@@ -4,55 +4,60 @@ import ConnectionPlugin from "rete-connection-plugin";
 import ContextMenuPlugin from "rete-context-menu-plugin";
 import AreaPlugin from "rete-area-plugin";
 import { MyNode } from "./components/Node";
-import { MyControl } from "./components/Control";
+import { AddComponent } from "./nodes/AddComponent";
 
-const numSocket = new Rete.Socket("Number value");
+// Put custom sockets here
+export const numSocket = new Rete.Socket("Number value");
 
-class AddComponent extends Rete.Component {
-  constructor() {
-    super("Add");
-  }
-
-  builder(node) {
-    const inp = new Rete.Input("num1", "Number", numSocket);
-    const out = new Rete.Output("num", "Number", numSocket);
-    const ctrl = new MyControl(this.editor, "greeting", "#username");
-
-    return node.addInput(inp).addOutput(out).addControl(ctrl);
-  }
-
-  worker(node, inputs, outputs) {
-    console.log(node.data.greeting);
-  }
-}
-
+/*
+  Primary initialization function.  Takes a container ref to attach the rete editor to.
+*/
 const editor = async function (container) {
-  console.log(container);
+  // Here we load up all components of the builder into our editor for usage.
+  // We might be able to programatically generate components from enki
   const components = [new AddComponent()];
 
+  // create the main edtor
   const editor = new Rete.NodeEditor("demo@0.1.0", container);
+
+  // PLUGINS
+  // connection plugin is used to render conections between nodes
   editor.use(ConnectionPlugin);
+
+  // React rendering for the editor
   editor.use(ReactRenderPlugin, {
+    // MyNode is a custom default style for nodes
     component: MyNode,
   });
+
+  // renders a context menu on right click that shows available nodes
   editor.use(ContextMenuPlugin);
 
+  // The engine is used to process/run the rete graph
   const engine = new Rete.Engine("demo@0.1.0");
 
+  // Register custom components with both the editor and the engine
   components.forEach((c) => {
     editor.register(c);
     engine.register(c);
   });
 
+  // List for changes to the editor.  When they are detected, run the graph in the engine
   editor.on(
     "process nodecreated noderemoved connectioncreated connectionremoved",
     async () => {
       console.log("process");
+
+      // Here we would swap out local processing for an endpoint that we send the serialised JSON too.
+      // Then we run the fewshots, etc on the backend rather than on the client.
+      // Alterative for now is for the client to call our own /openai endpoint.
+      // NOTE need to consider authentication against games API from a web client
       await engine.abort();
       await engine.process(editor.toJSON());
     }
   );
 
+  // a default editor graph state
   editor.fromJSON({
     id: "demo@0.1.0",
     nodes: {
