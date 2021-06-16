@@ -1,11 +1,11 @@
 import Rete from "rete";
-import { MyControl } from "../controls/Control";
-import { numSocket } from "../editor";
+import { TextInputControl } from "../controls/TextInputControl";
+import { stringSocket } from "../sockets";
 
-export class AddComponent extends Rete.Component {
+export class InputComponent extends Rete.Component {
   constructor() {
     // Name of the component
-    super("Add");
+    super("Input");
   }
 
   // the builder is used to "assemble" the node component.
@@ -13,22 +13,19 @@ export class AddComponent extends Rete.Component {
   // to generate the appropriate inputs and ouputs for the fewshot at build time
   builder(node) {
     // create inputs here. First argument is th ename, second is the type (matched to other components sockets), and third is the socket the i/o will use
-    const inp = new Rete.Input("num1", "Number", numSocket);
-    const out = new Rete.Output("num", "Number", numSocket);
+    const out = new Rete.Output("text", "String", stringSocket);
 
     // controls are the internals of the node itself
     // This default control simple has a tet field.
-    const ctrl = new MyControl(this.editor, "greeting", "#username");
+    const ctrl = new TextInputControl(this.editor, "text", "Your action here");
 
-    return node.addInput(inp).addOutput(out).addControl(ctrl);
+    return node.addOutput(out).addControl(ctrl);
   }
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connecte components
   worker(node, inputs, outputs) {
-    console.log("node", node);
-    console.log("input", inputs);
-    console.log("outputs", outputs);
-    console.log(node.data.greeting);
+    console.log("DATA", node.data);
+    outputs["text"] = node.data.text;
   }
 }

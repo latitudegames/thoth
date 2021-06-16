@@ -1,13 +1,14 @@
 import React from "react";
 import { Control } from "rete";
 
-class MyReactControl extends React.Component {
+class ReactTextInputControl extends React.Component {
   state = {};
   componentDidMount() {
     this.setState({
       name: this.props.name,
     });
     console.log(this.props);
+    // putData adds a key/value to the node
     this.props.putData(this.props.id, this.props.name);
   }
   onChange(event) {
@@ -25,16 +26,20 @@ class MyReactControl extends React.Component {
   }
 }
 
-export class MyControl extends Control {
+export class TextInputControl extends Control {
   constructor(emitter, key, name) {
     super(key);
     this.render = "react";
-    this.component = MyReactControl;
+    this.component = ReactTextInputControl;
+
+    console.log(this.putData);
+
+    // we define the props that are passed into the rendered react component here
     this.props = {
       emitter,
       id: key,
       name,
-      putData: () => this.putData.apply(this, arguments),
+      putData: (...args) => this.putData.apply(this, args),
     };
   }
 }
