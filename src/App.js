@@ -1,5 +1,5 @@
 import "./App.css";
-import init from "./editor";
+import init from "./rete/editor";
 
 function App() {
   return (

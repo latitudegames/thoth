@@ -3,11 +3,8 @@ import ReactRenderPlugin from "rete-react-render-plugin";
 import ConnectionPlugin from "rete-connection-plugin";
 import ContextMenuPlugin from "rete-context-menu-plugin";
 import AreaPlugin from "rete-area-plugin";
-import { MyNode } from "./components/Node";
-import { AddComponent } from "./nodes/AddComponent";
-
-// Put custom sockets here
-export const numSocket = new Rete.Socket("Number value");
+import { MyNode } from "../components/Node";
+import { InputComponent } from "./components/InputComponent";
 
 /*
   Primary initialization function.  Takes a container ref to attach the rete editor to.
@@ -15,7 +12,7 @@ export const numSocket = new Rete.Socket("Number value");
 const editor = async function (container) {
   // Here we load up all components of the builder into our editor for usage.
   // We might be able to programatically generate components from enki
-  const components = [new AddComponent()];
+  const components = [new InputComponent()];
 
   // create the main edtor
   const editor = new Rete.NodeEditor("demo@0.1.0", container);
@@ -37,6 +34,7 @@ const editor = async function (container) {
   const engine = new Rete.Engine("demo@0.1.0");
 
   // Register custom components with both the editor and the engine
+  // We will need a wa to share components between client and server
   components.forEach((c) => {
     editor.register(c);
     engine.register(c);
@@ -46,8 +44,6 @@ const editor = async function (container) {
   editor.on(
     "process nodecreated noderemoved connectioncreated connectionremoved",
     async () => {
-      console.log("process");
-
       // Here we would swap out local processing for an endpoint that we send the serialised JSON too.
       // Then we run the fewshots, etc on the backend rather than on the client.
       // Alterative for now is for the client to call our own /openai endpoint.
