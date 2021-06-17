@@ -1,45 +1,57 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import { Control } from "rete";
 
-class ReactTextInputControl extends React.Component {
-  state = {};
-  componentDidMount() {
-    this.setState({
-      name: this.props.name,
-    });
-    console.log(this.props);
-    // putData adds a key/value to the node
-    this.props.putData(this.props.id, this.props.name);
-  }
-  onChange(event) {
-    this.props.putData(this.props.id, event.target.value);
-    this.props.emitter.trigger("process");
-    this.setState({
-      name: event.target.value,
-    });
-  }
+const ReactTextInputControl = (props) => {
+  const [name, setName] = useState("");
 
-  render() {
-    return (
-      <input value={this.state.name} onChange={this.onChange.bind(this)} />
-    );
-  }
-}
+  useEffect(() => {
+    setName(props.name);
+    props.putData(props.key, props.value);
+  }, []);
+
+  const onChange = (e) => {
+    props.putData(props.key, e.target.value);
+    setName(e.target.value);
+  };
+
+  const onButton = () => {
+    props.emitter.trigger("process");
+  };
+
+  return (
+    <>
+      <input value={name} onChange={onChange} />
+      <p>Result: {props.display}</p>
+      <button onClick={onButton}>RUN</button>
+    </>
+  );
+};
 
 export class TextInputControl extends Control {
-  constructor(emitter, key, name) {
+  constructor({ emitter, key, value }) {
     super(key);
     this.render = "react";
+    this.key = key;
     this.component = ReactTextInputControl;
-
-    console.log(this.putData);
 
     // we define the props that are passed into the rendered react component here
     this.props = {
       emitter,
-      id: key,
-      name,
+      key,
+      value,
+      display: "",
       putData: (...args) => this.putData.apply(this, args),
     };
+  }
+
+  display(val) {
+    this.props.display = val;
+    this.putData("display", val);
+    this.update();
+  }
+
+  setValue(val) {
+    this.props.value = val;
+    this.putData(this.key, val);
   }
 }

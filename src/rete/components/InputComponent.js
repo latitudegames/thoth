@@ -8,6 +8,10 @@ export class InputComponent extends Rete.Component {
     super("Input");
   }
 
+  counter = 0;
+
+  control = {};
+
   // the builder is used to "assemble" the node component.
   // when we have enki hooked up and have garbbed all few shots, we would use the builder
   // to generate the appropriate inputs and ouputs for the fewshot at build time
@@ -17,7 +21,13 @@ export class InputComponent extends Rete.Component {
 
     // controls are the internals of the node itself
     // This default control simple has a tet field.
-    const ctrl = new TextInputControl(this.editor, "text", "Your action here");
+    const ctrl = new TextInputControl({
+      emitter: this.editor,
+      key: "text",
+      name: "Your action here",
+    });
+
+    this.control = ctrl;
 
     return node.addOutput(out).addControl(ctrl);
   }
@@ -25,7 +35,10 @@ export class InputComponent extends Rete.Component {
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connecte components
   worker(node, inputs, outputs) {
-    console.log("DATA", node.data);
+    console.log("NODE", node);
+    console.log("OUTPUTS", outputs);
+    this.counter += 1;
+    this.control.display("BLARG " + this.counter);
     outputs["text"] = node.data.text;
   }
 }
