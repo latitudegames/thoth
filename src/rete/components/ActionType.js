@@ -54,7 +54,7 @@ export class ActionTypeComponent extends Rete.Component {
   // to the outputs to be consumed by any connecte components
   async worker(node, inputs, outputs) {
     const action = inputs["action"][0];
-    const prompt = fewShots + action;
+    const prompt = fewShots + action + ",";
 
     const body = {
       prompt,
