@@ -105,7 +105,8 @@ export class TenseTransformer extends Rete.Component {
       maxTokens: 100,
       temperature: 0.0,
     };
-    const result = await completion(body);
+    const raw = await completion(body);
+    const result = raw.trim();
 
     this.displayControl.display(result);
 
