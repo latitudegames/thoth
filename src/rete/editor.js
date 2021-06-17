@@ -53,36 +53,17 @@ const editor = async function (container) {
     }
   );
 
+  const defaultState =
+    '{"id":"demo@0.1.0","nodes":{"1":{"id":1,"data":{"text":"Your action here"},"inputs":{},"outputs":{"text":{"connections":[]}},"position":[-628.0219116210938,-141.3781280517578],"name":"Input"}}}';
+
   // a default editor graph state
-  editor.fromJSON({
-    id: "demo@0.1.0",
-    nodes: {
-      1: {
-        id: 1,
-        data: {},
-        inputs: { num1: { connections: [] } },
-        outputs: {
-          num: { connections: [{ node: 2, input: "num1", data: {} }] },
-        },
-        position: [-285.5, -105.375],
-        name: "Add",
-      },
-      2: {
-        id: 2,
-        data: {},
-        inputs: {
-          num1: { connections: [{ node: 1, output: "num", data: {} }] },
-        },
-        outputs: { num: { connections: [] } },
-        position: [-16.5, -99.375],
-        name: "Add",
-      },
-    },
-  });
+  editor.fromJSON(JSON.parse(defaultState));
 
   editor.view.resize();
   AreaPlugin.zoomAt(editor);
   editor.trigger("process");
+
+  return editor;
 };
 
 export default editor;
