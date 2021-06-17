@@ -5,6 +5,7 @@ import ContextMenuPlugin from "rete-context-menu-plugin";
 import AreaPlugin from "rete-area-plugin";
 import { MyNode } from "../components/Node";
 import { InputComponent } from "./components/InputComponent";
+import { TenseTransformer } from "./components/TenseTransformer";
 
 /*
   Primary initialization function.  Takes a container ref to attach the rete editor to.
@@ -12,7 +13,7 @@ import { InputComponent } from "./components/InputComponent";
 const editor = async function (container) {
   // Here we load up all components of the builder into our editor for usage.
   // We might be able to programatically generate components from enki
-  const components = [new InputComponent()];
+  const components = [new InputComponent(), new TenseTransformer()];
 
   // create the main edtor
   const editor = new Rete.NodeEditor("demo@0.1.0", container);
@@ -41,17 +42,14 @@ const editor = async function (container) {
   });
 
   // List for changes to the editor.  When they are detected, run the graph in the engine
-  editor.on(
-    "process nodecreated noderemoved connectioncreated connectionremoved",
-    async () => {
-      // Here we would swap out local processing for an endpoint that we send the serialised JSON too.
-      // Then we run the fewshots, etc on the backend rather than on the client.
-      // Alterative for now is for the client to call our own /openai endpoint.
-      // NOTE need to consider authentication against games API from a web client
-      await engine.abort();
-      await engine.process(editor.toJSON());
-    }
-  );
+  editor.on("process", async () => {
+    // Here we would swap out local processing for an endpoint that we send the serialised JSON too.
+    // Then we run the fewshots, etc on the backend rather than on the client.
+    // Alterative for now is for the client to call our own /openai endpoint.
+    // NOTE need to consider authentication against games API from a web client
+    await engine.abort();
+    await engine.process(editor.toJSON());
+  });
 
   const defaultState =
     '{"id":"demo@0.1.0","nodes":{"1":{"id":1,"data":{"text":"Your action here"},"inputs":{},"outputs":{"text":{"connections":[]}},"position":[-628.0219116210938,-141.3781280517578],"name":"Input"}}}';
