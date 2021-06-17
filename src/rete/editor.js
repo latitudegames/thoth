@@ -8,6 +8,7 @@ import { InputComponent } from "./components/InputComponent";
 import { TenseTransformer } from "./components/TenseTransformer";
 import { RunInputComponent } from "./components/RunInputComponent";
 import { ActionTypeComponent } from "./components/ActionType";
+import { EntityDetector } from "./components/EntityDetector";
 
 /*
   Primary initialization function.  Takes a container ref to attach the rete editor to.
@@ -20,6 +21,7 @@ const editor = async function (container) {
     new TenseTransformer(),
     new RunInputComponent(),
     new ActionTypeComponent(),
+    new EntityDetector(),
   ];
 
   // create the main edtor
@@ -46,6 +48,10 @@ const editor = async function (container) {
   components.forEach((c) => {
     editor.register(c);
     engine.register(c);
+  });
+
+  editor.on("zoom", ({ source }) => {
+    return source !== "dblclick";
   });
 
   // List for changes to the editor.  When they are detected, run the graph in the engine
