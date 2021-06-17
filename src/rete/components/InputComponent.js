@@ -2,6 +2,7 @@ import Rete from "rete";
 import { TextInputControl } from "../controls/TextInputControl";
 import { stringSocket } from "../sockets";
 import { DisplayControl } from "../controls/DisplayControl";
+import { completion } from "../../utils/openaiHelper";
 
 export class InputComponent extends Rete.Component {
   constructor() {
@@ -39,11 +40,7 @@ export class InputComponent extends Rete.Component {
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connecte components
-  worker(node, inputs, outputs) {
-    console.log("NODE", node);
-    console.log("OUTPUTS", outputs);
-    this.counter += 1;
-    this.displayControl.display("BLARG " + this.counter);
+  async worker(node, inputs, outputs) {
     outputs["text"] = node.data.text;
   }
 }
