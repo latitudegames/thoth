@@ -2,16 +2,16 @@ import { useState, useEffect } from "react";
 import { Control } from "rete";
 
 const ReactTextInputControl = (props) => {
-  const [name, setName] = useState("");
+  const [value, setValue] = useState("");
 
   useEffect(() => {
-    setName(props.name);
+    setValue(props.value);
     props.putData(props.key, props.value);
-  }, []);
+  }, [props]);
 
   const onChange = (e) => {
     props.putData(props.key, e.target.value);
-    setName(e.target.value);
+    setValue(e.target.value);
   };
 
   const onButton = () => {
@@ -20,8 +20,7 @@ const ReactTextInputControl = (props) => {
 
   return (
     <>
-      <input value={name} onChange={onChange} />
-      <p>Result: {props.display}</p>
+      <input value={value} onChange={onChange} />
       <button onClick={onButton}>RUN</button>
     </>
   );
@@ -39,19 +38,7 @@ export class TextInputControl extends Control {
       emitter,
       key,
       value,
-      display: "",
       putData: (...args) => this.putData.apply(this, args),
     };
-  }
-
-  display(val) {
-    this.props.display = val;
-    this.putData("display", val);
-    this.update();
-  }
-
-  setValue(val) {
-    this.props.value = val;
-    this.putData(this.key, val);
   }
 }
