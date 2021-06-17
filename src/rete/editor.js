@@ -7,6 +7,7 @@ import { MyNode } from "../components/Node";
 import { InputComponent } from "./components/InputComponent";
 import { TenseTransformer } from "./components/TenseTransformer";
 import { RunInputComponent } from "./components/RunInputComponent";
+import { ActionTypeComponent } from "./components/ActionType";
 
 /*
   Primary initialization function.  Takes a container ref to attach the rete editor to.
@@ -18,6 +19,7 @@ const editor = async function (container) {
     new InputComponent(),
     new TenseTransformer(),
     new RunInputComponent(),
+    new ActionTypeComponent(),
   ];
 
   // create the main edtor
