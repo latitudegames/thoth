@@ -1,18 +1,12 @@
 import Rete from "rete";
 import { TextInputControl } from "../controls/TextInputControl";
 import { stringSocket } from "../sockets";
-import { DisplayControl } from "../controls/DisplayControl";
-import { completion } from "../../utils/openaiHelper";
 
 export class InputComponent extends Rete.Component {
   constructor() {
     // Name of the component
     super("Input");
   }
-
-  counter = 0;
-
-  displayControl = {};
 
   // the builder is used to "assemble" the node component.
   // when we have enki hooked up and have garbbed all few shots, we would use the builder
@@ -25,17 +19,11 @@ export class InputComponent extends Rete.Component {
     // This default control simple has a tet field.
     const input = new TextInputControl({
       emitter: this.editor,
-      key: "input",
-      value: "Your action here",
+      key: "text",
+      value: "Input text",
     });
 
-    const display = new DisplayControl({
-      key: "display",
-    });
-
-    this.displayControl = display;
-
-    return node.addOutput(out).addControl(input).addControl(display);
+    return node.addOutput(out).addControl(input);
   }
 
   // the worker contains the main business logic of the node.  It will pass those results
