@@ -3,7 +3,8 @@ h2 {
   text-align: center;
 }
 
-.socket.output.action {
+.socket.output.action,
+.socket.input.action {
   background: #f7020e;
 }
 
