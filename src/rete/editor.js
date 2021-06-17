@@ -6,6 +6,7 @@ import AreaPlugin from "rete-area-plugin";
 import { MyNode } from "../components/Node";
 import { InputComponent } from "./components/InputComponent";
 import { TenseTransformer } from "./components/TenseTransformer";
+import { RunInputComponent } from "./components/RunInputComponent";
 
 /*
   Primary initialization function.  Takes a container ref to attach the rete editor to.
@@ -13,7 +14,11 @@ import { TenseTransformer } from "./components/TenseTransformer";
 const editor = async function (container) {
   // Here we load up all components of the builder into our editor for usage.
   // We might be able to programatically generate components from enki
-  const components = [new InputComponent(), new TenseTransformer()];
+  const components = [
+    new InputComponent(),
+    new TenseTransformer(),
+    new RunInputComponent(),
+  ];
 
   // create the main edtor
   const editor = new Rete.NodeEditor("demo@0.1.0", container);
@@ -52,7 +57,7 @@ const editor = async function (container) {
   });
 
   const defaultState =
-    '{"id":"demo@0.1.0","nodes":{"1":{"id":1,"data":{"text":"Your action here"},"inputs":{},"outputs":{"text":{"connections":[]}},"position":[-628.0219116210938,-141.3781280517578],"name":"Input"}}}';
+    '{"id":"demo@0.1.0","nodes":{"1":{"id":1,"data":{"text":"Your action here","undefined":"Sam"},"inputs":{},"outputs":{"text":{"connections":[{"node":2,"input":"name","data":{}}]}},"position":[-584.6937240633796,0.21663434116217672],"name":"Input"},"2":{"id":2,"data":{},"inputs":{"text":{"connections":[{"node":4,"output":"text","data":{}}]},"name":{"connections":[{"node":1,"output":"text","data":{}}]}},"outputs":{"action":{"connections":[]}},"position":[-258.40411111574474,-95.36187171688155],"name":"Tense Transformer"},"4":{"id":4,"data":{"undefined":"I walk into the room"},"inputs":{},"outputs":{"text":{"connections":[{"node":2,"input":"text","data":{}}]}},"position":[-581.868571648038,-184.57681808772452],"name":"Input with run"}}}';
 
   // a default editor graph state
   editor.fromJSON(JSON.parse(defaultState));
