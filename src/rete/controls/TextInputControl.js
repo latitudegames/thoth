@@ -6,37 +6,27 @@ const ReactTextInputControl = (props) => {
 
   useEffect(() => {
     setValue(props.value);
-    props.putData(props.key, props.value);
-  }, [props]);
+    props.putData(props.name, props.value);
+  }, []);
 
   const onChange = (e) => {
-    props.putData(props.key, e.target.value);
+    props.putData(props.name, e.target.value);
     setValue(e.target.value);
   };
 
-  const onButton = () => {
-    props.emitter.trigger("process");
-  };
-
-  return (
-    <>
-      <input value={value} onChange={onChange} />
-      <button onClick={onButton}>RUN</button>
-    </>
-  );
+  return <input value={value} onChange={onChange} />;
 };
 
 export class TextInputControl extends Control {
   constructor({ emitter, key, value }) {
     super(key);
     this.render = "react";
-    this.key = key;
     this.component = ReactTextInputControl;
 
     // we define the props that are passed into the rendered react component here
     this.props = {
       emitter,
-      key,
+      name: key,
       value,
       putData: (...args) => this.putData.apply(this, args),
     };
