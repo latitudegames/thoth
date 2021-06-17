@@ -2,3 +2,11 @@ h1,
 h2 {
   text-align: center;
 }
+
+.socket.output.action {
+  background: #f7020e;
+}
+
+.node.selected {
+  background-color: #05c807 !important;
+}
