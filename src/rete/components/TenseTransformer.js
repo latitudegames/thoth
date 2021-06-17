@@ -73,7 +73,8 @@ export class TenseTransformer extends Rete.Component {
   // to generate the appropriate inputs and ouputs for the fewshot at build time
   builder(node) {
     // create inputs here. First argument is th ename, second is the type (matched to other components sockets), and third is the socket the i/o will use
-    const inp = new Rete.Input("text", "String", stringSocket);
+    const textInput = new Rete.Input("text", "text", stringSocket);
+    const nameInput = new Rete.Input("name", "name", stringSocket);
     const out = new Rete.Output("action", "Action", actionSocket);
 
     // controls are the internals of the node itself
@@ -84,16 +85,22 @@ export class TenseTransformer extends Rete.Component {
     });
     this.displayControl = display;
 
-    return node.addInput(inp).addOutput(out).addControl(display);
+    return node
+      .addInput(textInput)
+      .addInput(nameInput)
+      .addOutput(out)
+      .addControl(display);
   }
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connecte components
   async worker(node, inputs, outputs) {
-    // AD ON INPUT
+    // ADD ON INPUT
+    const { name, text } = inputs;
+    const prompt = `${fewShots}${name[0]}: ${text[0]}\nThird Person:`;
 
     const body = {
-      prompt: fewShots,
+      prompt,
       stop: ["\n"],
       maxTokens: 100,
       temperature: 0.0,
