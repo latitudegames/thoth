@@ -9404,6 +9404,11 @@ rete-context-menu-plugin@^0.6.0-rc.1:
     lodash-es "^4.17.15"
     vue "^2.5.17"
 
+rete-module-plugin@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/rete-module-plugin/-/rete-module-plugin-0.4.1.tgz#3f81ae4efdb53394134a77649a21f32debda3468"
+  integrity sha512-8SFOdL8dFkw+o6QN1CPORoaP63tm+1ENZmtMaFkewXRg4j1qc7OzgsrKMygJpPdAXsN5IeFqF1sR/T7PAa4aYA==
+
 rete-react-render-plugin@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/rete-react-render-plugin/-/rete-react-render-plugin-0.2.1.tgz#71a6d73f18f850b85262563f678b40080a7b0e32"
