@@ -1,6 +1,7 @@
 import Rete from "rete";
 import { TextInputControl } from "../controls/TextInputControl";
 import { stringSocket } from "../sockets";
+import { DisplayControl } from "../controls/DisplayControl";
 
 export class InputComponent extends Rete.Component {
   constructor() {
@@ -10,7 +11,7 @@ export class InputComponent extends Rete.Component {
 
   counter = 0;
 
-  control = {};
+  displayControl = {};
 
   // the builder is used to "assemble" the node component.
   // when we have enki hooked up and have garbbed all few shots, we would use the builder
@@ -21,15 +22,19 @@ export class InputComponent extends Rete.Component {
 
     // controls are the internals of the node itself
     // This default control simple has a tet field.
-    const ctrl = new TextInputControl({
+    const input = new TextInputControl({
       emitter: this.editor,
-      key: "text",
-      name: "Your action here",
+      key: "input",
+      value: "Your action here",
     });
 
-    this.control = ctrl;
+    const display = new DisplayControl({
+      key: "display",
+    });
 
-    return node.addOutput(out).addControl(ctrl);
+    this.displayControl = display;
+
+    return node.addOutput(out).addControl(input).addControl(display);
   }
 
   // the worker contains the main business logic of the node.  It will pass those results
@@ -38,7 +43,7 @@ export class InputComponent extends Rete.Component {
     console.log("NODE", node);
     console.log("OUTPUTS", outputs);
     this.counter += 1;
-    this.control.display("BLARG " + this.counter);
+    this.displayControl.display("BLARG " + this.counter);
     outputs["text"] = node.data.text;
   }
 }
