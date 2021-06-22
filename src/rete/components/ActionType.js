@@ -27,6 +27,10 @@ export class ActionTypeComponent extends Rete.Component {
   constructor() {
     // Name of the component
     super("Action Type Classifier");
+
+    this.task = {
+      outputs: { actionType: "option" },
+    };
   }
 
   displayControl = {};

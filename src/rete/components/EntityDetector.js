@@ -113,6 +113,12 @@ export class EntityDetector extends Rete.Component {
   constructor() {
     // Name of the component
     super("Entity Detector");
+
+    this.task = {
+      outputs: {
+        entities: "option",
+      },
+    };
   }
 
   displayControl = {};

@@ -7,6 +7,21 @@ export class RunInputComponent extends Rete.Component {
   constructor() {
     // Name of the component
     super("Input with run");
+
+    this.task = {
+      outputs: {
+        text: "output",
+      },
+      init: (task) => {
+        console.log("TASK", task);
+        this.initialTask = task;
+        console.log("this", this);
+      },
+    };
+  }
+
+  run() {
+    this.initialTask.run();
   }
 
   // the builder is used to "assemble" the node component.
@@ -16,6 +31,8 @@ export class RunInputComponent extends Rete.Component {
     // create inputs here. First argument is th ename, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const out = new Rete.Output("text", "String", stringSocket);
 
+    console.log("BUILD");
+
     // controls are the internals of the node itself
     // This default control simple has a tet field.
     const input = new TextInputControl({
@@ -24,7 +41,13 @@ export class RunInputComponent extends Rete.Component {
       value: "Input text",
     });
 
-    const run = new RunButtonControl({ emitter: this.editor, key: "run" });
+    console.log("INITIAL TASK", this.initialTask);
+
+    const run = new RunButtonControl({
+      emitter: this.editor,
+      key: "run",
+      run: this.run.bind(this),
+    });
 
     return node.addOutput(out).addControl(input).addControl(run);
   }
@@ -34,6 +57,9 @@ export class RunInputComponent extends Rete.Component {
   async worker(node, inputs, outputs) {
     console.log("outputs", outputs);
     console.log("data", node);
-    outputs["text"] = node.data.text;
+    // outputs["text"] = node.data.text;
+    return {
+      text: node.data.text,
+    };
   }
 }

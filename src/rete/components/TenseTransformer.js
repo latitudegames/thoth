@@ -64,6 +64,12 @@ export class TenseTransformer extends Rete.Component {
   constructor() {
     // Name of the component
     super("Tense Transformer");
+
+    this.task = {
+      outputs: {
+        action: "option",
+      },
+    };
   }
 
   displayControl = {};
