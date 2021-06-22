@@ -2,6 +2,7 @@ import Rete from "rete";
 import ReactRenderPlugin from "rete-react-render-plugin";
 import ConnectionPlugin from "rete-connection-plugin";
 import ContextMenuPlugin from "rete-context-menu-plugin";
+import TaskPlugin from "rete-task-plugin";
 import AreaPlugin from "rete-area-plugin";
 import { MyNode } from "../components/Node";
 import { InputComponent } from "./components/InputComponent";
@@ -9,6 +10,8 @@ import { TenseTransformer } from "./components/TenseTransformer";
 import { RunInputComponent } from "./components/RunInputComponent";
 import { ActionTypeComponent } from "./components/ActionType";
 import { EntityDetector } from "./components/EntityDetector";
+import { SafetyVerifier } from "./components/SafetyVerifier";
+import { BooleanPassthrough } from "./components/BooleanPassthrough";
 
 /*
   Primary initialization function.  Takes a container ref to attach the rete editor to.
@@ -22,6 +25,8 @@ const editor = async function (container) {
     new RunInputComponent(),
     new ActionTypeComponent(),
     new EntityDetector(),
+    new SafetyVerifier(),
+    new BooleanPassthrough(),
   ];
 
   // create the main edtor
@@ -39,6 +44,7 @@ const editor = async function (container) {
 
   // renders a context menu on right click that shows available nodes
   editor.use(ContextMenuPlugin);
+  editor.use(TaskPlugin);
 
   // The engine is used to process/run the rete graph
   const engine = new Rete.Engine("demo@0.1.0");
