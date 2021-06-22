@@ -72,6 +72,12 @@ export class SafetyVerifier extends Rete.Component {
   constructor() {
     // Name of the component
     super("Safety Verifier");
+
+    this.task = {
+      outputs: {
+        boolean: "option",
+      },
+    };
   }
 
   displayControl = {};
@@ -110,8 +116,8 @@ export class SafetyVerifier extends Rete.Component {
     const raw = await completion(body);
     const result = raw.trim() !== "X";
 
-    this.displayControl.display(result);
+    this.displayControl.display(`${result}`);
 
-    outputs["actionType"] = result;
+    outputs["boolean"] = result;
   }
 }
