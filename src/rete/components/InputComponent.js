@@ -37,5 +37,9 @@ export class InputComponent extends Rete.Component {
   async worker(node, inputs, outputs) {
     console.log("tense transformer");
     outputs["text"] = node.data.text;
+
+    return {
+      text: node.data.text,
+    };
   }
 }
