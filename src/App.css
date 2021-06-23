@@ -8,6 +8,11 @@ h2 {
   background: #f7020e;
 }
 
+.socket.output.data,
+.socket.input.data {
+  background: #4501e4;
+}
+
 .node.selected {
   background-color: #05c807 !important;
 }
