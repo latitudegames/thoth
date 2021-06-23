@@ -1,5 +1,5 @@
 import Rete from "rete";
-import { actionSocket, actionTypeSocket, booleanSocket } from "../sockets";
+import { actionSocket, dataSocket, booleanSocket } from "../sockets";
 import { DisplayControl } from "../controls/DisplayControl";
 import { completion } from "../../utils/openaiHelper";
 
@@ -75,7 +75,8 @@ export class SafetyVerifier extends Rete.Component {
 
     this.task = {
       outputs: {
-        boolean: "option",
+        data: "option",
+        boolean: "output",
       },
     };
   }
@@ -88,6 +89,8 @@ export class SafetyVerifier extends Rete.Component {
   builder(node) {
     // create inputs here. First argument is th ename, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const inp = new Rete.Input("action", "Action", actionSocket);
+    const dataInput = new Rete.Input("data", "Data", dataSocket);
+    const dataOutput = new Rete.Output("data", "Data", dataSocket);
     const out = new Rete.Output("boolean", "Boolean", booleanSocket);
 
     // controls are the internals of the node itself
@@ -98,7 +101,12 @@ export class SafetyVerifier extends Rete.Component {
 
     this.displayControl = display;
 
-    return node.addInput(inp).addOutput(out).addControl(display);
+    return node
+      .addInput(inp)
+      .addInput(dataInput)
+      .addOutput(out)
+      .addOutput(dataOutput)
+      .addControl(display);
   }
 
   // the worker contains the main business logic of the node.  It will pass those results
@@ -118,6 +126,8 @@ export class SafetyVerifier extends Rete.Component {
 
     this.displayControl.display(`${result}`);
 
-    outputs["boolean"] = result;
+    return {
+      boolean: result,
+    };
   }
 }
