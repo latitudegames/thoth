@@ -1,13 +1,13 @@
 import Rete from "rete";
-import { anySocket, booleanSocket } from "../sockets";
+import { booleanSocket, dataSocket } from "../sockets";
 
-export class BooleanPassthrough extends Rete.Component {
+export class BooleanGate extends Rete.Component {
   constructor() {
     // Name of the component
-    super("Boolean Passthrough");
+    super("Boolean Gate");
 
     this.task = {
-      outputs: { passthroughOut: "option" },
+      outputs: { true: "option", false: "option" },
     };
   }
 
@@ -16,22 +16,15 @@ export class BooleanPassthrough extends Rete.Component {
   // to generate the appropriate inputs and ouputs for the fewshot at build time
   builder(node) {
     const bool = new Rete.Input("boolean", "Boolean", booleanSocket);
-    const passthroughInput = new Rete.Input(
-      "passthroughIn",
-      "Passthrough",
-      anySocket
-    );
-
-    const passthroughOutput = new Rete.Output(
-      "passthroughOut",
-      "Passthrough",
-      anySocket
-    );
+    const dataInput = new Rete.Input("data", "Data", dataSocket);
+    const isTrue = new Rete.Output("true", "True", dataSocket);
+    const isFalse = new Rete.Output("false", "False", dataSocket);
 
     return node
-      .addOutput(passthroughOutput)
-      .addInput(passthroughInput)
-      .addInput(bool);
+      .addInput(bool)
+      .addInput(dataInput)
+      .addOutput(isTrue)
+      .addOutput(isFalse);
   }
 
   // the worker contains the main business logic of the node.  It will pass those results
@@ -41,12 +34,10 @@ export class BooleanPassthrough extends Rete.Component {
 
     console.log("Is true", isTrue);
 
-    if (!isTrue) {
-      console.log("closing");
-      this.closed = ["passthroughOut"];
+    if (isTrue) {
+      this.task.closed = ["false"];
     } else {
-      console.log("passing through");
-      outputs["passthroughOut"] = inputs["passthroughIn"][0];
+      this.task.closed = ["true"];
     }
   }
 }

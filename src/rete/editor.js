@@ -11,7 +11,7 @@ import { RunInputComponent } from "./components/RunInputComponent";
 import { ActionTypeComponent } from "./components/ActionType";
 import { EntityDetector } from "./components/EntityDetector";
 import { SafetyVerifier } from "./components/SafetyVerifier";
-import { BooleanPassthrough } from "./components/BooleanPassthrough";
+import { BooleanGate } from "./components/BooleanGate";
 
 /*
   Primary initialization function.  Takes a container ref to attach the rete editor to.
@@ -26,7 +26,7 @@ const editor = async function (container) {
     new ActionTypeComponent(),
     new EntityDetector(),
     new SafetyVerifier(),
-    new BooleanPassthrough(),
+    new BooleanGate(),
   ];
 
   // create the main edtor
@@ -74,7 +74,7 @@ const editor = async function (container) {
   );
 
   const defaultState =
-    '{"id":"demo@0.1.0","nodes":{"1":{"id":1,"data":{"text":"Your action here","undefined":"Sam"},"inputs":{},"outputs":{"text":{"connections":[{"node":2,"input":"name","data":{}}]}},"position":[-584.6937240633796,0.21663434116217672],"name":"Input"},"2":{"id":2,"data":{},"inputs":{"text":{"connections":[{"node":4,"output":"text","data":{}}]},"name":{"connections":[{"node":1,"output":"text","data":{}}]}},"outputs":{"action":{"connections":[]}},"position":[-258.40411111574474,-95.36187171688155],"name":"Tense Transformer"},"4":{"id":4,"data":{"undefined":"I walk into the room"},"inputs":{},"outputs":{"text":{"connections":[{"node":2,"input":"text","data":{}}]}},"position":[-581.868571648038,-184.57681808772452],"name":"Input with run"}}}';
+    '{"id":"demo@0.1.0","nodes":{"1":{"id":1,"data":{"text":"Input text","undefined":"Sam"},"inputs":{},"outputs":{"text":{"connections":[{"node":2,"input":"name","data":{}},{"node":7,"input":"name","data":{}},{"node":8,"input":"name","data":{}}]}},"position":[-584.6937240633796,0.21663434116217672],"name":"Input"},"2":{"id":2,"data":{},"inputs":{"data":{"connections":[{"node":4,"output":"data","data":{}}]},"text":{"connections":[{"node":4,"output":"text","data":{}}]},"name":{"connections":[{"node":1,"output":"text","data":{}}]}},"outputs":{"action":{"connections":[{"node":5,"input":"action","data":{}}]},"data":{"connections":[{"node":5,"input":"data","data":{}}]}},"position":[-258.40411111574474,-95.36187171688155],"name":"Tense Transformer"},"4":{"id":4,"data":{"undefined":"I walk into the room","text":"Input text"},"inputs":{},"outputs":{"data":{"connections":[{"node":2,"input":"data","data":{}}]},"text":{"connections":[{"node":2,"input":"text","data":{}},{"node":7,"input":"text","data":{}},{"node":8,"input":"text","data":{}}]}},"position":[-582.4164977964898,-205.11553029720008],"name":"Input with run"},"5":{"id":5,"data":{},"inputs":{"action":{"connections":[{"node":2,"output":"action","data":{}}]},"data":{"connections":[{"node":2,"output":"data","data":{}}]}},"outputs":{"boolean":{"connections":[{"node":6,"input":"boolean","data":{}}]},"data":{"connections":[{"node":6,"input":"data","data":{}}]}},"position":[136.71001449014577,-203.88432719218048],"name":"Safety Verifier"},"6":{"id":6,"data":{},"inputs":{"boolean":{"connections":[{"node":5,"output":"boolean","data":{}}]},"data":{"connections":[{"node":5,"output":"data","data":{}}]}},"outputs":{"true":{"connections":[{"node":7,"input":"data","data":{}}]},"false":{"connections":[{"node":8,"input":"data","data":{}}]}},"position":[522.5284937856222,-273.4006765840502],"name":"Boolean Gate"},"7":{"id":7,"data":{},"inputs":{"data":{"connections":[{"node":6,"output":"true","data":{}}]},"text":{"connections":[{"node":4,"output":"text","data":{}}]},"name":{"connections":[{"node":1,"output":"text","data":{}}]}},"outputs":{"action":{"connections":[]},"data":{"connections":[]}},"position":[824.4693831854775,-480.7339922525906],"name":"Tense Transformer"},"8":{"id":8,"data":{},"inputs":{"data":{"connections":[{"node":6,"output":"false","data":{}}]},"text":{"connections":[{"node":4,"output":"text","data":{}}]},"name":{"connections":[{"node":1,"output":"text","data":{}}]}},"outputs":{"action":{"connections":[]},"data":{"connections":[]}},"position":[818.1862278206048,-150.4088675639029],"name":"Tense Transformer"}}}';
 
   // a default editor graph state
   editor.fromJSON(JSON.parse(defaultState));
