@@ -67,7 +67,8 @@ export class TenseTransformer extends Rete.Component {
 
     this.task = {
       outputs: {
-        action: "option",
+        action: "output",
+        data: "option",
       },
     };
   }
@@ -82,6 +83,7 @@ export class TenseTransformer extends Rete.Component {
     const textInput = new Rete.Input("text", "Text", stringSocket);
     const nameInput = new Rete.Input("name", "Name", stringSocket);
     const dataInput = new Rete.Input("data", "Data", dataSocket);
+    const dataOutput = new Rete.Output("data", "Data", dataSocket);
     const out = new Rete.Output("action", "Action", actionSocket);
 
     // controls are the internals of the node itself
@@ -98,6 +100,7 @@ export class TenseTransformer extends Rete.Component {
       .addInput(textInput)
       .addInput(nameInput)
       .addOutput(out)
+      .addOutput(dataOutput)
       .addControl(display);
   }
 
@@ -122,6 +125,8 @@ export class TenseTransformer extends Rete.Component {
     console.log("inside tense worker", this);
     this.displayControl.display(result);
 
-    outputs["action"] = result;
+    return {
+      action: result,
+    };
   }
 }
