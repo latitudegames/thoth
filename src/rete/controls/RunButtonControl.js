@@ -2,7 +2,6 @@ import { Control } from "rete";
 
 const ReactRunButton = (props) => {
   const onButton = () => {
-    props.emitter.trigger("process");
     props.run();
   };
 
