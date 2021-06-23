@@ -44,6 +44,7 @@ const editor = async function (container) {
 
   // renders a context menu on right click that shows available nodes
   editor.use(ContextMenuPlugin);
+
   editor.use(TaskPlugin);
 
   // The engine is used to process/run the rete graph
@@ -60,15 +61,17 @@ const editor = async function (container) {
     return source !== "dblclick";
   });
 
-  // List for changes to the editor.  When they are detected, run the graph in the engine
-  editor.on("process", async () => {
-    // Here we would swap out local processing for an endpoint that we send the serialised JSON too.
-    // Then we run the fewshots, etc on the backend rather than on the client.
-    // Alterative for now is for the client to call our own /openai endpoint.
-    // NOTE need to consider authentication against games API from a web client
-    await engine.abort();
-    await engine.process(editor.toJSON());
-  });
+  editor.on(
+    "process nodecreated noderemoved connectioncreated connectionremoved",
+    async () => {
+      // Here we would swap out local processing for an endpoint that we send the serialised JSON too.
+      // Then we run the fewshots, etc on the backend rather than on the client.
+      // Alterative for now is for the client to call our own /openai endpoint.
+      // NOTE need to consider authentication against games API from a web client
+      await engine.abort();
+      await engine.process(editor.toJSON());
+    }
+  );
 
   const defaultState =
     '{"id":"demo@0.1.0","nodes":{"1":{"id":1,"data":{"text":"Your action here","undefined":"Sam"},"inputs":{},"outputs":{"text":{"connections":[{"node":2,"input":"name","data":{}}]}},"position":[-584.6937240633796,0.21663434116217672],"name":"Input"},"2":{"id":2,"data":{},"inputs":{"text":{"connections":[{"node":4,"output":"text","data":{}}]},"name":{"connections":[{"node":1,"output":"text","data":{}}]}},"outputs":{"action":{"connections":[]}},"position":[-258.40411111574474,-95.36187171688155],"name":"Tense Transformer"},"4":{"id":4,"data":{"undefined":"I walk into the room"},"inputs":{},"outputs":{"text":{"connections":[{"node":2,"input":"text","data":{}}]}},"position":[-581.868571648038,-184.57681808772452],"name":"Input with run"}}}';
