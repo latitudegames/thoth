@@ -1,5 +1,5 @@
 import Rete from "rete";
-import { actionSocket, actionTypeSocket } from "../sockets";
+import { actionSocket, dataSocket, actionTypeSocket } from "../sockets";
 import { DisplayControl } from "../controls/DisplayControl";
 import { completion } from "../../utils/openaiHelper";
 
@@ -29,7 +29,7 @@ export class ActionTypeComponent extends Rete.Component {
     super("Action Type Classifier");
 
     this.task = {
-      outputs: { actionType: "option" },
+      outputs: { actionType: "output", data: "option" },
     };
   }
 
@@ -42,6 +42,8 @@ export class ActionTypeComponent extends Rete.Component {
     // create inputs here. First argument is th ename, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const inp = new Rete.Input("action", "Action", actionSocket);
     const out = new Rete.Output("actionType", "Action Type", actionTypeSocket);
+    const dataInput = new Rete.Input("data", "Data", dataSocket);
+    const dataOutput = new Rete.Output("data", "Data", dataSocket);
 
     // controls are the internals of the node itself
     // This default control simple has a tet field.
@@ -51,7 +53,12 @@ export class ActionTypeComponent extends Rete.Component {
 
     this.displayControl = display;
 
-    return node.addInput(inp).addOutput(out).addControl(display);
+    return node
+      .addInput(inp)
+      .addInput(dataInput)
+      .addOutput(dataOutput)
+      .addOutput(out)
+      .addControl(display);
   }
 
   // the worker contains the main business logic of the node.  It will pass those results
@@ -70,6 +77,8 @@ export class ActionTypeComponent extends Rete.Component {
     const result = raw.trim();
     this.displayControl.display(result);
 
-    outputs["actionType"] = result;
+    return {
+      actiontype: result,
+    };
   }
 }
