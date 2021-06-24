@@ -14,9 +14,7 @@ export class RunInputComponent extends Rete.Component {
         data: "option",
       },
       init: (task) => {
-        console.log("INIT");
         this.initialTask = task;
-        console.log("this", this);
       },
     };
   }
@@ -60,8 +58,6 @@ export class RunInputComponent extends Rete.Component {
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connecte components
   async worker(node, inputs, data) {
-    console.log("node", node);
-    console.log("data", data);
     return {
       text: node.data.text,
     };

@@ -1,7 +1,6 @@
 import { Control } from "rete";
 
 const ReactTextInputControl = (props) => {
-  console.log("props", props);
   return <p style={{ width: 200 }}>Result: {props.display}</p>;
 };
 

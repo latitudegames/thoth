@@ -35,7 +35,6 @@ export class InputComponent extends Rete.Component {
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connecte components
   async worker(node, inputs, outputs) {
-    console.log("tense transformer");
     outputs["text"] = node.data.text;
 
     return {
