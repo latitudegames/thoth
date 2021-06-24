@@ -3,8 +3,14 @@ h2 {
   text-align: center;
 }
 
-.socket.output.action {
+.socket.output.action,
+.socket.input.action {
   background: #f7020e;
+}
+
+.socket.output.data,
+.socket.input.data {
+  background: #4501e4;
 }
 
 .node.selected {
