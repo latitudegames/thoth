@@ -24,24 +24,36 @@ export class SwitchGate extends Rete.Component {
   // https://github.com/retejs/rete/issues/439
   builder(node) {
     this.node = node;
-    const input = new Rete.Input("input", "Input", anySocket);
-    const dataInput = new Rete.Input("data", "Data", dataSocket);
 
     const setOutputs = (outputs) => {
-      this.dynamicOutputs = [...outputs, "default"];
+      this.dynamicOutputs = outputs;
 
-      // remove all outputs before adding them back in
-      // prevent registered key clash error in rete
-      this.node.outputs.forEach((output) => {
-        node.removeOutput(output);
+      const existingOutputs = [];
+
+      this.node.outputs.forEach((out) => {
+        existingOutputs.push(out.key);
       });
+
+      // Any outputs existing on the current node that arent incoming have been deleted
+      // and need to be removed.
+      existingOutputs
+        .filter((out) => !outputs.includes(out))
+        .forEach((key) => {
+          const output = this.node.outputs.get(key);
+          node.removeOutput(output);
+        });
+
+      // any incoming outputs not already on the node are new and will be added.
+      const newOutputs = outputs.filter(
+        (out) => !existingOutputs.includes(out)
+      );
 
       this.task.outputs = this.dynamicOutputs.reduce((acc, out) => {
         acc[out] = "option";
         return acc;
       }, {});
 
-      outputs.forEach((output) => {
+      newOutputs.forEach((output) => {
         const newOutput = new Rete.Output(
           output,
           capitalizeFirstLetter(output),
@@ -59,7 +71,15 @@ export class SwitchGate extends Rete.Component {
       key: "dynamicOutput",
     });
 
-    node.addInput(input).addInput(dataInput).addControl(switchControl);
+    const input = new Rete.Input("input", "Input", anySocket);
+    const dataInput = new Rete.Input("data", "Data", dataSocket);
+    const defaultOutput = new Rete.Input("default", "Default", dataSocket);
+
+    node
+      .addInput(input)
+      .addInput(dataInput)
+      .addOutput(defaultOutput)
+      .addControl(switchControl);
 
     return node;
   }
@@ -71,14 +91,16 @@ export class SwitchGate extends Rete.Component {
     console.log("SWITCH WORKER", input);
 
     // close all outputs
-    this.task.closed = [...this.dynamicOutputs];
+    this._task.closed = [...this.dynamicOutputs];
 
-    if (this.task.closed.includes(input)) {
+    if (this._task.closed.includes(input)) {
       // If the ouputs closed has the incoming text, filter closed outputs to not include it
-      this.task.closed = this.task.closed.filter((output) => output !== input);
+      this._task.closed = this._task.closed.filter(
+        (output) => output !== input
+      );
     } else {
       // otherwise open up the default output
-      this.task.closed = this.task.closed.filter(
+      this._task.closed = this._task.closed.filter(
         (output) => output !== "default"
       );
     }
