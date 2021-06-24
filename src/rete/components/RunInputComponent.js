@@ -51,8 +51,8 @@ export class RunInputComponent extends Rete.Component {
     });
 
     return node
-      .addOutput(data)
       .addOutput(out)
+      .addOutput(data)
       .addControl(input)
       .addControl(run);
   }
