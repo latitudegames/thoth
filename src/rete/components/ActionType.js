@@ -78,7 +78,7 @@ export class ActionTypeComponent extends Rete.Component {
     this.displayControl.display(result);
 
     return {
-      actiontype: result,
+      actionType: result,
     };
   }
 }
