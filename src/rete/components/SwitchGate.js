@@ -28,7 +28,7 @@ export class SwitchGate extends Rete.Component {
     const dataInput = new Rete.Input("data", "Data", dataSocket);
 
     const setOutputs = (outputs) => {
-      this.dynamicOutputs = outputs;
+      this.dynamicOutputs = [...outputs, "default"];
 
       // remove all outputs before adding them back in
       // prevent registered key clash error in rete
@@ -36,7 +36,7 @@ export class SwitchGate extends Rete.Component {
         node.removeOutput(output);
       });
 
-      this.task.outputs = outputs;
+      this.task.outputs = this.dynamicOutputs;
 
       outputs.forEach((output) => {
         const newOutput = new Rete.Output(
@@ -45,8 +45,10 @@ export class SwitchGate extends Rete.Component {
           dataSocket
         );
         this.node.addOutput(newOutput);
-        node.update();
       });
+
+      node.update();
+      this.editor.trigger("process");
     };
 
     const switchControl = new OutputGenerator({
@@ -61,13 +63,16 @@ export class SwitchGate extends Rete.Component {
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connecte components
-  async worker(node, inputs, outputs) {
-    const isTrue = inputs["boolean"][0];
+  async worker(node, inputs, data) {
+    const input = inputs["input"][0];
+    console.log("SWITCH WORKER", input);
 
-    if (isTrue) {
-      this.task.closed = ["false"];
+    this.task.closed = [...this.dynamicOutputs];
+
+    if (this.closed.includes(input)) {
+      this.task.closed = this.closed.filter((output) => output !== input);
     } else {
-      this.task.closed = ["true"];
+      this.task.closed = this.closed.filter((output) => output !== "default");
     }
   }
 }
