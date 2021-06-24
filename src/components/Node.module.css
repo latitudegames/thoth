@@ -1,0 +1,89 @@
+.node {
+    transition: background-color .05s ease;
+    width: var(--c40);
+    border-radius: var(--extraSmall);
+    border: 1px solid transparent;
+    box-shadow: 0 4px 5px rgba(0,0,0,0.2);
+    background-color: rgba(70,70,70,0.9);
+    color: #aaa;
+    /* backdrop-filter: blur(5px); */
+}
+.node:hover {
+    border: 1px solid var(--dark-3);
+}
+.node-title {
+    /* font-family: 'IBM Plex Mono', monospace !important; */
+    /* text-transform: uppercase; */
+    letter-spacing: .1em;
+    font-weight: 900;
+    padding: var(--extraSmall);
+    padding-bottom: var(--small);
+    padding-top: var(--small);
+    border-bottom: 1px solid var(--dark-1);
+    color: #aaa;
+}
+.input, .output {
+    display: flex;
+}
+.connections-container {
+    display: flex;
+}
+.bottom-container {
+    font-family: 'IBM Plex Mono', monospace !important;
+    border-top: 1px solid var(--dark-1);
+    padding: var(--extraSmall);
+    display: flex;
+    flex-direction: row;
+    gap: var(--extraSmall);
+}
+.bottom-container input {
+    color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: var(--dark-1);
+  border: 1px solid var(--dark-3);
+}
+.bottom-container .control {
+    flex: 1;
+}
+
+.control button {
+    background-color: var(--primary);
+    width: 100%;
+}
+.control input {
+    box-sizing: border-box;
+    width: 100%;
+    margin-right: var(--small);
+}
+.node.selected {
+    color: var(--dark-4);
+    background-color: rgba(70,70,70,0.95);
+    border-color: var(--primary);
+    /* backdrop-filter: blur(15px); */
+}
+.node.selected .node-title {
+    color: var(--dark-4);
+    border-bottom: 1px solid var(--dark-1);
+}
+.node.selected .bottom-container {
+    border-top: 1px solid var(--dark-1);
+}
+.connection-container {
+    padding: var(--extraSmall);
+    flex: 1;
+}
+.connection-container.out {
+    background-color: rgba(0,0,0,0.3);
+}
+.input {
+    justify-content: flex-start;
+    align-items: center;
+    display: flex;
+
+}
+.output {
+    justify-content: flex-end;
+    align-items: center;
+    display: flex; 
+}

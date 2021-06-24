@@ -1,5 +1,6 @@
-import "./App.css";
 import init from "./rete/editor";
+import "./App.css";
+
 
 import './dds-globals/dds-globals.css'
 
@@ -19,7 +20,7 @@ function App() {
       <h1>THOTH</h1>
       <h2>Multishot Builder</h2>
       <button onClick={serialize}>serialize</button>
-      <div style={{ textAlign: "left", width: "100vw", height: "70vh" }}>
+      <div style={{ textAlign: "left", width: "100vw", height: "100vh", position: 'absolute' }}>
         <div ref={(el) => buildEditor(el)} />
       </div>
     </div>
