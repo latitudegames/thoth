@@ -108,7 +108,6 @@ export class TenseTransformer extends Rete.Component {
   // to the outputs to be consumed by any connecte components
   async worker(node, inputs, outputs) {
     // ADD ON INPUT
-    console.log("TENSE TRANSFORMER");
     const { name, text } = inputs;
     const prompt = `${fewShots}${name[0]}: ${text[0]}\nThird Person:`;
 
@@ -121,8 +120,6 @@ export class TenseTransformer extends Rete.Component {
     const raw = await completion(body);
     const result = raw.trim();
 
-    // not super happy that we have to access the object here with 'this.component'
-    console.log("inside tense worker", this);
     this.displayControl.display(result);
 
     return {
