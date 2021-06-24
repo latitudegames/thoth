@@ -1,5 +1,5 @@
 import Rete from "rete";
-import { actionSocket, entitySocket } from "../sockets";
+import { actionSocket, dataSocket, entitySocket } from "../sockets";
 import { DisplayControl } from "../controls/DisplayControl";
 import { completion } from "../../utils/openaiHelper";
 
@@ -116,7 +116,8 @@ export class EntityDetector extends Rete.Component {
 
     this.task = {
       outputs: {
-        entities: "option",
+        entities: "output",
+        data: "option",
       },
     };
   }
@@ -130,6 +131,8 @@ export class EntityDetector extends Rete.Component {
     // create inputs here. First argument is th ename, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const inp = new Rete.Input("action", "Action", actionSocket);
     const out = new Rete.Output("entities", "Entities", entitySocket);
+    const dataInput = new Rete.Input("data", "Data", dataSocket);
+    const dataOutput = new Rete.Output("data", "Data", dataSocket);
 
     // controls are the internals of the node itself
     // This default control simple has a tet field.
@@ -139,7 +142,12 @@ export class EntityDetector extends Rete.Component {
 
     this.displayControl = display;
 
-    return node.addInput(inp).addOutput(out).addControl(display);
+    return node
+      .addInput(inp)
+      .addInput(dataInput)
+      .addOutput(dataOutput)
+      .addOutput(out)
+      .addControl(display);
   }
 
   // the worker contains the main business logic of the node.  It will pass those results
