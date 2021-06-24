@@ -12,7 +12,7 @@ import { ActionTypeComponent } from "./components/ActionType";
 import { EntityDetector } from "./components/EntityDetector";
 import { SafetyVerifier } from "./components/SafetyVerifier";
 import { BooleanGate } from "./components/BooleanGate";
-import { Alert } from "./components/alert";
+import { Alert } from "./components/AlertMessage";
 
 /*
   Primary initialization function.  Takes a container ref to attach the rete editor to.
