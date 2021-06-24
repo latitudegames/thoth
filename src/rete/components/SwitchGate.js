@@ -36,7 +36,10 @@ export class SwitchGate extends Rete.Component {
         node.removeOutput(output);
       });
 
-      this.task.outputs = this.dynamicOutputs;
+      this.task.outputs = this.dynamicOutputs.reduce((acc, out) => {
+        acc[out] = "option";
+        return acc;
+      }, {});
 
       outputs.forEach((output) => {
         const newOutput = new Rete.Output(
@@ -67,12 +70,17 @@ export class SwitchGate extends Rete.Component {
     const input = inputs["input"][0];
     console.log("SWITCH WORKER", input);
 
+    // close all outputs
     this.task.closed = [...this.dynamicOutputs];
 
-    if (this.closed.includes(input)) {
-      this.task.closed = this.closed.filter((output) => output !== input);
+    if (this.task.closed.includes(input)) {
+      // If the ouputs closed has the incoming text, filter closed outputs to not include it
+      this.task.closed = this.task.closed.filter((output) => output !== input);
     } else {
-      this.task.closed = this.closed.filter((output) => output !== "default");
+      // otherwise open up the default output
+      this.task.closed = this.task.closed.filter(
+        (output) => output !== "default"
+      );
     }
   }
 }
