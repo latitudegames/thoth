@@ -12,6 +12,7 @@ import { ActionTypeComponent } from "./components/ActionType";
 import { EntityDetector } from "./components/EntityDetector";
 import { SafetyVerifier } from "./components/SafetyVerifier";
 import { BooleanGate } from "./components/BooleanGate";
+import { Alert } from "./components/alert";
 
 /*
   Primary initialization function.  Takes a container ref to attach the rete editor to.
@@ -26,6 +27,7 @@ const editor = async function (container) {
     new ActionTypeComponent(),
     new EntityDetector(),
     new SafetyVerifier(),
+    new Alert(),
     new BooleanGate(),
   ];
 
