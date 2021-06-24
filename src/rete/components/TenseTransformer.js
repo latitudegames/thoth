@@ -1,5 +1,5 @@
 import Rete from "rete";
-import { stringSocket, actionSocket } from "../sockets";
+import { stringSocket, actionSocket, dataSocket } from "../sockets";
 import { DisplayControl } from "../controls/DisplayControl";
 import { completion } from "../../utils/openaiHelper";
 
@@ -64,6 +64,13 @@ export class TenseTransformer extends Rete.Component {
   constructor() {
     // Name of the component
     super("Tense Transformer");
+
+    this.task = {
+      outputs: {
+        action: "output",
+        data: "option",
+      },
+    };
   }
 
   displayControl = {};
@@ -73,8 +80,10 @@ export class TenseTransformer extends Rete.Component {
   // to generate the appropriate inputs and ouputs for the fewshot at build time
   builder(node) {
     // create inputs here. First argument is th ename, second is the type (matched to other components sockets), and third is the socket the i/o will use
-    const textInput = new Rete.Input("text", "text", stringSocket);
-    const nameInput = new Rete.Input("name", "name", stringSocket);
+    const textInput = new Rete.Input("text", "Text", stringSocket);
+    const nameInput = new Rete.Input("name", "Name", stringSocket);
+    const dataInput = new Rete.Input("data", "Data", dataSocket);
+    const dataOutput = new Rete.Output("data", "Data", dataSocket);
     const out = new Rete.Output("action", "Action", actionSocket);
 
     // controls are the internals of the node itself
@@ -83,12 +92,15 @@ export class TenseTransformer extends Rete.Component {
       key: "display",
       defaultDisplay: "awaiting response",
     });
+
     this.displayControl = display;
 
     return node
+      .addInput(dataInput)
       .addInput(textInput)
       .addInput(nameInput)
       .addOutput(out)
+      .addOutput(dataOutput)
       .addControl(display);
   }
 
@@ -96,6 +108,7 @@ export class TenseTransformer extends Rete.Component {
   // to the outputs to be consumed by any connecte components
   async worker(node, inputs, outputs) {
     // ADD ON INPUT
+    console.log("TENSE TRANSFORMER");
     const { name, text } = inputs;
     const prompt = `${fewShots}${name[0]}: ${text[0]}\nThird Person:`;
 
@@ -105,10 +118,15 @@ export class TenseTransformer extends Rete.Component {
       maxTokens: 100,
       temperature: 0.0,
     };
-    const result = await completion(body);
+    const raw = await completion(body);
+    const result = raw.trim();
 
+    // not super happy that we have to access the object here with 'this.component'
+    console.log("inside tense worker", this);
     this.displayControl.display(result);
 
-    outputs["action"] = result;
+    return {
+      action: result,
+    };
   }
 }
