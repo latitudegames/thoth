@@ -1,7 +1,8 @@
 export const completion = async (body) => {
-  console.log("body", body);
+  // const url = 'https://latitude-game-api.herokuapp.com'
+  const url = "http://localhost:8000";
   try {
-    const response = await fetch("http://localhost:8000/openai", {
+    const response = await fetch(url + "/openai", {
       method: "POST",
       prompt,
       mode: "cors",
