@@ -1,5 +1,5 @@
 import Rete from "rete";
-import { actionSocket, dataSocket, booleanSocket } from "../sockets";
+import { stringSocket, dataSocket, booleanSocket } from "../sockets";
 import { DisplayControl } from "../controls/DisplayControl";
 import { completion } from "../../utils/openaiHelper";
 
@@ -88,7 +88,7 @@ export class SafetyVerifier extends Rete.Component {
   // to generate the appropriate inputs and ouputs for the fewshot at build time
   builder(node) {
     // create inputs here. First argument is th ename, second is the type (matched to other components sockets), and third is the socket the i/o will use
-    const inp = new Rete.Input("action", "Action", actionSocket);
+    const inp = new Rete.Input("string", "Text", stringSocket);
     const dataInput = new Rete.Input("data", "Data", dataSocket);
     const dataOutput = new Rete.Output("data", "Data", dataSocket);
     const out = new Rete.Output("boolean", "Boolean", booleanSocket);
@@ -112,7 +112,7 @@ export class SafetyVerifier extends Rete.Component {
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connecte components
   async worker(node, inputs, outputs) {
-    const action = inputs["action"][0];
+    const action = inputs["string"][0];
     const prompt = fewShots + action + "\nRating:";
 
     const body = {
