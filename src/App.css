@@ -1,3 +1,11 @@
+html, body {
+  background-color: #151515;
+  color: var(--dark-4);
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+}
+
 h1,
 h2 {
   text-align: center;
@@ -5,14 +13,62 @@ h2 {
 
 .socket.output.action,
 .socket.input.action {
-  background: #f7020e;
+  background: #f54703;
+  background: var(--primary);
+}
+
+.socket.output.string,
+.socket.input.string {
+  background: #21b534;
 }
 
 .socket.output.data,
 .socket.input.data {
-  background: #4501e4;
+  background: #fcbd03;
 }
-
+.socket.output.boolean,
+.socket.input.boolean {
+  background: #7027DD;
+}
+.socket {
+  height: var(--small);
+  width: var(--small);
+  border: 1px solid var(--primary)
+}
+.socket.output {
+  position: relative;
+  right: -5px;
+}
+.socket.input {
+  position: relative;
+  left: -5px;
+}
+.socket:hover {
+  background-color: var(--dark-1);
+}
 .node.selected {
   background-color: #05c807 !important;
+}
+
+.connection .main-path {
+  stroke-width: 2px;
+  stroke: var(--primary)
+}
+button {
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: var(--dark-3);
+  border: 1px solid var(--dark-3);
+  padding: var(--small);
+  padding-left: var(--medium);
+  padding-right: var(--medium);
+}
+input {
+  padding: var(--small);
+  padding-left: var(--medium);
+  padding-right: var(--medium);
+}
+.node.selected button {
+  background-color: var(--primary) !important;
 }
