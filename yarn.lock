@@ -9414,10 +9414,9 @@ rete-react-render-plugin@^0.2.1:
   resolved "https://registry.yarnpkg.com/rete-react-render-plugin/-/rete-react-render-plugin-0.2.1.tgz#71a6d73f18f850b85262563f678b40080a7b0e32"
   integrity sha512-2ZMXUP0v+EiejHVMqdrOmUwyDBHC2UDOJ/pFkElaZL1Kn/E40JZA5yzdBXi6ajYZI2DCzoW5ZBcA2Ihjtur8MQ==
 
-rete-task-plugin@^0.3.0:
+"rete-task-plugin@git+https://github.com/latitudegames/task-plugin.git":
   version "0.3.0"
-  resolved "https://registry.yarnpkg.com/rete-task-plugin/-/rete-task-plugin-0.3.0.tgz#bf2f329e76eabc1704181b53a5f1da5ffaed15b3"
-  integrity sha512-g1U4I0l54Qyyn/cAkDbi89lUNd3jSfXyNUm8ZdkPgvUXhgMVpSiAlyMl984846Eo9MIusI+KsYqMUWKPkEO+dA==
+  resolved "git+https://github.com/latitudegames/task-plugin.git#c38894b8a4c5a334ba63bf217b43480e4c6738db"
 
 rete@^1.4.5-rc.1:
   version "1.4.5-rc.1"
