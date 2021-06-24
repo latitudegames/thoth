@@ -13,6 +13,7 @@ import { EntityDetector } from "./components/EntityDetector";
 import { SafetyVerifier } from "./components/SafetyVerifier";
 import { BooleanGate } from "./components/BooleanGate";
 import { Alert } from "./components/AlertMessage";
+import { SwitchGate } from "./components/SwitchGate";
 
 /*
   Primary initialization function.  Takes a container ref to attach the rete editor to.
@@ -29,6 +30,7 @@ const editor = async function (container) {
     new SafetyVerifier(),
     new Alert(),
     new BooleanGate(),
+    new SwitchGate(),
   ];
 
   // create the main edtor
