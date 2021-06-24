@@ -1,6 +1,8 @@
 import "./App.css";
 import init from "./rete/editor";
 
+import './dds-globals/dds-globals.css'
+
 function App() {
   let editor;
 
