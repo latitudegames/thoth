@@ -56,8 +56,8 @@ export class ActionTypeComponent extends Rete.Component {
     return node
       .addInput(inp)
       .addInput(dataInput)
-      .addOutput(dataOutput)
       .addOutput(out)
+      .addOutput(dataOutput)
       .addControl(display);
   }
 
