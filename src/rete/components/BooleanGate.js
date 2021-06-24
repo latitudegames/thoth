@@ -35,9 +35,9 @@ export class BooleanGate extends Rete.Component {
     console.log("Is true", isTrue);
 
     if (isTrue) {
-      this.task.closed = ["false"];
+      this._task.closed = ["false"];
     } else {
-      this.task.closed = ["true"];
+      this._task.closed = ["true"];
     }
   }
 }
