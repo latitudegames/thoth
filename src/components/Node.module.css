@@ -1,12 +1,14 @@
 .node {
     transition: background-color .05s ease;
+    min-width: var(--c40);
     width: var(--c40);
     border-radius: var(--extraSmall);
     border: 1px solid transparent;
     box-shadow: 0 4px 5px rgba(0,0,0,0.2);
-    background-color: rgba(70,70,70,0.9);
+    background-color: rgba(70,70,70,0.7);
     color: #aaa;
-    /* backdrop-filter: blur(5px); */
+    resize: both;
+    backdrop-filter: blur(3px);
 }
 .node:hover {
     border: 1px solid var(--dark-3);
@@ -21,6 +23,8 @@
     padding-top: var(--small);
     border-bottom: 1px solid var(--dark-1);
     color: #aaa;
+    background: none;
+    border-radius: var(--extraSmall) var(--extraSmall) 0px 0px;
 }
 .input, .output {
     display: flex;
@@ -42,19 +46,31 @@
   cursor: pointer;
   background-color: var(--dark-1);
   border: 1px solid var(--dark-3);
+  box-shadow: inset 0px 5px 5px rgba(0,0,0,0.1);
 }
 .bottom-container .control {
+    font-family: 'IBM Plex Mono', monospace !important;
+    flex: 1;
+}
+.bottom-container .control:last-child {
+    font-family: 'IBM Plex Mono', monospace !important;
+    flex: .5;
+}
+.bottom-container .control:first-child {
+    font-family: 'IBM Plex Mono', monospace !important;
     flex: 1;
 }
 
 .control button {
     background-color: var(--primary);
     width: 100%;
+    font-family: 'IBM Plex Mono', monospace !important;
 }
 .control input {
     box-sizing: border-box;
     width: 100%;
     margin-right: var(--small);
+    font-family: 'IBM Plex Mono', monospace !important;
 }
 .node.selected {
     color: var(--dark-4);
@@ -65,6 +81,7 @@
 .node.selected .node-title {
     color: var(--dark-4);
     border-bottom: 1px solid var(--dark-1);
+    /* background: linear-gradient(to top left, rgba(80,144,206,0), rgba(57, 159, 228, 0.2)); */
 }
 .node.selected .bottom-container {
     border-top: 1px solid var(--dark-1);
