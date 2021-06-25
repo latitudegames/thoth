@@ -7,7 +7,6 @@ import css from "./sidepanel.module.css";
 
 const SpellBrowser = (props) => {
   const { getNodes, getNodeMap, editor: nodeScreen } = useRete();
-
   let spellList = getNodes();
   let spellMap = getNodeMap();
 
@@ -27,7 +26,7 @@ const SpellBrowser = (props) => {
               );
             }}
           >
-            {spellList[item].name}
+            <div className={css["node-title"]}>{spellList[item].name}</div>
           </div>
         );
       })}
