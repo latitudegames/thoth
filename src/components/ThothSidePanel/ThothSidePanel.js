@@ -1,21 +1,20 @@
 import React, { useState } from 'react'
 
 import css from './sidepanel.module.css'
+import SpellBrowser from './SpellBrowser'
+import Playtest from './Playtest'
 
-const ThothSidePanel = ({...props}) => {
-    const [activeTab, setActiveTab] = useState('spellBrowser')
-
-    const playTest = 'Playtest: eventually we\'ll need to populate and trigger visibility intead of the component itself so we don\'t trigger a reset'
-    const spellBrowser = 'This is the spell browser.'
+const ThothSidePanel = ({editor, ...props}) => {
+    const [activeTab, setActiveTab] = useState('playtest')
 
     const tabs = {
         spellBrowser: {
             title: "Spell Browser",
-            component: spellBrowser
+            component: <SpellBrowser />
         },
         playtest: {
             title: "Playtest",
-            component: playTest
+            component: <Playtest />
         }
     }
 
@@ -23,9 +22,9 @@ const ThothSidePanel = ({...props}) => {
     <div className={css['th-sidepanel']}>
         <div className={css['tabs']}>
             {Object.keys(tabs).map((item) => {
-                console.log(item)
                 return <div onClick={() => {
                     setActiveTab(item)
+                    console.log(editor)
                 }}className={`${css['tab']} ${css[activeTab === item ? 'active' : '']}`}>{tabs[item].title}</div>
             })}
         </div>
