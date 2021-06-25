@@ -1,7 +1,7 @@
 .th-sidepanel {
     position: absolute;
     height: calc(100vh - 70px - var(--small) - var(--small));
-    width: 33vw;
+    width: 25vw;
     right: var(--small);
     top: var(--c10);
     background-color: rgba(50,50,50,0.95);
@@ -60,4 +60,28 @@
     box-shadow: inset 0px 5px 5px rgba(0,0,0,0.1);
     flex: 1;
     margin-right: var(--extraSmall);
+}
+.node-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: var(--extraSmall);
+}
+.node-grid-item {
+    box-shadow: 0 4px 5px rgba(0,0,0,0.2);
+    background-color: rgba(70,70,70,0.7);
+    cursor: pointer;
+    padding: var(--small);
+    border-radius: 4px;
+    border: 1px solid var(--dark-2);
+    margin-bottom: var(--extraSmall);
+
+    letter-spacing: .1em;
+    font-weight: 900;
+    padding: var(--extraSmall);
+    padding-bottom: var(--extraLarge);
+    padding-top: var(--small);
+    color: #aaa;
+}
+.node-grid-item:hover {
+    border: 1px solid var(--dark-3);
 }

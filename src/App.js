@@ -7,6 +7,10 @@ import ThothPageWrapper from "./components/ThothPage/ThothPageWrapper";
 function App() {
   const { serialize, editor } = useRete();
 
+  const getNodeMap = () => {
+    return editor.components;
+  };
+
   const getNodes = () => {
     return Object.fromEntries(editor.components);
   };
@@ -27,6 +31,7 @@ function App() {
       toolbarItems={toolbar}
       nodeList={getNodes}
       editor={getEditor}
+      nodeMap={getNodeMap}
     >
       <Editor />
     </ThothPageWrapper>
