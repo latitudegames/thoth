@@ -1,0 +1,29 @@
+.th-toolbar {
+    position: absolute;
+    display: inline-block;
+    padding: var(--extraSmall);
+    background-color: var(--dark-1);
+    border-bottom: 1px solid var(--dark-2);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    box-shadow: 0 4px 5px rgba(0,0,0,.5);
+    z-index: 8;
+}
+.toolbar-section {
+    display: flex;
+    flex: 1;
+}
+.toolbar-section:last-child {
+    justify-content: flex-end;
+}
+.thoth-logo {
+    position: relative;
+    top: 6px;
+    margin-left: var(--extraSmall);
+    height: var(--c4);
+}
+.toolbar-section button {
+    margin-left: var(--extraSmall);
+}
