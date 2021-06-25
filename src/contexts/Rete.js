@@ -61,6 +61,7 @@ const ReteProvider = ({ children }) => {
 export const Editor = ({ children }) => {
   const { buildEditor } = useRete();
 
+
   return (
     <>
       <div
@@ -71,6 +72,8 @@ export const Editor = ({ children }) => {
           position: "absolute",
           backgroundImage: `url('${gridimg}')`,
         }}
+        onDragOver={(e) => {e.preventDefault()}}
+        onDrop={(e) => {}}
       >
         <div
           ref={(el) => {
