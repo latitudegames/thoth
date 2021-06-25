@@ -9,9 +9,9 @@ const SpellBrowser = ({nodeList, editor,  ...props}) => {
     console.log(spellList)
 
     return (
-        <div>
+        <div className={css['node-grid']}>
             {Object.keys(spellList).map((item, index) => {
-                return <div key={item}>{spellList[item].name}</div>
+                return <div className={css['node-grid-item']} key={item} onClick={()=> { nodeScreen.addNode(item)}}>{spellList[item].name}</div>
             })}
         </div>
     )
