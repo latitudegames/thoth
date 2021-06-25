@@ -4,13 +4,12 @@ import css from './sidepanel.module.css'
 import SpellBrowser from './SpellBrowser'
 import Playtest from './Playtest'
 
-const ThothSidePanel = ({editor, ...props}) => {
+const ThothSidePanel = ({nodeList, ...props}) => {
     const [activeTab, setActiveTab] = useState('playtest')
-
     const tabs = {
         spellBrowser: {
             title: "Spell Browser",
-            component: <SpellBrowser />
+            component: <SpellBrowser nodeList={nodeList}/>
         },
         playtest: {
             title: "Playtest",
@@ -24,7 +23,6 @@ const ThothSidePanel = ({editor, ...props}) => {
             {Object.keys(tabs).map((item) => {
                 return <div onClick={() => {
                     setActiveTab(item)
-                    console.log(editor)
                 }}className={`${css['tab']} ${css[activeTab === item ? 'active' : '']}`}>{tabs[item].title}</div>
             })}
         </div>
