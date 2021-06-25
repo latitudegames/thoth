@@ -2,13 +2,16 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import ReteProvider from "./contexts/Rete";
+import PubSubProvider from "./contexts/PubSub";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
   <React.StrictMode>
-    <ReteProvider>
-      <App />
-    </ReteProvider>
+    <PubSubProvider>
+      <ReteProvider>
+        <App />
+      </ReteProvider>
+    </PubSubProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

@@ -124,6 +124,7 @@ export class SafetyVerifier extends Rete.Component {
     const raw = await completion(body);
     const result = raw.trim() !== "X";
 
+    console.log(this.displayControl)
     this.displayControl.display(`${result}`);
 
     return {
