@@ -14,6 +14,7 @@ function App() {
   const getNodes = () => {
     return Object.fromEntries(editor.components);
   };
+
   const getEditor = () => {
     return editor;
   };
@@ -27,12 +28,7 @@ function App() {
   );
 
   return (
-    <ThothPageWrapper
-      toolbarItems={toolbar}
-      nodeList={getNodes}
-      editor={getEditor}
-      nodeMap={getNodeMap}
-    >
+    <ThothPageWrapper toolbarItems={toolbar}>
       <Editor />
     </ThothPageWrapper>
   );
