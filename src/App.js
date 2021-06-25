@@ -1,37 +1,36 @@
-import init from "./rete/editor";
-
-import ThothPageWrapper from "./components/ThothPage/ThothPageWrapper";
-import gridimg from './grid.png'
-import './dds-globals/dds-globals.css'
+import "./dds-globals/dds-globals.css";
 import "./App.css";
 
-function App() {
-  let editor;
+import { useRete, Editor } from "./contexts/Rete";
+import ThothPageWrapper from "./components/ThothPage/ThothPageWrapper";
 
-  const buildEditor = async (el) => {
-    editor = await init(el)
-  };
+function App() {
+  const { serialize, editor } = useRete();
 
   const getNodes = () => {
-    return Object.fromEntries(editor.components)
-  }
+    return Object.fromEntries(editor.components);
+  };
   const getEditor = () => {
-    return editor
-  }
-
-  const serialize = () => {
-    console.log(JSON.stringify(editor.toJSON()));
+    return editor;
   };
 
-  const toolbar = (<><button>Load</button><button onClick={serialize}>Export</button><button onClick={serialize}>Create New</button></>)
+  const toolbar = (
+    <>
+      <button>Load</button>
+      <button onClick={serialize}>Export</button>
+      <button onClick={serialize}>Create New</button>
+    </>
+  );
 
   return (
-    <ThothPageWrapper toolbarItems={toolbar} nodeList={getNodes} editor={getEditor}>
-      <div style={{ textAlign: "left", width: "100vw", height: "100vh", position: 'absolute', backgroundImage: `url('${gridimg}')` }}>
-        <div ref={(el) => buildEditor(el)} />
-      </div>
+    <ThothPageWrapper
+      toolbarItems={toolbar}
+      nodeList={getNodes}
+      editor={getEditor}
+    >
+      <Editor />
     </ThothPageWrapper>
-  )
+  );
 }
 
 export default App;
