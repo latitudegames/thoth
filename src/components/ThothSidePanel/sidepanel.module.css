@@ -4,9 +4,28 @@
     width: 33vw;
     right: var(--small);
     top: var(--c10);
-    background-color: var(--dark-1);
+    background-color: rgba(50,50,50,0.95);
     border: 1px solid var(--dark-2);
     z-index: 9;
     border-radius: 4px;
     box-shadow: 0 5px 10px rgba(0,0,0,1);
+    display: flex;
+    flex-direction: column;
+}
+.tabs {
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid var(--dark-2);
+}
+.tab {
+    cursor: pointer;
+    text-align: center;
+    padding: var(--small);
+    flex: 1;
+}
+.tab-page {
+    flex: 1;
+}
+.tab:hover {
+    background-color: rgba(70,70,70,0.95);
 }
