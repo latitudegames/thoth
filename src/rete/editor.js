@@ -14,10 +14,11 @@ import { DifficultyDetectorComponent } from "./components/DifficultyDetector";
 import { EntityDetector } from "./components/EntityDetector";
 import { SafetyVerifier } from "./components/SafetyVerifier";
 import { BooleanGate } from "./components/BooleanGate";
-import { TimeDetectorComponent } from "./components/TimeDetector"
+import { TimeDetectorComponent } from "./components/TimeDetector";
 import { Alert } from "./components/AlertMessage";
 import { SwitchGate } from "./components/SwitchGate";
 import { Print } from "./components/PrintToConsole";
+import { ConsoleInput } from "./components/ConsoleInput";
 
 /*
   Primary initialization function.  Takes a container ref to attach the rete editor to.
@@ -27,6 +28,7 @@ const editor = async function (container, pubSub) {
   // We might be able to programatically generate components from enki
   const components = [
     new Print(),
+    new ConsoleInput(),
     new InputComponent(),
     new TenseTransformer(),
     new RunInputComponent(),
