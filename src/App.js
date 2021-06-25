@@ -1,7 +1,8 @@
 import init from "./rete/editor";
 import "./App.css";
 
-
+import ThothPageWrapper from "./components/ThothPage/ThothPageWrapper";
+import gridimg from './grid.png'
 import './dds-globals/dds-globals.css'
 
 function App() {
@@ -15,16 +16,15 @@ function App() {
     console.log(JSON.stringify(editor.toJSON()));
   };
 
+  const toolbar = (<><button>Load</button><button onClick={serialize}>Export</button><button className={'primary'}>Create new</button></>)
+
   return (
-    <div className="App">
-      <h1>THOTH</h1>
-      <h2>Multishot Builder</h2>
-      <button onClick={serialize}>serialize</button>
+    <ThothPageWrapper toolbarItems={toolbar}>
       <div style={{ textAlign: "left", width: "100vw", height: "100vh", position: 'absolute' }}>
-        <div ref={(el) => buildEditor(el)} />
+        <div style={{backgroundImage: `url('${gridimg}')`}} ref={(el) => buildEditor(el)} />
       </div>
-    </div>
-  );
+    </ThothPageWrapper>
+  )
 }
 
 export default App;

@@ -1,9 +1,10 @@
 html, body {
-  background-color: #151515;
+  background-color: #191919;
   color: var(--dark-4);
   overflow: hidden;
   padding: 0;
   margin: 0;
+  font-size: 14px;
 }
 
 h1,
@@ -64,6 +65,17 @@ button {
   padding: var(--small);
   padding-left: var(--medium);
   padding-right: var(--medium);
+  font-family: 'IBM Plex Mono', 'sans-serif' !important;
+  text-transform: uppercase;
+}
+button.primary {
+  background-color: var(--primary);
+}
+button:hover {
+  filter: brightness(1.1);
+}
+button:active {
+  filter: brightness(0.9);
 }
 input {
   padding: var(--small);
