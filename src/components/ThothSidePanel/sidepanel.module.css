@@ -63,7 +63,7 @@
 }
 .node-grid {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
     grid-column-gap: var(--extraSmall);
 }
 .node-grid-item {
@@ -78,7 +78,7 @@
     letter-spacing: .1em;
     font-weight: 900;
     padding: var(--extraSmall);
-    padding-bottom: var(--small);
+    padding-bottom: var(--extraLarge);
     padding-top: var(--small);
     color: #aaa;
 }
