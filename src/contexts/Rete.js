@@ -1,6 +1,8 @@
 import init from "../rete/editor";
 import gridimg from "../grid.png";
 
+import { usePubSub } from "./PubSub";
+
 import { useContext, createContext, useState } from "react";
 
 const Context = createContext({
@@ -17,11 +19,12 @@ export const useRete = () => useContext(Context);
 
 const ReteProvider = ({ children }) => {
   const [editor, setEditor] = useState();
+  const pubSub = usePubSub();
 
   const buildEditor = async (el) => {
     if (editor) return;
 
-    const newEditor = await init(el);
+    const newEditor = await init(el, pubSub);
     setEditor(newEditor);
   };
 
