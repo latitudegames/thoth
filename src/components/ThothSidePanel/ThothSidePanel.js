@@ -4,12 +4,12 @@ import css from './sidepanel.module.css'
 import SpellBrowser from './SpellBrowser'
 import Playtest from './Playtest'
 
-const ThothSidePanel = ({nodeList, editor, ...props}) => {
+const ThothSidePanel = ({nodeList, nodeMap, editor, ...props}) => {
     const [activeTab, setActiveTab] = useState('playtest')
     const tabs = {
         spellBrowser: {
             title: "Spell Browser",
-            component: <SpellBrowser nodeList={nodeList} editor={editor}/>
+            component: <SpellBrowser nodeMap={nodeMap} nodeList={nodeList} editor={editor}/>
         },
         gameStateManager: {
             title: "Game State Manager",
