@@ -68,7 +68,6 @@
 .control input {
     box-sizing: border-box;
     width: 100%;
-    margin-right: var(--small);
     font-family: 'IBM Plex Mono', monospace !important;
 }
 .node.selected {

@@ -20,12 +20,16 @@
     background-color: rgba(40,40,40,0.95);
     cursor: pointer;
     text-align: center;
-    padding: var(--small);
+    padding: var(--extraSmall);
     flex: 1;
     border-bottom: 1px solid var(--dark-2);
 }
 .tab-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     flex: 1;
+    margin: var(--extraSmall);
 }
 .tab:hover {
     background-color: rgba(60,60,60,0.95);
@@ -33,4 +37,27 @@
 .tab.active{
     border-bottom: 1px solid transparent;
     background-color: rgba(50,50,50,0.95);
+}
+.playtest-output {
+    border: 1px solid var(--dark-2);
+    padding: var(--small);
+    background-color: rgba(40,40,40,0.95);
+    color: rgba(150,150,150,0.95);
+    flex: 1;
+    font-family: 'IBM Plex Mono', 'mono';
+    overflow-y: hidden;
+}
+.input {
+    margin-top: var(--extraSmall);
+    display: flex;
+}
+.input input {
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: var(--dark-1);
+    border: 1px solid var(--dark-3);
+    box-shadow: inset 0px 5px 5px rgba(0,0,0,0.1);
+    flex: 1;
+    margin-right: var(--extraSmall);
 }
