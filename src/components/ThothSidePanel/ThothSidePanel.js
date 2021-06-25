@@ -11,10 +11,14 @@ const ThothSidePanel = ({nodeList, editor, ...props}) => {
             title: "Spell Browser",
             component: <SpellBrowser nodeList={nodeList} editor={editor}/>
         },
+        gameStateManager: {
+            title: "Game State Manager",
+            component: <Playtest />
+        },
         playtest: {
             title: "Playtest",
             component: <Playtest />
-        }
+        },
     }
 
     return (
