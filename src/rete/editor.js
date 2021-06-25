@@ -18,7 +18,7 @@ import { SwitchGate } from "./components/SwitchGate";
 /*
   Primary initialization function.  Takes a container ref to attach the rete editor to.
 */
-const editor = async function (container) {
+const editor = async function (container, pubSub) {
   // Here we load up all components of the builder into our editor for usage.
   // We might be able to programatically generate components from enki
   const components = [
@@ -35,6 +35,9 @@ const editor = async function (container) {
 
   // create the main edtor
   const editor = new Rete.NodeEditor("demo@0.1.0", container);
+
+  // Set up the reactcontext pubsub on the editor so rete components can talk to react
+  editor.pubSub = pubSub;
 
   // PLUGINS
   // connection plugin is used to render conections between nodes
