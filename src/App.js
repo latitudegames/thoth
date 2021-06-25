@@ -16,7 +16,7 @@ function App() {
     console.log(JSON.stringify(editor.toJSON()));
   };
 
-  const toolbar = (<><button>Load</button><button onClick={serialize}>Export</button><button className={'primary'}>Create new</button></>)
+  const toolbar = (<><button>Load</button><button onClick={serialize}>Export</button><button onClick={serialize}>Create New</button><button className={'primary'}>Run</button></>)
 
   return (
     <ThothPageWrapper toolbarItems={toolbar}>

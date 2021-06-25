@@ -60,9 +60,9 @@ button {
   color: #fff;
   border-radius: 4px;
   cursor: pointer;
-  background-color: var(--dark-3);
-  border: 1px solid var(--dark-3);
-  padding: var(--small);
+  background-color: var(--dark-1);
+  border: 1px solid var(--dark-2);
+  padding: 14px; /* not using a var here to optically correct for base + cap of typeface */
   padding-left: var(--medium);
   padding-right: var(--medium);
   font-family: 'IBM Plex Mono', 'sans-serif' !important;
@@ -78,7 +78,7 @@ button:active {
   filter: brightness(0.9);
 }
 input {
-  padding: var(--small);
+  padding: 14px; /* not using a var here to optically correct for base + cap of typeface */
   padding-left: var(--medium);
   padding-right: var(--medium);
 }
