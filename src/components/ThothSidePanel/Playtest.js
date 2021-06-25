@@ -10,6 +10,7 @@ const Playtest = ({...props}) => {
             </div>
             <div className={css['input']}>
                 <input type="text"></input>
+                <button className="primary">Send</button>
             </div>
         </>
     )
