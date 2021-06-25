@@ -51,7 +51,7 @@ export class DifficultyDetectorComponent extends Rete.Component {
   builder(node) {
     // create inputs here. First argument is th ename, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const inp = new Rete.Input("string", "Text", stringSocket);
-    const out = new Rete.Output("actionDifficulty", "Action Difficulty and type", actionDifficultySocket);
+    const out = new Rete.Output("actionDifficulty", "Action Difficulty", actionDifficultySocket);
     const dataInput = new Rete.Input("data", "Data", dataSocket);
     const dataOutput = new Rete.Output("data", "Data", dataSocket);
 
