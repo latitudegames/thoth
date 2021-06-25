@@ -1,20 +1,38 @@
-import React from 'react'
-import { createNode } from 'rete-context-menu-plugin/src/utils';
+import React from "react";
+import { createNode } from "rete-context-menu-plugin/src/utils";
 
-import css from './sidepanel.module.css'
+import { useRete } from "../../../contexts/Rete";
 
-const SpellBrowser = ({nodeList, nodeMap, editor,  ...props}) => {
-    let spellList = nodeList()
-    let nodeScreen = editor()
-    let spellMap = nodeMap()
+import css from "./sidepanel.module.css";
 
-    return (
-        <div className={css['node-grid']}>
-            {Object.keys(spellList).map((item, index)=>{
-                return <div className={css['node-grid-item']} key={item} onClick={async ()=> { nodeScreen.addNode(await createNode(spellMap.get(spellList[item].name), { x: 0, y: 0 }))}}>{spellList[item].name}</div>
-            })}
-        </div>
-    )
-}
+const SpellBrowser = ({ nodeList, nodeMap, editor, ...props }) => {
+  const { getNodes, getNodeMap, editor: nodeScreen } = useRete();
 
-export default SpellBrowser
+  let spellList = getNodes();
+  let spellMap = getNodeMap();
+
+  return (
+    <div className={css["node-grid"]}>
+      {Object.keys(spellList).map((item, index) => {
+        return (
+          <div
+            className={css["node-grid-item"]}
+            key={item}
+            onClick={async () => {
+              nodeScreen.addNode(
+                await createNode(spellMap.get(spellList[item].name), {
+                  x: 0,
+                  y: 0,
+                })
+              );
+            }}
+          >
+            {spellList[item].name}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+export default SpellBrowser;
