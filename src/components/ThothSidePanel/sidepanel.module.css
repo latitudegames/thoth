@@ -28,7 +28,7 @@
     flex: 1;
 }
 .tab:hover {
-    background-color: rgba(100,100,100,0.95);
+    background-color: rgba(60,60,60,0.95);
 }
 .tab.active{
     border-bottom: 1px solid transparent;

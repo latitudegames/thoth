@@ -5,8 +5,8 @@ import css from './sidepanel.module.css'
 const ThothSidePanel = ({...props}) => {
     const [activeTab, setActiveTab] = useState('spellBrowser')
 
-    const playTest = ''
-    const spellBrowser = ''
+    const playTest = 'Playtest: eventually we\'ll need to populate and trigger visibility intead of the component itself so we don\'t trigger a reset'
+    const spellBrowser = 'This is the spell browser.'
 
     const tabs = {
         spellBrowser: {
@@ -30,7 +30,7 @@ const ThothSidePanel = ({...props}) => {
             })}
         </div>
         <div className={css['tab-page']}>
-            hi
+            {tabs[activeTab].component}
         </div>
     </div>)
 }
