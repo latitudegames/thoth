@@ -14,6 +14,7 @@ import { SafetyVerifier } from "./components/SafetyVerifier";
 import { BooleanGate } from "./components/BooleanGate";
 import { Alert } from "./components/AlertMessage";
 import { SwitchGate } from "./components/SwitchGate";
+import { Print } from "./components/PrintToConsole";
 
 /*
   Primary initialization function.  Takes a container ref to attach the rete editor to.
@@ -22,6 +23,7 @@ const editor = async function (container, pubSub) {
   // Here we load up all components of the builder into our editor for usage.
   // We might be able to programatically generate components from enki
   const components = [
+    new Print(),
     new InputComponent(),
     new TenseTransformer(),
     new RunInputComponent(),
