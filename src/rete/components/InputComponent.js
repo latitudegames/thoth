@@ -26,7 +26,7 @@ export class InputComponent extends Rete.Component {
     const input = new TextInputControl({
       emitter: this.editor,
       key: "text",
-      value: "Input text",
+      value: "Joe",
     });
 
     return node.addOutput(out).addControl(input);
