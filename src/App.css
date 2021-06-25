@@ -87,3 +87,6 @@ input {
 .node.selected button {
   background-color: var(--primary) !important;
 }
+.context-menu {
+  width: var(--c50);
+}
