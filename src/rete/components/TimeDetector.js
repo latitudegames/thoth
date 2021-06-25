@@ -66,7 +66,7 @@ export class TimeDetectorComponent extends Rete.Component {
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connecte components
   async worker(node, inputs, outputs) {
-    const action = inputs["action"][0];
+    const action = inputs["string"][0];
     const prompt = fewShots + action + ",";
 
     const body = {
