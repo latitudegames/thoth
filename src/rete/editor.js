@@ -10,9 +10,11 @@ import { TenseTransformer } from "./components/TenseTransformer";
 import { RunInputComponent } from "./components/RunInputComponent";
 import { ActionTypeComponent } from "./components/ActionType";
 import { ItemTypeComponent } from "./components/ItemDetector";
+import { DifficultyDetectorComponent } from "./components/DifficultyDetector";
 import { EntityDetector } from "./components/EntityDetector";
 import { SafetyVerifier } from "./components/SafetyVerifier";
 import { BooleanGate } from "./components/BooleanGate";
+import { TimeDetectorComponent } from "./components/TimeDetector"
 import { Alert } from "./components/AlertMessage";
 import { SwitchGate } from "./components/SwitchGate";
 
@@ -30,6 +32,8 @@ const editor = async function (container) {
     new EntityDetector(),
     new SafetyVerifier(),
     new ItemTypeComponent(),
+    new DifficultyDetectorComponent(),
+    new TimeDetectorComponent(),
     new Alert(),
     new BooleanGate(),
     new SwitchGate(),
