@@ -1,8 +1,10 @@
-import "./dds-globals/dds-globals.css";
-import "./App.css";
+
 
 import { useRete, Editor } from "./contexts/Rete";
 import ThothPageWrapper from "./components/ThothPage/ThothPageWrapper";
+
+import "./dds-globals/dds-globals.css";
+import "./App.css";
 
 function App() {
   const { serialize, editor } = useRete();
