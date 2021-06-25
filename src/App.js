@@ -1,5 +1,3 @@
-
-
 import { useRete, Editor } from "./contexts/Rete";
 import ThothPageWrapper from "./components/ThothPage/ThothPageWrapper";
 
@@ -7,19 +5,7 @@ import "./dds-globals/dds-globals.css";
 import "./App.css";
 
 function App() {
-  const { serialize, editor } = useRete();
-
-  const getNodeMap = () => {
-    return editor.components;
-  };
-
-  const getNodes = () => {
-    return Object.fromEntries(editor.components);
-  };
-
-  const getEditor = () => {
-    return editor;
-  };
+  const { serialize } = useRete();
 
   const toolbar = (
     <>
