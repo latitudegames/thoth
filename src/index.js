@@ -1,11 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
+import ReteProvider from "./contexts/Rete";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ReteProvider>
+      <App />
+    </ReteProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );
