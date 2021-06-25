@@ -9,6 +9,8 @@ const Context = createContext({
   serialize: () => {},
   buildEditor: () => {},
   setEditor: () => {},
+  getNodeMap: () => {},
+  getNodes: () => {},
 });
 
 export const useRete = () => useContext(Context);
@@ -17,7 +19,6 @@ const ReteProvider = ({ children }) => {
   const [editor, setEditor] = useState();
 
   const buildEditor = async (el) => {
-    console.log("BUILDING EDITOR");
     if (editor) return;
 
     const newEditor = await init(el);
@@ -32,11 +33,21 @@ const ReteProvider = ({ children }) => {
     console.log(JSON.stringify(editor.toJSON()));
   };
 
+  const getNodeMap = () => {
+    return editor.components;
+  };
+
+  const getNodes = () => {
+    return Object.fromEntries(editor.components);
+  };
+
   const publicInterface = {
     run,
     serialize,
     editor,
     buildEditor,
+    getNodeMap,
+    getNodes,
   };
 
   return (
