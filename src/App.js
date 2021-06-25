@@ -19,7 +19,7 @@ function App() {
   const toolbar = (<><button>Load</button><button onClick={serialize}>Export</button><button onClick={serialize}>Create New</button><button className={'primary'}>Run</button></>)
 
   return (
-    <ThothPageWrapper toolbarItems={toolbar}>
+    <ThothPageWrapper toolbarItems={toolbar} editor={editor}>
       <div style={{ textAlign: "left", width: "100vw", height: "100vh", position: 'absolute' }}>
         <div style={{backgroundImage: `url('${gridimg}')`}} ref={(el) => buildEditor(el)} />
       </div>
