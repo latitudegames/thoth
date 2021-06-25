@@ -12,6 +12,10 @@ function App() {
     editor = await init(el)
   };
 
+  const getNodeMap = () => {
+    return editor.components
+  }
+
   const getNodes = () => {
     return Object.fromEntries(editor.components)
   }
@@ -26,7 +30,7 @@ function App() {
   const toolbar = (<><button>Load</button><button onClick={serialize}>Export</button><button onClick={serialize}>Create New</button></>)
 
   return (
-    <ThothPageWrapper toolbarItems={toolbar} nodeList={getNodes} editor={getEditor}>
+    <ThothPageWrapper toolbarItems={toolbar} nodeList={getNodes} nodeMap={getNodeMap} editor={getEditor}>
       <div style={{ textAlign: "left", width: "100vw", height: "100vh", position: 'absolute', backgroundImage: `url('${gridimg}')` }}>
         <div ref={(el) => buildEditor(el)} />
       </div>

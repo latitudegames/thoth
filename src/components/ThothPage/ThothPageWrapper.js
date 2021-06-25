@@ -4,13 +4,13 @@ import ThothSidePanel from '../ThothSidePanel/ThothSidePanel'
 import Toolbar from '../Toolbar/Toolbar'
 import css from './pagewrapper.module.css'
 
-const ThothPageWrapper = ({ toolbarItems, editor, nodeList, ...props}) => {
+const ThothPageWrapper = ({ toolbarItems, nodeMap, editor, nodeList, ...props}) => {
     return (
         <div>
             <Toolbar>
                 {toolbarItems}
             </Toolbar>
-            <ThothSidePanel nodeList={nodeList} editor={editor}/>
+            <ThothSidePanel nodeMap={nodeMap} nodeList={nodeList} editor={editor}/>
             {props.children}
         </div>
     )
