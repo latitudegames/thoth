@@ -67,6 +67,7 @@
     grid-column-gap: var(--extraSmall);
 }
 .node-grid-item {
+    cursor: grab;
     transition: background-color .05s ease;
     border-radius: var(--extraSmall);
     border: 1px solid transparent;
@@ -89,4 +90,11 @@
     color: #aaa;
     background: none;
     border-radius: var(--extraSmall) var(--extraSmall) 0px 0px;
+}
+.node-bottom-container {
+    font-family: 'IBM Plex Mono', monospace !important;
+    padding: var(--extraSmall);
+    display: flex;
+    flex-direction: row;
+    gap: var(--extraSmall);
 }
