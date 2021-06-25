@@ -1,11 +1,11 @@
 import React from "react";
 import { createNode } from "rete-context-menu-plugin/src/utils";
 
-import { useRete } from "../../../contexts/Rete";
+import { useRete } from "../../contexts/Rete";
 
 import css from "./sidepanel.module.css";
 
-const SpellBrowser = ({ nodeList, nodeMap, editor, ...props }) => {
+const SpellBrowser = (props) => {
   const { getNodes, getNodeMap, editor: nodeScreen } = useRete();
 
   let spellList = getNodes();
