@@ -12,7 +12,7 @@ export class BooleanGate extends Rete.Component {
   }
 
   // the builder is used to "assemble" the node component.
-  // when we have enki hooked up and have garbbed all few shots, we would use the builder
+  // when we have enki hooked up and have grabbed all few shots, we would use the builder
   // to generate the appropriate inputs and ouputs for the fewshot at build time
   builder(node) {
     const bool = new Rete.Input("boolean", "Boolean", booleanSocket);
@@ -28,7 +28,7 @@ export class BooleanGate extends Rete.Component {
   }
 
   // the worker contains the main business logic of the node.  It will pass those results
-  // to the outputs to be consumed by any connecte components
+  // to the outputs to be consumed by any connected components
   async worker(node, inputs, outputs) {
     const isTrue = inputs["boolean"][0];
 
