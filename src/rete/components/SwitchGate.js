@@ -85,7 +85,7 @@ export class SwitchGate extends Rete.Component {
   }
 
   // the worker contains the main business logic of the node.  It will pass those results
-  // to the outputs to be consumed by any connecte components
+  // to the outputs to be consumed by any connected components
   async worker(node, inputs, data) {
     const input = inputs["input"][0];
     console.log("SWITCH WORKER", input);
