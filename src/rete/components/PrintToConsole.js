@@ -35,7 +35,6 @@ export class Print extends Rete.Component {
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connecte components
   worker(node, inputs, data) {
-    console.log("RUNNING PRINT WORKER");
     const { publish, events } = this.editor.pubSub;
     const text = inputs.text[0];
     publish(events.PRINT_CONSOLE, text);
