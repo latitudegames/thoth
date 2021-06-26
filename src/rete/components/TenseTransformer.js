@@ -76,10 +76,10 @@ export class TenseTransformer extends Rete.Component {
   displayControl = {};
 
   // the builder is used to "assemble" the node component.
-  // when we have enki hooked up and have garbbed all few shots, we would use the builder
+  // when we have enki hooked up and have grabbed all few shots, we would use the builder
   // to generate the appropriate inputs and ouputs for the fewshot at build time
   builder(node) {
-    // create inputs here. First argument is th ename, second is the type (matched to other components sockets), and third is the socket the i/o will use
+    // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const textInput = new Rete.Input("text", "Text", stringSocket);
     const nameInput = new Rete.Input("name", "Name", stringSocket);
     const dataInput = new Rete.Input("data", "Data", dataSocket);
@@ -87,7 +87,7 @@ export class TenseTransformer extends Rete.Component {
     const out = new Rete.Output("action", "Action", actionSocket);
 
     // controls are the internals of the node itself
-    // This default control simple has a text field.
+    // This default control sample has a text field.
     const display = new DisplayControl({
       key: "display",
       defaultDisplay: "awaiting response",
@@ -105,7 +105,7 @@ export class TenseTransformer extends Rete.Component {
   }
 
   // the worker contains the main business logic of the node.  It will pass those results
-  // to the outputs to be consumed by any connecte components
+  // to the outputs to be consumed by any connected components
   async worker(node, inputs, outputs) {
     // ADD ON INPUT
     const { name, text } = inputs;
