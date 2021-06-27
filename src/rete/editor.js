@@ -36,10 +36,10 @@ const editor = async function (container, pubSub) {
     new EntityDetector(),
     new InputComponent(),
     new ItemTypeComponent(),
-    new TenseTransformer(),
     new RunInputComponent(),
     new SafetyVerifier(),
     new SwitchGate(),
+    new TenseTransformer(),
     new TimeDetectorComponent(),
   ];
 
@@ -50,6 +50,7 @@ const editor = async function (container, pubSub) {
   editor.pubSub = pubSub;
 
   // PLUGINS
+  //https://github.com/retejs/comment-plugin
   // connection plugin is used to render conections between nodes
   editor.use(ConnectionPlugin);
 
