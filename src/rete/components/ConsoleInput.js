@@ -13,16 +13,24 @@ export class ConsoleInput extends Rete.Component {
         data: "option",
       },
       init: (task) => {
-        const { subscribe, events } = this.editor.pubSub;
-
-        subscribe(events.INPUT_CONSOLE, (_, text) => {
-          task.run(text);
-        });
+        this.initialTask = task;
       },
     };
   }
 
   displayControl = {};
+
+  subscribeToConsole(node) {
+    const { subscribe, events } = this.editor.pubSub;
+
+    subscribe(events.INPUT_CONSOLE, (_, text) => {
+      // attach the text to the nodes data for access in worker
+      node.data.text = text;
+
+      // will need to run this here with the stater rather than the text
+      this.initialTask.run(text);
+    });
+  }
 
   // the builder is used to "assemble" the node component.
   // when we have enki hooked up and have garbbed all few shots, we would use the builder
@@ -39,12 +47,16 @@ export class ConsoleInput extends Rete.Component {
 
     this.displayControl = display;
 
+    this.subscribeToConsole(node);
+
     return node.addOutput(textOutput).addOutput(dataOutput).addControl(display);
   }
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connecte components
   worker(node, inputs, text) {
+    console.log("INSIDE CONSOLE INPUT", node);
+
     this.displayControl.display(text);
 
     return {
