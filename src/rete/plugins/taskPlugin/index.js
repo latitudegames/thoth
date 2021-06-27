@@ -21,8 +21,6 @@ function install(editor) {
 
       if (taskOptions.init) taskOptions.init(task, node);
 
-      console.log("Task outputs", node, taskOptions.output);
-
       Object.keys(taskOptions.outputs).forEach((key) => {
         outputs[key] = { type: taskOptions.outputs[key], key, task };
       });
