@@ -2,10 +2,10 @@ import Rete from "rete";
 import { dataSocket, anySocket } from "../sockets";
 import { DisplayControl } from "../controls/DisplayControl";
 
-export class ConsolePrint extends Rete.Component {
+export class PlaytestPrint extends Rete.Component {
   constructor() {
     // Name of the component
-    super("Console Print");
+    super("Playtest Print");
 
     this.task = {
       outputs: {},
@@ -37,7 +37,7 @@ export class ConsolePrint extends Rete.Component {
   worker(node, inputs, data) {
     const { publish, events } = this.editor.pubSub;
     const text = inputs.text[0];
-    publish(events.PRINT_CONSOLE, text);
+    publish(events.PLAYTEST_PRINT, text);
     this.displayControl.display(text);
   }
 }

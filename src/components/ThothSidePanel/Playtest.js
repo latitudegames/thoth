@@ -9,7 +9,7 @@ const Playtest = ({ ...props }) => {
 
   const { publish, subscribe, events } = usePubSub();
 
-  const { INPUT_CONSOLE, PRINT_CONSOLE } = events;
+  const { PLAYTEST_INPUT, PLAYTEST_PRINT } = events;
 
   const printToConsole = useCallback(
     (_, text) => {
@@ -21,18 +21,18 @@ const Playtest = ({ ...props }) => {
   );
 
   useEffect(() => {
-    const unsubscribe = subscribe(PRINT_CONSOLE, printToConsole);
+    const unsubscribe = subscribe(PLAYTEST_PRINT, printToConsole);
 
     // return a clean up function
     return unsubscribe;
-  }, [subscribe, printToConsole, PRINT_CONSOLE]);
+  }, [subscribe, printToConsole, PLAYTEST_PRINT]);
 
   const printItem = (text, key) => <p key={key}>{text}</p>;
 
   const publishInput = () => {
     const newHistory = [...history, `You: ${value}`];
     setHistory(newHistory);
-    publish(INPUT_CONSOLE, value);
+    publish(PLAYTEST_INPUT, value);
     setValue("");
   };
 

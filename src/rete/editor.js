@@ -17,8 +17,8 @@ import { BooleanGate } from "./components/BooleanGate";
 import { TimeDetectorComponent } from "./components/TimeDetector";
 import { Alert } from "./components/AlertMessage";
 import { SwitchGate } from "./components/SwitchGate";
-import { ConsolePrint } from "./components/ConsolePrint";
-import { ConsoleInput } from "./components/ConsoleInput";
+import { PlaytestPrint } from "./components/PlaytestPrint";
+import { PlaytestInput } from "./components/PlaytestInput";
 
 /*
   Primary initialization function.  Takes a container ref to attach the rete editor to.
@@ -30,12 +30,12 @@ const editor = async function (container, pubSub) {
     new ActionTypeComponent(),
     new Alert(),
     new BooleanGate(),
-    new ConsolePrint(),
-    new ConsoleInput(),
     new DifficultyDetectorComponent(),
     new EntityDetector(),
     new InputComponent(),
     new ItemTypeComponent(),
+    new PlaytestPrint(),
+    new PlaytestInput(),
     new RunInputComponent(),
     new SafetyVerifier(),
     new SwitchGate(),

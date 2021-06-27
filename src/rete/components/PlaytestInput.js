@@ -2,10 +2,10 @@ import Rete from "rete";
 import { dataSocket, stringSocket } from "../sockets";
 import { DisplayControl } from "../controls/DisplayControl";
 
-export class ConsoleInput extends Rete.Component {
+export class PlaytestInput extends Rete.Component {
   constructor() {
     // Name of the component
-    super("Console Input");
+    super("Playtest Input");
 
     this.task = {
       outputs: {
@@ -20,10 +20,10 @@ export class ConsoleInput extends Rete.Component {
 
   displayControl = {};
 
-  subscribeToConsole(node) {
+  subscribeToPlaytest(node) {
     const { subscribe, events } = this.editor.pubSub;
 
-    subscribe(events.INPUT_CONSOLE, (_, text) => {
+    subscribe(events.PLAYTEST_INPUT, (_, text) => {
       // attach the text to the nodes data for access in worker
       node.data.text = text;
 
@@ -47,7 +47,7 @@ export class ConsoleInput extends Rete.Component {
 
     this.displayControl = display;
 
-    this.subscribeToConsole(node);
+    this.subscribeToPlaytest(node);
 
     return node.addOutput(textOutput).addOutput(dataOutput).addControl(display);
   }
@@ -55,8 +55,6 @@ export class ConsoleInput extends Rete.Component {
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connecte components
   worker(node, inputs, text) {
-    console.log("INSIDE CONSOLE INPUT", node);
-
     this.displayControl.display(text);
 
     return {
