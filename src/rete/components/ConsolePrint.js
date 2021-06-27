@@ -2,10 +2,10 @@ import Rete from "rete";
 import { dataSocket, anySocket } from "../sockets";
 import { DisplayControl } from "../controls/DisplayControl";
 
-export class Print extends Rete.Component {
+export class ConsolePrint extends Rete.Component {
   constructor() {
     // Name of the component
-    super("Print");
+    super("Console Print");
 
     this.task = {
       outputs: {},
