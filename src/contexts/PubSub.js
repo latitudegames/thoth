@@ -11,8 +11,8 @@ const Context = createContext({
 export const usePubSub = () => useContext(Context);
 
 const events = {
-  INPUT_CONSOLE: "consoleInput",
-  PRINT_CONSOLE: "printConsole",
+  PLAYTEST_INPUT: "playtestInput",
+  PLAYTEST_PRINT: "playtestPrint",
 };
 
 const PubSubProvider = ({ children }) => {
