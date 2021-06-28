@@ -21,12 +21,15 @@ export class InputComponent extends Rete.Component {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const out = new Rete.Output("text", "String", stringSocket);
 
+    // Handle default value if data is present
+    const value = node.data.text ? node.data.text : "Input text here";
+
     // controls are the internals of the node itself
     // This default control sample has a text field.
     const input = new TextInputControl({
       emitter: this.editor,
       key: "text",
-      value: "Input text here",
+      value,
     });
 
     return node.addOutput(out).addControl(input);
