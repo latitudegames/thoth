@@ -18,10 +18,12 @@ export class Alert extends Rete.Component {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const dataInput = new Rete.Input("data", "Data", dataSocket);
 
+    const value = node.data.text ? node.data.text : "Input text here";
+
     const input = new TextInputControl({
       emitter: this.editor,
       key: "text",
-      value: "Input text",
+      value,
     });
 
     return node.addInput(dataInput).addControl(input);
