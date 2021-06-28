@@ -27,6 +27,10 @@ export class Task {
   async run(data, needReset = true, garbage = [], propagate = true) {
     if (needReset) garbage.push(this);
 
+    // This would be a great place to run an animation showing the signal flow.
+    // Just needto figure out how to change the folow of the connection attached to a socket on the fly.
+    // And animations should follow the flow of the data, not the main IO paths
+
     if (!this.outputData) {
       const inputs = {};
 
@@ -34,7 +38,6 @@ export class Task {
       // We run eachinput back to whatever node it is connected to.
       // We run that nodes task run, and then return its output data and
       // associate it with This nodes input key
-
       await Promise.all(
         this.getInputs("output").map(async (key) => {
           inputs[key] = await Promise.all(
