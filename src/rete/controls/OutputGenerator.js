@@ -6,7 +6,9 @@ const SingleOutput = (props) => {
     <div style={{ marginBottom: 10 }}>
       <p style={{ display: "inline" }}>{props.name}</p>
       <span style={{ float: "right" }}>
-        <button onClick={() => props.delete(props.name)}>Delete</button>
+        <button className="list" onClick={() => props.delete(props.name)}>
+          Delete
+        </button>
       </span>
     </div>
   );
