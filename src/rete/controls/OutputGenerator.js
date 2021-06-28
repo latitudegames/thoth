@@ -14,7 +14,7 @@ const SingleOutput = (props) => {
   );
 };
 
-const NewOutput = (props) => {
+const AddNewOutput = (props) => {
   const [value, setValue] = useState("");
 
   const onChange = (e) => {
@@ -36,10 +36,12 @@ const NewOutput = (props) => {
 
 const ReactOutputGenerator = ({ setDynamicOutputs, defaultOutputs }) => {
   const [outputs, setOutputs] = useState([...defaultOutputs]);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    if (outputs.length > 0) setDynamicOutputs(outputs);
-  }, [setDynamicOutputs, outputs]);
+    if (loaded) setDynamicOutputs(outputs);
+    if (!loaded) setLoaded(true);
+  }, [setDynamicOutputs, outputs, loaded]);
 
   const onDelete = (name) => {
     const newOutputs = outputs.filter((output) => output !== name);
@@ -56,7 +58,7 @@ const ReactOutputGenerator = ({ setDynamicOutputs, defaultOutputs }) => {
       {outputs.map((out) => (
         <SingleOutput name={out} delete={onDelete} />
       ))}
-      <NewOutput addOutput={addOutput} />
+      <AddNewOutput addOutput={addOutput} />
     </>
   );
 };
