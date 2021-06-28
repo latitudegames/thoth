@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { PouchDB } from "react-pouchdb";
 import App from "./App";
 import ReteProvider from "./contexts/Rete";
 import PubSubProvider from "./contexts/PubSub";
@@ -7,11 +8,13 @@ import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
   <React.StrictMode>
-    <PubSubProvider>
-      <ReteProvider>
-        <App />
-      </ReteProvider>
-    </PubSubProvider>
+    <PouchDB name="thoth">
+      <PubSubProvider>
+        <ReteProvider>
+          <App />
+        </ReteProvider>
+      </PubSubProvider>
+    </PouchDB>
   </React.StrictMode>,
   document.getElementById("root")
 );
