@@ -32,11 +32,11 @@ const NewOutput = (props) => {
   );
 };
 
-const ReactOutputGenerator = ({ setDynamicOutputs }) => {
-  const [outputs, setOutputs] = useState([]);
+const ReactOutputGenerator = ({ setDynamicOutputs, defaultOutputs }) => {
+  const [outputs, setOutputs] = useState([...defaultOutputs]);
 
   useEffect(() => {
-    setDynamicOutputs(outputs);
+    if (outputs.length > 0) setDynamicOutputs(outputs);
   }, [setDynamicOutputs, outputs]);
 
   const onDelete = (name) => {
@@ -60,7 +60,7 @@ const ReactOutputGenerator = ({ setDynamicOutputs }) => {
 };
 
 export class OutputGenerator extends Control {
-  constructor({ key, setOutputs }) {
+  constructor({ key, setOutputs, defaultOutputs }) {
     super(key);
     this.render = "react";
     this.key = key;
@@ -73,6 +73,7 @@ export class OutputGenerator extends Control {
 
     // we define the props that are passed into the rendered react component here
     this.props = {
+      defaultOutputs,
       setDynamicOutputs,
     };
   }
