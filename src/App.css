@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
   background-color: #191919;
   color: var(--dark-4);
   overflow: hidden;
@@ -29,12 +30,12 @@ h2 {
 }
 .socket.output.boolean,
 .socket.input.boolean {
-  background: #7027DD;
+  background: #7027dd;
 }
 .socket {
   height: var(--small);
   width: var(--small);
-  border: 1px solid var(--primary)
+  border: 1px solid var(--primary);
 }
 .socket.output {
   position: relative;
@@ -54,7 +55,10 @@ h2 {
 .connection .main-path {
   stroke-width: 2px;
   stroke: var(--primary);
-  filter: drop-shadow(0px 1px 0px var(--dark-0)) drop-shadow(0px -1px 0px var(--dark-0)) drop-shadow(-1px 0px 0px var(--dark-0)) drop-shadow(1px 0px 0px var(--dark-0));
+  filter: drop-shadow(0px 1px 0px var(--dark-0))
+    drop-shadow(0px -1px 0px var(--dark-0))
+    drop-shadow(-1px 0px 0px var(--dark-0))
+    drop-shadow(1px 0px 0px var(--dark-0));
 }
 button {
   box-sizing: border-box;
@@ -66,11 +70,17 @@ button {
   padding: 13.5px; /* not using a var here to optically correct for base + cap of typeface */
   padding-left: var(--medium);
   padding-right: var(--medium);
-  font-family: 'IBM Plex Mono', 'sans-serif' !important;
+  font-family: "IBM Plex Mono", "sans-serif" !important;
   text-transform: uppercase;
 }
 button.primary {
   background-color: var(--primary);
+}
+button.list {
+  background-color: var(--dark-2);
+  padding-left: var(--small);
+  padding-right: var(--small);
+  padding: 3px;
 }
 button:hover {
   filter: brightness(1.1);
