@@ -44,6 +44,14 @@ export class SwitchGate extends Rete.Component {
         .filter((out) => !outputs.includes(out))
         .forEach((key) => {
           const output = this.node.outputs.get(key);
+
+          node
+            .getConnections()
+            .filter((con) => con.output.key === key)
+            .forEach((con) => {
+              this.editor.removeConnection(con);
+            });
+
           node.removeOutput(output);
         });
 
@@ -68,8 +76,6 @@ export class SwitchGate extends Rete.Component {
         this.node.addOutput(newOutput);
       });
 
-      // Update the node so these changes take effect
-      console.log("RUNNING NODE UPDATE");
       node.update();
     };
 
@@ -91,7 +97,6 @@ export class SwitchGate extends Rete.Component {
 
     // Handle outputs in the nodes data to repopulate when loading from JSON
     if (node.data.outputs && node.data.outputs.length !== 0) {
-      console.log("Output data found");
       node.data.outputs.forEach((key) => {
         const output = new Rete.Output(
           key,
