@@ -123,7 +123,6 @@ export class SwitchGate extends Rete.Component {
   // to the outputs to be consumed by any connected components
   async worker(node, inputs, data) {
     const input = inputs["input"][0];
-    console.log("SWITCH WORKER", input);
 
     // close all outputs
     this._task.closed = [...this.dynamicOutputs];
