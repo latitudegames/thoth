@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import css from "./sidepanel.module.css";
 import Heiroglyphs from "./Heiroglyphs";
 import Playtest from "./Playtest";
+import StateManager from "./StateManager";
 
 const ThothSidePanel = ({ nodeList, nodeMap, editor, ...props }) => {
   const [activeTab, setActiveTab] = useState("playtest");
@@ -15,7 +16,7 @@ const ThothSidePanel = ({ nodeList, nodeMap, editor, ...props }) => {
     },
     gameStateManager: {
       title: "Game State Manager",
-      component: <Playtest />,
+      component: <StateManager />,
     },
     playtest: {
       title: "Playtest",
