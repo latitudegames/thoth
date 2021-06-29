@@ -8,7 +8,6 @@ import {
 import { useDB } from "react-pouchdb";
 
 import { useRete } from "../Rete";
-
 import defaultSpellData from "./defaultSpell";
 
 const Context = createContext({
@@ -21,7 +20,7 @@ const Context = createContext({
   updateCurrentState: () => {},
 });
 
-export const useThoth = () => useContext(Context);
+export const useSpell = () => useContext(Context);
 
 const Spellrovider = ({ children }) => {
   const db = useDB();
