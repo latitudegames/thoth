@@ -4,7 +4,7 @@ import { PouchDB } from "react-pouchdb";
 import App from "./App";
 import ReteProvider from "./contexts/Rete";
 import PubSubProvider from "./contexts/PubSub";
-import SpellProvider from "./contexts/Spell";
+import ThothProvider from "./contexts/Thoth";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
@@ -12,9 +12,9 @@ ReactDOM.render(
     <PouchDB name="thoth">
       <PubSubProvider>
         <ReteProvider>
-          <SpellProvider>
+          <ThothProvider>
             <App />
-          </SpellProvider>
+          </ThothProvider>
         </ReteProvider>
       </PubSubProvider>
     </PouchDB>

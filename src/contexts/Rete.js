@@ -2,7 +2,7 @@ import init from "../rete/editor";
 import gridimg from "../grid.png";
 
 import { usePubSub } from "./PubSub";
-import { useSpell } from "./Spell";
+import { useThoth } from "./Thoth";
 
 import { useContext, createContext, useState } from "react";
 
@@ -23,10 +23,10 @@ const ReteProvider = ({ children }) => {
   const [editor, setEditor] = useState();
   const pubSub = usePubSub();
 
-  const buildEditor = async (el, defaultSpell) => {
+  const buildEditor = async (container, defaultSpell) => {
     if (editor) return;
 
-    const newEditor = await init(el, pubSub, defaultSpell);
+    const newEditor = await init({ container, pubSub, defaultSpell });
     setEditor(newEditor);
   };
 
@@ -67,7 +67,7 @@ const ReteProvider = ({ children }) => {
 
 export const Editor = ({ children }) => {
   const { buildEditor } = useRete();
-  const { currentSpell } = useSpell();
+  const { currentSpell } = useThoth();
 
   return (
     <>

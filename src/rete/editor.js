@@ -23,7 +23,7 @@ import { PlaytestInput } from "./components/PlaytestInput";
 /*
   Primary initialization function.  Takes a container ref to attach the rete editor to.
 */
-const editor = async function (container, pubSub, defaultSpell) {
+const editor = async function ({ container, pubSub, defaultSpell }) {
   // Here we load up all components of the builder into our editor for usage.
   // We might be able to programatically generate components from enki
   const components = [
