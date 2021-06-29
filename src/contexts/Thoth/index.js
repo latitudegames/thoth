@@ -17,6 +17,7 @@ const Context = createContext({
   loadSpell: () => {},
   saveSpell: () => {},
   getSpell: () => {},
+  saveCurrentSpell: () => {},
   getCurrentState: () => {},
   updateCurrentState: () => {},
 });
@@ -83,9 +84,12 @@ const ThothProvider = ({ children }) => {
       ...spell,
       ...update,
     };
-    const updatedSpell = await db.put(newSpell);
 
-    return updatedSpell;
+    return db.put(newSpell);
+  };
+
+  const saveCurrentSpell = async (update) => {
+    return saveSpell(currentSpell._id, update);
   };
 
   const getCurrentState = async () => {
@@ -97,6 +101,7 @@ const ThothProvider = ({ children }) => {
     const currentSpell = await getSpell(settings.currentSpell);
     currentSpell.gameState = state;
     await db.put(currentSpell);
+    setCurrentSpellState(currentSpell);
     return currentSpell;
   };
 
@@ -108,6 +113,7 @@ const ThothProvider = ({ children }) => {
     loadSpell,
     saveSpell,
     getSpell,
+    saveCurrentSpell,
     getCurrentState,
     updateCurrentState,
   };
