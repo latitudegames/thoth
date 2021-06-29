@@ -7,7 +7,7 @@ const ReactTextInputControl = (props) => {
   useEffect(() => {
     setValue(props.value);
     props.putData(props.name, props.value);
-  }, []);
+  }, [props]);
 
   const onChange = (e) => {
     props.putData(props.name, e.target.value);

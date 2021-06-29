@@ -1,4 +1,5 @@
 import { useRete, Editor } from "./contexts/Rete";
+import { useThoth } from "./contexts/Spell/index";
 import ThothPageWrapper from "./components/ThothPage/ThothPageWrapper";
 
 import "./dds-globals/dds-globals.css";
@@ -6,6 +7,7 @@ import "./App.css";
 
 function App() {
   const { serialize } = useRete();
+  const { currentSpell } = useThoth();
 
   const toolbar = (
     <>
@@ -17,7 +19,7 @@ function App() {
 
   return (
     <ThothPageWrapper toolbarItems={toolbar}>
-      <Editor />
+      <Editor defaultState={currentSpell.graph} />
     </ThothPageWrapper>
   );
 }
