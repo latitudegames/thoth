@@ -20,9 +20,9 @@ const Context = createContext({
   updateCurrentState: () => {},
 });
 
-export const useSpell = () => useContext(Context);
+export const useThoth = () => useContext(Context);
 
-const Spellrovider = ({ children }) => {
+const ThothProvider = ({ children }) => {
   const db = useDB();
   const { editor } = useRete();
 
@@ -105,4 +105,4 @@ const Spellrovider = ({ children }) => {
   );
 };
 
-export default Spellrovider;
+export default ThothProvider;
