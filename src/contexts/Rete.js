@@ -23,10 +23,14 @@ const ReteProvider = ({ children }) => {
   const [editor, setEditor] = useState();
   const pubSub = usePubSub();
 
-  const buildEditor = async (container, defaultSpell) => {
+  const buildEditor = async (container, thoth) => {
     if (editor) return;
 
-    const newEditor = await init({ container, pubSub, defaultSpell });
+    const newEditor = await init({
+      container,
+      pubSub,
+      thoth,
+    });
     setEditor(newEditor);
   };
 
@@ -67,7 +71,7 @@ const ReteProvider = ({ children }) => {
 
 export const Editor = ({ children }) => {
   const { buildEditor } = useRete();
-  const { currentSpell } = useThoth();
+  const thoth = useThoth();
 
   return (
     <>
@@ -84,11 +88,11 @@ export const Editor = ({ children }) => {
         }}
         onDrop={(e) => {}}
       >
-        {!currentSpell.graph && <p>Loading...</p>}
-        {currentSpell.graph && (
+        {!thoth.currentSpell.graph && <p>Loading...</p>}
+        {thoth.currentSpell.graph && (
           <div
             ref={(el) => {
-              if (el) buildEditor(el, currentSpell.graph);
+              if (el) buildEditor(el, thoth);
             }}
           />
         )}

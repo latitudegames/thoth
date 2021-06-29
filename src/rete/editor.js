@@ -23,7 +23,7 @@ import { PlaytestInput } from "./components/PlaytestInput";
 /*
   Primary initialization function.  Takes a container ref to attach the rete editor to.
 */
-const editor = async function ({ container, pubSub, defaultSpell }) {
+const editor = async function ({ container, pubSub, thoth }) {
   // Here we load up all components of the builder into our editor for usage.
   // We might be able to programatically generate components from enki
   const components = [
@@ -48,6 +48,8 @@ const editor = async function ({ container, pubSub, defaultSpell }) {
 
   // Set up the reactcontext pubsub on the editor so rete components can talk to react
   editor.pubSub = pubSub;
+
+  editor.thoth = thoth;
 
   // PLUGINS
   // https://github.com/retejs/comment-plugin
@@ -97,7 +99,7 @@ const editor = async function ({ container, pubSub, defaultSpell }) {
     editor.trigger("process");
   };
 
-  editor.loadGraph(defaultSpell);
+  editor.loadGraph(thoth.currentSpell.graph);
 
   return editor;
 };
