@@ -2,6 +2,7 @@ import init from "../rete/editor";
 import gridimg from "../grid.png";
 
 import { usePubSub } from "./PubSub";
+import { useSpell } from "./Spell";
 
 import { useContext, createContext, useState } from "react";
 
@@ -22,10 +23,10 @@ const ReteProvider = ({ children }) => {
   const [editor, setEditor] = useState();
   const pubSub = usePubSub();
 
-  const buildEditor = async (el) => {
+  const buildEditor = async (el, defaultSpell) => {
     if (editor) return;
 
-    const newEditor = await init(el, pubSub);
+    const newEditor = await init(el, pubSub, defaultSpell);
     setEditor(newEditor);
   };
 
@@ -66,6 +67,7 @@ const ReteProvider = ({ children }) => {
 
 export const Editor = ({ children }) => {
   const { buildEditor } = useRete();
+  const { currentSpell } = useSpell();
 
   return (
     <>
@@ -82,11 +84,14 @@ export const Editor = ({ children }) => {
         }}
         onDrop={(e) => {}}
       >
-        <div
-          ref={(el) => {
-            if (el) buildEditor(el);
-          }}
-        />
+        {!currentSpell.graph && <p>Loading...</p>}
+        {currentSpell.graph && (
+          <div
+            ref={(el) => {
+              if (el) buildEditor(el, currentSpell.graph);
+            }}
+          />
+        )}
       </div>
       {children}
     </>
