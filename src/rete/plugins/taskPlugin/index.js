@@ -2,7 +2,6 @@ import { Task } from "./task";
 
 function install(editor) {
   editor.on("componentregister", (component) => {
-    console.log("REGISTERING TASK PLUGIN");
     if (!component.task)
       throw new Error("Task plugin requires a task property in component");
     if (component.task.outputs.constructor !== Object)

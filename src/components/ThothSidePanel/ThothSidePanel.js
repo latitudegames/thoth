@@ -26,9 +26,10 @@ const ThothSidePanel = ({ nodeList, nodeMap, editor, ...props }) => {
   return (
     <div className={css["th-sidepanel"]}>
       <div className={css["tabs"]}>
-        {Object.keys(tabs).map((item) => {
+        {Object.keys(tabs).map((item, i) => {
           return (
             <div
+              key={`${item}-${i}`}
               onClick={() => {
                 setActiveTab(item);
               }}

@@ -2,7 +2,7 @@ import React from "react";
 import ThothSidePanel from "../ThothSidePanel/ThothSidePanel";
 
 import Toolbar from "../Toolbar/Toolbar";
-import css from "./pagewrapper.module.css";
+import "./pagewrapper.module.css";
 
 const ThothPageWrapper = ({ toolbarItems, ...props }) => {
   return (
