@@ -69,6 +69,7 @@ const Spellrovider = ({ children }) => {
   const loadSpell = async (spellId) => {
     const spell = getSpell(spellId);
     setCurrentSpell(spell);
+    editor.loadGraph(spell.graph);
   };
 
   const getSpell = async (spellId) => {
