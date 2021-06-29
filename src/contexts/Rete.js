@@ -13,6 +13,7 @@ const Context = createContext({
   setEditor: () => {},
   getNodeMap: () => {},
   getNodes: () => {},
+  loadGraph: () => {},
 });
 
 export const useRete = () => useContext(Context);
@@ -44,6 +45,10 @@ const ReteProvider = ({ children }) => {
     return Object.fromEntries(editor.components);
   };
 
+  const loadGraph = (graph) => {
+    editor.loadGraph(graph);
+  };
+
   const publicInterface = {
     run,
     serialize,
@@ -51,6 +56,7 @@ const ReteProvider = ({ children }) => {
     buildEditor,
     getNodeMap,
     getNodes,
+    loadGraph,
   };
 
   return (
@@ -60,7 +66,6 @@ const ReteProvider = ({ children }) => {
 
 export const Editor = ({ children }) => {
   const { buildEditor } = useRete();
-
 
   return (
     <>
@@ -72,7 +77,9 @@ export const Editor = ({ children }) => {
           position: "absolute",
           backgroundImage: `url('${gridimg}')`,
         }}
-        onDragOver={(e) => {e.preventDefault()}}
+        onDragOver={(e) => {
+          e.preventDefault();
+        }}
         onDrop={(e) => {}}
       >
         <div
