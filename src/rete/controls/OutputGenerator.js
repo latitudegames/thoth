@@ -55,8 +55,8 @@ const ReactOutputGenerator = ({ setDynamicOutputs, defaultOutputs }) => {
 
   return (
     <>
-      {outputs.map((out) => (
-        <SingleOutput name={out} delete={onDelete} />
+      {outputs.map((out, i) => (
+        <SingleOutput name={out} key={i} delete={onDelete} />
       ))}
       <AddNewOutput addOutput={addOutput} />
     </>
