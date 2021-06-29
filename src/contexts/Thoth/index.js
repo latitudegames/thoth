@@ -15,6 +15,7 @@ const Context = createContext({
   currentSpell: {},
   setCurrentSpell: {},
   loadSpell: () => {},
+  saveSpell: () => {},
   getSpell: () => {},
   getCurrentState: () => {},
   updateCurrentState: () => {},
@@ -76,6 +77,17 @@ const ThothProvider = ({ children }) => {
     return spell;
   };
 
+  const saveSpell = async (spellId, update) => {
+    const spell = await getSpell(spellId);
+    const newSpell = {
+      ...spell,
+      ...update,
+    };
+    const updatedSpell = await db.put(newSpell);
+
+    return updatedSpell;
+  };
+
   const getCurrentState = async () => {
     const currentSpell = await getSpell(settings.currentSpell);
     return currentSpell.gameState;
@@ -89,12 +101,12 @@ const ThothProvider = ({ children }) => {
   };
 
   // Check for existing currentSpell in the db
-
   const publicInterface = {
     currentSpell,
     setCurrentSpell,
     settings,
     loadSpell,
+    saveSpell,
     getSpell,
     getCurrentState,
     updateCurrentState,
