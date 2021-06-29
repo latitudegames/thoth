@@ -39,7 +39,7 @@ const ReteProvider = ({ children }) => {
   };
 
   const serialize = () => {
-    console.log(JSON.stringify(editor.toJSON()));
+    return editor.toJSON();
   };
 
   const getNodeMap = () => {
