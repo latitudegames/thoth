@@ -87,13 +87,8 @@ export class SwitchGate extends Rete.Component {
 
     const input = new Rete.Input("input", "Input", anySocket);
     const dataInput = new Rete.Input("data", "Data", dataSocket);
-    const defaultOutput = new Rete.Output("default", "Default", dataSocket);
 
-    node
-      .addInput(input)
-      .addInput(dataInput)
-      .addOutput(defaultOutput)
-      .addControl(switchControl);
+    node.addInput(input).addInput(dataInput).addControl(switchControl);
 
     // Handle outputs in the nodes data to repopulate when loading from JSON
     if (node.data.outputs && node.data.outputs.length !== 0) {
