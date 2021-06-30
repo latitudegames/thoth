@@ -71,7 +71,10 @@ const defaultSpell = {
       },
     },
   },
-  gameState: {},
+  gameState: {
+    history: [],
+    name: [],
+  },
 };
 
 export default defaultSpell;
