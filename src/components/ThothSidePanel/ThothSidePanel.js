@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import css from "./sidepanel.module.css";
-import Heiroglyphs from "./Heiroglyphs";
+import Hieroglyphs from "./Hieroglyphs";
 import Playtest from "./Playtest";
 import StateManager from "./StateManager";
 
@@ -9,9 +9,9 @@ const ThothSidePanel = ({ nodeList, nodeMap, editor, ...props }) => {
   const [activeTab, setActiveTab] = useState("stateManager");
   const tabs = {
     spellBrowser: {
-      title: "Heiroglyphs",
+      title: "Hieroglyphs",
       component: (
-        <Heiroglyphs nodeMap={nodeMap} nodeList={nodeList} editor={editor} />
+        <Hieroglyphs nodeMap={nodeMap} nodeList={nodeList} editor={editor} />
       ),
     },
     stateManager: {
