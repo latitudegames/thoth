@@ -34,44 +34,47 @@ const AddNewInput = (props) => {
   );
 };
 
-const ReactInputGenerator = ({ setDynamicInputs, defaultInputs }) => {
-  const [outputs, setOutputs] = useState([...defaultInputs]);
+const ReactInputGenerator = ({ setDynamicInputs, defaultInputs, ignored }) => {
+  const [inputs, setInputs] = useState([...defaultInputs]);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    if (loaded) setDynamicInputs(outputs);
+    if (loaded) setDynamicInputs(inputs);
     if (!loaded) setLoaded(true);
-  }, [setDynamicInputs, outputs, loaded]);
+  }, [setDynamicInputs, inputs, loaded]);
 
   const onDelete = (name) => {
-    const newOutputs = outputs.filter((output) => output !== name);
-    setOutputs(newOutputs);
+    const newInputs = inputs.filter((input) => input !== name);
+    setInputs(newInputs);
   };
 
-  const addInput = (output) => {
-    const newOutputs = [...outputs, output];
-    setOutputs(newOutputs);
+  const addInput = (input) => {
+    const newInputs = [...inputs, input];
+    setInputs(newInputs);
   };
 
   return (
     <>
-      {outputs.map((out, i) => (
-        <SingleInput name={out} key={i} delete={onDelete} />
-      ))}
+      {inputs
+        .filter((input) => !ignored.includes(input))
+        .map((input, i) => (
+          <SingleInput name={input} key={i} delete={onDelete} />
+        ))}
       <AddNewInput addInput={addInput} />
     </>
   );
 };
 
-export class OutputGenerator extends Control {
-  constructor({ key, setOutputs, defaultInputs }) {
+export class InputGenerator extends Control {
+  constructor({ key, setInputs, defaultInputs, ignored }) {
     super(key);
     this.render = "react";
     this.key = key;
     this.component = ReactInputGenerator;
 
-    const setDynamicInputs = (outputs) => {
-      setOutputs(outputs);
+    const setDynamicInputs = (inputs) => {
+      // add the ignored inputs to the inputs here so they wont get deleted.
+      setInputs(inputs);
       this.update();
     };
 
@@ -79,6 +82,7 @@ export class OutputGenerator extends Control {
     this.props = {
       defaultInputs,
       setDynamicInputs,
+      ignored,
     };
   }
 }
