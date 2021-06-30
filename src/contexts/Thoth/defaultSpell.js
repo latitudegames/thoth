@@ -1,76 +1,59 @@
-const defaultSpell = {
-  _id: "defaultSpell",
-  graph: {
-    id: "demo@0.1.0",
-    nodes: {
-      1: {
-        id: 1,
-        data: { text: "Input text here", undefined: "Sam" },
-        inputs: {},
-        outputs: {
-          text: { connections: [{ node: 12, input: "name", data: {} }] },
-        },
-        position: [74.40924045994934, 79.08276852760682],
-        name: "Input",
+const defaultGraph = {
+  id: "demo@0.1.0",
+  nodes: {
+    19: {
+      id: 19,
+      data: { text: "look around", display: "look around" },
+      inputs: {},
+      outputs: {
+        text: { connections: [{ node: 20, input: "text", data: {} }] },
+        data: { connections: [{ node: 20, input: "data", data: {} }] },
       },
-      9: {
-        id: 9,
-        data: { display: "true" },
-        inputs: {
-          string: { connections: [{ node: 13, output: "text", data: {} }] },
-          data: { connections: [{ node: 13, output: "data", data: {} }] },
-        },
-        outputs: {
-          boolean: { connections: [{ node: 11, input: "boolean", data: {} }] },
-          data: { connections: [{ node: 11, input: "data", data: {} }] },
-        },
-        position: [-199.3843239822832, -205.0910954299351],
-        name: "Safety Verifier",
+      position: [-490.22096252441406, -39.029022216796875],
+      name: "Playtest Input",
+    },
+    20: {
+      id: 20,
+      data: { display: "Joe looks around." },
+      inputs: {
+        data: { connections: [{ node: 19, output: "data", data: {} }] },
+        text: { connections: [{ node: 19, output: "text", data: {} }] },
+        name: { connections: [{ node: 21, output: "text", data: {} }] },
       },
-      11: {
-        id: 11,
-        data: {},
-        inputs: {
-          boolean: { connections: [{ node: 9, output: "boolean", data: {} }] },
-          data: { connections: [{ node: 9, output: "data", data: {} }] },
-        },
-        outputs: {
-          true: { connections: [{ node: 12, input: "data", data: {} }] },
-          false: { connections: [] },
-        },
-        position: [99.11344037443256, -410.6986301163858],
-        name: "Boolean Gate",
+      outputs: {
+        action: { connections: [{ node: 22, input: "text", data: {} }] },
+        data: { connections: [{ node: 22, input: "data", data: {} }] },
       },
-      12: {
-        id: 12,
-        data: { display: "Joe walks into the bar." },
-        inputs: {
-          data: { connections: [{ node: 11, output: "true", data: {} }] },
-          text: { connections: [{ node: 13, output: "text", data: {} }] },
-          name: { connections: [{ node: 1, output: "text", data: {} }] },
-        },
-        outputs: { action: { connections: [] }, data: { connections: [] } },
-        position: [426.32063666846057, -244.95964440421992],
-        name: "Tense Transformer",
+      position: [-113.70181927025716, -40.976457966150136],
+      name: "Tense Transformer",
+    },
+    21: {
+      id: 21,
+      data: { text: "Joe" },
+      inputs: {},
+      outputs: {
+        text: { connections: [{ node: 20, input: "name", data: {} }] },
       },
-      13: {
-        id: 13,
-        data: {},
-        inputs: {},
-        outputs: {
-          text: {
-            connections: [
-              { node: 9, input: "string", data: {} },
-              { node: 12, input: "text", data: {} },
-            ],
-          },
-          data: { connections: [{ node: 9, input: "data", data: {} }] },
-        },
-        position: [-567.2821504111539, -206.93077213491136],
-        name: "Console Input",
+      position: [-487.4524728901213, 177.47814817526412],
+      name: "Input",
+    },
+    22: {
+      id: 22,
+      data: { display: "Joe looks around." },
+      inputs: {
+        text: { connections: [{ node: 20, output: "action", data: {} }] },
+        data: { connections: [{ node: 20, output: "data", data: {} }] },
       },
+      outputs: {},
+      position: [254.06680252890246, -40.51955467684894],
+      name: "Playtest Print",
     },
   },
+};
+
+const defaultSpell = {
+  _id: "defaultSpell",
+  graph: defaultGraph,
   gameState: {
     history: [],
     name: [],
