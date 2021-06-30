@@ -19,7 +19,7 @@ import { Alert } from "./components/AlertMessage";
 import { SwitchGate } from "./components/SwitchGate";
 import { PlaytestPrint } from "./components/PlaytestPrint";
 import { PlaytestInput } from "./components/PlaytestInput";
-import { StateRead } from "./components/StateRead";
+import { StateWrite } from "./components/StateWrite";
 
 /*
   Primary initialization function.  Takes a container ref to attach the rete editor to.
@@ -43,7 +43,7 @@ const editor = async function ({ container, pubSub, thoth }) {
     new PlaytestInput(),
     new RunInputComponent(),
     new SafetyVerifier(),
-    new StateRead(),
+    new StateWrite(),
     new SwitchGate(),
     new TenseTransformer(),
     new TimeDetectorComponent(),

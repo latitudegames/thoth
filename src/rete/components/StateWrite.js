@@ -1,15 +1,24 @@
 import Rete from "rete";
 
-export class StateRead extends Rete.Component {
+export class StateWrite extends Rete.Component {
   constructor() {
     // Name of the component
-    super("State sRead");
+    super("State Write");
 
     this.task = {
       outputs: {},
     };
   }
+
+  node = {};
+
   builder(node) {
+    this.node = node;
+
+    const setInputs = (inputs) => {
+      this.dynamicInputs = inputs;
+    };
+
     return node;
   }
 
