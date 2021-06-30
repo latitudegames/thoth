@@ -6,7 +6,7 @@ import Playtest from "./Playtest";
 import StateManager from "./StateManager";
 
 const ThothSidePanel = ({ nodeList, nodeMap, editor, ...props }) => {
-  const [activeTab, setActiveTab] = useState("playtest");
+  const [activeTab, setActiveTab] = useState("stateManager");
   const tabs = {
     spellBrowser: {
       title: "Heiroglyphs",
@@ -14,8 +14,8 @@ const ThothSidePanel = ({ nodeList, nodeMap, editor, ...props }) => {
         <Heiroglyphs nodeMap={nodeMap} nodeList={nodeList} editor={editor} />
       ),
     },
-    gameStateManager: {
-      title: "Game State Manager",
+    stateManager: {
+      title: "State Manager",
       component: <StateManager />,
     },
     playtest: {
