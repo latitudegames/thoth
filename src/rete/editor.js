@@ -23,7 +23,11 @@ import { PlaytestInput } from "./components/PlaytestInput";
 /*
   Primary initialization function.  Takes a container ref to attach the rete editor to.
 */
+
+let editorInstance;
+
 const editor = async function ({ container, pubSub, thoth }) {
+  if (editorInstance) return editorInstance;
   // Here we load up all components of the builder into our editor for usage.
   // We might be able to programatically generate components from enki
   const components = [
@@ -45,10 +49,10 @@ const editor = async function ({ container, pubSub, thoth }) {
 
   // create the main edtor
   const editor = new Rete.NodeEditor("demo@0.1.0", container);
+  editorInstance = editor;
 
   // Set up the reactcontext pubsub on the editor so rete components can talk to react
   editor.pubSub = pubSub;
-
   editor.thoth = thoth;
 
   // PLUGINS
@@ -99,6 +103,7 @@ const editor = async function ({ container, pubSub, thoth }) {
     editor.trigger("process");
   };
 
+  console.log("Loading!");
   editor.loadGraph(thoth.currentSpell.graph);
 
   return editor;
