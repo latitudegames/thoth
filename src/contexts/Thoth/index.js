@@ -56,20 +56,21 @@ const ThothProvider = ({ children }) => {
             currentSpell: "defaultSpell",
           };
 
-          return db.put(settings);
+          await db.put(settings);
+          return settings;
         }
       });
 
       setSettings(settings);
 
-      const defaultSpell = await db.get("defaultSpell").catch((err) => {
+      const defaultSpell = await db.get("defaultSpell").catch(async (err) => {
         if (err.name === "not_found") {
-          return db.put(defaultSpellData);
+          await db.put(defaultSpellData);
+          return defaultSpellData;
         }
       });
 
-      if (!defaultSpell._rev) db.put(defaultSpell);
-
+      console.log("Default spell", defaultSpell);
       setCurrentSpellState(defaultSpell);
       setCurrentGameState(defaultSpell.gameState);
     })();
@@ -101,11 +102,11 @@ const ThothProvider = ({ children }) => {
     return saveSpell(currentSpell._id, update);
   };
 
-  const updateCurrentGameState = async (state) => {
+  const updateCurrentGameState = async (update) => {
     const currentSpell = await getSpell(settings.currentSpell);
     currentSpell.gameState = {
       ...currentSpell.gameState,
-      state,
+      ...update,
     };
     await db.put(currentSpell);
     setCurrentSpellState(currentSpell);
