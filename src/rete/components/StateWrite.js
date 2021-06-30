@@ -15,9 +15,9 @@ export class StateWrite extends Rete.Component {
   builder(node) {
     this.node = node;
 
-    const setInputs = (inputs) => {
-      this.dynamicInputs = inputs;
-    };
+    // const setInputs = (inputs) => {
+    //   this.dynamicInputs = inputs;
+    // };
 
     return node;
   }
