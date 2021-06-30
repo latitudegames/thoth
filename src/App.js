@@ -11,15 +11,19 @@ function App() {
 
   const onSave = () => {
     const serialized = serialize();
-    console.log("saving");
     saveCurrentSpell({ graph: serialized });
+  };
+
+  const onSerialize = () => {
+    const serialized = serialize();
+    console.log(JSON.stringify(serialized));
   };
 
   const toolbar = (
     <>
       <button onClick={onSave}>Save</button>
       <button>Load</button>
-      <button onClick={serialize}>Export</button>
+      <button onClick={onSerialize}>Export</button>
       <button onClick={serialize}>Create New</button>
     </>
   );
