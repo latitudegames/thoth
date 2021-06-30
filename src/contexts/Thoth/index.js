@@ -18,8 +18,8 @@ const Context = createContext({
   saveSpell: () => {},
   getSpell: () => {},
   saveCurrentSpell: () => {},
-  getCurrentState: () => {},
-  updateCurrentState: () => {},
+  currentGameState: {},
+  updateCurrentGameState: () => {},
 });
 
 export const useThoth = () => useContext(Context);
@@ -29,6 +29,7 @@ const ThothProvider = ({ children }) => {
   const { editor } = useRete();
 
   const [currentSpell, setCurrentSpellState] = useState({});
+  const [currentGameState, setCurrentGameState] = useState({});
   const [settings, setSettings] = useState({});
 
   const setCurrentSpell = useCallback(
@@ -37,6 +38,7 @@ const ThothProvider = ({ children }) => {
       settings.currentSpell = spell;
       await db.put(settings);
       setCurrentSpellState(spell);
+      setCurrentGameState(spell.gameState);
     },
     [db]
   );
@@ -46,12 +48,15 @@ const ThothProvider = ({ children }) => {
 
     // load initial settings
     (async () => {
-      const settings = await db.get("settings").catch((err) => {
+      const settings = await db.get("settings").catch(async (err) => {
+        console.log("SETTINGS NOT FOUND");
         if (err.name === "not_found") {
-          return {
-            _id: "config",
+          const settings = {
+            _id: "settings",
             currentSpell: "defaultSpell",
           };
+
+          return db.put(settings);
         }
       });
 
@@ -59,17 +64,21 @@ const ThothProvider = ({ children }) => {
 
       const defaultSpell = await db.get("defaultSpell").catch((err) => {
         if (err.name === "not_found") {
-          return defaultSpellData;
+          return db.put(defaultSpellData);
         }
       });
 
+      if (!defaultSpell._rev) db.put(defaultSpell);
+
       setCurrentSpellState(defaultSpell);
+      setCurrentGameState(defaultSpell.gameState);
     })();
   }, [db, setCurrentSpell]);
 
   const loadSpell = async (spellId) => {
     const spell = getSpell(spellId);
     setCurrentSpell(spell);
+    setCurrentGameState(spell.gameState);
     editor.loadGraph(spell.graph);
   };
 
@@ -92,30 +101,29 @@ const ThothProvider = ({ children }) => {
     return saveSpell(currentSpell._id, update);
   };
 
-  const getCurrentState = async () => {
+  const updateCurrentGameState = async (state) => {
     const currentSpell = await getSpell(settings.currentSpell);
-    return currentSpell.gameState;
-  };
-
-  const updateCurrentState = async (state) => {
-    const currentSpell = await getSpell(settings.currentSpell);
-    currentSpell.gameState = state;
+    currentSpell.gameState = {
+      ...currentSpell.gameState,
+      state,
+    };
     await db.put(currentSpell);
     setCurrentSpellState(currentSpell);
+    setCurrentGameState(currentSpell.gameState);
     return currentSpell;
   };
 
   // Check for existing currentSpell in the db
   const publicInterface = {
     currentSpell,
-    setCurrentSpell,
-    settings,
-    loadSpell,
-    saveSpell,
     getSpell,
+    setCurrentSpell,
+    currentGameState,
+    loadSpell,
+    settings,
     saveCurrentSpell,
-    getCurrentState,
-    updateCurrentState,
+    saveSpell,
+    updateCurrentGameState,
   };
 
   return (
