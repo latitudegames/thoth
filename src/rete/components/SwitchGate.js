@@ -18,8 +18,6 @@ export class SwitchGate extends Rete.Component {
 
   node = {};
 
-  procesOutput;
-
   // TODO refactor this function into smaller class functions
   // note: might be possible to abstract this into a parent class to be used by anyone
   // that wants to make components with dynamic outputs.
