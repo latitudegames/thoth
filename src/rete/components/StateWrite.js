@@ -18,14 +18,11 @@ export class StateWrite extends Rete.Component {
   // note: might be possible to abstract this into a parent class to be used by anyone
   // that wants to make components with dynamic outputs.
   builder(node) {
-    this.node = node;
-
     const setInputs = (inputs, ignore) => {
-      this.dynamicInputs = inputs;
-      this.node.data.inputs = inputs;
+      node.data.inputs = inputs;
       const existingInputs = [];
 
-      this.node.inputs.forEach((input) => {
+      node.inputs.forEach((input) => {
         existingInputs.push(input.key);
       });
 
@@ -34,7 +31,7 @@ export class StateWrite extends Rete.Component {
       existingInputs
         .filter((input) => !inputs.includes(input))
         .forEach((key) => {
-          const input = this.node.inputs.get(key);
+          const input = node.inputs.get(key);
 
           node
             .getConnections()
@@ -52,7 +49,7 @@ export class StateWrite extends Rete.Component {
       // From these new outputs, we iterate and add an output socket to the node
       newInputs.forEach((input) => {
         const newInput = new Rete.Input(input, input, anySocket);
-        this.node.addInput(newInput);
+        node.addInput(newInput);
       });
 
       node.update();
@@ -87,7 +84,6 @@ export class StateWrite extends Rete.Component {
 
     const updates = Object.entries(inputs).reduce((acc, [key, val]) => {
       // Check here what type of data structure the gameState for the key is
-      console.log("checking game state type", gameState[key]);
       switch (typeof gameState[key]) {
         case "object":
           // if we have an array, add the value to the array and reassign to the state
