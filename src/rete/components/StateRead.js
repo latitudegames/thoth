@@ -83,6 +83,14 @@ export class StateRead extends Rete.Component {
       });
     }
 
+    this.task.outputs = node.data.outputs.reduce(
+      (acc, out) => {
+        acc[out] = "output";
+        return acc;
+      },
+      { ...this.task.outputs }
+    );
+
     return node;
   }
 
@@ -92,7 +100,7 @@ export class StateRead extends Rete.Component {
     const gameState = await this.editor.thoth.getCurrentGameState();
 
     return Object.entries(gameState).reduce((acc, [key, value]) => {
-      if (Object.keys(node.data.outputs).includes(key)) {
+      if (node.data.outputs.includes(key)) {
         acc[key] = value;
       }
 
