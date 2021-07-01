@@ -18,17 +18,12 @@ export class StateRead extends Rete.Component {
   // note: might be possible to abstract this into a parent class to be used by anyone
   // that wants to make components with dynamic outputs.
   builder(node) {
-    this.node = node;
-
     const setOutputs = (outputs) => {
-      this.dynamicOutputs = outputs;
-
-      // save these to the nodes data
-      this.node.data.outputs = outputs;
+      node.data.outputs = outputs;
 
       const existingOutputs = [];
 
-      this.node.outputs.forEach((out) => {
+      node.outputs.forEach((out) => {
         existingOutputs.push(out.key);
       });
 
@@ -37,7 +32,7 @@ export class StateRead extends Rete.Component {
       existingOutputs
         .filter((out) => !outputs.includes(out))
         .forEach((key) => {
-          const output = this.node.outputs.get(key);
+          const output = node.outputs.get(key);
 
           node
             .getConnections()
@@ -55,15 +50,18 @@ export class StateRead extends Rete.Component {
       );
 
       // Here we are running over and ensuring that the outputs are in the task
-      this.task.outputs = this.dynamicOutputs.reduce((acc, out) => {
-        acc[out] = "output";
-        return acc;
-      }, {});
+      this.task.outputs = node.data.outputs.reduce(
+        (acc, out) => {
+          acc[out] = "output";
+          return acc;
+        },
+        { ...this.task.outputs }
+      );
 
       // From these new outputs, we iterate and add an output socket to the node
       newOutputs.forEach((output) => {
         const newOutput = new Rete.Output(output, output, anySocket);
-        this.node.addOutput(newOutput);
+        node.addOutput(newOutput);
       });
 
       node.update();
@@ -83,15 +81,6 @@ export class StateRead extends Rete.Component {
         const output = new Rete.Output(key, key, anySocket);
         node.addOutput(output);
       });
-
-      // Add the data outputs to the tasks outputs
-      this.task.outputs = node.data.outputs.reduce(
-        (acc, out) => {
-          acc[out] = "output";
-          return acc;
-        },
-        { ...this.task.outputs }
-      );
     }
 
     return node;
@@ -103,7 +92,7 @@ export class StateRead extends Rete.Component {
     const gameState = await this.editor.thoth.getCurrentGameState();
 
     return Object.entries(gameState).reduce((acc, [key, value]) => {
-      if (Object.keys(this.task.outputs).includes(key)) {
+      if (Object.keys(node.data.outputs).includes(key)) {
         acc[key] = value;
       }
 
