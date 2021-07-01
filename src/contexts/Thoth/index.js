@@ -11,15 +11,17 @@ import { useRete } from "../Rete";
 import defaultSpellData from "./defaultSpell";
 
 const Context = createContext({
-  settings: {},
   currentSpell: {},
-  setCurrentSpell: {},
-  loadSpell: () => {},
-  saveSpell: () => {},
-  getSpell: () => {},
-  saveCurrentSpell: () => {},
   currentGameState: {},
   getCurrentGameState: () => {},
+  getSpell: () => {},
+  loadSpell: () => {},
+  rewriteCurrentGameState: () => {},
+  saveSpell: () => {},
+  saveCurrentSpell: () => {},
+  setCurrentSpell: {},
+  settings: {},
+  stateHistory: [],
   updateCurrentGameState: () => {},
 });
 
@@ -32,6 +34,7 @@ const ThothProvider = ({ children }) => {
   const [currentSpell, setCurrentSpellState] = useState({});
   const [currentGameState, setCurrentGameState] = useState({});
   const [settings, setSettings] = useState({});
+  const [stateHistory, setStateHistory] = useState([]);
 
   const setCurrentSpell = useCallback(
     async (spell) => {
@@ -71,7 +74,6 @@ const ThothProvider = ({ children }) => {
         }
       });
 
-      console.log("Default spell", defaultSpell);
       setCurrentSpellState(defaultSpell);
       setCurrentGameState(defaultSpell.gameState);
     })();
@@ -110,10 +112,19 @@ const ThothProvider = ({ children }) => {
 
   const updateCurrentGameState = async (update) => {
     const currentSpell = await getSpell(settings.currentSpell);
-    currentSpell.gameState = {
+
+    const newState = {
       ...currentSpell.gameState,
       ...update,
     };
+
+    return rewriteCurrentGameState(newState);
+  };
+
+  const rewriteCurrentGameState = async (state) => {
+    const currentSpell = await getSpell(settings.currentSpell);
+    setStateHistory([...stateHistory, currentSpell.gameState]);
+    currentSpell.gameState = state;
     await db.put(currentSpell);
     setCurrentSpellState(currentSpell);
     setCurrentGameState(currentSpell.gameState);
@@ -123,15 +134,17 @@ const ThothProvider = ({ children }) => {
   // Check for existing currentSpell in the db
   const publicInterface = {
     currentSpell,
-    getSpell,
-    setCurrentSpell,
     currentGameState,
+    getCurrentGameState,
+    getSpell,
     loadSpell,
-    settings,
+    rewriteCurrentGameState,
     saveCurrentSpell,
     saveSpell,
+    setCurrentSpell,
+    settings,
+    stateHistory,
     updateCurrentGameState,
-    getCurrentGameState,
   };
 
   return (
