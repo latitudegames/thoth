@@ -98,13 +98,13 @@ export class SwitchGate extends Rete.Component {
       });
 
       // Add the data outputs to the tasks outputs
-      // const updatedOuputs = node.data.outputs.reduce(
-      //   (acc, out) => {
-      //     acc[out] = "option";
-      //     return acc;
-      //   },
-      //   { ...this.task.outputs }
-      // );
+      this.task.outputs = node.data.outputs.reduce(
+        (acc, out) => {
+          acc[out] = "option";
+          return acc;
+        },
+        { ...this.task.outputs }
+      );
     }
 
     return node;
