@@ -1,5 +1,5 @@
 import Rete from "rete";
-import { stringSocket, dataSocket, actionDifficultySocket } from "../sockets";
+import { actionSocket, dataSocket, actionDifficultySocket } from "../sockets";
 import { DisplayControl } from "../controls/DisplayControl";
 import { completion } from "../../utils/openaiHelper";
 
@@ -31,7 +31,7 @@ Action, Difficulty, Type: climb up the mountain, 6/20, Endurance
 Action, Difficulty, Type: goes to talk to the king, 2/20, Charisma
 Action, Difficulty, Type: ask who the evil demon king is, 2/20, Charisma
 Action, Difficulty, Type: do a back flip, 6/20, Dexterity
-Action, Difficulty, Type: `
+Action, Difficulty, Type: `;
 
 export class DifficultyDetectorComponent extends Rete.Component {
   constructor() {
@@ -50,8 +50,12 @@ export class DifficultyDetectorComponent extends Rete.Component {
   // to generate the appropriate inputs and ouputs for the fewshot at build time
   builder(node) {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
-    const inp = new Rete.Input("string", "Text", stringSocket);
-    const out = new Rete.Output("actionDifficulty", "Action Difficulty", actionDifficultySocket);
+    const inp = new Rete.Input("action", "Action", actionSocket);
+    const out = new Rete.Output(
+      "actionDifficulty",
+      "Action Difficulty",
+      actionDifficultySocket
+    );
     const dataInput = new Rete.Input("data", "Data", dataSocket);
     const dataOutput = new Rete.Output("data", "Data", dataSocket);
 
@@ -74,7 +78,7 @@ export class DifficultyDetectorComponent extends Rete.Component {
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connected components
   async worker(node, inputs, outputs) {
-    const action = inputs["string"][0];
+    const action = inputs["action"][0];
     const prompt = fewShots + action + ",";
 
     const body = {
@@ -88,7 +92,7 @@ export class DifficultyDetectorComponent extends Rete.Component {
     this.displayControl.display(result);
 
     return {
-        actionDifficulty: result,
+      actionDifficulty: result,
     };
   }
 }
