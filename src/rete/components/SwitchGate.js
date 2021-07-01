@@ -22,17 +22,13 @@ export class SwitchGate extends Rete.Component {
   // note: might be possible to abstract this into a parent class to be used by anyone
   // that wants to make components with dynamic outputs.
   builder(node) {
-    this.node = node;
-
     const setOutputs = (outputs) => {
-      this.dynamicOutputs = outputs;
-
       // save these to the nodes data
-      this.node.data.outputs = outputs;
+      node.data.outputs = outputs;
 
       const existingOutputs = [];
 
-      this.node.outputs.forEach((out) => {
+      node.outputs.forEach((out) => {
         existingOutputs.push(out.key);
       });
 
@@ -41,7 +37,7 @@ export class SwitchGate extends Rete.Component {
       existingOutputs
         .filter((out) => !outputs.includes(out))
         .forEach((key) => {
-          const output = this.node.outputs.get(key);
+          const output = node.outputs.get(key);
 
           node
             .getConnections()
@@ -58,12 +54,6 @@ export class SwitchGate extends Rete.Component {
         (out) => !existingOutputs.includes(out)
       );
 
-      // Here we are running over and ensuring that the outputs are in the task
-      this.task.outputs = this.dynamicOutputs.reduce((acc, out) => {
-        acc[out] = "option";
-        return acc;
-      }, {});
-
       // From these new outputs, we iterate and add an output socket to the node
       newOutputs.forEach((output) => {
         const newOutput = new Rete.Output(
@@ -71,8 +61,16 @@ export class SwitchGate extends Rete.Component {
           capitalizeFirstLetter(output),
           dataSocket
         );
-        this.node.addOutput(newOutput);
+        node.addOutput(newOutput);
       });
+
+      this.task.outputs = node.data.outputs.reduce(
+        (acc, out) => {
+          acc[out] = "option";
+          return acc;
+        },
+        { ...this.task.outputs }
+      );
 
       node.update();
     };
@@ -100,13 +98,13 @@ export class SwitchGate extends Rete.Component {
       });
 
       // Add the data outputs to the tasks outputs
-      this.task.outputs = node.data.outputs.reduce(
-        (acc, out) => {
-          acc[out] = "option";
-          return acc;
-        },
-        { ...this.task.outputs }
-      );
+      // const updatedOuputs = node.data.outputs.reduce(
+      //   (acc, out) => {
+      //     acc[out] = "option";
+      //     return acc;
+      //   },
+      //   { ...this.task.outputs }
+      // );
     }
 
     return node;
@@ -118,7 +116,7 @@ export class SwitchGate extends Rete.Component {
     const input = inputs["input"][0];
 
     // close all outputs
-    this._task.closed = [...this.dynamicOutputs];
+    this._task.closed = [...node.data.outputs];
 
     if (this._task.closed.includes(input)) {
       // If the ouputs closed has the incoming text, filter closed outputs to not include it
