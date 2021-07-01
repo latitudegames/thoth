@@ -186,6 +186,8 @@ export class EntityDetector extends Rete.Component {
 
     this.displayControl.display(JSON.stringify(allEntities));
 
-    outputs["entities"] = allEntities;
+    return {
+      entities: allEntities,
+    };
   }
 }
