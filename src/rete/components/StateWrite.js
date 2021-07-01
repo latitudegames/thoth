@@ -22,9 +22,7 @@ export class StateWrite extends Rete.Component {
 
     const setInputs = (inputs, ignore) => {
       this.dynamicInputs = inputs;
-
       this.node.data.inputs = inputs;
-
       const existingInputs = [];
 
       this.node.inputs.forEach((input) => {
@@ -74,7 +72,8 @@ export class StateWrite extends Rete.Component {
     // Handle outputs in the nodes data to repopulate when loading from JSON
     if (node.data.inputs && node.data.inputs.length !== 0) {
       node.data.inputs.forEach((key) => {
-        const input = new Rete.Output(key, key, anySocket);
+        if (key === "data") return;
+        const input = new Rete.Input(key, key, anySocket);
         node.addInput(input);
       });
     }
@@ -83,9 +82,30 @@ export class StateWrite extends Rete.Component {
   }
 
   async worker(node, inputs, data) {
+    const gameState = await this.editor.thoth.getCurrentGameState();
+    let value;
+
     const updates = Object.entries(inputs).reduce((acc, [key, val]) => {
-      // we are assuming there is only one incoming input and not many here
-      acc[key] = val[0];
+      // Check here what type of data structure the gameState for the key is
+      console.log("checking game state type", gameState[key]);
+      switch (typeof gameState[key]) {
+        case "object":
+          // if we have an array, add the value to the array and reassign to the state
+          if (Array.isArray(gameState[key])) {
+            value = [...gameState[key], val[0]];
+            break;
+          }
+
+          // if it is an object, we assume that the incoming data is an object update
+          value = { ...gameState[key], ...val[0] };
+
+          break;
+        default:
+          // default is to just overwrite whatever value is there with a new one.
+          value = val[0];
+      }
+
+      acc[key] = value;
 
       return acc;
     }, {});
