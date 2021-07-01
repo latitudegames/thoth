@@ -12,7 +12,7 @@ import css from "./sidepanel.module.css";
 import { useThoth } from "../../contexts/Thoth";
 
 const StateManager = ({ ...props }) => {
-  const { currentGameState, updateCurrentGameState } = useThoth();
+  const { currentGameState, rewriteCurrentGameState } = useThoth();
   const [code, setCode] = useState("{}");
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const StateManager = ({ ...props }) => {
   };
 
   const onSave = () => {
-    updateCurrentGameState(JSON.parse(code));
+    rewriteCurrentGameState(JSON.parse(code));
   };
 
   return (
