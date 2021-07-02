@@ -5,37 +5,35 @@ export class ForEach extends Rete.Component {
   constructor() {
     super("ForEach");
     this.task = {
-      outputs: { data: "option", item: "output", done: "option" },
+      outputs: { act: "option", element: "output", done: "option" },
     };
   }
 
   builder(node) {
-    var dataInput = new Rete.Input("dataIn", "Data", dataSocket, true);
-    var arrayInput = new Rete.Input("array", "Array", arraySocket);
-    var dataOut = new Rete.Output("dataOut", "Data", dataSocket);
-    var itemout = new Rete.Output("item", "Item", anySocket);
-    var doneOut = new Rete.Output("done", "Done", dataSocket);
+    var inp0 = new Rete.Input("act1", "Data", dataSocket, true);
+    var inp1 = new Rete.Input("array", "Array", arraySocket);
+    var out1 = new Rete.Output("act", "Data", dataSocket);
+    var out2 = new Rete.Output("element", "Item", anySocket);
+    var out3 = new Rete.Output("done", "Done", dataSocket);
 
     return node
-      .addInput(dataInput)
-      .addInput(arrayInput)
-      .addOutput(itemout)
-      .addOutput(dataOut)
-      .addOutput(doneOut);
+      .addInput(inp0)
+      .addInput(inp1)
+      .addOutput(out1)
+      .addOutput(out2)
+      .addOutput(out3);
   }
 
-  async worker(node, inputs, { item }) {
-    if (item === undefined) {
+  async worker(node, inputs, { element }) {
+    if (element === undefined) {
       await Promise.all(
-        inputs.array[0].map((item) => this._task.clone().run({ item }))
+        inputs.array[0].map((el) => this._task.clone().run({ element: el }))
       );
-      this._task.closed = ["dataOut"];
+      console.log("done");
+      this._task.closed = ["act"];
     } else {
-      // const sec = Math.random()*1000;
-      // await (new Promise((res, rej) => {setTimeout(res, sec)}));
-      console.log("ForEach", item);
       this._task.closed = ["done"];
-      return { item };
+      return { element };
     }
   }
 }
