@@ -1,0 +1,107 @@
+{
+  "global": {
+    "tabEnableFloat": true
+  },
+  "layout": {
+    "type": "row",
+    "id": "#5",
+    "children": [
+      {
+        "type": "tabset",
+        "id": "#15",
+        "weight": 12.971838964596847,
+        "children": [
+          {
+            "type": "tab",
+            "id": "#21",
+            "className": "editor-tab",
+            "name": "Editor",
+            "component": "editor"
+          }
+        ]
+      },
+      {
+        "type": "row",
+        "id": "#24",
+        "weight": 5.0216980506793005,
+        "children": [
+          {
+            "type": "tabset",
+            "id": "#13",
+            "weight": 50,
+            "children": [
+              {
+                "type": "tab",
+                "id": "#10",
+                "name": "State Manager",
+                "component": "stateManager"
+              }
+            ],
+            "active": true
+          },
+          {
+            "type": "tabset",
+            "id": "#23",
+            "weight": 50,
+            "children": [
+              {
+                "type": "tab",
+                "id": "#22",
+                "name": "Playtest",
+                "component": "playtest"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "borders": [
+    {
+      "type": "border",
+      "location": "bottom",
+      "children": [
+        {
+          "type": "tab",
+          "id": "#1",
+          "name": "Hieroglyphs",
+          "component": "grid",
+          "enableClose": false
+        },
+        {
+          "type": "tab",
+          "id": "#2",
+          "name": "Terminal",
+          "component": "grid",
+          "enableClose": false
+        }
+      ]
+    },
+    {
+      "type": "border",
+      "location": "left",
+      "children": [
+        {
+          "type": "tab",
+          "id": "#3",
+          "name": "Scene",
+          "component": "scene",
+          "enableClose": false
+        }
+      ]
+    },
+    {
+      "type": "border",
+      "location": "right",
+      "children": [
+        {
+          "type": "tab",
+          "id": "#4",
+          "name": "Options",
+          "component": "grid",
+          "enableClose": false
+        }
+      ]
+    }
+  ]
+}
