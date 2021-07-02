@@ -1,5 +1,5 @@
 import React from "react";
-import ThothSidePanel from "../ThothSidePanel/ThothSidePanel";
+// import ThothSidePanel from "../ThothSidePanel/ThothSidePanel";
 
 import Toolbar from "../Toolbar/Toolbar";
 import "./pagewrapper.module.css";
