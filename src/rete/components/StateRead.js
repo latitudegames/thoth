@@ -1,18 +1,14 @@
 import Rete from "rete";
-import { anySocket, dataSocket } from "../sockets";
+import { anySocket } from "../sockets";
 import { OutputGenerator } from "../controls/OutputGenerator";
 
-function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-export class SwitchGate extends Rete.Component {
+export class StateRead extends Rete.Component {
   constructor() {
     // Name of the component
-    super("Switch");
+    super("State Read");
 
     this.task = {
-      outputs: { data: "option" },
+      outputs: {},
     };
   }
 
@@ -23,7 +19,6 @@ export class SwitchGate extends Rete.Component {
   // that wants to make components with dynamic outputs.
   builder(node) {
     const setOutputs = (outputs) => {
-      // save these to the nodes data
       node.data.outputs = outputs;
 
       const existingOutputs = [];
@@ -54,59 +49,48 @@ export class SwitchGate extends Rete.Component {
         (out) => !existingOutputs.includes(out)
       );
 
-      // From these new outputs, we iterate and add an output socket to the node
-      newOutputs.forEach((output) => {
-        const newOutput = new Rete.Output(
-          output,
-          capitalizeFirstLetter(output),
-          dataSocket
-        );
-        node.addOutput(newOutput);
-      });
-
+      // Here we are running over and ensuring that the outputs are in the task
       this.task.outputs = node.data.outputs.reduce(
         (acc, out) => {
-          acc[out] = "option";
+          acc[out] = "output";
           return acc;
         },
         { ...this.task.outputs }
       );
 
+      // From these new outputs, we iterate and add an output socket to the node
+      newOutputs.forEach((output) => {
+        const newOutput = new Rete.Output(output, output, anySocket);
+        node.addOutput(newOutput);
+      });
+
       node.update();
     };
 
     const switchControl = new OutputGenerator({
-      defaultOutputs: node.data.outputs || ["default"],
+      defaultOutputs: node.data.outputs || [],
       setOutputs: (outputs) => setOutputs.call(this, outputs),
       key: "dynamicOutput",
     });
 
-    const input = new Rete.Input("input", "Input", anySocket);
-    const dataInput = new Rete.Input("data", "Data", dataSocket);
-
-    node.addInput(input).addInput(dataInput).addControl(switchControl);
+    node.addControl(switchControl);
 
     // Handle outputs in the nodes data to repopulate when loading from JSON
     if (node.data.outputs && node.data.outputs.length !== 0) {
       node.data.outputs.forEach((key) => {
-        const output = new Rete.Output(
-          key,
-          capitalizeFirstLetter(key),
-          dataSocket
-        );
+        const output = new Rete.Output(key, key, anySocket);
         node.addOutput(output);
       });
+    }
 
-      // Add the data outputs to the tasks outputs
-      if (node.data.outputs && node.data.outputs.length > 0) {
-        this.task.outputs = node.data.outputs.reduce(
-          (acc, out) => {
-            acc[out] = "option";
-            return acc;
-          },
-          { ...this.task.outputs }
-        );
-      }
+    if (node.data.outputs && node.data.outputs.length > 0) {
+      this.task.outputs = node.data.outputs.reduce(
+        (acc, out) => {
+          acc[out] = "output";
+          return acc;
+        },
+        { ...this.task.outputs }
+      );
     }
 
     return node;
@@ -115,21 +99,14 @@ export class SwitchGate extends Rete.Component {
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connected components
   async worker(node, inputs, data) {
-    const input = inputs["input"][0];
+    const gameState = await this.editor.thoth.getCurrentGameState();
 
-    // close all outputs
-    this._task.closed = [...node.data.outputs];
+    return Object.entries(gameState).reduce((acc, [key, value]) => {
+      if (node.data.outputs.includes(key)) {
+        acc[key] = value;
+      }
 
-    if (this._task.closed.includes(input)) {
-      // If the ouputs closed has the incoming text, filter closed outputs to not include it
-      this._task.closed = this._task.closed.filter(
-        (output) => output !== input
-      );
-    } else {
-      // otherwise open up the default output
-      this._task.closed = this._task.closed.filter(
-        (output) => output !== "default"
-      );
-    }
+      return acc;
+    }, {});
   }
 }
