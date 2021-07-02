@@ -1,6 +1,5 @@
 import { Layout, Model } from "flexlayout-react";
 import "flexlayout-react/style/dark.css";
-s;
 
 import { useRete, Editor } from "./contexts/Rete";
 import { useThoth } from "./contexts/Thoth";
