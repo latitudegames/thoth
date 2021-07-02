@@ -1,6 +1,6 @@
 import { Layout, Model } from "flexlayout-react";
 import "flexlayout-react/style/dark.css";
-import { useState, useEffect } from "react";
+s;
 
 import { useRete, Editor } from "./contexts/Rete";
 import { useThoth } from "./contexts/Thoth";
@@ -51,10 +51,18 @@ function App() {
     }
   };
 
+  const onRenderTabSet = (arg) => {
+    console.log(arg);
+  };
+
   return (
     <ThothPageWrapper toolbarItems={toolbar}>
       <div className="layout-container">
-        <Layout model={model} factory={factory} />
+        <Layout
+          model={model}
+          factory={factory}
+          onRenderTabSet={onRenderTabSet}
+        />
       </div>
       {/* <Editor /> */}
     </ThothPageWrapper>

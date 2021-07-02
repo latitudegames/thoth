@@ -1,6 +1,6 @@
 {
   "global": {
-    "tabEnableFloat": true
+    "tabEnableFloat": false
   },
   "layout": {
     "type": "row",
@@ -87,6 +87,13 @@
           "name": "Scene",
           "component": "scene",
           "enableClose": false
+        },
+        {
+          "type": "tab",
+          "id": "#4",
+          "name": "Spells",
+          "component": "spells",
+          "enableClose": false
         }
       ]
     },
@@ -96,7 +103,7 @@
       "children": [
         {
           "type": "tab",
-          "id": "#4",
+          "id": "#6",
           "name": "Options",
           "component": "grid",
           "enableClose": false
