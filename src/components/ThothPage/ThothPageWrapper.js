@@ -8,7 +8,7 @@ const ThothPageWrapper = ({ toolbarItems, ...props }) => {
   return (
     <div>
       <Toolbar>{toolbarItems}</Toolbar>
-      <ThothSidePanel />
+      {/* <ThothSidePanel /> */}
       {props.children}
     </div>
   );
