@@ -5,13 +5,13 @@ import { useRete } from "../../contexts/Rete";
 
 import css from "./sidepanel.module.css";
 
-const SpellBrowser = (props) => {
+const HieroglyphBrowser = (props) => {
   const { getNodes, getNodeMap, editor: nodeScreen } = useRete();
-  let heiroglyphList = getNodes();
-  let heiroglyphMap = getNodeMap();
+  let hieroglyphList = getNodes();
+  let hieroglyphMap = getNodeMap();
   return (
     <div className={css["node-grid"]}>
-      {Object.keys(heiroglyphList).map((item, index) => {
+      {Object.keys(hieroglyphList).map((item, index) => {
         return (
           <div
             draggable
@@ -19,7 +19,7 @@ const SpellBrowser = (props) => {
             key={item}
             onClick={async () => {
               nodeScreen.addNode(
-                await createNode(heiroglyphMap.get(heiroglyphList[item].name), {
+                await createNode(hieroglyphMap.get(hieroglyphList[item].name), {
                   x: 0,
                   y: 0,
                 })
@@ -27,14 +27,14 @@ const SpellBrowser = (props) => {
             }}
             onDragEnd={async (e) => {
               nodeScreen.addNode(
-                await createNode(heiroglyphMap.get(heiroglyphList[item].name), {
+                await createNode(hieroglyphMap.get(hieroglyphList[item].name), {
                   x: 0,
                   y: 0,
                 })
               );
             }}
           >
-            <div className={css["node-title"]}>{heiroglyphList[item].name}</div>
+            <div className={css["node-title"]}>{hieroglyphList[item].name}</div>
             <div className={css["node-bottom-container"]}></div>
           </div>
         );
@@ -43,4 +43,4 @@ const SpellBrowser = (props) => {
   );
 };
 
-export default SpellBrowser;
+export default HieroglyphBrowser;

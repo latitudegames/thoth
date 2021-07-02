@@ -1,21 +1,22 @@
 import React, { useState } from "react";
 
 import css from "./sidepanel.module.css";
-import Heiroglyphs from "./Heiroglyphs";
+import Hieroglyphs from "./Hieroglyphs";
 import Playtest from "./Playtest";
+import StateManager from "./StateManager";
 
 const ThothSidePanel = ({ nodeList, nodeMap, editor, ...props }) => {
-  const [activeTab, setActiveTab] = useState("playtest");
+  const [activeTab, setActiveTab] = useState("stateManager");
   const tabs = {
     spellBrowser: {
-      title: "Heiroglyphs",
+      title: "Hieroglyphs",
       component: (
-        <Heiroglyphs nodeMap={nodeMap} nodeList={nodeList} editor={editor} />
+        <Hieroglyphs nodeMap={nodeMap} nodeList={nodeList} editor={editor} />
       ),
     },
-    gameStateManager: {
-      title: "Game State Manager",
-      component: <Playtest />,
+    stateManager: {
+      title: "State Manager",
+      component: <StateManager />,
     },
     playtest: {
       title: "Playtest",
@@ -26,9 +27,10 @@ const ThothSidePanel = ({ nodeList, nodeMap, editor, ...props }) => {
   return (
     <div className={css["th-sidepanel"]}>
       <div className={css["tabs"]}>
-        {Object.keys(tabs).map((item) => {
+        {Object.keys(tabs).map((item, i) => {
           return (
             <div
+              key={`${item}-${i}`}
               onClick={() => {
                 setActiveTab(item);
               }}

@@ -2,6 +2,7 @@ import init from "../rete/editor";
 import gridimg from "../grid.png";
 
 import { usePubSub } from "./PubSub";
+import { useThoth } from "./Thoth";
 
 import { useContext, createContext, useState } from "react";
 
@@ -13,6 +14,7 @@ const Context = createContext({
   setEditor: () => {},
   getNodeMap: () => {},
   getNodes: () => {},
+  loadGraph: () => {},
 });
 
 export const useRete = () => useContext(Context);
@@ -21,10 +23,14 @@ const ReteProvider = ({ children }) => {
   const [editor, setEditor] = useState();
   const pubSub = usePubSub();
 
-  const buildEditor = async (el) => {
+  const buildEditor = async (container, thoth) => {
     if (editor) return;
 
-    const newEditor = await init(el, pubSub);
+    const newEditor = await init({
+      container,
+      pubSub,
+      thoth,
+    });
     setEditor(newEditor);
   };
 
@@ -33,7 +39,7 @@ const ReteProvider = ({ children }) => {
   };
 
   const serialize = () => {
-    console.log(JSON.stringify(editor.toJSON()));
+    return editor.toJSON();
   };
 
   const getNodeMap = () => {
@@ -44,6 +50,10 @@ const ReteProvider = ({ children }) => {
     return Object.fromEntries(editor.components);
   };
 
+  const loadGraph = (graph) => {
+    editor.loadGraph(graph);
+  };
+
   const publicInterface = {
     run,
     serialize,
@@ -51,6 +61,7 @@ const ReteProvider = ({ children }) => {
     buildEditor,
     getNodeMap,
     getNodes,
+    loadGraph,
   };
 
   return (
@@ -60,7 +71,7 @@ const ReteProvider = ({ children }) => {
 
 export const Editor = ({ children }) => {
   const { buildEditor } = useRete();
-
+  const thoth = useThoth();
 
   return (
     <>
@@ -72,14 +83,19 @@ export const Editor = ({ children }) => {
           position: "absolute",
           backgroundImage: `url('${gridimg}')`,
         }}
-        onDragOver={(e) => {e.preventDefault()}}
+        onDragOver={(e) => {
+          e.preventDefault();
+        }}
         onDrop={(e) => {}}
       >
-        <div
-          ref={(el) => {
-            if (el) buildEditor(el);
-          }}
-        />
+        {!thoth.currentSpell.graph && <p>Loading...</p>}
+        {thoth.currentSpell.graph && (
+          <div
+            ref={(el) => {
+              if (el) buildEditor(el, thoth);
+            }}
+          />
+        )}
       </div>
       {children}
     </>

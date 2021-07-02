@@ -27,8 +27,11 @@ export class PlaytestInput extends Rete.Component {
       // attach the text to the nodes data for access in worker
       node.data.text = text;
 
+      console.log("running!");
       // will need to run this here with the stater rather than the text
       this.initialTask.run(text);
+      this.initialTask.reset();
+      this.editor.trigger("process");
     });
   }
 
