@@ -83,13 +83,15 @@ export class StateRead extends Rete.Component {
       });
     }
 
-    this.task.outputs = node.data.outputs.reduce(
-      (acc, out) => {
-        acc[out] = "output";
-        return acc;
-      },
-      { ...this.task.outputs }
-    );
+    if (node.data.outputs && node.data.outputs.length > 0) {
+      this.task.outputs = node.data.outputs.reduce(
+        (acc, out) => {
+          acc[out] = "output";
+          return acc;
+        },
+        { ...this.task.outputs }
+      );
+    }
 
     return node;
   }
