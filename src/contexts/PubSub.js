@@ -10,9 +10,13 @@ const Context = createContext({
 
 export const usePubSub = () => useContext(Context);
 
-const events = {
+export { PubSub };
+
+export const events = {
   PLAYTEST_INPUT: "playtestInput",
   PLAYTEST_PRINT: "playtestPrint",
+  INSPECTOR_SET: "inspectorSet",
+  NODE_SET: (nodeId) => `nodeSet:${nodeId}`,
 };
 
 const PubSubProvider = ({ children }) => {
