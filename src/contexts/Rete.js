@@ -4,7 +4,7 @@ import gridimg from "../grid.png";
 import { usePubSub } from "./PubSub";
 import { useThoth } from "./Thoth";
 
-import { useContext, createContext, useState } from "react";
+import { useContext, createContext, useState, useEffect } from "react";
 
 const Context = createContext({
   run: () => {},
@@ -22,6 +22,24 @@ export const useRete = () => useContext(Context);
 const ReteProvider = ({ children }) => {
   const [editor, setEditor] = useState();
   const pubSub = usePubSub();
+  const { publish, subscribe, events } = pubSub;
+
+  useEffect(() => {
+    if (editor?.on) {
+      editor.on("nodeselect", (node) => {
+        publish(events.INSPECTOR_SET, {
+          nodeId: node.id,
+          ...node.data,
+        });
+
+        subscribe(events.NODE_SET(node.id), (event, data) => {
+          console.log("NODE DATA RECEIVED", data);
+          node.data = data;
+          node.update();
+        });
+      });
+    }
+  });
 
   const buildEditor = async (container, thoth) => {
     if (editor) return;
