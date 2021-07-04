@@ -8,8 +8,8 @@ import json from "./layout.json";
 
 import "./dds-globals/dds-globals.css";
 import "./App.css";
-import StateManager from "./components/ThothSidePanel/StateManager";
-import Playtest from "./components/ThothSidePanel/Playtest";
+import StateManager from "./components/Windows/StateManager";
+import Playtest from "./components/Windows/Playtest";
 import Inspector from "./components/Windows/Inspector";
 
 const model = Model.fromJson(json);
