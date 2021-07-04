@@ -10,6 +10,7 @@ import "./dds-globals/dds-globals.css";
 import "./App.css";
 import StateManager from "./components/ThothSidePanel/StateManager";
 import Playtest from "./components/ThothSidePanel/Playtest";
+import Inspector from "./components/Windows/Inspector";
 
 const model = Model.fromJson(json);
 
@@ -45,23 +46,17 @@ function App() {
         return <StateManager />;
       case "playtest":
         return <Playtest />;
+      case "inspector":
+        return <Inspector />;
       default:
         return <p></p>;
     }
   };
 
-  const onRenderTabSet = (arg) => {
-    console.log(arg);
-  };
-
   return (
     <ThothPageWrapper toolbarItems={toolbar}>
       <div className="layout-container">
-        <Layout
-          model={model}
-          factory={factory}
-          onRenderTabSet={onRenderTabSet}
-        />
+        <Layout model={model} factory={factory} />
       </div>
       {/* <Editor /> */}
     </ThothPageWrapper>
