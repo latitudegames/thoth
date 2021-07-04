@@ -29,16 +29,15 @@ const ReteProvider = ({ children }) => {
       // whenever a node is selected, we publish a notification to the inspector
       editor.on("nodeselect", (node) => {
         publish(events.INSPECTOR_SET, {
+          name: node.name,
           nodeId: node.id,
-          ...node.data,
+          data: node.data,
         });
 
         // we set up a subscribe to that nodes channel when it saves data.
-        subscribe(events.NODE_SET(node.id), (event, data) => {
+        subscribe(events.NODE_SET(node.id), (event, { data }) => {
           node.data = data;
 
-          console.log("received");
-          //
           if (node.onInspector) {
             node.onInspector(data);
           }
