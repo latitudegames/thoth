@@ -100,3 +100,12 @@ input {
 .context-menu {
   width: var(--c50);
 }
+.layout-container .flexlayout__layout {
+  margin-top: 70px;
+}
+.flexlayout__tab {
+  overflow: hidden;
+}
+.flexlayout__tabset-selected {
+  background: rgb(50 50 50 / 95%);
+}
