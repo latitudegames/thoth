@@ -21,6 +21,19 @@
         ]
       },
       {
+        "type": "tabset",
+        "id": "#16",
+        "weight": 5,
+        "children": [
+          {
+            "type": "tab",
+            "id": "#31",
+            "name": "Inspector",
+            "component": "inspector"
+          }
+        ]
+      },
+      {
         "type": "row",
         "id": "#24",
         "weight": 5.0216980506793005,
