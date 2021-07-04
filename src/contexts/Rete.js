@@ -26,20 +26,27 @@ const ReteProvider = ({ children }) => {
 
   useEffect(() => {
     if (editor?.on) {
+      // whenever a node is selected, we publish a notification to the inspector
       editor.on("nodeselect", (node) => {
         publish(events.INSPECTOR_SET, {
           nodeId: node.id,
           ...node.data,
         });
 
+        // we set up a subscribe to that nodes channel when it saves data.
         subscribe(events.NODE_SET(node.id), (event, data) => {
-          console.log("NODE DATA RECEIVED", data);
           node.data = data;
+
+          console.log("received");
+          //
+          if (node.onInspector) {
+            node.onInspector(data);
+          }
           node.update();
         });
       });
     }
-  });
+  }, [editor, events, publish, subscribe]);
 
   const buildEditor = async (container, thoth) => {
     if (editor) return;
