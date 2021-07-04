@@ -75,6 +75,11 @@ export class SwitchGate extends Rete.Component {
       node.update();
     };
 
+    node.onInspector = (data) => {
+      setOutputs(data.outputs);
+      console.log("ON INSPECTOR");
+    };
+
     const switchControl = new OutputGenerator({
       defaultOutputs: node.data.outputs || ["default"],
       setOutputs: (outputs) => setOutputs.call(this, outputs),
