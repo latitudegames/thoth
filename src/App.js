@@ -1,9 +1,17 @@
+import { Layout, Model } from "flexlayout-react";
+import "flexlayout-react/style/dark.css";
+
 import { useRete, Editor } from "./contexts/Rete";
 import { useThoth } from "./contexts/Thoth";
 import ThothPageWrapper from "./components/ThothPage/ThothPageWrapper";
+import json from "./layout.json";
 
 import "./dds-globals/dds-globals.css";
 import "./App.css";
+import StateManager from "./components/ThothSidePanel/StateManager";
+import Playtest from "./components/ThothSidePanel/Playtest";
+
+const model = Model.fromJson(json);
 
 function App() {
   const { serialize } = useRete();
@@ -28,9 +36,34 @@ function App() {
     </>
   );
 
+  const factory = (node) => {
+    const component = node.getComponent();
+    switch (component) {
+      case "editor":
+        return <Editor />;
+      case "stateManager":
+        return <StateManager />;
+      case "playtest":
+        return <Playtest />;
+      default:
+        return <p></p>;
+    }
+  };
+
+  const onRenderTabSet = (arg) => {
+    console.log(arg);
+  };
+
   return (
     <ThothPageWrapper toolbarItems={toolbar}>
-      <Editor />
+      <div className="layout-container">
+        <Layout
+          model={model}
+          factory={factory}
+          onRenderTabSet={onRenderTabSet}
+        />
+      </div>
+      {/* <Editor /> */}
     </ThothPageWrapper>
   );
 }

@@ -46,16 +46,22 @@
   flex: 1;
   font-family: "IBM Plex Mono", "mono";
   overflow-y: hidden;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  left: 5px;
+  bottom: 60px;
 }
 .code-editor {
   border: 1px solid var(--dark-2);
-  /* padding: var(--small); */
-  /* background-color: rgba(40, 40, 40, 0.95);
-  color: rgba(150, 150, 150, 0.95); */
-  /* /* flex: 1; */
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  left: 5px;
+  bottom: 60px;
+
   font-family: 12px / normal "Monaco", "Menlo", "Ubuntu Mono", "Consolas",
     "source-code-pro", monospace !important;
-  /* overflow-y: hidden; */
 }
 .code-editor .ace_editor span,
 .code-editor .ace_editor textarea {
@@ -65,7 +71,12 @@
 .input {
   margin-top: var(--extraSmall);
   display: flex;
+  position: absolute;
+  right: 5px;
+  left: 5px;
+  bottom: 5px;
 }
+
 .input input {
   color: #fff;
   border-radius: 4px;
