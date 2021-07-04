@@ -3,7 +3,7 @@ import { stringSocket, actionSocket, dataSocket } from "../sockets";
 import { DisplayControl } from "../controls/DisplayControl";
 import { completion } from "../../utils/openaiHelper";
 
-const fewShots = `Change each statement to be in the third person present tense and correct all grammar.
+const fewshot = `Change each statement to be in the third person present tense and correct all grammar.
 
 Matt: am sleepy.
 Third Person: Matt is sleepy.
@@ -79,6 +79,8 @@ export class TenseTransformer extends Rete.Component {
   // when we have enki hooked up and have grabbed all few shots, we would use the builder
   // to generate the appropriate inputs and ouputs for the fewshot at build time
   builder(node) {
+    // Set fewshot into nodes data
+    node.data.fewshot = fewshot;
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const textInput = new Rete.Input("text", "Text", stringSocket);
     const nameInput = new Rete.Input("name", "Name", stringSocket);
@@ -109,7 +111,7 @@ export class TenseTransformer extends Rete.Component {
   async worker(node, inputs, outputs) {
     // ADD ON INPUT
     const { name, text } = inputs;
-    const prompt = `${fewShots}${name[0]}: ${text[0]}\nThird Person:`;
+    const prompt = `${node.data.fewshot}${name[0]}: ${text[0]}\nThird Person:`;
 
     const body = {
       prompt,
