@@ -26,7 +26,8 @@ const StateManager = (props) => {
   };
 
   useEffect(() => {
-    if (props?.node?.rect?.height) setHeight(props.node.rect.height);
+    if (props?.node?.rect?.height)
+      setHeight(props.node.rect.height - bottomHeight);
     props.node.setEventListener("resize", (data) => {
       setTimeout(() => setHeight(data.rect.height - bottomHeight), 0);
     });
@@ -57,12 +58,16 @@ const StateManager = (props) => {
         defaultValue={code}
         onChange={setCode}
       />
-      <Box className={css["input"]} css={{ height: bottomHeight }} flex={1}>
-        <button className="secondary" onClick={onClear}>
-          Clear
-        </button>
+      <Box
+        className={css["bottom-container"]}
+        css={{ height: bottomHeight }}
+        flex={1}
+      >
         <button className="primary" onClick={onSave}>
           Save
+        </button>
+        <button className="secondary" onClick={onClear}>
+          Clear
         </button>
       </Box>
     </Flex>
