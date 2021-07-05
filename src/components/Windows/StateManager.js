@@ -28,6 +28,8 @@ const StateManager = (props) => {
   useEffect(() => {
     if (props?.node?.rect?.height)
       setHeight(props.node.rect.height - bottomHeight);
+
+    // this is to dynamically set the appriopriate height so that Monaco editor doesnt break flexbox when resizing
     props.node.setEventListener("resize", (data) => {
       setTimeout(() => setHeight(data.rect.height - bottomHeight), 0);
     });
