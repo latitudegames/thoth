@@ -46,11 +46,6 @@
   flex: 1;
   font-family: "IBM Plex Mono", "mono";
   overflow-y: hidden;
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  left: 5px;
-  bottom: 60px;
 }
 
 .bottom-container button {
