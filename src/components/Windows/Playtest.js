@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { Flex, Box } from "rebass";
 import { usePubSub } from "../../contexts/PubSub";
 
 import css from "./windows.module.css";
@@ -41,17 +42,21 @@ const Playtest = ({ ...props }) => {
   };
 
   return (
-    <>
-      <div className={css["playtest-output"]}>
-        <ul>{history.map(printItem)}</ul>
-      </div>
-      <div className={css["input"]}>
-        <input type="text" value={value} onChange={onChange}></input>
-        <button className="primary" onClick={publishInput}>
-          Send
-        </button>
-      </div>
-    </>
+    <Flex flexDirection="column" css={{ height: "100%" }}>
+      <Box flex={8} css={{ display: "flex" }}>
+        <div className={css["playtest-output"]}>
+          <ul>{history.map(printItem)}</ul>
+        </div>
+      </Box>
+      <Box flex={1}>
+        <div className={css["input"]}>
+          <input type="text" value={value} onChange={onChange}></input>
+          <button className="primary" onClick={publishInput}>
+            Send
+          </button>
+        </div>
+      </Box>
+    </Flex>
   );
 };
 
