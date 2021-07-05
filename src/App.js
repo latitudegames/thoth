@@ -43,7 +43,7 @@ function App() {
       case "editor":
         return <Editor />;
       case "stateManager":
-        return <StateManager />;
+        return <StateManager node={node} />;
       case "playtest":
         return <Playtest />;
       case "inspector":
