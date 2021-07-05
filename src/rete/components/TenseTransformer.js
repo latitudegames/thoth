@@ -71,6 +71,12 @@ export class TenseTransformer extends Rete.Component {
         data: "option",
       },
     };
+
+    this.dataControls = {
+      fewshot: {
+        type: "textarea",
+      },
+    };
   }
 
   displayControl = {};
