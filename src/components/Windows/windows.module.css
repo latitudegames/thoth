@@ -53,10 +53,9 @@
   bottom: 60px;
 }
 
-.ace_line > span,
-.ace_line > textarea {
-  font: 12px / normal "Monaco", "Menlo", "Ubuntu Mono", "Consolas",
-    "source-code-pro", monospace !important;
+.bottom-container button {
+  float: right;
+  margin-right: 10px;
 }
 
 .code-editor {
