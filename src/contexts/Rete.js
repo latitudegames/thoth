@@ -28,9 +28,11 @@ const ReteProvider = ({ children }) => {
     if (editor?.on) {
       // whenever a node is selected, we publish a notification to the inspector
       editor.on("nodeselect", (node) => {
+        const component = editor.getComponent(node.name);
         publish(events.INSPECTOR_SET, {
           name: node.name,
           nodeId: node.id,
+          dataControls: component.dataControls,
           data: node.data,
         });
 
