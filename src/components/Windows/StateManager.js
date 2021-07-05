@@ -7,9 +7,12 @@ import css from "./windows.module.css";
 
 import { useThoth } from "../../contexts/Thoth";
 
-const StateManager = ({ ...props }) => {
+const StateManager = (props) => {
   const { currentGameState, rewriteCurrentGameState } = useThoth();
   const [code, setCode] = useState("{}");
+  const [height, setHeight] = useState();
+
+  const bottomHeight = 50;
 
   const editorOptions = {
     lineNumbers: false,
@@ -19,7 +22,15 @@ const StateManager = ({ ...props }) => {
     suggest: {
       preview: false,
     },
+    // automaticLayout: true,
   };
+
+  useEffect(() => {
+    if (props?.node?.rect?.height) setHeight(props.node.rect.height);
+    props.node.setEventListener("resize", (data) => {
+      setTimeout(() => setHeight(data.rect.height - bottomHeight), 0);
+    });
+  }, [props.node]);
 
   useEffect(() => {
     if (currentGameState) setCode(jsonFormat(currentGameState));
@@ -36,27 +47,17 @@ const StateManager = ({ ...props }) => {
   };
 
   return (
-    <Flex flexDirection="column" css={{ height: "100%" }}>
+    <Flex flexDirection="column" css={{ height: "100%", minHeight: 0 }}>
       <Editor
-        height="90vh"
         theme="vs-dark"
+        height={height}
         defaultLanguage="json"
         value={code}
         options={editorOptions}
         defaultValue={code}
         onChange={setCode}
       />
-      {/* <CustomScroll flex="8">
-        <Editor
-          value={code}
-          onValueChange={setCode}
-          highlight={(code) => {
-            return highlight(code, languages.json);
-          }}
-          padding={10}
-        />
-      </CustomScroll> */}
-      <Box className={css["input"]} flex={1}>
+      <Box className={css["input"]} css={{ height: bottomHeight }} flex={1}>
         <button className="secondary" onClick={onClear}>
           Clear
         </button>
