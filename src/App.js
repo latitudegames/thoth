@@ -47,7 +47,7 @@ function App() {
       case "playtest":
         return <Playtest />;
       case "inspector":
-        return <Inspector />;
+        return <Inspector node={node} />;
       default:
         return <p></p>;
     }
