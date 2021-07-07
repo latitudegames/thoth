@@ -41,6 +41,19 @@ function App() {
     </>
   );
 
+  const tabs = [
+    {
+      name: "My Project",
+      type: "Project",
+      active: true,
+    },
+    {
+      name: "My Enki",
+      type: "Enki",
+      active: false,
+    },
+  ];
+
   const factory = (node) => {
     const component = node.getComponent();
     switch (component) {
@@ -58,7 +71,7 @@ function App() {
   };
 
   return (
-    <ThothPageWrapper toolbarItems={toolbar}>
+    <ThothPageWrapper toolbarItems={toolbar} tabs={tabs}>
       <div className="layout-container">
         <Layout model={model} factory={factory} />
       </div>
