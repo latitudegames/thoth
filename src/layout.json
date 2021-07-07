@@ -28,8 +28,8 @@
           {
             "type": "tab",
             "id": "#31",
-            "name": "inspecto",
-            "component": "editor"
+            "name": "inspector",
+            "component": "inspector"
           }
         ]
       },
