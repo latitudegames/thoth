@@ -1,8 +1,7 @@
 .th-tabbar {
   flex: 1;
   display: inline-block;
-  padding: var(--extraSmall);
-  background-color: var(--dark-1);
+  background-color: var(--dark-0);
   border-bottom: 1px solid var(--dark-2);
   width: 100%;
   display: flex;
@@ -13,18 +12,56 @@
 }
 .tabbar-section {
   display: flex;
-  flex: 1;
 }
-.tabbar-section:last-child {
+/* .tabbar-section:last-child {
   justify-content: flex-end;
-}
+} */
 .thoth-logo {
   position: relative;
   top: 6px;
   margin-left: var(--extraSmall);
+  margin-right: var(--medium);
   height: var(--c3);
   padding: 3px;
 }
-.tabbar-section button {
+
+.tabbar-tab {
+  padding: var(--c2) var(--c3);
+  box-sizing: border-box;
+  width: var(--c28);
+  background-color: var(--dark-1);
+  position: relative;
+}
+
+.tabbar-tab.active {
+  background-color: var(--dark-2);
+}
+
+.tabbar-tab.inactive {
+  background-color: var(--dark-1);
+  border-radius: 4px;
+  padding-top: var(--c1);
+  padding-bottom: var(--c1);
+  height: 90%;
+  top: var(--extraSmall);
   margin-left: var(--extraSmall);
+}
+
+.tabbar-tab p {
+  flex: 1;
+  display: inline-block;
+  margin: 0;
+  cursor: pointer;
+}
+
+.tabbar-tab span {
+  position: absolute;
+  top: var(--small);
+  right: 10px;
+  font-size: var(--c2);
+  cursor: pointer;
+}
+
+.tabbar-tab.inactive span {
+  top: var(--extraSmall);
 }
