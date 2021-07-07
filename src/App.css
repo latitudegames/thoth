@@ -124,5 +124,31 @@ input {
   overflow: hidden;
 }
 .flexlayout__tabset-selected {
-  background: rgb(50 50 50 / 95%);
+  background: var(--dark-0);
+}
+.flexlayout__tabset_tabbar_inner_tab_container_top {
+  border-top: none;
+  background-color: var(--dark-0);
+}
+.flexlayout__tabset_tabbar_outer_top {
+  border-bottom: none;
+}
+.flexlayout__tabset {
+  font-size: 16px;
+}
+.flexlayout__tab {
+  background-color: var(--dark-2);
+}
+.flexlayout__tab_toolbar {
+  background-color: var(--dark-0);
+}
+.flexlayout__tab_button {
+  margin: 0;
+  background-color: var(--dark-2);
+}
+.flexlayout__tab_button {
+  border-top-right-radius: 0;
+}
+.flexlayout__tab_button--unselected {
+  background-color: var(--dark-1);
 }
