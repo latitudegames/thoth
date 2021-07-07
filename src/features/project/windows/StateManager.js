@@ -5,7 +5,7 @@ import { Flex, Box } from "rebass";
 
 import css from "./windows.module.css";
 
-import { useThoth } from "../../contexts/Thoth";
+import { useThoth } from "../../../contexts/Thoth";
 
 const StateManager = (props) => {
   const { currentGameState, rewriteCurrentGameState } = useThoth();
@@ -51,6 +51,18 @@ const StateManager = (props) => {
 
   return (
     <Flex flexDirection="column" css={{ height: "100%", minHeight: 0 }}>
+      <Box
+        className={css["bottom-container"]}
+        css={{ height: bottomHeight }}
+        flex={1}
+      >
+        <button className="small" onClick={onSave}>
+          Save
+        </button>
+        <button className="small" onClick={onClear}>
+          Clear
+        </button>
+      </Box>
       <Editor
         theme="vs-dark"
         height={height}
@@ -60,18 +72,6 @@ const StateManager = (props) => {
         defaultValue={code}
         onChange={setCode}
       />
-      <Box
-        className={css["bottom-container"]}
-        css={{ height: bottomHeight }}
-        flex={1}
-      >
-        <button className="primary" onClick={onSave}>
-          Save
-        </button>
-        <button className="secondary" onClick={onClear}>
-          Clear
-        </button>
-      </Box>
     </Flex>
   );
 };

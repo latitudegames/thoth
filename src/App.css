@@ -78,9 +78,15 @@ button.primary {
 }
 button.list {
   background-color: var(--dark-2);
+  padding: 3px;
   padding-left: var(--small);
   padding-right: var(--small);
-  padding: 3px;
+}
+button.small {
+  background-color: var(--dark-2);
+  padding: 8px;
+  padding-left: var(--small);
+  padding-right: var(--small);
 }
 button:hover {
   filter: brightness(1.1);
