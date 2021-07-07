@@ -66,13 +66,16 @@ button {
   border-radius: 4px;
   cursor: pointer;
   background-color: var(--dark-2);
-  border: 1px solid var(--dark-2);
+  border: 1px solid var(--dark-3);
   padding: 9px 16px;
   padding-left: var(--small);
   padding-right: var(--small);
   font-family: "IBM Plex Mono", "sans-serif" !important;
   font-size: 11px;
   text-transform: uppercase;
+}
+button.option {
+  border: none;
 }
 button.primary {
   background-color: var(--primary);
@@ -108,7 +111,7 @@ input {
   width: var(--c50);
 }
 .layout-container .flexlayout__layout {
-  margin-top: 70px;
+  margin-top: var(--c12);
 }
 .flexlayout__tab {
   overflow: hidden;

@@ -31,9 +31,13 @@ function App() {
 
   const toolbar = (
     <>
-      <button onClick={onSave}>Save</button>
-      <button>Load</button>
-      <button onClick={onSerialize}>Export</button>
+      <button className="option" onClick={onSave}>
+        Save
+      </button>
+      <button className="option">Load</button>
+      <button className="option" onClick={onSerialize}>
+        Export
+      </button>
     </>
   );
 
