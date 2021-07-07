@@ -1,11 +1,17 @@
 html,
 body {
-  background-color: #191919;
+  background-color: var(--dark-0);
   color: var(--dark-4);
   overflow: hidden;
   padding: 0;
   margin: 0;
   font-size: 14px;
+}
+
+html,
+body,
+#root {
+  height: 100%;
 }
 
 h1,
@@ -110,8 +116,9 @@ input {
 .context-menu {
   width: var(--c50);
 }
-.layout-container .flexlayout__layout {
-  margin-top: var(--c13);
+.layout-container {
+  position: relative;
+  height: 100%;
 }
 .flexlayout__tab {
   overflow: hidden;

@@ -11,7 +11,7 @@ const ThothPageWrapper = ({ toolbarItems, tabs, ...props }) => {
       <TabBar tabs={tabs} />
       <Toolbar>{toolbarItems}</Toolbar>
       {/* <ThothSidePanel /> */}
-      {props.children}
+      <div className={css["view-container"]}>{props.children}</div>
     </div>
   );
 };
