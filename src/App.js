@@ -34,7 +34,6 @@ function App() {
       <button onClick={onSave}>Save</button>
       <button>Load</button>
       <button onClick={onSerialize}>Export</button>
-      <button onClick={serialize}>Create New</button>
     </>
   );
 

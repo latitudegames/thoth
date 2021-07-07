@@ -2,12 +2,14 @@ import React from "react";
 // import ThothSidePanel from "../ThothSidePanel/ThothSidePanel";
 
 import TabBar from "../TabBar/TabBar";
-import "./pagewrapper.module.css";
+import css from "./pagewrapper.module.css";
+import Toolbar from "../Toolbar/Toolbar";
 
 const ThothPageWrapper = ({ toolbarItems, ...props }) => {
   return (
-    <div>
-      <TabBar>{toolbarItems}</TabBar>
+    <div className={css["wrapper"]}>
+      <TabBar />
+      <Toolbar>{toolbarItems}</Toolbar>
       {/* <ThothSidePanel /> */}
       {props.children}
     </div>

@@ -1,5 +1,5 @@
 .th-tabbar {
-  position: absolute;
+  flex: 1;
   display: inline-block;
   padding: var(--extraSmall);
   background-color: var(--dark-1);
@@ -22,7 +22,8 @@
   position: relative;
   top: 6px;
   margin-left: var(--extraSmall);
-  height: var(--c4);
+  height: var(--c3);
+  padding: 3px;
 }
 .tabbar-section button {
   margin-left: var(--extraSmall);
