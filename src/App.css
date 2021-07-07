@@ -111,7 +111,7 @@ input {
   width: var(--c50);
 }
 .layout-container .flexlayout__layout {
-  margin-top: var(--c12);
+  margin-top: var(--c13);
 }
 .flexlayout__tab {
   overflow: hidden;
