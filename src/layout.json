@@ -28,8 +28,8 @@
           {
             "type": "tab",
             "id": "#31",
-            "name": "Inspector",
-            "component": "inspector"
+            "name": "inspecto",
+            "component": "editor"
           }
         ]
       },
@@ -68,60 +68,5 @@
         ]
       }
     ]
-  },
-  "borders": [
-    {
-      "type": "border",
-      "location": "bottom",
-      "children": [
-        {
-          "type": "tab",
-          "id": "#1",
-          "name": "Hieroglyphs",
-          "component": "grid",
-          "enableClose": false
-        },
-        {
-          "type": "tab",
-          "id": "#2",
-          "name": "Terminal",
-          "component": "grid",
-          "enableClose": false
-        }
-      ]
-    },
-    {
-      "type": "border",
-      "location": "left",
-      "children": [
-        {
-          "type": "tab",
-          "id": "#3",
-          "name": "Scene",
-          "component": "scene",
-          "enableClose": false
-        },
-        {
-          "type": "tab",
-          "id": "#4",
-          "name": "Spells",
-          "component": "spells",
-          "enableClose": false
-        }
-      ]
-    },
-    {
-      "type": "border",
-      "location": "right",
-      "children": [
-        {
-          "type": "tab",
-          "id": "#6",
-          "name": "Options",
-          "component": "grid",
-          "enableClose": false
-        }
-      ]
-    }
-  ]
+  }
 }
