@@ -5,10 +5,10 @@ import TabBar from "../TabBar/TabBar";
 import css from "./pagewrapper.module.css";
 import Toolbar from "../Toolbar/Toolbar";
 
-const ThothPageWrapper = ({ toolbarItems, ...props }) => {
+const ThothPageWrapper = ({ toolbarItems, tabs, ...props }) => {
   return (
     <div className={css["wrapper"]}>
-      <TabBar />
+      <TabBar tabs={tabs} />
       <Toolbar>{toolbarItems}</Toolbar>
       {/* <ThothSidePanel /> */}
       {props.children}
