@@ -107,6 +107,7 @@ export const Editor = ({ children }) => {
           width: "100vw",
           height: "100vh",
           position: "absolute",
+          backgroundColor: "#191919",
           backgroundImage: `url('${gridimg}')`,
         }}
         onDragOver={(e) => {
