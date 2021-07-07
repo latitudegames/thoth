@@ -5,7 +5,7 @@ import { Flex, Box } from "rebass";
 import TextareaAutosize from "react-textarea-autosize";
 import { Label, Input as InputComponent } from "@rebass/forms";
 
-import { usePubSub } from "../../contexts/PubSub";
+import { usePubSub } from "../../../contexts/PubSub";
 
 const Textarea = (props) => {
   const [value, setValue] = useState();

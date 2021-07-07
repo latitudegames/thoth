@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Flex, Box } from "rebass";
-import { usePubSub } from "../../contexts/PubSub";
+import { usePubSub } from "../../../contexts/PubSub";
 
 import css from "./windows.module.css";
 

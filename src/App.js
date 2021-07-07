@@ -3,14 +3,15 @@ import "flexlayout-react/style/dark.css";
 
 import { useRete, Editor } from "./contexts/Rete";
 import { useThoth } from "./contexts/Thoth";
-import ThothPageWrapper from "./components/ThothPage/ThothPageWrapper";
+import ThothPageWrapper from "./features/common/ThothPage/ThothPageWrapper";
 import json from "./layout.json";
 
 import "./dds-globals/dds-globals.css";
 import "./App.css";
-import StateManager from "./components/Windows/StateManager";
-import Playtest from "./components/Windows/Playtest";
-import Inspector from "./components/Windows/Inspector";
+
+import StateManager from "./features/project/windows/StateManager";
+import Playtest from "./features/project/windows/Playtest";
+import Inspector from "./features/project/windows/Inspector";
 
 const model = Model.fromJson(json);
 
