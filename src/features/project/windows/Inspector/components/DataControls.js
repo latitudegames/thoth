@@ -29,10 +29,10 @@ const StubComponent = (props) => <div>{props.name}</div>;
 // }
 
 const controlMap = {
-  longText: () => StubComponent,
-  input: () => StubComponent,
-  slider: () => StubComponent,
-  dial: () => StubComponent,
+  longText: StubComponent,
+  input: StubComponent,
+  slider: StubComponent,
+  dial: StubComponent,
 };
 
 const DataControls = ({ dataControls, updateData, width, data, ...props }) => {
