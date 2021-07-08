@@ -41,6 +41,14 @@ function App() {
     </>
   );
 
+  const options = (
+    <>
+      <button className="option">State Manager</button>
+      <button className="option">Playtest</button>
+      <button className="option">Inspector</button>
+    </>
+  );
+
   const tabs = [
     {
       name: "My Project",
@@ -71,7 +79,7 @@ function App() {
   };
 
   return (
-    <ThothPageWrapper toolbarItems={toolbar} tabs={tabs}>
+    <ThothPageWrapper toolbarItems={toolbar} tabs={tabs} options={options}>
       <div className="layout-container">
         <Layout model={model} factory={factory} />
       </div>
