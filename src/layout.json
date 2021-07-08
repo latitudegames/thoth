@@ -16,7 +16,7 @@
             "id": "#21",
             "enableClose": false,
             "className": "editor-tab",
-            "name": "Editor",
+            "name": "Composer",
             "component": "editor"
           }
         ]
