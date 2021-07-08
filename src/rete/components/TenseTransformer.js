@@ -1,5 +1,6 @@
 import Rete from "rete";
 import { stringSocket, actionSocket, dataSocket } from "../sockets";
+import { DataControl } from "../plugins/inspectorPlugin";
 import { DisplayControl } from "../controls/DisplayControl";
 import { completion } from "../../utils/openaiHelper";
 
@@ -71,12 +72,6 @@ export class TenseTransformer extends Rete.Component {
         data: "option",
       },
     };
-
-    this.dataControls = {
-      fewshot: {
-        type: "textarea",
-      },
-    };
   }
 
   displayControl = {};
@@ -100,6 +95,19 @@ export class TenseTransformer extends Rete.Component {
       key: "display",
       defaultDisplay: "awaiting response",
     });
+
+    const fewshotControl = new DataControl({
+      data: "fewshot",
+      name: "Fewshot",
+      controls: {
+        type: "longText",
+      },
+      onData: (data) => {
+        console.log("Data Received!", data);
+      },
+    });
+
+    node.inspector.add(fewshotControl);
 
     this.displayControl = display;
 
