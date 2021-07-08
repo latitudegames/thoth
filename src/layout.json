@@ -28,7 +28,7 @@
           {
             "type": "tab",
             "id": "#31",
-            "name": "inspector",
+            "name": "Inspector",
             "component": "inspector"
           }
         ]
