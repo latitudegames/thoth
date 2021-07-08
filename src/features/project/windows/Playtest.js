@@ -1,9 +1,36 @@
-import { useState, useEffect, useCallback } from "react";
-import { Flex, Box } from "rebass";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 import { usePubSub } from "../../../contexts/PubSub";
 import Window from "../../common/Window/Window";
 
 import css from "../project.module.css";
+
+const Input = (props) => {
+  const ref = useRef();
+  useHotkeys(
+    "return",
+    () => {
+      if (ref.current !== document.activeElement) return;
+      props.onSend();
+    },
+    { enableOnTags: "INPUT" },
+    [props, ref]
+  );
+
+  return (
+    <div className={css["playtest-input"]}>
+      <input
+        ref={ref}
+        type="text"
+        value={props.value}
+        onChange={props.onChange}
+      ></input>
+      <button className="small" onClick={props.onSend}>
+        Send
+      </button>
+    </div>
+  );
+};
 
 const Playtest = ({ ...props }) => {
   const [history, setHistory] = useState([]);
@@ -30,7 +57,8 @@ const Playtest = ({ ...props }) => {
 
   const printItem = (text, key) => <li key={key}>{text}</li>;
 
-  const publishInput = () => {
+  const onSend = () => {
+    console.log("Sending!", value);
     const newHistory = [...history, `You: ${value}`];
     setHistory(newHistory);
     publish(PLAYTEST_INPUT, value);
@@ -53,12 +81,7 @@ const Playtest = ({ ...props }) => {
       <div className={css["playtest-output"]}>
         <ul>{history.map(printItem)}</ul>
       </div>
-      <div className={css["playtest-input"]}>
-        <input type="text" value={value} onChange={onChange}></input>
-        <button className="small" onClick={publishInput}>
-          Send
-        </button>
-      </div>
+      <Input onChange={onChange} value={value} onSend={onSend} />
     </Window>
   );
 };
