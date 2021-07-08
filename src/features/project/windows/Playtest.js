@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { Flex, Box } from "rebass";
 import { usePubSub } from "../../../contexts/PubSub";
+import Window from "../../common/Window/Window";
 
-import css from "./windows.module.css";
+import css from "../project.module.css";
 
 const Playtest = ({ ...props }) => {
   const [history, setHistory] = useState([]);
@@ -14,7 +15,6 @@ const Playtest = ({ ...props }) => {
 
   const printToConsole = useCallback(
     (_, text) => {
-      console.log("message received!");
       const newHistory = [...history, text];
       setHistory(newHistory);
     },
@@ -28,7 +28,7 @@ const Playtest = ({ ...props }) => {
     return unsubscribe;
   }, [subscribe, printToConsole, PLAYTEST_PRINT]);
 
-  const printItem = (text, key) => <p key={key}>{text}</p>;
+  const printItem = (text, key) => <li key={key}>{text}</li>;
 
   const publishInput = () => {
     const newHistory = [...history, `You: ${value}`];
@@ -41,22 +41,25 @@ const Playtest = ({ ...props }) => {
     setValue(e.target.value);
   };
 
+  const toolbar = (
+    <>
+      <button className="small">History</button>
+      <button className="small">Clear</button>
+    </>
+  );
+
   return (
-    <Flex flexDirection="column" css={{ height: "100%" }}>
-      <Box flex={8} css={{ display: "flex" }}>
-        <div className={css["playtest-output"]}>
-          <ul>{history.map(printItem)}</ul>
-        </div>
-      </Box>
-      <Box flex={1}>
-        <div className={css["input"]}>
-          <input type="text" value={value} onChange={onChange}></input>
-          <button className="primary" onClick={publishInput}>
-            Send
-          </button>
-        </div>
-      </Box>
-    </Flex>
+    <Window toolbar={toolbar}>
+      <div className={css["playtest-output"]}>
+        <ul>{history.map(printItem)}</ul>
+      </div>
+      <div className={css["playtest-input"]}>
+        <input type="text" value={value} onChange={onChange}></input>
+        <button className="small" onClick={publishInput}>
+          Send
+        </button>
+      </div>
+    </Window>
   );
 };
 
