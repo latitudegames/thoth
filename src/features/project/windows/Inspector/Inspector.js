@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import Collapsible from "react-collapsible";
 import TextareaAutosize from "react-textarea-autosize";
 
-import Window from "../../common/Window/Window";
-import { usePubSub } from "../../../contexts/PubSub";
+import Window from "../../../common/Window/Window";
+import { usePubSub } from "../../../../contexts/PubSub";
+import { SimpleAccordion } from "../../../common/Accordion";
 
 const Textarea = (props) => {
   const [value, setValue] = useState();
@@ -57,7 +58,6 @@ const Inspector = (props) => {
 
   useEffect(() => {
     subscribe(events.INSPECTOR_SET, (event, data) => {
-      console.log("DATA", data);
       setData(data);
     });
   }, [events, subscribe]);
@@ -85,6 +85,7 @@ const Inspector = (props) => {
 
   return (
     <Window toolbar={toolbar}>
+      <SimpleAccordion />
       {data.dataControls &&
         Object.entries(data.dataControls).map(([key, value], i) => {
           const controlProps = {
