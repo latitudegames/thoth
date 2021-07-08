@@ -4,7 +4,7 @@ import ConnectionPlugin from "rete-connection-plugin";
 import ContextMenuPlugin from "rete-context-menu-plugin";
 import AreaPlugin from "rete-area-plugin";
 import TaskPlugin from "./plugins/taskPlugin";
-import { MyNode } from "../features/common/Node";
+import { MyNode } from "../features/common/Node/Node";
 import { InputComponent } from "./components/Input";
 import { TenseTransformer } from "./components/TenseTransformer";
 import { RunInputComponent } from "./components/RunInput";
