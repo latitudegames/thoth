@@ -3,6 +3,8 @@ import jsonFormat from "json-format";
 import Editor from "@monaco-editor/react";
 import { Flex, Box } from "rebass";
 
+import Window from "../../common/Window/Window";
+
 import css from "../project.module.css";
 
 import { useThoth } from "../../../contexts/Thoth";
@@ -49,20 +51,20 @@ const StateManager = (props) => {
     rewriteCurrentGameState(JSON.parse(code));
   };
 
+  const toolbar = (
+    <>
+      <button className="small">History</button>
+      <button className="small" onClick={onClear}>
+        Clear
+      </button>
+      <button className="small" onClick={onSave}>
+        Save
+      </button>
+    </>
+  );
+
   return (
-    <Flex flexDirection="column" css={{ height: "100%", minHeight: 0 }}>
-      <Box
-        className={css["bottom-container"]}
-        css={{ height: bottomHeight }}
-        flex={1}
-      >
-        <button className="small" onClick={onSave}>
-          Save
-        </button>
-        <button className="small" onClick={onClear}>
-          Clear
-        </button>
-      </Box>
+    <Window toolbar={toolbar}>
       <Editor
         theme="vs-dark"
         height={height}
@@ -72,7 +74,7 @@ const StateManager = (props) => {
         defaultValue={code}
         onChange={setCode}
       />
-    </Flex>
+    </Window>ss
   );
 };
 
