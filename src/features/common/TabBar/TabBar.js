@@ -29,7 +29,7 @@ const TabBar = ({ tabs }) => {
         <img className={css["thoth-logo"]} alt="Thoth logo" src={thothlogo} />
       </div>
       <div className={css["tabbar-section"]}>
-        {tabs && tabs.map((tab) => <Tab {...tab} />)}
+        {tabs && tabs.map((tab, i) => <Tab {...tab} key={i} />)}
       </div>
     </div>
   );
