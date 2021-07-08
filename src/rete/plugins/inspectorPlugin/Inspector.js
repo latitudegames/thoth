@@ -43,6 +43,7 @@ export class Inspector {
       control.onData(data[key]);
     });
 
+    // update the node at the end ofthid
     this.node.update();
   }
 
