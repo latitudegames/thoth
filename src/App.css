@@ -152,3 +152,6 @@ input {
 .flexlayout__tab_button--unselected {
   background-color: var(--dark-1);
 }
+.flexlayout__tab_button:hover {
+  background-color: var(--dark-3);
+}
