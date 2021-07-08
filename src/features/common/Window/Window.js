@@ -1,5 +1,4 @@
 import { Scrollbars } from "react-custom-scrollbars";
-
 import css from "./window.module.css";
 
 const WindowToolbar = (props) => {
@@ -14,9 +13,9 @@ const Window = (props) => {
   return (
     <div className={css["window"]}>
       <WindowToolbar>{props.toolbar}</WindowToolbar>
-      <WindowLayout>
-        <Scrollbars>{props.children}</Scrollbars>
-      </WindowLayout>
+      <Scrollbars>
+        <WindowLayout>{props.children}</WindowLayout>
+      </Scrollbars>
     </div>
   );
 };
