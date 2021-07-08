@@ -3,7 +3,7 @@ import jsonFormat from "json-format";
 import Editor from "@monaco-editor/react";
 import { Flex, Box } from "rebass";
 
-import css from "./windows.module.css";
+import css from "../project.module.css";
 
 import { useThoth } from "../../../contexts/Thoth";
 
