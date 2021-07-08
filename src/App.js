@@ -11,7 +11,7 @@ import "./App.css";
 
 import StateManager from "./features/project/windows/StateManager";
 import Playtest from "./features/project/windows/Playtest";
-import Inspector from "./features/project/windows/Inspector";
+import Inspector from "./features/project/windows/Inspector/Inspector";
 
 const model = Model.fromJson(json);
 
