@@ -1,0 +1,19 @@
+.window {
+  display: flex;
+  flex-direction: column;
+  padding: var(--c1);
+  height: 100%;
+  box-sizing: border-box;
+}
+.window-layout {
+  border: 1px solid var(--dark-1);
+  flex-grow: 28;
+  box-sizing: border-box;
+  /* height: 100%; */
+}
+.window-toolbar {
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+  padding-bottom: var(--c1);
+}
