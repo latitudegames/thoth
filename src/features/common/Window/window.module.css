@@ -9,11 +9,18 @@
   border: 1px solid var(--dark-1);
   flex-grow: 28;
   box-sizing: border-box;
-  /* height: 100%; */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 .window-toolbar {
   display: flex;
   flex: 1;
+  height: var(--c4);
   justify-content: flex-end;
   padding-bottom: var(--c1);
+}
+
+.window-toolbar button {
+  margin-right: var(--c1);
 }
