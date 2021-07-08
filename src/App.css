@@ -82,6 +82,8 @@ button {
 }
 button.option {
   border: none;
+  margin: 0;
+  border-radius: 0;
 }
 button.primary {
   background-color: var(--primary);
@@ -153,5 +155,6 @@ input {
   background-color: var(--dark-1);
 }
 .flexlayout__tab_button:hover {
-  background-color: var(--dark-3);
+  filter: brightness(2.1);
+  /* background-color: var(--dark-3); */
 }
