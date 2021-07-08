@@ -4,7 +4,7 @@ import gridimg from "../grid.png";
 import { usePubSub } from "./PubSub";
 import { useThoth } from "./Thoth";
 
-import { useContext, createContext, useState, useEffect } from "react";
+import { useContext, createContext, useState } from "react";
 
 const Context = createContext({
   run: () => {},
@@ -22,32 +22,6 @@ export const useRete = () => useContext(Context);
 const ReteProvider = ({ children }) => {
   const [editor, setEditor] = useState();
   const pubSub = usePubSub();
-  const { publish, subscribe, events } = pubSub;
-
-  useEffect(() => {
-    if (editor?.on) {
-      // whenever a node is selected, we publish a notification to the inspector
-      editor.on("nodeselect", (node) => {
-        const component = editor.getComponent(node.name);
-        publish(events.INSPECTOR_SET, {
-          name: node.name,
-          nodeId: node.id,
-          dataControls: component.dataControls,
-          data: node.data,
-        });
-
-        // we set up a subscribe to that nodes channel when it saves data.
-        subscribe(events.NODE_SET(node.id), (event, { data }) => {
-          node.data = data;
-
-          if (node.onInspector) {
-            node.onInspector(data);
-          }
-          node.update();
-        });
-      });
-    }
-  }, [editor, events, publish, subscribe]);
 
   const buildEditor = async (container, thoth) => {
     if (editor) return;
