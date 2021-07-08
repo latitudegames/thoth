@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^4.12.1",
+    "@material-ui/icons": "^4.11.2",
     "@monaco-editor/react": "^4.2.1",
     "@rebass/forms": "^4.0.6",
     "@testing-library/jest-dom": "^5.11.4",
