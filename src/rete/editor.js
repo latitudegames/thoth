@@ -4,6 +4,7 @@ import ConnectionPlugin from "rete-connection-plugin";
 import ContextMenuPlugin from "rete-context-menu-plugin";
 import AreaPlugin from "rete-area-plugin";
 import TaskPlugin from "./plugins/taskPlugin";
+import InspectorPlugin from "./plugins/inspectorPlugin";
 import { MyNode } from "../features/common/Node/Node";
 import { InputComponent } from "./components/Input";
 import { TenseTransformer } from "./components/TenseTransformer";
@@ -75,6 +76,9 @@ const editor = async function ({ container, pubSub, thoth }) {
   // renders a context menu on right click that shows available nodes
   editor.use(ContextMenuPlugin);
   editor.use(TaskPlugin);
+
+  // This should only be needed on client, not server
+  editor.use(InspectorPlugin);
 
   // The engine is used to process/run the rete graph
   const engine = new Rete.Engine("demo@0.1.0");
