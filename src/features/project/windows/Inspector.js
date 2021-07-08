@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
-import { Scrollbars } from "react-custom-scrollbars";
 import Collapsible from "react-collapsible";
-import { Flex, Box } from "rebass";
 import TextareaAutosize from "react-textarea-autosize";
-import { Label, Input as InputComponent } from "@rebass/forms";
 
+import Window from "../../common/Window/Window";
 import { usePubSub } from "../../../contexts/PubSub";
 
 const Textarea = (props) => {
@@ -33,14 +31,6 @@ const Textarea = (props) => {
     </Collapsible>
   );
 };
-
-// const Slider = () => {};
-
-// const Switch = () => {};
-
-// const Radio = () => {};
-
-// const Select = () => {};
 
 const Inspector = (props) => {
   const { publish, subscribe, events } = usePubSub();
@@ -85,45 +75,33 @@ const Inspector = (props) => {
     setData(newData);
   };
 
-  return (
+  const toolbar = (
     <>
-      <p>Component Data:</p>
-      <Flex flexDirection="column" css={{ padding: 10 }}>
-        <Box flex={8}>
-          <button className="primary" onClick={onSave}>
-            Save
-          </button>
-        </Box>
-        <Box css={{ padding: 10, paddingTop: 20 }}>
-          <Scrollbars style={{ width, height }}>
-            {data.dataControls &&
-              Object.entries(data.dataControls).map(([key, value], i) => {
-                const props = {
-                  width,
-                  key,
-                  name: key,
-                  initialValue: data.data[key] || "",
-                  updateData,
-                };
-                switch (value.type) {
-                  case "textarea":
-                    return (
-                      <Textarea
-                        width={width - 20}
-                        key={i + key}
-                        name={key}
-                        initialValue={data.data[key] || ""}
-                        updateData={updateData}
-                      />
-                    );
-                  default:
-                    return <></>;
-                }
-              })}
-          </Scrollbars>
-        </Box>
-      </Flex>
+      <button className="small" onClick={onSave}>
+        Save
+      </button>
     </>
+  );
+
+  return (
+    <Window toolbar={toolbar}>
+      {data.dataControls &&
+        Object.entries(data.dataControls).map(([key, value], i) => {
+          const controlProps = {
+            width,
+            key,
+            name: key,
+            initialValue: data.data[key] || "",
+            updateData,
+          };
+          switch (value.type) {
+            case "textarea":
+              return <Textarea {...controlProps} />;
+            default:
+              return <></>;
+          }
+        })}
+    </Window>
   );
 };
 
