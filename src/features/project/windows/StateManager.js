@@ -74,7 +74,7 @@ const StateManager = (props) => {
         defaultValue={code}
         onChange={setCode}
       />
-    </Window>ss
+    </Window>
   );
 };
 
