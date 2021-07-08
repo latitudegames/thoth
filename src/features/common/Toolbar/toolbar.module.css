@@ -16,7 +16,7 @@
   flex: 1;
 }
 .toolbar-section:last-child {
-  justify-content: flex-start;
+  justify-content: flex-end;
 }
 .toolbar-section button {
   margin-left: var(--extraSmall);
