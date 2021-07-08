@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
 import jsonFormat from "json-format";
 import Editor from "@monaco-editor/react";
-import { Flex, Box } from "rebass";
-
 import Window from "../../common/Window/Window";
 
-import css from "../project.module.css";
+import "../project.module.css";
 
 import { useThoth } from "../../../contexts/Thoth";
 

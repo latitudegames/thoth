@@ -1,11 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { PouchDB } from "react-pouchdb";
-import {
-  createTheme,
-  makeStyles,
-  ThemeProvider,
-} from "@material-ui/core/styles";
+import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import App from "./App";
 import ReteProvider from "./contexts/Rete";
 import PubSubProvider from "./contexts/PubSub";
