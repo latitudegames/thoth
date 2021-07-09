@@ -3,7 +3,3 @@
   flex-direction: column;
   height: 100%;
 }
-.view-container {
-  padding: var(--c1);
-  height: 100%;
-}
