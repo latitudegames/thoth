@@ -1,0 +1,73 @@
+{
+  "global": {
+    "tabEnableFloat": false
+  },
+  "layout": {
+    "type": "row",
+    "id": "#5",
+    "children": [
+      {
+        "type": "tabset",
+        "id": "#15",
+        "weight": 12.971838964596847,
+        "children": [
+          {
+            "type": "tab",
+            "id": "#21",
+            "enableClose": false,
+            "className": "editor-tab",
+            "name": "Composer",
+            "component": "editor"
+          }
+        ]
+      },
+      {
+        "type": "tabset",
+        "id": "#16",
+        "weight": 5,
+        "children": [
+          {
+            "type": "tab",
+            "id": "#31",
+            "name": "Inspector",
+            "component": "inspector"
+          }
+        ]
+      },
+      {
+        "type": "row",
+        "id": "#24",
+        "weight": 5.0216980506793005,
+        "children": [
+          {
+            "type": "tabset",
+            "id": "#13",
+            "weight": 50,
+            "children": [
+              {
+                "type": "tab",
+                "id": "#10",
+                "name": "State Manager",
+                "component": "stateManager"
+              }
+            ],
+            "active": true
+          },
+          {
+            "type": "tabset",
+            "id": "#23",
+            "weight": 50,
+            "children": [
+              {
+                "type": "tab",
+                "id": "#22",
+                "name": "Playtest",
+                "component": "playtest"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
