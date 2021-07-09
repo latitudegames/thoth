@@ -39,8 +39,8 @@ export class Inspector {
     this.onData(data);
 
     // Send the right databack to each individual control callback handle
-    this.dataControls.forEach(([key, control]) => {
-      control.onData(data[key]);
+    this.dataControls.forEach((control, key) => {
+      if (control?.onData) control.onData(data[key]);
     });
 
     // update the node at the end ofthid
