@@ -1,4 +1,4 @@
-import { useContext, createContext, useState } from "react";
+import { useContext, createContext } from "react";
 import { useDB } from "react-pouchdb";
 
 const Context = createContext({
