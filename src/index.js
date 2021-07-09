@@ -1,32 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { PouchDB } from "react-pouchdb";
-import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import App from "./App";
-import ReteProvider from "./contexts/Rete";
-import PubSubProvider from "./contexts/PubSub";
-import ThothProvider from "./contexts/Thoth";
+import AppProviders from "./contexts/AppProviders";
 import reportWebVitals from "./reportWebVitals";
-
-const darkTheme = createTheme({
-  palette: {
-    type: "dark",
-  },
-});
 
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider theme={darkTheme}>
-      <PouchDB name="thoth">
-        <PubSubProvider>
-          <ReteProvider>
-            <ThothProvider>
-              <App />
-            </ThothProvider>
-          </ReteProvider>
-        </PubSubProvider>
-      </PouchDB>
-    </ThemeProvider>
+    <AppProviders>
+      <App />
+    </AppProviders>
   </React.StrictMode>,
   document.getElementById("root")
 );
