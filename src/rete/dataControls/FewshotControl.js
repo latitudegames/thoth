@@ -1,16 +1,19 @@
 import { DataControl } from "../plugins/inspectorPlugin";
 
 export class FewshotControl extends DataControl {
-  constructor({ onData }) {
+  constructor() {
     const options = {
       data: "fewshot",
       name: "Fewshot",
       controls: {
         type: "longText",
       },
-      onData,
     };
 
     super(options);
+  }
+
+  onData(data) {
+    console.log("ON DATA", data);
   }
 }
