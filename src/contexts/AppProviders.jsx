@@ -3,6 +3,7 @@ import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import ReteProvider from "./Rete";
 import PubSubProvider from "./PubSub";
 import ThothProvider from "./Thoth";
+import LayoutProvider from "./Layout";
 
 const darkTheme = createTheme({
   palette: {
@@ -14,6 +15,7 @@ const providers = [
   [ThemeProvider, { theme: darkTheme }],
   PubSubProvider,
   [PouchDB, { name: "thoth" }],
+  LayoutProvider,
   ThothProvider,
   ReteProvider,
 ];
