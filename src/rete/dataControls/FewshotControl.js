@@ -6,7 +6,7 @@ export class FewshotControl extends DataControl {
       data: "fewshot",
       name: "Fewshot",
       controls: {
-        type: "longText",
+        component: "longText",
       },
     };
 

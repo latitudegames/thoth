@@ -50,7 +50,7 @@ const DataControls = ({ dataControls, updateData, width, data, ...props }) => {
           updateData,
         };
 
-        const Component = controlMap[value.type] || StubComponent;
+        const Component = controlMap[value.component] || StubComponent;
 
         return (
           <SimpleAccordion heading={key} key={key}>
