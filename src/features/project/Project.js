@@ -1,7 +1,6 @@
 import { Layout, Model } from "flexlayout-react";
 import { useRete, Editor } from "../../contexts/Rete";
 import { useThoth } from "../../contexts/Thoth";
-import Toolbar from "../common/Toolbar/Toolbar";
 import StateManager from "./windows/StateManager";
 import Playtest from "./windows/Playtest";
 import Inspector from "./windows/Inspector/Inspector";
