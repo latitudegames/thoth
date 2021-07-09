@@ -21,16 +21,29 @@ export const useRete = () => useContext(Context);
 
 const ReteProvider = ({ children }) => {
   const [editor, setEditor] = useState();
+  const [editorMap, setEditorMap] = useState({});
   const pubSub = usePubSub();
 
-  const buildEditor = async (container, thoth) => {
-    if (editor) return;
+  const buildEditor = async (container, thoth, tab) => {
+    if (editorMap[tab]) {
+      // If we are here, we are swapping to a new editor.  Set teh editor from the map, and return.
+      setEditor(editorMap[tab]);
+      return;
+    }
 
     const newEditor = await init({
       container,
       pubSub,
       thoth,
     });
+
+    // editor map to store multiple instances of  editors based on tab
+    setEditorMap({
+      ...editorMap,
+      [tab]: editor,
+    });
+
+    // this should store the current editor
     setEditor(newEditor);
   };
 
@@ -69,7 +82,7 @@ const ReteProvider = ({ children }) => {
   );
 };
 
-export const Editor = ({ children }) => {
+export const Editor = ({ tab = "default", children }) => {
   const { buildEditor } = useRete();
   const thoth = useThoth();
 
@@ -93,7 +106,7 @@ export const Editor = ({ children }) => {
         {thoth.currentSpell.graph && (
           <div
             ref={(el) => {
-              if (el) buildEditor(el, thoth);
+              if (el) buildEditor(el, thoth, tab);
             }}
           />
         )}
