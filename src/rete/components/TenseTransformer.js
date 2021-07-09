@@ -96,11 +96,7 @@ export class TenseTransformer extends Rete.Component {
       defaultDisplay: "awaiting response",
     });
 
-    const fewshotControl = new FewshotControl({
-      onData: (data) => {
-        console.log("Data Received!", data);
-      },
-    });
+    const fewshotControl = new FewshotControl();
 
     node.inspector.add(fewshotControl);
 
