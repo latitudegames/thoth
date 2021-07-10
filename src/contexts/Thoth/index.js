@@ -5,8 +5,8 @@ import {
   useEffect,
   useCallback,
 } from "react";
-import { useDB } from "react-pouchdb";
 
+import { useDB } from "../Database";
 import { useRete } from "../Rete";
 import defaultSpellData from "./defaultSpell";
 
@@ -28,7 +28,7 @@ const Context = createContext({
 export const useThoth = () => useContext(Context);
 
 const ThothProvider = ({ children }) => {
-  const db = useDB();
+  const { db } = useDB();
   const { editor } = useRete();
 
   const [currentSpell, setCurrentSpellState] = useState({});
@@ -38,7 +38,11 @@ const ThothProvider = ({ children }) => {
 
   const setCurrentSpell = useCallback(
     async (spell) => {
-      const settings = await db.get("settings");
+      const settings = await db.settings
+        .findOne({
+          selector: "default",
+        })
+        .exec();
       settings.currentSpell = spell;
       await db.put(settings);
       setCurrentSpellState(spell);
@@ -52,27 +56,36 @@ const ThothProvider = ({ children }) => {
 
     // load initial settings
     (async () => {
-      const settings = await db.get("settings").catch(async (err) => {
-        console.log("SETTINGS NOT FOUND");
-        if (err.name === "not_found") {
-          const settings = {
-            _id: "settings",
-            currentSpell: "defaultSpell",
-          };
+      console.log(db);
+      let settings = await db.settings
+        .findOne({
+          selector: { name: "default" },
+        })
+        .exec();
 
-          await db.put(settings);
-          return settings;
-        }
-      });
+      if (!settings) {
+        settings = await db.settings.inser({
+          name: "default",
+          currentSpell: "defaultSpell",
+        });
+      }
 
       setSettings(settings);
 
-      const defaultSpell = await db.get("defaultSpell").catch(async (err) => {
-        if (err.name === "not_found") {
-          await db.put(defaultSpellData);
-          return defaultSpellData;
-        }
-      });
+      let defaultSpell = await db.spells
+        .findOne({
+          selector: {
+            name: settings.currentSpell,
+          },
+        })
+        .exec();
+
+      if (!defaultSpell) {
+        defaultSpell = await db.spells.insert({
+          name: "defaultSpell",
+          ...defaultSpellData,
+        });
+      }
 
       setCurrentSpellState(defaultSpell);
       setCurrentGameState(defaultSpell.gameState);
@@ -80,33 +93,39 @@ const ThothProvider = ({ children }) => {
   }, [db, setCurrentSpell]);
 
   const loadSpell = async (spellId) => {
-    const spell = getSpell(spellId);
+    const spell = await getSpell(spellId);
     setCurrentSpell(spell);
     setCurrentGameState(spell.gameState);
     editor.loadGraph(spell.graph);
   };
 
   const getSpell = async (spellId) => {
-    const spell = await db.get(spellId);
-    return spell;
+    return db.spells
+      .findOne({
+        selector: {
+          name: spellId,
+        },
+      })
+      .exec();
   };
 
   const saveSpell = async (spellId, update) => {
     const spell = await getSpell(spellId);
-    const newSpell = {
-      ...spell,
-      ...update,
-    };
 
-    return db.put(newSpell);
+    return await spell.atomicUpdate((oldData) => {
+      return {
+        ...oldData,
+        ...update,
+      };
+    });
   };
 
   const saveCurrentSpell = async (update) => {
-    return saveSpell(currentSpell._id, update);
+    return saveSpell(currentSpell.name, update);
   };
 
   const getCurrentGameState = async () => {
-    const spell = await getSpell(currentSpell._id);
+    const spell = await getSpell(currentSpell.name);
     return spell.gameState;
   };
 
@@ -124,8 +143,10 @@ const ThothProvider = ({ children }) => {
   const rewriteCurrentGameState = async (state) => {
     const currentSpell = await getSpell(settings.currentSpell);
     setStateHistory([...stateHistory, currentSpell.gameState]);
-    currentSpell.gameState = state;
-    await db.put(currentSpell);
+
+    await currentSpell.atomicPatch({
+      gameState: state,
+    });
     setCurrentSpellState(currentSpell);
     setCurrentGameState(currentSpell.gameState);
     return currentSpell;

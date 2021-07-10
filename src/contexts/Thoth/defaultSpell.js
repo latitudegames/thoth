@@ -52,7 +52,6 @@ const defaultGraph = {
 };
 
 const defaultSpell = {
-  _id: "defaultSpell",
   graph: defaultGraph,
   gameState: {
     history: [],
