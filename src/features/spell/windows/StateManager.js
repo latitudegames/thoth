@@ -19,10 +19,10 @@ const StateManager = (props) => {
     minimap: {
       enabled: false,
     },
+    fontSize: 18,
     suggest: {
       preview: false,
     },
-    // automaticLayout: true,
   };
 
   useEffect(() => {
