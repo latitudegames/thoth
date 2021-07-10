@@ -3,7 +3,7 @@ import jsonFormat from "json-format";
 import Editor from "@monaco-editor/react";
 import Window from "../../common/Window/Window";
 
-import "../project.module.css";
+import "../spell.module.css";
 
 import { useThoth } from "../../../contexts/Thoth";
 

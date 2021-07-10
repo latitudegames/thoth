@@ -10,7 +10,7 @@ import TabLayout from "../common/TabLayout/TabLayout";
 
 const model = Model.fromJson(defaultJson);
 
-const Project = () => {
+const Spell = () => {
   const { serialize } = useRete();
   const { saveCurrentSpell } = useThoth();
 
@@ -67,4 +67,4 @@ const Project = () => {
   );
 };
 
-export default Project;
+export default Spell;

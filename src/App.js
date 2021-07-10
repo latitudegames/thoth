@@ -1,7 +1,7 @@
 import "flexlayout-react/style/dark.css";
 
 import ThothPageWrapper from "./features/common/ThothPage/ThothPageWrapper";
-import Project from "./features/project/Project";
+import Spell from "./features/spell/Spell";
 
 import "./dds-globals/dds-globals.css";
 import "./App.css";
@@ -9,8 +9,8 @@ import "./App.css";
 function App() {
   const tabs = [
     {
-      name: "My Project",
-      type: "Project",
+      name: "My Spell",
+      type: "spell",
       active: true,
     },
     {
@@ -22,7 +22,7 @@ function App() {
 
   return (
     <ThothPageWrapper tabs={tabs}>
-      <Project />
+      <Spell />
     </ThothPageWrapper>
   );
 }

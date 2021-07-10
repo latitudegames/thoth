@@ -56,7 +56,6 @@ const ThothProvider = ({ children }) => {
 
     // load initial settings
     (async () => {
-      console.log(db);
       let settings = await db.settings
         .findOne({
           selector: { name: "default" },

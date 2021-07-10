@@ -3,7 +3,7 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { usePubSub } from "../../../contexts/PubSub";
 import Window from "../../common/Window/Window";
 
-import css from "../project.module.css";
+import css from "../spell.module.css";
 
 const Input = (props) => {
   const ref = useRef();
