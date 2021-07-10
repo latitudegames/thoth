@@ -4,8 +4,12 @@ import settingsSchema from "./schemas/settings";
 
 addRxPlugin(require("pouchdb-adapter-idb"));
 
+let database = null;
+
 export const initDB = async () => {
-  const database = await createRxDatabase({
+  if (database !== null) return database;
+
+  database = await createRxDatabase({
     name: "thoth_alpha", // <- name
     adapter: "idb", // <- storage-adapter
   });
