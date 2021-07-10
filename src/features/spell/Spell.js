@@ -7,6 +7,7 @@ import Inspector from "./windows/Inspector/Inspector";
 
 import defaultJson from "./layout.json";
 import TabLayout from "../common/TabLayout/TabLayout";
+import TextEditor from "./windows/TextEditor";
 
 const model = Model.fromJson(defaultJson);
 
@@ -55,6 +56,8 @@ const Spell = () => {
         return <Playtest />;
       case "inspector":
         return <Inspector node={node} />;
+      case "textEditor":
+        return <TextEditor node={node} />;
       default:
         return <p></p>;
     }
