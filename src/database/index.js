@@ -1,6 +1,7 @@
 import { createRxDatabase, addRxPlugin } from "rxdb";
 import spellSchema from "./schemas/spell";
 import settingsSchema from "./schemas/settings";
+import tabSchema from "./schemas/tab";
 
 addRxPlugin(require("pouchdb-adapter-idb"));
 
@@ -20,6 +21,9 @@ export const initDB = async () => {
     },
     settings: {
       schema: settingsSchema,
+    },
+    tabs: {
+      schema: tabSchema,
     },
   });
 
