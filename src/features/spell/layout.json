@@ -31,6 +31,12 @@
             "id": "#31",
             "name": "Inspector",
             "component": "inspector"
+          },
+          {
+            "type": "tab",
+            "id": "#40",
+            "name": "Text Editor",
+            "component": "textEditor"
           }
         ]
       },
