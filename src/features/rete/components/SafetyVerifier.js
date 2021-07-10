@@ -1,7 +1,7 @@
 import Rete from "rete";
 import { stringSocket, dataSocket, booleanSocket } from "../sockets";
 import { DisplayControl } from "../controls/DisplayControl";
-import { completion } from "../../utils/openaiHelper";
+import { completion } from "../../../utils/openaiHelper";
 
 const fewShots = `Rate the actions according to the following content categories
 X: Explicit sexual content, rape, cannibalism, incest
@@ -124,7 +124,7 @@ export class SafetyVerifier extends Rete.Component {
     const raw = await completion(body);
     const result = raw.trim() !== "X";
 
-    console.log(this.displayControl)
+    console.log(this.displayControl);
     this.displayControl.display(`${result}`);
 
     return {

@@ -1,7 +1,7 @@
 import Rete from "rete";
 import { actionSocket, dataSocket, arraySocket } from "../sockets";
 import { DisplayControl } from "../controls/DisplayControl";
-import { completion } from "../../utils/openaiHelper";
+import { completion } from "../../../utils/openaiHelper";
 
 const fewShots = `Given an action, detect what entities the player is interacting with. Ignore entities that the player is just asking about.
 
