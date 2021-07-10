@@ -43,8 +43,9 @@ const ThothProvider = ({ children }) => {
           selector: "default",
         })
         .exec();
-      settings.currentSpell = spell;
-      await db.put(settings);
+      await settings.atomicPatch({
+        currentSpell: spell,
+      });
       setCurrentSpellState(spell);
       setCurrentGameState(spell.gameState);
     },
@@ -63,7 +64,7 @@ const ThothProvider = ({ children }) => {
         .exec();
 
       if (!settings) {
-        settings = await db.settings.inser({
+        settings = await db.settings.insert({
           name: "default",
           currentSpell: "defaultSpell",
         });
