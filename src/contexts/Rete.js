@@ -1,4 +1,4 @@
-import init from "../rete/editor";
+import init from "../features/rete/editor";
 import gridimg from "../grid.png";
 
 import { usePubSub } from "./PubSub";

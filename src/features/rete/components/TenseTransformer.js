@@ -2,7 +2,7 @@ import Rete from "rete";
 import { stringSocket, actionSocket, dataSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
 import { DisplayControl } from "../controls/DisplayControl";
-import { completion } from "../../utils/openaiHelper";
+import { completion } from "../../../utils/openaiHelper";
 
 const fewshot = `Change each statement to be in the third person present tense and correct all grammar.
 

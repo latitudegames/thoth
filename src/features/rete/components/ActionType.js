@@ -1,37 +1,35 @@
 import Rete from "rete";
-import { stringSocket, dataSocket, timeDetectorSocket } from "../sockets";
+import { actionSocket, dataSocket, actionTypeSocket } from "../sockets";
 import { DisplayControl } from "../controls/DisplayControl";
-import { completion } from "../../utils/openaiHelper";
+import { completion } from "../../../utils/openaiHelper";
 
-// For simplicity quests should be ONE thing not complete X and Y
-const fewShots = `Given an action, predict how long it would take to complete out of the following categories: seconds, minutes, hours, days, weeks, years.
+const fewShots = `Given an action classify the type of action it is
 
-Action, Time: pick up the bucket, seconds
-Action, Time: cast a fireball spell on the goblin, seconds
-Action, Time: convince the king to give you his kingdom, minutes
-Action, Time: talk to the merchant, minutes
-Action, Time: leap over the chasm, seconds
-Action, Time: climb up the mountain, days
-Action, Time: throw a stone at the goblin, seconds
-Action, Time: run away from the orcs, minutes
-Action, Time: ask the baker to give you a free loaf of bread, seconds
-Action, Time: grab a torch off the wall, seconds
-Action, Time: throw your sword at the table, seconds
-Action, Time: drink your potion, seconds
-Action, Time: run away to Worgen, days
-Action, Time: travel to the forest, days
-Action, Time: go to the city of Braxos, days
-Action, Time: sail across the ocean, weeks
-Action, Time: take over the kingdom, years
-Action, Time: `;
+Types: look, get, use, craft, dialog, movement, travel, combat, consume, other
 
-export class TimeDetectorComponent extends Rete.Component {
+Action, Type: pick up the bucket, get
+Action, Type: cast a fireball spell on the goblin, combat
+Action, Type: convince the king to give you his kingdom, dialog
+Action, Type: talk to the merchant, dialog
+Action, Type: leap over the chasm, movement
+Action, Type: climb up the mountain, travel
+Action, Type: throw a stone at the goblin, combat
+Action, Type: run away from the orcs, movement
+Action, Type: ask the baker to give you a free loaf of bread, dialog
+Action, Type: go to the forest, travel
+Action, Type: grab a torch off the wall, get
+Action, Type: throw your sword at the table, use
+Action, Type: journey to the city, travel
+Action, Type: drink your potion, use
+Action, Type: `;
+
+export class ActionTypeComponent extends Rete.Component {
   constructor() {
     // Name of the component
-    super("Time Detector");
+    super("Action Type Classifier");
 
     this.task = {
-      outputs: { detectedTime: "output", data: "option" },
+      outputs: { actionType: "output", data: "option" },
     };
   }
 
@@ -42,8 +40,8 @@ export class TimeDetectorComponent extends Rete.Component {
   // to generate the appropriate inputs and ouputs for the fewshot at build time
   builder(node) {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
-    const inp = new Rete.Input("string", "Text", stringSocket);
-    const out = new Rete.Output("detectedTime", "Time Detected", timeDetectorSocket);
+    const inp = new Rete.Input("action", "Action", actionSocket);
+    const out = new Rete.Output("actionType", "Action Type", actionTypeSocket);
     const dataInput = new Rete.Input("data", "Data", dataSocket);
     const dataOutput = new Rete.Output("data", "Data", dataSocket);
 
@@ -66,7 +64,7 @@ export class TimeDetectorComponent extends Rete.Component {
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connected components
   async worker(node, inputs, outputs) {
-    const action = inputs["string"][0];
+    const action = inputs["action"][0];
     const prompt = fewShots + action + ",";
 
     const body = {
@@ -80,7 +78,7 @@ export class TimeDetectorComponent extends Rete.Component {
     this.displayControl.display(result);
 
     return {
-      detectedTime: result,
+      actionType: result,
     };
   }
 }

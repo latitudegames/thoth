@@ -1,25 +1,37 @@
 import Rete from "rete";
-import { stringSocket, dataSocket, itemTypeSocket } from "../sockets";
+import { stringSocket, dataSocket, timeDetectorSocket } from "../sockets";
 import { DisplayControl } from "../controls/DisplayControl";
-import { completion } from "../../utils/openaiHelper";
+import { completion } from "../../../utils/openaiHelper";
 
 // For simplicity quests should be ONE thing not complete X and Y
-const fewShots = `Given an action, detect the item which is taken.
+const fewShots = `Given an action, predict how long it would take to complete out of the following categories: seconds, minutes, hours, days, weeks, years.
 
-Action, Item: pick up the goblet from the fountain, goblet
-Action, Item: grab the axe from the tree stump, axe
-Action, Item: lean down and grab the spear from the ground, spear
-Action, Item: gather the valerian plant from the forest, valerian plant
-Action, Item: get the necklace from the box, necklace
-Action, Item: `
+Action, Time: pick up the bucket, seconds
+Action, Time: cast a fireball spell on the goblin, seconds
+Action, Time: convince the king to give you his kingdom, minutes
+Action, Time: talk to the merchant, minutes
+Action, Time: leap over the chasm, seconds
+Action, Time: climb up the mountain, days
+Action, Time: throw a stone at the goblin, seconds
+Action, Time: run away from the orcs, minutes
+Action, Time: ask the baker to give you a free loaf of bread, seconds
+Action, Time: grab a torch off the wall, seconds
+Action, Time: throw your sword at the table, seconds
+Action, Time: drink your potion, seconds
+Action, Time: run away to Worgen, days
+Action, Time: travel to the forest, days
+Action, Time: go to the city of Braxos, days
+Action, Time: sail across the ocean, weeks
+Action, Time: take over the kingdom, years
+Action, Time: `;
 
-export class ItemTypeComponent extends Rete.Component {
+export class TimeDetectorComponent extends Rete.Component {
   constructor() {
     // Name of the component
-    super("Item Detector");
+    super("Time Detector");
 
     this.task = {
-      outputs: { detectedItem: "output", data: "option" },
+      outputs: { detectedTime: "output", data: "option" },
     };
   }
 
@@ -31,7 +43,11 @@ export class ItemTypeComponent extends Rete.Component {
   builder(node) {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const inp = new Rete.Input("string", "Text", stringSocket);
-    const out = new Rete.Output("detectedItem", "Item Detected", itemTypeSocket);
+    const out = new Rete.Output(
+      "detectedTime",
+      "Time Detected",
+      timeDetectorSocket
+    );
     const dataInput = new Rete.Input("data", "Data", dataSocket);
     const dataOutput = new Rete.Output("data", "Data", dataSocket);
 
@@ -46,8 +62,8 @@ export class ItemTypeComponent extends Rete.Component {
     return node
       .addInput(inp)
       .addInput(dataInput)
-      .addOutput(dataOutput)
       .addOutput(out)
+      .addOutput(dataOutput)
       .addControl(display);
   }
 
@@ -68,7 +84,7 @@ export class ItemTypeComponent extends Rete.Component {
     this.displayControl.display(result);
 
     return {
-        detectedItem: result,
+      detectedTime: result,
     };
   }
 }

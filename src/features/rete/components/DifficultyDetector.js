@@ -1,7 +1,7 @@
 import Rete from "rete";
 import { actionSocket, dataSocket, actionDifficultySocket } from "../sockets";
 import { DisplayControl } from "../controls/DisplayControl";
-import { completion } from "../../utils/openaiHelper";
+import { completion } from "../../../utils/openaiHelper";
 
 // For simplicity quests should be ONE thing not complete X and Y
 const fewShots = `Given an action, predict how hard it would be for a normal human in a fantasy world and what type of stat it uses.
