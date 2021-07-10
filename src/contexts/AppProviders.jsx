@@ -4,6 +4,7 @@ import ReteProvider from "./Rete";
 import PubSubProvider from "./PubSub";
 import ThothProvider from "./Thoth";
 import LayoutProvider from "./Layout";
+import DatabaseProvider from "./Database";
 
 const darkTheme = createTheme({
   palette: {
@@ -12,6 +13,7 @@ const darkTheme = createTheme({
 });
 
 const providers = [
+  DatabaseProvider,
   [ThemeProvider, { theme: darkTheme }],
   PubSubProvider,
   [PouchDB, { name: "thoth" }],
