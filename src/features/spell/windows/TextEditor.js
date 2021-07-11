@@ -27,7 +27,7 @@ const TextEditor = (props) => {
   };
 
   useEffect(() => {
-    subscribe(events.INSPECTOR_SET, (event, data) => {
+    subscribe(events.TEXT_EDITOR_SET, (event, data) => {
       setData(data);
 
       console.log("Data!", data);

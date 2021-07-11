@@ -2,7 +2,7 @@ import init from "../features/rete/editor";
 import gridimg from "../grid.png";
 
 import { usePubSub } from "./PubSub";
-import { useThoth } from "./Thoth";
+import { useSpell } from "./Spell";
 
 import { useContext, createContext, useState } from "react";
 
@@ -24,7 +24,7 @@ const ReteProvider = ({ children }) => {
   const [editorMap, setEditorMap] = useState({});
   const pubSub = usePubSub();
 
-  const buildEditor = async (container, thoth, tab) => {
+  const buildEditor = async (container, spell, tab) => {
     if (editorMap[tab]) {
       // If we are here, we are swapping to a new editor.  Set teh editor from the map, and return.
       setEditor(editorMap[tab]);
@@ -34,7 +34,7 @@ const ReteProvider = ({ children }) => {
     const newEditor = await init({
       container,
       pubSub,
-      thoth,
+      thoth: spell,
     });
 
     // editor map to store multiple instances of  editors based on tab
@@ -84,7 +84,7 @@ const ReteProvider = ({ children }) => {
 
 export const Editor = ({ tab = "default", children }) => {
   const { buildEditor } = useRete();
-  const thoth = useThoth();
+  const spell = useSpell();
 
   return (
     <>
@@ -102,11 +102,11 @@ export const Editor = ({ tab = "default", children }) => {
         }}
         onDrop={(e) => {}}
       >
-        {!thoth.currentSpell.graph && <p>Loading...</p>}
-        {thoth.currentSpell.graph && (
+        {!spell.currentSpell.graph && <p>Loading...</p>}
+        {spell.currentSpell.graph && (
           <div
             ref={(el) => {
-              if (el) buildEditor(el, thoth, tab);
+              if (el) buildEditor(el, spell, tab);
             }}
           />
         )}
