@@ -1,6 +1,8 @@
 import { Inspector } from "./Inspector";
 
 function install(editor) {
+  const { publish, subscribe, events } = editor.pubSub;
+
   editor.on("componentregister", (component) => {
     const builder = component.builder;
 
@@ -15,8 +17,8 @@ function install(editor) {
 
   // handle publishing and subscribing to inspector
   editor.on("nodeselect", (node) => {
-    const { publish, subscribe, events } = editor.pubSub;
-
+    // clear text editor
+    publish(events.TEXT_EDITOR_SET, {});
     publish(events.INSPECTOR_SET, node.inspector.data());
 
     // we set up a subscribe to that nodes channel when it saves data.

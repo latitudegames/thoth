@@ -56,8 +56,6 @@ const DataControls = ({
 }) => {
   if (!dataControls) return <p>Select a component.</p>;
 
-  console.log("Data controls", dataControls);
-
   return (
     <>
       {Object.entries(dataControls).map(([key, value]) => {
