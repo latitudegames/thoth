@@ -1,5 +1,6 @@
 import { SimpleAccordion } from "../../../../common/Accordion";
 import { usePubSub } from "../../../../../contexts/PubSub";
+import { useLayout } from "../../../../../contexts/Layout";
 
 // const Textarea = (props) => {
 //   const [value, setValue] = useState();
@@ -25,6 +26,7 @@ const StubComponent = (props) => <div>{props.name}</div>;
 
 const LongText = ({ initialValue, name, nodeId }) => {
   const { events, publish } = usePubSub();
+  const { createOrFocus, componentTypes } = useLayout();
 
   const onClick = () => {
     const data = {
@@ -34,6 +36,7 @@ const LongText = ({ initialValue, name, nodeId }) => {
       name,
     };
     publish(events.TEXT_EDITOR_SET, data);
+    createOrFocus(componentTypes.TEXT_EDITOR, "Text Editor");
   };
 
   return <button onClick={onClick}>Open in text editor</button>;
