@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 
 import Window from "../../../common/Window/Window";
+import { useLayout } from "../../../../contexts/Layout";
 import { usePubSub } from "../../../../contexts/PubSub";
 import DataControls from "./components/DataControls";
+import LoadingScreen from "../../../common/LoadingScreen/LoadingScreen";
 
 const Inspector = (props) => {
-  const { publish, subscribe, events } = usePubSub();
+  const { publish, events } = usePubSub();
+  const { inspectorData } = useLayout();
   const [data, setData] = useState("");
   const [width, setWidth] = useState();
 
@@ -23,10 +26,8 @@ const Inspector = (props) => {
   }, [props]);
 
   useEffect(() => {
-    subscribe(events.INSPECTOR_SET, (event, data) => {
-      setData(data);
-    });
-  }, [events, subscribe]);
+    setData(inspectorData);
+  }, [inspectorData]);
 
   const onSave = () => {
     publish(events.NODE_SET(data.nodeId), data.data);
@@ -48,6 +49,8 @@ const Inspector = (props) => {
       </button>
     </>
   );
+
+  if (!data) return <LoadingScreen />;
 
   return (
     <Window toolbar={toolbar}>
