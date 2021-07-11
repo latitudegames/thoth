@@ -25,9 +25,9 @@ const Context = createContext({
   updateCurrentGameState: () => {},
 });
 
-export const useThoth = () => useContext(Context);
+export const useSpell = () => useContext(Context);
 
-const ThothProvider = ({ children }) => {
+const SpellProvider = ({ children }) => {
   const { db } = useDB();
   const { editor } = useRete();
 
@@ -173,4 +173,4 @@ const ThothProvider = ({ children }) => {
   );
 };
 
-export default ThothProvider;
+export default SpellProvider;

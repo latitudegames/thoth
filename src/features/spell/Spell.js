@@ -1,6 +1,6 @@
 import { Layout, Model } from "flexlayout-react";
 import { useRete, Editor } from "../../contexts/Rete";
-import { useThoth } from "../../contexts/Thoth";
+import { useSpell } from "../../contexts/Spell";
 import StateManager from "./windows/StateManager";
 import Playtest from "./windows/Playtest";
 import Inspector from "./windows/Inspector/Inspector";
@@ -13,7 +13,7 @@ const model = Model.fromJson(defaultJson);
 
 const Spell = () => {
   const { serialize } = useRete();
-  const { saveCurrentSpell } = useThoth();
+  const { saveCurrentSpell } = useSpell();
 
   const onSave = () => {
     const serialized = serialize();

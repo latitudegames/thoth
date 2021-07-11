@@ -2,7 +2,7 @@ import { PouchDB } from "react-pouchdb";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import ReteProvider from "./Rete";
 import PubSubProvider from "./PubSub";
-import ThothProvider from "./Thoth";
+import SpellProvider from "./Spell";
 import LayoutProvider from "./Layout";
 import DatabaseProvider from "./Database";
 
@@ -18,7 +18,7 @@ const providers = [
   PubSubProvider,
   [PouchDB, { name: "thoth" }],
   LayoutProvider,
-  ThothProvider,
+  SpellProvider,
   ReteProvider,
 ];
 

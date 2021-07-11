@@ -5,10 +5,10 @@ import Window from "../../common/Window/Window";
 
 import "../spell.module.css";
 
-import { useThoth } from "../../../contexts/Thoth";
+import { useSpell } from "../../../contexts/Spell";
 
 const StateManager = (props) => {
-  const { currentGameState, rewriteCurrentGameState } = useThoth();
+  const { currentGameState, rewriteCurrentGameState } = useSpell();
   const [code, setCode] = useState("{}");
   const [height, setHeight] = useState();
 
