@@ -1,5 +1,5 @@
 import { useRete, Editor } from "../../contexts/Rete";
-import { Layout } from "../../contexts/Layout";
+import { Layout, useLayout } from "../../contexts/Layout";
 import { useSpell } from "../../contexts/Spell";
 import StateManager from "./windows/StateManager";
 import Playtest from "./windows/Playtest";
@@ -11,6 +11,7 @@ import TextEditor from "./windows/TextEditor";
 
 const Spell = () => {
   const { serialize } = useRete();
+  const { createOrFocus, componentTypes } = useLayout();
   const { saveCurrentSpell } = useSpell();
 
   const onSave = () => {
@@ -35,11 +36,36 @@ const Spell = () => {
     </>
   );
 
+  const onStateManager = () => {
+    createOrFocus(componentTypes.STATE_MANAGER, "State Manager");
+  };
+
+  const onPlaytest = () => {
+    createOrFocus(componentTypes.PLAYTEST, "Playtest");
+  };
+
+  const onInspector = () => {
+    createOrFocus(componentTypes.INSPECTOR, "Inspector");
+  };
+
+  const onTextEditor = () => {
+    createOrFocus(componentTypes.TEXT_EDITOR, "Text Editor");
+  };
+
   const options = (
     <>
-      <button className="option">State Manager</button>
-      <button className="option">Playtest</button>
-      <button className="option">Inspector</button>
+      <button className="option" onClick={onStateManager}>
+        State Manager
+      </button>
+      <button className="option" onClick={onPlaytest}>
+        Playtest
+      </button>
+      <button className="option" onClick={onInspector}>
+        Inspector
+      </button>
+      <button className="option" onClick={onTextEditor}>
+        Text Editor
+      </button>
     </>
   );
 
