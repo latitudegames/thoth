@@ -28,6 +28,7 @@ const LayoutProvider = ({ children }) => {
     subscribe(events.INSPECTOR_SET, (event, data) => {
       setInspectorData(data);
 
+      if (!data.dataControls) return;
       Object.entries(data.dataControls).forEach(([key, control]) => {
         if (control.component === "longText") {
           const dataSend = {
