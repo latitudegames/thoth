@@ -1,16 +1,15 @@
 import { useState, useEffect } from "react";
-// import jsonFormat from "json-format";
 import Editor from "@monaco-editor/react";
-import { usePubSub } from "../../../contexts/PubSub";
 import Window from "../../common/Window/Window";
 
 import "../spell.module.css";
+import { useLayout } from "../../../contexts/Layout";
 
 const TextEditor = (props) => {
   const [code, setCode] = useState("");
   const [data, setData] = useState("");
   const [height, setHeight] = useState();
-  const { publish, subscribe, events } = usePubSub();
+  const { textEditorData, saveTextEditor } = useLayout();
 
   const bottomHeight = 50;
 
@@ -22,17 +21,14 @@ const TextEditor = (props) => {
     suggest: {
       preview: false,
     },
+    wordWrap: "bounded",
     fontSize: 18,
-    // automaticLayout: true,
   };
 
   useEffect(() => {
-    subscribe(events.TEXT_EDITOR_SET, (event, data) => {
-      setData(data);
-
-      console.log("Data!", data);
-    });
-  }, [events, subscribe]);
+    setData(textEditorData);
+    setCode(textEditorData.data);
+  }, [textEditorData]);
 
   useEffect(() => {
     if (props?.node?.rect?.height)
@@ -44,14 +40,16 @@ const TextEditor = (props) => {
     });
   }, [props.node]);
 
-  const onClear = () => {
-    const reset = ``;
-
-    setCode(reset);
+  const onSave = () => {
+    saveTextEditor(data);
   };
 
-  const onSave = () => {
-    publish(events.NODE_SET(data.nodeId), data.data);
+  const updateCode = (code) => {
+    setCode(code);
+    setData({
+      ...data,
+      data: code,
+    });
   };
 
   const toolbar = (
@@ -71,7 +69,7 @@ const TextEditor = (props) => {
         value={code}
         options={editorOptions}
         defaultValue={code}
-        onChange={setCode}
+        onChange={updateCode}
       />
     </Window>
   );
