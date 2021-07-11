@@ -96,16 +96,6 @@ const LayoutProvider = ({ children }) => {
     return model;
   };
 
-  const addTabset = () => {
-    const json = {
-      type: "tabset",
-      weight: 12,
-    };
-    return currentModel.doAction(
-      Actions.addNode(json, "#root", DockLocation.RIGHT, 0)
-    );
-  };
-
   const addWindow = (componentType, title) => {
     // For now we always add a new window onto the root container
     const json = {
