@@ -21,6 +21,7 @@ export class Inspector {
     // Attach the inspector to the incoming control instance
     control[prop] = this;
     control.editor = this.editor;
+    control.node = this.node;
 
     list.set(control.key, control);
   }
