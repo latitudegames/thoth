@@ -6,6 +6,7 @@ const Context = createContext({
   inspectorData: {},
   textEditorData: {},
   setCurrentMode: {},
+  currentModel: {},
   saveInspector: () => {},
   saveTextEditor: () => {},
   addTextEditor: () => {},
@@ -67,6 +68,7 @@ const LayoutProvider = ({ children }) => {
     textEditorData,
     saveTextEditor,
     setCurrentModel,
+    currentModel,
   };
 
   return (
@@ -75,11 +77,11 @@ const LayoutProvider = ({ children }) => {
 };
 
 export const Layout = ({ model, factory }) => {
-  // const { setCurrentModel } = useLayout();
+  const { setCurrentModel } = useLayout();
 
-  // useEffect(() => {
-  //   setCurrentModel(model);
-  // }, [model, setCurrentModel]);
+  useEffect(() => {
+    setCurrentModel(model);
+  }, [model, setCurrentModel]);
 
   return <Layout model={model} factory={factory} />;
 };

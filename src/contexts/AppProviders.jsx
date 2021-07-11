@@ -17,8 +17,8 @@ const providers = [
   [ThemeProvider, { theme: darkTheme }],
   PubSubProvider,
   [PouchDB, { name: "thoth" }],
-  LayoutProvider,
   SpellProvider,
+  LayoutProvider,
   ReteProvider,
 ];
 
