@@ -4,7 +4,7 @@
   },
   "layout": {
     "type": "row",
-    "id": "#5",
+    "id": "#root",
     "children": [
       {
         "type": "tabset",
