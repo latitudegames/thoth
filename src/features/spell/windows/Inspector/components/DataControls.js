@@ -2,26 +2,6 @@ import { SimpleAccordion } from "../../../../common/Accordion";
 import { usePubSub } from "../../../../../contexts/PubSub";
 import { useLayout } from "../../../../../contexts/Layout";
 
-// const Textarea = (props) => {
-//   const [value, setValue] = useState();
-
-//   useEffect(() => {
-//     setValue(props.initialValue);
-//   }, [props.initialValue]);
-
-//   const onChange = (e) => {
-//     const update = {
-//       [props.name]: e.target.value,
-//     };
-//     setValue(e.target.value);
-//     props.updateData(update);
-//   };
-
-//   return (
-//     <div></div>
-//   );
-// }
-
 const StubComponent = (props) => <div>{props.name}</div>;
 
 const LongText = ({ initialValue, name, nodeId }) => {
