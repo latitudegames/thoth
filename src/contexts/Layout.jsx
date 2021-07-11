@@ -4,6 +4,8 @@ import {
   Model,
   Actions,
   DockLocation,
+  TabNode,
+  TabSetNode,
 } from "flexlayout-react";
 import { usePubSub } from "./PubSub";
 // import { useDB } from "./Database";
@@ -97,18 +99,31 @@ const LayoutProvider = ({ children }) => {
   };
 
   const addWindow = (componentType, title) => {
-    // For now we always add a new window onto the root container
-    const json = {
-      type: "tabset",
-      // weight: 12,
+    // Solution partly taken from here.
+    // Programatic creation of a tabSet and a tab added to it.
+    // https://github.com/caplin/FlexLayout/issues/54
+    const tabJson = {
+      type: "tab",
+      component: componentType,
+      weight: 12,
       name: title,
     };
+    const rootNode = currentModel.getRoot();
+    const tabNode = new TabNode(currentModel, tabJson);
+    const tabSetNode = new TabSetNode(currentModel, {
+      type: "tabset",
+      weight: 12,
+    });
 
-    // Mimic this issue
-    // https://github.com/caplin/FlexLayout/issues/54
+    rootNode._addChild(tabSetNode);
 
     currentModel.doAction(
-      Actions.addNode(json, "#root", DockLocation.RIGHT, 0)
+      Actions.moveNode(
+        tabNode.getId(),
+        tabSetNode.getId(),
+        DockLocation.RIGHT,
+        0
+      )
     );
   };
 
