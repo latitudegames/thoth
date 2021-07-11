@@ -34,10 +34,6 @@ const Context = createContext({
   saveTextEditor: () => {},
   createOrFocus: () => {},
   addWindow: () => {},
-  addTextEditor: () => {},
-  addInspector: () => {},
-  addStateManager: () => {},
-  addPlaytest: () => {},
   componentTypes: {},
 });
 
