@@ -55,6 +55,7 @@ const Inspector = (props) => {
   return (
     <Window toolbar={toolbar}>
       <DataControls
+        nodeId={data.nodeId}
         dataControls={data.dataControls}
         data={data.data}
         width={width}
