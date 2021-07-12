@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 
 const SingleOutput = (props) => {
   return (
-    <div style={{ marginBottom: 10 }}>
+    <div style={{ marginBottom: 10, flex: 1, width: "100%" }}>
       <p style={{ display: "inline" }}>{props.name}</p>
       <span style={{ float: "right" }}>
         <button className="list" onClick={() => props.delete(props.name)}>
@@ -26,10 +26,17 @@ const AddNewOutput = (props) => {
   };
 
   return (
-    <>
-      <input value={value} type="text" onChange={onChange} />
-      <button onClick={onAdd}>Add</button>
-    </>
+    <div style={{ flex: 1, display: "flex" }}>
+      <input
+        style={{ flex: 6, padding: 0 }}
+        value={value}
+        type="text"
+        onChange={onChange}
+      />
+      <button style={{ flex: 1 }} onClick={onAdd}>
+        Add
+      </button>
+    </div>
   );
 };
 
@@ -41,7 +48,7 @@ const OutputGenerator = ({ updateData, data, name }) => {
 
   useEffect(() => {
     update({ [name]: outputs });
-  }, [update, outputs, name]);
+  }, [outputs]);
 
   const onDelete = (name) => {
     const newOutputs = outputs.filter((output) => output !== name);
@@ -54,12 +61,12 @@ const OutputGenerator = ({ updateData, data, name }) => {
   };
 
   return (
-    <>
+    <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
       {outputs.map((out, i) => (
         <SingleOutput name={out} key={i} delete={onDelete} />
       ))}
       <AddNewOutput addOutput={addOutput} />
-    </>
+    </div>
   );
 };
 
