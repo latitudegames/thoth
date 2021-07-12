@@ -10,6 +10,7 @@
   box-sizing: border-box;
   box-shadow: 0 4px 5px rgba(0, 0, 0, 0.5);
   z-index: 8;
+  min-height: var(--c6);
 }
 .toolbar-section {
   display: flex;
