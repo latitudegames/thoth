@@ -22,6 +22,7 @@ export class Inspector {
     control[prop] = this;
     control.editor = this.editor;
     control.node = this.node;
+    control.component = this.component;
 
     list.set(control.key, control);
   }
