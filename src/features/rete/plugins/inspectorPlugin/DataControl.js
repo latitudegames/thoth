@@ -1,6 +1,8 @@
 export class DataControl {
   inspector = null;
   editor = null;
+  node = null;
+  component = null;
 
   constructor({ data, name, controls, ...rest }) {
     this.key = data;
