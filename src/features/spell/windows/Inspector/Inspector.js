@@ -29,9 +29,9 @@ const Inspector = (props) => {
     setData(inspectorData);
   }, [inspectorData]);
 
-  const onSave = () => {
+  useEffect(() => {
     publish(events.NODE_SET(data.nodeId), data.data);
-  };
+  }, [data]);
 
   const updateData = (update) => {
     const newData = {
@@ -47,9 +47,7 @@ const Inspector = (props) => {
 
   const toolbar = (
     <>
-      <button className="small" onClick={onSave}>
-        Save
-      </button>
+      <button className="small">Something</button>
     </>
   );
 
