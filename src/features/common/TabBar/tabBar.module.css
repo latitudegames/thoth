@@ -27,7 +27,7 @@
 }
 
 .tabbar-tab {
-  padding: var(--c1) var(--c1);
+  padding: var(--small) var(--small);
   box-sizing: border-box;
   width: var(--c28);
   background-color: var(--dark-1);
@@ -59,6 +59,7 @@
 }
 
 .tabbar-tab span {
+  display: flex;
   right: 10px;
   font-size: var(--c2);
   cursor: pointer;
