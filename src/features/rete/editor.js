@@ -5,6 +5,7 @@ import ContextMenuPlugin from "rete-context-menu-plugin";
 import AreaPlugin from "rete-area-plugin";
 import TaskPlugin from "./plugins/taskPlugin";
 import InspectorPlugin from "./plugins/inspectorPlugin";
+import SocketGenerator from "./plugins/socketGenerator";
 import { MyNode } from "../../features/common/Node/Node";
 import { InputComponent } from "./components/Input";
 import { TenseTransformer } from "./components/TenseTransformer";
@@ -78,6 +79,7 @@ const editor = async function ({ container, pubSub, thoth }) {
   editor.use(TaskPlugin);
 
   // This should only be needed on client, not server
+  editor.use(SocketGenerator);
   editor.use(InspectorPlugin);
 
   // The engine is used to process/run the rete graph
