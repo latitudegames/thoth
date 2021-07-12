@@ -1,6 +1,7 @@
 import { SimpleAccordion } from "../../../../common/Accordion";
 import { usePubSub } from "../../../../../contexts/PubSub";
 import { useLayout } from "../../../../../contexts/Layout";
+import OutputGenerator from "./OutputGenerator";
 
 const StubComponent = (props) => <div>{props.name}</div>;
 
@@ -23,6 +24,7 @@ const LongText = ({ initialValue, name, nodeId }) => {
 };
 
 const controlMap = {
+  outputGenerator: OutputGenerator,
   longText: LongText,
   input: StubComponent,
   slider: StubComponent,
@@ -46,7 +48,7 @@ const DataControls = ({
         const controlProps = {
           nodeId,
           width,
-          key,
+          data: value?.data,
           name: key,
           initialValue: data[key] || "",
           updateData,
