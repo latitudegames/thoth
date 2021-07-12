@@ -36,7 +36,10 @@ const Inspector = (props) => {
   const updateData = (update) => {
     const newData = {
       ...data,
-      ...update,
+      data: {
+        ...data.data,
+        ...update,
+      },
     };
 
     setData(newData);
