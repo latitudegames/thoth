@@ -88,7 +88,7 @@ const Spell = () => {
   };
 
   return (
-    <TabLayout options={options} toolbar={toolbar}>
+    <TabLayout>
       <Layout json={defaultJson} factory={factory} />
     </TabLayout>
   );

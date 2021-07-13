@@ -130,7 +130,7 @@ input {
 }
 .flexlayout__tabset_tabbar_inner_tab_container_top {
   border-top: none;
-  background-color: var(--dark-0);
+  background-color: var(--dark-1);
 }
 .flexlayout__tabset_tabbar_outer_top {
   border-bottom: none;
@@ -142,7 +142,7 @@ input {
   background-color: var(--dark-2);
 }
 .flexlayout__tab_toolbar {
-  background-color: var(--dark-0);
+  background-color: var(--dark-1);
 }
 .flexlayout__tab_button {
   margin: 0;
@@ -157,6 +157,9 @@ input {
 .flexlayout__tab_button:hover {
   filter: brightness(2.1);
   /* background-color: var(--dark-3); */
+}
+.flexlayout__splitter {
+  background-color: transparent;
 }
 .view-line span {
   font-family: "IBM Plex Mono", sans-serif;

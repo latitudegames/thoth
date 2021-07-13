@@ -76,13 +76,13 @@
     font-family: 'IBM Plex Mono', monospace !important;
 }
 .node.selected {
-    color: var(--dark-4);
+    color: var(--dark-5);
     background-color: rgba(70,70,70,0.95);
     border-color: var(--primary);
     /* backdrop-filter: blur(15px); */
 }
 .node.selected .node-title {
-    color: var(--dark-4);
+    color: var(--dark-5);
     border-bottom: 1px solid var(--dark-1);
     /* background: linear-gradient(to top left, rgba(80,144,206,0), rgba(57, 159, 228, 0.2)); */
 }
