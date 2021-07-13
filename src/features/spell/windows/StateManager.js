@@ -25,6 +25,17 @@ const StateManager = (props) => {
     },
   };
 
+  const handleEditorWillMount = (monaco) => {
+    monaco.editor.defineTheme('sds-dark', {
+      base: 'vs-dark', 
+      inherit: true,
+      rules: [],
+      colors: {
+        "editor.background": '#272727'
+      }
+    });
+  }
+
   useEffect(() => {
     if (props?.node?.rect?.height)
       setHeight(props.node.rect.height - bottomHeight);
@@ -64,13 +75,14 @@ const StateManager = (props) => {
   return (
     <Window toolbar={toolbar}>
       <Editor
-        theme="vs-dark"
+        theme="sds-dark"
         height={height}
         defaultLanguage="json"
         value={code}
         options={editorOptions}
         defaultValue={code}
         onChange={setCode}
+        beforeMount={handleEditorWillMount}
       />
     </Window>
   );

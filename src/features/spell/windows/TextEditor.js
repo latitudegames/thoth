@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Editor from "@monaco-editor/react";
+import Editor, { monaco } from "@monaco-editor/react";
 import Window from "../../common/Window/Window";
 
 import "../spell.module.css";
@@ -12,6 +12,16 @@ const TextEditor = (props) => {
   const { textEditorData, saveTextEditor } = useLayout();
 
   const bottomHeight = 50;
+  const handleEditorWillMount = (monaco) => {
+    monaco.editor.defineTheme('sds-dark', {
+      base: 'vs-dark', 
+      inherit: true,
+      rules: [],
+      colors: {
+        "editor.background": '#272727'
+      }
+    });
+  }
 
   const editorOptions = {
     lineNumbers: false,
@@ -64,13 +74,14 @@ const TextEditor = (props) => {
   return (
     <Window toolbar={toolbar}>
       <Editor
-        theme="vs-dark"
+        theme="sds-dark"
         height={height}
         defaultLanguage="plaintext"
         value={code}
         options={editorOptions}
         defaultValue={code}
         onChange={updateCode}
+        beforeMount={handleEditorWillMount}
       />
     </Window>
   );
