@@ -1,5 +1,5 @@
 import Rete from "rete";
-import { stringSocket, actionSocket, dataSocket } from "../sockets";
+import { stringSocket, dataSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
 import { DisplayControl } from "../controls/DisplayControl";
 import { completion } from "../../../utils/openaiHelper";
@@ -87,7 +87,7 @@ export class TenseTransformer extends Rete.Component {
     const nameInput = new Rete.Input("name", "Name", stringSocket);
     const dataInput = new Rete.Input("data", "Data", dataSocket);
     const dataOutput = new Rete.Output("data", "Data", dataSocket);
-    const out = new Rete.Output("action", "Action", actionSocket);
+    const out = new Rete.Output("action", "Action", stringSocket);
 
     // controls are the internals of the node itself
     // This default control sample has a text field.

@@ -1,5 +1,5 @@
 import Rete from "rete";
-import { stringSocket, dataSocket, timeDetectorSocket } from "../sockets";
+import { stringSocket, dataSocket } from "../sockets";
 import { DisplayControl } from "../controls/DisplayControl";
 import { completion } from "../../../utils/openaiHelper";
 
@@ -43,11 +43,7 @@ export class TimeDetectorComponent extends Rete.Component {
   builder(node) {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const inp = new Rete.Input("string", "Text", stringSocket);
-    const out = new Rete.Output(
-      "detectedTime",
-      "Time Detected",
-      timeDetectorSocket
-    );
+    const out = new Rete.Output("detectedTime", "Time Detected", stringSocket);
     const dataInput = new Rete.Input("data", "Data", dataSocket);
     const dataOutput = new Rete.Output("data", "Data", dataSocket);
 
