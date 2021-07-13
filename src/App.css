@@ -5,7 +5,7 @@ body {
   overflow: hidden;
   padding: 0;
   margin: 0;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 html,
@@ -157,4 +157,7 @@ input {
 .flexlayout__tab_button:hover {
   filter: brightness(2.1);
   /* background-color: var(--dark-3); */
+}
+.view-line span {
+  font-family: "IBM Plex Mono", sans-serif;
 }
