@@ -78,7 +78,7 @@ export class DifficultyDetectorComponent extends Rete.Component {
 
   async worker(node, inputs, outputs) {
     const action = inputs["action"][0];
-    const prompt = this.data.fewshot + action + ",";
+    const prompt = node.data.fewshot + action + ",";
 
     const body = {
       prompt,
