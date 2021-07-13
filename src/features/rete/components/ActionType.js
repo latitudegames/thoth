@@ -1,5 +1,5 @@
 import Rete from "rete";
-import { actionSocket, dataSocket, actionTypeSocket } from "../sockets";
+import { stringSocket, dataSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
 import { DisplayControl } from "../controls/DisplayControl";
 import { completion } from "../../../utils/openaiHelper";
@@ -42,8 +42,8 @@ export class ActionTypeComponent extends Rete.Component {
   builder(node) {
     node.data.fewshot = fewshot;
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
-    const inp = new Rete.Input("action", "Action", actionSocket);
-    const out = new Rete.Output("actionType", "Action Type", actionTypeSocket);
+    const inp = new Rete.Input("action", "Action", stringSocket);
+    const out = new Rete.Output("actionType", "ActionType", stringSocket);
     const dataInput = new Rete.Input("data", "Data", dataSocket);
     const dataOutput = new Rete.Output("data", "Data", dataSocket);
 

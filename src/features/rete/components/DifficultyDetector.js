@@ -1,5 +1,5 @@
 import Rete from "rete";
-import { actionSocket, dataSocket, actionDifficultySocket } from "../sockets";
+import { stringSocket, dataSocket } from "../sockets";
 import { DisplayControl } from "../controls/DisplayControl";
 import { FewshotControl } from "../dataControls/FewshotControl";
 import { completion } from "../../../utils/openaiHelper";
@@ -48,11 +48,11 @@ export class DifficultyDetectorComponent extends Rete.Component {
 
   builder(node) {
     node.data.fewshot = fewshot;
-    const inp = new Rete.Input("action", "Action", actionSocket);
+    const inp = new Rete.Input("action", "Action", stringSocket);
     const out = new Rete.Output(
       "actionDifficulty",
       "Action Difficulty",
-      actionDifficultySocket
+      stringSocket
     );
 
     const dataInput = new Rete.Input("data", "Data", dataSocket);
