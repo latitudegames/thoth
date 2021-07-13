@@ -1,9 +1,10 @@
 import Rete from "rete";
 import { stringSocket, dataSocket, booleanSocket } from "../sockets";
+import { FewshotControl } from "../dataControls/FewshotControl";
 import { DisplayControl } from "../controls/DisplayControl";
 import { completion } from "../../../utils/openaiHelper";
 
-const fewShots = `Rate the actions according to the following content categories
+const fewshot = `Rate the actions according to the following content categories
 X: Explicit sexual content, rape, cannibalism, incest
 M: Heavy violence, light sexual content, safe for adults
 T: Light violence, safe for teens.
@@ -83,21 +84,21 @@ export class SafetyVerifier extends Rete.Component {
 
   displayControl = {};
 
-  // the builder is used to "assemble" the node component.
-  // when we have enki hooked up and have grabbed all few shots, we would use the builder
-  // to generate the appropriate inputs and ouputs for the fewshot at build time
   builder(node) {
-    // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
+    node.data.fewshot = fewshot;
+
     const inp = new Rete.Input("string", "Text", stringSocket);
     const dataInput = new Rete.Input("data", "Data", dataSocket);
     const dataOutput = new Rete.Output("data", "Data", dataSocket);
     const out = new Rete.Output("boolean", "Boolean", booleanSocket);
 
-    // controls are the internals of the node itself
-    // This default control sample has a text field.
     const display = new DisplayControl({
       key: "display",
     });
+
+    const fewshotControl = new FewshotControl();
+
+    node.inspector.add(fewshotControl);
 
     this.displayControl = display;
 
@@ -109,11 +110,9 @@ export class SafetyVerifier extends Rete.Component {
       .addControl(display);
   }
 
-  // the worker contains the main business logic of the node.  It will pass those results
-  // to the outputs to be consumed by any connected components
   async worker(node, inputs, outputs) {
     const action = inputs["string"][0];
-    const prompt = fewShots + action + "\nRating:";
+    const prompt = fewshot + action + "\nRating:";
 
     const body = {
       prompt,
@@ -124,7 +123,6 @@ export class SafetyVerifier extends Rete.Component {
     const raw = await completion(body);
     const result = raw.trim() !== "X";
 
-    console.log(this.displayControl);
     this.displayControl.display(`${result}`);
 
     return {
