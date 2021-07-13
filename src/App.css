@@ -71,8 +71,8 @@ button {
   color: #fff;
   border-radius: 4px;
   cursor: pointer;
-  background-color: var(--dark-2);
-  border: 1px solid var(--dark-3);
+  background-color: var(--dark-3);
+  border: 1px solid var(--dark-4);
   padding: 9px 16px;
   padding-left: var(--small);
   padding-right: var(--small);
@@ -95,7 +95,7 @@ button.list {
   padding-right: var(--small);
 }
 button.small {
-  background-color: var(--dark-2);
+  background-color: var(--dark-3);
   padding: 8px;
   padding-left: var(--small);
   padding-right: var(--small);
@@ -139,14 +139,15 @@ input {
   font-size: 16px;
 }
 .flexlayout__tab {
-  background-color: var(--dark-2);
+  background-color: var(--dark-3);
 }
 .flexlayout__tab_toolbar {
   background-color: var(--dark-1);
 }
 .flexlayout__tab_button {
   margin: 0;
-  background-color: var(--dark-2);
+  background-color: var(--dark-3);
+  box-shadow: none;
 }
 .flexlayout__tab_button {
   border-top-right-radius: 0;
