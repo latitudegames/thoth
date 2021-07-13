@@ -170,7 +170,7 @@ export const Layout = ({ json, factory }) => {
   if (!currentModel) return <LoadingScreen />;
 
   return (
-    <LayoutComponent ref={layoutRef} model={currentModel} factory={factory} />
+    <LayoutComponent ref={layoutRef} model={currentModel} factory={factory} font={{size:"12px", fontFamily: 'IBM Plex Sans'}}/>
   );
 };
 

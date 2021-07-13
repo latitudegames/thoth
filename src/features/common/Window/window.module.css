@@ -6,7 +6,6 @@
   box-sizing: border-box;
 }
 .window-layout {
-  border: 1px solid var(--dark-1);
   flex-grow: 28;
   box-sizing: border-box;
   display: flex;

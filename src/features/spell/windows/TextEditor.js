@@ -22,7 +22,8 @@ const TextEditor = (props) => {
       preview: false,
     },
     wordWrap: "bounded",
-    fontSize: 18,
+    fontSize: 14,
+    fontFamily: '"IBM Plex Mono", sans-serif !important'
   };
 
   useEffect(() => {

@@ -19,7 +19,7 @@ const StateManager = (props) => {
     minimap: {
       enabled: false,
     },
-    fontSize: 18,
+    fontSize: 14,
     suggest: {
       preview: false,
     },
