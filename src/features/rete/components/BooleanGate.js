@@ -32,8 +32,6 @@ export class BooleanGate extends Rete.Component {
   async worker(node, inputs, outputs) {
     const isTrue = inputs["boolean"][0];
 
-    console.log("Is true", isTrue);
-
     if (isTrue) {
       this._task.closed = ["false"];
     } else {
