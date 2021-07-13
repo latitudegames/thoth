@@ -1,0 +1,25 @@
+.window {
+  display: flex;
+  flex-direction: column;
+  padding: var(--c1);
+  height: 100%;
+  box-sizing: border-box;
+}
+.window-layout {
+  flex-grow: 28;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.window-toolbar {
+  display: flex;
+  flex: 1;
+  height: var(--c4);
+  justify-content: flex-end;
+  padding-bottom: var(--c1);
+}
+
+.window-toolbar button {
+  margin-right: var(--c1);
+}
