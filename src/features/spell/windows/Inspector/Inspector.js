@@ -30,6 +30,7 @@ const Inspector = (props) => {
   }, [inspectorData]);
 
   useEffect(() => {
+    if (!data) return;
     publish(events.NODE_SET(data.nodeId), data.data);
   }, [data]);
 
