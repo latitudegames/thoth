@@ -19,6 +19,11 @@ h2 {
   text-align: center;
 }
 
+.socket.output.any-type,
+.socket.input.any-type {
+  background: #838383;
+}
+
 .socket.output.boolean,
 .socket.input.boolean {
   background: #f54703;
