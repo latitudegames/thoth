@@ -1,8 +1,8 @@
-import init from "../rete/editor";
+import init from "../features/rete/editor";
 import gridimg from "../grid.png";
 
 import { usePubSub } from "./PubSub";
-import { useThoth } from "./Thoth";
+import { useSpell } from "./Spell";
 
 import { useContext, createContext, useState } from "react";
 
@@ -21,16 +21,29 @@ export const useRete = () => useContext(Context);
 
 const ReteProvider = ({ children }) => {
   const [editor, setEditor] = useState();
+  const [editorMap, setEditorMap] = useState({});
   const pubSub = usePubSub();
 
-  const buildEditor = async (container, thoth) => {
-    if (editor) return;
+  const buildEditor = async (container, spell, tab) => {
+    if (editorMap[tab]) {
+      // If we are here, we are swapping to a new editor.  Set teh editor from the map, and return.
+      setEditor(editorMap[tab]);
+      return;
+    }
 
     const newEditor = await init({
       container,
       pubSub,
-      thoth,
+      thoth: spell,
     });
+
+    // editor map to store multiple instances of  editors based on tab
+    setEditorMap({
+      ...editorMap,
+      [tab]: editor,
+    });
+
+    // this should store the current editor
     setEditor(newEditor);
   };
 
@@ -69,9 +82,9 @@ const ReteProvider = ({ children }) => {
   );
 };
 
-export const Editor = ({ children }) => {
+export const Editor = ({ tab = "default", children }) => {
   const { buildEditor } = useRete();
-  const thoth = useThoth();
+  const spell = useSpell();
 
   return (
     <>
@@ -81,6 +94,7 @@ export const Editor = ({ children }) => {
           width: "100vw",
           height: "100vh",
           position: "absolute",
+          backgroundColor: "#191919",
           backgroundImage: `url('${gridimg}')`,
         }}
         onDragOver={(e) => {
@@ -88,11 +102,11 @@ export const Editor = ({ children }) => {
         }}
         onDrop={(e) => {}}
       >
-        {!thoth.currentSpell.graph && <p>Loading...</p>}
-        {thoth.currentSpell.graph && (
+        {!spell.currentSpell.graph && <p>Loading...</p>}
+        {spell.currentSpell.graph && (
           <div
             ref={(el) => {
-              if (el) buildEditor(el, thoth);
+              if (el) buildEditor(el, spell, tab);
             }}
           />
         )}

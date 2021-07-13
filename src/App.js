@@ -1,69 +1,28 @@
-import { Layout, Model } from "flexlayout-react";
 import "flexlayout-react/style/dark.css";
 
-import { useRete, Editor } from "./contexts/Rete";
-import { useThoth } from "./contexts/Thoth";
-import ThothPageWrapper from "./components/ThothPage/ThothPageWrapper";
-import json from "./layout.json";
+import ThothPageWrapper from "./features/common/ThothPage/ThothPageWrapper";
+import Spell from "./features/spell/Spell";
 
 import "./dds-globals/dds-globals.css";
 import "./App.css";
-import StateManager from "./components/ThothSidePanel/StateManager";
-import Playtest from "./components/ThothSidePanel/Playtest";
-
-const model = Model.fromJson(json);
 
 function App() {
-  const { serialize } = useRete();
-  const { saveCurrentSpell } = useThoth();
-
-  const onSave = () => {
-    const serialized = serialize();
-    saveCurrentSpell({ graph: serialized });
-  };
-
-  const onSerialize = () => {
-    const serialized = serialize();
-    console.log(JSON.stringify(serialized));
-  };
-
-  const toolbar = (
-    <>
-      <button onClick={onSave}>Save</button>
-      <button>Load</button>
-      <button onClick={onSerialize}>Export</button>
-      <button onClick={serialize}>Create New</button>
-    </>
-  );
-
-  const factory = (node) => {
-    const component = node.getComponent();
-    switch (component) {
-      case "editor":
-        return <Editor />;
-      case "stateManager":
-        return <StateManager />;
-      case "playtest":
-        return <Playtest />;
-      default:
-        return <p></p>;
-    }
-  };
-
-  const onRenderTabSet = (arg) => {
-    console.log(arg);
-  };
+  const tabs = [
+    {
+      name: "My Spell",
+      type: "spell",
+      active: true,
+    },
+    {
+      name: "My Enki",
+      type: "Enki",
+      active: false,
+    },
+  ];
 
   return (
-    <ThothPageWrapper toolbarItems={toolbar}>
-      <div className="layout-container">
-        <Layout
-          model={model}
-          factory={factory}
-          onRenderTabSet={onRenderTabSet}
-        />
-      </div>
-      {/* <Editor /> */}
+    <ThothPageWrapper tabs={tabs}>
+      <Spell />
     </ThothPageWrapper>
   );
 }

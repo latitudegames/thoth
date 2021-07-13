@@ -1,23 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { PouchDB } from "react-pouchdb";
 import App from "./App";
-import ReteProvider from "./contexts/Rete";
-import PubSubProvider from "./contexts/PubSub";
-import ThothProvider from "./contexts/Thoth";
+import AppProviders from "./contexts/AppProviders";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
   <React.StrictMode>
-    <PouchDB name="thoth">
-      <PubSubProvider>
-        <ReteProvider>
-          <ThothProvider>
-            <App />
-          </ThothProvider>
-        </ReteProvider>
-      </PubSubProvider>
-    </PouchDB>
+    <AppProviders>
+      <App />
+    </AppProviders>
   </React.StrictMode>,
   document.getElementById("root")
 );

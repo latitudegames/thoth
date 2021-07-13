@@ -1,11 +1,17 @@
 html,
 body {
-  background-color: #191919;
+  background-color: var(--dark-0);
   color: var(--dark-4);
   overflow: hidden;
   padding: 0;
   margin: 0;
-  font-size: 14px;
+  font-size: 12px;
+}
+
+html,
+body,
+#root {
+  height: 100%;
 }
 
 h1,
@@ -65,22 +71,34 @@ button {
   color: #fff;
   border-radius: 4px;
   cursor: pointer;
-  background-color: var(--dark-1);
-  border: 1px solid var(--dark-2);
-  padding: 13.5px; /* not using a var here to optically correct for base + cap of typeface */
-  padding-left: var(--medium);
-  padding-right: var(--medium);
+  background-color: var(--dark-2);
+  border: 1px solid var(--dark-3);
+  padding: 9px 16px;
+  padding-left: var(--small);
+  padding-right: var(--small);
   font-family: "IBM Plex Mono", "sans-serif" !important;
+  font-size: 11px;
   text-transform: uppercase;
+}
+button.option {
+  border: none;
+  margin: 0;
+  border-radius: 0;
 }
 button.primary {
   background-color: var(--primary);
 }
 button.list {
   background-color: var(--dark-2);
+  padding: 3px;
   padding-left: var(--small);
   padding-right: var(--small);
-  padding: 3px;
+}
+button.small {
+  background-color: var(--dark-2);
+  padding: 8px;
+  padding-left: var(--small);
+  padding-right: var(--small);
 }
 button:hover {
   filter: brightness(1.1);
@@ -100,12 +118,46 @@ input {
 .context-menu {
   width: var(--c50);
 }
-.layout-container .flexlayout__layout {
-  margin-top: 70px;
+.layout-container {
+  position: relative;
+  height: 100%;
 }
 .flexlayout__tab {
   overflow: hidden;
 }
 .flexlayout__tabset-selected {
-  background: rgb(50 50 50 / 95%);
+  background: var(--dark-0);
+}
+.flexlayout__tabset_tabbar_inner_tab_container_top {
+  border-top: none;
+  background-color: var(--dark-0);
+}
+.flexlayout__tabset_tabbar_outer_top {
+  border-bottom: none;
+}
+.flexlayout__tabset {
+  font-size: 16px;
+}
+.flexlayout__tab {
+  background-color: var(--dark-2);
+}
+.flexlayout__tab_toolbar {
+  background-color: var(--dark-0);
+}
+.flexlayout__tab_button {
+  margin: 0;
+  background-color: var(--dark-2);
+}
+.flexlayout__tab_button {
+  border-top-right-radius: 0;
+}
+.flexlayout__tab_button--unselected {
+  background-color: var(--dark-1);
+}
+.flexlayout__tab_button:hover {
+  filter: brightness(2.1);
+  /* background-color: var(--dark-3); */
+}
+.view-line span {
+  font-family: "IBM Plex Mono", sans-serif;
 }
