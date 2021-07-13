@@ -21,8 +21,5 @@
   height: var(--c4);
   justify-content: flex-end;
   padding-bottom: var(--c1);
-}
-
-.window-toolbar button {
-  margin-right: var(--c1);
+  gap: var(--extraSmall)
 }
