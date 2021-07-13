@@ -3,6 +3,8 @@ import { Inspector } from "./Inspector";
 function install(editor) {
   const { publish, subscribe, events } = editor.pubSub;
 
+  let currentNode = null;
+
   editor.on("componentregister", (component) => {
     const builder = component.builder;
 
@@ -17,6 +19,9 @@ function install(editor) {
 
   // handle publishing and subscribing to inspector
   editor.on("nodeselect", (node) => {
+    if (node === currentNode) return;
+
+    currentNode = node;
     // clear text editor
     publish(events.TEXT_EDITOR_SET, {});
     publish(events.INSPECTOR_SET, node.inspector.data());
