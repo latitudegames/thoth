@@ -6,10 +6,14 @@ import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
+import css from './accordion.module.css'
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
-    backgroundColor: "#272727",
+    backgroundColor: "transparent",
+    boxShadow: 'none',
+    padding: '0',
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
@@ -19,19 +23,23 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "row-reverse",
   },
   expandIcon: {
-    marginRight: 4,
+    marginRight: 8,
+    padding: 0
   },
   detailsRoot: {
-    backgroundColor: "#272727",
+    backgroundColor: "transparent",
   },
+  elevation0: {
+    boxShadow: 'none'
+  }
 }));
 
 export const SimpleAccordion = (props) => {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
-      <Accordion square={true}>
+    <div className={css['accordion']}>
+      <Accordion square={true} elevation={0}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
