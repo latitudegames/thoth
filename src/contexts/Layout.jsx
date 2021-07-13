@@ -49,19 +49,21 @@ const LayoutProvider = ({ children }) => {
 
   useEffect(() => {
     subscribe(events.INSPECTOR_SET, (event, data) => {
+      console.log("Data received", data);
       setInspectorData(data);
 
       if (!data.dataControls) return;
       Object.entries(data.dataControls).forEach(([key, control]) => {
         if (control.component === "longText") {
-          const dataSend = {
+          // we relay data to the text editor component for display here as well.
+          const textData = {
             data: data.data[key],
             nodeId: data.nodeId,
-            key: data.name,
+            key: key,
             name: data.name,
           };
 
-          publish(events.TEXT_EDITOR_SET, dataSend);
+          setTextEditorData(textData);
         }
       });
     });
@@ -170,7 +172,12 @@ export const Layout = ({ json, factory }) => {
   if (!currentModel) return <LoadingScreen />;
 
   return (
-    <LayoutComponent ref={layoutRef} model={currentModel} factory={factory} font={{size:"12px", fontFamily: 'IBM Plex Sans'}}/>
+    <LayoutComponent
+      ref={layoutRef}
+      model={currentModel}
+      factory={factory}
+      font={{ size: "12px", fontFamily: "IBM Plex Sans" }}
+    />
   );
 };
 
