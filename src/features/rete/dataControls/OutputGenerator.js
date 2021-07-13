@@ -4,7 +4,7 @@ import { anySocket } from "../sockets";
 import { DataControl } from "../plugins/inspectorPlugin";
 
 export class OutputGeneratorControl extends DataControl {
-  constructor(defaultOutputs) {
+  constructor(defaultOutputs = []) {
     const options = {
       data: "outputs",
       name: "Data Outputs",
@@ -19,7 +19,7 @@ export class OutputGeneratorControl extends DataControl {
     super(options);
   }
 
-  onData(outputs) {
+  onData(outputs = []) {
     this.node.data.outputs = outputs;
 
     const existingOutputs = [];
