@@ -1,10 +1,10 @@
 import Rete from "rete";
-import { anySocket } from "../sockets";
+import * as sockets from "../sockets";
 
 import { DataControl } from "../plugins/inspectorPlugin";
 
 export class OutputGeneratorControl extends DataControl {
-  constructor(defaultOutputs = []) {
+  constructor(defaultOutputs = [], socketType = "anySocket") {
     const options = {
       data: "outputs",
       name: "Data Outputs",
@@ -17,9 +17,12 @@ export class OutputGeneratorControl extends DataControl {
     };
 
     super(options);
+
+    this.socketType = socketType;
   }
 
   onData(outputs = []) {
+    console.log("outputs", outputs);
     this.node.data.outputs = outputs;
 
     const existingOutputs = [];
@@ -59,9 +62,15 @@ export class OutputGeneratorControl extends DataControl {
 
     // From these new outputs, we iterate and add an output socket to the node
     newOutputs.forEach((output) => {
-      const newOutput = new Rete.Output(output, output, anySocket);
+      const newOutput = new Rete.Output(
+        output,
+        output,
+        sockets[this.socketType]
+      );
       this.node.addOutput(newOutput);
     });
+
+    console.log("node data", this.node.data);
 
     this.node.update();
   }
