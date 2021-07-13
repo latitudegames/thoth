@@ -9,9 +9,9 @@ const WindowLayout = (props) => {
   return <div className={css["window-layout"]}>{props.children}</div>;
 };
 
-const Window = ({border, ...props}) => {
+const Window = ({border, dark, ...props}) => {
   return (
-    <div className={`${css["window"]} ${css[border && "bordered"]}`}>
+    <div className={`${css["window"]} ${css[border && "bordered"]} ${css[dark && "darkened"]}`}>
       <WindowToolbar>{props.toolbar}</WindowToolbar>
       <Scrollbars>
         <WindowLayout>{props.children}</WindowLayout>

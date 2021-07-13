@@ -79,6 +79,7 @@ button {
   font-family: "IBM Plex Mono", "sans-serif" !important;
   font-size: 11px;
   text-transform: uppercase;
+  box-shadow: 0px 2px 0px rgba(0,0,0,0.2);
 }
 button.option {
   border: none;
@@ -149,6 +150,8 @@ input {
   margin: 0;
   background-color: var(--dark-3);
   box-shadow: none;
+  padding-left: var(--extraSmall);
+  padding-right: var(--extraSmall);
 }
 .flexlayout__tab_button {
   border-top-right-radius: 0;

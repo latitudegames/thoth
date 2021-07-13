@@ -89,7 +89,7 @@ const Spell = () => {
 
   return (
     <TabLayout>
-      <Layout json={defaultJson} factory={factory} />
+      <Layout json={defaultJson} factory={factory}/>
     </TabLayout>
   );
 };

@@ -8,6 +8,9 @@
 .window.bordered .window-layout{
   border: 1px solid var(--dark-2);
 }
+.window.darkened .window-layout{
+  background-color: var(--dark-2);
+}
 .window-layout {
   flex-grow: 28;
   box-sizing: border-box;
