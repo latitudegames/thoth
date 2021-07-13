@@ -1,5 +1,6 @@
 .wrapper {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  margin: var(--c1);
+  height: calc(100% - var(--c2));
 }
