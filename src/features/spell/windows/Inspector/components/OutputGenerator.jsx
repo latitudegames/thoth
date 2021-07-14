@@ -40,28 +40,39 @@ const AddNewOutput = (props) => {
   );
 };
 
-const OutputGenerator = ({ updateData, dataKey, initialValue }) => {
+const OutputGenerator = ({ updateData, control, initialValue, ...props }) => {
   const [outputs, setOutputs] = useState([...initialValue]);
+  const { controls, dataKey } = control;
 
   useEffect(() => {
     setOutputs([...initialValue]);
   }, [initialValue]);
 
   const onDelete = (name) => {
-    const newOutputs = outputs.filter((output) => output !== name);
+    const newOutputs = outputs.filter((output) => output.name !== name);
     setOutputs(newOutputs);
+    update(newOutputs);
+  };
+
+  const update = (update) => {
+    updateData({ [dataKey]: update });
   };
 
   const addOutput = (output) => {
-    const newOutputs = [...outputs, output];
+    const newOutput = {
+      name: output,
+      socketType: controls.data.socketType,
+    };
+
+    const newOutputs = [...outputs, newOutput];
     setOutputs(newOutputs);
-    updateData({ [dataKey]: newOutputs });
+    update(newOutputs);
   };
 
   return (
     <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
       {outputs.map((out, i) => (
-        <SingleOutput name={out} key={i} delete={onDelete} />
+        <SingleOutput name={out.name} key={i} delete={onDelete} />
       ))}
       <AddNewOutput addOutput={addOutput} />
     </div>
