@@ -6,6 +6,8 @@
   height: 100%;
   color: #fff;
   margin-right: var(--medium);
+  padding: 0;
+  position: relative;
 }
 .thoth-logo {
   position: relative;
@@ -23,6 +25,7 @@
   padding-right: var(--small);
   font-family: "IBM Plex Mono";
   text-transform: uppercase;
+  list-style: none;
 }
 .menu-bar-item:hover {
   background-color: var(--dark-2);
