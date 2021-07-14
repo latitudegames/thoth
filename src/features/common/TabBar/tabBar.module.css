@@ -59,12 +59,12 @@
   flex: 1;
   display: inline-block;
   margin: 0;
-  cursor: pointer;
+  cursor: default;
 }
 
 .tabbar-tab span {
   display: flex;
   right: 10px;
   font-size: var(--c2);
-  cursor: pointer;
+  cursor: default;
 }

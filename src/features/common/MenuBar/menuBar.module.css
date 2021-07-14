@@ -15,5 +15,15 @@
   height: var(--c2);
 }
 .menu-bar-item {
+  border-radius: 4px;
+  cursor: default;
+  background-color: var(--dark-0);
   padding: var(--extraSmall);
+  padding-left: var(--small);
+  padding-right: var(--small);
+  font-family: "IBM Plex Mono";
+  text-transform: uppercase;
+}
+.menu-bar-item:hover {
+  background-color: var(--dark-2);
 }
