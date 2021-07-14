@@ -6,7 +6,7 @@ import css from './datacontrols.module.css'
 
 const StubComponent = (props) => <div>{props.name}</div>;
 
-const LongText = ({ initialValue, name, nodeId }) => {
+const LongText = ({ initialValue, name, dataKey, nodeId }) => {
   const { events, publish } = usePubSub();
   const { createOrFocus, componentTypes } = useLayout();
 
@@ -14,7 +14,7 @@ const LongText = ({ initialValue, name, nodeId }) => {
     const data = {
       data: initialValue,
       nodeId,
-      key: name,
+      dataKey,
       name,
     };
     publish(events.TEXT_EDITOR_SET, data);
@@ -45,18 +45,19 @@ const DataControls = ({
 
   return (
     <>
-      {Object.entries(dataControls).map(([key, value]) => {
+      {Object.entries(dataControls).map(([key, control]) => {
         // Default props to pass through to every data control
         const controlProps = {
           nodeId,
           width,
-          data: value?.data,
-          name: key,
-          initialValue: data[key] || "",
+          dataKey: control?.dataKey,
+          name: control.name,
+          initialValue: data[control.dataKey] || "",
           updateData,
         };
 
-        const Component = controlMap[value.component] || StubComponent;
+        const Component =
+          controlMap[control.controls.component] || StubComponent;
 
         return (
           <SimpleAccordion heading={key} key={key}>
