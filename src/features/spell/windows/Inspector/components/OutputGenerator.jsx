@@ -40,7 +40,7 @@ const AddNewOutput = (props) => {
   );
 };
 
-const OutputGenerator = ({ updateData, data, name, initialValue }) => {
+const OutputGenerator = ({ updateData, dataKey, initialValue }) => {
   const [outputs, setOutputs] = useState([...initialValue]);
 
   useEffect(() => {
@@ -55,7 +55,7 @@ const OutputGenerator = ({ updateData, data, name, initialValue }) => {
   const addOutput = (output) => {
     const newOutputs = [...outputs, output];
     setOutputs(newOutputs);
-    updateData({ [name]: newOutputs });
+    updateData({ [dataKey]: newOutputs });
   };
 
   return (
