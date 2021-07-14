@@ -112,7 +112,7 @@ export class SafetyVerifier extends Rete.Component {
 
   async worker(node, inputs, outputs) {
     const action = inputs["string"][0];
-    const prompt = fewshot + action + "\nRating:";
+    const prompt = node.data.fewshot + action + "\nRating:";
 
     const body = {
       prompt,
