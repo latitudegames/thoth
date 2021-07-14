@@ -10,9 +10,6 @@ export class OutputGeneratorControl extends DataControl {
       name: "Data Outputs",
       controls: {
         component: "outputGenerator",
-        data: {
-          defaultOutputs,
-        },
       },
     };
 

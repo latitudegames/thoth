@@ -32,6 +32,7 @@ const Context = createContext({
   setCurrentRef: () => {},
   saveInspector: () => {},
   saveTextEditor: () => {},
+  saveInspector: () => {},
   createOrFocus: () => {},
   addWindow: () => {},
   componentTypes: {},
@@ -44,12 +45,11 @@ const LayoutProvider = ({ children }) => {
 
   const [currentModel, setCurrentModel] = useState(null);
   const [currentRef, setCurrentRef] = useState(null);
-  const [inspectorData, setInspectorData] = useState({});
+  const [inspectorData, setInspectorData] = useState(null);
   const [textEditorData, setTextEditorData] = useState({});
 
   useEffect(() => {
     subscribe(events.INSPECTOR_SET, (event, data) => {
-      console.log("Data received", data);
       setInspectorData(data);
 
       if (!data.dataControls) return;
@@ -87,6 +87,10 @@ const LayoutProvider = ({ children }) => {
         ...dataSend,
       });
     }
+  };
+
+  const saveInspector = (data) => {
+    publish(events.NODE_SET(data.nodeId), data.data);
   };
 
   const createModel = (json) => {
@@ -142,6 +146,7 @@ const LayoutProvider = ({ children }) => {
     inspectorData,
     textEditorData,
     saveTextEditor,
+    saveInspector,
     setCurrentModel,
     currentModel,
     createModel,
