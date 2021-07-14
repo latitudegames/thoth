@@ -31,10 +31,14 @@ const MenuBar = ({ tabs }) => {
     file: {
       items: {
         new: {
-
+          onClick: () => {alert('you clicked new!')}
         },
-        save: {},
-        load: {},
+        save: {
+          onClick: () => {alert('you clicked save!')}
+        },
+        load: {
+          onClick: () => {alert('you clicked load!')}
+        },
       }
     },
     edit: {
@@ -75,7 +79,7 @@ const MenuBar = ({ tabs }) => {
 
   //Menu bar rendering
 
-  const ListItem = ({ item, label, topLevel }) => {
+  const ListItem = ({ item, label, topLevel, onClick }) => {
     label = label.replace(/_/g, ' ')
     console.log(topLevel ? 'menu-bar-item' : 'list-item')
     let children = null;
@@ -83,14 +87,14 @@ const MenuBar = ({ tabs }) => {
       children = (
         <ul className={css['menu-panel']}>
           {Object.keys(item.items).map((i, x) => {
-            return <ListItem item={item?.items[i]} label={Object.keys(item.items)[x]} topLevel={false}/>
+            return <ListItem item={item?.items[i]} label={Object.keys(item.items)[x]} topLevel={false} onClick={item?.items[i].onClick}/>
           })}
         </ul>
       );
     }
 
     return (
-      <li className={`${css[topLevel ? 'menu-bar-item' : 'list-item']}`}>
+      <li className={`${css[topLevel ? 'menu-bar-item' : 'list-item']}`} onClick={onClick}>
         {label}
         {children && <div className={css['folder-arrow']}> ❯ </div>}
         {!topLevel && <br />}
@@ -103,7 +107,7 @@ const MenuBar = ({ tabs }) => {
     <ul className={css['menu-bar']}>
         <img className={css["thoth-logo"]} alt="Thoth logo" src={thothlogo} />
           {
-            Object.keys(menuBarItems).map((item, index) => <ListItem item={menuBarItems[item]} label={Object.keys(menuBarItems)[index]} topLevel={true}/>)
+            Object.keys(menuBarItems).map((item, index) => <ListItem item={menuBarItems[item]} label={Object.keys(menuBarItems)[index]} topLevel={true} onClick={menuBarItems[item].onClick}/>)
           }
     </ul>
   );
