@@ -14,12 +14,10 @@ export class OutputGeneratorControl extends DataControl {
     };
 
     super(options);
-
     this.socketType = socketType;
   }
 
   onData(outputs = []) {
-    console.log("outputs", outputs);
     this.node.data.outputs = outputs;
 
     const existingOutputs = [];
@@ -58,6 +56,7 @@ export class OutputGeneratorControl extends DataControl {
     );
 
     // From these new outputs, we iterate and add an output socket to the node
+    console.log("Constrution socket type", this.socketType);
     newOutputs.forEach((output) => {
       const newOutput = new Rete.Output(
         output,

@@ -8,7 +8,6 @@ function install(editor) {
     // we are going to override the default builder with our own, and will invoke the original builder inside it.
     component.builder = (node) => {
       // Handle outputs in the nodes data to repopulate when loading from JSON
-      console.log("checking node data for outputs");
       if (node.data.outputs && node.data.outputs.length !== 0) {
         node.data.outputs.forEach((key) => {
           const output = new Rete.Output(key, key, anySocket);
