@@ -32,7 +32,9 @@ export class OutputGeneratorControl extends DataControl {
     // Any outputs existing on the current node that arent incoming have been deleted
     // and need to be removed.
     existingOutputs
-      .filter((out) => !outputs.includes(out))
+      .filter(
+        (existing) => !outputs.some((incoming) => incoming.name === existing)
+      )
       .forEach((key) => {
         const output = this.node.outputs.get(key);
 
@@ -47,7 +49,9 @@ export class OutputGeneratorControl extends DataControl {
       });
 
     // any incoming outputs not already on the node are new and will be added.
-    const newOutputs = outputs.filter((out) => !existingOutputs.includes(out));
+    const newOutputs = outputs.filter(
+      (out) => !existingOutputs.includes(out.name)
+    );
 
     // Here we are running over and ensuring that the outputs are in the task
     this.component.task.outputs = this.node.data.outputs.reduce(
@@ -59,17 +63,14 @@ export class OutputGeneratorControl extends DataControl {
     );
 
     // From these new outputs, we iterate and add an output socket to the node
-    console.log("Constrution socket type", this.socketType);
     newOutputs.forEach((output) => {
       const newOutput = new Rete.Output(
-        output,
-        output,
-        sockets[this.socketType]
+        output.name.toLowerCase(),
+        output.name,
+        sockets[output.socketType]
       );
       this.node.addOutput(newOutput);
     });
-
-    console.log("node data", this.node.data);
 
     this.node.update();
   }
