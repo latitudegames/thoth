@@ -29,6 +29,9 @@
   justify-content: center;
   align-items: center;
 }
+.template-container .template-panel {
+  border: 1px solid transparent;
+}
 .template-container p {
   display: inline-block;
   padding: 4px;
@@ -51,10 +54,32 @@
 }
 
 .button-row {
+  margin-top: var(--small);
   border-top: 1px solid var(--dark-3);
   padding-top: var(--small);
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
   gap: var(--extraSmall);
+}
+.project-row {
+  padding: var(--extraSmall);
+  padding-left: var(--small);
+  border-bottom: 1px solid var(--dark-2);
+}
+.project-row:hover {
+  background-color: var(--dark-3);
+}
+.project-row.selected {
+  background-color: var(--primary);
+}
+
+.version-banner {
+  box-shadow: inset 0px -30px 30px rgba(0,0,0,.5);
+  background-position: center;
+  background-size: cover;
+  height: var(--c25);
+}
+.open-project-container {
+  padding: var(--small);
 }
