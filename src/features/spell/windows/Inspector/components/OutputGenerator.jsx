@@ -62,6 +62,7 @@ const OutputGenerator = ({ updateData, control, initialValue, ...props }) => {
     const newOutput = {
       name: output,
       socketType: controls.data.socketType,
+      taskType: controls.data.taskType || "output",
     };
 
     const newOutputs = [...outputs, newOutput];
