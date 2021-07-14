@@ -10,6 +10,7 @@ ul {
 	display: inline-block;
 	background-color: var(--dark-3);
   padding: var(--extraSmall);
+  padding-left: var(--small);
   text-transform: capitalize;
 }
 .list-item:hover {
