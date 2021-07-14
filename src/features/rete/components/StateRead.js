@@ -11,7 +11,9 @@ export class StateRead extends Rete.Component {
   }
 
   builder(node) {
-    const outputGenerator = new OutputGeneratorControl(node.data.outputs);
+    const outputGenerator = new OutputGeneratorControl({
+      defaultOutputs: node.data.outputs,
+    });
     node.inspector.add(outputGenerator);
 
     return node;
