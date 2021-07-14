@@ -19,10 +19,11 @@ export class SwitchGate extends Rete.Component {
   node = {};
 
   builder(node) {
-    const outputGenerator = new OutputGeneratorControl(
-      node.data.outputs,
-      "dataSocket"
-    );
+    const outputGenerator = new OutputGeneratorControl({
+      defaultOutputs: node.data.outputs,
+      socketType: "dataSocket",
+      taskType: "option",
+    });
     node.inspector.add(outputGenerator);
 
     const input = new Rete.Input("input", "Input", anySocket);
@@ -39,7 +40,7 @@ export class SwitchGate extends Rete.Component {
     const input = inputs["input"][0];
 
     // close all outputs
-    this._task.closed = [...node.data.outputs];
+    this._task.closed = node.data.outputs.map((out) => out.name);
 
     if (this._task.closed.includes(input)) {
       // If the ouputs closed has the incoming text, filter closed outputs to not include it
