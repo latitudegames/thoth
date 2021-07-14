@@ -8,18 +8,18 @@ import "./dds-globals/dds-globals.css";
 import "./App.css";
 
 function App() {
-  const tabs = [
-    {
-      name: "My Spell",
-      type: "spell",
-      active: true,
-    }
-  ];
+  let tabs = []
+  // tabs = [
+  //   {
+  //     name: "My Spell",
+  //     type: "spell",
+  //     active: true,
+  //   }
+  // ];
 
   return (
     <ThothPageWrapper tabs={tabs}>
-      <Spell />
-      <StartScreen />
+      {tabs.length ? <Spell /> : <><Spell empty/><StartScreen /></>}
     </ThothPageWrapper>
   );
 }
