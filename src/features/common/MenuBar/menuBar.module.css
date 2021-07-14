@@ -1,3 +1,61 @@
+ul {
+  margin: 0;
+	list-style: none;
+	position: relative;
+  border-radius: 3px;
+	}
+	
+.list-item {
+  position: relative;
+	display: inline-block;
+	background-color: var(--dark-3);
+  padding: var(--extraSmall);
+  text-transform: capitalize;
+}
+.list-item:hover {
+  background-color: var(--primary)
+}
+
+/* Hide Dropdowns by Default */
+ul ul {
+	display: none;
+	position: absolute; 
+	top: var(--large); /* the height of the main nav */
+  transform: translateX(-26%);
+}
+	
+/* Display Dropdowns on Hover */
+ul li:hover > ul {
+	display:inherit;
+}
+	
+/* Fisrt Tier Dropdown */
+ul ul li {
+	width:  var(--c20);
+	float:none;
+	display:list-item;
+	position: relative;
+}
+
+/* Second, Third and more Tiers	*/
+ul ul ul li {
+	position: relative;
+	top:calc(var(--large) * -1); 
+	left: var(--c19);
+}
+
+li.list-item:first-child {
+  border-radius: 4px 4px 0px 0px;
+}
+
+li.list-item:last-child {
+  border-radius: 0px 0px 4px 4px;
+}
+
+.menu-panel {
+  filter: drop-shadow(0px 0px 10px rgba(0,0,0,.3));
+}
+
 .menu-bar {
   display: flex;
   flex-direction: row;
@@ -8,6 +66,7 @@
   margin-right: var(--medium);
   padding: 0;
   position: relative;
+  z-index: 999;
 }
 .thoth-logo {
   position: relative;
@@ -29,4 +88,15 @@
 }
 .menu-bar-item:hover {
   background-color: var(--dark-2);
+}
+.folder-arrow {
+  display: inline-block;
+  margin-left: var(--extraSmall);
+  transform: rotate(90deg);
+}
+.menu-panel .folder-arrow {
+  position: absolute;
+  top: 49%;
+  right: var(--small);
+  transform: translateY(-50%);
 }

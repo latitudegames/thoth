@@ -63,27 +63,45 @@ const MenuBar = ({ tabs }) => {
           }
         }
       }
+    },
+    workspace: {
+      items: {
+        multishot_editing: {
+          onClick: null
+        },
+        fewshot_editing: {
+          onClick: null
+        },
+        playtesting: {
+          onClick: null
+        },
+        node_composing: {
+          onClick: null
+        },
+      }
     }
   }
 
   //Menu bar rendering
 
-  const ListItem = ({ item, label }) => {
-    // console.log(Object.keys(item.items)[index])
+  const ListItem = ({ item, label, topLevel }) => {
+    label = label.replace('_', ' ')
+    console.log(topLevel ? 'menu-bar-item' : 'list-item')
     let children = null;
     if (item.items && Object.keys(item.items)) {
       children = (
-        <ul>
+        <ul className={css['menu-panel']}>
           {Object.keys(item.items).map((i, x) => {
-            return <ListItem item={item?.items[i]} label={Object.keys(item.items)[x]}/>
+            return <ListItem item={item?.items[i]} label={Object.keys(item.items)[x]} topLevel={false}/>
           })}
         </ul>
       );
     }
 
     return (
-      <li>
-        {label && label}
+      <li className={`${css[topLevel ? 'menu-bar-item' : 'list-item']}`}>
+        {label}
+        {children && <div className={css['folder-arrow']}> ❯ </div>}
         {children}
       </li>
     );
@@ -93,7 +111,7 @@ const MenuBar = ({ tabs }) => {
     <ul className={css['menu-bar']}>
         <img className={css["thoth-logo"]} alt="Thoth logo" src={thothlogo} />
           {
-            Object.keys(menuBarItems).map((item, index) => <ListItem item={menuBarItems[item]} label={Object.keys(menuBarItems)[index]}/>)
+            Object.keys(menuBarItems).map((item, index) => <ListItem item={menuBarItems[item]} label={Object.keys(menuBarItems)[index]} topLevel={true}/>)
           }
     </ul>
   );
