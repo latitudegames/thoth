@@ -4,14 +4,19 @@ import * as sockets from "../sockets";
 import { DataControl } from "../plugins/inspectorPlugin";
 
 export class OutputGeneratorControl extends DataControl {
-  constructor(defaultOutputs = [], socketType = "anySocket") {
+  constructor({
+    defaultOutputs = [],
+    socketType = "anySocket",
+    taskType = "output",
+  }) {
     const options = {
       dataKey: "outputs",
       name: "Data Outputs",
       controls: {
         component: "outputGenerator",
         data: {
-          socketType: socketType,
+          socketType,
+          taskType,
         },
       },
     };
@@ -56,7 +61,7 @@ export class OutputGeneratorControl extends DataControl {
     // Here we are running over and ensuring that the outputs are in the task
     this.component.task.outputs = this.node.data.outputs.reduce(
       (acc, out) => {
-        acc[out] = "output";
+        acc[out.name] = out.taskType || "output";
         return acc;
       },
       { ...this.component.task.outputs }
