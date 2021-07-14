@@ -18,8 +18,8 @@ function App() {
 
   return (
     <ThothPageWrapper tabs={tabs}>
-      <StartScreen />
       <Spell />
+      <StartScreen />
     </ThothPageWrapper>
   );
 }

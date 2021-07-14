@@ -1,0 +1,20 @@
+.panel {
+  padding: var(--small);
+  background-color: var(--dark-2);
+  border-radius: var(--extraSmall);
+}
+.panel.unpadded {
+  padding: 0;
+}
+.panel.square {
+  border-radius: 0;
+}
+.panel.round {
+  border-radius: 4;
+}
+.panel.rounder {
+  border-radius: var(--extraSmall);
+}
+.panel.roundest {
+  border-radius: var(--small);
+}
