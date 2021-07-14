@@ -4,8 +4,8 @@ export class DataControl {
   node = null;
   component = null;
 
-  constructor({ data, name, controls, ...rest }) {
-    this.key = data;
+  constructor({ dataKey, name, controls, ...rest }) {
+    this.dataKey = dataKey;
     this.name = name;
     this.controls = controls;
     this.onData = rest.onData || this.onData;
@@ -14,7 +14,7 @@ export class DataControl {
   //Serializer to esail extract the data controls information for publishing
   data() {
     return {
-      key: this.key,
+      dataKey: this.dataKey,
       name: this.name,
       controls: this.controls,
     };
