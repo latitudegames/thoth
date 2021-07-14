@@ -59,6 +59,10 @@ li.list-item:last-child {
   border-top: 0;
   border-radius: 0px 0px 4px 4px;
 }
+li.list-item:only-child {
+  border: 1px solid var(--dark-3);
+  border-radius: 4px;
+}
 
 .menu-panel {
   /* filter: drop-shadow(0px 0px 10px rgba(0,0,0,.3)); */
@@ -99,11 +103,12 @@ li.list-item:last-child {
   filter: drop-shadow(0px 5px 5px rgba(0,0,0,0.3));
 }
 .folder-arrow {
-  display: inline-block;
+  display: none;
   margin-left: var(--extraSmall);
   transform: rotate(90deg);
 }
 .menu-panel .folder-arrow {
+  display: inline-block;
   position: absolute;
   top: 49%;
   right: var(--small);
