@@ -8,6 +8,7 @@
   box-sizing: border-box;
   background-position: center;
   background-size: cover;
+  overflow: hidden;
 }
 .panel.unpadded {
   padding: 0;
