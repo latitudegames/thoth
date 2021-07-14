@@ -2,6 +2,7 @@ import { SimpleAccordion } from "../../../../common/Accordion";
 import { usePubSub } from "../../../../../contexts/PubSub";
 import { useLayout } from "../../../../../contexts/Layout";
 import OutputGenerator from "./OutputGenerator";
+import css from './datacontrols.module.css'
 
 const StubComponent = (props) => <div>{props.name}</div>;
 
@@ -39,7 +40,8 @@ const DataControls = ({
   nodeId,
   ...props
 }) => {
-  if (!dataControls) return <p>Select a component.</p>;
+  if (!dataControls) return <p className={css['message']}>No component selected</p>
+  if (Object.keys(dataControls).length < 1) return <p className={css['message']}>Selected component has nothing to inspect</p>
 
   return (
     <>

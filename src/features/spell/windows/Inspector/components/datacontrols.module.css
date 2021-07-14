@@ -1,0 +1,7 @@
+.message {
+  position: relative;
+  padding: var(--extraLarge);
+  text-align: center;
+  top: 50%;
+  transform: translateY(-100%);
+}

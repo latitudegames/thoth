@@ -1,0 +1,19 @@
+.menu-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #fff;
+  margin-right: var(--medium);
+}
+.thoth-logo {
+  position: relative;
+  top: 2px;
+  margin-left: calc( var(--c2) + 2px);
+  margin-right: var(--c3);
+  height: var(--c2);
+}
+.menu-bar-item {
+  padding: var(--extraSmall);
+}
