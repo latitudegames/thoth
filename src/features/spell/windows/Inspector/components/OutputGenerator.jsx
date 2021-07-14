@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 
 const SingleOutput = (props) => {
   return (
@@ -40,15 +40,12 @@ const AddNewOutput = (props) => {
   );
 };
 
-const OutputGenerator = ({ updateData, data, name }) => {
-  const { defaultOutputs } = data;
-  const [outputs, setOutputs] = useState([...defaultOutputs]);
-
-  const update = useCallback((outputs) => updateData(outputs), []);
+const OutputGenerator = ({ updateData, data, name, initialValue }) => {
+  const [outputs, setOutputs] = useState([...initialValue]);
 
   useEffect(() => {
-    update({ [name]: outputs });
-  }, [outputs]);
+    setOutputs([...initialValue]);
+  }, [initialValue]);
 
   const onDelete = (name) => {
     const newOutputs = outputs.filter((output) => output !== name);
@@ -58,6 +55,7 @@ const OutputGenerator = ({ updateData, data, name }) => {
   const addOutput = (output) => {
     const newOutputs = [...outputs, output];
     setOutputs(newOutputs);
+    updateData({ [name]: newOutputs });
   };
 
   return (

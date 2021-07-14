@@ -2,13 +2,11 @@ import { useEffect, useState } from "react";
 
 import Window from "../../../common/Window/Window";
 import { useLayout } from "../../../../contexts/Layout";
-import { usePubSub } from "../../../../contexts/PubSub";
 import DataControls from "./components/DataControls";
 import LoadingScreen from "../../../common/LoadingScreen/LoadingScreen";
 
 const Inspector = (props) => {
-  const { publish, events } = usePubSub();
-  const { inspectorData } = useLayout();
+  const { inspectorData, saveInspector } = useLayout();
   const [data, setData] = useState("");
   const [width, setWidth] = useState();
 
@@ -29,11 +27,6 @@ const Inspector = (props) => {
     setData(inspectorData);
   }, [inspectorData]);
 
-  useEffect(() => {
-    if (!data) return;
-    publish(events.NODE_SET(data.nodeId), data.data);
-  }, [data]);
-
   const updateData = (update) => {
     const newData = {
       ...data,
@@ -44,6 +37,7 @@ const Inspector = (props) => {
     };
 
     setData(newData);
+    saveInspector(newData);
   };
 
   const toolbar = (
@@ -56,6 +50,7 @@ const Inspector = (props) => {
 
   return (
     <Window toolbar={toolbar} dark border>
+      <h1>{data.name}</h1>
       <DataControls
         nodeId={data.nodeId}
         dataControls={data.dataControls}
