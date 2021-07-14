@@ -1,6 +1,5 @@
-import { useRete, Editor } from "../../contexts/Rete";
+import { Editor } from "../../contexts/Rete";
 import { Layout, useLayout } from "../../contexts/Layout";
-import { useSpell } from "../../contexts/Spell";
 import StateManager from "./windows/StateManager";
 import Playtest from "./windows/Playtest";
 import Inspector from "./windows/Inspector/Inspector";
@@ -10,31 +9,7 @@ import TabLayout from "../common/TabLayout/TabLayout";
 import TextEditor from "./windows/TextEditor";
 
 const Spell = () => {
-  const { serialize } = useRete();
   const { createOrFocus, componentTypes } = useLayout();
-  const { saveCurrentSpell } = useSpell();
-
-  const onSave = () => {
-    const serialized = serialize();
-    saveCurrentSpell({ graph: serialized });
-  };
-
-  const onSerialize = () => {
-    const serialized = serialize();
-    console.log(JSON.stringify(serialized));
-  };
-
-  const toolbar = (
-    <>
-      <button className="option" onClick={onSave}>
-        Save
-      </button>
-      <button className="option">Load</button>
-      <button className="option" onClick={onSerialize}>
-        Export
-      </button>
-    </>
-  );
 
   const onStateManager = () => {
     createOrFocus(componentTypes.STATE_MANAGER, "State Manager");
