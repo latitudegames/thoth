@@ -18,7 +18,7 @@
 }
 .tab {
   background-color: rgba(40, 40, 40, 0.95);
-  cursor: pointer;
+  cursor: default;
   text-align: center;
   padding: var(--extraSmall);
   flex: 1;
@@ -77,7 +77,7 @@
 .playtest-input input {
   color: #fff;
   border-radius: 4px;
-  cursor: pointer;
+  cursor: default;
   background-color: var(--dark-2);
   border: 1px solid var(--dark-3);
   box-shadow: inset 0px 5px 5px rgba(0, 0, 0, 0.1);
