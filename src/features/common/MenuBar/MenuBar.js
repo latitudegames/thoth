@@ -76,7 +76,47 @@ const MenuBar = ({ tabs }) => {
           onClick: null
         },
         node_composing: {
-          onClick: null
+          items: {
+            serialization: {
+              onClick: null
+            },
+            preamble: {
+              onClick: null
+            },
+            fewshot_data: {
+              items: {
+                serialization: {
+                  onClick: null
+                },
+                preamble: {
+                  onClick: null
+                },
+                fewshot_data: {
+                  items: {
+                    serialization: {
+                      onClick: null
+                    },
+                    preamble: {
+                      onClick: null
+                    },
+                    fewshot_data: {
+                      items: {
+                        serialization: {
+                          onClick: null
+                        },
+                        preamble: {
+                          onClick: null
+                        },
+                        fewshot_data: {
+                          onClick: null
+                        },
+                      }
+                    },
+                  }
+                },
+              }
+            },
+          }
         },
       }
     }
@@ -102,6 +142,7 @@ const MenuBar = ({ tabs }) => {
       <li className={`${css[topLevel ? 'menu-bar-item' : 'list-item']}`}>
         {label}
         {children && <div className={css['folder-arrow']}> ❯ </div>}
+        {!topLevel && <br />}
         {children}
       </li>
     );

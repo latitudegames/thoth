@@ -6,6 +6,9 @@ ul {
 	}
 	
 .list-item {
+  border: 1px solid var(--dark-1);
+  border-top: 0;
+  border-bottom: 0;
   position: relative;
 	display: inline-block;
 	background-color: var(--dark-3);
@@ -22,7 +25,7 @@ ul ul {
 	display: none;
 	position: absolute; 
 	top: var(--large); /* the height of the main nav */
-  transform: translateX(-26%);
+  transform: translateX(calc(var(--c7) * -1));
 }
 	
 /* Display Dropdowns on Hover */
@@ -42,19 +45,23 @@ ul ul li {
 ul ul ul li {
 	position: relative;
 	top:calc(var(--large) * -1); 
-	left: var(--c19);
+	left: var(--c23);
 }
 
 li.list-item:first-child {
+  border: 1px solid var(--dark-1);
+  border-bottom: 0;
   border-radius: 4px 4px 0px 0px;
 }
 
 li.list-item:last-child {
+  border: 1px solid var(--dark-1);
+  border-top: 0;
   border-radius: 0px 0px 4px 4px;
 }
 
 .menu-panel {
-  filter: drop-shadow(0px 0px 10px rgba(0,0,0,.3));
+  /* filter: drop-shadow(0px 0px 10px rgba(0,0,0,.3)); */
 }
 
 .menu-bar {
