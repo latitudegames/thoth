@@ -6,10 +6,13 @@ import { DataControl } from "../plugins/inspectorPlugin";
 export class OutputGeneratorControl extends DataControl {
   constructor(defaultOutputs = [], socketType = "anySocket") {
     const options = {
-      data: "outputs",
+      dataKey: "outputs",
       name: "Data Outputs",
       controls: {
         component: "outputGenerator",
+        data: {
+          socketType: socketType,
+        },
       },
     };
 
