@@ -1,7 +1,13 @@
 .panel {
+  text-align: left;
+  display: inline-block;
+  color: #fff;
   padding: var(--small);
   background-color: var(--dark-2);
   border-radius: var(--extraSmall);
+  box-sizing: border-box;
+  background-position: center;
+  background-size: cover;
 }
 .panel.unpadded {
   padding: 0;
@@ -17,4 +23,7 @@
 }
 .panel.roundest {
   border-radius: var(--small);
+}
+.panel.shadow {
+  box-shadow: 0px 2px 5px rgba(0,0,0,0.5);
 }
