@@ -22,7 +22,7 @@ function install(editor) {
       if (node.data.outputs && node.data.outputs.length > 0) {
         component.task.outputs = node.data.outputs.reduce(
           (acc, out) => {
-            acc[out.name] = "output";
+            acc[out.name] = out.taskType || "output";
             return acc;
           },
           { ...component.task.outputs }
