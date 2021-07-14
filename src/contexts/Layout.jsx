@@ -32,7 +32,6 @@ const Context = createContext({
   setCurrentRef: () => {},
   saveInspector: () => {},
   saveTextEditor: () => {},
-  saveInspector: () => {},
   createOrFocus: () => {},
   addWindow: () => {},
   componentTypes: {},
@@ -53,13 +52,16 @@ const LayoutProvider = ({ children }) => {
       setInspectorData(data);
 
       if (!data.dataControls) return;
+
+      // Handle components in a special way here.  Could probaby abstract this better
+
       Object.entries(data.dataControls).forEach(([key, control]) => {
-        if (control.component === "longText") {
+        if (control.controls.component === "longText") {
           // we relay data to the text editor component for display here as well.
           const textData = {
-            data: data.data[key],
+            data: data.data[control.dataKey],
             nodeId: data.nodeId,
-            key: key,
+            dataKey: control.dataKey,
             name: data.name,
           };
 
@@ -73,15 +75,15 @@ const LayoutProvider = ({ children }) => {
     });
   }, [events, subscribe, publish]);
 
-  const saveTextEditor = (data) => {
+  const saveTextEditor = (textData) => {
     const dataSend = {
-      [data.key]: data.data,
+      [textData.dataKey]: textData.data,
     };
 
-    publish(events.NODE_SET(data.nodeId), dataSend);
+    publish(events.NODE_SET(textData.nodeId), dataSend);
 
     // Keep the inspector in sync with the text editor if needed.
-    if (inspectorData[data.key]) {
+    if (inspectorData[textData.dataKey]) {
       setInspectorData({
         ...inspectorData,
         ...dataSend,
@@ -89,8 +91,9 @@ const LayoutProvider = ({ children }) => {
     }
   };
 
-  const saveInspector = (data) => {
-    publish(events.NODE_SET(data.nodeId), data.data);
+  const saveInspector = (inspectorData) => {
+    setInspectorData(inspectorData);
+    publish(events.NODE_SET(inspectorData.nodeId), inspectorData.data);
   };
 
   const createModel = (json) => {
