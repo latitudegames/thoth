@@ -2,9 +2,9 @@ import Rete from "rete";
 import { anySocket, dataSocket } from "../sockets";
 import { OutputGeneratorControl } from "../dataControls/OutputGenerator";
 
-function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
+// function capitalizeFirstLetter(string) {
+//   return string.charAt(0).toUpperCase() + string.slice(1);
+// }
 
 export class SwitchGate extends Rete.Component {
   constructor() {
