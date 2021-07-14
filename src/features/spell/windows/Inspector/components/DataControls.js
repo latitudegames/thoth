@@ -50,8 +50,7 @@ const DataControls = ({
         const controlProps = {
           nodeId,
           width,
-          dataKey: control?.dataKey,
-          name: control.name,
+          control,
           initialValue: data[control.dataKey] || "",
           updateData,
         };
