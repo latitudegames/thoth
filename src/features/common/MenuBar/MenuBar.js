@@ -28,104 +28,55 @@ const MenuBar = ({ tabs }) => {
 
 
   const menuBarItems = {
-    save: {
-      onClick: onSave
+    file: {
+      items: {
+        new: {
+
+        },
+        save: {},
+        load: {},
+      }
     },
-    load: {},
-    export: {
-      onClick: onSerialize,
+    edit: {
+      items: {
+        undo: {},
+        redo: {},
+        copy: {},
+        paste: {},
+      }
     },
     studio: {
       items: {
-        text_editor: {
-          onClick: null
-        },
-        state_manager: {
-          onClick: null
-        },
-        playtest: {
-          onClick: null
-        },
-        inspector: {
-          onClick: null
-        },
-        enki: {
+        tools: {
           items: {
-            serialization: {
-              onClick: null
-            },
-            preamble: {
-              onClick: null
-            },
-            fewshot_data: {
-              onClick: null
-            },
+            text_editor: {},
+            inspector: {},
+            state_manager: {},
+            playtest: {},
+            enki: {
+              items: {
+                fewshots: {},
+                serialization: {},
+                preamble: {},
+              }
+            }
+          },
+        },
+        change_layout: {
+          items: {
+            multishot_editing: {},
+            enki_fewshot_editing: {},
+            node_editing: {}
           }
-        }
+        },
       }
     },
-    workspace: {
-      items: {
-        multishot_editing: {
-          onClick: null
-        },
-        fewshot_editing: {
-          onClick: null
-        },
-        playtesting: {
-          onClick: null
-        },
-        node_composing: {
-          items: {
-            serialization: {
-              onClick: null
-            },
-            preamble: {
-              onClick: null
-            },
-            fewshot_data: {
-              items: {
-                serialization: {
-                  onClick: null
-                },
-                preamble: {
-                  onClick: null
-                },
-                fewshot_data: {
-                  items: {
-                    serialization: {
-                      onClick: null
-                    },
-                    preamble: {
-                      onClick: null
-                    },
-                    fewshot_data: {
-                      items: {
-                        serialization: {
-                          onClick: null
-                        },
-                        preamble: {
-                          onClick: null
-                        },
-                        fewshot_data: {
-                          onClick: null
-                        },
-                      }
-                    },
-                  }
-                },
-              }
-            },
-          }
-        },
-      }
-    }
   }
 
   //Menu bar rendering
 
   const ListItem = ({ item, label, topLevel }) => {
-    label = label.replace('_', ' ')
+    label = label.replace(/_/g, ' ')
     console.log(topLevel ? 'menu-bar-item' : 'list-item')
     let children = null;
     if (item.items && Object.keys(item.items)) {
