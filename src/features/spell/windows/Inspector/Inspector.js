@@ -7,7 +7,6 @@ import LoadingScreen from "../../../common/LoadingScreen/LoadingScreen";
 
 const Inspector = (props) => {
   const { inspectorData, saveInspector } = useLayout();
-  const [data, setData] = useState("");
   const [width, setWidth] = useState();
 
   useEffect(() => {
@@ -23,20 +22,15 @@ const Inspector = (props) => {
     });
   }, [props]);
 
-  useEffect(() => {
-    setData(inspectorData);
-  }, [inspectorData]);
-
   const updateData = (update) => {
     const newData = {
-      ...data,
+      ...inspectorData,
       data: {
-        ...data.data,
+        ...inspectorData.data,
         ...update,
       },
     };
 
-    setData(newData);
     saveInspector(newData);
   };
 
@@ -46,15 +40,15 @@ const Inspector = (props) => {
     </>
   );
 
-  if (!data) return <LoadingScreen />;
+  if (!inspectorData) return <LoadingScreen />;
 
   return (
     <Window toolbar={toolbar} dark border>
-      <h1>{data.name}</h1>
+      <h1>{inspectorData.name}</h1>
       <DataControls
-        nodeId={data.nodeId}
-        dataControls={data.dataControls}
-        data={data.data}
+        nodeId={inspectorData.nodeId}
+        dataControls={inspectorData.dataControls}
+        data={inspectorData.data}
         width={width}
         updateData={updateData}
       />
