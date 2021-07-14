@@ -1,5 +1,5 @@
 import Rete from "rete";
-import { anySocket } from "../../sockets";
+import * as sockets from "../../sockets";
 
 function install(editor) {
   editor.on("componentregister", (component) => {
@@ -10,7 +10,11 @@ function install(editor) {
       // Handle outputs in the nodes data to repopulate when loading from JSON
       if (node.data.outputs && node.data.outputs.length !== 0) {
         node.data.outputs.forEach((key) => {
-          const output = new Rete.Output(key, key, anySocket);
+          const output = new Rete.Output(
+            key.name.toLowerCase(),
+            key.name,
+            sockets[key.socketType]
+          );
           node.addOutput(output);
         });
       }
@@ -18,7 +22,7 @@ function install(editor) {
       if (node.data.outputs && node.data.outputs.length > 0) {
         component.task.outputs = node.data.outputs.reduce(
           (acc, out) => {
-            acc[out] = "output";
+            acc[out.name] = "output";
             return acc;
           },
           { ...component.task.outputs }
