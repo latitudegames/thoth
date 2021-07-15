@@ -24,6 +24,7 @@ import { PlaytestInput } from "./components/PlaytestInput";
 import { StateWrite } from "./components/StateWrite";
 import { StateRead } from "./components/StateRead";
 import { ForEach } from "./components/ForEach";
+import { Generator } from "./components/Generator";
 
 /*
   Primary initialization function.  Takes a container ref to attach the rete editor to.
@@ -42,6 +43,7 @@ const editor = async function ({ container, pubSub, thoth }) {
     new DifficultyDetectorComponent(),
     new EntityDetector(),
     new ForEach(),
+    new Generator(),
     new InputComponent(),
     new ItemTypeComponent(),
     new PlaytestPrint(),
