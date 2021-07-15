@@ -8,6 +8,7 @@ import InspectorPlugin from "./plugins/inspectorPlugin";
 import SocketGenerator from "./plugins/socketGenerator";
 import { MyNode } from "../../features/common/Node/Node";
 import { InputComponent } from "./components/Input";
+import { JoinListComponent } from "./components/JoinList";
 import { TenseTransformer } from "./components/TenseTransformer";
 import { RunInputComponent } from "./components/RunInput";
 import { ActionTypeComponent } from "./components/ActionType";
@@ -46,6 +47,7 @@ const editor = async function ({ container, pubSub, thoth }) {
     new Generator(),
     new InputComponent(),
     new ItemTypeComponent(),
+    new JoinListComponent(),
     new PlaytestPrint(),
     new PlaytestInput(),
     new RunInputComponent(),
@@ -107,7 +109,7 @@ const editor = async function ({ container, pubSub, thoth }) {
       // NOTE need to consider authentication against games API from a web client
       await engine.abort();
       await engine.process(editor.toJSON());
-      editor.thoth.saveCurrentSpell({graph: editor.toJSON()});
+      // editor.thoth.saveCurrentSpell({graph: editor.toJSON()});
     }
   );
 
