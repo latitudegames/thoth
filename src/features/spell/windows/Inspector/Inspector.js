@@ -36,7 +36,7 @@ const Inspector = (props) => {
 
   const toolbar = (
     <>
-      <button className="small">Something</button>
+      <div style={{flex: 1, marginTop: 'var(--c1)'}}>{inspectorData?.name}</div> <button className="small">Something</button>
     </>
   );
 
@@ -44,7 +44,6 @@ const Inspector = (props) => {
 
   return (
     <Window toolbar={toolbar} dark border>
-      <h1>{inspectorData.name}</h1>
       <DataControls
         nodeId={inspectorData.nodeId}
         dataControls={inspectorData.dataControls}
