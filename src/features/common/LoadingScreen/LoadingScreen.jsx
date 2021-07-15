@@ -5,6 +5,7 @@ const LoadingScreen = (props) => (
     style={{
       height: "100%",
       width: "100%",
+      backgroundColor: 'var(--dark-3)'
     }}
   >
     <div style={{position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center'}}>
