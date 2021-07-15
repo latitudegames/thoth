@@ -11,3 +11,7 @@
 .MuiCollapse-wrapperInner {
   border-top: 1px solid var(--dark-2) !important;
 }
+.MuiAccordion-root.Mui-expanded {
+  margin-top: var(--extraSmall) !important;
+  margin-bottom: var(--extraSmall) !important;
+}
