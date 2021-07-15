@@ -2,22 +2,18 @@ import { navigate } from "hookrouter";
 import { useEffect } from "react";
 
 import { Editor } from "../../contexts/Rete";
-import { Layout } from "../../contexts/Layout";
+import { Layout, useLayout } from "../../contexts/Layout";
 import StateManager from "./windows/StateManager";
 import Playtest from "./windows/Playtest";
 import Inspector from "./windows/Inspector/Inspector";
 
-import defaultJson from "./layout.json";
 import TabLayout from "../common/TabLayout/TabLayout";
 import TextEditor from "./windows/TextEditor";
 import { useTabManager } from "../../contexts/TabManager";
 
-const workspaceMap = {
-  default: defaultJson,
-};
-
 const Thoth = ({ empty, workspace = "default" }) => {
   const { tabs } = useTabManager();
+  const { getWorkspace } = useLayout();
 
   // reroute to home if no tabs open
   useEffect(() => {
@@ -46,7 +42,7 @@ const Thoth = ({ empty, workspace = "default" }) => {
 
   return (
     <TabLayout>
-      {!empty && <Layout json={workspaceMap[workspace]} factory={factory} />}
+      {!empty && <Layout json={getWorkspace[workspace]} factory={factory} />}
     </TabLayout>
   );
 };
