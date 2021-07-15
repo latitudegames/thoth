@@ -93,6 +93,10 @@ li.list-item:only-child {
   font-family: "IBM Plex Mono";
   text-transform: uppercase;
   list-style: none;
+
+  /* moving down 1px because the container itself follows the grid, but the items do not. */
+  position: relative;
+  top: 1px;
 }
 .menu-bar-item:hover {
   background-color: var(--dark-2);
