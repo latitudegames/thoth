@@ -12,16 +12,17 @@ import defaultSpellData from "./defaultSpell";
 
 const Context = createContext({
   currentSpell: {},
-  currentGameState: {},
-  getCurrentGameState: () => {},
+  setCurrentSpell: {},
   getSpell: () => {},
   loadSpell: () => {},
-  rewriteCurrentGameState: () => {},
   saveSpell: () => {},
+  newSpell: () => {},
   saveCurrentSpell: () => {},
-  setCurrentSpell: {},
   settings: {},
   stateHistory: [],
+  currentGameState: {},
+  getCurrentGameState: () => {},
+  rewriteCurrentGameState: () => {},
   updateCurrentGameState: () => {},
 });
 
@@ -120,6 +121,15 @@ const SpellProvider = ({ children }) => {
     });
   };
 
+  const newSpell = async ({ graph, name }) => {
+    const newSpell = {
+      name,
+      graph,
+    };
+
+    return db.spells.insert(newSpell);
+  };
+
   const saveCurrentSpell = async (update) => {
     return saveSpell(currentSpell.name, update);
   };
@@ -159,6 +169,7 @@ const SpellProvider = ({ children }) => {
     getCurrentGameState,
     getSpell,
     loadSpell,
+    newSpell,
     rewriteCurrentGameState,
     saveCurrentSpell,
     saveSpell,
