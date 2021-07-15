@@ -24,8 +24,15 @@ const EnkiDetails = () => {
     setValue("");
   };
 
-  const handleChange = (event) => {
-    console.log(event);
+  const listChange = async (event) => {
+    const taskName = event.target.value
+    const enkiData = await getEnkiPrompt(taskName);
+    if (enkiData) {
+        selectEnki({
+          taskName,
+          ...enkiData,
+        });
+      }
   };
 
   useEffect(async () => {
@@ -58,8 +65,8 @@ const EnkiDetails = () => {
             Search Enki by Name
           </button>
 
-          {taskList.length > 0 && !activeTask && (
-            <Select native onChange={handleChange}>
+          {taskList?.length > 0 && !activeTask && (
+            <Select native onChange={listChange}>
               <option aria-label="None" disabled selected value="" />
               {taskList.map((task) => {
                 return <option value={task.name}>{task.name}</option>;
