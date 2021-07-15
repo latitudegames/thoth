@@ -6,13 +6,18 @@ import tabSchema from "./schemas/tab";
 addRxPlugin(require("pouchdb-adapter-idb"));
 
 let database = null;
+const databaseName = "thoth_alpha";
+const adapter = "idb";
 
 export const initDB = async () => {
   if (database !== null) return database;
 
+  // Uncomment this for fast deletion of DB
+  // await removeRxDatabase(databaseName, adapter);
+
   database = await createRxDatabase({
-    name: "thoth_alpha", // <- name
-    adapter: "idb", // <- storage-adapter
+    name: databaseName, // <- name
+    adapter: adapter, // <- storage-adapter
   });
 
   await database.addCollections({
@@ -26,6 +31,15 @@ export const initDB = async () => {
       schema: tabSchema,
     },
   });
+
+  // middleware hooks
+  database.spells.preInsert((doc) => {
+    doc.createdAt = Date.now();
+  }, false);
+
+  database.spells.preSave((doc) => {
+    doc.updatedAt = Date.now();
+  }, false);
 
   return database;
 };
