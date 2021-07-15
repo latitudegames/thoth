@@ -29,6 +29,18 @@ function install(editor) {
         );
       }
 
+      if (node.data.inputs && node.data.inputs.length !== 0) {
+        node.data.inputs.forEach((key) => {
+          if (key === "data") return;
+          const input = new Rete.Input(
+            key.name.toLowerCase(),
+            key.name,
+            sockets[key.socketType]
+          );
+          node.addInput(input);
+        });
+      }
+
       builder.call(component, node);
     };
   });
