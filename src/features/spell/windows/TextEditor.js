@@ -42,7 +42,6 @@ const TextEditor = (props) => {
     setCode(textEditorData.data);
 
     if (textEditorData?.control?.data?.language) {
-      console.log("setting language", textEditorData.control.data.language);
       setLanguage(textEditorData.control.data.language);
     }
   }, [textEditorData]);
@@ -72,7 +71,7 @@ const TextEditor = (props) => {
   const toolbar = (
     <>
       <div style={{ flex: 1, marginTop: "var(--c1)" }}>
-        {textEditorData?.name} - {language}
+        {textEditorData?.name && textEditorData?.name + " - " + language}
       </div>
       <button className="small" onClick={onSave}>
         Save
