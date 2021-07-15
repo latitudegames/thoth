@@ -65,6 +65,7 @@ const TextEditor = (props) => {
 
   const toolbar = (
     <>
+      <div style={{flex: 1, marginTop: 'var(--c1)'}}>{textEditorData?.name}</div>
       <button className="small" onClick={onSave}>
         Save
       </button>
