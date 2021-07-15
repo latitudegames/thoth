@@ -9,13 +9,13 @@ import "./App.css";
 
 function App() {
   let tabs = []
-  // tabs = [
-  //   {
-  //     name: "My Spell",
-  //     type: "spell",
-  //     active: true,
-  //   }
-  // ];
+  tabs = [
+    {
+      name: "My Spell",
+      type: "spell",
+      active: true,
+    }
+  ];
 
   return (
     <ThothPageWrapper tabs={tabs}>
