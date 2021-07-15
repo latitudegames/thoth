@@ -26,7 +26,7 @@ const AddNewInput = (props) => {
   };
 
   return (
-    <div style={{ flex: 1, display: "flex" }}>
+    <div style={{ display: "flex", gap: 'var(--extraSmall)' }}>
       <input
         style={{ flex: 6, padding: 0 }}
         value={value}
