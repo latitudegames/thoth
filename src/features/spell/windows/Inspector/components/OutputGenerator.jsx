@@ -35,7 +35,7 @@ const AddNewOutput = (props) => {
         placeholder={'Node output text...'}
       />
       <button style={{ flex: 1 }} onClick={onAdd}>
-        Add
+        + Add
       </button>
     </div>
   );
