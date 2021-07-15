@@ -77,17 +77,15 @@ const LayoutProvider = ({ children }) => {
   }, [events, subscribe, publish]);
 
   const saveTextEditor = (textData) => {
-    const dataSend = {
+    const textUpdate = {
       [textData.dataKey]: textData.data,
     };
 
-    publish(events.NODE_SET(textData.nodeId), dataSend);
-
-    // Keep the inspector in sync with the text editor if needed.
-    if (inspectorData[textData.dataKey]) {
+    publish(events.NODE_SET(textData.nodeId), textUpdate);
+    if (inspectorData) {
       setInspectorData({
         ...inspectorData,
-        ...dataSend,
+        ...textUpdate,
       });
     }
   };
