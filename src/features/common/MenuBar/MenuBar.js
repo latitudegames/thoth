@@ -26,10 +26,15 @@ const MenuBar = ({ tabs }) => {
 
   //Menu bar hotkeys
 
-  useHotkeys("cmd+s, crtl+s", (event) => {
-    event.preventDefault();
-    onSave();
-  });
+  useHotkeys(
+    "cmd+s, crtl+s",
+    (event) => {
+      event.preventDefault();
+      onSave();
+    },
+    {},
+    [onSave]
+  );
 
   //Menu bar entries
 
