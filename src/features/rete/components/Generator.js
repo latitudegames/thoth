@@ -81,7 +81,7 @@ export class Generator extends Rete.Component {
       ? node.data.stop.split(",").map((i) => i.trim())
       : ["/n"];
 
-    const temperature = node?.data?.temp ? parseFloat(node.data.temp) : 0.0;
+    const temperature = node?.data?.temp ? parseFloat(node.data.temp) : 0.7;
     const maxTokens = node?.data?.maxTokens
       ? parseInt(node.data.maxTokens)
       : 50;
