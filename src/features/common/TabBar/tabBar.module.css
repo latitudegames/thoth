@@ -1,5 +1,5 @@
 .th-tabbar {
-  flex: 1;
+  /* flex: 1; */
   display: inline-block;
   background-color: var(--dark-0);
   width: 100%;
@@ -19,7 +19,7 @@
 .thoth-logo {
   position: relative;
   top: 2px;
-  margin-left: calc( var(--c2) + 2px);
+  margin-left: calc(var(--c2) + 2px);
   margin-right: var(--c3);
   height: var(--c2);
 }
