@@ -31,7 +31,7 @@ function install(editor) {
 
       if (node.data.inputs && node.data.inputs.length !== 0) {
         node.data.inputs.forEach((key) => {
-          if (key === "data") return;
+          if (key.name.toLowerCase() === "data") return;
           const input = new Rete.Input(
             key.name.toLowerCase(),
             key.name,
