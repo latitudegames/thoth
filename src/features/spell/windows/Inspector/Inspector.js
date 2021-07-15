@@ -43,7 +43,7 @@ const Inspector = (props) => {
   if (!inspectorData) return <LoadingScreen />;
 
   return (
-    <Window toolbar={toolbar} dark border>
+    <Window toolbar={toolbar} dark border unpadded>
       <DataControls
         nodeId={inspectorData.nodeId}
         dataControls={inspectorData.dataControls}

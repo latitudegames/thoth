@@ -1,0 +1,13 @@
+.MuiAccordionSummary-content {
+  margin: 0 !important;
+}
+.MuiAccordionSummary-root {
+  min-height: var(--medium) !important;
+}
+.MuiAccordionDetails-root {
+  padding: var(--small) !important;
+  padding-top: var(--medium) !important;
+}
+.MuiCollapse-wrapperInner {
+  border-top: 1px solid var(--dark-2) !important;
+}
