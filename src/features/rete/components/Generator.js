@@ -95,7 +95,7 @@ export class Generator extends Rete.Component {
     const raw = await completion(body);
     const result = raw.trim();
 
-    const composed = prompt + result;
+    const composed = `${prompt} ${result}`;
 
     return {
       result,
