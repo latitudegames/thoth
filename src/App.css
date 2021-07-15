@@ -121,6 +121,12 @@ button:hover {
 button:active {
   filter: brightness(0.9);
 }
+button.disabled {
+  box-shadow: none;
+  pointer-events: none;
+  opacity: 0.5;
+  background-color: var(--dark-2);
+}
 input {
   box-sizing: border-box;
   padding: 13.5px; /* not using a var here to optically correct for base + cap of typeface */
