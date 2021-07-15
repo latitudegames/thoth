@@ -1,9 +1,9 @@
 input.text-input {
   box-sizing: border-box;
-  padding: 13.5px; /* not using a var here to optically correct for base + cap of typeface */
+  padding: 4px; /* not using a var here to optically correct for base + cap of typeface */
   background-color: var(--dark-2);
-  padding-left: var(--medium);
-  padding-right: var(--medium);
+  padding-left: var(--small);
+  padding-right: var(--small);
   color: #fff;
   border-radius: 4px;
   cursor: default;

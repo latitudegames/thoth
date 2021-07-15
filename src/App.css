@@ -183,3 +183,16 @@ overflow: hidden;
 .view-line span {
   font-family: "IBM Plex Mono", sans-serif;
 }
+input[type='text'] {
+  box-sizing: border-box;
+  padding: var(--extraSmall); /* not using a var here to optically correct for base + cap of typeface */
+  background-color: var(--dark-2);
+  padding-left: var(--small);
+  padding-right: var(--small);
+  color: #fff;
+  border-radius: 4px;
+  cursor: default;
+  border: 1px solid var(--dark-3);
+  box-shadow: inset 0px 5px 5px rgba(0,0,0,0.1);
+  font-family: 'IBM Plex Mono', monospace !important;
+}
