@@ -39,7 +39,7 @@ export const SimpleAccordion = (props) => {
 
   return (
     <div className={css['accordion']}>
-      <Accordion square={true} elevation={0}>
+      <Accordion square={true} elevation={0} defaultExpanded={true}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
