@@ -12,7 +12,11 @@ import TabLayout from "../common/TabLayout/TabLayout";
 import TextEditor from "./windows/TextEditor";
 import { useTabManager } from "../../contexts/TabManager";
 
-const Thoth = ({ empty }) => {
+const workspaceMap = {
+  default: defaultJson,
+};
+
+const Thoth = ({ empty, workspace = "default" }) => {
   const { tabs } = useTabManager();
 
   // reroute to home if no tabs open
@@ -42,7 +46,7 @@ const Thoth = ({ empty }) => {
 
   return (
     <TabLayout>
-      {!empty && <Layout json={defaultJson} factory={factory} />}
+      {!empty && <Layout json={workspaceMap[workspace]} factory={factory} />}
     </TabLayout>
   );
 };
