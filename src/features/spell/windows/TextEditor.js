@@ -9,6 +9,7 @@ const TextEditor = (props) => {
   const [code, setCode] = useState("");
   const [data, setData] = useState("");
   const [height, setHeight] = useState();
+  const [language, setLanguage] = useState("plaintext");
   const { textEditorData, saveTextEditor } = useLayout();
 
   const bottomHeight = 50;
@@ -39,6 +40,11 @@ const TextEditor = (props) => {
   useEffect(() => {
     setData(textEditorData);
     setCode(textEditorData.data);
+
+    if (textEditorData?.control?.data?.language) {
+      console.log("setting language", textEditorData.control.data.language);
+      setLanguage(textEditorData.control.data.language);
+    }
   }, [textEditorData]);
 
   useEffect(() => {
@@ -65,7 +71,9 @@ const TextEditor = (props) => {
 
   const toolbar = (
     <>
-      <div style={{flex: 1, marginTop: 'var(--c1)'}}>{textEditorData?.name}</div>
+      <div style={{ flex: 1, marginTop: "var(--c1)" }}>
+        {textEditorData?.name} - {language}
+      </div>
       <button className="small" onClick={onSave}>
         Save
       </button>
@@ -77,7 +85,7 @@ const TextEditor = (props) => {
       <Editor
         theme="sds-dark"
         height={height}
-        defaultLanguage="plaintext"
+        defaultLanguage={language}
         value={code}
         options={editorOptions}
         defaultValue={code}
