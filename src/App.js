@@ -1,25 +1,32 @@
 import "flexlayout-react/style/dark.css";
 
 import ThothPageWrapper from "./features/common/ThothPage/ThothPageWrapper";
-import Spell from "./features/spell/Spell";
-import StartScreen from "./features/common/StartScreen/StartScreen"
+import Thoth from "./features/Thoth/Thoth";
+import StartScreen from "./features/StartScreen/StartScreen";
 
 import "./dds-globals/dds-globals.css";
 import "./App.css";
 
 function App() {
-  let tabs = []
+  let tabs = [];
   tabs = [
     {
       name: "My Spell",
       type: "spell",
       active: true,
-    }
+    },
   ];
 
   return (
     <ThothPageWrapper tabs={tabs}>
-      {tabs.length ? <Spell /> : <><Spell empty/><StartScreen /></>}
+      {tabs.length ? (
+        <Thoth />
+      ) : (
+        <>
+          <Thoth empty />
+          <StartScreen />
+        </>
+      )}
     </ThothPageWrapper>
   );
 }
