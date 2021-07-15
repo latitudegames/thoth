@@ -1,3 +1,4 @@
 .accordion {
   border-bottom: 1px solid var(--dark-2);
+  border-radius: 4px;
 }

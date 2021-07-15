@@ -32,6 +32,7 @@ const AddNewInput = (props) => {
         value={value}
         type="text"
         onChange={onChange}
+        placeholder={'Node input text...'}
       />
       <button style={{ flex: 1 }} onClick={onAdd}>
         Add
