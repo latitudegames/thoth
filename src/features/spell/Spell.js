@@ -8,7 +8,7 @@ import defaultJson from "./layout.json";
 import TabLayout from "../common/TabLayout/TabLayout";
 import TextEditor from "./windows/TextEditor";
 
-const Spell = () => {
+const Spell = ({empty}) => {
   const factory = (node) => {
     const component = node.getComponent();
     switch (component) {
@@ -29,7 +29,7 @@ const Spell = () => {
 
   return (
     <TabLayout>
-      <Layout json={defaultJson} factory={factory} />
+      {!empty && <Layout json={defaultJson} factory={factory}/>}
     </TabLayout>
   );
 };
