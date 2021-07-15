@@ -1,7 +1,8 @@
 .message {
   position: relative;
-  padding: var(--extraLarge);
+  padding-left: var(--extraLarge);
+  padding-right: var(--extraLarge);
   text-align: center;
-  top: 50%;
-  transform: translateY(-100%);
+  top: 35%;
+  transform: translateY(-50%);
 }
