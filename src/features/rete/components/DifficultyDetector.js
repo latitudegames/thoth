@@ -1,10 +1,11 @@
 import Rete from "rete";
-import { actionSocket, dataSocket, actionDifficultySocket } from "../sockets";
+import { stringSocket, dataSocket } from "../sockets";
 import { DisplayControl } from "../controls/DisplayControl";
+import { FewshotControl } from "../dataControls/FewshotControl";
 import { completion } from "../../../utils/openaiHelper";
 
 // For simplicity quests should be ONE thing not complete X and Y
-const fewShots = `Given an action, predict how hard it would be for a normal human in a fantasy world and what type of stat it uses.
+const fewshot = `Given an action, predict how hard it would be for a normal human in a fantasy world and what type of stat it uses.
 
 Stat Types: Strength, Dexterity, Endurance, Intelligence, Charisma
 
@@ -45,25 +46,25 @@ export class DifficultyDetectorComponent extends Rete.Component {
 
   displayControl = {};
 
-  // the builder is used to "assemble" the node component.
-  // when we have enki hooked up and have grabbed all few shots, we would use the builder
-  // to generate the appropriate inputs and ouputs for the fewshot at build time
   builder(node) {
-    // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
-    const inp = new Rete.Input("action", "Action", actionSocket);
+    node.data.fewshot = fewshot;
+    const inp = new Rete.Input("action", "Action", stringSocket);
     const out = new Rete.Output(
       "actionDifficulty",
       "Action Difficulty",
-      actionDifficultySocket
+      stringSocket
     );
+
     const dataInput = new Rete.Input("data", "Data", dataSocket);
     const dataOutput = new Rete.Output("data", "Data", dataSocket);
 
-    // controls are the internals of the node itself
-    // This default control sample has a text field.
     const display = new DisplayControl({
       key: "display",
     });
+
+    const fewshotControl = new FewshotControl();
+
+    node.inspector.add(fewshotControl);
 
     this.displayControl = display;
 
@@ -75,11 +76,9 @@ export class DifficultyDetectorComponent extends Rete.Component {
       .addControl(display);
   }
 
-  // the worker contains the main business logic of the node.  It will pass those results
-  // to the outputs to be consumed by any connected components
   async worker(node, inputs, outputs) {
     const action = inputs["action"][0];
-    const prompt = fewShots + action + ",";
+    const prompt = node.data.fewshot + action + ",";
 
     const body = {
       prompt,

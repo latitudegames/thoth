@@ -2,11 +2,12 @@ import { SimpleAccordion } from "../../../../common/Accordion";
 import { usePubSub } from "../../../../../contexts/PubSub";
 import { useLayout } from "../../../../../contexts/Layout";
 import OutputGenerator from "./OutputGenerator";
-import css from './datacontrols.module.css'
+import InputGenerator from "./InputGenerator";
+import css from "./datacontrols.module.css";
 
 const StubComponent = (props) => <div>{props.name}</div>;
 
-const LongText = ({ initialValue, name, nodeId }) => {
+const LongText = ({ initialValue, name, dataKey, nodeId }) => {
   const { events, publish } = usePubSub();
   const { createOrFocus, componentTypes } = useLayout();
 
@@ -14,7 +15,7 @@ const LongText = ({ initialValue, name, nodeId }) => {
     const data = {
       data: initialValue,
       nodeId,
-      key: name,
+      dataKey,
       name,
     };
     publish(events.TEXT_EDITOR_SET, data);
@@ -26,6 +27,7 @@ const LongText = ({ initialValue, name, nodeId }) => {
 
 const controlMap = {
   outputGenerator: OutputGenerator,
+  inputGenerator: InputGenerator,
   longText: LongText,
   input: StubComponent,
   slider: StubComponent,
@@ -40,23 +42,29 @@ const DataControls = ({
   nodeId,
   ...props
 }) => {
-  if (!dataControls) return <p className={css['message']}>No component selected</p>
-  if (Object.keys(dataControls).length < 1) return <p className={css['message']}>Selected component has nothing to inspect</p>
+  if (!dataControls)
+    return <p className={css["message"]}>No component selected</p>;
+  if (Object.keys(dataControls).length < 1)
+    return (
+      <p className={css["message"]}>
+        Selected component has nothing to inspect
+      </p>
+    );
 
   return (
     <>
-      {Object.entries(dataControls).map(([key, value]) => {
+      {Object.entries(dataControls).map(([key, control]) => {
         // Default props to pass through to every data control
         const controlProps = {
           nodeId,
           width,
-          data: value?.data,
-          name: key,
-          initialValue: data[key] || "",
+          control,
+          initialValue: data[control.dataKey] || "",
           updateData,
         };
 
-        const Component = controlMap[value.component] || StubComponent;
+        const Component =
+          controlMap[control.controls.component] || StubComponent;
 
         return (
           <SimpleAccordion heading={key} key={key}>

@@ -24,7 +24,7 @@ export class Inspector {
     control.node = this.node;
     control.component = this.component;
 
-    list.set(control.key, control);
+    list.set(control.dataKey, control);
   }
 
   add(dataControl) {
@@ -56,7 +56,8 @@ export class Inspector {
   data() {
     const dataControls = Array.from(this.dataControls.entries()).reduce(
       (acc, [key, val]) => {
-        acc[key] = val.controls;
+        // use the data method on controls to get data shape
+        acc[key] = val.data();
         return acc;
       },
       {}

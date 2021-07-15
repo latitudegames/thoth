@@ -19,23 +19,37 @@ h2 {
   text-align: center;
 }
 
-.socket.output.action,
-.socket.input.action {
+.socket.output.any-type,
+.socket.input.any-type {
+  background: #838383;
+}
+
+.socket.output.boolean,
+.socket.input.boolean {
   background: #f54703;
-  background: var(--primary);
 }
 
 .socket.output.string,
 .socket.input.string {
+  background: #f59403;
+}
+
+.socket.output.array,
+.socket.input.array {
+  background: #1290ce;
+}
+
+.socket.output.object,
+.socket.input.object {
   background: #21b534;
 }
 
-.socket.output.data,
-.socket.input.data {
+.socket.output.number,
+.socket.input.number {
   background: #fcbd03;
 }
-.socket.output.boolean,
-.socket.input.boolean {
+.socket.output.data,
+.socket.input.data {
   background: #7027dd;
 }
 .socket {

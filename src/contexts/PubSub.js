@@ -26,7 +26,11 @@ const PubSubProvider = ({ children }) => {
   };
 
   const subscribe = (event, callback) => {
-    return PubSub.subscribe(event, callback);
+    const token = PubSub.subscribe(event, callback);
+
+    return () => {
+      PubSub.unsubscribe(token);
+    };
   };
 
   const publicInterface = {

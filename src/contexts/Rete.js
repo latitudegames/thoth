@@ -9,6 +9,7 @@ import { useContext, createContext, useState } from "react";
 const Context = createContext({
   run: () => {},
   editor: {},
+  editorMap: {},
   serialize: () => {},
   buildEditor: () => {},
   setEditor: () => {},
@@ -40,7 +41,7 @@ const ReteProvider = ({ children }) => {
     // editor map to store multiple instances of  editors based on tab
     setEditorMap({
       ...editorMap,
-      [tab]: editor,
+      [tab]: newEditor,
     });
 
     // this should store the current editor
@@ -75,6 +76,7 @@ const ReteProvider = ({ children }) => {
     getNodeMap,
     getNodes,
     loadGraph,
+    editorMap,
   };
 
   return (

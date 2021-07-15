@@ -1,9 +1,10 @@
 import Rete from "rete";
-import { actionSocket, dataSocket, arraySocket } from "../sockets";
+import { stringSocket, dataSocket, arraySocket } from "../sockets";
+import { FewshotControl } from "../dataControls/FewshotControl";
 import { DisplayControl } from "../controls/DisplayControl";
 import { completion } from "../../../utils/openaiHelper";
 
-const fewShots = `Given an action, detect what entities the player is interacting with. Ignore entities that the player is just asking about.
+const fewshot = `Given an action, detect what entities the player is interacting with. Ignore entities that the player is just asking about.
 
 Entity types: food, person, creature, object, place, other, none
 
@@ -128,8 +129,9 @@ export class EntityDetector extends Rete.Component {
   // when we have enki hooked up and have grabbed all few shots, we would use the builder
   // to generate the appropriate inputs and ouputs for the fewshot at build time
   builder(node) {
+    node.data.fewshot = fewshot;
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
-    const inp = new Rete.Input("action", "Action", actionSocket);
+    const inp = new Rete.Input("action", "Action", stringSocket);
     const out = new Rete.Output("entities", "Entities", arraySocket);
     const dataInput = new Rete.Input("data", "Data", dataSocket);
     const dataOutput = new Rete.Output("data", "Data", dataSocket);
@@ -139,6 +141,10 @@ export class EntityDetector extends Rete.Component {
     const display = new DisplayControl({
       key: "display",
     });
+
+    const fewshotControl = new FewshotControl();
+
+    node.inspector.add(fewshotControl);
 
     this.displayControl = display;
 
@@ -154,7 +160,7 @@ export class EntityDetector extends Rete.Component {
   // to the outputs to be consumed by any connected components
   async worker(node, inputs, outputs) {
     const action = inputs["action"][0];
-    const prompt = fewShots + action + "\nEntities:";
+    const prompt = node.data.fewshot + action + "\nEntities:";
 
     const body = {
       prompt,
