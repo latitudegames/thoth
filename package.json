@@ -12,6 +12,7 @@
     "@testing-library/user-event": "^12.1.10",
     "classnames": "^2.3.1",
     "flexlayout-react": "^0.5.12",
+    "handlebars": "^4.7.7",
     "json-format": "^1.0.1",
     "pouchdb": "^7.2.2",
     "pouchdb-adapter-idb": "^7.2.2",
@@ -40,7 +41,7 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "PORT=3001 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

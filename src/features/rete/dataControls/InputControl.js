@@ -1,13 +1,12 @@
 import { DataControl } from "../plugins/inspectorPlugin";
 
-export class FewshotControl extends DataControl {
-  constructor(data = {}) {
+export class InputControl extends DataControl {
+  constructor({ dataKey, name }) {
     const options = {
-      dataKey: "fewshot",
-      name: "Fewshot",
+      dataKey: dataKey,
+      name: name,
       controls: {
-        component: "longText",
-        data,
+        component: "input",
       },
     };
 
