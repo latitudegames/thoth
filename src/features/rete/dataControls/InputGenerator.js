@@ -26,7 +26,9 @@ export class InputGeneratorControl extends DataControl {
     super(options);
   }
 
-  onData(inputs = []) {
+  onData(inputs) {
+    if (!inputs) return;
+
     this.node.data.inputs = inputs;
 
     const existingInputs = [];
