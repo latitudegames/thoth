@@ -49,7 +49,7 @@ const MenuBar = ({ tabs }) => {
       event.preventDefault();
       onSave();
     },
-    {},
+    { enableOnTags: "INPUT" },
     [onSave]
   );
 
