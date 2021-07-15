@@ -8,8 +8,9 @@ import {
   TabSetNode,
 } from "flexlayout-react";
 import { usePubSub } from "./PubSub";
-// import { useDB } from "./Database";
 import LoadingScreen from "../features/common/LoadingScreen/LoadingScreen";
+
+import defaultJson from "./layouts/defaultLayout.json";
 
 const componentTypes = {
   TEXT_EDITOR: "textEditor",
@@ -17,6 +18,10 @@ const componentTypes = {
   STATE_MANAGER: "stateManager",
   EDITOR: "editor",
   PLAYTEST: "playtest",
+};
+
+const workspaceMap = {
+  default: defaultJson,
 };
 
 // helpful resources
@@ -35,6 +40,8 @@ const Context = createContext({
   createOrFocus: () => {},
   addWindow: () => {},
   componentTypes: {},
+  workspaceMap: {},
+  getWorkspace: () => {},
 });
 
 export const useLayout = () => useContext(Context);
@@ -144,6 +151,10 @@ const LayoutProvider = ({ children }) => {
     if (!component) addWindow(componentName, title);
   };
 
+  const getWorkspace = (workspace) => {
+    return workspaceMap[workspace] || workspaceMap["default"];
+  };
+
   const publicInterface = {
     inspectorData,
     textEditorData,
@@ -156,6 +167,8 @@ const LayoutProvider = ({ children }) => {
     componentTypes,
     currentRef,
     setCurrentRef,
+    workspaceMap,
+    getWorkspace,
   };
 
   return (
