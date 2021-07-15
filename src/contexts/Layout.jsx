@@ -63,6 +63,7 @@ const LayoutProvider = ({ children }) => {
             nodeId: data.nodeId,
             dataKey: control.dataKey,
             name: data.name,
+            control: control.controls,
           };
 
           setTextEditorData(textData);
