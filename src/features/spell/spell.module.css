@@ -43,7 +43,7 @@
   padding: var(--c1);
   background-color: rgba(40, 40, 40, 0.95);
   color: rgba(150, 150, 150, 0.95);
-  flex: 10;
+  flex: 1;
   font-family: "IBM Plex Mono", "mono";
   overflow-y: hidden;
   display: flex;

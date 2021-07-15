@@ -78,12 +78,14 @@ const Playtest = ({ ...props }) => {
 
   return (
     <Window toolbar={toolbar}>
+      <div style={{display: 'flex', height: '100%', flexDirection: 'column'}}>
       <div className={css["playtest-output"]}>
         <Scrollbars>
           <ul>{history.map(printItem)}</ul>
         </Scrollbars>
       </div>
       <Input onChange={onChange} value={value} onSend={onSend} />
+      </div>
     </Window>
   );
 };

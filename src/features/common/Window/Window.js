@@ -6,16 +6,14 @@ const WindowToolbar = (props) => {
 };
 
 const WindowLayout = (props) => {
-  return <div className={css["window-layout"]}>{props.children}</div>;
+  return <div className={css["window-layout"]}><Scrollbars>{props.children}</Scrollbars></div>;
 };
 
 const Window = ({border, dark, ...props}) => {
   return (
     <div className={`${css["window"]} ${css[border && "bordered"]} ${css[dark && "darkened"]}`}>
       <WindowToolbar>{props.toolbar}</WindowToolbar>
-      <Scrollbars>
-        <WindowLayout>{props.children}</WindowLayout>
-      </Scrollbars>
+      <WindowLayout>{props.children}</WindowLayout>
     </div>
   );
 };
