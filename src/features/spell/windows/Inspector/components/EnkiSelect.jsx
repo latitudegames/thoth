@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { getEnkiPrompt, getEnkis } from "../../../../../services/game-api/enki";
 import Chip from "@material-ui/core/Chip";
+import Select from "@material-ui/core/Select";
 
 const EnkiDetails = () => {
   const [value, setValue] = useState("");
@@ -23,14 +24,18 @@ const EnkiDetails = () => {
     setValue("");
   };
 
-  useEffect(async ()=>{
-    const list = await getEnkis()
-    const parsedList = JSON.parse(list)
-    const enkiTaskList = parsedList?.enkiTasks
-    if (enkiTaskList){
-        updateTaskList(enkiTaskList)
+  const handleChange = (event) => {
+    console.log(event);
+  };
+
+  useEffect(async () => {
+    const list = await getEnkis();
+    const parsedList = JSON.parse(list);
+    const enkiTaskList = parsedList?.enkiTasks;
+    if (enkiTaskList) {
+      updateTaskList(enkiTaskList);
     }
-  },[activeTask])
+  }, [activeTask]);
 
   return (
     <div style={{ flex: 1, display: "flex" }}>
@@ -52,6 +57,15 @@ const EnkiDetails = () => {
           <button style={{ flex: 1 }} onClick={onSearch}>
             Search Enki by Name
           </button>
+
+          {taskList.length > 0 && !activeTask && (
+            <Select native onChange={handleChange}>
+              <option aria-label="None" disabled selected value="" />
+              {taskList.map((task) => {
+                return <option value={task.name}>{task.name}</option>;
+              })}
+            </Select>
+          )}
         </>
       )}
     </div>
