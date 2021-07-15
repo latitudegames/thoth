@@ -30,6 +30,7 @@
 }
 .window.unpadded {
   padding: 0;
+  padding-bottom: var(--c1);
 }
 .window.unpadded .window-toolbar{
   padding: var(--c1);
