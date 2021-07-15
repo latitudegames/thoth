@@ -167,6 +167,10 @@ const MenuBar = ({ tabs }) => {
   };
 
   const handleClick = (func) => {
+    
+    //Initially intended to control the visibility with a state, but this triggers a re-render and hides the menu anyway! :D
+    //Keeping this intact just in case.
+
     togglemenuVisibility()
     eval(func)
   }
