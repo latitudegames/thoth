@@ -22,7 +22,7 @@ export class Generator extends Rete.Component {
     const dataIn = new Rete.Input("data", "Data", dataSocket);
     const dataOut = new Rete.Output("data", "Data", dataSocket);
     const resultOut = new Rete.Output("result", "Result", stringSocket);
-    const composedOut = new Rete.Output("composed, Composed", stringSocket);
+    const composedOut = new Rete.Output("composed", "Composed", stringSocket);
 
     node
       .addInput(dataIn)
