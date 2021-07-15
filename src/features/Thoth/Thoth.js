@@ -1,3 +1,6 @@
+import { navigate } from "hookrouter";
+import { useEffect } from "react";
+
 import { Editor } from "../../contexts/Rete";
 import { Layout } from "../../contexts/Layout";
 import StateManager from "./windows/StateManager";
@@ -7,8 +10,18 @@ import Inspector from "./windows/Inspector/Inspector";
 import defaultJson from "./layout.json";
 import TabLayout from "../common/TabLayout/TabLayout";
 import TextEditor from "./windows/TextEditor";
+import { useTabManager } from "../../contexts/TabManager";
 
-const Spell = ({empty}) => {
+const Thoth = ({ empty }) => {
+  const { tabs } = useTabManager();
+
+  // reroute to home if no tabs open
+  useEffect(() => {
+    if (tabs.length === 0) {
+      navigate("/home");
+    }
+  }, tabs);
+
   const factory = (node) => {
     const component = node.getComponent();
     switch (component) {
@@ -29,9 +42,9 @@ const Spell = ({empty}) => {
 
   return (
     <TabLayout>
-      {!empty && <Layout json={defaultJson} factory={factory}/>}
+      {!empty && <Layout json={defaultJson} factory={factory} />}
     </TabLayout>
   );
 };
 
-export default Spell;
+export default Thoth;
