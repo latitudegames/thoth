@@ -14,7 +14,17 @@ function App() {
       name: "My Spell",
       type: "spell",
       active: true,
-    }
+    },
+    {
+      name: "My Spell",
+      type: "spell",
+      active: false,
+    },
+    {
+      name: "My Spell",
+      type: "spell",
+      active: false,
+    },
   ];
 
   return (
