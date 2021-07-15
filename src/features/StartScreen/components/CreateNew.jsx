@@ -1,4 +1,9 @@
 import { useState } from "react";
+import {
+  uniqueNamesGenerator,
+  adjectives,
+  colors,
+} from "unique-names-generator";
 
 import css from "../startScreen.module.css";
 import Panel from "../../common/Panel/Panel";
@@ -7,6 +12,14 @@ import TemplatePanel from "./TemplatePanel";
 import enkiImg from "../enki.png";
 import emptyImg from "../empty.png";
 import langImg from "../lang.png";
+import { useSpell } from "../../../contexts/Spell/index";
+import { useTabManager } from "../../../contexts/TabManager";
+
+const customConfig = {
+  dictionaries: [adjectives, colors],
+  separator: " ",
+  length: 2,
+};
 
 const templates = [
   { label: "Empty", bg: emptyImg },
@@ -16,6 +29,18 @@ const templates = [
 
 const CreateNew = ({ setNewVisible }) => {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const { newSpell } = useSpell();
+  const { openTab } = useTabManager();
+
+  const onCreate = async () => {
+    const placeholderName = uniqueNamesGenerator(customConfig);
+    const spell = await newSpell({ graph: {}, name: placeholderName });
+    const tab = await openTab({ name: spell.name, spellId: spell.name });
+
+    console.log("Spell", spell);
+    console.log("tab", tab);
+    console.log("create", selectedTemplate);
+  };
 
   return (
     <Panel shadow flexColumn>
@@ -48,7 +73,10 @@ const CreateNew = ({ setNewVisible }) => {
           {" "}
           cancel{" "}
         </button>
-        <button className={!selectedTemplate ? "disabled" : "primary"}>
+        <button
+          className={!selectedTemplate ? "disabled" : "primary"}
+          onClick={onCreate}
+        >
           {" "}
           CREATE{" "}
         </button>
