@@ -135,10 +135,14 @@ button.disabled {
 .flexlayout__tab {
   overflow: hidden;
   border-radius: 0px 0px 4px 4px;
+  border: 1px solid #333;
+  border-top: 0;
 }
 .flexlayout__tabset {
-border-radius: 4px;
-overflow: hidden;
+  box-sizing: border-box;
+  border: 1px solid #333;
+  border-radius: 4px;
+  overflow: hidden;
 }
 
 .flexlayout__tabset-selected {
