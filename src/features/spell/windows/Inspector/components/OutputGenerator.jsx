@@ -28,7 +28,7 @@ const AddNewOutput = (props) => {
   return (
     <div style={{ display: "flex", gap: 'var(--extraSmall)' }}>
       <input
-        style={{ flex: 6, padding: 0 }}
+        style={{ flex: 6 }}
         value={value}
         type="text"
         onChange={onChange}
