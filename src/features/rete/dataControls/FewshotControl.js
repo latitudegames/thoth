@@ -15,7 +15,6 @@ export class FewshotControl extends DataControl {
   }
 
   onData(data) {
-    console.log("Data", data);
     return;
   }
 }
