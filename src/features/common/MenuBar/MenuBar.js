@@ -14,10 +14,10 @@ const MenuBar = ({ tabs }) => {
   const useToggle = (initialValue = false) => {
     const [value, setValue] = useState(initialValue);
     const toggle = React.useCallback(() => {
-      setValue(v => !v);
+      setValue((v) => !v);
     }, []);
     return [value, toggle];
-  }
+  };
   const [menuVisibility, togglemenuVisibility] = useToggle();
 
   //Menu bar functions
@@ -167,13 +167,13 @@ const MenuBar = ({ tabs }) => {
   };
 
   const handleClick = (func) => {
-    
     //Initially intended to control the visibility with a state, but this triggers a re-render and hides the menu anyway! :D
     //Keeping this intact just in case.
 
-    togglemenuVisibility()
-    eval(func)
-  }
+    togglemenuVisibility(menuVisibility);
+    // eslint-disable-next-line no-eval
+    eval(func);
+  };
 
   return (
     <ul className={css["menu-bar"]}>
@@ -184,7 +184,9 @@ const MenuBar = ({ tabs }) => {
           label={Object.keys(menuBarItems)[index]}
           topLevel={true}
           key={index}
-          onClick={() => {handleClick(menuBarItems[item].onClick)}}
+          onClick={() => {
+            handleClick(menuBarItems[item].onClick);
+          }}
         />
       ))}
     </ul>
