@@ -33,7 +33,7 @@ const CreateNew = ( {selectedTemplate, setSelectedTemplate, setNewVisible} ) => 
   return (
     <Panel shadow flexColumn >
         <h1> Create New </h1>
-        <div style={{width: 'var(--c85)', backgroundColor: 'var(--dark-2)', display: 'flex', flexDirection: 'row', gap: 'var(--extraSmall)'}}>
+        <div style={{width: 'var(--c62)', backgroundColor: 'var(--dark-2)', display: 'flex', flexDirection: 'row', gap: 'var(--extraSmall)'}}>
           <TemplatePanel label="Empty" bg={emptyImg} selectedTemplate={selectedTemplate} setSelectedTemplate={setSelectedTemplate}/>
           <TemplatePanel label="Language example" bg={langImg} selectedTemplate={selectedTemplate} setSelectedTemplate={setSelectedTemplate}/>
           <TemplatePanel label="Project with Enki" bg={enkiImg} selectedTemplate={selectedTemplate} setSelectedTemplate={setSelectedTemplate}/>
@@ -51,9 +51,9 @@ const OpenProject = ({selectedProject, setSelectedProject, setNewVisible}) => {
     <Panel shadow unpadded>
       <div className={css['version-banner']} style={{backgroundImage: `url(${thothBanner})`}} />
       <div className={css['open-project-container']}>
-        <h1> Recent Projects </h1>
+        <h1 style={{marginLeft: 16}}> Recent Projects </h1>
 
-        <Panel style={{width: 'var(--c85)', backgroundColor: 'var(--dark-1)'}} flexColumn gap={'var(--small)'} unpadded>
+        <Panel style={{width: 'var(--c62)', backgroundColor: 'var(--dark-1)'}} flexColumn gap={'var(--small)'} unpadded>
           <ProjectRow label={"Lorem ipsum"} selectedProject={selectedProject} setSelectedProject={setSelectedProject} />
           <ProjectRow label={"Dolor sit"} selectedProject={selectedProject} setSelectedProject={setSelectedProject} />
           <ProjectRow label={"Taco Bell ad ambulat"} selectedProject={selectedProject} setSelectedProject={setSelectedProject} />
