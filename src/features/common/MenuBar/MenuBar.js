@@ -3,6 +3,7 @@ import { useHotkeys } from "react-hotkeys-hook";
 
 import { useRete } from "../../../contexts/Rete";
 import { useSpell } from "../../../contexts/Spell";
+import { useLayout } from "../../../contexts/Layout";
 
 import css from "./menuBar.module.css";
 import thothlogo from "./thoth.png";
@@ -12,6 +13,7 @@ const MenuBar = ({ tabs }) => {
 
   const { serialize } = useRete();
   const { saveCurrentSpell } = useSpell();
+  const { componentTypes, createOrFocus } = useLayout();
 
   const onSave = () => {
     console.log("saving");
@@ -24,21 +26,21 @@ const MenuBar = ({ tabs }) => {
     console.log(JSON.stringify(serialized));
   };
 
-  // const onStateManager = () => {
-  //   createOrFocus(componentTypes.STATE_MANAGER, "State Manager");
-  // };
+  const onStateManager = () => {
+    createOrFocus(componentTypes.STATE_MANAGER, "State Manager");
+  };
 
-  // const onPlaytest = () => {
-  //   createOrFocus(componentTypes.PLAYTEST, "Playtest");
-  // };
+  const onPlaytest = () => {
+    createOrFocus(componentTypes.PLAYTEST, "Playtest");
+  };
 
-  // const onInspector = () => {
-  //   createOrFocus(componentTypes.INSPECTOR, "Inspector");
-  // };
+  const onInspector = () => {
+    createOrFocus(componentTypes.INSPECTOR, "Inspector");
+  };
 
-  // const onTextEditor = () => {
-  //   createOrFocus(componentTypes.TEXT_EDITOR, "Text Editor");
-  // };
+  const onTextEditor = () => {
+    createOrFocus(componentTypes.TEXT_EDITOR, "Text Editor");
+  };
 
   //Menu bar hotkeys
 
@@ -63,14 +65,10 @@ const MenuBar = ({ tabs }) => {
           },
         },
         save: {
-          onClick: () => {
-            onSave();
-          },
+          onClick: onSave,
         },
         serialize: {
-          onClick: () => {
-            onSerialize();
-          },
+          onClick: onSerialize,
         },
         load: {
           onClick: () => {
@@ -91,10 +89,18 @@ const MenuBar = ({ tabs }) => {
       items: {
         tools: {
           items: {
-            text_editor: {},
-            inspector: {},
-            state_manager: {},
-            playtest: {},
+            text_editor: {
+              onClick: onTextEditor,
+            },
+            inspector: {
+              onClick: onInspector,
+            },
+            state_manager: {
+              onClick: onStateManager,
+            },
+            playtest: {
+              onClick: onPlaytest,
+            },
             enki: {
               items: {
                 fewshots: {},
