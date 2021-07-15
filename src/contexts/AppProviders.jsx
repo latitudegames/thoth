@@ -5,6 +5,7 @@ import PubSubProvider from "./PubSub";
 import SpellProvider from "./Spell";
 import LayoutProvider from "./Layout";
 import DatabaseProvider from "./Database";
+import TabManagerProvider from "./TabManager";
 
 const darkTheme = createTheme({
   palette: {
@@ -20,6 +21,7 @@ const providers = [
   SpellProvider,
   LayoutProvider,
   ReteProvider,
+  TabManagerProvider,
 ];
 
 /**
