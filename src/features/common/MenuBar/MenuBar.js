@@ -16,7 +16,6 @@ const MenuBar = ({ tabs }) => {
   const { componentTypes, createOrFocus } = useLayout();
 
   const onSave = () => {
-    console.log("saving");
     const serialized = serialize();
     saveCurrentSpell({ graph: serialized });
   };
