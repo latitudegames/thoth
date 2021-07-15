@@ -122,13 +122,6 @@ button.disabled {
   opacity: 0.5;
   background-color: var(--dark-2);
 }
-input {
-  box-sizing: border-box;
-  padding: 13.5px; /* not using a var here to optically correct for base + cap of typeface */
-  background-color: var(--dark-2);
-  padding-left: var(--medium);
-  padding-right: var(--medium);
-}
 .node.selected button {
   background-color: var(--primary) !important;
 }
