@@ -28,7 +28,7 @@ const AddNewInput = (props) => {
   return (
     <div style={{ flex: 1, display: "flex" }}>
       <input
-        style={{ flex: 6, padding: 0 }}
+        style={{ flex: 6, padding: "5px 10px", color: "#fff" }}
         value={value}
         type="text"
         onChange={onChange}
