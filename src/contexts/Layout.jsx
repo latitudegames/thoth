@@ -44,7 +44,7 @@ const LayoutProvider = ({ children }) => {
 
   const [currentModel, setCurrentModel] = useState(null);
   const [currentRef, setCurrentRef] = useState(null);
-  const [inspectorData, setInspectorData] = useState({});
+  const [inspectorData, setInspectorData] = useState(null);
   const [textEditorData, setTextEditorData] = useState({});
 
   useEffect(() => {
@@ -52,16 +52,20 @@ const LayoutProvider = ({ children }) => {
       setInspectorData(data);
 
       if (!data.dataControls) return;
+
+      // Handle components in a special way here.  Could probaby abstract this better
+
       Object.entries(data.dataControls).forEach(([key, control]) => {
-        if (control.component === "longText") {
-          const dataSend = {
-            data: data.data[key],
+        if (control.controls.component === "longText") {
+          // we relay data to the text editor component for display here as well.
+          const textData = {
+            data: data.data[control.dataKey],
             nodeId: data.nodeId,
-            key: data.name,
+            dataKey: control.dataKey,
             name: data.name,
           };
 
-          publish(events.TEXT_EDITOR_SET, dataSend);
+          setTextEditorData(textData);
         }
       });
     });
@@ -71,20 +75,25 @@ const LayoutProvider = ({ children }) => {
     });
   }, [events, subscribe, publish]);
 
-  const saveTextEditor = (data) => {
+  const saveTextEditor = (textData) => {
     const dataSend = {
-      [data.key]: data.data,
+      [textData.dataKey]: textData.data,
     };
 
-    publish(events.NODE_SET(data.nodeId), dataSend);
+    publish(events.NODE_SET(textData.nodeId), dataSend);
 
     // Keep the inspector in sync with the text editor if needed.
-    if (inspectorData[data.key]) {
+    if (inspectorData[textData.dataKey]) {
       setInspectorData({
         ...inspectorData,
         ...dataSend,
       });
     }
+  };
+
+  const saveInspector = (inspectorData) => {
+    setInspectorData(inspectorData);
+    publish(events.NODE_SET(inspectorData.nodeId), inspectorData.data);
   };
 
   const createModel = (json) => {
@@ -140,6 +149,7 @@ const LayoutProvider = ({ children }) => {
     inspectorData,
     textEditorData,
     saveTextEditor,
+    saveInspector,
     setCurrentModel,
     currentModel,
     createModel,
@@ -170,7 +180,12 @@ export const Layout = ({ json, factory }) => {
   if (!currentModel) return <LoadingScreen />;
 
   return (
-    <LayoutComponent ref={layoutRef} model={currentModel} factory={factory} font={{size:"12px", fontFamily: 'IBM Plex Sans'}}/>
+    <LayoutComponent
+      ref={layoutRef}
+      model={currentModel}
+      factory={factory}
+      font={{ size: "12px", fontFamily: "IBM Plex Sans" }}
+    />
   );
 };
 

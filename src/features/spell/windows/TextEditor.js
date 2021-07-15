@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Editor, { monaco } from "@monaco-editor/react";
+import Editor from "@monaco-editor/react";
 import Window from "../../common/Window/Window";
 
 import "../spell.module.css";
@@ -13,15 +13,15 @@ const TextEditor = (props) => {
 
   const bottomHeight = 50;
   const handleEditorWillMount = (monaco) => {
-    monaco.editor.defineTheme('sds-dark', {
-      base: 'vs-dark', 
+    monaco.editor.defineTheme("sds-dark", {
+      base: "vs-dark",
       inherit: true,
       rules: [],
       colors: {
-        "editor.background": '#272727'
-      }
+        "editor.background": "#272727",
+      },
     });
-  }
+  };
 
   const editorOptions = {
     lineNumbers: false,
@@ -33,7 +33,7 @@ const TextEditor = (props) => {
     },
     wordWrap: "bounded",
     fontSize: 14,
-    fontFamily: '"IBM Plex Mono", sans-serif !important'
+    fontFamily: '"IBM Plex Mono", sans-serif !important',
   };
 
   useEffect(() => {

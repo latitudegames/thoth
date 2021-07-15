@@ -1,9 +1,10 @@
 import Rete from "rete";
-import { actionSocket, dataSocket, actionTypeSocket } from "../sockets";
+import { stringSocket, dataSocket } from "../sockets";
+import { FewshotControl } from "../dataControls/FewshotControl";
 import { DisplayControl } from "../controls/DisplayControl";
 import { completion } from "../../../utils/openaiHelper";
 
-const fewShots = `Given an action classify the type of action it is
+const fewshot = `Given an action classify the type of action it is
 
 Types: look, get, use, craft, dialog, movement, travel, combat, consume, other
 
@@ -39,9 +40,10 @@ export class ActionTypeComponent extends Rete.Component {
   // when we have enki hooked up and have grabbed all few shots, we would use the builder
   // to generate the appropriate inputs and ouputs for the fewshot at build time
   builder(node) {
+    node.data.fewshot = fewshot;
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
-    const inp = new Rete.Input("action", "Action", actionSocket);
-    const out = new Rete.Output("actionType", "Action Type", actionTypeSocket);
+    const inp = new Rete.Input("action", "Action", stringSocket);
+    const out = new Rete.Output("actionType", "ActionType", stringSocket);
     const dataInput = new Rete.Input("data", "Data", dataSocket);
     const dataOutput = new Rete.Output("data", "Data", dataSocket);
 
@@ -50,6 +52,10 @@ export class ActionTypeComponent extends Rete.Component {
     const display = new DisplayControl({
       key: "display",
     });
+
+    const fewshotControl = new FewshotControl();
+
+    node.inspector.add(fewshotControl);
 
     this.displayControl = display;
 
@@ -62,10 +68,10 @@ export class ActionTypeComponent extends Rete.Component {
   }
 
   // the worker contains the main business logic of the node.  It will pass those results
-  // to the outputs to be consumed by any connected components
+  // to the outputs to be consumed by any connsected components
   async worker(node, inputs, outputs) {
     const action = inputs["action"][0];
-    const prompt = fewShots + action + ",";
+    const prompt = node.data.fewshot + action + ",";
 
     const body = {
       prompt,

@@ -1,5 +1,4 @@
 import css from "./TabLayout.module.css";
-import Toolbar from "../Toolbar/Toolbar";
 
 const TabLayout = ({ children, options, toolbar }) => {
   return (

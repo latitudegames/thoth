@@ -2,14 +2,11 @@ import { useEffect, useState } from "react";
 
 import Window from "../../../common/Window/Window";
 import { useLayout } from "../../../../contexts/Layout";
-import { usePubSub } from "../../../../contexts/PubSub";
 import DataControls from "./components/DataControls";
 import LoadingScreen from "../../../common/LoadingScreen/LoadingScreen";
 
 const Inspector = (props) => {
-  const { publish, events } = usePubSub();
-  const { inspectorData } = useLayout();
-  const [data, setData] = useState("");
+  const { inspectorData, saveInspector } = useLayout();
   const [width, setWidth] = useState();
 
   useEffect(() => {
@@ -25,24 +22,16 @@ const Inspector = (props) => {
     });
   }, [props]);
 
-  useEffect(() => {
-    setData(inspectorData);
-  }, [inspectorData]);
-
-  useEffect(() => {
-    publish(events.NODE_SET(data.nodeId), data.data);
-  }, [data]);
-
   const updateData = (update) => {
     const newData = {
-      ...data,
+      ...inspectorData,
       data: {
-        ...data.data,
+        ...inspectorData.data,
         ...update,
       },
     };
 
-    setData(newData);
+    saveInspector(newData);
   };
 
   const toolbar = (
@@ -51,14 +40,15 @@ const Inspector = (props) => {
     </>
   );
 
-  if (!data) return <LoadingScreen />;
+  if (!inspectorData) return <LoadingScreen />;
 
   return (
     <Window toolbar={toolbar} dark border>
+      <h1>{inspectorData.name}</h1>
       <DataControls
-        nodeId={data.nodeId}
-        dataControls={data.dataControls}
-        data={data.data}
+        nodeId={inspectorData.nodeId}
+        dataControls={inspectorData.dataControls}
+        data={inspectorData.data}
         width={width}
         updateData={updateData}
       />
