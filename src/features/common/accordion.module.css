@@ -2,6 +2,5 @@
   background-color: var(--dark-2);
   box-sizing: border-box;
   overflow: hidden;
-  margin-top: var(--c1);
-  margin-bottom: var(--c1);
+  border-bottom: 1px solid var(--dark-2);
 }
