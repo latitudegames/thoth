@@ -12,15 +12,23 @@ export class Generator extends Rete.Component {
     this.task = {
       outputs: {
         result: "output",
+        composed: "output",
         data: "option",
       },
     };
   }
 
   builder(node) {
-    const dataIn = new Rete.Input("data", "Data", dataSocket, true);
-    const dataOut = new Rete.Output("data", "Data", dataSocket, true);
-    const resultOut = new Rete.Output("result", "Result", stringSocket, true);
+    const dataIn = new Rete.Input("data", "Data", dataSocket);
+    const dataOut = new Rete.Output("data", "Data", dataSocket);
+    const resultOut = new Rete.Output("result", "Result", stringSocket);
+    const composedOut = new Rete.Output("composed, Composed", stringSocket);
+
+    node
+      .addInput(dataIn)
+      .addOutput(dataOut)
+      .addOutput(resultOut)
+      .addOutput(composedOut);
 
     const inputGenerator = new InputGeneratorControl({
       ignored: [
@@ -57,7 +65,7 @@ export class Generator extends Rete.Component {
       .add(temperatureControl)
       .add(maxTokenControl);
 
-    return node.addInput(dataIn).addOutput(dataOut).addOutput(resultOut);
+    return node;
   }
 
   async worker(node, rawInputs, { element }) {
@@ -85,13 +93,13 @@ export class Generator extends Rete.Component {
       temperature,
     };
     const raw = await completion(body);
-
-    console.log("RAW", raw);
-
     const result = raw.trim();
+
+    const composed = prompt + result;
 
     return {
       result,
+      composed,
     };
   }
 }
