@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { getEnkiPrompt } from "../../../../../services/game-api/enki";
+import { getEnkiPrompt, getEnkis } from "../../../../../services/game-api/enki";
 import Chip from "@material-ui/core/Chip";
 
 const EnkiDetails = () => {
   const [value, setValue] = useState("");
   const [activeEnki, selectEnki] = useState(undefined);
+  const [taskList, updateTaskList] = useState(undefined);
   const activeTask = activeEnki?.taskName;
   const onChange = (e) => {
     setValue(e.target.value);
@@ -21,6 +22,15 @@ const EnkiDetails = () => {
     }
     setValue("");
   };
+
+  useEffect(async ()=>{
+    const list = await getEnkis()
+    const parsedList = JSON.parse(list)
+    const enkiTaskList = parsedList?.enkiTasks
+    if (enkiTaskList){
+        updateTaskList(enkiTaskList)
+    }
+  },[activeTask])
 
   return (
     <div style={{ flex: 1, display: "flex" }}>
