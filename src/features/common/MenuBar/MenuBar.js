@@ -134,6 +134,7 @@ const MenuBar = ({ tabs }) => {
                 item={item?.items[i]}
                 label={Object.keys(item.items)[x]}
                 topLevel={false}
+                key={x}
                 onClick={item?.items[i].onClick}
               />
             );
@@ -163,6 +164,7 @@ const MenuBar = ({ tabs }) => {
           item={menuBarItems[item]}
           label={Object.keys(menuBarItems)[index]}
           topLevel={true}
+          key={index}
           onClick={menuBarItems[item].onClick}
         />
       ))}
