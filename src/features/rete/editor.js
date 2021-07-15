@@ -24,7 +24,7 @@ import { PlaytestInput } from "./components/PlaytestInput";
 import { StateWrite } from "./components/StateWrite";
 import { StateRead } from "./components/StateRead";
 import { ForEach } from "./components/ForEach";
-
+import { EnkiTask } from "./components/EnkiTask"
 /*
   Primary initialization function.  Takes a container ref to attach the rete editor to.
 */
@@ -40,6 +40,7 @@ const editor = async function ({ container, pubSub, thoth }) {
     new Alert(),
     new BooleanGate(),
     new DifficultyDetectorComponent(),
+    new EnkiTask(),
     new EntityDetector(),
     new ForEach(),
     new InputComponent(),
