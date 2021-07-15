@@ -24,6 +24,22 @@ const MenuBar = ({ tabs }) => {
     console.log(JSON.stringify(serialized));
   };
 
+  // const onStateManager = () => {
+  //   createOrFocus(componentTypes.STATE_MANAGER, "State Manager");
+  // };
+
+  // const onPlaytest = () => {
+  //   createOrFocus(componentTypes.PLAYTEST, "Playtest");
+  // };
+
+  // const onInspector = () => {
+  //   createOrFocus(componentTypes.INSPECTOR, "Inspector");
+  // };
+
+  // const onTextEditor = () => {
+  //   createOrFocus(componentTypes.TEXT_EDITOR, "Text Editor");
+  // };
+
   //Menu bar hotkeys
 
   useHotkeys(
