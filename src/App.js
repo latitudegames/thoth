@@ -8,6 +8,7 @@ import StartScreen from "./features/StartScreen/StartScreen";
 
 import "./dds-globals/dds-globals.css";
 import "./App.css";
+import { useTabManager } from "./contexts/TabManager";
 
 const routes = {
   "/": () => <Thoth />,
@@ -17,15 +18,16 @@ const routes = {
 function App() {
   // Use our routes
   const match = useRoutes(routes);
+  const { tabs } = useTabManager();
 
-  let tabs = [];
-  tabs = [
-    {
-      name: "My Spell",
-      type: "spell",
-      active: true,
-    },
-  ];
+  // let tabs = [];
+  // tabs = [
+  //   {
+  //     name: "My Spell",
+  //     type: "spell",
+  //     active: true,
+  //   },
+  // ];
 
   return (
     <ThothPageWrapper tabs={tabs}>
