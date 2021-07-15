@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 
 import { useRete } from "../../../contexts/Rete";
@@ -9,8 +9,18 @@ import css from "./menuBar.module.css";
 import thothlogo from "./thoth.png";
 
 const MenuBar = ({ tabs }) => {
-  //Menu bar functions
+  //state
 
+  const useToggle = (initialValue = false) => {
+    const [value, setValue] = useState(initialValue);
+    const toggle = React.useCallback(() => {
+      setValue(v => !v);
+    }, []);
+    return [value, toggle];
+  }
+  const [menuVisibility, togglemenuVisibility] = useToggle();
+
+  //Menu bar functions
   const { serialize } = useRete();
   const { saveCurrentSpell } = useSpell();
   const { componentTypes, createOrFocus } = useLayout();
@@ -156,6 +166,11 @@ const MenuBar = ({ tabs }) => {
     );
   };
 
+  const handleClick = (func) => {
+    togglemenuVisibility()
+    eval(func)
+  }
+
   return (
     <ul className={css["menu-bar"]}>
       <img className={css["thoth-logo"]} alt="Thoth logo" src={thothlogo} />
@@ -164,7 +179,7 @@ const MenuBar = ({ tabs }) => {
           item={menuBarItems[item]}
           label={Object.keys(menuBarItems)[index]}
           topLevel={true}
-          onClick={menuBarItems[item].onClick}
+          onClick={() => {handleClick(menuBarItems[item].onClick)}}
         />
       ))}
     </ul>
