@@ -19,7 +19,9 @@ function App() {
   return (
     <ThothPageWrapper tabs={tabs}>
       <Switch>
-        <Route path="/thoth" component={Thoth} />
+        <Route path="/thoth">
+          {tabs.length === 0 ? <Redirect to="/home" /> : <Thoth />}
+        </Route>
         <Route path="/home" component={StartScreen} />
         <Route path="/">
           {tabs.length === 0 ? (
