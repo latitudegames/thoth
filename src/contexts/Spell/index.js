@@ -67,9 +67,10 @@ const SpellProvider = ({ children }) => {
   }, [db, setCurrentSpell]);
 
   const loadSpell = async (spellId) => {
-    const spell = await getSpell(spellId);
+    const result = await getSpell(spellId);
+    if (!result) return;
 
-    if (!spell) return;
+    const spell = result.toJSON();
 
     setCurrentSpell(spell);
     setCurrentGameState(spell.gameState);
