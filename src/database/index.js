@@ -1,4 +1,5 @@
-import { createRxDatabase, addRxPlugin } from "rxdb";
+// eslint-disable-next-line no-unused-vars
+import { createRxDatabase, addRxPlugin, removeRxDatabase } from "rxdb";
 import spellSchema from "./schemas/spell";
 import settingsSchema from "./schemas/settings";
 import tabSchema from "./schemas/tab";
@@ -39,6 +40,22 @@ export const initDB = async () => {
 
   database.spells.preSave((doc) => {
     doc.updatedAt = Date.now();
+  }, false);
+
+  database.tabs.preInsert(async (doc) => {
+    console.log("doc", doc);
+    if (doc.active) {
+      const active = await database.tabs
+        .findOne({
+          selector: { active: true },
+        })
+        .exec();
+
+      if (!active) return;
+
+      const tab = await active.atomicPatch({ active: false });
+      console.log(tab);
+    }
   }, false);
 
   return database;
