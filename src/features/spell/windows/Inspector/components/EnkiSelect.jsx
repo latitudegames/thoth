@@ -5,7 +5,7 @@ import Select from "@material-ui/core/Select";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 
-const EnkiDetails = () => {
+const EnkiDetails = ({ addOutput }) => {
   const [value, setValue] = useState("");
   const [activeEnki, selectEnki] = useState(undefined);
   const [taskList, updateTaskList] = useState(undefined);
@@ -18,12 +18,10 @@ const EnkiDetails = () => {
     const taskName = value;
     const enkiData = await getEnkiPrompt(value);
     if (enkiData) {
-      const totalInputs = enkiData.data[0].inputs.length;
-      const totalOutputs = enkiData.data[0].outputs.length;
+      const inputs = enkiData.data[0].inputs;
+      const outputs = enkiData.data[0].outputs;
       selectEnki({
         taskName,
-        totalInputs,
-        totalOutputs,
         ...enkiData,
       });
     }
@@ -90,25 +88,39 @@ const EnkiDetails = () => {
         </div>
       )}
       <br></br>
-      {activeTask && (
+      {/* {activeTask && (
         <div style={{ flex: 1, display: "flex" }}>
           {activeEnki.serialization.introduction}
         </div>
-      )}
+      )} */}
     </>
   );
 };
 
 const EnkiSelect = ({ updateData, control, initialValue, ...props }) => {
-  //   const { controls, dataKey } = control;
+  const [outputs, setOutputs] = useState([...initialValue]);
 
-  //   const update = (update) => {
-  //     updateData({ [dataKey]: update });
-  //   };
+  const { controls, dataKey } = control;
+
+  const update = (update) => {
+    updateData({ [dataKey]: update });
+  };
+
+  const addOutput = (output) => {
+    const newOutput = {
+      name: output,
+      socketType: controls.data.socketType,
+      taskType: controls.data.taskType || "output",
+    };
+
+    const newOutputs = [...outputs, newOutput];
+    setOutputs(newOutputs);
+    update(newOutputs);
+  };
 
   return (
     <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
-      <EnkiDetails />
+      <EnkiDetails addOutput={addOutput} />
     </div>
   );
 };
