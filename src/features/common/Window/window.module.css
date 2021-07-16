@@ -30,7 +30,8 @@
 .window-toolbar {
   display: flex;
   flex: 1;
-  height: var(--c4);
+  min-height: var(--c4);
+  max-height: var(--c4);
   justify-content: flex-end;
   padding-bottom: var(--c1);
   gap: var(--extraSmall);

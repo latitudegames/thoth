@@ -1,7 +1,12 @@
 .message {
   position: relative;
-  padding-left: var(--extraLarge);
-  padding-right: var(--extraLarge);
+  margin-left: var(--extraLarge);
+  margin-right: var(--extraLarge);
+  padding: var(--extraSmall);
+  padding-left: var(--small);
+  padding-right: var(--small);
+  background-color: var(--dark-2);
+  border-radius: var(--small);
   text-align: center;
   top: 35%;
   transform: translateY(-50%);

@@ -36,7 +36,7 @@ const Inspector = (props) => {
 
   const toolbar = (
     <>
-      <div style={{flex: 1, marginTop: 'var(--c1)'}}>{inspectorData?.name}</div> <button className="small">Something</button>
+      <div style={{flex: 1, marginTop: 'var(--c1)'}}>{inspectorData?.name}</div> 
     </>
   );
 
