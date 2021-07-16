@@ -87,16 +87,18 @@ const ReteProvider = ({ children }) => {
 };
 
 export const Editor = ({ tab = "default", children }) => {
-  const { buildEditor } = useRete();
+  const { buildEditor, editor } = useRete();
   const { activeTab } = useTabManager();
   const spell = useSpell();
 
+  // Load uo current spell whenever activeTab changes
   useEffect(() => {
+    if (!editor || !activeTab) return;
+
     (async () => {
-      if (!activeTab.spell) return;
       await spell.loadSpell(activeTab.spell);
     })();
-  }, [activeTab]);
+  }, [editor, activeTab]);
 
   return (
     <>
