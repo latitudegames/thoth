@@ -73,7 +73,6 @@ const SpellProvider = ({ children }) => {
     const spell = result.toJSON();
 
     setCurrentSpell(spell);
-    console.log("Game state", spell.gameState);
     setCurrentGameState(spell.gameState);
 
     if (editor?.loadGraph && spell?.graph) {
