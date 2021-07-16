@@ -14,20 +14,18 @@ const TabManager = ({ children }) => {
   const { db } = useDB();
   const { getWorkspace } = useLayout();
 
-  const [tabs, setTabs] = useState([]);
-  const [activeTab, setActiveTab] = useState({});
+  const [tabs, setTabs] = useState(null);
+  const [activeTab, setActiveTab] = useState(null);
 
   useEffect(() => {
     if (!db) return;
 
     db.tabs.find().$.subscribe((results) => {
-      console.log("found tabs", results);
       setTabs(results);
     });
 
     db.tabs.findOne({ selector: { active: true } }).$.subscribe((result) => {
       if (!result) return;
-      console.log("active tab changed", result);
       setActiveTab(result);
     });
   }, [db]);
