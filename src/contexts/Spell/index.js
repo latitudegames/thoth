@@ -73,6 +73,7 @@ const SpellProvider = ({ children }) => {
     const spell = result.toJSON();
 
     setCurrentSpell(spell);
+    console.log("Game state", spell.gameState);
     setCurrentGameState(spell.gameState);
 
     if (editor?.loadGraph && spell?.graph) {
@@ -120,8 +121,6 @@ const SpellProvider = ({ children }) => {
   };
 
   const updateCurrentGameState = async (update) => {
-    const currentSpell = await getSpell(settings.currentSpell);
-
     const newState = {
       ...currentSpell.gameState,
       ...update,
@@ -131,15 +130,17 @@ const SpellProvider = ({ children }) => {
   };
 
   const rewriteCurrentGameState = async (state) => {
-    const currentSpell = await getSpell(settings.currentSpell);
+    const updatedSpell = await getSpell(currentSpell.name);
     setStateHistory([...stateHistory, currentSpell.gameState]);
 
-    await currentSpell.atomicPatch({
+    await updatedSpell.atomicPatch({
       gameState: state,
     });
-    setCurrentSpellState(currentSpell);
-    setCurrentGameState(currentSpell.gameState);
-    return currentSpell;
+
+    const updated = updatedSpell.toJSON();
+    setCurrentSpellState(updated);
+    setCurrentGameState(updated.gameState);
+    return updated;
   };
 
   // Check for existing currentSpell in the db
