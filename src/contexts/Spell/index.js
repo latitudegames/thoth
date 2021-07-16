@@ -8,7 +8,6 @@ import {
 
 import { useDB } from "../Database";
 import { useRete } from "../Rete";
-import defaultSpellData from "./defaultSpell";
 
 const Context = createContext({
   currentSpell: {},
@@ -39,14 +38,6 @@ const SpellProvider = ({ children }) => {
 
   const setCurrentSpell = useCallback(
     async (spell) => {
-      const settings = await db.settings
-        .findOne({
-          selector: "default",
-        })
-        .exec();
-      await settings.atomicPatch({
-        currentSpell: spell,
-      });
       setCurrentSpellState(spell);
       setCurrentGameState(spell.gameState);
     },
@@ -72,32 +63,20 @@ const SpellProvider = ({ children }) => {
       }
 
       setSettings(settings);
-
-      let defaultSpell = await db.spells
-        .findOne({
-          selector: {
-            name: settings.currentSpell,
-          },
-        })
-        .exec();
-
-      if (!defaultSpell) {
-        defaultSpell = await db.spells.insert({
-          name: "defaultSpell",
-          ...defaultSpellData,
-        });
-      }
-
-      setCurrentSpellState(defaultSpell);
-      setCurrentGameState(defaultSpell.gameState);
     })();
   }, [db, setCurrentSpell]);
 
   const loadSpell = async (spellId) => {
     const spell = await getSpell(spellId);
+
+    if (!spell) return;
+
     setCurrentSpell(spell);
     setCurrentGameState(spell.gameState);
-    editor.loadGraph(spell.graph);
+
+    if (editor?.loadGraph && spell?.graph) {
+      editor.loadGraph(spell.graph);
+    }
   };
 
   const getSpell = async (spellId) => {
