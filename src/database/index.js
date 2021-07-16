@@ -43,7 +43,6 @@ export const initDB = async () => {
   }, false);
 
   database.tabs.preInsert(async (doc) => {
-    console.log("doc", doc);
     if (doc.active) {
       const active = await database.tabs
         .findOne({
@@ -53,8 +52,21 @@ export const initDB = async () => {
 
       if (!active) return;
 
-      const tab = await active.atomicPatch({ active: false });
-      console.log(tab);
+      await active.atomicPatch({ active: false });
+    }
+  }, false);
+
+  database.tabs.preSave(async (doc) => {
+    if (doc.active) {
+      const active = await database.tabs
+        .findOne({
+          selector: { active: true },
+        })
+        .exec();
+
+      if (!active) return;
+
+      await active.atomicPatch({ active: false });
     }
   }, false);
 
