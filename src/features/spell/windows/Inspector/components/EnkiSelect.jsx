@@ -70,18 +70,20 @@ const EnkiDetails = () => {
             <button style={{ flex: 1 }} onClick={onSearch}>
               Search Enki by Name
             </button>
-
-            {taskList?.length > 0 && !activeTask && (
+          </>
+        )}
+      </div>
+      <br></br>
+      {taskList?.length > 0 && !activeTask && (
+         <div style={{ flex: 1, display: "flex" }}>
               <Select native onChange={listChange}>
                 <option aria-label="None" disabled selected value="" />
                 {taskList.map((task) => {
                   return <option value={task.name}>{task.name}</option>;
                 })}
               </Select>
+              </div>
             )}
-          </>
-        )}
-      </div>
       <br></br>
       {activeTask && (
         <div style={{ flex: 1, display: "flex" }}>
