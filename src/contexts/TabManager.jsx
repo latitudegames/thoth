@@ -21,12 +21,12 @@ const TabManager = ({ children }) => {
     if (!db) return;
 
     db.tabs.find().$.subscribe((results) => {
-      setTabs(results);
+      setTabs(results.map((tab) => tab.toJSON()));
     });
 
     db.tabs.findOne({ selector: { active: true } }).$.subscribe((result) => {
       if (!result) return;
-      setActiveTab(result);
+      setActiveTab(result.toJSON());
     });
   }, [db]);
 
@@ -44,7 +44,8 @@ const TabManager = ({ children }) => {
       active: true,
     };
 
-    const tab = await db.tabs.insert(newTab);
+    const result = await db.tabs.insert(newTab);
+    const tab = result.toJSON();
     setActiveTab(tab);
     return tab;
   };
