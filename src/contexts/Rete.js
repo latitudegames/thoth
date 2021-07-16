@@ -59,11 +59,11 @@ const ReteProvider = ({ children }) => {
   };
 
   const getNodeMap = () => {
-    return editor.components;
+    return editor && editor.components;
   };
 
   const getNodes = () => {
-    return Object.fromEntries(editor.components);
+    return editor && Object.fromEntries(editor.components);
   };
 
   const loadGraph = (graph) => {

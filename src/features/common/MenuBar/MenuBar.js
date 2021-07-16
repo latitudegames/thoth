@@ -11,7 +11,6 @@ import thothlogo from "./thoth.png";
 
 const MenuBar = ({ tabs }) => {
   //state
-
   const useToggle = (initialValue = false) => {
     const [value, setValue] = useState(initialValue);
     const toggle = React.useCallback(() => {
@@ -57,7 +56,6 @@ const MenuBar = ({ tabs }) => {
   };
 
   //Menu bar hotkeys
-
   useHotkeys(
     "cmd+s, crtl+s",
     (event) => {
@@ -80,7 +78,6 @@ const MenuBar = ({ tabs }) => {
   );
 
   //Menu bar entries
-
   const menuBarItems = {
     file: {
       items: {
@@ -145,7 +142,6 @@ const MenuBar = ({ tabs }) => {
   };
 
   //Menu bar rendering
-
   const ListItem = ({ item, label, topLevel, onClick }) => {
     label = label.replace(/_/g, " ");
     let children = null;
@@ -183,7 +179,6 @@ const MenuBar = ({ tabs }) => {
   const handleClick = (func) => {
     //Initially intended to control the visibility with a state, but this triggers a re-render and hides the menu anyway! :D
     //Keeping this intact just in case.
-
     togglemenuVisibility(menuVisibility);
     // eslint-disable-next-line no-eval
     eval(func);
