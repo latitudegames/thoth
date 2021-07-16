@@ -1,15 +1,44 @@
-import React from "react";
-import { Editor } from "../../../../contexts/Rete";
+import React, { useState } from "react";
+import { Editor, useRete } from "../../../../contexts/Rete";
+import { createNode } from "rete-context-menu-plugin/src/utils";
 
 import css from "./editorwindow.module.css";
 
 const EditorWindow = ({ props }) => {
+  const { getNodes, getNodeMap, editor } = useRete();
+  const nodeList = getNodes();
+  const nodeMap = getNodeMap();
+
+  console.log(nodeList);
+  console.log(nodeMap);
+
   const EditorToolbar = () => {
     return (
       <>
-        <ul>
-          <button> + add node </button>
+      <ul>
+      <li> <button>Add Node <div className={css["folder-arrow"]}> ❯ </div></button>
+      <ul>
+          {nodeList && Object.keys(nodeList).map((item, index) => {
+            return (
+              <li
+                className={css["list-item"]}
+                key={item}
+                onClick={async () => {
+                  editor.addNode(
+                    await createNode(nodeMap.get(nodeList[item].name), {
+                      x: 0,
+                      y: 0,
+                    })
+                  );
+                }}
+              >
+                {nodeList[item].name}
+              </li>
+            );
+          })}
         </ul>
+      </li>
+      </ul>
       </>
     );
   };
