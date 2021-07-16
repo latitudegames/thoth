@@ -20,7 +20,7 @@
             "enableClose": false,
             "className": "editor-tab",
             "name": "Composer",
-            "component": "editor"
+            "component": "editorWindow"
           }
         ]
       },
