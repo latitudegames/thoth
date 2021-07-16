@@ -89,6 +89,7 @@ button {
   font-size: 11px;
   text-transform: uppercase;
   box-shadow: 0px 2px 0px rgba(0,0,0,0.2);
+  height: var(--c4);
 }
 button.option {
   border: none;
@@ -122,19 +123,63 @@ button.disabled {
   opacity: 0.5;
   background-color: var(--dark-2);
 }
-input {
-  box-sizing: border-box;
-  padding: 13.5px; /* not using a var here to optically correct for base + cap of typeface */
-  background-color: var(--dark-2);
-  padding-left: var(--medium);
-  padding-right: var(--medium);
-}
 .node.selected button {
   background-color: var(--primary) !important;
 }
 .context-menu {
-  width: var(--c50);
+  padding: 0 !important;
+  width: var(--c25) !important;
+  box-shadow: 0px 5px 10px rgba(0,0,0,0.2);
 }
+.context-menu .item {
+  box-sizing: border-box;
+  border: 1px solid var(--dark-3) !important;
+  border-top: 0 !important;
+  border-bottom: 0 !important;
+  position: relative !important;
+	display: inline-block !important;
+	background-color: var(--dark-2) !important;
+  padding: var(--extraSmall) !important;
+  padding-left: var(--small) !important;
+  text-transform: capitalize !important;
+}
+.context-menu .item:hover {
+  background-color: var(--primary) !important;
+}
+.context-menu .item:first-child {
+  border-top: 1px solid var(--dark-3) !important;
+}
+.context-menu .item:last-child {
+  border-bottom: 1px solid var(--dark-3) !important;
+}
+
+.context-menu .search {
+  box-sizing: border-box;
+  border: 1px solid var(--dark-3) !important;
+  border-bottom: 0 !important;
+  position: relative !important;
+	display: inline-block !important;
+	background-color: var(--dark-2) !important;
+  padding: var(--extraSmall) !important;
+  text-transform: capitalize !important;
+}
+
+.context-menu .search input {
+  box-sizing: border-box !important;
+  padding: var(--extraSmall) !important; /* not using a var here to optically correct for base + cap of typeface */
+  background-color: var(--dark-2) !important;
+  padding-left: var(--small) !important;
+  padding-right: var(--small) !important;
+  color: #fff !important;
+  border-radius: 4px !important;
+  cursor: default !important;
+  border: 1px solid var(--dark-4) !important;
+  box-shadow: inset 0px 5px 5px rgba(0,0,0,0.1) !important;
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-size: 11px !important;
+  height: var(--c4) !important;
+}
+
 .layout-container {
   position: relative;
   height: 100%;
@@ -142,10 +187,14 @@ input {
 .flexlayout__tab {
   overflow: hidden;
   border-radius: 0px 0px 4px 4px;
+  border: 1px solid #333;
+  border-top: 0;
 }
 .flexlayout__tabset {
-border-radius: 4px;
-overflow: hidden;
+  box-sizing: border-box;
+  border: 1px solid #333;
+  border-radius: 4px;
+  overflow: hidden;
 }
 
 .flexlayout__tabset-selected {
@@ -189,4 +238,19 @@ overflow: hidden;
 }
 .view-line span {
   font-family: "IBM Plex Mono", sans-serif;
+}
+input[type='text'] {
+  box-sizing: border-box;
+  padding: var(--extraSmall); /* not using a var here to optically correct for base + cap of typeface */
+  background-color: var(--dark-2);
+  padding-left: var(--small);
+  padding-right: var(--small);
+  color: #fff;
+  border-radius: 4px;
+  cursor: default;
+  border: 1px solid var(--dark-4);
+  box-shadow: inset 0px 5px 5px rgba(0,0,0,0.1);
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-size: 11px;
+  height: var(--c4);
 }

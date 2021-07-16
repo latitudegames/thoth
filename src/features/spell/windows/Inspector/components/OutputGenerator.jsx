@@ -26,15 +26,16 @@ const AddNewOutput = (props) => {
   };
 
   return (
-    <div style={{ flex: 1, display: "flex" }}>
+    <div style={{ display: "flex", gap: 'var(--extraSmall)' }}>
       <input
-        style={{ flex: 6, padding: 0 }}
+        style={{ flex: 6 }}
         value={value}
         type="text"
         onChange={onChange}
+        placeholder={'Node output text...'}
       />
       <button style={{ flex: 1 }} onClick={onAdd}>
-        Add
+        + Add
       </button>
     </div>
   );

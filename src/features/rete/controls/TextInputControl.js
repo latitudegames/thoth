@@ -14,7 +14,7 @@ const ReactTextInputControl = (props) => {
     setValue(e.target.value);
   };
 
-  return <input value={value} onChange={onChange} />;
+  return <input type="text" value={value} onChange={onChange} />;
 };
 
 export class TextInputControl extends Control {

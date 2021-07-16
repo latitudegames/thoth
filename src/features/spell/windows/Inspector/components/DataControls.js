@@ -1,6 +1,7 @@
 import { SimpleAccordion } from "../../../../common/Accordion";
 import { usePubSub } from "../../../../../contexts/PubSub";
 import { useLayout } from "../../../../../contexts/Layout";
+import Input from "./Input";
 import OutputGenerator from "./OutputGenerator";
 import InputGenerator from "./InputGenerator";
 import EnkiSelect from "./EnkiSelect";
@@ -31,7 +32,7 @@ const controlMap = {
   outputGenerator: OutputGenerator,
   inputGenerator: InputGenerator,
   longText: LongText,
-  input: StubComponent,
+  input: Input,
   slider: StubComponent,
   dial: StubComponent,
 };
@@ -69,7 +70,7 @@ const DataControls = ({
           controlMap[control.controls.component] || StubComponent;
 
         return (
-          <SimpleAccordion heading={key} key={key}>
+          <SimpleAccordion heading={control.name || key} key={key}>
             <Component {...controlProps} />
           </SimpleAccordion>
         );
