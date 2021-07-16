@@ -4,8 +4,9 @@ import { createNode } from "rete-context-menu-plugin/src/utils";
 
 import css from "./editorwindow.module.css";
 
-const EditorWindow = ({ props }) => {
+const EditorWindow = ({ ...props }) => {
   const { getNodes, getNodeMap, editor } = useRete();
+
   const useToggle = (initialValue = false) => {
     const [value, setValue] = useState(initialValue);
     const toggle = React.useCallback(() => {
@@ -13,6 +14,7 @@ const EditorWindow = ({ props }) => {
     }, []);
     return [value, toggle];
   };
+
   const [menuVisibility, togglemenuVisibility] = useToggle();
   const nodeList = getNodes();
   const nodeMap = getNodeMap();
@@ -20,7 +22,7 @@ const EditorWindow = ({ props }) => {
   const EditorToolbar = () => {
     return (
       <>
-        <ul className>
+        <ul>
           <li>
             {" "}
             <button>
