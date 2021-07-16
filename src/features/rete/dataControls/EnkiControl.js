@@ -6,11 +6,11 @@ import { DataControl } from "../plugins/inspectorPlugin";
 export class EnkiSelectControl extends DataControl {
   constructor({
     defaultOutputs = [],
-    socketType = "anySocket",
+    socketType = "String",
     taskType = "output",
   }) {
     const options = {
-      dataKey: "enki",
+      dataKey: "outputs",
       name: "Data Outputs",
       controls: {
         component: "enkiSelect",

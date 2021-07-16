@@ -19,7 +19,8 @@ const EnkiDetails = ({ addOutput }) => {
     const enkiData = await getEnkiPrompt(value);
     if (enkiData) {
       enkiData.data[0].outputs.forEach((_output, index) => {
-        addOutput(`${taskName}Output${index}`);
+        console.log("adding output",`${taskName}:Output-${index}`)
+        addOutput(`${taskName}:Output-${index}`);
       });
       selectEnki({
         taskName,
@@ -103,6 +104,10 @@ const EnkiSelect = ({ updateData, control, initialValue, ...props }) => {
 
   const { controls, dataKey } = control;
 
+
+  useEffect(() => {
+    setOutputs([...initialValue]);
+  }, [initialValue]);
   const update = (update) => {
     updateData({ [dataKey]: update });
   };
@@ -110,11 +115,12 @@ const EnkiSelect = ({ updateData, control, initialValue, ...props }) => {
   const addOutput = (output) => {
     const newOutput = {
       name: output,
-      socketType: controls.data.socketType,
+      socketType: "String",
       taskType: controls.data.taskType || "output",
     };
 
     const newOutputs = [...outputs, newOutput];
+    console.log("newOutputs",newOutputs)
     setOutputs(newOutputs);
     update(newOutputs);
   };
