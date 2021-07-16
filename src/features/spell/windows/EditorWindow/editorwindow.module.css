@@ -28,6 +28,8 @@
 }
 
 .editor-toolbar ul button {
+  display: flex;
+  justify-content: space-between;
   width:  var(--c25);
 }
 	
@@ -61,6 +63,7 @@
 	
 /* Fisrt Tier Dropdown */
 .editor-toolbar ul ul li {
+  top: 2px;
 	width:  var(--c25);
 	float:none;
 	display:list-item;
