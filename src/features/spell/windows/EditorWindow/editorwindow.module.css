@@ -12,9 +12,11 @@
   left: 0;
   width: calc(100% - var(--c2));
   z-index: 1;
-  padding: var(--extraSmall);
+  padding: var(--c1);
   display: flex;
   justify-content: flex-end;
+  height: var(--c4);
+  max-height: var(--c6);
 }
 .editor-toolbar li {
   box-sizing: border-box;
