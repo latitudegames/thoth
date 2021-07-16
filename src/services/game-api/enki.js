@@ -13,7 +13,7 @@ export const getEnkiPrompt = async (taskName) => {
       });
   
       console.log("response", response);
-      const parsed = await response.text();
+      const parsed = await response.json();
   
       console.log("parsed", parsed);
   
@@ -39,7 +39,7 @@ export const getEnkiPrompt = async (taskName) => {
       });
   
       console.log("response", response);
-      const parsed = await response.text();
+      const parsed = await response.json();
   
       console.log("parsed", parsed);
   

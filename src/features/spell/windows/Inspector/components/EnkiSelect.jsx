@@ -16,8 +16,12 @@ const EnkiDetails = () => {
     const taskName = value;
     const enkiData = await getEnkiPrompt(value);
     if (enkiData) {
+      const totalInputs = enkiData.data[0].inputs.length()
+      const totalOutputs = enkiData.data[0].outputs.length()
       selectEnki({
         taskName,
+        totalInputs,
+        totalOutputs,
         ...enkiData,
       });
     }
