@@ -7,6 +7,7 @@ import Inspector from "./windows/Inspector/Inspector";
 import defaultJson from "./layout.json";
 import TabLayout from "../common/TabLayout/TabLayout";
 import TextEditor from "./windows/TextEditor";
+import EditorWindow from "./windows/EditorWindow/EditorWindow"
 
 const Spell = ({empty}) => {
   const factory = (node) => {
@@ -22,6 +23,8 @@ const Spell = ({empty}) => {
         return <Inspector node={node} />;
       case "textEditor":
         return <TextEditor node={node} />;
+      case "editorWindow":
+        return <EditorWindow />;
       default:
         return <p></p>;
     }
