@@ -1,8 +1,10 @@
+import { useEffect } from "react";
 import init from "../features/rete/editor";
 import gridimg from "../grid.png";
 
 import { usePubSub } from "./PubSub";
 import { useSpell } from "./Spell";
+import { useTabManager } from "./TabManager";
 
 import { useContext, createContext, useState } from "react";
 
@@ -86,7 +88,15 @@ const ReteProvider = ({ children }) => {
 
 export const Editor = ({ tab = "default", children }) => {
   const { buildEditor } = useRete();
+  const { activeTab } = useTabManager();
   const spell = useSpell();
+
+  useEffect(() => {
+    (async () => {
+      if (!activeTab.spell) return;
+      await spell.loadSpell(activeTab.spell);
+    })();
+  }, [activeTab]);
 
   return (
     <>
@@ -105,13 +115,11 @@ export const Editor = ({ tab = "default", children }) => {
         onDrop={(e) => {}}
       >
         {!spell.currentSpell.graph && <p>Loading...</p>}
-        {spell.currentSpell.graph && (
-          <div
-            ref={(el) => {
-              if (el) buildEditor(el, spell, tab);
-            }}
-          />
-        )}
+        <div
+          ref={(el) => {
+            if (el) buildEditor(el, spell, tab);
+          }}
+        />
       </div>
       {children}
     </>
