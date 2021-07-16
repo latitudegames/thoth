@@ -1,6 +1,6 @@
 .accordion {
-  background-color: var(--dark-2);
+  background-color: var(--dark-1);
   box-sizing: border-box;
   overflow: hidden;
-  border-bottom: 1px solid var(--dark-2);
+  border-bottom: 1px solid var(--dark-1);
 }

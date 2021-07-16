@@ -6,8 +6,8 @@
     animation: nodeGenesis .2s ease;
     transition: background-color .05s ease;
     min-width: var(--c40);
-    width: var(--c40);
-    border-radius: var(--extraSmall);
+        width: var(--c40);
+        border-radius: 4px;
     border: 1px solid transparent;
     box-shadow: 0 4px 5px rgba(0,0,0,0.2);
     background-color: rgba(70,70,70,0.7);
