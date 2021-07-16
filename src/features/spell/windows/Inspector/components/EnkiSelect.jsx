@@ -48,39 +48,47 @@ const EnkiDetails = () => {
   }, [activeTask]);
 
   return (
-    <div style={{ flex: 1, display: "flex" }}>
-      {activeTask ? (
-        <>
-          <Chip
-            label={activeTask}
-            onDelete={() => selectEnki(undefined)}
-            color="white"
-            variant="outlined"
-          />
-        </>
-      ) : (
-        <>
-          <input
-            style={{ flex: 6, padding: 0 }}
-            value={value}
-            type="text"
-            onChange={onChange}
-          />
-          <button style={{ flex: 1 }} onClick={onSearch}>
-            Search Enki by Name
-          </button>
+    <>
+      <div style={{ flex: 1, display: "flex" }}>
+        {activeTask ? (
+          <>
+            <Chip
+              label={activeTask}
+              onDelete={() => selectEnki(undefined)}
+              color="white"
+              variant="outlined"
+            />
+          </>
+        ) : (
+          <>
+            <input
+              style={{ flex: 6, padding: 0 }}
+              value={value}
+              type="text"
+              onChange={onChange}
+            />
+            <button style={{ flex: 1 }} onClick={onSearch}>
+              Search Enki by Name
+            </button>
 
-          {taskList?.length > 0 && !activeTask && (
-            <Select native onChange={listChange}>
-              <option aria-label="None" disabled selected value="" />
-              {taskList.map((task) => {
-                return <option value={task.name}>{task.name}</option>;
-              })}
-            </Select>
-          )}
-        </>
+            {taskList?.length > 0 && !activeTask && (
+              <Select native onChange={listChange}>
+                <option aria-label="None" disabled selected value="" />
+                {taskList.map((task) => {
+                  return <option value={task.name}>{task.name}</option>;
+                })}
+              </Select>
+            )}
+          </>
+        )}
+      </div>
+      <br></br>
+      {activeTask && (
+        <div style={{ flex: 1, display: "flex" }}>
+          {activeEnki.serialization.introduction}
+        </div>
       )}
-    </div>
+    </>
   );
 };
 
