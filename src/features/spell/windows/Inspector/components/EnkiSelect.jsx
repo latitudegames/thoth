@@ -16,8 +16,8 @@ const EnkiDetails = () => {
     const taskName = value;
     const enkiData = await getEnkiPrompt(value);
     if (enkiData) {
-      const totalInputs = enkiData.data[0].inputs.length()
-      const totalOutputs = enkiData.data[0].outputs.length()
+      const totalInputs = enkiData.data[0].inputs.length;
+      const totalOutputs = enkiData.data[0].outputs.length;
       selectEnki({
         taskName,
         totalInputs,
@@ -29,20 +29,19 @@ const EnkiDetails = () => {
   };
 
   const listChange = async (event) => {
-    const taskName = event.target.value
+    const taskName = event.target.value;
     const enkiData = await getEnkiPrompt(taskName);
     if (enkiData) {
-        selectEnki({
-          taskName,
-          ...enkiData,
-        });
-      }
+      selectEnki({
+        taskName,
+        ...enkiData,
+      });
+    }
   };
 
   useEffect(async () => {
     const list = await getEnkis();
-    const parsedList = JSON.parse(list);
-    const enkiTaskList = parsedList?.enkiTasks;
+    const enkiTaskList = list?.enkiTasks;
     if (enkiTaskList) {
       updateTaskList(enkiTaskList);
     }
@@ -51,12 +50,14 @@ const EnkiDetails = () => {
   return (
     <div style={{ flex: 1, display: "flex" }}>
       {activeTask ? (
-        <Chip
-          label={activeTask}
-          onDelete={() => selectEnki(undefined)}
-          color="white"
-          variant="outlined"
-        />
+        <>
+          <Chip
+            label={activeTask}
+            onDelete={() => selectEnki(undefined)}
+            color="white"
+            variant="outlined"
+          />
+        </>
       ) : (
         <>
           <input
