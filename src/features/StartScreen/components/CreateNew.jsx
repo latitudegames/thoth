@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { navigate } from "hookrouter";
 import {
   uniqueNamesGenerator,
   adjectives,
@@ -21,6 +22,11 @@ const customConfig = {
   length: 2,
 };
 
+const defaultGraph = {
+  id: "demo@0.1.0",
+  nodes: {},
+};
+
 const templates = [
   { label: "Empty", bg: emptyImg },
   { label: "Language example", bg: langImg },
@@ -34,12 +40,12 @@ const CreateNew = ({ setNewVisible }) => {
 
   const onCreate = async () => {
     const placeholderName = uniqueNamesGenerator(customConfig);
-    const spell = await newSpell({ graph: {}, name: placeholderName });
+    const spell = await newSpell({
+      graph: defaultGraph,
+      name: placeholderName,
+    });
     const tab = await openTab({ name: spell.name, spellId: spell.name });
-
-    console.log("Spell", spell);
-    console.log("tab", tab);
-    console.log("create", selectedTemplate);
+    navigate("/");
   };
 
   return (
