@@ -25,7 +25,7 @@ export class StateRead extends Rete.Component {
     const gameState = await this.editor.thoth.getCurrentGameState();
 
     return Object.entries(gameState).reduce((acc, [key, value]) => {
-      if (node.data.outputs.includes(key)) {
+      if (node.data.outputs.some((out)=> out.name === key)) {
         acc[key] = value;
       }
 

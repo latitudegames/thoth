@@ -36,14 +36,14 @@ const Inspector = (props) => {
 
   const toolbar = (
     <>
-      <div style={{flex: 1, marginTop: 'var(--c1)'}}>{inspectorData?.name}</div> <button className="small">Something</button>
+      <div style={{flex: 1, marginTop: 'var(--c1)'}}>{inspectorData?.name}</div> 
     </>
   );
 
   if (!inspectorData) return <LoadingScreen />;
 
   return (
-    <Window toolbar={toolbar} dark border>
+    <Window toolbar={toolbar} darker outline borderless>
       <DataControls
         nodeId={inspectorData.nodeId}
         dataControls={inspectorData.dataControls}

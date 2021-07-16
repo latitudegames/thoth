@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
+import { Scrollbars } from "react-custom-scrollbars";
 import { usePubSub } from "../../../contexts/PubSub";
 import Window from "../../common/Window/Window";
 
@@ -58,7 +59,6 @@ const Playtest = ({ ...props }) => {
   const printItem = (text, key) => <li key={key}>{text}</li>;
 
   const onSend = () => {
-    console.log("Sending!", value);
     const newHistory = [...history, `You: ${value}`];
     setHistory(newHistory);
     publish(PLAYTEST_INPUT, value);
@@ -78,10 +78,14 @@ const Playtest = ({ ...props }) => {
 
   return (
     <Window toolbar={toolbar}>
+      <div style={{display: 'flex', height: '100%', flexDirection: 'column'}}>
       <div className={css["playtest-output"]}>
-        <ul>{history.map(printItem)}</ul>
+        <Scrollbars>
+          <ul>{history.map(printItem)}</ul>
+        </Scrollbars>
       </div>
       <Input onChange={onChange} value={value} onSend={onSend} />
+      </div>
     </Window>
   );
 };
