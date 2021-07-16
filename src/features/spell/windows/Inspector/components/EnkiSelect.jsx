@@ -19,7 +19,7 @@ const EnkiDetails = ({ addOutput }) => {
     const enkiData = await getEnkiPrompt(value);
     if (enkiData) {
       enkiData.data[0].outputs.forEach((_output, index) => {
-        addOutput(`${taskName} Output ${index+1}`);
+        addOutput(`${taskName} Output ${index + 1}`);
       });
       selectEnki({
         taskName,
@@ -34,7 +34,7 @@ const EnkiDetails = ({ addOutput }) => {
     const enkiData = await getEnkiPrompt(taskName);
     if (enkiData) {
       enkiData.data[0].outputs.forEach((_output, index) => {
-        addOutput(`${taskName} Output ${index+1}`);
+        addOutput(`${taskName} Output ${index + 1}`);
       });
       selectEnki({
         taskName,
@@ -53,6 +53,20 @@ const EnkiDetails = ({ addOutput }) => {
 
   return (
     <>
+      {taskList?.length > 0 && !activeTask && (
+        <div style={{ flex: 1, display: "flex", width: "100%" }}>
+          <FormControl>
+            <Select native onChange={listChange}>
+              <option aria-label="None" disabled selected value="" />
+              {taskList.map((task) => {
+                return <option value={task.name}>{task.name}</option>;
+              })}
+            </Select>
+            <FormHelperText margin={"dense"}>Select Enki</FormHelperText>
+          </FormControl>
+        </div>
+      )}
+      <br></br>
       <div style={{ flex: 1, display: "flex" }}>
         {activeTask ? (
           <>
@@ -78,20 +92,6 @@ const EnkiDetails = ({ addOutput }) => {
         )}
       </div>
       <br></br>
-      {taskList?.length > 0 && !activeTask && (
-        <div style={{ flex: 1, display: "flex", width: "100%" }}>
-          <FormControl>
-            <Select native onChange={listChange}>
-              <option aria-label="None" disabled selected value="" />
-              {taskList.map((task) => {
-                return <option value={task.name}>{task.name}</option>;
-              })}
-            </Select>
-            <FormHelperText margin={"dense"}>Select Enki</FormHelperText>
-          </FormControl>
-        </div>
-      )}
-      <br></br>
       {/* {activeTask && (
         <div style={{ flex: 1, display: "flex" }}>
           {activeEnki.serialization.introduction}
@@ -105,7 +105,6 @@ const EnkiSelect = ({ updateData, control, initialValue, ...props }) => {
   const [outputs, setOutputs] = useState([...initialValue]);
 
   const { controls, dataKey } = control;
-
 
   useEffect(() => {
     setOutputs([...initialValue]);
@@ -122,7 +121,7 @@ const EnkiSelect = ({ updateData, control, initialValue, ...props }) => {
     };
 
     const newOutputs = [...outputs, newOutput];
-    console.log("newOutputs",newOutputs)
+    console.log("newOutputs", newOutputs);
     setOutputs(newOutputs);
     update(newOutputs);
   };
