@@ -33,6 +33,9 @@ const EnkiDetails = ({ addOutput }) => {
     const taskName = event.target.value;
     const enkiData = await getEnkiPrompt(taskName);
     if (enkiData) {
+      enkiData.data[0].outputs.forEach((_output, index) => {
+        addOutput(`${taskName} Output ${index+1}`);
+      });
       selectEnki({
         taskName,
         ...enkiData,
@@ -69,7 +72,7 @@ const EnkiDetails = ({ addOutput }) => {
               onChange={onChange}
             />
             <button style={{ flex: 1 }} onClick={onSearch}>
-              Search Enki Name
+              Search
             </button>
           </>
         )}
