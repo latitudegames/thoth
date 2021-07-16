@@ -2,7 +2,7 @@ import { navigate } from "hookrouter";
 import { useEffect } from "react";
 
 import { Editor } from "../../contexts/Rete";
-import { Layout, useLayout } from "../../contexts/Layout";
+import { Layout } from "../../contexts/Layout";
 import StateManager from "./windows/StateManager";
 import Playtest from "./windows/Playtest";
 import Inspector from "./windows/Inspector/Inspector";
@@ -10,17 +10,20 @@ import Inspector from "./windows/Inspector/Inspector";
 import TabLayout from "../common/TabLayout/TabLayout";
 import TextEditor from "./windows/TextEditor";
 import { useTabManager } from "../../contexts/TabManager";
+import { useSpell } from "../../contexts/Spell";
+import { useRete } from "../../contexts/Rete";
 
 const Thoth = ({ empty, workspace = "default" }) => {
-  const { tabs } = useTabManager();
-  const { getWorkspace } = useLayout();
+  const { tabs, activeTab } = useTabManager();
+  const { loadSpell } = useSpell();
+  const { editor } = useRete();
 
   // reroute to home if no tabs open
   useEffect(() => {
-    if (tabs.length === 0) {
+    if (tabs.length === 0 || !activeTab) {
       navigate("/home");
     }
-  }, tabs);
+  }, [tabs]);
 
   const factory = (node) => {
     const component = node.getComponent();
@@ -42,7 +45,7 @@ const Thoth = ({ empty, workspace = "default" }) => {
 
   return (
     <TabLayout>
-      {!empty && <Layout json={getWorkspace[workspace]} factory={factory} />}
+      {!empty && <Layout json={activeTab.layoutJson} factory={factory} />}
     </TabLayout>
   );
 };
