@@ -5,7 +5,7 @@ import Select from "@material-ui/core/Select";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 
-const EnkiDetails = ({ addOutput }) => {
+const EnkiDetails = ({ addOutput, update }) => {
   const [value, setValue] = useState("");
   const [activeEnki, selectEnki] = useState(undefined);
   const [taskList, updateTaskList] = useState(undefined);
@@ -34,13 +34,18 @@ const EnkiDetails = ({ addOutput }) => {
     const enkiData = await getEnkiPrompt(taskName);
     if (enkiData) {
       enkiData.data[0].outputs.forEach((_output, index) => {
-        addOutput(`${taskName} Output ${index + 1}`);
+        addOutput(`Output ${index + 1}`);
       });
       selectEnki({
         taskName,
         ...enkiData,
       });
     }
+  };
+
+  const clearEnki = async () => {
+    selectEnki(undefined);
+    update([]);
   };
 
   useEffect(async () => {
@@ -72,8 +77,8 @@ const EnkiDetails = ({ addOutput }) => {
           <>
             <Chip
               label={activeTask}
-              onDelete={() => selectEnki(undefined)}
-              color="white"
+              onDelete={clearEnki}
+              color="default"
               variant="outlined"
             />
           </>
@@ -128,7 +133,7 @@ const EnkiSelect = ({ updateData, control, initialValue, ...props }) => {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
-      <EnkiDetails addOutput={addOutput} />
+      <EnkiDetails addOutput={addOutput} update={update} />
     </div>
   );
 };
