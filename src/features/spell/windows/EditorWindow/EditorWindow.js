@@ -15,7 +15,7 @@ const EditorWindow = ({ props }) => {
   const EditorToolbar = () => {
     return (
       <>
-      <ul>
+      <ul className>
       <li> <button>Add Node <div className={css["folder-arrow"]}> ❯ </div></button>
       <ul>
           {nodeList && Object.keys(nodeList).map((item, index) => {
