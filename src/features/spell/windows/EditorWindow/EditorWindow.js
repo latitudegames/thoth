@@ -6,6 +6,14 @@ import css from "./editorwindow.module.css";
 
 const EditorWindow = ({ props }) => {
   const { getNodes, getNodeMap, editor } = useRete();
+  const useToggle = (initialValue = false) => {
+    const [value, setValue] = useState(initialValue);
+    const toggle = React.useCallback(() => {
+      setValue((v) => !v);
+    }, []);
+    return [value, toggle];
+  };
+  const [menuVisibility, togglemenuVisibility] = useToggle();
   const nodeList = getNodes();
   const nodeMap = getNodeMap();
 
@@ -24,6 +32,7 @@ const EditorWindow = ({ props }) => {
                 className={css["list-item"]}
                 key={item}
                 onClick={async () => {
+                  togglemenuVisibility(menuVisibility);
                   editor.addNode(
                     await createNode(nodeMap.get(nodeList[item].name), {
                       x: 0,
