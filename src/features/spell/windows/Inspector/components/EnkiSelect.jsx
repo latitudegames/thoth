@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { getEnkiPrompt, getEnkis } from "../../../../../services/game-api/enki";
 import Chip from "@material-ui/core/Chip";
 import Select from "@material-ui/core/Select";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
 
 const EnkiDetails = () => {
   const [value, setValue] = useState("");
@@ -68,22 +70,25 @@ const EnkiDetails = () => {
               onChange={onChange}
             />
             <button style={{ flex: 1 }} onClick={onSearch}>
-              Search Enki by Name
+              Search Enki Name
             </button>
           </>
         )}
       </div>
       <br></br>
       {taskList?.length > 0 && !activeTask && (
-         <div style={{ flex: 1, display: "flex" }}>
-              <Select native onChange={listChange}>
-                <option aria-label="None" disabled selected value="" />
-                {taskList.map((task) => {
-                  return <option value={task.name}>{task.name}</option>;
-                })}
-              </Select>
-              </div>
-            )}
+        <div style={{ flex: 1, display: "flex", width: "100%" }}>
+          <FormControl>
+            <Select native onChange={listChange}>
+              <option aria-label="None" disabled selected value="" />
+              {taskList.map((task) => {
+                return <option value={task.name}>{task.name}</option>;
+              })}
+            </Select>
+            <FormHelperText margin={"dense"}>Select Enki</FormHelperText>
+          </FormControl>
+        </div>
+      )}
       <br></br>
       {activeTask && (
         <div style={{ flex: 1, display: "flex" }}>
