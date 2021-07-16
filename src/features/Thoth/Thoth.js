@@ -1,6 +1,3 @@
-import { navigate } from "hookrouter";
-import { useEffect } from "react";
-
 import { Editor } from "../../contexts/Rete";
 import { Layout } from "../../contexts/Layout";
 import StateManager from "./windows/StateManager";
@@ -12,21 +9,10 @@ import TabLayout from "../common/TabLayout/TabLayout";
 import TextEditor from "./windows/TextEditor";
 
 import { useTabManager } from "../../contexts/TabManager";
-import { useSpell } from "../../contexts/Spell";
-import { useRete } from "../../contexts/Rete";
 import LoadingScreen from "../common/LoadingScreen/LoadingScreen";
 
 const Thoth = ({ empty, workspace = "default" }) => {
-  const { tabs, activeTab } = useTabManager();
-  const { loadSpell } = useSpell();
-  const { editor } = useRete();
-
-  // reroute to home if no tabs open
-  useEffect(() => {
-    if (tabs?.length === 0) {
-      navigate("/home");
-    }
-  });
+  const { activeTab } = useTabManager();
 
   const factory = (node) => {
     const component = node.getComponent();
