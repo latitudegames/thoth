@@ -19,8 +19,7 @@ const EnkiDetails = ({ addOutput }) => {
     const enkiData = await getEnkiPrompt(value);
     if (enkiData) {
       enkiData.data[0].outputs.forEach((_output, index) => {
-        console.log("adding output",`${taskName}:Output-${index}`)
-        addOutput(`${taskName}:Output-${index}`);
+        addOutput(`${taskName} Output ${index+1}`);
       });
       selectEnki({
         taskName,
