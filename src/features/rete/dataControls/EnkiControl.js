@@ -11,7 +11,7 @@ export class EnkiSelectControl extends DataControl {
   }) {
     const options = {
       dataKey: "outputs",
-      name: "Data Outputs",
+      name: "Enki Task Details",
       controls: {
         component: "enkiSelect",
         data: {
@@ -58,6 +58,8 @@ export class EnkiSelectControl extends DataControl {
       (out) => !existingOutputs.includes(out.name)
     );
 
+    console.log("ZANY",newOutputs)
+
     // Here we are running over and ensuring that the outputs are in the task
     this.component.task.outputs = this.node.data.outputs.reduce(
       (acc, out) => {
@@ -69,6 +71,7 @@ export class EnkiSelectControl extends DataControl {
 
     // From these new outputs, we iterate and add an output socket to the node
     newOutputs.forEach((output) => {
+      console.log("OUTPUT COMPOSITION DIFFERENCE",output)
       const newOutput = new Rete.Output(
         output.name.toLowerCase(),
         output.name,
