@@ -20,15 +20,6 @@ function App() {
   const match = useRoutes(routes);
   const { tabs } = useTabManager();
 
-  // let tabs = [];
-  // tabs = [
-  //   {
-  //     name: "My Spell",
-  //     type: "spell",
-  //     active: true,
-  //   },
-  // ];
-
   return (
     <ThothPageWrapper tabs={tabs}>
       {/* TODO better not found page  */}
