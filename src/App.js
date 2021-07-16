@@ -14,8 +14,6 @@ function App() {
   // Use our routes
   const { tabs } = useTabManager();
 
-  console.log("rendeirng app");
-
   if (!tabs) return <LoadingScreen />;
 
   return (
