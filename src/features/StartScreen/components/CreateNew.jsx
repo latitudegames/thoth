@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { navigate } from "hookrouter";
 import {
   uniqueNamesGenerator,
   adjectives,
   colors,
 } from "unique-names-generator";
+import { useLocation } from "wouter";
 
 import css from "../startScreen.module.css";
 import Panel from "../../common/Panel/Panel";
@@ -38,6 +38,9 @@ const CreateNew = ({ setNewVisible }) => {
   const { newSpell } = useSpell();
   const { openTab } = useTabManager();
 
+  // eslint-disable-next-line no-unused-vars
+  const [location, setLocation] = useLocation();
+
   const onCreate = async () => {
     const placeholderName = uniqueNamesGenerator(customConfig);
     const spell = await newSpell({
@@ -45,7 +48,7 @@ const CreateNew = ({ setNewVisible }) => {
       name: placeholderName,
     });
     const tab = await openTab({ name: spell.name, spellId: spell.name });
-    navigate("/");
+    setLocation("/thoth");
   };
 
   return (

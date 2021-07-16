@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { navigate } from "hookrouter";
+import { useLocation } from "wouter";
 import { useHotkeys } from "react-hotkeys-hook";
 
 import { useRete } from "../../../contexts/Rete";
@@ -10,7 +10,9 @@ import css from "./menuBar.module.css";
 import thothlogo from "./thoth.png";
 
 const MenuBar = ({ tabs }) => {
-  //state
+  // eslint-disable-next-line no-unused-vars
+  const [location, setLocation] = useLocation();
+
   const useToggle = (initialValue = false) => {
     const [value, setValue] = useState(initialValue);
     const toggle = React.useCallback(() => {
@@ -31,7 +33,7 @@ const MenuBar = ({ tabs }) => {
   };
 
   const onNew = () => {
-    navigate("/home");
+    setLocation("/home");
   };
 
   const onSerialize = () => {
