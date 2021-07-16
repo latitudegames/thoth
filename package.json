@@ -13,7 +13,6 @@
     "classnames": "^2.3.1",
     "flexlayout-react": "^0.5.12",
     "handlebars": "^4.7.7",
-    "hookrouter": "^1.2.5",
     "json-format": "^1.0.1",
     "pouchdb": "^7.2.2",
     "pouchdb-adapter-idb": "^7.2.2",
@@ -27,7 +26,6 @@
     "react-hotkeys-hook": "^3.3.2",
     "react-icons": "^4.2.0",
     "react-pouchdb": "^2.1.0",
-    "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "react-simple-code-editor": "^0.11.0",
     "rebass": "^4.0.7",
@@ -41,10 +39,11 @@
     "rxjs": "^7.2.0",
     "unique-names-generator": "^4.5.0",
     "uuid": "^8.3.2",
-    "web-vitals": "^1.0.1"
+    "web-vitals": "^1.0.1",
+    "wouter": "^2.7.4"
   },
   "scripts": {
-    "start": "PORT=3001 react-scripts start",
+    "start": "PORT=3000 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
