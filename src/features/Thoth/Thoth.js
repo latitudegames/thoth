@@ -12,6 +12,7 @@ import TextEditor from "./windows/TextEditor";
 import { useTabManager } from "../../contexts/TabManager";
 import { useSpell } from "../../contexts/Spell";
 import { useRete } from "../../contexts/Rete";
+import LoadingScreen from "../common/LoadingScreen/LoadingScreen";
 
 const Thoth = ({ empty, workspace = "default" }) => {
   const { tabs, activeTab } = useTabManager();
@@ -20,10 +21,10 @@ const Thoth = ({ empty, workspace = "default" }) => {
 
   // reroute to home if no tabs open
   useEffect(() => {
-    if (tabs.length === 0 || !activeTab) {
+    if (tabs?.length === 0) {
       navigate("/home");
     }
-  }, [tabs]);
+  });
 
   const factory = (node) => {
     const component = node.getComponent();
@@ -42,6 +43,8 @@ const Thoth = ({ empty, workspace = "default" }) => {
         return <p></p>;
     }
   };
+
+  if (!activeTab) return <LoadingScreen />;
 
   return (
     <TabLayout>
