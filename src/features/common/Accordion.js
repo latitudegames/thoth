@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     padding: 0
   },
   detailsRoot: {
-    backgroundColor: "var(--dark-3)",
+    backgroundColor: "var(--dark-2)",
   },
   summaryContent: {
     margin: 0
