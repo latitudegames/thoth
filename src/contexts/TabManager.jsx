@@ -6,6 +6,8 @@ import { useLayout } from "./Layout";
 const Context = createContext({
   tabs: [],
   activeTab: {},
+  switchTab: () => {},
+  closeTab: () => {},
 });
 
 export const useTabManager = () => useContext(Context);
@@ -50,14 +52,22 @@ const TabManager = ({ children }) => {
     return tab;
   };
 
-  // const closeTab = () => {};
+  const closeTab = async (tabId) => {
+    const tab = await db.tabs.findOne({ selector: { id: tabId } }).exec();
+    await tab.remove();
+  };
 
-  // const switchTab = () => {};
+  const switchTab = async (tabId) => {
+    const tab = await db.tabs.findOne({ selector: { id: tabId } }).exec();
+    await tab.atomicPatch({ active: true });
+  };
 
   const publicInterface = {
     tabs,
     activeTab,
     openTab,
+    switchTab,
+    closeTab,
   };
 
   return (
