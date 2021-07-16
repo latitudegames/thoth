@@ -109,7 +109,7 @@ const editor = async function ({ container, pubSub, thoth }) {
       // NOTE need to consider authentication against games API from a web client
       await engine.abort();
       await engine.process(editor.toJSON());
-      // editor.thoth.saveCurrentSpell({graph: editor.toJSON()});
+      editor.thoth.saveCurrentSpell({ graph: editor.toJSON() });
     }
   );
 
@@ -119,9 +119,6 @@ const editor = async function ({ container, pubSub, thoth }) {
     AreaPlugin.zoomAt(editor);
     editor.trigger("process");
   };
-
-  console.log("Loading!");
-  // editor.loadGraph(thoth.currentSpell.graph);
 
   return editor;
 };
