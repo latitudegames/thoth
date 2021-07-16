@@ -14,7 +14,7 @@ const Input = ({ control, updateData, initialValue }) => {
   return (
     <div style={{ flex: 1, display: "flex" }}>
       <input
-        style={{ flex: 6, padding: "5px 10px", color: "#fff" }}
+        style={{ flex: 6 }}
         value={value}
         type="text"
         onChange={onChange}

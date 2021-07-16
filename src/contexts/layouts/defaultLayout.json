@@ -20,39 +20,45 @@
             "enableClose": false,
             "className": "editor-tab",
             "name": "Composer",
-            "component": "editor"
-          }
-        ]
-      },
-      {
-        "type": "tabset",
-        "id": "#16",
-        "weight": 5,
-        "children": [
-          {
-            "type": "tab",
-            "id": "#31",
-            "name": "Inspector",
-            "component": "inspector"
-          },
-          {
-            "type": "tab",
-            "id": "#40",
-            "name": "Text Editor",
-            "component": "textEditor"
+            "component": "editorWindow"
           }
         ]
       },
       {
         "type": "row",
         "id": "#24",
-        "weight": 5.0216980506793005,
+        "weight": 4,
         "children": [
+          {
+            "type": "tabset",
+            "id": "#16",
+            "weight": 20,
+            "children": [
+              {
+                "type": "tab",
+                "id": "#31",
+                "name": "Inspector",
+                "component": "inspector"
+              }
+            ]
+          },
           {
             "type": "tabset",
             "id": "#13",
             "weight": 50,
             "children": [
+              {
+                "type": "tab",
+                "id": "#22",
+                "name": "Playtest",
+                "component": "playtest"
+              },
+              {
+                "type": "tab",
+                "id": "#40",
+                "name": "Text Editor",
+                "component": "textEditor"
+              },
               {
                 "type": "tab",
                 "id": "#10",
@@ -61,19 +67,6 @@
               }
             ],
             "active": true
-          },
-          {
-            "type": "tabset",
-            "id": "#23",
-            "weight": 50,
-            "children": [
-              {
-                "type": "tab",
-                "id": "#22",
-                "name": "Playtest",
-                "component": "playtest"
-              }
-            ]
           }
         ]
       }
