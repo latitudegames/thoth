@@ -115,7 +115,7 @@ const EnkiSelect = ({ updateData, control, initialValue, ...props }) => {
   const addOutput = (output) => {
     const newOutput = {
       name: output,
-      socketType: "String",
+      socketType: "stringSocket",
       taskType: controls.data.taskType || "output",
     };
 
