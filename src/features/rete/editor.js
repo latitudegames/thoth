@@ -31,7 +31,11 @@ import { Generator } from "./components/Generator";
   Primary initialization function.  Takes a container ref to attach the rete editor to.
 */
 
+const editorMap = {};
+
 const editor = async function ({ container, pubSub, thoth, tab }) {
+  // if (editorMap[tab]) return editorMap[tab];
+
   // Here we load up all components of the builder into our editor for usage.
   // We might be able to programatically generate components from enki
   const components = [
@@ -111,13 +115,18 @@ const editor = async function ({ container, pubSub, thoth, tab }) {
     }
   );
 
+  editor.abort = async () => {
+    await engine.abort();
+  };
+
   editor.loadGraph = async (graph) => {
     await engine.abort();
     editor.fromJSON(graph);
     editor.view.resize();
     AreaPlugin.zoomAt(editor);
-    editor.trigger("process");
   };
+
+  editorMap[tab] = editor;
 
   return editor;
 };
