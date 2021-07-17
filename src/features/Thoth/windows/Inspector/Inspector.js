@@ -20,6 +20,10 @@ const Inspector = (props) => {
         setWidth(data.rect.width);
       }, 0);
     });
+
+    return () => {
+      props.node.removeEventListener("resize");
+    };
   }, [props]);
 
   const updateData = (update) => {
@@ -36,7 +40,9 @@ const Inspector = (props) => {
 
   const toolbar = (
     <>
-      <div style={{flex: 1, marginTop: 'var(--c1)'}}>{inspectorData?.name}</div> 
+      <div style={{ flex: 1, marginTop: "var(--c1)" }}>
+        {inspectorData?.name}
+      </div>
     </>
   );
 

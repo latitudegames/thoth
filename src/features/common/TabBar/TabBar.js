@@ -16,12 +16,13 @@ const Tab = (props) => {
     [css["inactive"]]: !props.active,
   });
 
-  const onClick = () => {
+  const onClick = (e) => {
     switchTab(props.id);
   };
 
   // Handle selecting the next tab down is none are active.
-  const onClose = () => {
+  const onClose = (e) => {
+    e.stopPropagation();
     closeTab(props.id);
   };
 
