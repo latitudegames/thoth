@@ -5,7 +5,6 @@ import { DataControl } from "../plugins/inspectorPlugin";
 
 export class EnkiThroughputControl extends DataControl {
   constructor({
-    defaultOutputs = [],
     socketType = "String",
     taskType = "output",
   }) {
