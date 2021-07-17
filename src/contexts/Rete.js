@@ -18,32 +18,20 @@ const Context = createContext({
   getNodeMap: () => {},
   getNodes: () => {},
   loadGraph: () => {},
+  setContainer: () => {},
 });
 
 export const useRete = () => useContext(Context);
 
 const ReteProvider = ({ children }) => {
   const [editor, setEditor] = useState();
-  const [editorMap, setEditorMap] = useState({});
   const pubSub = usePubSub();
 
   const buildEditor = async (container, spell, tab) => {
-    if (editorMap[tab]) {
-      // If we are here, we are swapping to a new editor.  Set teh editor from the map, and return.
-      setEditor(editorMap[tab]);
-      return;
-    }
-
     const newEditor = await init({
       container,
       pubSub,
       thoth: spell,
-    });
-
-    // editor map to store multiple instances of  editors based on tab
-    setEditorMap({
-      ...editorMap,
-      [tab]: newEditor,
     });
 
     // this should store the current editor
@@ -78,7 +66,6 @@ const ReteProvider = ({ children }) => {
     getNodeMap,
     getNodes,
     loadGraph,
-    editorMap,
   };
 
   return (
@@ -87,6 +74,7 @@ const ReteProvider = ({ children }) => {
 };
 
 export const Editor = ({ tab = "default", children }) => {
+  const [loaded, setLoaded] = useState(null);
   const { buildEditor, editor } = useRete();
   const { activeTab } = useTabManager();
   const spell = useSpell();
@@ -96,6 +84,7 @@ export const Editor = ({ tab = "default", children }) => {
     if (!editor || !activeTab) return;
 
     (async () => {
+      console.log("loading spell");
       await spell.loadSpell(activeTab.spell);
     })();
   }, [editor, activeTab]);
@@ -119,7 +108,10 @@ export const Editor = ({ tab = "default", children }) => {
         {!spell.currentSpell.graph && <p>Loading...</p>}
         <div
           ref={(el) => {
-            if (el) buildEditor(el, spell, tab);
+            if (el && !loaded) {
+              buildEditor(el, spell);
+              setLoaded(true);
+            }
           }}
         />
       </div>
