@@ -20,6 +20,7 @@ export class EnkiTask extends Rete.Component {
         defaultOutputs: node.data.outputs,
         socketType: "dataSocket",
         taskType: "option",
+        nodeId: node.id
       });
 
       node.inspector.add(EnkiOutput);
