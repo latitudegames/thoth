@@ -7,9 +7,9 @@ import {
   useCallback,
 } from "react";
 
-import { useDB } from "../Database";
-import { usePubSub } from "../PubSub";
-import { useRete } from "../Rete";
+import { useDB } from "./Database";
+import { usePubSub } from "./PubSub";
+import { useRete } from "./Rete";
 
 const Context = createContext({
   currentSpell: {},
@@ -68,7 +68,6 @@ const SpellProvider = ({ children }) => {
       if (!settings) {
         settings = await db.settings.insert({
           name: "default",
-          currentSpell: "defaultSpell",
         });
       }
 
