@@ -11,7 +11,6 @@ import { useContext, createContext, useState } from "react";
 const Context = createContext({
   run: () => {},
   editor: {},
-  editorMap: {},
   serialize: () => {},
   buildEditor: () => {},
   setEditor: () => {},
