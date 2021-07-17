@@ -38,9 +38,6 @@ const CreateNew = ({ setNewVisible }) => {
   const { newSpell } = useSpell();
   const { openTab } = useTabManager();
 
-  // eslint-disable-next-line no-unused-vars
-  const [location, setLocation] = useLocation();
-
   const onCreate = async () => {
     const placeholderName = uniqueNamesGenerator(customConfig);
     const spell = await newSpell({
@@ -48,7 +45,6 @@ const CreateNew = ({ setNewVisible }) => {
       name: placeholderName,
     });
     await openTab({ name: spell.name, spellId: spell.name });
-    setLocation("/thoth");
   };
 
   return (
