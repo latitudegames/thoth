@@ -4,16 +4,14 @@ import * as sockets from "../sockets";
 import { DataControl } from "../plugins/inspectorPlugin";
 
 export class EnkiThroughputControl extends DataControl {
-  constructor({
-    socketType = "String",
-    taskType = "output",
-  }) {
+  constructor({ socketType = "String", taskType = "output" }) {
     const options = {
       dataKey: "throughputs",
       name: "Enki Task Details",
       controls: {
         component: "enkiSelect",
         data: {
+          activetask: {},
           socketType,
           taskType,
         },
@@ -24,7 +22,9 @@ export class EnkiThroughputControl extends DataControl {
     this.socketType = socketType;
   }
 
-  onData({ inputs, outputs }) {
+  onData({ inputs, outputs, activeTask }) {
+    this.node.data.name = activeTask?.taskName || "Enki Task";
+    this.node.data.activetask = activeTask;
     this.node.data.inputs = inputs || [];
     this.node.data.outputs = outputs || [];
 
@@ -115,7 +115,7 @@ export class EnkiThroughputControl extends DataControl {
       );
       this.node.addOutput(newOutput);
     });
-
+    console.log("CHECKOUT THE NODEID", this.node.id);
     this.node.update();
   }
 }
