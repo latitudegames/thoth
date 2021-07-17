@@ -11,7 +11,7 @@ export class DataControl {
     this.onData = rest.onData || this.onData;
   }
 
-  //Serializer to esail extract the data controls information for publishing
+  //Serializer to easily extract the data controls information for publishing
   data() {
     return {
       dataKey: this.dataKey,
