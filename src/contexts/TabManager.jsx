@@ -1,8 +1,10 @@
-import { useContext, createContext, useEffect, useState } from "react";
+import { useContext, createContext, useEffect, useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { v4 as uuidv4 } from "uuid";
 import { useDB } from "./Database";
 import { useLayout } from "./Layout";
+import { useRete } from "./Rete";
+import { useSpell } from "./Spell";
 
 const Context = createContext({
   tabs: [],
@@ -16,6 +18,9 @@ export const useTabManager = () => useContext(Context);
 const TabManager = ({ children }) => {
   const { db } = useDB();
   const { getWorkspace } = useLayout();
+  const { editor } = useRete();
+  const { saveSpell } = useSpell();
+  const tabRef = useRef();
 
   // eslint-disable-next-line no-unused-vars
   const [location, setLocation] = useLocation();
@@ -23,9 +28,26 @@ const TabManager = ({ children }) => {
   const [tabs, setTabs] = useState(null);
   const [activeTab, setActiveTab] = useState(null);
 
+  const updateActiveTab = (activeTab) => {
+    tabRef.current = activeTab;
+    setActiveTab(activeTab);
+  };
+
   useEffect(() => {
     if (location !== "/thoth") setLocation("/thoth");
   }, [activeTab]);
+
+  useEffect(() => {
+    if (!editor) return;
+    editor.on(
+      "process nodecreated noderemoved connectioncreated connectionremoved",
+      () => {
+        // Use a tab ref here because otherwise the state is stale inside the callback function.
+        // Handy pattern to remember when wanting to set things like callbacks, etc.
+        saveSpell(tabRef.current.spell, { graph: editor.toJSON() });
+      }
+    );
+  }, [editor]);
 
   useEffect(() => {
     if (!db) return;
@@ -36,7 +58,7 @@ const TabManager = ({ children }) => {
 
     db.tabs.findOne({ selector: { active: true } }).$.subscribe((result) => {
       if (!result) return;
-      setActiveTab(result.toJSON());
+      updateActiveTab(result.toJSON());
     });
   }, [db]);
 
