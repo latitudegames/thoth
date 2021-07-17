@@ -60,8 +60,6 @@ const editor = async function ({ container, pubSub, thoth }) {
   // create the main edtor
   const editor = new Rete.NodeEditor("demo@0.1.0", container);
 
-  console.log("coontainer", container);
-
   // Set up the reactcontext pubsub on the editor so rete components can talk to react
   editor.pubSub = pubSub;
   editor.thoth = thoth;
