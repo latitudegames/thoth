@@ -3,14 +3,14 @@ import * as sockets from "../sockets";
 
 import { DataControl } from "../plugins/inspectorPlugin";
 
-export class EnkiOutputControl extends DataControl {
+export class EnkiThroughputControl extends DataControl {
   constructor({
     defaultOutputs = [],
     socketType = "String",
     taskType = "output",
   }) {
     const options = {
-      dataKey: "outputs",
+      dataKey: "throughputs",
       name: "Enki Task Details",
       controls: {
         component: "enkiSelect",
@@ -25,10 +25,16 @@ export class EnkiOutputControl extends DataControl {
     this.socketType = socketType;
   }
 
-  onData(outputs = []) {
-    this.node.data.outputs = outputs;
+  onData({inputs,outputs}) {
+    this.node.data.inputs = inputs || [];
+    this.node.data.outputs = outputs || [];
 
+    const existingInputs = [];
     const existingOutputs = [];
+
+    this.node.outputs.forEach((out) => {
+      existingInputs.push(out.key);
+    });
 
     this.node.outputs.forEach((out) => {
       existingOutputs.push(out.key);
@@ -53,11 +59,34 @@ export class EnkiOutputControl extends DataControl {
         this.node.removeOutput(output);
       });
 
+    // Any inputs existing on the current node that arent incoming have been deleted
+    // and need to be removed.
+    existingInputs
+      .filter(
+        (existing) => !inputs.some((incoming) => incoming.name === existing)
+      )
+      .forEach((key) => {
+        const output = this.node.inputs.get(key);
+
+        this.node
+          .getConnections()
+          .filter((con) => con.input.key === key)
+          .forEach((con) => {
+            this.editor.removeConnection(con);
+          });
+
+        this.node.removeInput(output);
+      });
+
+    // any incoming inputs not already on the node are new and will be added.
+    const newInputs = inputs.filter(
+      (input) => !existingInputs.includes(input.name)
+    );
+
     // any incoming outputs not already on the node are new and will be added.
     const newOutputs = outputs.filter(
       (out) => !existingOutputs.includes(out.name)
     );
-
 
     // Here we are running over and ensuring that the outputs are in the task
     this.component.task.outputs = this.node.data.outputs.reduce(
@@ -67,6 +96,16 @@ export class EnkiOutputControl extends DataControl {
       },
       { ...this.component.task.outputs }
     );
+
+    // From these new inputs, we iterate and add an output socket to the node
+    newInputs.forEach((output) => {
+      const newInput = new Rete.Input(
+        output.name.toLowerCase(),
+        output.name,
+        sockets[output.socketType]
+      );
+      this.node.addInput(newInput);
+    });
 
     // From these new outputs, we iterate and add an output socket to the node
     newOutputs.forEach((output) => {
