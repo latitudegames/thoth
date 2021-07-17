@@ -58,7 +58,6 @@ export class EnkiOutputControl extends DataControl {
       (out) => !existingOutputs.includes(out.name)
     );
 
-    console.log("ZANY",newOutputs)
 
     // Here we are running over and ensuring that the outputs are in the task
     this.component.task.outputs = this.node.data.outputs.reduce(
@@ -71,7 +70,6 @@ export class EnkiOutputControl extends DataControl {
 
     // From these new outputs, we iterate and add an output socket to the node
     newOutputs.forEach((output) => {
-      console.log("OUTPUT COMPOSITION DIFFERENCE",output)
       const newOutput = new Rete.Output(
         output.name.toLowerCase(),
         output.name,
