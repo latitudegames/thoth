@@ -1,5 +1,5 @@
 import Rete from "rete";
-import { EnkiOutputControl } from "../dataControls/EnkiOutputControl";
+import { EnkiThroughputControl } from "../dataControls/EnkiThroughputControl";
 import { anySocket, dataSocket } from "../sockets";
 
 export class EnkiTask extends Rete.Component {
@@ -16,7 +16,7 @@ export class EnkiTask extends Rete.Component {
 
   builder(node) {
 
-    const EnkiOutput = new EnkiOutputControl({
+    const EnkiOutput = new EnkiThroughputControl({
         defaultOutputs: node.data.outputs,
         socketType: "dataSocket",
         taskType: "option",
