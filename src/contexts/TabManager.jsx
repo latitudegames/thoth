@@ -1,4 +1,5 @@
 import { useContext, createContext, useEffect, useState } from "react";
+import { useLocation } from "wouter";
 import { v4 as uuidv4 } from "uuid";
 import { useDB } from "./Database";
 import { useLayout } from "./Layout";
@@ -16,8 +17,16 @@ const TabManager = ({ children }) => {
   const { db } = useDB();
   const { getWorkspace } = useLayout();
 
+  // eslint-disable-next-line no-unused-vars
+  const [location, setLocation] = useLocation();
+
   const [tabs, setTabs] = useState(null);
   const [activeTab, setActiveTab] = useState(null);
+
+  useEffect(() => {
+    console.log("Active tab changed");
+    if (location !== "/thoth") setLocation("/thoth");
+  }, [activeTab]);
 
   useEffect(() => {
     if (!db) return;
