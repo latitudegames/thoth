@@ -5,7 +5,7 @@ import Select from "@material-ui/core/Select";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 
-const EnkiDetails = ({ addOutput, update }) => {
+const EnkiDetails = ({ addInput, addOutput, update, throughput }) => {
   const [value, setValue] = useState("");
   const [activeEnki, selectEnki] = useState(undefined);
   const [taskList, updateTaskList] = useState(undefined);
@@ -18,6 +18,9 @@ const EnkiDetails = ({ addOutput, update }) => {
     const taskName = value;
     const enkiData = await getEnkiPrompt(value);
     if (enkiData) {
+      enkiData.data[0].inputs.forEach((_input, index) => {
+        addInput(`${taskName} Input ${index + 1}`);
+      });
       enkiData.data[0].outputs.forEach((_output, index) => {
         addOutput(`${taskName} Output ${index + 1}`);
       });
@@ -33,6 +36,9 @@ const EnkiDetails = ({ addOutput, update }) => {
     const taskName = event.target.value;
     const enkiData = await getEnkiPrompt(taskName);
     if (enkiData) {
+      enkiData.data[0].inputs.forEach((_input, index) => {
+        addInput(`Input ${index + 1}`);
+      });
       enkiData.data[0].outputs.forEach((_output, index) => {
         addOutput(`Output ${index + 1}`);
       });
@@ -44,8 +50,9 @@ const EnkiDetails = ({ addOutput, update }) => {
   };
 
   const clearEnki = async () => {
+    update(throughput);
     selectEnki(undefined);
-    update([]);
+
   };
 
   useEffect(async () => {
@@ -107,12 +114,17 @@ const EnkiDetails = ({ addOutput, update }) => {
 };
 
 const EnkiSelect = ({ updateData, control, initialValue, ...props }) => {
-  const [outputs, setOutputs] = useState([...initialValue]);
+  const { inputs: initialInputs = [], outputs: initialOutputs = [] } =
+    initialValue;
+
+  const [inputs, setInputs] = useState([...initialInputs]);
+  const [outputs, setOutputs] = useState([...initialOutputs]);
 
   const { controls, dataKey } = control;
 
   useEffect(() => {
-    setOutputs([...initialValue]);
+    setInputs([...initialInputs]);
+    setOutputs([...initialOutputs]);
   }, [initialValue]);
   const update = (update) => {
     updateData({ [dataKey]: update });
@@ -126,14 +138,25 @@ const EnkiSelect = ({ updateData, control, initialValue, ...props }) => {
     };
 
     const newOutputs = [...outputs, newOutput];
-    console.log("newOutputs", newOutputs);
     setOutputs(newOutputs);
-    update(newOutputs);
+    update({ outputs: newOutputs });
+  };
+
+  const addInput = (input) => {
+    const newInput = {
+      name: input,
+      socketType: "stringSocket",
+      taskType: controls.data.taskType || "output",
+    };
+
+    const newInputs = [...inputs, newInput];
+    setInputs(newInputs);
+    update({ inputs: newInputs });
   };
 
   return (
     <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
-      <EnkiDetails addOutput={addOutput} update={update} />
+      <EnkiDetails addInput={addInput} addOutput={addOutput} update={update} throughput={{inputs,outputs}} />
     </div>
   );
 };
