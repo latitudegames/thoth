@@ -31,8 +31,7 @@ import { Generator } from "./components/Generator";
   Primary initialization function.  Takes a container ref to attach the rete editor to.
 */
 
-const editor = async function ({ container, pubSub, thoth }) {
-  // if (editorInstance) return editorInstance;
+const editor = async function ({ container, pubSub, thoth, tab }) {
   // Here we load up all components of the builder into our editor for usage.
   // We might be able to programatically generate components from enki
   const components = [
@@ -109,14 +108,11 @@ const editor = async function ({ container, pubSub, thoth }) {
       // NOTE need to consider authentication against games API from a web client
       await engine.abort();
       await engine.process(editor.toJSON());
-
-      editor.pubSub.publish(editor.pubSub.events.SAVE_CURRENT_SPELL, {
-        graph: editor.toJSON(),
-      });
     }
   );
 
-  editor.loadGraph = (graph) => {
+  editor.loadGraph = async (graph) => {
+    await engine.abort();
     editor.fromJSON(graph);
     editor.view.resize();
     AreaPlugin.zoomAt(editor);
