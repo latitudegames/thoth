@@ -25,19 +25,19 @@ export class EnkiThroughputControl extends DataControl {
     this.socketType = socketType;
   }
 
-  onData({inputs,outputs}) {
+  onData({ inputs, outputs }) {
     this.node.data.inputs = inputs || [];
     this.node.data.outputs = outputs || [];
 
     const existingInputs = [];
     const existingOutputs = [];
 
-    this.node.outputs.forEach((out) => {
-      existingInputs.push(out.key);
+    this.node.inputs.forEach((input) => {
+      existingInputs.push(input.key);
     });
 
-    this.node.outputs.forEach((out) => {
-      existingOutputs.push(out.key);
+    this.node.outputs.forEach((output) => {
+      existingOutputs.push(output.key);
     });
 
     // Any outputs existing on the current node that arent incoming have been deleted
@@ -66,7 +66,7 @@ export class EnkiThroughputControl extends DataControl {
         (existing) => !inputs.some((incoming) => incoming.name === existing)
       )
       .forEach((key) => {
-        const output = this.node.inputs.get(key);
+        const input = this.node.inputs.get(key);
 
         this.node
           .getConnections()
@@ -75,7 +75,7 @@ export class EnkiThroughputControl extends DataControl {
             this.editor.removeConnection(con);
           });
 
-        this.node.removeInput(output);
+        this.node.removeInput(input);
       });
 
     // any incoming inputs not already on the node are new and will be added.
@@ -85,24 +85,24 @@ export class EnkiThroughputControl extends DataControl {
 
     // any incoming outputs not already on the node are new and will be added.
     const newOutputs = outputs.filter(
-      (out) => !existingOutputs.includes(out.name)
+      (output) => !existingOutputs.includes(output.name)
     );
 
     // Here we are running over and ensuring that the outputs are in the task
     this.component.task.outputs = this.node.data.outputs.reduce(
-      (acc, out) => {
-        acc[out.name] = out.taskType || "output";
+      (acc, output) => {
+        acc[output.name] = output.taskType || "output";
         return acc;
       },
       { ...this.component.task.outputs }
     );
 
     // From these new inputs, we iterate and add an output socket to the node
-    newInputs.forEach((output) => {
+    newInputs.forEach((input) => {
       const newInput = new Rete.Input(
-        output.name.toLowerCase(),
-        output.name,
-        sockets[output.socketType]
+        input.name.toLowerCase(),
+        input.name,
+        sockets[input.socketType]
       );
       this.node.addInput(newInput);
     });
