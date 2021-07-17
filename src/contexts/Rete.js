@@ -7,6 +7,7 @@ import { useSpell } from "./Spell";
 import { useTabManager } from "./TabManager";
 
 import { useContext, createContext, useState } from "react";
+import LoadingScreen from "../features/common/LoadingScreen/LoadingScreen";
 
 const Context = createContext({
   run: () => {},
@@ -87,6 +88,8 @@ export const Editor = ({ tab = "default", children }) => {
     })();
   }, [editor, activeTab]);
 
+  if (!activeTab) return <LoadingScreen />;
+
   return (
     <>
       <div
@@ -107,7 +110,7 @@ export const Editor = ({ tab = "default", children }) => {
         <div
           ref={(el) => {
             if (el && !loaded) {
-              buildEditor(el, spell);
+              buildEditor(el, spell, activeTab);
               setLoaded(true);
             }
           }}
