@@ -1,3 +1,4 @@
+import { ControlPointDuplicateOutlined } from "@material-ui/icons";
 import {
   useContext,
   createContext,
@@ -7,6 +8,7 @@ import {
 } from "react";
 
 import { useDB } from "../Database";
+import { usePubSub } from "../PubSub";
 import { useRete } from "../Rete";
 
 const Context = createContext({
@@ -30,6 +32,7 @@ export const useSpell = () => useContext(Context);
 const SpellProvider = ({ children }) => {
   const { db } = useDB();
   const { editor } = useRete();
+  const { events, subscribe } = usePubSub();
 
   const [currentSpell, setCurrentSpellState] = useState({});
   const [currentGameState, setCurrentGameState] = useState({});
@@ -43,6 +46,13 @@ const SpellProvider = ({ children }) => {
     },
     [db]
   );
+
+  useEffect(() => {
+    if (!currentSpell) return;
+    subscribe(events.SAVE_CURRENT_SPELL, (event, data) => {
+      saveCurrentSpell(data);
+    });
+  }, [events, subscribe, currentSpell]);
 
   useEffect(() => {
     if (!db) return;
@@ -120,6 +130,7 @@ const SpellProvider = ({ children }) => {
   };
 
   const updateCurrentGameState = async (update) => {
+    console.log("update", update);
     const newState = {
       ...currentSpell.gameState,
       ...update,
