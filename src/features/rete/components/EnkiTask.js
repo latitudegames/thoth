@@ -1,5 +1,5 @@
 import Rete from "rete";
-import { EnkiSelectControl } from "../dataControls/EnkiControl";
+import { EnkiOutputControl } from "../dataControls/EnkiOutputControl";
 import { anySocket, dataSocket } from "../sockets";
 
 export class EnkiTask extends Rete.Component {
@@ -16,18 +16,18 @@ export class EnkiTask extends Rete.Component {
 
   builder(node) {
 
-    const EnkiSelect = new EnkiSelectControl({
+    const EnkiOutput = new EnkiOutputControl({
         defaultOutputs: node.data.outputs,
         socketType: "dataSocket",
         taskType: "option",
       });
 
-      node.inspector.add(EnkiSelect);
+      node.inspector.add(EnkiOutput);
 
-      const input = new Rete.Input("input", "Input", anySocket);
-    const dataInput = new Rete.Input("data", "Data", dataSocket);
+    //   const input = new Rete.Input("input", "Input", anySocket);
+    // const dataInput = new Rete.Input("data", "Data", dataSocket);
 
-    node.addInput(input).addInput(dataInput);
+    // node.addInput(input).addInput(dataInput);
 
     return node;
   }

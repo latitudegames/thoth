@@ -3,7 +3,7 @@ import * as sockets from "../sockets";
 
 import { DataControl } from "../plugins/inspectorPlugin";
 
-export class EnkiSelectControl extends DataControl {
+export class EnkiOutputControl extends DataControl {
   constructor({
     defaultOutputs = [],
     socketType = "String",
