@@ -43,6 +43,16 @@ const DataControls = ({
   nodeId,
   ...props
 }) => {
+
+  const icons = {
+    "Data Inputs":"properties",
+    "Data Outputs":"properties",
+    "Fewshot":"fewshot",
+    "Stop":"stop-sign",
+    "Temperature":"temperature",
+    "Max Tokens":"moon"
+  }
+
   if (!dataControls)
     return <p className={css["message"]}>No component selected</p>;
   if (Object.keys(dataControls).length < 1)
@@ -68,7 +78,7 @@ const DataControls = ({
           controlMap[control.controls.component] || StubComponent;
 
         return (
-          <SimpleAccordion heading={control.name || key} key={key}>
+          <SimpleAccordion heading={control.name || key} key={key} icon={icons[control.name]}>
             <Component {...controlProps} />
           </SimpleAccordion>
         );
