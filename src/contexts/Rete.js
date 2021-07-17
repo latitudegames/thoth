@@ -84,7 +84,6 @@ export const Editor = ({ tab = "default", children }) => {
     if (!editor || !activeTab) return;
 
     (async () => {
-      console.log("loading spell");
       await spell.loadSpell(activeTab.spell);
     })();
   }, [editor, activeTab]);
