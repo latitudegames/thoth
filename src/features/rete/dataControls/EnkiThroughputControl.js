@@ -40,25 +40,6 @@ export class EnkiThroughputControl extends DataControl {
       existingOutputs.push(output.key);
     });
 
-    // Any outputs existing on the current node that arent incoming have been deleted
-    // and need to be removed.
-    existingOutputs
-      .filter(
-        (existing) => !outputs.some((incoming) => incoming.name === existing)
-      )
-      .forEach((key) => {
-        const output = this.node.outputs.get(key);
-
-        this.node
-          .getConnections()
-          .filter((con) => con.output.key === key)
-          .forEach((con) => {
-            this.editor.removeConnection(con);
-          });
-
-        this.node.removeOutput(output);
-      });
-
     // Any inputs existing on the current node that arent incoming have been deleted
     // and need to be removed.
     existingInputs
@@ -76,6 +57,25 @@ export class EnkiThroughputControl extends DataControl {
           });
 
         this.node.removeInput(input);
+      });
+
+    // Any outputs existing on the current node that arent incoming have been deleted
+    // and need to be removed.
+    existingOutputs
+      .filter(
+        (existing) => !outputs.some((incoming) => incoming.name === existing)
+      )
+      .forEach((key) => {
+        const output = this.node.outputs.get(key);
+
+        this.node
+          .getConnections()
+          .filter((con) => con.output.key === key)
+          .forEach((con) => {
+            this.editor.removeConnection(con);
+          });
+
+        this.node.removeOutput(output);
       });
 
     // any incoming inputs not already on the node are new and will be added.
@@ -97,7 +97,7 @@ export class EnkiThroughputControl extends DataControl {
       { ...this.component.task.outputs }
     );
 
-    // From these new inputs, we iterate and add an output socket to the node
+    // From these new inputs, we iterate and add an input socket to the node
     newInputs.forEach((input) => {
       const newInput = new Rete.Input(
         input.name.toLowerCase(),
