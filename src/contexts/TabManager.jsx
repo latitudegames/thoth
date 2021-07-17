@@ -24,7 +24,6 @@ const TabManager = ({ children }) => {
   const [activeTab, setActiveTab] = useState(null);
 
   useEffect(() => {
-    console.log("Active tab changed");
     if (location !== "/thoth") setLocation("/thoth");
   }, [activeTab]);
 
@@ -55,10 +54,7 @@ const TabManager = ({ children }) => {
       active: true,
     };
 
-    const result = await db.tabs.insert(newTab);
-    const tab = result.toJSON();
-    setActiveTab(tab);
-    return tab;
+    await db.tabs.insert(newTab);
   };
 
   const closeTab = async (tabId) => {
