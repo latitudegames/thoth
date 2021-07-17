@@ -4,7 +4,6 @@ import {
   adjectives,
   colors,
 } from "unique-names-generator";
-import { useLocation } from "wouter";
 
 import css from "../startScreen.module.css";
 import Panel from "../../common/Panel/Panel";
@@ -13,7 +12,7 @@ import TemplatePanel from "./TemplatePanel";
 import enkiImg from "../enki.png";
 import emptyImg from "../empty.png";
 import langImg from "../lang.png";
-import { useSpell } from "../../../contexts/Spell/index";
+import { useSpell } from "../../../contexts/Spell";
 import { useTabManager } from "../../../contexts/TabManager";
 
 const customConfig = {
