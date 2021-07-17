@@ -126,29 +126,6 @@ const EnkiSelect = ({ updateData, control, initialValue, ...props }) => {
     updateData({ [dataKey]: update });
   };
 
-  const addOutput = (output) => {
-    const newOutput = {
-      name: output,
-      socketType: "stringSocket",
-      taskType: controls.data.taskType || "output",
-    };
-
-    const newOutputs = [...outputs, newOutput];
-    setOutputs(newOutputs);
-    update({ inputs, outputs: newOutputs });
-  };
-
-  const addInput = (input) => {
-    const newInput = {
-      name: input,
-      socketType: "stringSocket",
-      taskType: controls.data.taskType || "output",
-    };
-    const newInputs = [...inputs, newInput];
-    setInputs(newInputs);
-    update({ inputs: newInputs, outputs });
-  };
-
   const addThroughput = ({ inputsToAdd, outputsToAdd }) => {
     const throughput = { inputs: [], outputs: [] };
     inputsToAdd.forEach((input) => {
