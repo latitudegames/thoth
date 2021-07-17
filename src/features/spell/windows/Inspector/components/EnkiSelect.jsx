@@ -139,7 +139,7 @@ const EnkiSelect = ({ updateData, control, initialValue, ...props }) => {
 
     const newOutputs = [...outputs, newOutput];
     setOutputs(newOutputs);
-    update({ outputs: newOutputs });
+    update({ inputs, outputs: newOutputs });
   };
 
   const addInput = (input) => {
@@ -151,7 +151,7 @@ const EnkiSelect = ({ updateData, control, initialValue, ...props }) => {
 
     const newInputs = [...inputs, newInput];
     setInputs(newInputs);
-    update({ inputs: newInputs });
+    update({ inputs: newInputs, outputs });
   };
 
   return (
