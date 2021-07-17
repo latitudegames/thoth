@@ -5,9 +5,9 @@ import Select from "@material-ui/core/Select";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 
-const EnkiDetails = ({ addThroughput, update }) => {
+const EnkiDetails = ({ initialTask, addThroughput, update }) => {
   const [value, setValue] = useState("");
-  const [activeEnki, selectEnki] = useState(undefined);
+  const [activeEnki, selectEnki] = useState(initialTask);
   const [taskList, updateTaskList] = useState(undefined);
   const activeTask = activeEnki?.taskName;
   const onChange = (e) => {
@@ -15,7 +15,14 @@ const EnkiDetails = ({ addThroughput, update }) => {
   };
 
   const processThroughput = (taskName, enkiData) => {
-    const throughput = { inputsToAdd: [], outputsToAdd: [] };
+    const throughput = {
+      inputsToAdd: [],
+      outputsToAdd: [],
+      activeTask: {
+        taskName,
+        ...enkiData,
+      },
+    };
     enkiData.data[0].inputs.forEach((_input, index) => {
       throughput.inputsToAdd.push(`${taskName} Input ${index + 1}`);
     });
@@ -126,8 +133,8 @@ const EnkiSelect = ({ updateData, control, initialValue, ...props }) => {
     updateData({ [dataKey]: update });
   };
 
-  const addThroughput = ({ inputsToAdd, outputsToAdd }) => {
-    const throughput = { inputs: [], outputs: [] };
+  const addThroughput = ({ inputsToAdd, outputsToAdd, activeTask }) => {
+    const throughput = { inputs: [], outputs: [], activeTask };
     inputsToAdd.forEach((input) => {
       const newInput = {
         name: input,
@@ -155,6 +162,7 @@ const EnkiSelect = ({ updateData, control, initialValue, ...props }) => {
         addThroughput={addThroughput}
         update={update}
         throughput={{ inputs, outputs }}
+        initialTask={initialValue.activeTask}
       />
     </div>
   );
