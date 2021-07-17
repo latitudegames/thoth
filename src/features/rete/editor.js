@@ -2,7 +2,7 @@ import Rete from "rete";
 import ReactRenderPlugin from "rete-react-render-plugin";
 import ConnectionPlugin from "rete-connection-plugin";
 import ContextMenuPlugin from "rete-context-menu-plugin";
-import AreaPlugin from "rete-area-plugin";
+import AreaPlugin from "./plugins/areaPlugin";
 import TaskPlugin from "./plugins/taskPlugin";
 import InspectorPlugin from "./plugins/inspectorPlugin";
 import SocketGenerator from "./plugins/socketGenerator";
@@ -82,6 +82,9 @@ const editor = async function ({ container, pubSub, thoth }) {
   // This should only be needed on client, not server
   editor.use(SocketGenerator);
   editor.use(InspectorPlugin);
+  editor.use(AreaPlugin, {
+    scaleExtent: { min: 0.25, max: 2 },
+  });
 
   // The engine is used to process/run the rete graph
   const engine = new Rete.Engine("demo@0.1.0");
@@ -106,7 +109,10 @@ const editor = async function ({ container, pubSub, thoth }) {
       // NOTE need to consider authentication against games API from a web client
       await engine.abort();
       await engine.process(editor.toJSON());
-      editor.thoth.saveCurrentSpell({ graph: editor.toJSON() });
+
+      editor.pubSub.publish(editor.pubSub.events.SAVE_CURRENT_SPELL, {
+        graph: editor.toJSON(),
+      });
     }
   );
 
