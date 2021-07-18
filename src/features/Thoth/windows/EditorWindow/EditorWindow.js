@@ -4,7 +4,7 @@ import { createNode } from "rete-context-menu-plugin/src/utils";
 
 import css from "./editorwindow.module.css";
 
-const EditorWindow = ({ ...props }) => {
+const EditorWindow = ({ tab, ...props }) => {
   const { getNodes, getNodeMap, editor } = useRete();
 
   const useToggle = (initialValue = false) => {
@@ -61,7 +61,7 @@ const EditorWindow = ({ ...props }) => {
       <div className={css["editor-toolbar"]}>
         <EditorToolbar />
       </div>
-      <Editor />
+      <Editor tab={tab} />
     </div>
   );
 };
