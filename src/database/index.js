@@ -42,33 +42,29 @@ export const initDB = async () => {
     doc.updatedAt = Date.now();
   }, false);
 
-  database.tabs.preInsert(async (doc) => {
+  database.tabs.preInsert((doc) => {
     if (doc.active) {
-      const active = await database.tabs
-        .findOne({
-          selector: { active: true },
-        })
-        .exec();
+      const query = database.tabs.find().where("active").eq(true);
 
-      if (!active) return;
-
-      await active.atomicPatch({ active: false });
+      return query.update({
+        $set: {
+          active: false,
+        },
+      });
     }
-  }, false);
+  }, true);
 
-  database.tabs.preSave(async (doc) => {
+  database.tabs.preSave((doc) => {
     if (doc.active) {
-      const active = await database.tabs
-        .findOne({
-          selector: { active: true },
-        })
-        .exec();
+      const query = database.tabs.find().where("active").eq(true);
 
-      if (!active) return;
-
-      await active.atomicPatch({ active: false });
+      return query.update({
+        $set: {
+          active: false,
+        },
+      });
     }
-  }, false);
+  }, true);
 
   return database;
 };
