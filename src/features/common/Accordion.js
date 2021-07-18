@@ -5,6 +5,7 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Icon from '../common/Icon/Icon'
 
 import css from "./accordion.module.css";
 import "./accordion-overrides.css";
@@ -54,7 +55,10 @@ export const SimpleAccordion = (props) => {
           }}
           id="panel1a-header"
         >
-          <Typography className={classes.heading}>{props.heading}</Typography>
+          <Icon name={props.icon} style={{ marginRight: 'var(--c1)' }}/>
+          <Typography className={classes.heading}>
+            {props.heading}
+            </Typography>
         </AccordionSummary>
         <AccordionDetails classes={{ root: classes.detailsRoot }}>
           {/* <Typography>
