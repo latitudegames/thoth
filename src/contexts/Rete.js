@@ -75,19 +75,9 @@ const ReteProvider = ({ children }) => {
 
 export const Editor = ({ tab = "default", children }) => {
   const [loaded, setLoaded] = useState(null);
-  const { buildEditor, editor } = useRete();
+  const { buildEditor } = useRete();
   const { activeTab } = useTabManager();
   const spell = useSpell();
-
-  // Load uo current spell whenever activeTab changes
-  useEffect(() => {
-    if (!editor || !activeTab) return;
-
-    (async () => {
-      await editor.abort();
-      await spell.loadSpell(activeTab.spell);
-    })();
-  }, [editor, activeTab]);
 
   if (!activeTab) return <LoadingScreen />;
 
