@@ -1,10 +1,4 @@
-import {
-  useContext,
-  createContext,
-  useState,
-  useEffect,
-  useCallback,
-} from "react";
+import { useContext, createContext, useState, useEffect, useRef } from "react";
 
 import { useDB } from "./Database";
 import { usePubSub } from "./PubSub";
@@ -12,13 +6,12 @@ import { useRete } from "./Rete";
 
 const Context = createContext({
   currentSpell: {},
-  setCurrentSpell: {},
+  updateCurrentSpell: {},
   getSpell: () => {},
   loadSpell: () => {},
   saveSpell: () => {},
   newSpell: () => {},
   saveCurrentSpell: () => {},
-  settings: {},
   stateHistory: [],
   currentGameState: {},
   getCurrentGameState: () => {},
@@ -33,19 +26,32 @@ const SpellProvider = ({ children }) => {
   const { editor } = useRete();
   const { events, subscribe } = usePubSub();
 
-  const [currentSpell, setCurrentSpellState] = useState({});
-  const [currentGameState, setCurrentGameState] = useState({});
-  const [settings, setSettings] = useState({});
+  const spellRef = useRef;
+
+  const [currentSpell, setCurrentSpell] = useState({});
   const [stateHistory, setStateHistory] = useState([]);
 
-  const setCurrentSpell = useCallback(
-    async (spell) => {
-      setCurrentSpellState(spell);
-      setCurrentGameState(spell.gameState);
-    },
-    [db]
-  );
+  const updateCurrentSpell = (activeTab) => {
+    spellRef.current = activeTab;
+    setCurrentSpell(activeTab);
+  };
 
+  // subscribe to changes in the active tab
+  useEffect(() => {
+    if (!editor) return;
+
+    db.tabs
+      .findOne({ selector: { active: true } })
+      .$.subscribe(async (result) => {
+        if (!result) return;
+        const activeTab = result.toJSON();
+
+        loadSpell(activeTab.spell);
+      });
+  }, [db, editor]);
+
+  // Listener to save current spell
+  // MIght be able to replace this with the use of the spellRef
   useEffect(() => {
     if (!currentSpell) return;
     subscribe(events.SAVE_CURRENT_SPELL, (event, data) => {
@@ -53,39 +59,15 @@ const SpellProvider = ({ children }) => {
     });
   }, [events, subscribe, currentSpell]);
 
-  useEffect(() => {
-    if (!db) return;
-
-    // load initial settings
-    (async () => {
-      let settings = await db.settings
-        .findOne({
-          selector: { name: "default" },
-        })
-        .exec();
-
-      if (!settings) {
-        settings = await db.settings.insert({
-          name: "default",
-        });
-      }
-
-      setSettings(settings);
-    })();
-  }, [db, setCurrentSpell]);
-
   const loadSpell = async (spellId) => {
-    const result = await getSpell(spellId);
-    if (!result) return;
+    const spellDoc = await getSpell(spellId);
 
-    const spell = result.toJSON();
+    if (!spellDoc) return;
 
-    setCurrentSpell(spell);
-    setCurrentGameState(spell.gameState);
+    const spell = spellDoc.toJSON();
+    updateCurrentSpell(spell);
 
-    if (editor?.loadGraph && spell?.graph) {
-      editor.loadGraph(spell.graph);
-    }
+    editor.loadGraph(spell.graph);
   };
 
   const getSpell = async (spellId) => {
@@ -119,18 +101,18 @@ const SpellProvider = ({ children }) => {
   };
 
   const saveCurrentSpell = async (update) => {
-    return saveSpell(currentSpell.name, update);
+    return saveSpell(spellRef.current.name, update);
   };
 
   const getCurrentGameState = async () => {
-    const spell = await getSpell(currentSpell.name);
+    const spellDoc = await getSpell(spellRef.current.name);
+    const spell = spellDoc.toJSON();
     return spell.gameState;
   };
 
   const updateCurrentGameState = async (update) => {
-    console.log("update", update);
     const newState = {
-      ...currentSpell.gameState,
+      ...spellRef.current.gameState,
       ...update,
     };
 
@@ -138,23 +120,20 @@ const SpellProvider = ({ children }) => {
   };
 
   const rewriteCurrentGameState = async (state) => {
-    const updatedSpell = await getSpell(currentSpell.name);
-    setStateHistory([...stateHistory, currentSpell.gameState]);
+    const updatedSpell = await getSpell(spellRef.current.name);
+    setStateHistory([...stateHistory, updatedSpell.gameState]);
 
     await updatedSpell.atomicPatch({
       gameState: state,
     });
 
     const updated = updatedSpell.toJSON();
-    setCurrentSpellState(updated);
-    setCurrentGameState(updated.gameState);
-    return updated;
+    updateCurrentSpell(updated);
   };
 
   // Check for existing currentSpell in the db
   const publicInterface = {
     currentSpell,
-    currentGameState,
     getCurrentGameState,
     getSpell,
     loadSpell,
@@ -163,7 +142,6 @@ const SpellProvider = ({ children }) => {
     saveCurrentSpell,
     saveSpell,
     setCurrentSpell,
-    settings,
     stateHistory,
     updateCurrentGameState,
   };
