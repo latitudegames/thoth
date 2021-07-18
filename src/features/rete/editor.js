@@ -31,11 +31,7 @@ import { Generator } from "./components/Generator";
   Primary initialization function.  Takes a container ref to attach the rete editor to.
 */
 
-const editorMap = {};
-
 const editor = async function ({ container, pubSub, thoth, tab }) {
-  // if (editorMap[tab]) return editorMap[tab];
-
   // Here we load up all components of the builder into our editor for usage.
   // We might be able to programatically generate components from enki
   const components = [
@@ -66,6 +62,7 @@ const editor = async function ({ container, pubSub, thoth, tab }) {
   // Set up the reactcontext pubsub on the editor so rete components can talk to react
   editor.pubSub = pubSub;
   editor.thoth = thoth;
+  editor.tab = tab;
 
   // PLUGINS
   // https://github.com/retejs/comment-plugin
@@ -125,8 +122,6 @@ const editor = async function ({ container, pubSub, thoth, tab }) {
     editor.view.resize();
     AreaPlugin.zoomAt(editor);
   };
-
-  editorMap[tab] = editor;
 
   return editor;
 };
