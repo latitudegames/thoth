@@ -1,8 +1,7 @@
-import { useContext, createContext, useState, useEffect, useRef } from "react";
+import { useContext, createContext, useState, useRef } from "react";
 import { useSnackbar } from "notistack";
 
 import { useDB } from "./Database";
-import { usePubSub } from "./PubSub";
 import { useRete } from "./Rete";
 
 const Context = createContext({
@@ -25,7 +24,6 @@ export const useSpell = () => useContext(Context);
 const SpellProvider = ({ children }) => {
   const { db } = useDB();
   const { editor } = useRete();
-  const { events, subscribe } = usePubSub();
   const { enqueueSnackbar } = useSnackbar();
 
   const spellRef = useRef;
@@ -37,20 +35,6 @@ const SpellProvider = ({ children }) => {
     spellRef.current = activeTab;
     setCurrentSpell(activeTab);
   };
-
-  // subscribe to changes in the active tab
-  useEffect(() => {
-    if (!editor) return;
-
-    db.tabs
-      .findOne({ selector: { active: true } })
-      .$.subscribe(async (result) => {
-        if (!result) return;
-        const activeTab = result.toJSON();
-
-        loadSpell(activeTab.spell);
-      });
-  }, [db, editor]);
 
   const loadSpell = async (spellId) => {
     const spellDoc = await getSpell(spellId);
