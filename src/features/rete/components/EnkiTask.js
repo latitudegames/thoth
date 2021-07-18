@@ -1,7 +1,6 @@
 import Rete from "rete";
 import { EnkiThroughputControl } from "../dataControls/EnkiThroughputControl";
-import { anySocket, dataSocket } from "../sockets";
-
+import { postEnkiCompletion } from "../../../services/game-api/enki";
 export class EnkiTask extends Rete.Component {
   constructor() {
     // Name of the component
@@ -15,27 +14,28 @@ export class EnkiTask extends Rete.Component {
   node = {};
 
   builder(node) {
-
     const EnkiOutput = new EnkiThroughputControl({
-        defaultOutputs: node.data.outputs,
-        socketType: "dataSocket",
-        taskType: "option",
-        nodeId: node.id
-      });
+      defaultOutputs: node.data.outputs,
+      socketType: "dataSocket",
+      taskType: "option",
+      nodeId: node.id,
+    });
 
-      node.inspector.add(EnkiOutput);
-
-    //   const input = new Rete.Input("input", "Input", anySocket);
-    // const dataInput = new Rete.Input("data", "Data", dataSocket);
-
-    // node.addInput(input).addInput(dataInput);
+    node.inspector.add(EnkiOutput);
 
     return node;
   }
 
   async worker(node, inputs, outputs) {
-    return {
-      taskOutputs: "",
-    };
+    const completionResponse = await postEnkiCompletion(
+      node.data.name,
+      Object.values(inputs).map((inputArray) => inputArray[0])
+    );
+    let compiledOutputs;
+
+    Object.keys(node.outputs).forEach((outputName, outputNumber) => {
+      outputs[outputName] = completionResponse[outputNumber];
+    });
+    return compiledOutputs;
   }
 }
