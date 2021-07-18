@@ -44,7 +44,7 @@ const TabManager = ({ children }) => {
       () => {
         // Use a tab ref here because otherwise the state is stale inside the callback function.
         // Handy pattern to remember when wanting to set things like callbacks, etc.
-        saveSpell(tabRef.current.spell, { graph: editor.toJSON() });
+        saveSpell(tabRef.current.spell, { graph: editor.toJSON() }, false);
       }
     );
   }, [editor]);

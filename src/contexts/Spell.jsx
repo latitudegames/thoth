@@ -1,4 +1,5 @@
 import { useContext, createContext, useState, useEffect, useRef } from "react";
+import { useSnackbar } from "notistack";
 
 import { useDB } from "./Database";
 import { usePubSub } from "./PubSub";
@@ -25,6 +26,7 @@ const SpellProvider = ({ children }) => {
   const { db } = useDB();
   const { editor } = useRete();
   const { events, subscribe } = usePubSub();
+  const { enqueueSnackbar } = useSnackbar();
 
   const spellRef = useRef;
 
@@ -80,15 +82,20 @@ const SpellProvider = ({ children }) => {
       .exec();
   };
 
-  const saveSpell = async (spellId, update) => {
+  const saveSpell = async (spellId, update, snack = true) => {
     const spell = await getSpell(spellId);
 
-    return await spell.atomicUpdate((oldData) => {
-      return {
-        ...oldData,
-        ...update,
-      };
-    });
+    try {
+      await spell.atomicUpdate((oldData) => {
+        return {
+          ...oldData,
+          ...update,
+        };
+      });
+      if (snack) enqueueSnackbar("Spell saved");
+    } catch (err) {
+      if (snack) enqueueSnackbar("Error saving spell");
+    }
   };
 
   const newSpell = async ({ graph, name }) => {
