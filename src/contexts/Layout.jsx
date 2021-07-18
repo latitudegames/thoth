@@ -176,7 +176,7 @@ const LayoutProvider = ({ children }) => {
   );
 };
 
-export const Layout = ({ json, factory }) => {
+export const Layout = ({ json, factory, tab }) => {
   const { currentModel, createModel, setCurrentRef } = useLayout();
   const layoutRef = useRef(null);
 
@@ -192,12 +192,14 @@ export const Layout = ({ json, factory }) => {
   if (!currentModel) return <LoadingScreen />;
 
   return (
-    <LayoutComponent
-      ref={layoutRef}
-      model={currentModel}
-      factory={factory}
-      font={{ size: "12px", fontFamily: "IBM Plex Sans" }}
-    />
+    <div style={!tab.active ? { display: "none" } : {}} data-layout>
+      <LayoutComponent
+        ref={layoutRef}
+        model={currentModel}
+        factory={factory}
+        font={{ size: "12px", fontFamily: "IBM Plex Sans" }}
+      />
+    </div>
   );
 };
 
