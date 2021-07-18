@@ -142,7 +142,11 @@ const EnkiSelect = ({ updateData, control, initialValue, ...props }) => {
           taskType: "option",
         },
       ],
-      outputs: [],
+      outputs: [ {
+        name: "data",
+        socketType: "dataSocket",
+        taskType: "option",
+      },],
       activeTask,
     };
     inputsToAdd.forEach((input) => {
