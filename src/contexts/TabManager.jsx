@@ -18,8 +18,6 @@ export const useTabManager = () => useContext(Context);
 const TabManager = ({ children }) => {
   const { db } = useDB();
   const { getWorkspace } = useLayout();
-  const { editor } = useRete();
-  const { saveSpell } = useSpell();
   const tabRef = useRef();
 
   // eslint-disable-next-line no-unused-vars
@@ -33,34 +31,32 @@ const TabManager = ({ children }) => {
     setActiveTab(activeTab);
   };
 
+  // handle redirection when active tab changes
   useEffect(() => {
     if (location !== "/thoth") setLocation("/thoth");
   }, [activeTab]);
 
-  useEffect(() => {
-    if (!editor) return;
-    editor.on(
-      "process nodecreated noderemoved connectioncreated connectionremoved nodetranslated",
-      () => {
-        // Use a tab ref here because otherwise the state is stale inside the callback function.
-        // Handy pattern to remember when wanting to set things like callbacks, etc.
-        saveSpell(tabRef.current.spell, { graph: editor.toJSON() }, false);
-      }
-    );
-  }, [editor]);
+  // handle setting up autosave
 
+  // Suscribe to changes in the database for active tab, and all tabs
   useEffect(() => {
     if (!db) return;
 
-    db.tabs.find().$.subscribe((results) => {
-      setTabs(results.map((tab) => tab.toJSON()));
-    });
+    (async () => {
+      const tabs = await db.tabs.find().exec();
+      const activeTab = await db.tabs
+        .findOne({ selector: { active: true } })
+        .exec();
 
-    db.tabs.findOne({ selector: { active: true } }).$.subscribe((result) => {
-      if (!result) return;
-      updateActiveTab(result.toJSON());
-    });
+      if (tabs?.length > 0) setTabs(tabs.map((tab) => tab.toJSON()));
+      if (activeTab) setActiveTab(activeTab.toJSON());
+    })();
   }, [db]);
+
+  const updateTabs = async () => {
+    const tabs = await db.tabs.find().exec();
+    if (tabs?.length > 0) setTabs(tabs.map((tab) => tab.toJSON()));
+  };
 
   const openTab = async ({
     workspace = "default",
@@ -77,6 +73,7 @@ const TabManager = ({ children }) => {
     };
 
     await db.tabs.insert(newTab);
+    await updateTabs();
   };
 
   const closeTab = async (tabId) => {
@@ -87,6 +84,9 @@ const TabManager = ({ children }) => {
   const switchTab = async (tabId) => {
     const tab = await db.tabs.findOne({ selector: { id: tabId } }).exec();
     await tab.atomicPatch({ active: true });
+
+    updateActiveTab(tab.toJSON());
+    await updateTabs();
   };
 
   const publicInterface = {
