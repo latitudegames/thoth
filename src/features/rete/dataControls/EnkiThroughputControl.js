@@ -115,7 +115,6 @@ export class EnkiThroughputControl extends DataControl {
       );
       this.node.addOutput(newOutput);
     });
-    console.log("CHECKOUT THE NODEID", this.node.id);
     this.node.update();
   }
 }
