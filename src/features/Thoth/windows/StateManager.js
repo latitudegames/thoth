@@ -8,7 +8,7 @@ import "../thoth.module.css";
 import { useSpell } from "../../../contexts/Spell";
 
 const StateManager = (props) => {
-  const { currentGameState, rewriteCurrentGameState } = useSpell();
+  const { currentSpell, rewriteCurrentGameState } = useSpell();
   const [code, setCode] = useState("{}");
   const [height, setHeight] = useState();
 
@@ -47,8 +47,8 @@ const StateManager = (props) => {
   }, [props.node]);
 
   useEffect(() => {
-    if (currentGameState) setCode(jsonFormat(currentGameState));
-  }, [currentGameState]);
+    if (currentSpell?.gameState) setCode(jsonFormat(currentSpell.gameState));
+  }, [currentSpell]);
 
   const onClear = () => {
     const reset = `{}`;
