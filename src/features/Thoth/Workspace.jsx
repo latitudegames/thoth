@@ -6,6 +6,7 @@ import Inspector from "./windows/Inspector/Inspector";
 import EditorWindow from "./windows/EditorWindow/EditorWindow";
 
 import TextEditor from "./windows/TextEditor";
+import WorkspaceProvider from "../../contexts/WorkspaceProvider";
 
 const Workspace = ({ tab }) => {
   const factory = (tab) => {
@@ -30,7 +31,11 @@ const Workspace = ({ tab }) => {
     };
   };
 
-  return <Layout json={tab.layoutJson} factory={factory(tab)} tab={tab} />;
+  return (
+    <WorkspaceProvider tab={tab}>
+      <Layout json={tab.layoutJson} factory={factory(tab)} tab={tab} />
+    </WorkspaceProvider>
+  );
 };
 
 export default Workspace;
