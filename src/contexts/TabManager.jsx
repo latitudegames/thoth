@@ -3,8 +3,6 @@ import { useLocation } from "wouter";
 import { v4 as uuidv4 } from "uuid";
 import { useDB } from "./Database";
 import { useLayout } from "./Layout";
-import { useRete } from "./Rete";
-import { useSpell } from "./Spell";
 
 const Context = createContext({
   tabs: [],
@@ -23,7 +21,7 @@ const TabManager = ({ children }) => {
   // eslint-disable-next-line no-unused-vars
   const [location, setLocation] = useLocation();
 
-  const [tabs, setTabs] = useState(null);
+  const [tabs, setTabs] = useState([]);
   const [activeTab, setActiveTab] = useState(null);
 
   const updateActiveTab = (activeTab) => {
@@ -33,6 +31,7 @@ const TabManager = ({ children }) => {
 
   // handle redirection when active tab changes
   useEffect(() => {
+    console.log("CheckinglocATION", location);
     if (location !== "/thoth") setLocation("/thoth");
   }, [activeTab]);
 
@@ -43,20 +42,21 @@ const TabManager = ({ children }) => {
     if (!db) return;
 
     (async () => {
-      const tabs = await db.tabs.find().exec();
-      const activeTab = await db.tabs
+      await db.tabs
         .findOne({ selector: { active: true } })
-        .exec();
+        .$.subscribe((result) => {
+          if (!result) return;
 
-      if (tabs?.length > 0) setTabs(tabs.map((tab) => tab.toJSON()));
-      if (activeTab) setActiveTab(activeTab.toJSON());
+          setActiveTab(result.toJSON());
+        });
+
+      await db.tabs.find().$.subscribe((result) => {
+        if (!result || result.length === 0) return;
+
+        setTabs(result.map((tab) => tab.toJSON()));
+      });
     })();
   }, [db]);
-
-  const updateTabs = async () => {
-    const tabs = await db.tabs.find().exec();
-    if (tabs?.length > 0) setTabs(tabs.map((tab) => tab.toJSON()));
-  };
 
   const openTab = async ({
     workspace = "default",
@@ -72,12 +72,14 @@ const TabManager = ({ children }) => {
       active: true,
     };
 
+    console.log("new tab", newTab);
+
     await db.tabs.insert(newTab);
-    await updateTabs();
   };
 
   const closeTab = async (tabId) => {
     const tab = await db.tabs.findOne({ selector: { id: tabId } }).exec();
+    if (!tab) return;
     await tab.remove();
   };
 
@@ -86,7 +88,6 @@ const TabManager = ({ children }) => {
     await tab.atomicPatch({ active: true });
 
     updateActiveTab(tab.toJSON());
-    await updateTabs();
   };
 
   const publicInterface = {
