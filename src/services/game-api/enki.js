@@ -48,7 +48,7 @@ export const getEnkis = async () => {
   }
 };
 
-export const getEnkiCompletion = async (taskName, inputs) => {
+export const postEnkiCompletion = async (taskName, inputs) => {
   // const url = 'https://latitude-game-api.herokuapp.com'
   const url = "http://localhost:3000";
   try {
