@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Window from "../../../common/Window/Window";
 import { useLayout } from "../../../../contexts/Layout";
 import DataControls from "./components/DataControls";
-import LoadingScreen from "../../../common/LoadingScreen/LoadingScreen";
+import css from "./components/datacontrols.module.css";
 
 const Inspector = (props) => {
   const { inspectorData, saveInspector } = useLayout();
@@ -46,7 +46,8 @@ const Inspector = (props) => {
     </>
   );
 
-  if (!inspectorData) return <LoadingScreen />;
+  if (!inspectorData)
+    return <p className={css["message"]}>No component selected</p>;
 
   return (
     <Window toolbar={toolbar} darker outline borderless>
