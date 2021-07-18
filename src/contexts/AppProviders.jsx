@@ -2,10 +2,6 @@ import { PouchDB } from "react-pouchdb";
 import { SnackbarProvider } from "notistack";
 
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
-import ReteProvider from "./Rete";
-import PubSubProvider from "./PubSub";
-import SpellProvider from "./Spell";
-import LayoutProvider from "./Layout";
 import DatabaseProvider from "./Database";
 import TabManagerProvider from "./TabManager";
 
@@ -19,11 +15,7 @@ const providers = [
   [SnackbarProvider, { maxSnack: 3 }],
   DatabaseProvider,
   [ThemeProvider, { theme: darkTheme }],
-  PubSubProvider,
   [PouchDB, { name: "thoth" }],
-  ReteProvider,
-  SpellProvider,
-  LayoutProvider,
   TabManagerProvider,
 ];
 
