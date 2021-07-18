@@ -134,7 +134,17 @@ const EnkiSelect = ({ updateData, control, initialValue, ...props }) => {
   };
 
   const addThroughput = ({ inputsToAdd, outputsToAdd, activeTask }) => {
-    const throughput = { inputs: [], outputs: [], activeTask };
+    const throughput = {
+      inputs: [
+        {
+          name: "data",
+          socketType: "dataSocket",
+          taskType: "option",
+        },
+      ],
+      outputs: [],
+      activeTask,
+    };
     inputsToAdd.forEach((input) => {
       const newInput = {
         name: input,
@@ -151,6 +161,7 @@ const EnkiSelect = ({ updateData, control, initialValue, ...props }) => {
       };
       throughput.outputs.push(newOutput);
     });
+
     setInputs(throughput.inputs);
     setOutputs(throughput.outputs);
     update(throughput);
