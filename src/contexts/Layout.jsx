@@ -192,14 +192,12 @@ export const Layout = ({ json, factory, tab }) => {
   if (!currentModel) return <LoadingScreen />;
 
   return (
-    <div style={!tab.active ? { display: "none" } : {}} data-layout>
-      <LayoutComponent
-        ref={layoutRef}
-        model={currentModel}
-        factory={factory}
-        font={{ size: "12px", fontFamily: "IBM Plex Sans" }}
-      />
-    </div>
+    <LayoutComponent
+      ref={layoutRef}
+      model={currentModel}
+      factory={factory}
+      font={{ size: "12px", fontFamily: "IBM Plex Sans" }}
+    />
   );
 };
 
