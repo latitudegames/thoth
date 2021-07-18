@@ -34,7 +34,7 @@ export class EnkiTask extends Rete.Component {
     let compiledOutputs;
 
     Object.keys(node.outputs).forEach((outputName, outputNumber) => {
-      outputs[outputName] = completionResponse[outputNumber];
+      compiledOutputs[outputName] = completionResponse[outputNumber];
     });
     return compiledOutputs;
   }
