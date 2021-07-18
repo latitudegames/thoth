@@ -40,7 +40,7 @@ const TabManager = ({ children }) => {
   useEffect(() => {
     if (!editor) return;
     editor.on(
-      "process nodecreated noderemoved connectioncreated connectionremoved",
+      "process nodecreated noderemoved connectioncreated connectionremoved nodetranslated",
       () => {
         // Use a tab ref here because otherwise the state is stale inside the callback function.
         // Handy pattern to remember when wanting to set things like callbacks, etc.
