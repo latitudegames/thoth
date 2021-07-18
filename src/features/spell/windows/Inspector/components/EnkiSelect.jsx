@@ -24,10 +24,10 @@ const EnkiDetails = ({ initialTask, addThroughput, update }) => {
       },
     };
     enkiData.data[0].inputs.forEach((_input, index) => {
-      throughput.inputsToAdd.push(`${taskName} Input ${index + 1}`);
+      throughput.inputsToAdd.push(`Input ${index + 1}`);
     });
     enkiData.data[0].outputs.forEach((_output, index) => {
-      throughput.outputsToAdd.push(`${taskName} Output ${index + 1}`);
+      throughput.outputsToAdd.push(`Output ${index + 1}`);
     });
     selectEnki({
       taskName,
