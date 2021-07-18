@@ -1,4 +1,3 @@
-import { Layout } from "../../contexts/Layout";
 import TabLayout from "../common/TabLayout/TabLayout";
 import { useTabManager } from "../../contexts/TabManager";
 import Workspace from "./Workspace";
@@ -9,7 +8,7 @@ const Thoth = ({ empty, workspace = "default" }) => {
   if (!activeTab) return <LoadingScreen />;
 
   return (
-    <TabLayout data-layout>
+    <TabLayout>
       {!empty &&
         tabs.map((tab, i) => <Workspace tab={tab} key={`${i}-${tab.name}`} />)}
     </TabLayout>
