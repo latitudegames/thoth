@@ -52,15 +52,6 @@ const SpellProvider = ({ children }) => {
       });
   }, [db, editor]);
 
-  // Listener to save current spell
-  // MIght be able to replace this with the use of the spellRef
-  useEffect(() => {
-    if (!currentSpell) return;
-    subscribe(events.SAVE_CURRENT_SPELL, (event, data) => {
-      saveCurrentSpell(data);
-    });
-  }, [events, subscribe, currentSpell]);
-
   const loadSpell = async (spellId) => {
     const spellDoc = await getSpell(spellId);
 
