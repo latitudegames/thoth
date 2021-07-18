@@ -1,10 +1,8 @@
-import { useEffect } from "react";
 import init from "../features/rete/editor";
 import gridimg from "../grid.png";
 
 import { usePubSub } from "./PubSub";
 import { useSpell } from "./Spell";
-import { useTabManager } from "./TabManager";
 
 import { useContext, createContext, useState } from "react";
 import LoadingScreen from "../features/common/LoadingScreen/LoadingScreen";
@@ -32,10 +30,14 @@ const ReteProvider = ({ children }) => {
       container,
       pubSub,
       thoth: spell,
+      tab,
     });
 
-    // this should store the current editor
+    // set editor to the map
     setEditor(newEditor);
+
+    const spellDoc = await spell.getSpell(tab.spell);
+    newEditor.loadGraph(spellDoc.toJSON().graph);
   };
 
   const run = () => {
@@ -66,6 +68,7 @@ const ReteProvider = ({ children }) => {
     getNodeMap,
     getNodes,
     loadGraph,
+    setEditor,
   };
 
   return (
@@ -73,13 +76,15 @@ const ReteProvider = ({ children }) => {
   );
 };
 
-export const Editor = ({ tab = "default", children }) => {
+export const Editor = ({ tab, children }) => {
   const [loaded, setLoaded] = useState(null);
   const { buildEditor } = useRete();
-  const { activeTab } = useTabManager();
   const spell = useSpell();
 
-  if (!activeTab) return <LoadingScreen />;
+  if (!tab) return <LoadingScreen />;
+
+  if (loaded && tab.active) {
+  }
 
   return (
     <>
@@ -97,11 +102,10 @@ export const Editor = ({ tab = "default", children }) => {
         }}
         onDrop={(e) => {}}
       >
-        {!spell.currentSpell.graph && <p>Loading...</p>}
         <div
           ref={(el) => {
             if (el && !loaded) {
-              buildEditor(el, spell, activeTab);
+              buildEditor(el, spell, tab);
               setLoaded(true);
             }
           }}
