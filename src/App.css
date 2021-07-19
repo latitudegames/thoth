@@ -88,7 +88,7 @@ button {
   font-family: "IBM Plex Mono", "sans-serif" !important;
   font-size: 11px;
   text-transform: uppercase;
-  box-shadow: 0px 2px 0px rgba(0,0,0,0.2);
+  box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.2);
   height: var(--c4);
 }
 button.option {
@@ -129,7 +129,7 @@ button.disabled {
 .context-menu {
   padding: 0 !important;
   width: var(--c25) !important;
-  box-shadow: 0px 5px 10px rgba(0,0,0,0.2);
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
 }
 .context-menu .item {
   box-sizing: border-box;
@@ -137,8 +137,8 @@ button.disabled {
   border-top: 0 !important;
   border-bottom: 0 !important;
   position: relative !important;
-	display: inline-block !important;
-	background-color: var(--dark-2) !important;
+  display: inline-block !important;
+  background-color: var(--dark-2) !important;
   padding: var(--extraSmall) !important;
   padding-left: var(--small) !important;
   text-transform: capitalize !important;
@@ -158,15 +158,17 @@ button.disabled {
   border: 1px solid var(--dark-3) !important;
   border-bottom: 0 !important;
   position: relative !important;
-	display: inline-block !important;
-	background-color: var(--dark-2) !important;
+  display: inline-block !important;
+  background-color: var(--dark-2) !important;
   padding: var(--extraSmall) !important;
   text-transform: capitalize !important;
 }
 
 .context-menu .search input {
   box-sizing: border-box !important;
-  padding: var(--extraSmall) !important; /* not using a var here to optically correct for base + cap of typeface */
+  padding: var(
+    --extraSmall
+  ) !important; /* not using a var here to optically correct for base + cap of typeface */
   background-color: var(--dark-2) !important;
   padding-left: var(--small) !important;
   padding-right: var(--small) !important;
@@ -174,8 +176,8 @@ button.disabled {
   border-radius: 4px !important;
   cursor: default !important;
   border: 1px solid var(--dark-4) !important;
-  box-shadow: inset 0px 5px 5px rgba(0,0,0,0.1) !important;
-  font-family: 'IBM Plex Mono', monospace !important;
+  box-shadow: inset 0px 5px 5px rgba(0, 0, 0, 0.1) !important;
+  font-family: "IBM Plex Mono", monospace !important;
   font-size: 11px !important;
   height: var(--c4) !important;
 }
@@ -225,6 +227,7 @@ button.disabled {
 }
 .flexlayout__tab_button {
   border-radius: 0;
+  visibility: inherit !important;
 }
 .flexlayout__tab_button--unselected {
   background-color: var(--dark-2);
@@ -239,9 +242,11 @@ button.disabled {
 .view-line span {
   font-family: "IBM Plex Mono", sans-serif;
 }
-input[type='text'] {
+input[type="text"] {
   box-sizing: border-box;
-  padding: var(--extraSmall); /* not using a var here to optically correct for base + cap of typeface */
+  padding: var(
+    --extraSmall
+  ); /* not using a var here to optically correct for base + cap of typeface */
   background-color: var(--dark-2);
   padding-left: var(--small);
   padding-right: var(--small);
@@ -249,8 +254,8 @@ input[type='text'] {
   border-radius: 4px;
   cursor: default;
   border: 1px solid var(--dark-4);
-  box-shadow: inset 0px 5px 5px rgba(0,0,0,0.1);
-  font-family: 'IBM Plex Mono', monospace !important;
+  box-shadow: inset 0px 5px 5px rgba(0, 0, 0, 0.1);
+  font-family: "IBM Plex Mono", monospace !important;
   font-size: 11px;
   height: var(--c4);
 }
