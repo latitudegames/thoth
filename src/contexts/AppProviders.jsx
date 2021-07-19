@@ -4,6 +4,7 @@ import { SnackbarProvider } from "notistack";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import DatabaseProvider from "./Database";
 import TabManagerProvider from "./TabManager";
+import SpellProvider from "./Spell";
 
 const darkTheme = createTheme({
   palette: {
@@ -16,6 +17,7 @@ const providers = [
   DatabaseProvider,
   [ThemeProvider, { theme: darkTheme }],
   [PouchDB, { name: "thoth" }],
+  SpellProvider,
   TabManagerProvider,
 ];
 
