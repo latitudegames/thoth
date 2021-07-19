@@ -11,7 +11,7 @@ import { usePubSub } from "./PubSubProvider";
 import LoadingScreen from "../features/common/LoadingScreen/LoadingScreen";
 
 // Component types are listed here which are used to load components from the data sent by rete
-const componentTypes = {
+const windowTypes = {
   TEXT_EDITOR: "textEditor",
   INSPECTOR: "inspector",
   STATE_MANAGER: "stateManager",
@@ -34,7 +34,7 @@ const Context = createContext({
   saveTextEditor: () => {},
   createOrFocus: () => {},
   addWindow: () => {},
-  componentTypes: {},
+  windowTypes: {},
   workspaceMap: {},
   getWorkspace: () => {},
 });
@@ -44,10 +44,17 @@ export const useLayout = () => useContext(Context);
 const LayoutProvider = ({ children }) => {
   const { subscribe, publish, events } = usePubSub();
 
+  const currentModelRef = useRef(null);
+
   const [currentModel, setCurrentModel] = useState(null);
   const [currentRef, setCurrentRef] = useState(null);
   const [inspectorData, setInspectorData] = useState(null);
   const [textEditorData, setTextEditorData] = useState({});
+
+  const updateCurrentModel = (model) => {
+    currentModelRef.current = model;
+    setCurrentModel(model);
+  };
 
   useEffect(() => {
     subscribe(events.INSPECTOR_SET, (event, data) => {
@@ -99,7 +106,9 @@ const LayoutProvider = ({ children }) => {
 
   const createModel = (json) => {
     const model = Model.fromJson(json);
-    setCurrentModel(model);
+    updateCurrentModel(model);
+
+    console.log("model", model);
 
     return model;
   };
@@ -114,6 +123,8 @@ const LayoutProvider = ({ children }) => {
       weight: 12,
       name: title,
     };
+    const currentModel = currentModelRef.current;
+
     const rootNode = currentModel.getRoot();
     const tabNode = new TabNode(currentModel, tabJson);
     const tabSetNode = new TabSetNode(currentModel, {
@@ -134,7 +145,7 @@ const LayoutProvider = ({ children }) => {
   };
 
   const createOrFocus = (componentName, title) => {
-    const component = Object.entries(currentModel._idMap).find(
+    const component = Object.entries(currentModelRef.current._idMap).find(
       ([key, value]) => {
         return value._attributes?.component === componentName;
       }
@@ -142,7 +153,6 @@ const LayoutProvider = ({ children }) => {
 
     // the nodeId is stored in the zeroth index of the find
     if (component) currentModel.doAction(Actions.selectTab(component[0]));
-
     if (!component) addWindow(componentName, title);
   };
 
@@ -151,11 +161,10 @@ const LayoutProvider = ({ children }) => {
     textEditorData,
     saveTextEditor,
     saveInspector,
-    setCurrentModel,
     currentModel,
     createModel,
     createOrFocus,
-    componentTypes,
+    windowTypes,
     currentRef,
     setCurrentRef,
   };
