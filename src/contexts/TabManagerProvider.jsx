@@ -22,18 +22,12 @@ export const useTabManager = () => useContext(Context);
 
 const TabManager = ({ children }) => {
   const { db } = useDB();
-  const tabRef = useRef();
 
   // eslint-disable-next-line no-unused-vars
   const [location, setLocation] = useLocation();
 
   const [tabs, setTabs] = useState(null);
   const [activeTab, setActiveTab] = useState(null);
-
-  const updateActiveTab = (activeTab) => {
-    tabRef.current = activeTab;
-    setActiveTab(activeTab);
-  };
 
   // handle redirection when active tab changes
   useEffect(() => {
@@ -92,9 +86,11 @@ const TabManager = ({ children }) => {
 
   const switchTab = async (tabId) => {
     const tab = await db.tabs.findOne({ selector: { id: tabId } }).exec();
+    console.log("tab", tab);
+    if (!tab) return;
     await tab.atomicPatch({ active: true });
 
-    updateActiveTab(tab.toJSON());
+    setActiveTab(tab.toJSON());
   };
 
   const publicInterface = {
