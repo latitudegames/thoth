@@ -52,7 +52,6 @@ const Workspace = ({ tab, isActive }) => {
 
   return (
     <div style={{ visibility: !tab.active ? "hidden" : null, height: "100%" }}>
-      {console.log("tab layout", tab)}
       <Layout json={tab.layoutJson} factory={factory(tab)} tab={tab} />
     </div>
   );
