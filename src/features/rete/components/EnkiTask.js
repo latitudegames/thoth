@@ -31,11 +31,13 @@ export class EnkiTask extends Rete.Component {
       node.data.name,
       Object.values(inputs).map((inputArray) => inputArray[0])
     );
-    let compiledOutputs = {};
 
-    Object.keys(completionResponse.outputs).forEach((output, outputNumber) => {
-      compiledOutputs[`Output ${outputNumber + 1}`] = output;
-    });
-    return compiledOutputs;
+    return completionResponse.outputs.reduce(
+      (compiledOutputs, output, outputNumber) => {
+        compiledOutputs[`Output ${outputNumber + 1}`] = output;
+        return compiledOutputs;
+      },
+      {}
+    );;
   }
 }
