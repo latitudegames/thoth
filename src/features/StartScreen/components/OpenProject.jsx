@@ -6,9 +6,9 @@ import ProjectRow from "./ProjectRow";
 import FileInput from "./FileInput";
 import thothBanner from "../version-banner-0.0.0beta.jpg";
 import Icon from "../../common/Icon/Icon";
-import { useSpell } from "../../../contexts/Spell";
+import { useSpell } from "../../../contexts/SpellProvider";
 import { useLocation } from "wouter";
-import { useTabManager } from "../../../contexts/TabManager";
+import { useTabManager } from "../../../contexts/TabManagerProvider";
 
 const projects = [
   { label: "Lorem ipsum" },
@@ -19,9 +19,9 @@ const projects = [
 
 const OpenProject = () => {
   const { tabs } = useTabManager();
-  console.log(tabs);
   const [selectedProject, setSelectedProject] = useState(null);
   const { getThothVersion } = useSpell();
+  // eslint-disable-next-line no-unused-vars
   const [location, setLocation] = useLocation();
 
   const loadFile = (selectedFile) => {
