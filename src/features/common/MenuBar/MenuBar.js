@@ -1,15 +1,17 @@
 import React, { useState } from "react";
+import { useLocation } from "wouter";
 import { useHotkeys } from "react-hotkeys-hook";
 
 import { useRete } from "../../../contexts/Rete";
-import { useSpell } from "../../../contexts/Spell";
 import { useLayout } from "../../../contexts/Layout";
 
 import css from "./menuBar.module.css";
 import thothlogo from "./thoth.png";
 
 const MenuBar = ({ tabs }) => {
-  //state
+  // eslint-disable-next-line no-unused-vars
+  const [location, setLocation] = useLocation();
+
   const useToggle = (initialValue = false) => {
     const [value, setValue] = useState(initialValue);
     const toggle = React.useCallback(() => {
@@ -21,12 +23,16 @@ const MenuBar = ({ tabs }) => {
 
   //Menu bar functions
   const { serialize } = useRete();
-  const { saveCurrentSpell } = useSpell();
+  // const { saveCurrentSpell } = useSpell();
   const { componentTypes, createOrFocus } = useLayout();
 
   const onSave = () => {
-    const serialized = serialize();
-    saveCurrentSpell({ graph: serialized });
+    // const serialized = serialize();
+    // saveCurrentSpell({ graph: serialized });
+  };
+
+  const onNew = () => {
+    setLocation("/home");
   };
 
   const onSerialize = () => {
@@ -61,14 +67,23 @@ const MenuBar = ({ tabs }) => {
     [onSave]
   );
 
+  useHotkeys(
+    "option+n, crtl+n",
+    (event) => {
+      console.log("NEW");
+      event.preventDefault();
+      onNew();
+    },
+    { enableOnTags: "INPUT" },
+    [onNew]
+  );
+
   //Menu bar entries
   const menuBarItems = {
     file: {
       items: {
         new: {
-          onClick: () => {
-            alert("you clicked new!");
-          },
+          onClick: onNew,
         },
         save: {
           onClick: onSave,

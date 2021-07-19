@@ -4,18 +4,32 @@ import { VscClose } from "react-icons/vsc";
 import MenuBar from "../MenuBar/MenuBar";
 
 import css from "./tabBar.module.css";
+import { useTabManager } from "../../../contexts/TabManager";
 
 const Tab = (props) => {
+  const { switchTab, closeTab } = useTabManager();
+
   const title = `${props.type}- ${props.name}`;
   const tabClass = classnames({
     [css["tabbar-tab"]]: true,
     [css["active"]]: props.active,
     [css["inactive"]]: !props.active,
   });
+
+  const onClick = (e) => {
+    switchTab(props.id);
+  };
+
+  // Handle selecting the next tab down is none are active.
+  const onClose = (e) => {
+    e.stopPropagation();
+    closeTab(props.id);
+  };
+
   return (
-    <div className={tabClass}>
+    <div className={tabClass} onClick={onClick}>
       <p>{title}</p>
-      <span>
+      <span onClick={onClose}>
         <VscClose />
       </span>
     </div>

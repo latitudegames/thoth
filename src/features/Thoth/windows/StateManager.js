@@ -3,12 +3,12 @@ import jsonFormat from "json-format";
 import Editor from "@monaco-editor/react";
 import Window from "../../common/Window/Window";
 
-import "../spell.module.css";
+import "../thoth.module.css";
 
 import { useSpell } from "../../../contexts/Spell";
 
 const StateManager = (props) => {
-  const { currentGameState, rewriteCurrentGameState } = useSpell();
+  const { currentSpell, rewriteCurrentGameState } = useSpell();
   const [code, setCode] = useState("{}");
   const [height, setHeight] = useState();
 
@@ -26,15 +26,15 @@ const StateManager = (props) => {
   };
 
   const handleEditorWillMount = (monaco) => {
-    monaco.editor.defineTheme('sds-dark', {
-      base: 'vs-dark', 
+    monaco.editor.defineTheme("sds-dark", {
+      base: "vs-dark",
       inherit: true,
       rules: [],
       colors: {
-        "editor.background": '#272727'
-      }
+        "editor.background": "#272727",
+      },
     });
-  }
+  };
 
   useEffect(() => {
     if (props?.node?.rect?.height)
@@ -47,8 +47,8 @@ const StateManager = (props) => {
   }, [props.node]);
 
   useEffect(() => {
-    if (currentGameState) setCode(jsonFormat(currentGameState));
-  }, [currentGameState]);
+    if (currentSpell?.gameState) setCode(jsonFormat(currentSpell.gameState));
+  }, [currentSpell]);
 
   const onClear = () => {
     const reset = `{}`;

@@ -17,6 +17,7 @@ export const events = {
   PLAYTEST_PRINT: "playtestPrint",
   INSPECTOR_SET: "inspectorSet",
   TEXT_EDITOR_SET: "textEditorSet",
+  SAVE_CURRENT_SPELL: "saveCurrentSpell",
   NODE_SET: (nodeId) => `nodeSet:${nodeId}`,
 };
 
