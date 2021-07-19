@@ -1,17 +1,19 @@
 import { useEffect } from "react";
+
+import WorkspaceProvider from "../../contexts/WorkspaceProvider";
 import { Editor } from "../../contexts/ReteProvider";
 import { Layout } from "../../contexts/LayoutProvider";
+import { useSpell } from "../../contexts/SpellProvider";
+import { useRete } from "../../contexts/ReteProvider";
+
+import EventHandler from "./EventHandler";
 import StateManager from "./windows/StateManager";
 import Playtest from "./windows/Playtest";
 import Inspector from "./windows/Inspector/Inspector";
 import EditorWindow from "./windows/EditorWindow/EditorWindow";
-
 import TextEditor from "./windows/TextEditor";
-import WorkspaceProvider from "../../contexts/WorkspaceProvider";
-import { useSpell } from "../../contexts/SpellProvider";
-import { useRete } from "../../contexts/ReteProvider";
 
-const Workspace = ({ tab, isActive }) => {
+const Workspace = ({ tab, appPubSub }) => {
   const { saveSpell, loadSpell } = useSpell();
   const { editor } = useRete();
 
@@ -57,6 +59,7 @@ const Workspace = ({ tab, isActive }) => {
 
   return (
     <div style={{ visibility: !tab.active ? "hidden" : null, height: "100%" }}>
+      <EventHandler tab={tab} pubSub={appPubSub} />
       <Layout json={tab.layoutJson} factory={factory(tab)} tab={tab} />
     </div>
   );
