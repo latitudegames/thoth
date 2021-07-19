@@ -83,7 +83,7 @@ const LayoutProvider = ({ children }) => {
       [textData.dataKey]: textData.data,
     };
 
-    publish(events.NODE_SET(textData.nodeId), textUpdate);
+    publish(events.$NODE_SET(textData.nodeId), textUpdate);
     if (inspectorData) {
       setInspectorData({
         ...inspectorData,
@@ -94,7 +94,7 @@ const LayoutProvider = ({ children }) => {
 
   const saveInspector = (inspectorData) => {
     setInspectorData(inspectorData);
-    publish(events.NODE_SET(inspectorData.nodeId), inspectorData.data);
+    publish(events.$NODE_SET(inspectorData.nodeId), inspectorData.data);
   };
 
   const createModel = (json) => {
