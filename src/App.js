@@ -1,7 +1,3 @@
-import "flexlayout-react/style/dark.css";
-import "./dds-globals/dds-globals.css";
-import "./App.css";
-
 import { Route, Switch, Redirect } from "wouter";
 import ThothPageWrapper from "./features/common/ThothPage/ThothPageWrapper";
 import Thoth from "./features/Thoth/Thoth";
@@ -9,6 +5,11 @@ import StartScreen from "./features/StartScreen/StartScreen";
 
 import { useTabManager } from "./contexts/TabManager";
 import LoadingScreen from "./features/common/LoadingScreen/LoadingScreen";
+
+import "flexlayout-react/style/dark.css";
+import "./dds-globals/dds-globals.css";
+import "./App.css";
+//These need to be imported last to override styles.
 
 function App() {
   // Use our routes
