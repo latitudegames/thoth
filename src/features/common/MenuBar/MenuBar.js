@@ -3,7 +3,6 @@ import { useLocation } from "wouter";
 import { useHotkeys } from "react-hotkeys-hook";
 
 import { useRete } from "../../../contexts/Rete";
-import { useSpell } from "../../../contexts/Spell";
 import { useLayout } from "../../../contexts/Layout";
 
 import css from "./menuBar.module.css";
