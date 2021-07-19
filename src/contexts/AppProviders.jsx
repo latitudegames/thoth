@@ -5,6 +5,7 @@ import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import DatabaseProvider from "./Database";
 import TabManagerProvider from "./TabManager";
 import SpellProvider from "./Spell";
+import PubSubProvider from "./PubSub";
 
 const darkTheme = createTheme({
   palette: {
@@ -13,6 +14,7 @@ const darkTheme = createTheme({
 });
 
 const providers = [
+  PubSubProvider,
   [SnackbarProvider, { maxSnack: 3 }],
   DatabaseProvider,
   [ThemeProvider, { theme: darkTheme }],
