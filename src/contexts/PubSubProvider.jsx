@@ -26,7 +26,7 @@ export const events = {
   $CREATE_STATE_MANAGER: (tabId) => `createStateManage:${tabId}`,
   $CREATE_PLAYTEST: (tabId) => `createPlaytest:${tabId}`,
   $CREATE_INSPECTOR: (tabId) => `createInspector:${tabId}`,
-  $CREATE_TEXT_EDITOR: (tabId) => `createStateManage:${tabId}`,
+  $CREATE_TEXT_EDITOR: (tabId) => `createTextEditor:${tabId}`,
   $SERIALIZE: (tabId) => `serialize:${tabId}`,
   $EXPORT: (tabId) => `export:${tabId}`,
 };
