@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { Editor } from "../../contexts/Rete";
-import { Layout } from "../../contexts/Layout";
+import { Editor } from "../../contexts/ReteProvider";
+import { Layout } from "../../contexts/LayoutProvider";
 import StateManager from "./windows/StateManager";
 import Playtest from "./windows/Playtest";
 import Inspector from "./windows/Inspector/Inspector";
@@ -8,8 +8,8 @@ import EditorWindow from "./windows/EditorWindow/EditorWindow";
 
 import TextEditor from "./windows/TextEditor";
 import WorkspaceProvider from "../../contexts/WorkspaceProvider";
-import { useSpell } from "../../contexts/Spell";
-import { useRete } from "../../contexts/Rete";
+import { useSpell } from "../../contexts/SpellProvider";
+import { useRete } from "../../contexts/ReteProvider";
 
 const Workspace = ({ tab, isActive }) => {
   const { saveSpell, loadSpell } = useSpell();

@@ -7,7 +7,7 @@ import {
   TabNode,
   TabSetNode,
 } from "flexlayout-react";
-import { usePubSub } from "./PubSub";
+import { usePubSub } from "./PubSubProvider";
 import LoadingScreen from "../features/common/LoadingScreen/LoadingScreen";
 
 // Component types are listed here which are used to load components from the data sent by rete

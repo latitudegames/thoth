@@ -1,7 +1,7 @@
 import { useContext, createContext, useState, useRef } from "react";
 import { useSnackbar } from "notistack";
 
-import { useDB } from "./Database";
+import { useDB } from "./DatabaseProvider";
 
 const Context = createContext({
   currentSpell: {},

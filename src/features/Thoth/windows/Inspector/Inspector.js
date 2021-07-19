@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import Window from "../../../common/Window/Window";
-import { useLayout } from "../../../../contexts/Layout";
+import { useLayout } from "../../../../contexts/LayoutProvider";
 import DataControls from "./components/DataControls";
 import css from "./components/datacontrols.module.css";
 

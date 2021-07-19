@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Editor, useRete } from "../../../../contexts/Rete";
+import { Editor, useRete } from "../../../../contexts/ReteProvider";
 import { createNode } from "rete-context-menu-plugin/src/utils";
 
 import css from "./editorwindow.module.css";
