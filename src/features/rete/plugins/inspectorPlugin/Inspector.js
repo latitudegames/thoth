@@ -33,6 +33,8 @@ export class Inspector {
   }
 
   handleData(data) {
+    const { publish, events } = this.editor.pubSub;
+
     this.node.data = {
       ...this.node.data,
       ...data,
@@ -48,6 +50,9 @@ export class Inspector {
 
     // update the node at the end ofthid
     this.node.update();
+
+    // update inspector
+    publish(events.INSPECTOR_SET, data);
   }
 
   get(key) {}

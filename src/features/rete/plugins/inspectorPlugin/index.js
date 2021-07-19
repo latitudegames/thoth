@@ -34,6 +34,7 @@ function install(editor) {
     unsubscribe = subscribe(events.NODE_SET(node.id), (event, data) => {
       node.inspector.handleData(data);
       editor.trigger("nodecreated");
+      publish(events.INSPECTOR_SET, node.inspector.data());
     });
 
     // we need to unsibscribe when a new node is selected
