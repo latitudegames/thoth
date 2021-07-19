@@ -1,16 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { useHotkeys } from "react-hotkeys-hook";
 
-import { useRete } from "../../../contexts/ReteProvider";
-import { useLayout } from "../../../contexts/LayoutProvider";
-
+import { useTabManager } from "../../../contexts/TabManagerProvider";
+import { usePubSub } from "../../../contexts/PubSubProvider";
 import css from "./menuBar.module.css";
 import thothlogo from "./thoth.png";
 
-const MenuBar = ({ tabs }) => {
+const MenuBar = (props) => {
   // eslint-disable-next-line no-unused-vars
   const [location, setLocation] = useLocation();
+  const { publish, events } = usePubSub();
+  const { activeTab } = useTabManager();
+
+  const activeTabRef = useRef(null);
+
+  useEffect(() => {
+    activeTabRef.current = activeTab;
+  }, [activeTab]);
+
+  // grab all events we need
+  const {
+    $SAVE_SPELL,
+    $CREATE_STATE_MANAGER,
+    $CREATE_PLAYTEST,
+    $CREATE_INSPECTOR,
+    $CREATE_TEXT_EDITOR,
+    $SERIALIZE,
+    // $EXPORT,
+  } = events;
 
   const useToggle = (initialValue = false) => {
     const [value, setValue] = useState(initialValue);
@@ -21,14 +39,8 @@ const MenuBar = ({ tabs }) => {
   };
   const [menuVisibility, togglemenuVisibility] = useToggle();
 
-  //Menu bar functions
-  const { serialize } = useRete();
-  // const { saveCurrentSpell } = useSpell();
-  const { componentTypes, createOrFocus } = useLayout();
-
   const onSave = () => {
-    // const serialized = serialize();
-    // saveCurrentSpell({ graph: serialized });
+    publish($SAVE_SPELL(activeTabRef.current.id));
   };
 
   const onNew = () => {
@@ -36,24 +48,23 @@ const MenuBar = ({ tabs }) => {
   };
 
   const onSerialize = () => {
-    const serialized = serialize();
-    console.log(JSON.stringify(serialized));
+    publish($SERIALIZE(activeTabRef.current.id));
   };
 
   const onStateManager = () => {
-    createOrFocus(componentTypes.STATE_MANAGER, "State Manager");
+    publish($CREATE_STATE_MANAGER(activeTabRef.current.id));
   };
 
   const onPlaytest = () => {
-    createOrFocus(componentTypes.PLAYTEST, "Playtest");
+    publish($CREATE_PLAYTEST(activeTabRef.current.id));
   };
 
   const onInspector = () => {
-    createOrFocus(componentTypes.INSPECTOR, "Inspector");
+    publish($CREATE_INSPECTOR(activeTabRef.current.id));
   };
 
   const onTextEditor = () => {
-    createOrFocus(componentTypes.TEXT_EDITOR, "Text Editor");
+    publish($CREATE_TEXT_EDITOR(activeTabRef.current.id));
   };
 
   //Menu bar hotkeys
