@@ -81,6 +81,11 @@ const TabManager = ({ children }) => {
     const tab = await db.tabs.findOne({ selector: { id: tabId } }).exec();
     if (!tab) return;
     await tab.remove();
+
+    // Switch to the last tab down.
+    console.log("TABS", tabs);
+    if (tabs.length === 0) return;
+    switchTab(tabs[0].id);
   };
 
   const switchTab = async (tabId) => {
