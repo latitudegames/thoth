@@ -8,20 +8,20 @@ import {
 
 import { useDB } from "../Database";
 import { useRete } from "../Rete";
-import defaultSpellData from "./defaultSpell";
 
 const Context = createContext({
   currentSpell: {},
-  currentGameState: {},
-  getCurrentGameState: () => {},
+  setCurrentSpell: {},
   getSpell: () => {},
   loadSpell: () => {},
-  rewriteCurrentGameState: () => {},
   saveSpell: () => {},
+  newSpell: () => {},
   saveCurrentSpell: () => {},
-  setCurrentSpell: {},
   settings: {},
   stateHistory: [],
+  currentGameState: {},
+  getCurrentGameState: () => {},
+  rewriteCurrentGameState: () => {},
   updateCurrentGameState: () => {},
 });
 
@@ -38,14 +38,6 @@ const SpellProvider = ({ children }) => {
 
   const setCurrentSpell = useCallback(
     async (spell) => {
-      const settings = await db.settings
-        .findOne({
-          selector: "default",
-        })
-        .exec();
-      await settings.atomicPatch({
-        currentSpell: spell,
-      });
       setCurrentSpellState(spell);
       setCurrentGameState(spell.gameState);
     },
@@ -71,32 +63,21 @@ const SpellProvider = ({ children }) => {
       }
 
       setSettings(settings);
-
-      let defaultSpell = await db.spells
-        .findOne({
-          selector: {
-            name: settings.currentSpell,
-          },
-        })
-        .exec();
-
-      if (!defaultSpell) {
-        defaultSpell = await db.spells.insert({
-          name: "defaultSpell",
-          ...defaultSpellData,
-        });
-      }
-
-      setCurrentSpellState(defaultSpell);
-      setCurrentGameState(defaultSpell.gameState);
     })();
   }, [db, setCurrentSpell]);
 
   const loadSpell = async (spellId) => {
-    const spell = await getSpell(spellId);
+    const result = await getSpell(spellId);
+    if (!result) return;
+
+    const spell = result.toJSON();
+
     setCurrentSpell(spell);
     setCurrentGameState(spell.gameState);
-    editor.loadGraph(spell.graph);
+
+    if (editor?.loadGraph && spell?.graph) {
+      editor.loadGraph(spell.graph);
+    }
   };
 
   const getSpell = async (spellId) => {
@@ -118,6 +99,15 @@ const SpellProvider = ({ children }) => {
         ...update,
       };
     });
+  };
+
+  const newSpell = async ({ graph, name }) => {
+    const newSpell = {
+      name,
+      graph,
+    };
+
+    return db.spells.insert(newSpell);
   };
 
   const saveCurrentSpell = async (update) => {
@@ -159,6 +149,7 @@ const SpellProvider = ({ children }) => {
     getCurrentGameState,
     getSpell,
     loadSpell,
+    newSpell,
     rewriteCurrentGameState,
     saveCurrentSpell,
     saveSpell,

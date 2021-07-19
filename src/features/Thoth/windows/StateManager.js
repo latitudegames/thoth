@@ -3,7 +3,7 @@ import jsonFormat from "json-format";
 import Editor from "@monaco-editor/react";
 import Window from "../../common/Window/Window";
 
-import "../spell.module.css";
+import "../thoth.module.css";
 
 import { useSpell } from "../../../contexts/Spell";
 
@@ -26,15 +26,15 @@ const StateManager = (props) => {
   };
 
   const handleEditorWillMount = (monaco) => {
-    monaco.editor.defineTheme('sds-dark', {
-      base: 'vs-dark', 
+    monaco.editor.defineTheme("sds-dark", {
+      base: "vs-dark",
       inherit: true,
       rules: [],
       colors: {
-        "editor.background": '#272727'
-      }
+        "editor.background": "#272727",
+      },
     });
-  }
+  };
 
   useEffect(() => {
     if (props?.node?.rect?.height)

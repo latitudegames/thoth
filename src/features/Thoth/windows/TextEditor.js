@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Editor from "@monaco-editor/react";
 import Window from "../../common/Window/Window";
 
-import "../spell.module.css";
+import "../thoth.module.css";
 import { useLayout } from "../../../contexts/Layout";
 
 const TextEditor = (props) => {

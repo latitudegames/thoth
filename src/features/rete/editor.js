@@ -121,7 +121,7 @@ const editor = async function ({ container, pubSub, thoth }) {
   };
 
   console.log("Loading!");
-  editor.loadGraph(thoth.currentSpell.graph);
+  // editor.loadGraph(thoth.currentSpell.graph);
 
   return editor;
 };

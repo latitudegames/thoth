@@ -5,6 +5,7 @@ import PubSubProvider from "./PubSub";
 import SpellProvider from "./Spell";
 import LayoutProvider from "./Layout";
 import DatabaseProvider from "./Database";
+import TabManagerProvider from "./TabManager";
 
 const darkTheme = createTheme({
   palette: {
@@ -17,9 +18,10 @@ const providers = [
   [ThemeProvider, { theme: darkTheme }],
   PubSubProvider,
   [PouchDB, { name: "thoth" }],
+  ReteProvider,
   SpellProvider,
   LayoutProvider,
-  ReteProvider,
+  TabManagerProvider,
 ];
 
 /**

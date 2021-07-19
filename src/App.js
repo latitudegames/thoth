@@ -1,35 +1,29 @@
 import "flexlayout-react/style/dark.css";
 
+import { useRoutes } from "hookrouter";
+
 import ThothPageWrapper from "./features/common/ThothPage/ThothPageWrapper";
-import Spell from "./features/spell/Spell";
-import StartScreen from "./features/common/StartScreen/StartScreen"
+import Thoth from "./features/Thoth/Thoth";
+import StartScreen from "./features/StartScreen/StartScreen";
 
 import "./dds-globals/dds-globals.css";
 import "./App.css";
+import { useTabManager } from "./contexts/TabManager";
+
+const routes = {
+  "/": () => <Thoth />,
+  "/home": () => <StartScreen />,
+};
 
 function App() {
-  let tabs = []
-  tabs = [
-    {
-      name: "My Spell",
-      type: "spell",
-      active: true,
-    },
-    {
-      name: "My Spell",
-      type: "spell",
-      active: false,
-    },
-    {
-      name: "My Spell",
-      type: "spell",
-      active: false,
-    },
-  ];
+  // Use our routes
+  const match = useRoutes(routes);
+  const { tabs } = useTabManager();
 
   return (
     <ThothPageWrapper tabs={tabs}>
-      {tabs.length ? <Spell /> : <><Spell empty/><StartScreen /></>}
+      {/* TODO better not found page  */}
+      {match || <h1>NOT FOUND</h1>}
     </ThothPageWrapper>
   );
 }

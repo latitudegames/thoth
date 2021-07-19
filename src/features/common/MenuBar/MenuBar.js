@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { navigate } from "hookrouter";
 import { useHotkeys } from "react-hotkeys-hook";
 
 import { useRete } from "../../../contexts/Rete";
@@ -27,6 +28,10 @@ const MenuBar = ({ tabs }) => {
   const onSave = () => {
     const serialized = serialize();
     saveCurrentSpell({ graph: serialized });
+  };
+
+  const onNew = () => {
+    navigate("/home");
   };
 
   const onSerialize = () => {
@@ -61,14 +66,23 @@ const MenuBar = ({ tabs }) => {
     [onSave]
   );
 
+  useHotkeys(
+    "option+n, crtl+n",
+    (event) => {
+      console.log("NEW");
+      event.preventDefault();
+      onNew();
+    },
+    { enableOnTags: "INPUT" },
+    [onNew]
+  );
+
   //Menu bar entries
   const menuBarItems = {
     file: {
       items: {
         new: {
-          onClick: () => {
-            alert("you clicked new!");
-          },
+          onClick: onNew,
         },
         save: {
           onClick: onSave,
