@@ -14,6 +14,7 @@ import emptyImg from "../empty.png";
 import langImg from "../lang.png";
 import { useSpell } from "../../../contexts/Spell";
 import { useTabManager } from "../../../contexts/TabManager";
+import { useLocation } from "wouter";
 
 const customConfig = {
   dictionaries: [adjectives, colors],
@@ -36,6 +37,7 @@ const CreateNew = ({ setNewVisible }) => {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const { newSpell } = useSpell();
   const { openTab } = useTabManager();
+  const [location, setLocation] = useLocation();
 
   const onCreate = async () => {
     const placeholderName = uniqueNamesGenerator(customConfig);
@@ -71,18 +73,16 @@ const CreateNew = ({ setNewVisible }) => {
       <div className={css["button-row"]}>
         <button
           onClick={() => {
-            setNewVisible(false);
+            window.history.back()
           }}
         >
-          {" "}
-          cancel{" "}
+          cancel
         </button>
         <button
           className={!selectedTemplate ? "disabled" : "primary"}
           onClick={onCreate}
         >
-          {" "}
-          CREATE{" "}
+          CREATE
         </button>
       </div>
     </Panel>

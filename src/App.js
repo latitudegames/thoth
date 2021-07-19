@@ -15,6 +15,8 @@ function App() {
   // Use our routes
   const { tabs } = useTabManager();
 
+  const CreateNewScreen = () => { return ( <StartScreen createNew={true} />) }
+
   if (!tabs) return <LoadingScreen />;
 
   return (
@@ -24,6 +26,7 @@ function App() {
           {tabs.length === 0 ? <Redirect to="/home" /> : <Thoth />}
         </Route>
         <Route path="/home" component={StartScreen} />
+        <Route path="/home/create-new" component={CreateNewScreen} />
         <Route path="/">
           {tabs.length === 0 ? (
             <Redirect to="/home" />

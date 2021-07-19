@@ -7,14 +7,12 @@ import css from "./startScreen.module.css";
 
 //MAIN
 
-const StartScreen = ({ ...props }) => {
-  const [newVisible, setNewVisible] = useState(false);
-
+const StartScreen = ({createNew, ...props }) => {
   return (
     <div className={css["overlay"]}>
       <div className={css["center-container"]}>
-        {newVisible && <CreateNew setNewVisible={setNewVisible} />}
-        {!newVisible && <OpenProject setNewVisible={setNewVisible} />}
+        {createNew && <CreateNew />}
+        {!createNew && <OpenProject />}
       </div>
     </div>
   );
