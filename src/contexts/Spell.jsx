@@ -43,8 +43,6 @@ const SpellProvider = ({ children }) => {
 
     const spell = spellDoc.toJSON();
     updateCurrentSpell(spell);
-
-    editor.loadGraph(spell.graph);
   };
 
   const getSpell = async (spellId) => {
