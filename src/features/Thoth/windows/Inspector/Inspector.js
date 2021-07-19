@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Window from "../../../common/Window/Window";
 import { useLayout } from "../../../../contexts/Layout";
 import DataControls from "./components/DataControls";
-import LoadingScreen from "../../../common/LoadingScreen/LoadingScreen";
+import css from "./components/datacontrols.module.css";
 
 const Inspector = (props) => {
   const { inspectorData, saveInspector } = useLayout();
@@ -20,6 +20,10 @@ const Inspector = (props) => {
         setWidth(data.rect.width);
       }, 0);
     });
+
+    return () => {
+      props.node.removeEventListener("resize");
+    };
   }, [props]);
 
   const updateData = (update) => {
@@ -36,11 +40,14 @@ const Inspector = (props) => {
 
   const toolbar = (
     <>
-      <div style={{flex: 1, marginTop: 'var(--c1)'}}>{inspectorData?.name}</div> 
+      <div style={{ flex: 1, marginTop: "var(--c1)" }}>
+        {inspectorData?.name}
+      </div>
     </>
   );
 
-  if (!inspectorData) return <LoadingScreen />;
+  if (!inspectorData)
+    return <p className={css["message"]}>No component selected</p>;
 
   return (
     <Window toolbar={toolbar} darker outline borderless>

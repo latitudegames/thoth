@@ -4,7 +4,7 @@ import { Scrollbars } from "react-custom-scrollbars";
 import { usePubSub } from "../../../contexts/PubSub";
 import Window from "../../common/Window/Window";
 
-import css from "../spell.module.css";
+import css from "../thoth.module.css";
 
 const Input = (props) => {
   const ref = useRef();

@@ -5,47 +5,39 @@ import { usePubSub } from "./PubSub";
 import { useSpell } from "./Spell";
 
 import { useContext, createContext, useState } from "react";
+import LoadingScreen from "../features/common/LoadingScreen/LoadingScreen";
 
 const Context = createContext({
   run: () => {},
   editor: {},
-  editorMap: {},
   serialize: () => {},
   buildEditor: () => {},
   setEditor: () => {},
   getNodeMap: () => {},
   getNodes: () => {},
   loadGraph: () => {},
+  setContainer: () => {},
 });
 
 export const useRete = () => useContext(Context);
 
 const ReteProvider = ({ children }) => {
   const [editor, setEditor] = useState();
-  const [editorMap, setEditorMap] = useState({});
   const pubSub = usePubSub();
 
   const buildEditor = async (container, spell, tab) => {
-    if (editorMap[tab]) {
-      // If we are here, we are swapping to a new editor.  Set teh editor from the map, and return.
-      setEditor(editorMap[tab]);
-      return;
-    }
-
     const newEditor = await init({
       container,
       pubSub,
       thoth: spell,
+      tab,
     });
 
-    // editor map to store multiple instances of  editors based on tab
-    setEditorMap({
-      ...editorMap,
-      [tab]: newEditor,
-    });
-
-    // this should store the current editor
+    // set editor to the map
     setEditor(newEditor);
+
+    const spellDoc = await spell.getSpell(tab.spell);
+    newEditor.loadGraph(spellDoc.toJSON().graph);
   };
 
   const run = () => {
@@ -76,7 +68,7 @@ const ReteProvider = ({ children }) => {
     getNodeMap,
     getNodes,
     loadGraph,
-    editorMap,
+    setEditor,
   };
 
   return (
@@ -84,9 +76,15 @@ const ReteProvider = ({ children }) => {
   );
 };
 
-export const Editor = ({ tab = "default", children }) => {
+export const Editor = ({ tab, children }) => {
+  const [loaded, setLoaded] = useState(null);
   const { buildEditor } = useRete();
   const spell = useSpell();
+
+  if (!tab) return <LoadingScreen />;
+
+  if (loaded && tab.active) {
+  }
 
   return (
     <>
@@ -104,14 +102,14 @@ export const Editor = ({ tab = "default", children }) => {
         }}
         onDrop={(e) => {}}
       >
-        {!spell.currentSpell.graph && <p>Loading...</p>}
-        {spell.currentSpell.graph && (
-          <div
-            ref={(el) => {
-              if (el) buildEditor(el, spell, tab);
-            }}
-          />
-        )}
+        <div
+          ref={(el) => {
+            if (el && !loaded) {
+              buildEditor(el, spell, tab);
+              setLoaded(true);
+            }
+          }}
+        />
       </div>
       {children}
     </>

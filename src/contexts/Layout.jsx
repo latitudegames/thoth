@@ -8,9 +8,9 @@ import {
   TabSetNode,
 } from "flexlayout-react";
 import { usePubSub } from "./PubSub";
-// import { useDB } from "./Database";
 import LoadingScreen from "../features/common/LoadingScreen/LoadingScreen";
 
+// Component types are listed here which are used to load components from the data sent by rete
 const componentTypes = {
   TEXT_EDITOR: "textEditor",
   INSPECTOR: "inspector",
@@ -35,6 +35,8 @@ const Context = createContext({
   createOrFocus: () => {},
   addWindow: () => {},
   componentTypes: {},
+  workspaceMap: {},
+  getWorkspace: () => {},
 });
 
 export const useLayout = () => useContext(Context);
@@ -163,7 +165,7 @@ const LayoutProvider = ({ children }) => {
   );
 };
 
-export const Layout = ({ json, factory }) => {
+export const Layout = ({ json, factory, tab }) => {
   const { currentModel, createModel, setCurrentRef } = useLayout();
   const layoutRef = useRef(null);
 
