@@ -10,7 +10,7 @@ const StubComponent = (props) => <div>{props.name}</div>;
 
 const LongText = ({ initialValue, name, dataKey, nodeId }) => {
   const { events, publish } = usePubSub();
-  const { createOrFocus, componentTypes } = useLayout();
+  const { createOrFocus, windowTypes } = useLayout();
 
   const onClick = () => {
     const data = {
@@ -20,7 +20,7 @@ const LongText = ({ initialValue, name, dataKey, nodeId }) => {
       name,
     };
     publish(events.TEXT_EDITOR_SET, data);
-    createOrFocus(componentTypes.TEXT_EDITOR, "Text Editor");
+    createOrFocus(windowTypes.TEXT_EDITOR, "Text Editor");
   };
 
   return <button onClick={onClick}>Open in text editor</button>;
