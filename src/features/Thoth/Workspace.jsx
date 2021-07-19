@@ -12,7 +12,7 @@ import { useSpell } from "../../contexts/Spell";
 import { useRete } from "../../contexts/Rete";
 
 const Workspace = ({ tab, isActive }) => {
-  const { saveSpell } = useSpell();
+  const { saveSpell, loadSpell } = useSpell();
   const { editor } = useRete();
 
   // Set up autosave for the workspace
@@ -27,6 +27,11 @@ const Workspace = ({ tab, isActive }) => {
       }
     );
   }, [editor]);
+
+  useEffect(() => {
+    if (!tab) return;
+    loadSpell(tab.spell);
+  }, [tab]);
 
   const factory = (tab) => {
     return (node) => {
