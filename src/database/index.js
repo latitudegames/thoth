@@ -14,7 +14,9 @@ export const initDB = async () => {
   if (database !== null) return database;
 
   // Uncomment this for fast deletion of DB
-  await removeRxDatabase(databaseName, adapter);
+  if (process.env.NODE_ENV !== "production") {
+    // await removeRxDatabase(databaseName, adapter);
+  }
 
   database = await createRxDatabase({
     name: databaseName, // <- name
