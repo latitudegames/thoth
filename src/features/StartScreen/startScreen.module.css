@@ -37,7 +37,7 @@
   padding: 4px;
   padding-left: var(--small);
   padding-right: var(--small);
-  border-radius: var(--extraSmall);
+  border-radius: 4px;
 }
 .template-container:hover p {
   background-color: var(--dark-3);
@@ -75,10 +75,16 @@
 }
 
 .version-banner {
+  color: rgba(255,255,255,0.3);
+  box-sizing: border-box;
   box-shadow: inset 0px -30px 30px rgba(0,0,0,.5);
   background-position: center;
   background-size: cover;
   height: var(--c25);
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: var(--small);
 }
 .open-project-container {
   padding: var(--small);

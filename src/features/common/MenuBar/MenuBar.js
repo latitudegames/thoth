@@ -32,6 +32,9 @@ const MenuBar = ({ tabs }) => {
   };
 
   const onNew = () => {
+    setLocation("/home/create-new");
+  };
+  const onOpen = () => {
     setLocation("/home");
   };
 
@@ -82,20 +85,25 @@ const MenuBar = ({ tabs }) => {
   const menuBarItems = {
     file: {
       items: {
-        new: {
+        new_project: {
           onClick: onNew,
         },
+        open_project: {
+          onClick: onOpen,
+        },
         save: {
-          onClick: onSave,
-        },
-        serialize: {
-          onClick: onSerialize,
-        },
-        load: {
-          onClick: () => {
-            alert("you clicked load!");
-          },
-        },
+          items: {
+            save_project: {
+              onClick: onSave,
+            },
+            save_project_as: {
+              onClick: onSave,
+            },
+            export_JSON: {
+              onClick: onSerialize,
+            },
+          }
+        }
       },
     },
     edit: {
