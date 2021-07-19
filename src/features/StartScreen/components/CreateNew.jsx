@@ -4,6 +4,7 @@ import {
   adjectives,
   colors,
 } from "unique-names-generator";
+import { useLocation } from "wouter";
 
 import css from "../startScreen.module.css";
 import Panel from "../../common/Panel/Panel";
@@ -36,6 +37,7 @@ const CreateNew = ({ setNewVisible }) => {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const { newSpell } = useSpell();
   const { openTab } = useTabManager();
+  const [location, setLocation] = useLocation();
 
   const onCreate = async () => {
     const placeholderName = uniqueNamesGenerator(customConfig);
@@ -71,18 +73,16 @@ const CreateNew = ({ setNewVisible }) => {
       <div className={css["button-row"]}>
         <button
           onClick={() => {
-            setNewVisible(false);
+            window.history.back();
           }}
         >
-          {" "}
-          cancel{" "}
+          cancel
         </button>
         <button
           className={!selectedTemplate ? "disabled" : "primary"}
           onClick={onCreate}
         >
-          {" "}
-          CREATE{" "}
+          CREATE
         </button>
       </div>
     </Panel>

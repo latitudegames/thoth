@@ -17,7 +17,7 @@
   border-radius: 0;
 }
 .panel.round {
-  border-radius: 4;
+  border-radius: 4px;
 }
 .panel.rounder {
   border-radius: var(--extraSmall);
