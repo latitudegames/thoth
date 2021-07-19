@@ -53,7 +53,9 @@ const TabManager = ({ children }) => {
         });
 
       await db.tabs.find().$.subscribe((result) => {
-        if (!result || result.length === 0) return;
+        if (!result) return;
+        // If there are no tabs, we route the person back to the home screen
+        if (result.length === 0) setLocation("/home");
 
         setTabs(result.map((tab) => tab.toJSON()));
       });
@@ -83,8 +85,7 @@ const TabManager = ({ children }) => {
     await tab.remove();
 
     // Switch to the last tab down.
-    console.log("TABS", tabs);
-    if (tabs.length === 0) return;
+    if (tabs.length === 1) return;
     switchTab(tabs[0].id);
   };
 
