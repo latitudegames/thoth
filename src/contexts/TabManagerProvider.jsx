@@ -1,7 +1,7 @@
 import { useContext, createContext, useEffect, useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { v4 as uuidv4 } from "uuid";
-import { useDB } from "./Database";
+import { useDB } from "./DatabaseProvider";
 
 import defaultJson from "./layouts/defaultLayout.json";
 import LoadingScreen from "../features/common/LoadingScreen/LoadingScreen";

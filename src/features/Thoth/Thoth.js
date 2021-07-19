@@ -1,5 +1,5 @@
 import TabLayout from "../common/TabLayout/TabLayout";
-import { useTabManager } from "../../contexts/TabManager";
+import { useTabManager } from "../../contexts/TabManagerProvider";
 import Workspace from "./Workspace";
 import LoadingScreen from "../common/LoadingScreen/LoadingScreen";
 

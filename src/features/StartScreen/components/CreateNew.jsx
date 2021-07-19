@@ -12,8 +12,8 @@ import TemplatePanel from "./TemplatePanel";
 import enkiImg from "../enki.png";
 import emptyImg from "../empty.png";
 import langImg from "../lang.png";
-import { useSpell } from "../../../contexts/Spell";
-import { useTabManager } from "../../../contexts/TabManager";
+import { useSpell } from "../../../contexts/SpellProvider";
+import { useTabManager } from "../../../contexts/TabManagerProvider";
 
 const customConfig = {
   dictionaries: [adjectives, colors],

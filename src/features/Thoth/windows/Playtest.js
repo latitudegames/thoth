@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { Scrollbars } from "react-custom-scrollbars";
-import { usePubSub } from "../../../contexts/PubSub";
+import { usePubSub } from "../../../contexts/PubSubProvider";
 import Window from "../../common/Window/Window";
 
 import css from "../thoth.module.css";
@@ -78,13 +78,13 @@ const Playtest = ({ ...props }) => {
 
   return (
     <Window toolbar={toolbar}>
-      <div style={{display: 'flex', height: '100%', flexDirection: 'column'}}>
-      <div className={css["playtest-output"]}>
-        <Scrollbars>
-          <ul>{history.map(printItem)}</ul>
-        </Scrollbars>
-      </div>
-      <Input onChange={onChange} value={value} onSend={onSend} />
+      <div style={{ display: "flex", height: "100%", flexDirection: "column" }}>
+        <div className={css["playtest-output"]}>
+          <Scrollbars>
+            <ul>{history.map(printItem)}</ul>
+          </Scrollbars>
+        </div>
+        <Input onChange={onChange} value={value} onSend={onSend} />
       </div>
     </Window>
   );

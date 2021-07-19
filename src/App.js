@@ -3,7 +3,7 @@ import ThothPageWrapper from "./features/common/ThothPage/ThothPageWrapper";
 import Thoth from "./features/Thoth/Thoth";
 import StartScreen from "./features/StartScreen/StartScreen";
 
-import { useTabManager } from "./contexts/TabManager";
+import { useTabManager } from "./contexts/TabManagerProvider";
 import LoadingScreen from "./features/common/LoadingScreen/LoadingScreen";
 
 import "flexlayout-react/style/dark.css";

@@ -1,8 +1,8 @@
 import init from "../features/rete/editor";
 import gridimg from "../grid.png";
 
-import { usePubSub } from "./PubSub";
-import { useSpell } from "./Spell";
+import { usePubSub } from "./PubSubProvider";
+import { useSpell } from "./SpellProvider";
 
 import { useContext, createContext, useState } from "react";
 import LoadingScreen from "../features/common/LoadingScreen/LoadingScreen";

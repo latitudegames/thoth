@@ -3,7 +3,7 @@ import Editor from "@monaco-editor/react";
 import Window from "../../common/Window/Window";
 
 import "../thoth.module.css";
-import { useLayout } from "../../../contexts/Layout";
+import { useLayout } from "../../../contexts/LayoutProvider";
 
 const TextEditor = (props) => {
   const [code, setCode] = useState("");

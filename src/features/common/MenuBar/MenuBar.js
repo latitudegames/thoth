@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useLocation } from "wouter";
 import { useHotkeys } from "react-hotkeys-hook";
 
-import { useRete } from "../../../contexts/Rete";
-import { useLayout } from "../../../contexts/Layout";
+import { useRete } from "../../../contexts/ReteProvider";
+import { useLayout } from "../../../contexts/LayoutProvider";
 
 import css from "./menuBar.module.css";
 import thothlogo from "./thoth.png";
