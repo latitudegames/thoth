@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import init from "../features/rete/editor";
 import gridimg from "../grid.png";
 
@@ -22,8 +23,14 @@ const Context = createContext({
 export const useRete = () => useContext(Context);
 
 const ReteProvider = ({ children }) => {
-  const [editor, setEditor] = useState();
+  const [editor, setEditorState] = useState();
+  const editorRef = useRef(null);
   const pubSub = usePubSub();
+
+  const setEditor = (editor) => {
+    editorRef.current = editor;
+    setEditorState(editor);
+  };
 
   const buildEditor = async (container, spell, tab) => {
     const newEditor = await init({
@@ -45,7 +52,7 @@ const ReteProvider = ({ children }) => {
   };
 
   const serialize = () => {
-    return editor.toJSON();
+    return editorRef.current.toJSON();
   };
 
   const getNodeMap = () => {
