@@ -2,7 +2,8 @@ import { useContext, createContext, useEffect, useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { v4 as uuidv4 } from "uuid";
 import { useDB } from "./Database";
-import { useLayout } from "./Layout";
+
+import defaultJson from "./layouts/defaultLayout.json";
 
 const Context = createContext({
   tabs: [],
@@ -11,11 +12,15 @@ const Context = createContext({
   closeTab: () => {},
 });
 
+// Map of workspaces
+const workspaceMap = {
+  default: defaultJson,
+};
+
 export const useTabManager = () => useContext(Context);
 
 const TabManager = ({ children }) => {
   const { db } = useDB();
-  const { getWorkspace } = useLayout();
   const tabRef = useRef();
 
   // eslint-disable-next-line no-unused-vars
@@ -31,11 +36,8 @@ const TabManager = ({ children }) => {
 
   // handle redirection when active tab changes
   useEffect(() => {
-    console.log("CheckinglocATION", location);
     if (location !== "/thoth") setLocation("/thoth");
   }, [activeTab]);
-
-  // handle setting up autosave
 
   // Suscribe to changes in the database for active tab, and all tabs
   useEffect(() => {
@@ -64,15 +66,13 @@ const TabManager = ({ children }) => {
     spellId,
   }) => {
     const newTab = {
-      layoutJson: getWorkspace(workspace),
+      layoutJson: workspaceMap[workspace],
       name,
       id: uuidv4(),
       spell: spellId,
       type: "spell",
       active: true,
     };
-
-    console.log("new tab", newTab);
 
     await db.tabs.insert(newTab);
   };
