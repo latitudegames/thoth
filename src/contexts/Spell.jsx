@@ -2,7 +2,6 @@ import { useContext, createContext, useState, useRef } from "react";
 import { useSnackbar } from "notistack";
 
 import { useDB } from "./Database";
-import { useRete } from "./Rete";
 
 const Context = createContext({
   currentSpell: {},
@@ -23,7 +22,6 @@ export const useSpell = () => useContext(Context);
 
 const SpellProvider = ({ children }) => {
   const { db } = useDB();
-  const { editor } = useRete();
   const { enqueueSnackbar } = useSnackbar();
 
   const spellRef = useRef;

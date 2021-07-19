@@ -10,6 +10,7 @@ import {
 import { usePubSub } from "./PubSub";
 import LoadingScreen from "../features/common/LoadingScreen/LoadingScreen";
 
+// Component types are listed here which are used to load components from the data sent by rete
 const componentTypes = {
   TEXT_EDITOR: "textEditor",
   INSPECTOR: "inspector",
