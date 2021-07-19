@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useDB } from "./Database";
 
 import defaultJson from "./layouts/defaultLayout.json";
+import LoadingScreen from "../features/common/LoadingScreen/LoadingScreen";
 
 const Context = createContext({
   tabs: [],
@@ -26,7 +27,7 @@ const TabManager = ({ children }) => {
   // eslint-disable-next-line no-unused-vars
   const [location, setLocation] = useLocation();
 
-  const [tabs, setTabs] = useState([]);
+  const [tabs, setTabs] = useState(null);
   const [activeTab, setActiveTab] = useState(null);
 
   const updateActiveTab = (activeTab) => {
@@ -103,6 +104,8 @@ const TabManager = ({ children }) => {
     switchTab,
     closeTab,
   };
+
+  if (!tabs) return <LoadingScreen />;
 
   return (
     <Context.Provider value={publicInterface}>{children}</Context.Provider>
