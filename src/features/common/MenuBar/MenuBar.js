@@ -24,12 +24,12 @@ const MenuBar = ({ tabs }) => {
 
   //Menu bar functions
   const { serialize } = useRete();
-  const { saveCurrentSpell } = useSpell();
+  // const { saveCurrentSpell } = useSpell();
   const { componentTypes, createOrFocus } = useLayout();
 
   const onSave = () => {
-    const serialized = serialize();
-    saveCurrentSpell({ graph: serialized });
+    // const serialized = serialize();
+    // saveCurrentSpell({ graph: serialized });
   };
 
   const onNew = () => {
