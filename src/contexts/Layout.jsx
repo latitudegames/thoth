@@ -10,18 +10,12 @@ import {
 import { usePubSub } from "./PubSub";
 import LoadingScreen from "../features/common/LoadingScreen/LoadingScreen";
 
-import defaultJson from "./layouts/defaultLayout.json";
-
 const componentTypes = {
   TEXT_EDITOR: "textEditor",
   INSPECTOR: "inspector",
   STATE_MANAGER: "stateManager",
   EDITOR: "editor",
   PLAYTEST: "playtest",
-};
-
-const workspaceMap = {
-  default: defaultJson,
 };
 
 // helpful resources
@@ -151,10 +145,6 @@ const LayoutProvider = ({ children }) => {
     if (!component) addWindow(componentName, title);
   };
 
-  const getWorkspace = (workspace) => {
-    return workspaceMap[workspace] || workspaceMap["default"];
-  };
-
   const publicInterface = {
     inspectorData,
     textEditorData,
@@ -167,8 +157,6 @@ const LayoutProvider = ({ children }) => {
     componentTypes,
     currentRef,
     setCurrentRef,
-    workspaceMap,
-    getWorkspace,
   };
 
   return (
