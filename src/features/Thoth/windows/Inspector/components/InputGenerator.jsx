@@ -26,13 +26,13 @@ const AddNewInput = (props) => {
   };
 
   return (
-    <div style={{ display: "flex", gap: 'var(--extraSmall)' }}>
+    <div style={{ display: "flex", gap: "var(--extraSmall)" }}>
       <input
         style={{ flex: 6 }}
         value={value}
         type="text"
         onChange={onChange}
-        placeholder={'Node input text...'}
+        placeholder={"Node input text..."}
       />
       <button style={{ flex: 1 }} onClick={onAdd}>
         + Add
@@ -66,9 +66,9 @@ const InputGenerator = ({ updateData, control, initialValue, ...props }) => {
     updateData({ [dataKey]: [...update, ...control.controls.data.ignored] });
   };
 
-  const addOutput = (input) => {
+  const addOutput = (output) => {
     const newOutput = {
-      name: input,
+      name: output,
       socketType: controls.data.socketType,
     };
 
