@@ -12,13 +12,9 @@ import Playtest from "./windows/Playtest";
 import Inspector from "./windows/Inspector/Inspector";
 import EditorWindow from "./windows/EditorWindow/EditorWindow";
 import TextEditor from "./windows/TextEditor";
-import { useTabManager } from "../../contexts/TabManagerProvider";
-import { useLayout } from "../../contexts/LayoutProvider";
 
 const Workspace = ({ tab, appPubSub }) => {
   const { saveSpell, loadSpell } = useSpell();
-  const { saveTabLayout } = useTabManager();
-  const { currentModel } = useLayout();
   const { editor } = useRete();
 
   // Set up autosave for the workspace
