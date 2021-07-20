@@ -9,6 +9,7 @@ import {
 } from "flexlayout-react";
 import { usePubSub } from "./PubSubProvider";
 import LoadingScreen from "../features/common/LoadingScreen/LoadingScreen";
+import { useTabManager } from "./TabManagerProvider";
 
 // Component types are listed here which are used to load components from the data sent by rete
 const windowTypes = {
@@ -108,8 +109,6 @@ const LayoutProvider = ({ children }) => {
     const model = Model.fromJson(json);
     updateCurrentModel(model);
 
-    console.log("model", model);
-
     return model;
   };
 
@@ -176,6 +175,7 @@ const LayoutProvider = ({ children }) => {
 
 export const Layout = ({ json, factory, tab }) => {
   const { currentModel, createModel, setCurrentRef } = useLayout();
+  const { saveTabLayout } = useTabManager();
   const layoutRef = useRef(null);
 
   useEffect(() => {
@@ -187,10 +187,15 @@ export const Layout = ({ json, factory, tab }) => {
     setCurrentRef(layoutRef);
   }, [layoutRef, setCurrentRef]);
 
+  const onModelChange = (...rest) => {
+    saveTabLayout(tab.id, currentModel.toJson());
+  };
+
   if (!currentModel) return <LoadingScreen />;
 
   return (
     <LayoutComponent
+      onModelChange={onModelChange}
       ref={layoutRef}
       model={currentModel}
       factory={factory}
