@@ -1,6 +1,6 @@
+const url = process.env.REACT_APP_API_URL;
+
 export const getEnkiPrompt = async (taskName) => {
-  // const url = 'https://latitude-game-api.herokuapp.com'
-  const url = process.env.REACT_APP_API_URL;
   try {
     const response = await fetch(url + `/enki/${taskName}`, {
       method: "GET",
@@ -24,8 +24,6 @@ export const getEnkiPrompt = async (taskName) => {
 };
 
 export const getEnkis = async () => {
-  // const url = 'https://latitude-game-api.herokuapp.com'
-  const url = "http://localhost:3000";
   try {
     const response = await fetch(url + `/enki`, {
       method: "GET",
@@ -49,8 +47,6 @@ export const getEnkis = async () => {
 };
 
 export const postEnkiCompletion = async (taskName, inputs) => {
-  // const url = 'https://latitude-game-api.herokuapp.com'
-  const url = "http://localhost:3000";
   try {
     const response = await fetch(url + `/enki/${taskName}/completion`, {
       method: "POST",
