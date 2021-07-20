@@ -44,27 +44,51 @@ export const initDB = async () => {
     doc.updatedAt = Date.now();
   }, false);
 
-  database.tabs.preInsert((doc) => {
+  database.tabs.preInsert(async (doc) => {
     if (doc.active) {
-      const query = database.tabs.find().where("active").eq(true);
+      const query = database.tabs
+        .find()
+        .where("active")
+        .eq(true)
+        .and([
+          {
+            id: {
+              $ne: doc.id,
+            },
+          },
+        ]);
 
-      return query.update({
+      await query.update({
         $set: {
           active: false,
         },
       });
+
+      return doc;
     }
   }, true);
 
-  database.tabs.preSave((doc) => {
+  database.tabs.preSave(async (doc) => {
     if (doc.active) {
-      const query = database.tabs.find().where("active").eq(true);
+      const query = database.tabs
+        .find()
+        .where("active")
+        .eq(true)
+        .and([
+          {
+            id: {
+              $ne: doc.id,
+            },
+          },
+        ]);
 
-      return query.update({
+      await query.update({
         $set: {
           active: false,
         },
       });
+
+      return doc;
     }
   }, true);
 
