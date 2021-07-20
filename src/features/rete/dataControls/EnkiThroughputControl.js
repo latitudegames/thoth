@@ -23,6 +23,7 @@ export class EnkiThroughputControl extends DataControl {
   }
 
   onData({ inputs, outputs, activeTask }) {
+    // These are already in the node.data from the Inspector running.  It does this for you by default, spacing it on under the output name
     this.node.data.name = activeTask?.taskName || "Enki Task";
     this.node.data.activetask = activeTask;
     this.node.data.inputs = inputs || [];
@@ -96,10 +97,11 @@ export class EnkiThroughputControl extends DataControl {
       { ...this.component.task.outputs }
     );
 
+    // Output-X is being set to an 'option' taskType rather than output
     // From these new inputs, we iterate and add an input socket to the node
     newInputs.forEach((input) => {
       const newInput = new Rete.Input(
-        input.name.toLowerCase(),
+        input.name,
         input.name,
         sockets[input.socketType]
       );
@@ -109,7 +111,7 @@ export class EnkiThroughputControl extends DataControl {
     // From these new outputs, we iterate and add an output socket to the node
     newOutputs.forEach((output) => {
       const newOutput = new Rete.Output(
-        output.name.toLowerCase(),
+        output.name,
         output.name,
         sockets[output.socketType]
       );
