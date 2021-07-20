@@ -56,16 +56,14 @@ const TextEditor = (props) => {
     });
   }, [props.node]);
 
-  const onSave = () => {
-    saveTextEditor(data);
-  };
-
   const updateCode = (code) => {
     setCode(code);
-    setData({
+    const update = {
       ...data,
       data: code,
-    });
+    };
+    setData(update);
+    saveTextEditor(update);
   };
 
   const toolbar = (
@@ -73,9 +71,6 @@ const TextEditor = (props) => {
       <div style={{ flex: 1, marginTop: "var(--c1)" }}>
         {textEditorData?.name && textEditorData?.name + " - " + language}
       </div>
-      <button className="small" onClick={onSave}>
-        Save
-      </button>
     </>
   );
 
