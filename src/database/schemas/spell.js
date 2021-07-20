@@ -9,15 +9,19 @@ const spellSchema = {
       type: "string",
       primary: true,
     },
-    tab: {
-      ref: "tab",
-      type: "string",
-    },
     graph: {
       type: "object",
     },
     gameState: {
       type: "object",
+      default: {},
+    },
+    createdAt: {
+      type: "number",
+      // default: Date.now(),
+    },
+    updatedAt: {
+      type: "number",
     },
   },
 };

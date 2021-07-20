@@ -1,35 +1,47 @@
-import "flexlayout-react/style/dark.css";
-
+import { Route, Switch, Redirect } from "wouter";
 import ThothPageWrapper from "./features/common/ThothPage/ThothPageWrapper";
-import Spell from "./features/spell/Spell";
-import StartScreen from "./features/common/StartScreen/StartScreen"
+import Thoth from "./features/Thoth/Thoth";
+import StartScreen from "./features/StartScreen/StartScreen";
 
+import { useTabManager } from "./contexts/TabManagerProvider";
+import LoadingScreen from "./features/common/LoadingScreen/LoadingScreen";
+
+import "flexlayout-react/style/dark.css";
 import "./dds-globals/dds-globals.css";
 import "./App.css";
+//These need to be imported last to override styles.
 
 function App() {
-  let tabs = []
-  tabs = [
-    {
-      name: "My Spell",
-      type: "spell",
-      active: true,
-    },
-    {
-      name: "My Spell",
-      type: "spell",
-      active: false,
-    },
-    {
-      name: "My Spell",
-      type: "spell",
-      active: false,
-    },
-  ];
+  // Use our routes
+  const { tabs } = useTabManager();
+
+  const CreateNewScreen = () => {
+    return <StartScreen createNew={true} />;
+  };
+
+  const AllProjectsScreen = () => {
+    return <StartScreen allProjects={true} />;
+  };
+
+  if (!tabs) return <LoadingScreen />;
 
   return (
     <ThothPageWrapper tabs={tabs}>
-      {tabs.length ? <Spell /> : <><Spell empty/><StartScreen /></>}
+      <Switch>
+        <Route path="/thoth">
+          <Thoth />
+        </Route>
+        <Route path="/home" component={StartScreen} />
+        <Route path="/home/create-new" component={CreateNewScreen} />
+        <Route path="/home/all-projects" component={AllProjectsScreen} />
+        <Route path="/">
+          {tabs.length === 0 ? (
+            <Redirect to="/home" />
+          ) : (
+            <Redirect to="/thoth" />
+          )}
+        </Route>
+      </Switch>
     </ThothPageWrapper>
   );
 }
