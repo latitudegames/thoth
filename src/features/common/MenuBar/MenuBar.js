@@ -1,15 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { useLocation } from "wouter";
 import { useHotkeys } from "react-hotkeys-hook";
 
-import { useRete } from "../../../contexts/Rete";
-import { useSpell } from "../../../contexts/Spell";
-import { useLayout } from "../../../contexts/Layout";
-
+import { useTabManager } from "../../../contexts/TabManagerProvider";
+import { usePubSub } from "../../../contexts/PubSubProvider";
 import css from "./menuBar.module.css";
 import thothlogo from "./thoth.png";
 
-const MenuBar = ({ tabs }) => {
-  //state
+const MenuBar = (props) => {
+  // eslint-disable-next-line no-unused-vars
+  const [location, setLocation] = useLocation();
+  const { publish, events } = usePubSub();
+  const { activeTab } = useTabManager();
+
+  const activeTabRef = useRef(null);
+
+  useEffect(() => {
+    activeTabRef.current = activeTab;
+  }, [activeTab]);
+
+  // grab all events we need
+  const {
+    $SAVE_SPELL,
+    $CREATE_STATE_MANAGER,
+    $CREATE_PLAYTEST,
+    $CREATE_INSPECTOR,
+    $CREATE_TEXT_EDITOR,
+    // $SERIALIZE,
+    $EXPORT,
+  } = events;
+
   const useToggle = (initialValue = false) => {
     const [value, setValue] = useState(initialValue);
     const toggle = React.useCallback(() => {
@@ -19,35 +39,39 @@ const MenuBar = ({ tabs }) => {
   };
   const [menuVisibility, togglemenuVisibility] = useToggle();
 
-  //Menu bar functions
-  const { serialize } = useRete();
-  const { saveCurrentSpell } = useSpell();
-  const { componentTypes, createOrFocus } = useLayout();
-
   const onSave = () => {
-    const serialized = serialize();
-    saveCurrentSpell({ graph: serialized });
+    publish($SAVE_SPELL(activeTabRef.current.id));
   };
 
-  const onSerialize = () => {
-    const serialized = serialize();
-    console.log(JSON.stringify(serialized));
+  const onNew = () => {
+    setLocation("/home/create-new");
   };
+  const onOpen = () => {
+    setLocation("/home");
+  };
+
+  // const onSerialize = () => {
+  //   publish($SERIALIZE(activeTabRef.current.id));
+  // };
 
   const onStateManager = () => {
-    createOrFocus(componentTypes.STATE_MANAGER, "State Manager");
+    publish($CREATE_STATE_MANAGER(activeTabRef.current.id));
   };
 
   const onPlaytest = () => {
-    createOrFocus(componentTypes.PLAYTEST, "Playtest");
+    publish($CREATE_PLAYTEST(activeTabRef.current.id));
   };
 
   const onInspector = () => {
-    createOrFocus(componentTypes.INSPECTOR, "Inspector");
+    publish($CREATE_INSPECTOR(activeTabRef.current.id));
   };
 
   const onTextEditor = () => {
-    createOrFocus(componentTypes.TEXT_EDITOR, "Text Editor");
+    publish($CREATE_TEXT_EDITOR(activeTabRef.current.id));
+  };
+
+  const onExport = () => {
+    publish($EXPORT(activeTabRef.current.id));
   };
 
   //Menu bar hotkeys
@@ -61,24 +85,38 @@ const MenuBar = ({ tabs }) => {
     [onSave]
   );
 
+  useHotkeys(
+    "option+n, crtl+n",
+    (event) => {
+      console.log("NEW");
+      event.preventDefault();
+      onNew();
+    },
+    { enableOnTags: "INPUT" },
+    [onNew]
+  );
+
   //Menu bar entries
   const menuBarItems = {
     file: {
       items: {
-        new: {
-          onClick: () => {
-            alert("you clicked new!");
-          },
+        new_project: {
+          onClick: onNew,
+        },
+        open_project: {
+          onClick: onOpen,
         },
         save: {
-          onClick: onSave,
-        },
-        serialize: {
-          onClick: onSerialize,
-        },
-        load: {
-          onClick: () => {
-            alert("you clicked load!");
+          items: {
+            save_project: {
+              onClick: onSave,
+            },
+            save_project_as: {
+              onClick: onSave,
+            },
+            export_JSON: {
+              onClick: onExport,
+            },
           },
         },
       },

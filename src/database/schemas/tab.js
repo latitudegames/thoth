@@ -5,9 +5,12 @@ const tabSchema = {
     "Tabs are a high level form of organization and represent a discrete workspace in thoth.",
   type: "object",
   properties: {
-    name: {
+    id: {
       type: "string",
       primary: true,
+    },
+    name: {
+      type: "string",
     },
     active: {
       type: "boolean",
