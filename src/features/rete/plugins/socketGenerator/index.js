@@ -30,8 +30,15 @@ function install(editor) {
       }
 
       if (node.data.inputs && node.data.inputs.length !== 0) {
+        // get inputs from node.inputs
+        const inputMap = {};
+        node.inputs.forEach((value, key) => {
+          inputMap[key] = value;
+        });
+
         node.data.inputs.forEach((key) => {
-          if (key.name.toLowerCase() === "data") return;
+          // If the input key is already on the node, return
+          if (inputMap[key]) return;
           const input = new Rete.Input(
             key.name.toLowerCase(),
             key.name,
