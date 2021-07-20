@@ -6,7 +6,7 @@ import ProjectRow from "./ProjectRow";
 import FileInput from "./FileInput";
 import thothBanner from "../version-banner-0.0.0beta.jpg";
 import Icon from "../../common/Icon/Icon";
-import { useSpell, getSpell } from "../../../contexts/SpellProvider";
+import { useSpell } from "../../../contexts/SpellProvider";
 import { useLocation } from "wouter";
 import { useTabManager } from "../../../contexts/TabManagerProvider";
 
