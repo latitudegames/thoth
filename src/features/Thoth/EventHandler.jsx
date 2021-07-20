@@ -2,12 +2,14 @@ import { useEffect } from "react";
 import { useLayout } from "../../contexts/LayoutProvider";
 import { useRete } from "../../contexts/ReteProvider";
 import { useSpell } from "../../contexts/SpellProvider";
+import { useTabManager } from "../../contexts/TabManagerProvider";
 
 const EventHandler = ({ pubSub, tab }) => {
   // only using this to handle events, so not rendering anything with it.
   const { createOrFocus, windowTypes } = useLayout();
   const { serialize } = useRete();
-  const { saveCurrentSpell } = useSpell();
+  const { saveCurrentSpell, getSpell } = useSpell();
+  const { activeTab } = useTabManager();
 
   const { events, subscribe } = pubSub;
 
@@ -46,6 +48,27 @@ const EventHandler = ({ pubSub, tab }) => {
     console.log(serialize());
   };
 
+  const onExport = async () => {
+    const spellDoc = await getSpell(activeTab.spell);
+    const spell = spellDoc.toJSON();
+    console.log(spell);
+    var json = JSON.stringify(spell);
+    var blob = new Blob([json], { type: "application/json" });
+    const url = window.URL.createObjectURL(new Blob([blob]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `${spell.name}.thoth`);
+
+    // Append to html link element page
+    document.body.appendChild(link);
+
+    // Start download
+    link.click();
+
+    // Clean up and remove the link
+    link.parentNode.removeChild(link);
+  };
+
   const handlerMap = {
     [$SAVE_SPELL(tab.id)]: saveSpell,
     [$CREATE_STATE_MANAGER(tab.id)]: createStateManager,
@@ -53,7 +76,7 @@ const EventHandler = ({ pubSub, tab }) => {
     [$CREATE_INSPECTOR(tab.id)]: createInspector,
     [$CREATE_TEXT_EDITOR(tab.id)]: createTextEditor,
     [$SERIALIZE(tab.id)]: onSerialize,
-    [$EXPORT(tab.id)]: () => {},
+    [$EXPORT(tab.id)]: onExport,
   };
 
   useEffect(() => {

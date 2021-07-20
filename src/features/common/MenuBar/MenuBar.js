@@ -26,8 +26,8 @@ const MenuBar = (props) => {
     $CREATE_PLAYTEST,
     $CREATE_INSPECTOR,
     $CREATE_TEXT_EDITOR,
-    $SERIALIZE,
-    // $EXPORT,
+    // $SERIALIZE,
+    $EXPORT,
   } = events;
 
   const useToggle = (initialValue = false) => {
@@ -50,9 +50,9 @@ const MenuBar = (props) => {
     setLocation("/home");
   };
 
-  const onSerialize = () => {
-    publish($SERIALIZE(activeTabRef.current.id));
-  };
+  // const onSerialize = () => {
+  //   publish($SERIALIZE(activeTabRef.current.id));
+  // };
 
   const onStateManager = () => {
     publish($CREATE_STATE_MANAGER(activeTabRef.current.id));
@@ -68,6 +68,10 @@ const MenuBar = (props) => {
 
   const onTextEditor = () => {
     publish($CREATE_TEXT_EDITOR(activeTabRef.current.id));
+  };
+
+  const onExport = () => {
+    publish($EXPORT(activeTabRef.current.id));
   };
 
   //Menu bar hotkeys
@@ -111,10 +115,10 @@ const MenuBar = (props) => {
               onClick: onSave,
             },
             export_JSON: {
-              onClick: onSerialize,
+              onClick: onExport,
             },
-          }
-        }
+          },
+        },
       },
     },
     edit: {
