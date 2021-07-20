@@ -18,8 +18,8 @@ export class EnkiTask extends Rete.Component {
   builder(node) {
     const EnkiOutput = new EnkiThroughputControl({
       defaultOutputs: node.data.outputs,
-      socketType: "dataSocket",
-      taskType: "option",
+      socketType: "stringSocket",
+      taskType: "output",
       nodeId: node.id,
     });
 
@@ -41,13 +41,25 @@ export class EnkiTask extends Rete.Component {
       Object.values(inputs).map((inputArray) => inputArray[0])
     );
 
+    // handle this better
+    if (
+      !completionResponse?.outputs ||
+      completionResponse.outputs.length === 0
+    ) {
+      return null;
+    }
+
     const test = completionResponse.outputs.reduce(
       (compiledOutputs, output, outputNumber) => {
-        compiledOutputs[`output ${outputNumber + 1}`] = output;
+        compiledOutputs[`output${outputNumber + 1}`] = output;
         return compiledOutputs;
       },
       {}
     );
+
+    // console.log("test", test);
+    // console.log(this.node.task);
+
     this.displayControl.display(completionResponse.outputs.join(" "));
 
     return test;
