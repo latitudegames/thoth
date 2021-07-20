@@ -3,7 +3,7 @@ import ThothPageWrapper from "./features/common/ThothPage/ThothPageWrapper";
 import Thoth from "./features/Thoth/Thoth";
 import StartScreen from "./features/StartScreen/StartScreen";
 
-import { useTabManager } from "./contexts/TabManager";
+import { useTabManager } from "./contexts/TabManagerProvider";
 import LoadingScreen from "./features/common/LoadingScreen/LoadingScreen";
 
 import "flexlayout-react/style/dark.css";
@@ -15,7 +15,9 @@ function App() {
   // Use our routes
   const { tabs } = useTabManager();
 
-  const CreateNewScreen = () => { return ( <StartScreen createNew={true} />) }
+  const CreateNewScreen = () => {
+    return <StartScreen createNew={true} />;
+  };
 
   if (!tabs) return <LoadingScreen />;
 
@@ -23,7 +25,7 @@ function App() {
     <ThothPageWrapper tabs={tabs}>
       <Switch>
         <Route path="/thoth">
-          {tabs.length === 0 ? <Redirect to="/home" /> : <Thoth />}
+          <Thoth />
         </Route>
         <Route path="/home" component={StartScreen} />
         <Route path="/home/create-new" component={CreateNewScreen} />

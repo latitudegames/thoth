@@ -7,11 +7,12 @@ import {
   TabNode,
   TabSetNode,
 } from "flexlayout-react";
-import { usePubSub } from "./PubSub";
+import { usePubSub } from "./PubSubProvider";
 import LoadingScreen from "../features/common/LoadingScreen/LoadingScreen";
+import { useTabManager } from "./TabManagerProvider";
 
 // Component types are listed here which are used to load components from the data sent by rete
-const componentTypes = {
+const windowTypes = {
   TEXT_EDITOR: "textEditor",
   INSPECTOR: "inspector",
   STATE_MANAGER: "stateManager",
@@ -34,7 +35,7 @@ const Context = createContext({
   saveTextEditor: () => {},
   createOrFocus: () => {},
   addWindow: () => {},
-  componentTypes: {},
+  windowTypes: {},
   workspaceMap: {},
   getWorkspace: () => {},
 });
@@ -44,10 +45,17 @@ export const useLayout = () => useContext(Context);
 const LayoutProvider = ({ children }) => {
   const { subscribe, publish, events } = usePubSub();
 
+  const currentModelRef = useRef(null);
+
   const [currentModel, setCurrentModel] = useState(null);
   const [currentRef, setCurrentRef] = useState(null);
   const [inspectorData, setInspectorData] = useState(null);
   const [textEditorData, setTextEditorData] = useState({});
+
+  const updateCurrentModel = (model) => {
+    currentModelRef.current = model;
+    setCurrentModel(model);
+  };
 
   useEffect(() => {
     subscribe(events.INSPECTOR_SET, (event, data) => {
@@ -83,7 +91,7 @@ const LayoutProvider = ({ children }) => {
       [textData.dataKey]: textData.data,
     };
 
-    publish(events.NODE_SET(textData.nodeId), textUpdate);
+    publish(events.$NODE_SET(textData.nodeId), textUpdate);
     if (inspectorData) {
       setInspectorData({
         ...inspectorData,
@@ -94,12 +102,12 @@ const LayoutProvider = ({ children }) => {
 
   const saveInspector = (inspectorData) => {
     setInspectorData(inspectorData);
-    publish(events.NODE_SET(inspectorData.nodeId), inspectorData.data);
+    publish(events.$NODE_SET(inspectorData.nodeId), inspectorData.data);
   };
 
   const createModel = (json) => {
     const model = Model.fromJson(json);
-    setCurrentModel(model);
+    updateCurrentModel(model);
 
     return model;
   };
@@ -114,6 +122,8 @@ const LayoutProvider = ({ children }) => {
       weight: 12,
       name: title,
     };
+    const currentModel = currentModelRef.current;
+
     const rootNode = currentModel.getRoot();
     const tabNode = new TabNode(currentModel, tabJson);
     const tabSetNode = new TabSetNode(currentModel, {
@@ -134,7 +144,7 @@ const LayoutProvider = ({ children }) => {
   };
 
   const createOrFocus = (componentName, title) => {
-    const component = Object.entries(currentModel._idMap).find(
+    const component = Object.entries(currentModelRef.current._idMap).find(
       ([key, value]) => {
         return value._attributes?.component === componentName;
       }
@@ -142,7 +152,6 @@ const LayoutProvider = ({ children }) => {
 
     // the nodeId is stored in the zeroth index of the find
     if (component) currentModel.doAction(Actions.selectTab(component[0]));
-
     if (!component) addWindow(componentName, title);
   };
 
@@ -151,11 +160,10 @@ const LayoutProvider = ({ children }) => {
     textEditorData,
     saveTextEditor,
     saveInspector,
-    setCurrentModel,
     currentModel,
     createModel,
     createOrFocus,
-    componentTypes,
+    windowTypes,
     currentRef,
     setCurrentRef,
   };
@@ -167,6 +175,7 @@ const LayoutProvider = ({ children }) => {
 
 export const Layout = ({ json, factory, tab }) => {
   const { currentModel, createModel, setCurrentRef } = useLayout();
+  const { saveTabLayout } = useTabManager();
   const layoutRef = useRef(null);
 
   useEffect(() => {
@@ -178,10 +187,15 @@ export const Layout = ({ json, factory, tab }) => {
     setCurrentRef(layoutRef);
   }, [layoutRef, setCurrentRef]);
 
+  const onModelChange = (...rest) => {
+    saveTabLayout(tab.id, currentModel.toJson());
+  };
+
   if (!currentModel) return <LoadingScreen />;
 
   return (
     <LayoutComponent
+      onModelChange={onModelChange}
       ref={layoutRef}
       model={currentModel}
       factory={factory}

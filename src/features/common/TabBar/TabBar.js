@@ -4,7 +4,7 @@ import { VscClose } from "react-icons/vsc";
 import MenuBar from "../MenuBar/MenuBar";
 
 import css from "./tabBar.module.css";
-import { useTabManager } from "../../../contexts/TabManager";
+import { useTabManager } from "../../../contexts/TabManagerProvider";
 
 const Tab = (props) => {
   const { switchTab, closeTab } = useTabManager();
