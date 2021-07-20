@@ -1,7 +1,7 @@
-import ReteProvider from "./Rete";
-import PubSubProvider from "./PubSub";
-import SpellProvider from "./Spell";
-import LayoutProvider from "./Layout";
+import ReteProvider from "./ReteProvider";
+import PubSubProvider from "./PubSubProvider";
+import SpellProvider from "./SpellProvider";
+import LayoutProvider from "./LayoutProvider";
 
 const providers = [PubSubProvider, ReteProvider, SpellProvider, LayoutProvider];
 

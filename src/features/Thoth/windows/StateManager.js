@@ -5,7 +5,7 @@ import Window from "../../common/Window/Window";
 
 import "../thoth.module.css";
 
-import { useSpell } from "../../../contexts/Spell";
+import { useSpell } from "../../../contexts/SpellProvider";
 
 const StateManager = (props) => {
   const { currentSpell, rewriteCurrentGameState } = useSpell();

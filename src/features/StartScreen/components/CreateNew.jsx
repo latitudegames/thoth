@@ -12,9 +12,8 @@ import TemplatePanel from "./TemplatePanel";
 import enkiImg from "../enki.png";
 import emptyImg from "../empty.png";
 import langImg from "../lang.png";
-import { useSpell } from "../../../contexts/Spell";
-import { useTabManager } from "../../../contexts/TabManager";
-import { useLocation } from "wouter";
+import { useSpell } from "../../../contexts/SpellProvider";
+import { useTabManager } from "../../../contexts/TabManagerProvider";
 
 const customConfig = {
   dictionaries: [adjectives, colors],
@@ -37,7 +36,6 @@ const CreateNew = ({ setNewVisible }) => {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const { newSpell } = useSpell();
   const { openTab } = useTabManager();
-  const [location, setLocation] = useLocation();
 
   const onCreate = async () => {
     const placeholderName = uniqueNamesGenerator(customConfig);
@@ -73,7 +71,7 @@ const CreateNew = ({ setNewVisible }) => {
       <div className={css["button-row"]}>
         <button
           onClick={() => {
-            window.history.back()
+            window.history.back();
           }}
         >
           cancel

@@ -31,7 +31,7 @@ function install(editor) {
     publish(events.INSPECTOR_SET, node.inspector.data());
 
     // we set up a subscribe to that nodes channel when it saves data.
-    unsubscribe = subscribe(events.NODE_SET(node.id), (event, data) => {
+    unsubscribe = subscribe(events.$NODE_SET(node.id), (event, data) => {
       node.inspector.handleData(data);
       editor.trigger("nodecreated");
       publish(events.INSPECTOR_SET, node.inspector.data());

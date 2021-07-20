@@ -12,13 +12,23 @@ export const usePubSub = () => useContext(Context);
 
 export { PubSub };
 
+// Might want to namespace these
 export const events = {
+  // workspace specific events
   PLAYTEST_INPUT: "playtestInput",
   PLAYTEST_PRINT: "playtestPrint",
   INSPECTOR_SET: "inspectorSet",
   TEXT_EDITOR_SET: "textEditorSet",
   SAVE_CURRENT_SPELL: "saveCurrentSpell",
-  NODE_SET: (nodeId) => `nodeSet:${nodeId}`,
+  $NODE_SET: (nodeId) => `nodeSet:${nodeId}`,
+  // app to tab workspace events
+  $SAVE_SPELL: (tabId) => `saveSpell:${tabId}`,
+  $CREATE_STATE_MANAGER: (tabId) => `createStateManage:${tabId}`,
+  $CREATE_PLAYTEST: (tabId) => `createPlaytest:${tabId}`,
+  $CREATE_INSPECTOR: (tabId) => `createInspector:${tabId}`,
+  $CREATE_TEXT_EDITOR: (tabId) => `createTextEditor:${tabId}`,
+  $SERIALIZE: (tabId) => `serialize:${tabId}`,
+  $EXPORT: (tabId) => `export:${tabId}`,
 };
 
 const PubSubProvider = ({ children }) => {
