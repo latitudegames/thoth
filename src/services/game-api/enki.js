@@ -12,10 +12,7 @@ export const getEnkiPrompt = async (taskName) => {
       },
     });
 
-    console.log("response", response);
     const parsed = await response.json();
-
-    console.log("parsed", parsed);
 
     return parsed;
   } catch (err) {
@@ -35,10 +32,7 @@ export const getEnkis = async () => {
       },
     });
 
-    console.log("response", response);
     const parsed = await response.json();
-
-    console.log("parsed", parsed);
 
     return parsed;
   } catch (err) {
@@ -59,10 +53,7 @@ export const postEnkiCompletion = async (taskName, inputs) => {
       },
     });
 
-    console.log("response", response);
     const parsed = await response.json();
-
-    console.log("parsed", parsed);
 
     return parsed;
   } catch (err) {
