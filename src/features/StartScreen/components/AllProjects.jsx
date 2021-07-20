@@ -1,6 +1,7 @@
 import Panel from "../../common/Panel/Panel";
 import Icon from "../../common/Icon/Icon";
 import ProjectRow from "./ProjectRow";
+import FileInput from "./FileInput";
 
 import css from "../startScreen.module.css";
 
@@ -39,6 +40,7 @@ const AllProjects = ({ projects, setSelectedProject, selectedProject, loadFile }
         >
           back
         </button>
+        <FileInput loadFile={loadFile} />
         <button className={!selectedProject ? "disabled" : "primary"}>
             OPEN
           </button>
