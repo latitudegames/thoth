@@ -47,7 +47,7 @@ const MenuBar = (props) => {
     setLocation("/home/create-new");
   };
   const onOpen = () => {
-    setLocation("/home");
+    setLocation("/home/all-projects");
   };
 
   // const onSerialize = () => {
