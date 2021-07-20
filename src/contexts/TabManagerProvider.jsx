@@ -11,6 +11,7 @@ const Context = createContext({
   activeTab: {},
   switchTab: () => {},
   closeTab: () => {},
+  saveTabLayout: () => {},
 });
 
 // Map of workspaces
@@ -78,19 +79,27 @@ const TabManager = ({ children }) => {
     const tab = await db.tabs.findOne({ selector: { id: tabId } }).exec();
     if (!tab) return;
     await tab.remove();
+    const tabs = await db.tabs.find().exec();
 
     // Switch to the last tab down.
-    if (tabs.length === 1) return;
+    if (tabs.length === 0) {
+      setLocation("/home");
+      return;
+    }
     switchTab(tabs[0].id);
   };
 
   const switchTab = async (tabId) => {
     const tab = await db.tabs.findOne({ selector: { id: tabId } }).exec();
-    console.log("tab", tab);
     if (!tab) return;
     await tab.atomicPatch({ active: true });
 
     setActiveTab(tab.toJSON());
+  };
+
+  const saveTabLayout = async (tabId, json) => {
+    const tab = await db.tabs.findOne({ selector: { id: tabId } }).exec();
+    await tab.atomicPatch({ layoutJson: json });
   };
 
   const publicInterface = {
@@ -99,6 +108,7 @@ const TabManager = ({ children }) => {
     openTab,
     switchTab,
     closeTab,
+    saveTabLayout,
   };
 
   if (!tabs) return <LoadingScreen />;
