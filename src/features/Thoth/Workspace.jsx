@@ -17,7 +17,7 @@ import { useLayout } from "../../contexts/LayoutProvider";
 
 const Workspace = ({ tab, appPubSub }) => {
   const { saveSpell, loadSpell } = useSpell();
-  const { saveTab } = useTabManager();
+  const { saveTabLayout } = useTabManager();
   const { currentModel } = useLayout();
   const { editor } = useRete();
 
@@ -41,18 +41,6 @@ const Workspace = ({ tab, appPubSub }) => {
 
   const factory = (tab) => {
     return (node) => {
-      node.setEventListener("resize", (p) => {
-        saveTab(tab.id, { layoutJson: currentModel.toJson() });
-      });
-
-      node.setEventListener("close", (p) => {
-        saveTab(tab.id, { layoutJson: currentModel.toJson() });
-      });
-
-      node.setEventListener("visibility", (p) => {
-        saveTab(tab.id, { layoutJson: currentModel.toJson() });
-      });
-
       const component = node.getComponent();
       switch (component) {
         case "editor":
