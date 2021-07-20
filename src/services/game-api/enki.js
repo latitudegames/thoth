@@ -1,6 +1,6 @@
 export const getEnkiPrompt = async (taskName) => {
   // const url = 'https://latitude-game-api.herokuapp.com'
-  const url = "http://localhost:3000";
+  const url = process.env.REACT_APP_API_URL;
   try {
     const response = await fetch(url + `/enki/${taskName}`, {
       method: "GET",
