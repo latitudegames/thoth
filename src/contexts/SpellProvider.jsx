@@ -16,7 +16,7 @@ const Context = createContext({
   getCurrentGameState: () => {},
   rewriteCurrentGameState: () => {},
   updateCurrentGameState: () => {},
-  getThothVersion: () => {}
+  getThothVersion: () => {},
 });
 
 export const useSpell = () => useContext(Context);
@@ -45,10 +45,9 @@ const SpellProvider = ({ children }) => {
   };
 
   const getThothVersion = () => {
-
     //wherever we would like to store this...
-    return 'Latitude Thoth 0.0.1'
-  }
+    return "Latitude Thoth 0.0.1";
+  };
 
   const getSpell = async (spellId) => {
     return db.spells
@@ -76,10 +75,11 @@ const SpellProvider = ({ children }) => {
     }
   };
 
-  const newSpell = async ({ graph, name }) => {
+  const newSpell = async ({ graph, name, gameState = {} }) => {
     const newSpell = {
       name,
       graph,
+      gameState,
     };
 
     return db.spells.insert(newSpell);
