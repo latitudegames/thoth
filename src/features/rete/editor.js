@@ -2,7 +2,7 @@ import Rete from "rete";
 import ReactRenderPlugin from "rete-react-render-plugin";
 import ConnectionPlugin from "rete-connection-plugin";
 import ContextMenuPlugin from "rete-context-menu-plugin";
-import AreaPlugin from "rete-area-plugin";
+import AreaPlugin from "./plugins/areaPlugin";
 import TaskPlugin from "./plugins/taskPlugin";
 import InspectorPlugin from "./plugins/inspectorPlugin";
 import SocketGenerator from "./plugins/socketGenerator";
@@ -32,10 +32,7 @@ import { Generator } from "./components/Generator";
   Primary initialization function.  Takes a container ref to attach the rete editor to.
 */
 
-let editorInstance;
-
-const editor = async function ({ container, pubSub, thoth }) {
-  if (editorInstance) return editorInstance;
+const editor = async function ({ container, pubSub, thoth, tab }) {
   // Here we load up all components of the builder into our editor for usage.
   // We might be able to programatically generate components from enki
   const components = [
@@ -63,11 +60,11 @@ const editor = async function ({ container, pubSub, thoth }) {
 
   // create the main edtor
   const editor = new Rete.NodeEditor("demo@0.1.0", container);
-  editorInstance = editor;
 
   // Set up the reactcontext pubsub on the editor so rete components can talk to react
   editor.pubSub = pubSub;
   editor.thoth = thoth;
+  editor.tab = tab;
 
   // PLUGINS
   // https://github.com/retejs/comment-plugin
@@ -87,6 +84,9 @@ const editor = async function ({ container, pubSub, thoth }) {
   // This should only be needed on client, not server
   editor.use(SocketGenerator);
   editor.use(InspectorPlugin);
+  editor.use(AreaPlugin, {
+    scaleExtent: { min: 0.25, max: 2 },
+  });
 
   // The engine is used to process/run the rete graph
   const engine = new Rete.Engine("demo@0.1.0");
@@ -111,19 +111,19 @@ const editor = async function ({ container, pubSub, thoth }) {
       // NOTE need to consider authentication against games API from a web client
       await engine.abort();
       await engine.process(editor.toJSON());
-      // editor.thoth.saveCurrentSpell({graph: editor.toJSON()});
     }
   );
 
-  editor.loadGraph = (graph) => {
+  editor.abort = async () => {
+    await engine.abort();
+  };
+
+  editor.loadGraph = async (graph) => {
+    await engine.abort();
     editor.fromJSON(graph);
     editor.view.resize();
     AreaPlugin.zoomAt(editor);
-    editor.trigger("process");
   };
-
-  console.log("Loading!");
-  editor.loadGraph(thoth.currentSpell.graph);
 
   return editor;
 };

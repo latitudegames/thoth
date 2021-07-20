@@ -6,8 +6,8 @@
 }
 .MuiAccordionDetails-root {
   padding: var(--small) !important;
-  padding-left: var(--extraSmall) !important;
-  padding-right: var(--extraSmall) !important;
+  padding-left: var(--c4) !important;
+  padding-right: var(--small) !important;
   padding-top: var(--medium) !important;
 }
 .MuiCollapse-wrapperInner {
