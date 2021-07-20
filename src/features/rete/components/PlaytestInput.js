@@ -19,15 +19,15 @@ export class PlaytestInput extends Rete.Component {
   }
 
   displayControl = {};
+  unsubscribe = null;
 
   subscribeToPlaytest(node) {
     const { subscribe, events } = this.editor.pubSub;
 
-    subscribe(events.PLAYTEST_INPUT, (_, text) => {
+    this.unsubscribe = subscribe(events.PLAYTEST_INPUT, (_, text) => {
       // attach the text to the nodes data for access in worker
       node.data.text = text;
 
-      console.log("running!");
       // will need to run this here with the stater rather than the text
       this.initialTask.run(text);
       this.initialTask.reset();
@@ -39,6 +39,9 @@ export class PlaytestInput extends Rete.Component {
   // when we have enki hooked up and have garbbed all few shots, we would use the builder
   // to generate the appropriate inputs and ouputs for the fewshot at build time
   builder(node) {
+    if (this.unsubscribe) this.unsubscribe();
+    this.unsubscribe = null;
+
     // create inputs here. First argument is th ename, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const dataOutput = new Rete.Output("data", "Data", dataSocket);
     const textOutput = new Rete.Output("text", "Text", stringSocket);
