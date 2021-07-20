@@ -52,8 +52,8 @@ const EventHandler = ({ pubSub, tab }) => {
     const spellDoc = await getSpell(activeTab.spell);
     const spell = spellDoc.toJSON();
     console.log(spell);
-    var json = JSON.stringify(spell);
-    var blob = new Blob([json], { type: "application/json" });
+    const json = JSON.stringify(spell);
+    const blob = new Blob([json], { type: "application/json" });
     const url = window.URL.createObjectURL(new Blob([blob]));
     const link = document.createElement("a");
     link.href = url;
