@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useLayout } from "../../contexts/LayoutProvider";
 import { useRete } from "../../contexts/ReteProvider";
 import { useSpell } from "../../contexts/SpellProvider";

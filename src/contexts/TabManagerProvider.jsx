@@ -1,4 +1,4 @@
-import { useContext, createContext, useEffect, useState, useRef } from "react";
+import { useContext, createContext, useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { v4 as uuidv4 } from "uuid";
 import { useDB } from "./DatabaseProvider";
