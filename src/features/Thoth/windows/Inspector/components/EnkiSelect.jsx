@@ -23,11 +23,12 @@ const EnkiDetails = ({ initialTask, addThroughput, update }) => {
         ...enkiData,
       },
     };
+
     enkiData.data[0].inputs.forEach((_input, index) => {
-      throughput.inputsToAdd.push(`Input ${index + 1}`);
+      throughput.inputsToAdd.push(`input${index + 1}`);
     });
     enkiData.data[0].outputs.forEach((_output, index) => {
-      throughput.outputsToAdd.push(`Output ${index + 1}`);
+      throughput.outputsToAdd.push(`output${index + 1}`);
     });
     selectEnki({
       taskName,
@@ -170,6 +171,8 @@ const EnkiSelect = ({ updateData, control, initialValue, ...props }) => {
 
     setInputs(throughput.inputs);
     setOutputs(throughput.outputs);
+
+    console.log("thoughputs", throughput);
     update(throughput);
   };
 
