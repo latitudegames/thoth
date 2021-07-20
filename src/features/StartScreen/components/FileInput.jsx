@@ -16,7 +16,7 @@ const FileInput = ({ loadFile }) => {
     <>
       <button onClick={handleClick}>
         <Icon name="folder" style={{ marginRight: "var(--extraSmall)" }} />
-        Browse...
+        Import...
       </button>
       <input
         type="file"

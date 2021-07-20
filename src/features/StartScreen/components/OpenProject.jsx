@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import css from "../startScreen.module.css";
 import Panel from "../../common/Panel/Panel";
 import ProjectRow from "./ProjectRow";
@@ -10,37 +8,11 @@ import { useSpell } from "../../../contexts/SpellProvider";
 import { useLocation } from "wouter";
 import { useTabManager } from "../../../contexts/TabManagerProvider";
 
-const projects = [
-  { label: "Lorem ipsum" },
-  { label: "Dolor sit" },
-  { label: "Taco Bell ad ambulat" },
-  { label: "Candor umlaut" },
-];
-
-const OpenProject = () => {
+const OpenProject = ({projects, setSelectedProject, selectedProject, loadFile}) => {
   const { tabs } = useTabManager();
-  const [selectedProject, setSelectedProject] = useState(null);
-  const { getThothVersion, newSpell, getSpell } = useSpell();
-  const { openTab } = useTabManager();
+  const { getThothVersion } = useSpell();
   // eslint-disable-next-line no-unused-vars
   const [location, setLocation] = useLocation();
-
-  const onReaderLoad = async (event) => {
-    const spellData = JSON.parse(event.target.result);
-    // TODO check for proper values here and throw errors
-
-    let existingSpell = await getSpell(spellData.name);
-    const spell = existingSpell ? existingSpell : await newSpell(spellData);
-
-    await openTab({ name: spell.name, spellId: spell.name });
-  };
-
-  const loadFile = (selectedFile) => {
-    const reader = new FileReader();
-    reader.onload = onReaderLoad;
-    console.log("selected file");
-    reader.readAsText(selectedFile);
-  };
 
   return (
     <Panel shadow unpadded>
@@ -53,7 +25,9 @@ const OpenProject = () => {
         </div>
       )}
       <div className={css["open-project-container"]}>
-        <h1 style={{ marginLeft: 16 }}> Recent Projects </h1>
+        <h1 style={{marginLeft: 'var(--small)' }}> 
+          Recent Projects
+        </h1>
 
         <Panel
           style={{ width: "var(--c62)", backgroundColor: "var(--dark-1)" }}
@@ -62,14 +36,26 @@ const OpenProject = () => {
           roundness="round"
           unpadded
         >
-          {projects.map((project, i) => (
-            <ProjectRow
+          {projects.map((project, i) => {
+            if(i > 1) return (<></>)
+            return (<ProjectRow
               key={i}
               setSelectedProject={setSelectedProject}
               selectedProject={selectedProject}
               label={project.label}
+              onClick={() => {
+                setSelectedProject(project.label);
+              }}
+            />)
+          })}
+          <ProjectRow
+              label={"More..."}
+              icon={"properties"}
+              style={{fontFamily: 'IBM Plex Mono', textTransform: 'uppercase'}}
+              onClick={() => {
+                setLocation("/home/all-projects");
+              }}
             />
-          ))}
         </Panel>
 
         <div className={css["button-row"]}>

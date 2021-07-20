@@ -19,6 +19,10 @@ function App() {
     return <StartScreen createNew={true} />;
   };
 
+  const AllProjectsScreen = () => {
+    return <StartScreen allProjects={true} />;
+  };
+
   if (!tabs) return <LoadingScreen />;
 
   return (
@@ -29,6 +33,7 @@ function App() {
         </Route>
         <Route path="/home" component={StartScreen} />
         <Route path="/home/create-new" component={CreateNewScreen} />
+        <Route path="/home/all-projects" component={AllProjectsScreen} />
         <Route path="/">
           {tabs.length === 0 ? (
             <Redirect to="/home" />

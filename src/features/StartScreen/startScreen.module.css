@@ -63,9 +63,11 @@
   gap: var(--extraSmall);
 }
 .project-row {
+  display: flex;
   padding: var(--extraSmall);
   padding-left: var(--small);
   border-bottom: 1px solid var(--dark-2);
+  align-items: center;
 }
 .project-row:hover {
   background-color: var(--dark-3);
