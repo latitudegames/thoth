@@ -1,14 +1,17 @@
 import { useState, useEffect } from "react";
 import jsonFormat from "json-format";
 import Editor from "@monaco-editor/react";
+import { useSnackbar } from "notistack";
+
 import Window from "../../common/Window/Window";
+import { useSpell } from "../../../contexts/SpellProvider";
 
 import "../thoth.module.css";
 
-import { useSpell } from "../../../contexts/SpellProvider";
-
 const StateManager = (props) => {
   const { currentSpell, rewriteCurrentGameState } = useSpell();
+  const { enqueueSnackbar } = useSnackbar();
+  const [typing, setTyping] = useState(null);
   const [code, setCode] = useState("{}");
   const [height, setHeight] = useState();
 
@@ -47,17 +50,37 @@ const StateManager = (props) => {
   }, [props.node]);
 
   useEffect(() => {
+    if (!typing) return;
+
+    const delayDebounceFn = setTimeout(() => {
+      // Send Axios request here
+      onSave();
+      setTyping(false);
+    }, 2000);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [code]);
+
+  useEffect(() => {
     if (currentSpell?.gameState) setCode(jsonFormat(currentSpell.gameState));
   }, [currentSpell]);
 
   const onClear = () => {
     const reset = `{}`;
-
     setCode(reset);
+  };
+
+  const onChange = (code) => {
+    setCode(code);
+    setTyping(true);
   };
 
   const onSave = () => {
     rewriteCurrentGameState(JSON.parse(code));
+    enqueueSnackbar("State saved", {
+      preventDuplicate: true,
+      variant: "success",
+    });
   };
 
   const toolbar = (
@@ -65,9 +88,6 @@ const StateManager = (props) => {
       <button className="small">History</button>
       <button className="small" onClick={onClear}>
         Clear
-      </button>
-      <button className="small" onClick={onSave}>
-        Save
       </button>
     </>
   );
@@ -81,7 +101,7 @@ const StateManager = (props) => {
         value={code}
         options={editorOptions}
         defaultValue={code}
-        onChange={setCode}
+        onChange={onChange}
         beforeMount={handleEditorWillMount}
       />
     </Window>
