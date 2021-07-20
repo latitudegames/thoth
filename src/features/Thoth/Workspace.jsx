@@ -12,9 +12,13 @@ import Playtest from "./windows/Playtest";
 import Inspector from "./windows/Inspector/Inspector";
 import EditorWindow from "./windows/EditorWindow/EditorWindow";
 import TextEditor from "./windows/TextEditor";
+import { useTabManager } from "../../contexts/TabManagerProvider";
+import { useLayout } from "../../contexts/LayoutProvider";
 
 const Workspace = ({ tab, appPubSub }) => {
   const { saveSpell, loadSpell } = useSpell();
+  const { saveTab } = useTabManager();
+  const { currentModel } = useLayout();
   const { editor } = useRete();
 
   // Set up autosave for the workspace
@@ -37,6 +41,18 @@ const Workspace = ({ tab, appPubSub }) => {
 
   const factory = (tab) => {
     return (node) => {
+      node.setEventListener("resize", (p) => {
+        saveTab(tab.id, { layoutJson: currentModel.toJson() });
+      });
+
+      node.setEventListener("close", (p) => {
+        saveTab(tab.id, { layoutJson: currentModel.toJson() });
+      });
+
+      node.setEventListener("visibility", (p) => {
+        saveTab(tab.id, { layoutJson: currentModel.toJson() });
+      });
+
       const component = node.getComponent();
       switch (component) {
         case "editor":
