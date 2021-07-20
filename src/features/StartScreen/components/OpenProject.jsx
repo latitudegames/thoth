@@ -36,8 +36,9 @@ const OpenProject = ({projects, setSelectedProject, selectedProject, loadFile}) 
           roundness="round"
           unpadded
         >
-          {projects.map((project, i) => (
-            <ProjectRow
+          {projects.map((project, i) => {
+            if(i > 1) return (<></>)
+            return (<ProjectRow
               key={i}
               setSelectedProject={setSelectedProject}
               selectedProject={selectedProject}
@@ -45,8 +46,8 @@ const OpenProject = ({projects, setSelectedProject, selectedProject, loadFile}) 
               onClick={() => {
                 setSelectedProject(project.label);
               }}
-            />
-          ))}
+            />)
+          })}
           <ProjectRow
               label={"More..."}
               icon={"properties"}
