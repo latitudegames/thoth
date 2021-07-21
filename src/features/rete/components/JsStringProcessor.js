@@ -32,8 +32,9 @@ export class JsStringProcessor extends Rete.Component {
       taskType: "output",
       ignored: [
         {
-          name: "Data",
+          name: "data",
           socketType: "dataSocket",
+          taskType: "option",
         },
       ],
     });
@@ -51,12 +52,21 @@ export class JsStringProcessor extends Rete.Component {
         .addOutput(dataOut);
   }
 
-  async worker(node, inputs, outputs) {
+  async worker(node, inputs, data) {
     const input = inputs["input"][0];
 
     // TODO (mitchg) - obviously this is bad, but we want this for games week. Figure out security later.
     // eslint-disable-next-line
     const stringProcessor = eval(node.data.javascript);
-    return stringProcessor(input);
+    const outputs = stringProcessor(input);
+
+    // Note: outputGenerator lower-cases the output connection name,
+    // but end-users shouldn't be aware of this.  When they write
+    // their javascript snippet, it should return a dict with the keys
+    // they typed in, then we lower-case the keys for them.
+    const lowerCasedOutputs = {};
+      Object.keys(outputs).map((key) => {lowerCasedOutputs[key.toLowerCase()] = outputs[key];});
+
+    return lowerCasedOutputs;
   }
 }

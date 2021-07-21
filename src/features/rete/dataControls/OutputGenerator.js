@@ -63,7 +63,7 @@ export class OutputGeneratorControl extends DataControl {
     // Here we are running over and ensuring that the outputs are in the task
     this.component.task.outputs = this.node.data.outputs.reduce(
       (acc, out) => {
-        acc[out.name] = out.taskType || "output";
+        acc[out.name.toLowerCase()] = out.taskType || "output";
         return acc;
       },
       { ...this.component.task.outputs }
