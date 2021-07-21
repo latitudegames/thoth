@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import Editor from "@monaco-editor/react";
+import { useSnackbar } from "notistack";
+
 import Window from "../../common/Window/Window";
 
 import "../thoth.module.css";
@@ -9,8 +11,10 @@ const TextEditor = (props) => {
   const [code, setCode] = useState("");
   const [data, setData] = useState("");
   const [height, setHeight] = useState();
+  const [typing, setTyping] = useState(null);
   const [language, setLanguage] = useState("plaintext");
   const { textEditorData, saveTextEditor } = useLayout();
+  const { enqueueSnackbar } = useSnackbar();
 
   const bottomHeight = 50;
   const handleEditorWillMount = (monaco) => {
@@ -40,6 +44,7 @@ const TextEditor = (props) => {
   useEffect(() => {
     setData(textEditorData);
     setCode(textEditorData.data);
+    setTyping(false);
 
     if (textEditorData?.control?.data?.language) {
       setLanguage(textEditorData.control.data.language);
@@ -56,16 +61,34 @@ const TextEditor = (props) => {
     });
   }, [props.node]);
 
+  useEffect(() => {
+    if (!typing) return;
+
+    const delayDebounceFn = setTimeout(() => {
+      // Send Axios request here
+      onSave();
+      setTyping(false);
+    }, 2000);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [code]);
+
   const onSave = () => {
     saveTextEditor(data);
+    enqueueSnackbar("Editor saved", {
+      preventDuplicate: true,
+      variant: "success",
+    });
   };
 
   const updateCode = (code) => {
     setCode(code);
-    setData({
+    const update = {
       ...data,
       data: code,
-    });
+    };
+    setData(update);
+    setTyping(true);
   };
 
   const toolbar = (
@@ -73,9 +96,6 @@ const TextEditor = (props) => {
       <div style={{ flex: 1, marginTop: "var(--c1)" }}>
         {textEditorData?.name && textEditorData?.name + " - " + language}
       </div>
-      <button className="small" onClick={onSave}>
-        Save
-      </button>
     </>
   );
 
