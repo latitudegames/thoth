@@ -2,21 +2,32 @@ import React, { useRef } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 
 import Select from "react-select";
-import Icon from '../Icon/Icon'
-import Chip from '../Chip/Chip'
+import Icon from "../Icon/Icon";
+import Chip from "../Chip/Chip";
 
-import css from './select.module.css'
+import css from "./select.module.css";
 
-const BasicSelect = ({ options, onChange, placeholder, searchable, style, focusKey }) => {
-  const selectRef = useRef(null)
+const BasicSelect = ({
+  options,
+  onChange,
+  placeholder,
+  searchable,
+  style,
+  focusKey,
+}) => {
+  const selectRef = useRef(null);
 
   const DropdownIndicator = () => {
-    return searchable ? <Icon name="search" size={'var(--small)'}/> : <div className={css['dropdown-indicator']}>❯</div>
-  }
+    return searchable ? (
+      <Icon name="search" size={"var(--small)"} />
+    ) : (
+      <div className={css["dropdown-indicator"]}>❯</div>
+    );
+  };
 
   const focusSelect = () => {
-    selectRef.current.focus()
-  }
+    selectRef.current.focus();
+  };
 
   useHotkeys(
     focusKey,
@@ -36,7 +47,7 @@ const BasicSelect = ({ options, onChange, placeholder, searchable, style, focusK
       border: "1px solid var(--dark-3)",
     }),
     menuPortal: () => ({
-      height: 'var(--c2)'
+      height: "var(--c2)",
     }),
     clearIndicator: () => ({
       backgroundColor: "var(--primary)",
@@ -56,45 +67,53 @@ const BasicSelect = ({ options, onChange, placeholder, searchable, style, focusK
       color: "#fff",
       backgroundColor: state.isFocused ? "var(--dark-2)" : "var(--dark-3)",
       borderRadius: 4,
-      border: "1px solid var(--dark-4)",
+      border:
+        state.isFocused && focusKey
+          ? "2px solid var(--primary)"
+          : "1px solid var(--dark-4)",
+      boxSizing: "border-box",
       display: "flex",
       boxShadow: state.isFocused
         ? "inset 0px 5px 5px rgba(0, 0, 0, 0.1)"
         : "0px 2px 0px rgba(0, 0, 0, 0.2);",
-      maxHeight: 30,
-      minHeight: 30,
-      /* Correcting for some element wonkiness, actual height is 32px */
+      maxHeight: "var(--c4)",
+      minHeight: "var(--c4)",
       paddingLeft: "var(--small)",
       paddingRight: "var(--small)",
     }),
-    placeholder: () => ({
+    placeholder: (provided, state) => ({
       color: "#fff",
       position: "absolute",
       fontFamily: '"IBM Plex Mono"',
       textTransform: "uppercase",
+      display: state.isFocused && focusKey ? "none" : "inline-block",
     }),
     indicatorSeparator: () => ({
-      display: 'none'
+      display: "none",
     }),
     valueContainer: () => ({
-      width: '100%',
-      display: 'flex',
-      flex: '1',
-      alignItems: 'center'
-    })
+      width: "100%",
+      display: "flex",
+      flex: "1",
+      alignItems: "center",
+    }),
   };
 
   return (
-    <span className={css['select-dropdown-container']} style={style}>
-      {options ? <Select
-        options={options}
-        onChange={onChange}
-        styles={styles}
-        placeholder={placeholder}
-        components={{DropdownIndicator}}
-        isSearchable={searchable ? true : false}
-        ref={selectRef}
-      /> : <Chip noEvents label={"No options available..."} />}
+    <span className={css["select-dropdown-container"]} style={style}>
+      {options ? (
+        <Select
+          options={options}
+          onChange={onChange}
+          styles={styles}
+          placeholder={placeholder}
+          components={{ DropdownIndicator }}
+          isSearchable={searchable ? true : false}
+          ref={selectRef}
+        />
+      ) : (
+        <Chip noEvents label={"No options available..."} />
+      )}
     </span>
   );
 };
