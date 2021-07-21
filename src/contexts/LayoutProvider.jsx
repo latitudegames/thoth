@@ -57,8 +57,9 @@ const LayoutProvider = ({ children }) => {
     setCurrentModel(model);
   };
 
+  // inspector subscription
   useEffect(() => {
-    subscribe(events.INSPECTOR_SET, (event, data) => {
+    return subscribe(events.INSPECTOR_SET, (event, data) => {
       setInspectorData(data);
 
       if (!data.dataControls) return;
@@ -80,8 +81,11 @@ const LayoutProvider = ({ children }) => {
         }
       });
     });
+  }, [events, subscribe, publish]);
 
-    subscribe(events.TEXT_EDITOR_SET, (event, data) => {
+  // text editor subscription
+  useEffect(() => {
+    return subscribe(events.TEXT_EDITOR_SET, (event, data) => {
       setTextEditorData(data);
     });
   }, [events, subscribe, publish]);
