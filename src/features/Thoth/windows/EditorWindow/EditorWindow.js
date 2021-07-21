@@ -1,4 +1,3 @@
-import React, { useState, useRef } from "react";
 import { Editor, useRete } from "../../../../contexts/ReteProvider";
 import { createNode } from "rete-context-menu-plugin/src/utils";
 import Select from "../../../common/Select/Select";
@@ -7,14 +6,6 @@ import css from "./editorwindow.module.css";
 
 const EditorWindow = ({ tab, ...props }) => {
   const { getNodes, getNodeMap, editor } = useRete();
-
-  const useToggle = (initialValue = false) => {
-    const [value, setValue] = useState(initialValue);
-    const toggle = React.useCallback(() => {
-      setValue((v) => !v);
-    }, []);
-    return [value, toggle];
-  };
 
   const nodeList = getNodes();
   const nodeMap = getNodeMap();
