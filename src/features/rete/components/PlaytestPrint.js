@@ -36,7 +36,9 @@ export class PlaytestPrint extends Rete.Component {
   // to the outputs to be consumed by any connected components
   worker(node, inputs, data) {
     const { publish, events } = this.editor.pubSub;
+    if (!inputs || !inputs.text) return null;
     const text = inputs.text[0];
+
     publish(events.PLAYTEST_PRINT, text);
     this.displayControl.display(text);
   }

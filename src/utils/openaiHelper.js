@@ -1,6 +1,6 @@
 export const completion = async (body) => {
   // const url = 'https://latitude-game-api.herokuapp.com'
-  const url = process.env.REACT_APP_API_URL
+  const url = process.env.REACT_APP_API_URL;
   try {
     const response = await fetch(url + "/openai", {
       method: "POST",
@@ -13,10 +13,7 @@ export const completion = async (body) => {
       body: JSON.stringify(body),
     });
 
-    console.log("response", response);
     const parsed = await response.text();
-
-    console.log("parsed", parsed);
 
     return parsed;
   } catch (err) {

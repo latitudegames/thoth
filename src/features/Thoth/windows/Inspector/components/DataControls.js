@@ -4,6 +4,7 @@ import { useLayout } from "../../../../../contexts/LayoutProvider";
 import Input from "./Input";
 import OutputGenerator from "./OutputGenerator";
 import InputGenerator from "./InputGenerator";
+import EnkiSelect from "./EnkiSelect";
 import css from "./datacontrols.module.css";
 
 const StubComponent = (props) => <div>{props.name}</div>;
@@ -27,6 +28,7 @@ const LongText = ({ initialValue, name, dataKey, nodeId }) => {
 };
 
 const controlMap = {
+  enkiSelect: EnkiSelect,
   outputGenerator: OutputGenerator,
   inputGenerator: InputGenerator,
   longText: LongText,
