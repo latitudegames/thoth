@@ -40,7 +40,7 @@ const EditorWindow = ({ tab, ...props }) => {
   const EditorToolbar = () => {
     return (
       <>
-      <Select searchable placeholder={'search for nodes...'} onChange={ async (e) => {handleNodeSelect(e)}} options={getNodeOptions()} style={{width: '50%'}} value={null}/>
+      <Select searchable placeholder={'add node...'} onChange={ async (e) => {handleNodeSelect(e)}} options={getNodeOptions()} style={{width: '50%'}} value={null}/>
       </>
     );
   };
