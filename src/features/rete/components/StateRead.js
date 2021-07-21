@@ -8,6 +8,7 @@ export class StateRead extends Rete.Component {
     this.task = {
       outputs: {},
     };
+    this.category = "State"
   }
 
   builder(node) {

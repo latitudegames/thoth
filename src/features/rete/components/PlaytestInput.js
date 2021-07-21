@@ -16,6 +16,8 @@ export class PlaytestInput extends Rete.Component {
         this.initialTask = task;
       },
     };
+
+    this.category = "I/O"
   }
 
   displayControl = {};
