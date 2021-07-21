@@ -53,7 +53,7 @@ const EditorWindow = ({ tab, ...props }) => {
           options={getNodeOptions()}
           style={{ width: "50%" }}
           value={null}
-          focusKey="space"
+          focusKey="cmd+p, ctl+p"
         />
       </>
     );
