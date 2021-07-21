@@ -8,7 +8,9 @@ export class FewshotControl extends DataControl {
       controls: {
         component: "longText",
         editor: true,
-        data,
+        data: {
+          language: data.language || "plaintext",
+        },
       },
     };
 
