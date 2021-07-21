@@ -48,7 +48,6 @@ const TextEditor = (props) => {
 
   useEffect(() => {
     setData(textEditorData);
-    console.log("textEditorData.data", textEditorData.data);
     setCode(textEditorData.data);
     setTyping(false);
 
@@ -75,20 +74,26 @@ const TextEditor = (props) => {
     });
   }, [props.node]);
 
+  // debounce for delayed save
   useEffect(() => {
     if (!typing) return;
 
     const delayDebounceFn = setTimeout(() => {
       // Send Axios request here
-      onSave();
+      onSave(code);
       setTyping(false);
     }, 2000);
 
     return () => clearTimeout(delayDebounceFn);
   }, [code]);
 
-  const onSave = () => {
-    saveTextEditor(data);
+  const onSave = (code) => {
+    const update = {
+      ...data,
+      data: code,
+    };
+    setData(update);
+    saveTextEditor(update);
     enqueueSnackbar("Editor saved", {
       preventDuplicate: true,
       variant: "success",
