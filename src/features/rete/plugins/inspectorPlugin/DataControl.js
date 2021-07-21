@@ -17,6 +17,7 @@ export class DataControl {
       dataKey: this.dataKey,
       name: this.name,
       controls: this.controls,
+      id: this.id,
     };
   }
 
