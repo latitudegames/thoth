@@ -6,6 +6,18 @@ import { InputControl } from "../dataControls/InputControl";
 import { OutputGeneratorControl } from "../dataControls/OutputGenerator";
 import { InputGeneratorControl } from "../dataControls/InputGenerator";
 
+const defaultCode = `
+// inputs, outputs, and the node are your arguments
+// inputs and outputs are an object map where the keys 
+// are your defined inputs and outputs.
+function process(node, inputs, data) {
+
+  // Keys of the object returned must match the names 
+  // of your outputs you defined.
+  return {}
+}
+`;
+
 export class Code extends Rete.Component {
   constructor() {
     // Name of the component
@@ -19,6 +31,8 @@ export class Code extends Rete.Component {
   }
 
   builder(node) {
+    if (!node.data.code) node.data.code = defaultCode;
+
     const outputGenerator = new OutputGeneratorControl({
       ignored: [
         {
