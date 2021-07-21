@@ -29,6 +29,10 @@ const BasicSelect = ({
     selectRef.current.focus();
   };
 
+  const focusBlur = () => {
+    selectRef.current.blur();
+  }
+
   useHotkeys(
     focusKey,
     (event) => {
@@ -37,6 +41,16 @@ const BasicSelect = ({
     },
     { enableOnTags: "INPUT" },
     [focusSelect]
+  );
+
+  useHotkeys(
+    "enter, esc",
+    (event) => {
+      event.preventDefault();
+      focusBlur();
+    },
+    { enableOnTags: "INPUT" },
+    [focusBlur]
   );
 
   const styles = {
@@ -95,8 +109,11 @@ const BasicSelect = ({
       width: "100%",
       display: "flex",
       flex: "1",
-      alignItems: "center",
+      alignItems: "center"
     }),
+    singleValue: () => ({
+      color: 'rgba(255,255,255,0.5)'
+    })
   };
 
   return (
