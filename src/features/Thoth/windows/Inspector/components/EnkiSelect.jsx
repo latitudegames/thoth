@@ -1,17 +1,13 @@
 import { useState, useEffect } from "react";
 import { getEnkiPrompt, getEnkis } from "../../../../../services/game-api/enki";
 
-import Select from "../../../../common/Select/Select"
-import Chip from "../../../../common/Chip/Chip"
+import Select from "../../../../common/Select/Select";
+import Chip from "../../../../common/Chip/Chip";
 
 const EnkiDetails = ({ initialTask, addThroughput, update }) => {
-  const [value, setValue] = useState("");
   const [activeEnki, selectEnki] = useState(initialTask);
   const [taskList, updateTaskList] = useState(undefined);
   const activeTask = activeEnki?.taskName;
-  const onChange = (e) => {
-    setValue(e.target.value);
-  };
 
   const processThroughput = (taskName, enkiData) => {
     const throughput = {
@@ -36,15 +32,6 @@ const EnkiDetails = ({ initialTask, addThroughput, update }) => {
     addThroughput(throughput);
   };
 
-  const onSearch = async () => {
-    const taskName = value;
-    const enkiData = await getEnkiPrompt(value);
-    if (enkiData) {
-      processThroughput(taskName, enkiData);
-    }
-    setValue("");
-  };
-
   const listChange = async (event) => {
     const taskName = event.value;
     const enkiData = await getEnkiPrompt(taskName);
@@ -67,18 +54,23 @@ const EnkiDetails = ({ initialTask, addThroughput, update }) => {
   }, [activeTask]);
 
   const optionArray = () => {
-    let array = []
+    let array = [];
     taskList.map((task, index) => {
-      return array.push({value: task.name, label: task.name})
-    })
+      return array.push({ value: task.name, label: task.name });
+    });
 
-    return array
-  }
+    return array;
+  };
 
   return (
     <>
       {taskList?.length > 0 && !activeTask && (
-        <Select searchable options={optionArray()} onChange={listChange} placeholder={"search enkis..."}/>
+        <Select
+          searchable
+          options={optionArray()}
+          onChange={listChange}
+          placeholder={"search enkis..."}
+        />
       )}
       {!taskList && <Chip noEvents label={"loading..."} />}
       {/* {activeTask && (
@@ -86,9 +78,7 @@ const EnkiDetails = ({ initialTask, addThroughput, update }) => {
           {activeEnki.serialization.introduction}
         </div>
       )} */}
-      {activeTask && (
-        <Chip label={activeTask} onClick={clearEnki}/>
-      )}
+      {activeTask && <Chip label={activeTask} onClick={clearEnki} />}
     </>
   );
 };
