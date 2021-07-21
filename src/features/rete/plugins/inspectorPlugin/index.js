@@ -28,6 +28,7 @@ function install(editor) {
 
   // handle publishing and subscribing to inspector
   editor.on("nodeselect", (node) => {
+    publish(events.TEXT_EDITOR_CLEAR);
     publish(events.INSPECTOR_SET, node.inspector.data());
   });
 }

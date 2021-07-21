@@ -90,6 +90,13 @@ const LayoutProvider = ({ children }) => {
     });
   }, [events, subscribe, publish]);
 
+  // clear text editor subscription
+  useEffect(() => {
+    return subscribe(events.TEXT_EDITOR_CLEAR, (event, data) => {
+      setTextEditorData({});
+    });
+  }, [events, subscribe, publish]);
+
   const saveTextEditor = (textData) => {
     const textUpdate = {
       [textData.dataKey]: textData.data,
