@@ -1,5 +1,5 @@
 import Rete from "rete";
-import { dataSocket, stringSocket } from "../sockets";
+import { triggerSocket, stringSocket } from "../sockets";
 import { DisplayControl } from "../controls/DisplayControl";
 
 export class PlaytestInput extends Rete.Component {
@@ -10,7 +10,7 @@ export class PlaytestInput extends Rete.Component {
     this.task = {
       outputs: {
         text: "output",
-        data: "option",
+        trigger: "option",
       },
       init: (task) => {
         this.initialTask = task;
@@ -43,7 +43,7 @@ export class PlaytestInput extends Rete.Component {
     this.unsubscribe = null;
 
     // create inputs here. First argument is th ename, second is the type (matched to other components sockets), and third is the socket the i/o will use
-    const dataOutput = new Rete.Output("data", "Data", dataSocket);
+    const dataOutput = new Rete.Output("trigger", "Trigger", triggerSocket);
     const textOutput = new Rete.Output("text", "Text", stringSocket);
 
     const display = new DisplayControl({

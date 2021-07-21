@@ -10,7 +10,7 @@ export class JoinListComponent extends Rete.Component {
     this.task = {
       outputs: {
         text: "output",
-        data: "option"
+        trigger: "option",
       },
     };
   }
@@ -22,7 +22,7 @@ export class JoinListComponent extends Rete.Component {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const out = new Rete.Output("text", "String", stringSocket);
 
-    const inputList = new Rete.Input("list", "List", arraySocket)
+    const inputList = new Rete.Input("list", "List", arraySocket);
 
     // Handle default value if data is present
     const separator = node.data.separator ? node.data.separator : " ";
@@ -42,7 +42,7 @@ export class JoinListComponent extends Rete.Component {
   // to the outputs to be consumed by any connected components
   async worker(node, inputs, outputs) {
     return {
-      text: inputs.list[0].join(node.data.separator)
+      text: inputs.list[0].join(node.data.separator),
     };
   }
 }

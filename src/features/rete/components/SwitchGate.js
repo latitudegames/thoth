@@ -1,5 +1,5 @@
 import Rete from "rete";
-import { anySocket, dataSocket } from "../sockets";
+import { anySocket, triggerSocket } from "../sockets";
 import { OutputGeneratorControl } from "../dataControls/OutputGenerator";
 
 // function capitalizeFirstLetter(string) {
@@ -12,7 +12,7 @@ export class SwitchGate extends Rete.Component {
     super("Switch");
 
     this.task = {
-      outputs: { data: "option" },
+      outputs: { trigger: "option" },
     };
   }
 
@@ -21,13 +21,13 @@ export class SwitchGate extends Rete.Component {
   builder(node) {
     const outputGenerator = new OutputGeneratorControl({
       defaultOutputs: node.data.outputs,
-      socketType: "dataSocket",
+      socketType: "triggerSocket",
       taskType: "option",
     });
     node.inspector.add(outputGenerator);
 
     const input = new Rete.Input("input", "Input", anySocket);
-    const dataInput = new Rete.Input("data", "Data", dataSocket);
+    const dataInput = new Rete.Input("trigger", "Trigger", triggerSocket);
 
     node.addInput(input).addInput(dataInput);
 

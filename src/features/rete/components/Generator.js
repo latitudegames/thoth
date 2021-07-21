@@ -1,6 +1,6 @@
 import Rete from "rete";
 import Handlebars from "handlebars";
-import { dataSocket, stringSocket } from "../sockets";
+import { triggerSocket, stringSocket } from "../sockets";
 import { InputGeneratorControl } from "../dataControls/InputGenerator";
 import { InputControl } from "../dataControls/InputControl";
 import { FewshotControl } from "../dataControls/FewshotControl";
@@ -13,14 +13,14 @@ export class Generator extends Rete.Component {
       outputs: {
         result: "output",
         composed: "output",
-        data: "option",
+        trigger: "option",
       },
     };
   }
 
   builder(node) {
-    const dataIn = new Rete.Input("data", "Data", dataSocket);
-    const dataOut = new Rete.Output("data", "Data", dataSocket);
+    const dataIn = new Rete.Input("trigger", "Trigger", triggerSocket);
+    const dataOut = new Rete.Output("trigger", "Trigger", triggerSocket);
     const resultOut = new Rete.Output("result", "Result", stringSocket);
     const composedOut = new Rete.Output("composed", "Composed", stringSocket);
 
@@ -34,7 +34,7 @@ export class Generator extends Rete.Component {
       ignored: [
         {
           name: "Data",
-          socketType: "dataSocket",
+          socketType: "triggerSocket",
         },
       ],
     });
