@@ -4,7 +4,11 @@ export class DataControl {
   node = null;
   component = null;
 
-  constructor({ dataKey, name, component, data, options, ...rest }) {
+  constructor({ dataKey, name, component, data = {}, options = {}, ...rest }) {
+    if (!dataKey) throw new Error(`Data key is required`);
+    if (!name) throw new Error(`Name is required`);
+    if (!component) throw new Error(`Component name is required`);
+
     this.dataKey = dataKey;
     this.name = name;
     this.componentData = data;
