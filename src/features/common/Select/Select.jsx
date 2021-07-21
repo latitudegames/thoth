@@ -63,6 +63,7 @@ const BasicSelect = ({ options, onChange, placeholder, searchable, style }) => {
       alignItems: 'center'
     })
   };
+
   return (
     <span className={css['select-dropdown-container']} style={style}>
       {options ? <Select
@@ -72,7 +73,7 @@ const BasicSelect = ({ options, onChange, placeholder, searchable, style }) => {
         placeholder={placeholder}
         components={{DropdownIndicator}}
         isSearchable={searchable ? true : false}
-      /> : <Chip noEvents label={"loading..."} />}
+      /> : <Chip noEvents label={"No options available..."} />}
     </span>
   );
 };
