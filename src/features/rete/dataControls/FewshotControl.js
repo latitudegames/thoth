@@ -7,6 +7,7 @@ export class FewshotControl extends DataControl {
       name: "Fewshot",
       controls: {
         component: "longText",
+        editor: true,
         data,
       },
     };
