@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Editor, useRete } from "../../../../contexts/ReteProvider";
 import { createNode } from "rete-context-menu-plugin/src/utils";
 import Select from "../../../common/Select/Select"
@@ -20,6 +20,8 @@ const EditorWindow = ({ tab, ...props }) => {
   const nodeList = getNodes();
   const nodeMap = getNodeMap();
 
+  const selectRef = useRef(null);
+
   const handleNodeSelect = async (e) => {
     if(editor) editor.addNode(
       await createNode(nodeMap.get(e.value), {
@@ -40,7 +42,7 @@ const EditorWindow = ({ tab, ...props }) => {
   const EditorToolbar = () => {
     return (
       <>
-      <Select searchable placeholder={'add node...'} onChange={ async (e) => {handleNodeSelect(e)}} options={getNodeOptions()} style={{width: '50%'}} value={null}/>
+      <Select searchable placeholder={'add node...'} onChange={ async (e) => {handleNodeSelect(e)}} options={getNodeOptions()} style={{width: '50%'}} value={null} focusKey="space"/>
       </>
     );
   };

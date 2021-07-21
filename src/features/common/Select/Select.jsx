@@ -1,13 +1,33 @@
+import React, { useRef } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
+
 import Select from "react-select";
 import Icon from '../Icon/Icon'
 import Chip from '../Chip/Chip'
 
 import css from './select.module.css'
 
-const BasicSelect = ({ options, onChange, placeholder, searchable, style }) => {
+const BasicSelect = ({ options, onChange, placeholder, searchable, style, focusKey }) => {
+  const selectRef = useRef(null)
+
   const DropdownIndicator = () => {
     return searchable ? <Icon name="search" size={'var(--small)'}/> : <div className={css['dropdown-indicator']}>❯</div>
   }
+
+  const focusSelect = () => {
+    selectRef.current.focus()
+  }
+
+  useHotkeys(
+    focusKey,
+    (event) => {
+      event.preventDefault();
+      focusSelect();
+    },
+    { enableOnTags: "INPUT" },
+    [focusSelect]
+  );
+
   const styles = {
     menu: () => ({
       backgroundColor: "var(--dark-2)",
@@ -73,6 +93,7 @@ const BasicSelect = ({ options, onChange, placeholder, searchable, style }) => {
         placeholder={placeholder}
         components={{DropdownIndicator}}
         isSearchable={searchable ? true : false}
+        ref={selectRef}
       /> : <Chip noEvents label={"No options available..."} />}
     </span>
   );
