@@ -88,7 +88,6 @@ const MenuBar = (props) => {
   useHotkeys(
     "option+n, crtl+n",
     (event) => {
-      console.log("NEW");
       event.preventDefault();
       onNew();
     },
