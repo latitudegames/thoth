@@ -55,14 +55,12 @@ const DataControls = ({
           nodeId,
           width,
           control,
-          controls: dataControls,
           name: inspectorData.name,
           initialValue: data[control.dataKey] || "",
           updateData,
         };
 
-        const Component =
-          controlMap[control.controls.component] || StubComponent;
+        const Component = controlMap[control.component] || StubComponent;
 
         return (
           <SimpleAccordion
