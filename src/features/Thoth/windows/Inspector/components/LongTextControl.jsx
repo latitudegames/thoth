@@ -1,7 +1,7 @@
 import { usePubSub } from "../../../../../contexts/PubSubProvider";
 import { useLayout } from "../../../../../contexts/LayoutProvider";
 
-const LongText = ({ initialValue, name, dataKey, nodeId }) => {
+const LongText = ({ initialValue, name, control, dataKey, nodeId }) => {
   const { events, publish } = usePubSub();
   const { createOrFocus, windowTypes } = useLayout();
 
@@ -11,6 +11,7 @@ const LongText = ({ initialValue, name, dataKey, nodeId }) => {
       nodeId,
       dataKey,
       name,
+      control,
     };
     publish(events.TEXT_EDITOR_SET, data);
     createOrFocus(windowTypes.TEXT_EDITOR, "Text Editor");
