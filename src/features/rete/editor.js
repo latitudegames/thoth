@@ -24,6 +24,7 @@ import { PlaytestPrint } from "./components/PlaytestPrint";
 import { PlaytestInput } from "./components/PlaytestInput";
 import { StateWrite } from "./components/StateWrite";
 import { StateRead } from "./components/StateRead";
+import { JsStringProcessor } from "./components/JsStringProcessor";
 import { ForEach } from "./components/ForEach";
 import { Generator } from "./components/Generator";
 
@@ -51,6 +52,7 @@ const editor = async function ({ container, pubSub, thoth, tab }) {
     new SafetyVerifier(),
     new StateWrite(),
     new StateRead(),
+    new JsStringProcessor(),
     new SwitchGate(),
     new TenseTransformer(),
     new TimeDetectorComponent(),
