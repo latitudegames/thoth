@@ -1,13 +1,6 @@
 import { useLayout } from "../../../../contexts/LayoutProvider";
 
-const CodeControl = ({
-  initialValue,
-  name,
-  dataKey,
-  nodeId,
-  control,
-  controls,
-}) => {
+const CodeControl = () => {
   const { createOrFocus, windowTypes } = useLayout();
 
   const onClick = () => {
