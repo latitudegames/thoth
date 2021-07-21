@@ -11,8 +11,9 @@ const TextEditor = (props) => {
   const [code, setCode] = useState("");
   const [data, setData] = useState("");
   const [height, setHeight] = useState();
+  const [editorOptions, setEditorOptions] = useState();
   const [typing, setTyping] = useState(null);
-  const [language, setLanguage] = useState("plaintext");
+  const [language, setLanguage] = useState(null);
   const { textEditorData, saveTextEditor } = useLayout();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -28,26 +29,39 @@ const TextEditor = (props) => {
     });
   };
 
-  const editorOptions = {
-    lineNumbers: false,
-    minimap: {
-      enabled: false,
-    },
-    suggest: {
-      preview: false,
-    },
-    wordWrap: "bounded",
-    fontSize: 14,
-    fontFamily: '"IBM Plex Mono", sans-serif !important',
-  };
+  useEffect(() => {
+    const options = {
+      lineNumbers: language === "javascript",
+      minimap: {
+        enabled: false,
+      },
+      suggest: {
+        preview: language === "javascript",
+      },
+      wordWrap: "bounded",
+      fontSize: 14,
+      fontFamily: '"IBM Plex Mono", sans-serif !important',
+    };
+
+    setEditorOptions(options);
+  }, [textEditorData, language]);
 
   useEffect(() => {
     setData(textEditorData);
+    console.log("textEditorData.data", textEditorData.data);
     setCode(textEditorData.data);
     setTyping(false);
 
-    if (textEditorData?.control?.data?.language) {
-      setLanguage(textEditorData.control.data.language);
+    // todo this is really gross to see.  Make the object interface cleaner.
+    if (textEditorData?.control?.controls?.data?.language) {
+      setLanguage(textEditorData.control.controls.data.language);
+    }
+
+    if (
+      !textEditorData.data &&
+      textEditorData?.control?.controls?.data?.defaultCode
+    ) {
+      // setCode(textEditorData.control.controls.data.defaultCode);
     }
   }, [textEditorData]);
 
@@ -104,7 +118,8 @@ const TextEditor = (props) => {
       <Editor
         theme="sds-dark"
         height={height}
-        defaultLanguage={language}
+        language={language}
+        defaultLanguage="javascript"
         value={code}
         options={editorOptions}
         defaultValue={code}
