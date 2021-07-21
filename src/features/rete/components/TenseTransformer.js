@@ -72,6 +72,8 @@ export class TenseTransformer extends Rete.Component {
         data: "option",
       },
     };
+
+    this.category = "AI/ML"
   }
 
   displayControl = {};

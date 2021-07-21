@@ -9,6 +9,7 @@ export class BooleanGate extends Rete.Component {
     this.task = {
       outputs: { true: "option", false: "option" },
     };
+    this.category = "Logic"
   }
 
   // the builder is used to "assemble" the node component.

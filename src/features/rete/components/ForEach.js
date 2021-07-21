@@ -7,6 +7,7 @@ export class ForEach extends Rete.Component {
     this.task = {
       outputs: { act: "option", element: "output", done: "option" },
     };
+    this.category = "Logic"
   }
 
   builder(node) {
