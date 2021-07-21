@@ -7,11 +7,11 @@ import { useSpell } from "../../contexts/SpellProvider";
 import { useRete } from "../../contexts/ReteProvider";
 
 import EventHandler from "./EventHandler";
-import StateManager from "./windows/StateManager";
-import Playtest from "./windows/Playtest";
-import Inspector from "./windows/Inspector/Inspector";
-import EditorWindow from "./windows/EditorWindow/EditorWindow";
-import TextEditor from "./windows/TextEditor";
+import StateManager from "./components/StateManagerWindow";
+import Playtest from "./components/PlaytestWindow";
+import Inspector from "./components/InspectorWindow";
+import EditorWindow from "./components/EditorWindow";
+import TextEditor from "./components/TextEditorWindow";
 
 const Workspace = ({ tab, appPubSub }) => {
   const { saveSpell, loadSpell } = useSpell();
