@@ -115,6 +115,7 @@ const TextEditor = (props) => {
       <div style={{ flex: 1, marginTop: "var(--c1)" }}>
         {textEditorData?.name && textEditorData?.name + " - " + language}
       </div>
+      <button onClick={onSave}>SAVE</button>
     </>
   );
 

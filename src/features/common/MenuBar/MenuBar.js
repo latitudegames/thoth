@@ -113,7 +113,7 @@ const MenuBar = (props) => {
             save_project_as: {
               onClick: onSave,
             },
-            export_JSON: {
+            export_project: {
               onClick: onExport,
             },
           },
