@@ -67,14 +67,14 @@ const LayoutProvider = ({ children }) => {
       // Handle components in a special way here.  Could probaby abstract this better
 
       Object.entries(data.dataControls).forEach(([key, control]) => {
-        if (control?.controls?.editor) {
+        if (control?.options?.editor) {
           // we relay data to the text editor component for display here as well.
           const textData = {
             data: data.data[control.dataKey],
             nodeId: data.nodeId,
-            dataKey: control.dataKey,
             name: data.name,
             control: control,
+            options: control.options,
           };
 
           setTextEditorData(textData);
