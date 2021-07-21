@@ -18,10 +18,10 @@ export class CodeControl extends DataControl {
       name: name,
       controls: {
         component: "code",
+        editor: true,
         data: {
           language: "javascript",
           defaultCode,
-          editor: true,
         },
       },
     };
