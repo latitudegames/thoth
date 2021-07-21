@@ -80,7 +80,7 @@ export class Code extends Rete.Component {
 
     try {
       const value = runCodeWithArguments(node.data.code);
-      this.displayControl.display(value);
+      this.displayControl.display(`${JSON.stringify(value)}`);
 
       return value;
     } catch (err) {
