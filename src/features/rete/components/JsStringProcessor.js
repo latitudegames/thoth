@@ -17,14 +17,14 @@ export class JsStringProcessor extends Rete.Component {
 
   builder(node) {
 
-    // Default controls
+    // Add a default javascript template if the node is new and we don't have one.
+    node.data.javascript = node.data.javascript ? node.data.javascript :
+          "(inputStr) => {\n    return { \"outputKey\": \"outputValue\" }\n}";
+
+    // Rete controls
     const input = new Rete.Input("input", "Input", stringSocket);
     const dataInput = new Rete.Input("data", "Data", dataSocket);
-
-    node.addInput(input).addInput(dataInput);
-
     const dataOut = new Rete.Output("data", "Data", dataSocket);
-    node.addOutput(dataOut);
 
     // Inspector controls
     const outputGenerator = new OutputGeneratorControl({
@@ -37,18 +37,18 @@ export class JsStringProcessor extends Rete.Component {
         },
       ],
     });
-    node.inspector.add(outputGenerator);
-
-    // Add a default javascript template if the node is new and we don't have one.
-    node.data.javascript = node.data.javascript ? node.data.javascript :
-          "(inputStr) => {\n    return { \"firstWord\": \"test\" }\n}";
 
     const javascriptControl = new JavascriptControl({
       language: "javascript",
     });
+
+    node.inspector.add(outputGenerator);
     node.inspector.add(javascriptControl);
 
-    return node;
+    return node
+        .addInput(input)
+        .addInput(dataInput)
+        .addOutput(dataOut);
   }
 
   async worker(node, inputs, outputs) {
