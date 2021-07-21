@@ -16,6 +16,7 @@ export class Generator extends Rete.Component {
         data: "option",
       },
     };
+    this.category = "AI/ML"
   }
 
   builder(node) {

@@ -12,6 +12,8 @@ export class InputComponent extends Rete.Component {
         text: "output",
       },
     };
+    
+    this.category = "I/O"
   }
 
   // the builder is used to "assemble" the node component.

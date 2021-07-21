@@ -13,6 +13,16 @@
 .select-dropdown-container:hover .dropdown-indicator {
   transform: rotate(90deg);
 }
+.group-header {
+  display: flex;
+  align-items: center;
+  color: #fff;
+  padding: var(--c1);
+  background-color: var(--dark-1);
+  border-radius: 4px;
+  font-family: "IBM Plex Mono";
+  letter-spacing: .1em;
+}
 
 .select-dropdown-container ::-webkit-scrollbar{
   width: 8px;
