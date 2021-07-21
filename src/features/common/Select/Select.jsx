@@ -4,7 +4,7 @@ import Chip from '../Chip/Chip'
 
 import css from './select.module.css'
 
-const BasicSelect = ({ options, onChange, placeholder, searchable }) => {
+const BasicSelect = ({ options, onChange, placeholder, searchable, style }) => {
   const DropdownIndicator = () => {
     return searchable ? <Icon name="search" size={'var(--small)'}/> : <div className={css['dropdown-indicator']}>❯</div>
   }
@@ -64,7 +64,7 @@ const BasicSelect = ({ options, onChange, placeholder, searchable }) => {
     })
   };
   return (
-    <span className={css['select-dropdown-container']}>
+    <span className={css['select-dropdown-container']} style={style}>
       {options ? <Select
         options={options}
         onChange={onChange}

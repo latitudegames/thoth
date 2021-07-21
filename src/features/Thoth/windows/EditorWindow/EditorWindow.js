@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Editor, useRete } from "../../../../contexts/ReteProvider";
 import { createNode } from "rete-context-menu-plugin/src/utils";
+import Select from "../../../common/Select/Select"
 
 import css from "./editorwindow.module.css";
 
@@ -19,39 +20,27 @@ const EditorWindow = ({ tab, ...props }) => {
   const nodeList = getNodes();
   const nodeMap = getNodeMap();
 
+  const handleNodeSelect = async (e) => {
+    if(editor) editor.addNode(
+      await createNode(nodeMap.get(e.value), {
+        x: 0,
+        y: 0,
+      })
+    )
+  }
+
+  const getNodeOptions = () => {
+    const arr = []
+    if(nodeList) Object.keys(nodeList).map((item, index) => {
+      return arr.push({label: nodeList[item].name, value: nodeList[item].name})
+    })
+    return arr
+  }
+
   const EditorToolbar = () => {
     return (
       <>
-        <ul>
-          <li>
-            {" "}
-            <button>
-              Add Node <div className={css["folder-arrow"]}> ❯ </div>
-            </button>
-            <ul>
-              {nodeList &&
-                Object.keys(nodeList).map((item, index) => {
-                  return (
-                    <li
-                      className={css["list-item"]}
-                      key={item}
-                      onClick={async () => {
-                        togglemenuVisibility(menuVisibility);
-                        editor.addNode(
-                          await createNode(nodeMap.get(nodeList[item].name), {
-                            x: 0,
-                            y: 0,
-                          })
-                        );
-                      }}
-                    >
-                      {nodeList[item].name}
-                    </li>
-                  );
-                })}
-            </ul>
-          </li>
-        </ul>
+      <Select searchable placeholder={'search for nodes...'} onChange={ async (e) => {handleNodeSelect(e)}} options={getNodeOptions()} style={{width: '50%'}} value={null}/>
       </>
     );
   };
