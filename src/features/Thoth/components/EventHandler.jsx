@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import { useLayout } from "../../contexts/LayoutProvider";
-import { useRete } from "../../contexts/ReteProvider";
-import { useSpell } from "../../contexts/SpellProvider";
-import { useTabManager } from "../../contexts/TabManagerProvider";
+import { useLayout } from "../../../contexts/LayoutProvider";
+import { useRete } from "../../../contexts/ReteProvider";
+import { useSpell } from "../../../contexts/SpellProvider";
+import { useTabManager } from "../../../contexts/TabManagerProvider";
 
 const EventHandler = ({ pubSub, tab }) => {
   // only using this to handle events, so not rendering anything with it.
