@@ -8,6 +8,7 @@ export class OutputGeneratorControl extends DataControl {
     defaultOutputs = [],
     socketType = "anySocket",
     taskType = "output",
+    ignored = [],
   }) {
     const options = {
       dataKey: "outputs",
@@ -17,6 +18,7 @@ export class OutputGeneratorControl extends DataControl {
         data: {
           socketType,
           taskType,
+          ignored,
         },
       },
     };
