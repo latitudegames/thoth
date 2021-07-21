@@ -10,9 +10,11 @@ export class JoinListComponent extends Rete.Component {
     this.task = {
       outputs: {
         text: "output",
-        data: "option"
+        data: "option",
       },
     };
+
+    this.category = "Logic"
   }
 
   // the builder is used to "assemble" the node component.

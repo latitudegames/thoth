@@ -22,6 +22,8 @@ export class ItemTypeComponent extends Rete.Component {
     this.task = {
       outputs: { detectedItem: "output", data: "option" },
     };
+
+    this.category = "AI/ML"
   }
 
   displayControl = {};

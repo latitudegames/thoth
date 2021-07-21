@@ -28,6 +28,7 @@ export class Code extends Rete.Component {
         data: "option",
       },
     };
+    this.category = "Logic"
   }
 
   builder(node) {

@@ -121,6 +121,7 @@ export class EntityDetector extends Rete.Component {
         data: "option",
       },
     };
+    this.category = "AI/ML"
   }
 
   displayControl = {};
