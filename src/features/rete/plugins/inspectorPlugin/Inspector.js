@@ -29,6 +29,7 @@ export class Inspector {
 
   add(dataControl) {
     this._add(this.dataControls, dataControl, "inspector");
+    dataControl.onAdd();
     return this;
   }
 
