@@ -5,6 +5,7 @@ import OutputGenerator from "./OutputGenerator";
 import InputGenerator from "./InputGenerator";
 import EnkiSelect from "./EnkiSelect";
 import css from "./datacontrols.module.css";
+import CodeControl from "./CodeControl";
 
 const StubComponent = (props) => <div>{props.name}</div>;
 
@@ -16,6 +17,7 @@ const controlMap = {
   input: Input,
   slider: StubComponent,
   dial: StubComponent,
+  code: CodeControl,
 };
 
 const DataControls = ({
@@ -53,6 +55,7 @@ const DataControls = ({
           nodeId,
           width,
           control,
+          controls: dataControls,
           name: inspectorData.name,
           initialValue: data[control.dataKey] || "",
           updateData,
