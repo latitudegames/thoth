@@ -1,4 +1,3 @@
-import { usePubSub } from "../../../../../contexts/PubSubProvider";
 import { useLayout } from "../../../../../contexts/LayoutProvider";
 
 const CodeControl = ({
@@ -9,19 +8,9 @@ const CodeControl = ({
   control,
   controls,
 }) => {
-  const { events, publish } = usePubSub();
   const { createOrFocus, windowTypes } = useLayout();
 
   const onClick = () => {
-    const data = {
-      data: initialValue,
-      nodeId,
-      dataKey,
-      name,
-      control,
-    };
-
-    publish(events.TEXT_EDITOR_SET, data);
     createOrFocus(windowTypes.TEXT_EDITOR, "Text Editor");
   };
 
