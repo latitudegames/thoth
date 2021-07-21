@@ -1,6 +1,6 @@
 import Rete from "rete";
 import { TextInputControl } from "../controls/TextInputControl";
-import { stringSocket, dataSocket } from "../sockets";
+import { stringSocket, triggerSocket } from "../sockets";
 import { RunButtonControl } from "../controls/RunButtonControl";
 
 export class RunInputComponent extends Rete.Component {
@@ -11,7 +11,7 @@ export class RunInputComponent extends Rete.Component {
     this.task = {
       outputs: {
         text: "output",
-        data: "option",
+        trigger: "option",
       },
       init: (task) => {
         this.initialTask = task;
@@ -32,7 +32,7 @@ export class RunInputComponent extends Rete.Component {
   builder(node) {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const out = new Rete.Output("text", "String", stringSocket);
-    const data = new Rete.Output("data", "Data", dataSocket);
+    const data = new Rete.Output("trigger", "Trigger", triggerSocket);
 
     // controls are the internals of the node itself
     // This default control sample has a text field.

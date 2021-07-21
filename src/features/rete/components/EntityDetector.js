@@ -1,5 +1,5 @@
 import Rete from "rete";
-import { stringSocket, dataSocket, arraySocket } from "../sockets";
+import { stringSocket, triggerSocket, arraySocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
 import { DisplayControl } from "../controls/DisplayControl";
 import { completion } from "../../../utils/openaiHelper";
@@ -118,7 +118,7 @@ export class EntityDetector extends Rete.Component {
     this.task = {
       outputs: {
         entities: "output",
-        data: "option",
+        trigger: "option",
       },
     };
   }
@@ -133,8 +133,8 @@ export class EntityDetector extends Rete.Component {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const inp = new Rete.Input("action", "Action", stringSocket);
     const out = new Rete.Output("entities", "Entities", arraySocket);
-    const dataInput = new Rete.Input("data", "Data", dataSocket);
-    const dataOutput = new Rete.Output("data", "Data", dataSocket);
+    const dataInput = new Rete.Input("trigger", "Trigger", triggerSocket);
+    const dataOutput = new Rete.Output("trigger", "Trigger", triggerSocket);
 
     // controls are the internals of the node itself
     // This default control sample has a text field.

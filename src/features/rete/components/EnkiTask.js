@@ -9,7 +9,7 @@ export class EnkiTask extends Rete.Component {
     super("Enki Task");
 
     this.task = {
-      outputs: { data: "option" },
+      outputs: { trigger: "option" },
     };
   }
 

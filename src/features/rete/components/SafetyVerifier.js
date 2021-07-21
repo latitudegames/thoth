@@ -1,5 +1,5 @@
 import Rete from "rete";
-import { stringSocket, dataSocket, booleanSocket } from "../sockets";
+import { stringSocket, triggerSocket, booleanSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
 import { DisplayControl } from "../controls/DisplayControl";
 import { completion } from "../../../utils/openaiHelper";
@@ -76,7 +76,7 @@ export class SafetyVerifier extends Rete.Component {
 
     this.task = {
       outputs: {
-        data: "option",
+        trigger: "option",
         boolean: "output",
       },
     };
@@ -88,8 +88,8 @@ export class SafetyVerifier extends Rete.Component {
     node.data.fewshot = fewshot;
 
     const inp = new Rete.Input("string", "Text", stringSocket);
-    const dataInput = new Rete.Input("data", "Data", dataSocket);
-    const dataOutput = new Rete.Output("data", "Data", dataSocket);
+    const dataInput = new Rete.Input("trigger", "Trigger", triggerSocket);
+    const dataOutput = new Rete.Output("trigger", "Trigger", triggerSocket);
     const out = new Rete.Output("boolean", "Boolean", booleanSocket);
 
     const display = new DisplayControl({
