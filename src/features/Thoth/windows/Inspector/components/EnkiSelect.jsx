@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { getEnkiPrompt, getEnkis } from "../../../../../services/game-api/enki";
-import Chip from "@material-ui/core/Chip";
-import Select from "@material-ui/core/Select";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
+
+import Select from "../../../../common/Select/Select"
+import Chip from "../../../../common/Chip/Chip"
 
 const EnkiDetails = ({ initialTask, addThroughput, update }) => {
   const [value, setValue] = useState("");
@@ -47,7 +46,7 @@ const EnkiDetails = ({ initialTask, addThroughput, update }) => {
   };
 
   const listChange = async (event) => {
-    const taskName = event.target.value;
+    const taskName = event.value;
     const enkiData = await getEnkiPrompt(taskName);
     if (enkiData) {
       processThroughput(taskName, enkiData);
@@ -67,52 +66,29 @@ const EnkiDetails = ({ initialTask, addThroughput, update }) => {
     }
   }, [activeTask]);
 
+  const optionArray = () => {
+    let array = []
+    taskList.map((task, index) => {
+      return array.push({value: task.name, label: task.name})
+    })
+
+    return array
+  }
+
   return (
     <>
       {taskList?.length > 0 && !activeTask && (
-        <div style={{ flex: 1, display: "flex", width: "100%" }}>
-          <FormControl>
-            <Select native onChange={listChange}>
-              <option aria-label="None" disabled selected value="" />
-              {taskList.map((task) => {
-                return <option value={task.name}>{task.name}</option>;
-              })}
-            </Select>
-            <FormHelperText margin={"dense"}>Select Enki</FormHelperText>
-          </FormControl>
-        </div>
+        <Select searchable options={optionArray()} onChange={listChange} placeholder={"search enkis..."}/>
       )}
-      <br></br>
-      <div style={{ flex: 1, display: "flex" }}>
-        {activeTask ? (
-          <>
-            <Chip
-              label={activeTask}
-              onDelete={clearEnki}
-              color="default"
-              variant="outlined"
-            />
-          </>
-        ) : (
-          <>
-            <input
-              style={{ flex: 6, padding: 0 }}
-              value={value}
-              type="text"
-              onChange={onChange}
-            />
-            <button style={{ flex: 1 }} onClick={onSearch}>
-              Search
-            </button>
-          </>
-        )}
-      </div>
-      <br></br>
+      {!taskList && <Chip noEvents label={"loading..."} />}
       {/* {activeTask && (
         <div style={{ flex: 1, display: "flex" }}>
           {activeEnki.serialization.introduction}
         </div>
       )} */}
+      {activeTask && (
+        <Chip label={activeTask} onClick={clearEnki}/>
+      )}
     </>
   );
 };
