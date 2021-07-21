@@ -40,6 +40,7 @@ const DataControls = ({
   updateData,
   width,
   data,
+  inspectorData,
   nodeId,
   ...props
 }) => {
@@ -69,6 +70,7 @@ const DataControls = ({
           nodeId,
           width,
           control,
+          name: inspectorData.name,
           initialValue: data[control.dataKey] || "",
           updateData,
         };
