@@ -46,7 +46,14 @@ const OutputGenerator = ({ updateData, control, initialValue, ...props }) => {
   const { controls, dataKey } = control;
 
   useEffect(() => {
-    setOutputs([...initialValue]);
+    if (!initialValue) return;
+    const newOutputs = initialValue.filter(
+      (input) =>
+        !control.controls.data.ignored.some(
+          (ignored) => ignored.name === input.name
+        )
+    );
+    setOutputs(newOutputs);
   }, [initialValue]);
 
   const onDelete = (name) => {
@@ -56,7 +63,7 @@ const OutputGenerator = ({ updateData, control, initialValue, ...props }) => {
   };
 
   const update = (update) => {
-    updateData({ [dataKey]: update });
+      updateData({ [dataKey]: [...update, ...control.controls.data.ignored] });
   };
 
   const addOutput = (output) => {

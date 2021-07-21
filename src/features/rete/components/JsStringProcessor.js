@@ -55,6 +55,7 @@ export class JsStringProcessor extends Rete.Component {
     const input = inputs["input"][0];
 
     // TODO (mitchg) - obviously this is bad, but we want this for games week. Figure out security later.
+    // eslint-disable-next-line
     const stringProcessor = eval(node.data.javascript);
     return stringProcessor(input);
   }
