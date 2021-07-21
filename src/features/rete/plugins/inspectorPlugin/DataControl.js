@@ -20,6 +20,10 @@ export class DataControl {
     };
   }
 
+  async onAdd(data) {
+    return;
+  }
+
   // stub function
   async onData(data) {
     return;
