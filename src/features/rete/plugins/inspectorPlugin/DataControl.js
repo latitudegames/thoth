@@ -14,7 +14,7 @@ export class DataControl {
   }
 
   //Serializer to easily extract the data controls information for publishing
-  data() {
+  get control() {
     return {
       dataKey: this.dataKey,
       name: this.name,

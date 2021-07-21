@@ -58,7 +58,7 @@ export class Inspector {
     const dataControls = Array.from(this.dataControls.entries()).reduce(
       (acc, [key, val]) => {
         // use the data method on controls to get data shape
-        acc[key] = val.data();
+        acc[key] = val.control;
         return acc;
       },
       {}
