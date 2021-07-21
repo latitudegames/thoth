@@ -1,4 +1,4 @@
-import { SimpleAccordion } from "../../../../common/Accordion";
+import { SimpleAccordion } from "../../../common/Accordion";
 import LongText from "./LongTextControl";
 import Input from "./Input";
 import OutputGenerator from "./OutputGenerator";
