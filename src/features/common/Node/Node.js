@@ -1,5 +1,6 @@
 import React from "react";
 import { Node, Socket, Control } from "rete-react-render-plugin";
+import Icon, { componentCategories } from '../Icon/Icon'
 
 import css from "./Node.module.css";
 
@@ -10,7 +11,10 @@ export class MyNode extends Node {
 
     return (
       <div className={`${css["node"]} ${css[selected]}`}>
-        <div className={css["node-title"]}>{node.data.name || node.name}</div>
+        <div className={css["node-title"]}>
+          <Icon name={componentCategories[node.category]} style={{marginRight: 'var(--extraSmall)'}}/>
+          {node.data.name || node.name}
+          </div>
         <div className={css["connections-container"]}>
           {inputs.length > 0 && (
             <div className={css["connection-container"]}>

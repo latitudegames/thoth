@@ -61,6 +61,7 @@ const EditorWindow = ({ tab, ...props }) => {
       <>
         <Select
           searchable
+          nested
           placeholder={"add node..."}
           onChange={async (e) => {
             handleNodeSelect(e);
