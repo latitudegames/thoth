@@ -1,7 +1,7 @@
-const InfoControl = ({ info }) => {
+const InfoControl = ({ control }) => {
   return (
-    <div>
-      <p>info</p>
+    <div style={{ whiteSpace: "pre-line" }}>
+      <p>{control.data.info}</p>
     </div>
   );
 };
