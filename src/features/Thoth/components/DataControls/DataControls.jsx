@@ -7,7 +7,6 @@ import InputGenerator from "./InputGenerator";
 import EnkiSelect from "./EnkiSelect";
 import css from "./datacontrols.module.css";
 import CodeControl from "./CodeControl";
-import { dataControlCategories } from "../../../common/Icon/Icon";
 
 const StubComponent = (props) => <div>{props.name}</div>;
 
@@ -62,7 +61,7 @@ const DataControls = ({
           <SimpleAccordion
             heading={control.name || key}
             key={key}
-            icon={dataControlCategories[control.name]}
+            icon={control.icon}
           >
             <Component {...controlProps} />
           </SimpleAccordion>
