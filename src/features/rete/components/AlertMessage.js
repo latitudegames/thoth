@@ -10,6 +10,7 @@ export class Alert extends Rete.Component {
     this.task = {
       outputs: {},
     };
+    this.category = "I/O"
   }
   // the builder is used to "assemble" the node component.
   // when we have enki hooked up and have grabbed all few shots, we would use the builder

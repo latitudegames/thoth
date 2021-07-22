@@ -15,6 +15,12 @@ const BasicSelect = ({
   style,
   focusKey,
 }) => {
+  const icons = {
+    "AI/ML": "play-print",
+    "I/O": "water",
+    Logic: "switch",
+    State: "state",
+  };
   const selectRef = useRef(null);
 
   const DropdownIndicator = () => {
@@ -25,13 +31,23 @@ const BasicSelect = ({
     );
   };
 
+  const formatGroupLabel = (data) => (
+    <span className={css["group-header"]}>
+      <Icon
+        name={icons[data.label]}
+        style={{ marginRight: "var(--extraSmall)" }}
+      />
+      {data.label}
+    </span>
+  );
+
   const focusSelect = () => {
     selectRef.current.focus();
   };
 
-  const focusBlur = () => {
+  const blurSelect = () => {
     selectRef.current.blur();
-  }
+  };
 
   useHotkeys(
     focusKey,
@@ -47,10 +63,10 @@ const BasicSelect = ({
     "enter, esc",
     (event) => {
       event.preventDefault();
-      focusBlur();
+      blurSelect();
     },
     { enableOnTags: "INPUT" },
-    [focusBlur]
+    [blurSelect]
   );
 
   const styles = {
@@ -109,11 +125,11 @@ const BasicSelect = ({
       width: "100%",
       display: "flex",
       flex: "1",
-      alignItems: "center"
+      alignItems: "center",
     }),
     singleValue: () => ({
-      color: 'rgba(255,255,255,0.5)'
-    })
+      color: "rgba(255,255,255,0.5)",
+    }),
   };
 
   return (
@@ -127,6 +143,7 @@ const BasicSelect = ({
           components={{ DropdownIndicator }}
           isSearchable={searchable ? true : false}
           ref={selectRef}
+          formatGroupLabel={formatGroupLabel}
         />
       ) : (
         <Chip noEvents label={"No options available..."} />

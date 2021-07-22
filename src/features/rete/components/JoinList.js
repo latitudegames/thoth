@@ -13,6 +13,8 @@ export class JoinListComponent extends Rete.Component {
         trigger: "option",
       },
     };
+
+    this.category = "Logic"
   }
 
   // the builder is used to "assemble" the node component.
