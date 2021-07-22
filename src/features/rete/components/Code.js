@@ -1,5 +1,5 @@
 import Rete from "rete";
-import { dataSocket } from "../sockets";
+import { triggerSocket } from "../sockets";
 import { DisplayControl } from "../controls/DisplayControl";
 import { CodeControl } from "../dataControls/CodeControl";
 import { InputControl } from "../dataControls/InputControl";
@@ -25,7 +25,7 @@ export class Code extends Rete.Component {
 
     this.task = {
       outputs: {
-        data: "option",
+        trigger: "option",
       },
     };
     this.category = "Logic"
@@ -38,7 +38,7 @@ export class Code extends Rete.Component {
       ignored: [
         {
           name: "data",
-          socketType: "dataSocket",
+          socketType: "triggerSocket",
         },
       ],
     });
@@ -47,7 +47,7 @@ export class Code extends Rete.Component {
       ignored: [
         {
           name: "data",
-          socketType: "dataSocket",
+          socketType: "triggerSocket",
         },
       ],
     });
@@ -75,8 +75,8 @@ export class Code extends Rete.Component {
 
     this.displayControl = displayControl;
 
-    const dataInput = new Rete.Input("data", "Data", dataSocket);
-    const dataOutput = new Rete.Output("data", "Data", dataSocket);
+    const dataInput = new Rete.Input("trigger", "Trigger", triggerSocket);
+    const dataOutput = new Rete.Output("trigger", "Trigger", triggerSocket);
 
     node.addOutput(dataOutput).addInput(dataInput).addControl(displayControl);
   }
