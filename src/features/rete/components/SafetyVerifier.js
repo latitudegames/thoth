@@ -80,6 +80,7 @@ export class SafetyVerifier extends Rete.Component {
         boolean: "output",
       },
     };
+    this.category = "AI/ML"
   }
 
   displayControl = {};

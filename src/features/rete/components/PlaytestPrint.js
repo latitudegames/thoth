@@ -10,6 +10,8 @@ export class PlaytestPrint extends Rete.Component {
     this.task = {
       outputs: {},
     };
+
+    this.category = "I/O"
   }
 
   displayControl = {};

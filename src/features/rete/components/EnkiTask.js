@@ -11,6 +11,7 @@ export class EnkiTask extends Rete.Component {
     this.task = {
       outputs: { trigger: "option" },
     };
+    this.category = "AI/ML"
   }
 
   node = {};

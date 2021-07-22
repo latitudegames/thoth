@@ -33,6 +33,8 @@ export class TimeDetectorComponent extends Rete.Component {
     this.task = {
       outputs: { detectedTime: "output", trigger: "option" },
     };
+
+    this.category = "AI/ML"
   }
 
   displayControl = {};

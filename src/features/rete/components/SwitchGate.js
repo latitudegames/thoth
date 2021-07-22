@@ -14,6 +14,7 @@ export class SwitchGate extends Rete.Component {
     this.task = {
       outputs: { trigger: "option" },
     };
+    this.category = "Logic"
   }
 
   node = {};
