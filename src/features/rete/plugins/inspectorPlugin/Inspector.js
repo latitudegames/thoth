@@ -1,6 +1,8 @@
+import deepEqual from "deep-equal";
 export class Inspector {
   // Stub of function.  Can be a nodes catch all onData
   onData = () => {};
+  cache = {};
 
   constructor({ component, editor, node }) {
     this.component = component;
@@ -44,8 +46,14 @@ export class Inspector {
 
     // Send the right databack to each individual control callback handle
     this.dataControls.forEach((control, key) => {
-      if (control?.onData) control.onData(data[key]);
+      const isEqual = deepEqual(this.cache[key], data[key]);
+
+      if (!isEqual && control?.onData) {
+        control.onData(data[key]);
+      }
     });
+
+    this.cache = data;
 
     // update the node at the end ofthid
     this.node.update();
