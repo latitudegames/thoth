@@ -13,13 +13,11 @@ export class InputGeneratorControl extends DataControl {
     const options = {
       dataKey: "inputs",
       name: "Data Inputs",
-      controls: {
-        component: "inputGenerator",
-        data: {
-          ignored,
-          socketType,
-          taskType,
-        },
+      component: "inputGenerator",
+      data: {
+        ignored,
+        socketType,
+        taskType,
       },
     };
 
@@ -32,7 +30,7 @@ export class InputGeneratorControl extends DataControl {
     this.node.data.inputs = inputs;
 
     const existingInputs = [];
-    const ignored = this.controls.data.ignored.map((input) => input.name);
+    const ignored = this.control.data.ignored.map((input) => input.name);
 
     this.node.inputs.forEach((out) => {
       existingInputs.push(out.key);
