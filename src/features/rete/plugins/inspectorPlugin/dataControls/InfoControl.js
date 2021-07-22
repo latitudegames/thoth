@@ -5,7 +5,7 @@ export class InfoControl extends DataControl {
     const options = {
       dataKey: dataKey,
       name: name,
-      component: "input",
+      component: "info",
       data: {
         info,
       },
