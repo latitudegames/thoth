@@ -1,5 +1,5 @@
 import Rete from "rete";
-import { stringSocket, dataSocket } from "../sockets";
+import { stringSocket, triggerSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
 import { DisplayControl } from "../controls/DisplayControl";
 import { completion } from "../../../utils/openaiHelper";
@@ -29,7 +29,7 @@ export class ActionTypeComponent extends Rete.Component {
     // Name of the component
     super("Action Type Classifier");
     this.task = {
-      outputs: { actionType: "output", data: "option" },
+      outputs: { actionType: "output", trigger: "option" },
     };
     this.category = "AI/ML"
   }
@@ -44,8 +44,8 @@ export class ActionTypeComponent extends Rete.Component {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const inp = new Rete.Input("action", "Action", stringSocket);
     const out = new Rete.Output("actionType", "ActionType", stringSocket);
-    const dataInput = new Rete.Input("data", "Data", dataSocket);
-    const dataOutput = new Rete.Output("data", "Data", dataSocket);
+    const dataInput = new Rete.Input("trigger", "Trigger", triggerSocket);
+    const dataOutput = new Rete.Output("trigger", "Trigger", triggerSocket);
 
     // controls are the internals of the node itself
     // This default control sample has a text field.

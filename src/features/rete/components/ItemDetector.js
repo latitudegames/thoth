@@ -1,5 +1,5 @@
 import Rete from "rete";
-import { stringSocket, dataSocket } from "../sockets";
+import { stringSocket, triggerSocket } from "../sockets";
 import { DisplayControl } from "../controls/DisplayControl";
 import { FewshotControl } from "../dataControls/FewshotControl";
 import { completion } from "../../../utils/openaiHelper";
@@ -20,7 +20,7 @@ export class ItemTypeComponent extends Rete.Component {
     super("Item Detector");
 
     this.task = {
-      outputs: { detectedItem: "output", data: "option" },
+      outputs: { detectedItem: "output", trigger: "option" },
     };
 
     this.category = "AI/ML"
@@ -32,8 +32,8 @@ export class ItemTypeComponent extends Rete.Component {
     node.data.fewshot = fewshot;
     const inp = new Rete.Input("string", "Text", stringSocket);
     const out = new Rete.Output("detectedItem", "Item Detected", stringSocket);
-    const dataInput = new Rete.Input("data", "Data", dataSocket);
-    const dataOutput = new Rete.Output("data", "Data", dataSocket);
+    const dataInput = new Rete.Input("trigger", "Trigger", triggerSocket);
+    const dataOutput = new Rete.Output("trigger", "Trigger", triggerSocket);
 
     const display = new DisplayControl({
       key: "display",

@@ -1,5 +1,5 @@
 import Rete from "rete";
-import { stringSocket, dataSocket } from "../sockets";
+import { stringSocket, triggerSocket } from "../sockets";
 import { DisplayControl } from "../controls/DisplayControl";
 import { FewshotControl } from "../dataControls/FewshotControl";
 import { completion } from "../../../utils/openaiHelper";
@@ -40,7 +40,7 @@ export class DifficultyDetectorComponent extends Rete.Component {
     super("Difficulty Detector");
 
     this.task = {
-      outputs: { actionDifficulty: "output", data: "option" },
+      outputs: { actionDifficulty: "output", trigger: "option" },
     };
     this.category = "AI/ML"
   }
@@ -56,8 +56,8 @@ export class DifficultyDetectorComponent extends Rete.Component {
       stringSocket
     );
 
-    const dataInput = new Rete.Input("data", "Data", dataSocket);
-    const dataOutput = new Rete.Output("data", "Data", dataSocket);
+    const dataInput = new Rete.Input("trigger", "Trigger", triggerSocket);
+    const dataOutput = new Rete.Output("trigger", "Trigger", triggerSocket);
 
     const display = new DisplayControl({
       key: "display",

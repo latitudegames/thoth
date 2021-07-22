@@ -105,14 +105,14 @@ const EnkiSelect = ({ updateData, control, initialValue, ...props }) => {
       inputs: [
         {
           name: "data",
-          socketType: "dataSocket",
+          socketType: "triggerSocket",
           taskType: "option",
         },
       ],
       outputs: [
         {
           name: "data",
-          socketType: "dataSocket",
+          socketType: "triggerSocket",
           taskType: "option",
         },
       ],
