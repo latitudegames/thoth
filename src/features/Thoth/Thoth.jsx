@@ -1,7 +1,7 @@
 import TabLayout from "../common/TabLayout/TabLayout";
 import { useTabManager } from "../../contexts/TabManagerProvider";
 import { usePubSub } from "../../contexts/PubSubProvider";
-import Workspace from "./Workspace";
+import Workspace from "./components/Workspace";
 import LoadingScreen from "../common/LoadingScreen/LoadingScreen";
 
 const Thoth = ({ empty, workspace = "default" }) => {

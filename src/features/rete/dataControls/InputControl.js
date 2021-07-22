@@ -5,9 +5,7 @@ export class InputControl extends DataControl {
     const options = {
       dataKey: dataKey,
       name: name,
-      controls: {
-        component: "input",
-      },
+      component: "input",
     };
 
     super(options);

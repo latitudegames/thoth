@@ -43,15 +43,12 @@ const AddNewInput = (props) => {
 
 const InputGenerator = ({ updateData, control, initialValue, ...props }) => {
   const [inputs, setInputs] = useState([...initialValue]);
-  const { controls, dataKey } = control;
+  const { data, dataKey } = control;
 
   useEffect(() => {
     if (!initialValue) return;
     const newInputs = initialValue.filter(
-      (input) =>
-        !control.controls.data.ignored.some(
-          (ignored) => ignored.name === input.name
-        )
+      (input) => !data.ignored.some((ignored) => ignored.name === input.name)
     );
     console.log("new inputs", newInputs);
     setInputs(newInputs);
@@ -70,7 +67,7 @@ const InputGenerator = ({ updateData, control, initialValue, ...props }) => {
   const addInput = (input) => {
     const newInput = {
       name: input,
-      socketType: controls.data.socketType,
+      socketType: data.socketType,
     };
 
     const newInputs = [...inputs, newInput];

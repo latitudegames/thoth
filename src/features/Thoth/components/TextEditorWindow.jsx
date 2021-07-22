@@ -47,20 +47,13 @@ const TextEditor = (props) => {
   }, [textEditorData, language]);
 
   useEffect(() => {
+    if (!textEditorData) return;
     setData(textEditorData);
     setCode(textEditorData.data);
     setTyping(false);
 
-    // todo this is really gross to see.  Make the object interface cleaner.
-    if (textEditorData?.control?.controls?.data?.language) {
-      setLanguage(textEditorData.control.controls.data.language);
-    }
-
-    if (
-      !textEditorData.data &&
-      textEditorData?.control?.controls?.data?.defaultCode
-    ) {
-      // setCode(textEditorData.control.controls.data.defaultCode);
+    if (textEditorData?.options?.language) {
+      setLanguage(textEditorData.options.language);
     }
   }, [textEditorData]);
 

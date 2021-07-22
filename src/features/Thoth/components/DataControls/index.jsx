@@ -1,4 +1,4 @@
-import { SimpleAccordion } from "../../../../common/Accordion";
+import { SimpleAccordion } from "../../../common/Accordion";
 import LongText from "./LongTextControl";
 import Input from "./Input";
 import OutputGenerator from "./OutputGenerator";
@@ -55,14 +55,12 @@ const DataControls = ({
           nodeId,
           width,
           control,
-          controls: dataControls,
           name: inspectorData.name,
           initialValue: data[control.dataKey] || "",
           updateData,
         };
 
-        const Component =
-          controlMap[control.controls.component] || StubComponent;
+        const Component = controlMap[control.component] || StubComponent;
 
         return (
           <SimpleAccordion
