@@ -7,7 +7,7 @@ export const booleanSocket = new Rete.Socket("Boolean");
 export const arraySocket = new Rete.Socket("Array");
 export const stringSocket = new Rete.Socket("String");
 export const objectSocket = new Rete.Socket("Object");
-export const dataSocket = new Rete.Socket("Data");
+export const triggerSocket = new Rete.Socket("Trigger");
 
 const sockets = [
   numSocket,

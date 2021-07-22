@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 
-import Window from "../../../common/Window/Window";
-import { useLayout } from "../../../../contexts/LayoutProvider";
-import DataControls from "./components/DataControls";
-import css from "./components/datacontrols.module.css";
-import Icon, { componentCategories } from "../../../common/Icon/Icon"
+import Window from "../../common/Window/Window";
+import { useLayout } from "../../../contexts/LayoutProvider";
+import DataControls from "./DataControls";
+import css from "./DataControls/datacontrols.module.css";
+import Icon, { componentCategories } from "../../common/Icon/Icon";
 
 const Inspector = (props) => {
   const { inspectorData, saveInspector } = useLayout();
@@ -38,12 +38,15 @@ const Inspector = (props) => {
 
     saveInspector(newData);
   };
-  console.log(inspectorData)
+  console.log(inspectorData);
 
   const toolbar = (
     <>
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
-        <Icon name={componentCategories[inspectorData?.category]} style={{marginRight: 'var(--extraSmall)'}}/>
+      <div style={{ flex: 1, display: "flex", alignItems: "center" }}>
+        <Icon
+          name={componentCategories[inspectorData?.category]}
+          style={{ marginRight: "var(--extraSmall)" }}
+        />
         {inspectorData?.name}
       </div>
     </>
