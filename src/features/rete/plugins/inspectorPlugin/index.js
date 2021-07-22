@@ -13,7 +13,7 @@ function install(editor) {
     component.builder = (node) => {
       // Inspector class which will handle regsistering data controls, serializing, etc.
       node.inspector = new Inspector({ component, editor, node });
-
+      node.category = component.category
       builder.call(component, node);
     };
   });

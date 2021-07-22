@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 
 import Select from "react-select";
-import Icon from "../Icon/Icon";
+import Icon, { componentCategories } from "../Icon/Icon";
 import Chip from "../Chip/Chip";
 
 import css from "./select.module.css";
@@ -14,13 +14,8 @@ const BasicSelect = ({
   searchable,
   style,
   focusKey,
+  nested
 }) => {
-  const icons = {
-    "AI/ML": "play-print",
-    "I/O": "water",
-    Logic: "switch",
-    State: "state",
-  };
   const selectRef = useRef(null);
 
   const DropdownIndicator = () => {
@@ -34,7 +29,7 @@ const BasicSelect = ({
   const formatGroupLabel = (data) => (
     <span className={css["group-header"]}>
       <Icon
-        name={icons[data.label]}
+        name={componentCategories[data.label]}
         style={{ marginRight: "var(--extraSmall)" }}
       />
       {data.label}
@@ -84,7 +79,7 @@ const BasicSelect = ({
     }),
     option: (provided, state) => ({
       padding: "var(--extraSmall)",
-      paddingLeft: "var(--small)",
+      paddingLeft: nested ? "var(--large)" : "var(--small)",
       paddingRight: "var(--small)",
       backgroundColor: state.isFocused ? "var(--primary)" : "transparent",
     }),

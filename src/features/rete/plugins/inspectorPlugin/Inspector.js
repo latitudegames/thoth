@@ -7,6 +7,7 @@ export class Inspector {
     this.editor = editor;
     this.dataControls = new Map();
     this.node = node;
+    this.category = component.category;
   }
 
   _add(list, control, prop) {
@@ -69,6 +70,7 @@ export class Inspector {
       nodeId: this.node.id,
       dataControls,
       data: this.node.data,
+      category: this.node.category
     };
   }
 

@@ -6,8 +6,8 @@
     animation: nodeGenesis .2s ease;
     transition: background-color .05s ease;
     min-width: var(--c40);
-        width: var(--c40);
-        border-radius: 4px;
+    width: var(--c40);
+    border-radius: var(--extraSmall);
     border: 1px solid transparent;
     box-shadow: 0 4px 5px rgba(0,0,0,0.2);
     background-color: rgba(70,70,70,0.7);
@@ -27,9 +27,11 @@
     padding-bottom: var(--small);
     padding-top: var(--small);
     border-bottom: 1px solid var(--dark-2);
-    color: #aaa;
+    color: #fff;
     background: none;
     border-radius: var(--extraSmall) var(--extraSmall) 0px 0px;
+    display: flex;
+    opacity: .5;
 }
 .input, .output {
     display: flex;
@@ -74,7 +76,7 @@
     /* backdrop-filter: blur(15px); */
 }
 .node.selected .node-title {
-    color: var(--dark-5);
+    opacity: 1;
     border-bottom: 1px solid var(--dark-1);
     /* background: linear-gradient(to top left, rgba(80,144,206,0), rgba(57, 159, 228, 0.2)); */
 }
