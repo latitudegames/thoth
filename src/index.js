@@ -3,27 +3,11 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import AppProviders from "./contexts/AppProviders";
 import reportWebVitals from "./reportWebVitals";
-import Joyride from 'react-joyride';
-const state = {
-  steps: [
-    {
-      target: '.startScreen_version-banner__2-Q0f',
-      content: 'Welcome to Thoth! Lets get started...',
-    },
-    {
-      target: '.startScreen_button-row__2XZch',
-      content: 'Click here to compose your first spell',
-    },
-  ]
-};
+
 ReactDOM.render(
   <React.StrictMode>
     <AppProviders>
-      <>
-      <Joyride
-          steps={state.steps} />
       <App />
-      </>
     </AppProviders>
   </React.StrictMode>,
   document.getElementById("root")
