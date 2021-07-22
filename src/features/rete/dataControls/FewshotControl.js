@@ -5,12 +5,10 @@ export class FewshotControl extends DataControl {
     const options = {
       dataKey: "fewshot",
       name: "Fewshot",
-      controls: {
-        component: "longText",
+      component: "longText",
+      options: {
         editor: true,
-        data: {
-          language: data.language || "plaintext",
-        },
+        language: data.language || "plaintext",
       },
     };
 
