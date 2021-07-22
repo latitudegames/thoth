@@ -54,7 +54,7 @@ const OutputGenerator = ({ updateData, control, initialValue, ...props }) => {
         )
     );
     setOutputs(newOutputs);
-  }, [initialValue]);
+  }, [initialValue, control]);
 
   const onDelete = (name) => {
     const newOutputs = outputs.filter((output) => output.name !== name);

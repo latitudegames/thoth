@@ -88,7 +88,6 @@ const MenuBar = (props) => {
   useHotkeys(
     "option+n, crtl+n",
     (event) => {
-      console.log("NEW");
       event.preventDefault();
       onNew();
     },
@@ -114,7 +113,7 @@ const MenuBar = (props) => {
             save_project_as: {
               onClick: onSave,
             },
-            export_JSON: {
+            export_project: {
               onClick: onExport,
             },
           },

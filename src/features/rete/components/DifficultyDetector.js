@@ -42,6 +42,7 @@ export class DifficultyDetectorComponent extends Rete.Component {
     this.task = {
       outputs: { actionDifficulty: "output", data: "option" },
     };
+    this.category = "AI/ML"
   }
 
   displayControl = {};

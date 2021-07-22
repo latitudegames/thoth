@@ -9,7 +9,13 @@ function install(editor) {
     component.builder = (node) => {
       // Handle outputs in the nodes data to repopulate when loading from JSON
       if (node.data.outputs && node.data.outputs.length !== 0) {
+        const outputMap = {};
+        node.outputs.forEach((value, key) => {
+          outputMap[key] = value;
+        });
+
         node.data.outputs.forEach((key) => {
+          if (outputMap[key]) return;
           const output = new Rete.Output(
             key.name.toLowerCase(),
             key.name,
@@ -30,8 +36,15 @@ function install(editor) {
       }
 
       if (node.data.inputs && node.data.inputs.length !== 0) {
+        // get inputs from node.inputs
+        const inputMap = {};
+        node.inputs.forEach((value, key) => {
+          inputMap[key] = value;
+        });
+
         node.data.inputs.forEach((key) => {
-          if (key.name.toLowerCase() === "data") return;
+          // If the input key is already on the node, return
+          if (inputMap[key]) return;
           const input = new Rete.Input(
             key.name.toLowerCase(),
             key.name,
