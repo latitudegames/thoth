@@ -24,7 +24,7 @@ export class DataControl {
       name: this.name,
       component: this.componentKey,
       data: this.componentData,
-      option: this.options,
+      options: this.options,
     };
   }
 
