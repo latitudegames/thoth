@@ -1,6 +1,7 @@
 import { SimpleAccordion } from "../../../common/Accordion";
 import LongText from "./LongTextControl";
 import Input from "./Input";
+import Info from "./Info";
 import OutputGenerator from "./OutputGenerator";
 import InputGenerator from "./InputGenerator";
 import EnkiSelect from "./EnkiSelect";
@@ -19,6 +20,7 @@ const controlMap = {
   slider: StubComponent,
   dial: StubComponent,
   code: CodeControl,
+  info: Info,
 };
 
 const DataControls = ({
@@ -53,6 +55,8 @@ const DataControls = ({
         };
 
         const Component = controlMap[control.component] || StubComponent;
+
+        if (control.component === "info" && !control?.data?.info) return null;
 
         return (
           <SimpleAccordion
