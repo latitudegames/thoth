@@ -43,7 +43,7 @@ const AddNewOutput = (props) => {
 
 const OutputGenerator = ({ updateData, control, initialValue, ...props }) => {
   const [outputs, setOutputs] = useState([...initialValue]);
-  const { controls, dataKey } = control;
+  const { data, dataKey } = control;
 
   useEffect(() => {
     setOutputs([...initialValue]);
@@ -62,8 +62,8 @@ const OutputGenerator = ({ updateData, control, initialValue, ...props }) => {
   const addOutput = (output) => {
     const newOutput = {
       name: output,
-      socketType: controls.data.socketType,
-      taskType: controls.data.taskType || "output",
+      socketType: data.socketType,
+      taskType: data.taskType || "output",
     };
 
     const newOutputs = [...outputs, newOutput];

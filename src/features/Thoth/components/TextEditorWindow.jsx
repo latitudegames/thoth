@@ -47,20 +47,13 @@ const TextEditor = (props) => {
   }, [textEditorData, language]);
 
   useEffect(() => {
+    if (!textEditorData) return;
     setData(textEditorData);
     setCode(textEditorData.data);
     setTyping(false);
 
-    // todo this is really gross to see.  Make the object interface cleaner.
-    if (textEditorData?.control?.controls?.data?.language) {
-      setLanguage(textEditorData.control.controls.data.language);
-    }
-
-    if (
-      !textEditorData.data &&
-      textEditorData?.control?.controls?.data?.defaultCode
-    ) {
-      // setCode(textEditorData.control.controls.data.defaultCode);
+    if (textEditorData?.options?.language) {
+      setLanguage(textEditorData.options.language);
     }
   }, [textEditorData]);
 
@@ -80,14 +73,14 @@ const TextEditor = (props) => {
 
     const delayDebounceFn = setTimeout(() => {
       // Send Axios request here
-      onSave(code);
+      save(code);
       setTyping(false);
     }, 2000);
 
     return () => clearTimeout(delayDebounceFn);
   }, [code]);
 
-  const onSave = (code) => {
+  const save = (code) => {
     const update = {
       ...data,
       data: code,
@@ -98,6 +91,10 @@ const TextEditor = (props) => {
       preventDuplicate: true,
       variant: "success",
     });
+  };
+
+  const onSave = () => {
+    save(code);
   };
 
   const updateCode = (code) => {
