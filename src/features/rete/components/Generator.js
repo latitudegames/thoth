@@ -16,7 +16,7 @@ export class Generator extends Rete.Component {
         trigger: "option",
       },
     };
-    this.category = "AI/ML"
+    this.category = "AI/ML";
   }
 
   builder(node) {
@@ -47,16 +47,19 @@ export class Generator extends Rete.Component {
     const stopControl = new InputControl({
       dataKey: "stop",
       name: "Stop",
+      icon: "stop-sign",
     });
 
     const temperatureControl = new InputControl({
       dataKey: "temp",
       name: "Temperature",
+      icon: "temperature",
     });
 
     const maxTokenControl = new InputControl({
       dataKey: "maxTokens",
       name: "Max Tokens",
+      icon: "moon",
     });
 
     node.inspector
