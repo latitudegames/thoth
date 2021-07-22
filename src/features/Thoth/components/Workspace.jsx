@@ -1,17 +1,17 @@
 import { useEffect } from "react";
 
-import WorkspaceProvider from "../../contexts/WorkspaceProvider";
-import { Editor } from "../../contexts/ReteProvider";
-import { Layout } from "../../contexts/LayoutProvider";
-import { useSpell } from "../../contexts/SpellProvider";
-import { useRete } from "../../contexts/ReteProvider";
+import WorkspaceProvider from "../../../contexts/WorkspaceProvider";
+import { Editor } from "../../../contexts/ReteProvider";
+import { Layout } from "../../../contexts/LayoutProvider";
+import { useSpell } from "../../../contexts/SpellProvider";
+import { useRete } from "../../../contexts/ReteProvider";
 
 import EventHandler from "./EventHandler";
-import StateManager from "./windows/StateManager";
-import Playtest from "./windows/Playtest";
-import Inspector from "./windows/Inspector/Inspector";
-import EditorWindow from "./windows/EditorWindow/EditorWindow";
-import TextEditor from "./windows/TextEditor";
+import StateManager from "./StateManagerWindow";
+import Playtest from "./PlaytestWindow";
+import Inspector from "./InspectorWindow";
+import EditorWindow from "./EditorWindow";
+import TextEditor from "./TextEditorWindow";
 
 const Workspace = ({ tab, appPubSub }) => {
   const { saveSpell, loadSpell } = useSpell();

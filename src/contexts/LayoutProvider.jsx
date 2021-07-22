@@ -57,8 +57,9 @@ const LayoutProvider = ({ children }) => {
     setCurrentModel(model);
   };
 
+  // inspector subscription
   useEffect(() => {
-    subscribe(events.INSPECTOR_SET, (event, data) => {
+    return subscribe(events.INSPECTOR_SET, (event, data) => {
       setInspectorData(data);
 
       if (!data.dataControls) return;
@@ -66,23 +67,33 @@ const LayoutProvider = ({ children }) => {
       // Handle components in a special way here.  Could probaby abstract this better
 
       Object.entries(data.dataControls).forEach(([key, control]) => {
-        if (control?.controls?.editor) {
+        if (control?.options?.editor) {
           // we relay data to the text editor component for display here as well.
           const textData = {
             data: data.data[control.dataKey],
             nodeId: data.nodeId,
-            dataKey: control.dataKey,
             name: data.name,
             control: control,
+            options: control.options,
           };
 
           setTextEditorData(textData);
         }
       });
     });
+  }, [events, subscribe, publish]);
 
-    subscribe(events.TEXT_EDITOR_SET, (event, data) => {
+  // text editor subscription
+  useEffect(() => {
+    return subscribe(events.TEXT_EDITOR_SET, (event, data) => {
       setTextEditorData(data);
+    });
+  }, [events, subscribe, publish]);
+
+  // clear text editor subscription
+  useEffect(() => {
+    return subscribe(events.TEXT_EDITOR_CLEAR, (event, data) => {
+      setTextEditorData({});
     });
   }, [events, subscribe, publish]);
 
