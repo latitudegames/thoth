@@ -1,57 +1,75 @@
-import React, { useState } from "react";
 import { Editor, useRete } from "../../../../contexts/ReteProvider";
 import { createNode } from "rete-context-menu-plugin/src/utils";
+import Select from "../../../common/Select/Select";
 
 import css from "./editorwindow.module.css";
 
 const EditorWindow = ({ tab, ...props }) => {
   const { getNodes, getNodeMap, editor } = useRete();
 
-  const useToggle = (initialValue = false) => {
-    const [value, setValue] = useState(initialValue);
-    const toggle = React.useCallback(() => {
-      setValue((v) => !v);
-    }, []);
-    return [value, toggle];
-  };
-
-  const [menuVisibility, togglemenuVisibility] = useToggle();
   const nodeList = getNodes();
   const nodeMap = getNodeMap();
+
+  const handleNodeSelect = async (e) => {
+    if (editor)
+      editor.addNode(
+        await createNode(nodeMap.get(e.value), {
+          x: 0,
+          y: 0,
+        })
+      );
+  };
+
+  const getNodeOptions = () => {
+    const arr = [];
+
+    // Checks if a category already exists in the array and returns its address, 
+    // otherwise returns false, and the nodeList map below creates a category.
+    const doesCategoryExist = (arr, category) => {
+      let address = false;
+      if (arr.length === 0) return false;
+      arr.forEach((obj, index) => {
+        if (obj.label === category) address = index;
+      });
+      return address;
+    };
+
+    //Categorize node list into respective categories
+    if (nodeList)
+      Object.keys(nodeList).map((item, index) => {
+        if (doesCategoryExist(arr, nodeList[item].category) !== false) {
+          return arr[
+            doesCategoryExist(arr, nodeList[item].category)
+          ].options.push({
+            label: nodeList[item].name,
+            value: nodeList[item].name,
+          });
+        } else {
+          return arr.push({
+            label: nodeList[item].category,
+            options: [
+              { label: nodeList[item].name, value: nodeList[item].name },
+            ],
+          });
+        }
+      });
+    return arr;
+  };
 
   const EditorToolbar = () => {
     return (
       <>
-        <ul>
-          <li>
-            {" "}
-            <button>
-              Add Node <div className={css["folder-arrow"]}> ❯ </div>
-            </button>
-            <ul>
-              {nodeList &&
-                Object.keys(nodeList).map((item, index) => {
-                  return (
-                    <li
-                      className={css["list-item"]}
-                      key={item}
-                      onClick={async () => {
-                        togglemenuVisibility(menuVisibility);
-                        editor.addNode(
-                          await createNode(nodeMap.get(nodeList[item].name), {
-                            x: 0,
-                            y: 0,
-                          })
-                        );
-                      }}
-                    >
-                      {nodeList[item].name}
-                    </li>
-                  );
-                })}
-            </ul>
-          </li>
-        </ul>
+        <Select
+          searchable
+          placeholder={"add node..."}
+          onChange={async (e) => {
+            handleNodeSelect(e);
+          }}
+          options={getNodeOptions()}
+          style={{ width: "50%" }}
+          value={null}
+          focusKey="cmd+p, ctl+p"
+        />
       </>
     );
   };

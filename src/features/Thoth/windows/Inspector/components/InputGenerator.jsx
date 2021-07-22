@@ -21,18 +21,18 @@ const AddNewInput = (props) => {
   };
 
   const onAdd = () => {
-    props.addOutput(value);
+    props.addInput(value);
     setValue("");
   };
 
   return (
-    <div style={{ display: "flex", gap: 'var(--extraSmall)' }}>
+    <div style={{ display: "flex", gap: "var(--extraSmall)" }}>
       <input
         style={{ flex: 6 }}
         value={value}
         type="text"
         onChange={onChange}
-        placeholder={'Node input text...'}
+        placeholder={"Node input text..."}
       />
       <button style={{ flex: 1 }} onClick={onAdd}>
         + Add
@@ -53,6 +53,7 @@ const InputGenerator = ({ updateData, control, initialValue, ...props }) => {
           (ignored) => ignored.name === input.name
         )
     );
+    console.log("new inputs", newInputs);
     setInputs(newInputs);
   }, [initialValue]);
 
@@ -63,18 +64,19 @@ const InputGenerator = ({ updateData, control, initialValue, ...props }) => {
   };
 
   const update = (update) => {
-    updateData({ [dataKey]: [...update, ...control.controls.data.ignored] });
+    updateData({ [dataKey]: update });
   };
 
-  const addOutput = (input) => {
-    const newOutput = {
+  const addInput = (input) => {
+    const newInput = {
       name: input,
       socketType: controls.data.socketType,
     };
 
-    const newOutputs = [...inputs, newOutput];
-    setInputs(newOutputs);
-    update(newOutputs);
+    const newInputs = [...inputs, newInput];
+
+    setInputs(newInputs);
+    update(newInputs);
   };
 
   return (
@@ -82,7 +84,7 @@ const InputGenerator = ({ updateData, control, initialValue, ...props }) => {
       {inputs.map((input, i) => (
         <SingleInput name={input.name} key={i} delete={onDelete} />
       ))}
-      <AddNewInput addOutput={addOutput} />
+      <AddNewInput addInput={addInput} />
     </div>
   );
 };

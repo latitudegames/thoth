@@ -7,6 +7,7 @@ export class ForEach extends Rete.Component {
     this.task = {
       outputs: { act: "option", element: "output", done: "option" },
     };
+    this.category = "Logic"
   }
 
   builder(node) {
@@ -29,7 +30,6 @@ export class ForEach extends Rete.Component {
       await Promise.all(
         inputs.array[0].map((el) => this._task.clone().run({ element: el }))
       );
-      console.log("done");
       this._task.closed = ["act"];
     } else {
       this._task.closed = ["done"];

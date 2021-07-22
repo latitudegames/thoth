@@ -14,7 +14,7 @@
   z-index: 1;
   padding: var(--c1);
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   height: var(--c4);
   max-height: var(--c6);
 }

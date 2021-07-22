@@ -49,9 +49,10 @@ const EventHandler = ({ pubSub, tab }) => {
   };
 
   const onExport = async () => {
+    console.log("exporting in workspace!");
     const spellDoc = await getSpell(activeTab.spell);
+    console.log("spell doc");
     const spell = spellDoc.toJSON();
-    console.log(spell);
     const json = JSON.stringify(spell);
     const blob = new Blob([json], { type: "application/json" });
     const url = window.URL.createObjectURL(new Blob([blob]));

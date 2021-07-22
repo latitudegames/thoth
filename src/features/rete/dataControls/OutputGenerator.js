@@ -16,6 +16,7 @@ export class OutputGeneratorControl extends DataControl {
       controls: {
         component: "outputGenerator",
         data: {
+          ignored,
           socketType,
           taskType,
           ignored,
@@ -31,6 +32,7 @@ export class OutputGeneratorControl extends DataControl {
     this.node.data.outputs = outputs;
 
     const existingOutputs = [];
+    const ignored = this.controls.data.ignored.map((output) => output.name);
 
     this.node.outputs.forEach((out) => {
       existingOutputs.push(out.key);
@@ -42,6 +44,7 @@ export class OutputGeneratorControl extends DataControl {
       .filter(
         (existing) => !outputs.some((incoming) => incoming.name === existing)
       )
+      .filter((existing) => ignored.some((out) => out !== existing))
       .forEach((key) => {
         const output = this.node.outputs.get(key);
 

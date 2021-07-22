@@ -10,7 +10,7 @@ export class MyNode extends Node {
 
     return (
       <div className={`${css["node"]} ${css[selected]}`}>
-        <div className={css["node-title"]}>{node.name}</div>
+        <div className={css["node-title"]}>{node.data.name || node.name}</div>
         <div className={css["connections-container"]}>
           {inputs.length > 0 && (
             <div className={css["connection-container"]}>
