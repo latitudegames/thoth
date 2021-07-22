@@ -38,7 +38,6 @@ const Inspector = (props) => {
 
     saveInspector(newData);
   };
-  console.log(inspectorData);
 
   const toolbar = (
     <>
