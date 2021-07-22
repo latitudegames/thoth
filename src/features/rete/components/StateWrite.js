@@ -1,5 +1,5 @@
 import Rete from "rete";
-import { dataSocket } from "../sockets";
+import { triggerSocket } from "../sockets";
 import { InputGeneratorControl } from "../dataControls/InputGenerator";
 
 export class StateWrite extends Rete.Component {
@@ -10,16 +10,18 @@ export class StateWrite extends Rete.Component {
     this.task = {
       outputs: {},
     };
+
+    this.category = "State"
   }
 
   builder(node) {
-    const dataInput = new Rete.Input("data", "Data", dataSocket);
+    const dataInput = new Rete.Input("trigger", "Trigger", triggerSocket);
 
     const inputGenerator = new InputGeneratorControl({
       ignored: [
         {
           name: "data",
-          socketType: "dataSocket",
+          socketType: "triggerSocket",
         },
       ],
     });

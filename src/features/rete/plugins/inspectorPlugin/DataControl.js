@@ -25,6 +25,7 @@ export class DataControl {
       component: this.componentKey,
       data: this.componentData,
       options: this.options,
+      id: this.id,
     };
   }
 

@@ -1,4 +1,5 @@
 import deepEqual from "deep-equal";
+import { v4 as uuidv4 } from "uuid";
 export class Inspector {
   // Stub of function.  Can be a nodes catch all onData
   onData = () => {};
@@ -25,6 +26,7 @@ export class Inspector {
     control.editor = this.editor;
     control.node = this.node;
     control.component = this.component;
+    control.id = uuidv4();
 
     list.set(control.dataKey, control);
   }

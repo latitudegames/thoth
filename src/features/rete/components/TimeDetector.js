@@ -1,5 +1,5 @@
 import Rete from "rete";
-import { stringSocket, dataSocket } from "../sockets";
+import { stringSocket, triggerSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
 import { DisplayControl } from "../controls/DisplayControl";
 import { completion } from "../../../utils/openaiHelper";
@@ -31,8 +31,10 @@ export class TimeDetectorComponent extends Rete.Component {
     super("Time Detector");
 
     this.task = {
-      outputs: { detectedTime: "output", data: "option" },
+      outputs: { detectedTime: "output", trigger: "option" },
     };
+
+    this.category = "AI/ML"
   }
 
   displayControl = {};
@@ -41,8 +43,8 @@ export class TimeDetectorComponent extends Rete.Component {
     node.data.fewshot = fewshot;
     const inp = new Rete.Input("string", "Text", stringSocket);
     const out = new Rete.Output("detectedTime", "Time Detected", stringSocket);
-    const dataInput = new Rete.Input("data", "Data", dataSocket);
-    const dataOutput = new Rete.Output("data", "Data", dataSocket);
+    const dataInput = new Rete.Input("trigger", "Trigger", triggerSocket);
+    const dataOutput = new Rete.Output("trigger", "Trigger", triggerSocket);
 
     const display = new DisplayControl({
       key: "display",

@@ -1,5 +1,5 @@
 import Rete from "rete";
-import { arraySocket, dataSocket, anySocket } from "../sockets";
+import { arraySocket, triggerSocket, anySocket } from "../sockets";
 
 export class ForEach extends Rete.Component {
   constructor() {
@@ -7,14 +7,15 @@ export class ForEach extends Rete.Component {
     this.task = {
       outputs: { act: "option", element: "output", done: "option" },
     };
+    this.category = "Logic"
   }
 
   builder(node) {
-    var inp0 = new Rete.Input("act1", "Data", dataSocket, true);
+    var inp0 = new Rete.Input("act1", "Data", triggerSocket, true);
     var inp1 = new Rete.Input("array", "Array", arraySocket);
-    var out1 = new Rete.Output("act", "Data", dataSocket);
+    var out1 = new Rete.Output("act", "Data", triggerSocket);
     var out2 = new Rete.Output("element", "Item", anySocket);
-    var out3 = new Rete.Output("done", "Done", dataSocket);
+    var out3 = new Rete.Output("done", "Done", triggerSocket);
 
     return node
       .addInput(inp0)

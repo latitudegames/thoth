@@ -73,14 +73,14 @@ const TextEditor = (props) => {
 
     const delayDebounceFn = setTimeout(() => {
       // Send Axios request here
-      onSave(code);
+      save(code);
       setTyping(false);
     }, 2000);
 
     return () => clearTimeout(delayDebounceFn);
   }, [code]);
 
-  const onSave = (code) => {
+  const save = (code) => {
     const update = {
       ...data,
       data: code,
@@ -91,6 +91,10 @@ const TextEditor = (props) => {
       preventDuplicate: true,
       variant: "success",
     });
+  };
+
+  const onSave = () => {
+    save(code);
   };
 
   const updateCode = (code) => {
