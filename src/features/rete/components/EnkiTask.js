@@ -57,9 +57,6 @@ export class EnkiTask extends Rete.Component {
       {}
     );
 
-    // console.log("test", test);
-    // console.log(this.node.task);
-
     this.displayControl.display(completionResponse.outputs.join(" "));
 
     return test;
