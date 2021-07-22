@@ -4,10 +4,16 @@ import * as sockets from "../sockets";
 import { DataControl } from "../plugins/inspectorPlugin";
 
 export class EnkiThroughputControl extends DataControl {
-  constructor({ socketType = "String", taskType = "output", nodeId }) {
+  constructor({
+    socketType = "String",
+    taskType = "output",
+    nodeId,
+    icon = "bird",
+  }) {
     const options = {
       dataKey: `throughputs-${nodeId}`,
       name: "Enki Task Details",
+      icon,
       controls: {
         component: "enkiSelect",
         data: {

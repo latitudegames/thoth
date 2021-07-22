@@ -4,11 +4,17 @@ import * as sockets from "../sockets";
 import { DataControl } from "../plugins/inspectorPlugin";
 
 export class OutputGeneratorControl extends DataControl {
-  constructor({ socketType = "anySocket", taskType = "output", ignored = [] }) {
+  constructor({
+    socketType = "anySocket",
+    taskType = "output",
+    ignored = [],
+    icon = "properties",
+  }) {
     const options = {
       dataKey: "outputs",
       name: "Data Outputs",
       component: "outputGenerator",
+      icon,
       data: {
         ignored,
         socketType,
