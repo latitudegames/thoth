@@ -25,7 +25,7 @@ export class OutputGeneratorControl extends DataControl {
 
     const existingOutputs = [];
     const ignored =
-      this?.control?.data?.ignored.map((output) => output.name) || {};
+      this?.control?.data?.ignored.map((output) => output.name) || [];
 
     this.node.outputs.forEach((out) => {
       existingOutputs.push(out.key);
