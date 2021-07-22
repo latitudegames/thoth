@@ -19,7 +19,6 @@ export class OutputGeneratorControl extends DataControl {
           ignored,
           socketType,
           taskType,
-          ignored,
         },
       },
     };

@@ -1,7 +1,7 @@
 import Rete from "rete";
 import { stringSocket, dataSocket } from "../sockets";
 import { OutputGeneratorControl } from "../dataControls/OutputGenerator";
-import { JavascriptControl } from "../dataControls/JavascriptControl";
+import { CodeControl } from "../dataControls/CodeControl";
 
 export class JsStringProcessor extends Rete.Component {
   constructor() {
@@ -11,6 +11,7 @@ export class JsStringProcessor extends Rete.Component {
     this.task = {
       outputs: { data: "option" },
     };
+    this.category = "Logic";
   }
 
   node = {};
@@ -18,8 +19,7 @@ export class JsStringProcessor extends Rete.Component {
   builder(node) {
 
     // Add a default javascript template if the node is new and we don't have one.
-    node.data.javascript = node.data.javascript ? node.data.javascript :
-          "(inputStr) => {\n    return { \"outputKey\": \"outputValue\" }\n}";
+      if(!node.data.code) node.data.code =  "(inputStr) => {\n    return { \"outputKey\": \"outputValue\" }\n}";
 
     // Rete controls
     const input = new Rete.Input("input", "Input", stringSocket);
@@ -39,12 +39,13 @@ export class JsStringProcessor extends Rete.Component {
       ],
     });
 
-    const javascriptControl = new JavascriptControl({
-      language: "javascript",
+    const codeControl = new CodeControl({
+      dataKey: "code",
+      name: "code",
     });
 
     node.inspector.add(outputGenerator);
-    node.inspector.add(javascriptControl);
+    node.inspector.add(codeControl);
 
     return node
         .addInput(input)
@@ -57,7 +58,7 @@ export class JsStringProcessor extends Rete.Component {
 
     // TODO (mitchg) - obviously this is bad, but we want this for games week. Figure out security later.
     // eslint-disable-next-line
-    const stringProcessor = eval(node.data.javascript);
+    const stringProcessor = eval(node.data.code);
     const outputs = stringProcessor(input);
 
     // Note: outputGenerator lower-cases the output connection name,
@@ -65,7 +66,7 @@ export class JsStringProcessor extends Rete.Component {
     // their javascript snippet, it should return a dict with the keys
     // they typed in, then we lower-case the keys for them.
     const lowerCasedOutputs = {};
-      Object.keys(outputs).map((key) => {lowerCasedOutputs[key.toLowerCase()] = outputs[key];});
+      Object.keys(outputs).map((key) => {return lowerCasedOutputs[key.toLowerCase()] = outputs[key];});
 
     return lowerCasedOutputs;
   }
