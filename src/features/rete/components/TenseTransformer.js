@@ -1,5 +1,5 @@
 import Rete from "rete";
-import { stringSocket, dataSocket } from "../sockets";
+import { stringSocket, triggerSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
 import { DisplayControl } from "../controls/DisplayControl";
 import { completion } from "../../../utils/openaiHelper";
@@ -69,9 +69,11 @@ export class TenseTransformer extends Rete.Component {
     this.task = {
       outputs: {
         action: "output",
-        data: "option",
+        trigger: "option",
       },
     };
+
+    this.category = "AI/ML"
   }
 
   displayControl = {};
@@ -85,8 +87,8 @@ export class TenseTransformer extends Rete.Component {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const textInput = new Rete.Input("text", "Text", stringSocket);
     const nameInput = new Rete.Input("name", "Name", stringSocket);
-    const dataInput = new Rete.Input("data", "Data", dataSocket);
-    const dataOutput = new Rete.Output("data", "Data", dataSocket);
+    const dataInput = new Rete.Input("trigger", "Trigger", triggerSocket);
+    const dataOutput = new Rete.Output("trigger", "Trigger", triggerSocket);
     const out = new Rete.Output("action", "Action", stringSocket);
 
     // controls are the internals of the node itself

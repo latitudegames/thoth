@@ -1,5 +1,5 @@
 import Rete from "rete";
-import { dataSocket, anySocket } from "../sockets";
+import { triggerSocket, anySocket } from "../sockets";
 import { DisplayControl } from "../controls/DisplayControl";
 
 export class PlaytestPrint extends Rete.Component {
@@ -10,6 +10,8 @@ export class PlaytestPrint extends Rete.Component {
     this.task = {
       outputs: {},
     };
+
+    this.category = "I/O"
   }
 
   displayControl = {};
@@ -19,7 +21,7 @@ export class PlaytestPrint extends Rete.Component {
   // to generate the appropriate inputs and ouputs for the fewshot at build time
   builder(node) {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
-    const dataInput = new Rete.Input("data", "Data", dataSocket);
+    const dataInput = new Rete.Input("trigger", "Trigger", triggerSocket);
     const textInput = new Rete.Input("text", "Print", anySocket);
 
     const display = new DisplayControl({

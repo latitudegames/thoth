@@ -1,5 +1,5 @@
 import Rete from "rete";
-import { booleanSocket, dataSocket } from "../sockets";
+import { booleanSocket, triggerSocket } from "../sockets";
 
 export class BooleanGate extends Rete.Component {
   constructor() {
@@ -9,6 +9,7 @@ export class BooleanGate extends Rete.Component {
     this.task = {
       outputs: { true: "option", false: "option" },
     };
+    this.category = "Logic"
   }
 
   // the builder is used to "assemble" the node component.
@@ -16,9 +17,9 @@ export class BooleanGate extends Rete.Component {
   // to generate the appropriate inputs and ouputs for the fewshot at build time
   builder(node) {
     const bool = new Rete.Input("boolean", "Boolean", booleanSocket);
-    const dataInput = new Rete.Input("data", "Data", dataSocket);
-    const isTrue = new Rete.Output("true", "True", dataSocket);
-    const isFalse = new Rete.Output("false", "False", dataSocket);
+    const dataInput = new Rete.Input("trigger", "Trigger", triggerSocket);
+    const isTrue = new Rete.Output("true", "True", triggerSocket);
+    const isFalse = new Rete.Output("false", "False", triggerSocket);
 
     return node
       .addInput(bool)
