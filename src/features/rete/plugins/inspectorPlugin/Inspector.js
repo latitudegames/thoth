@@ -43,6 +43,7 @@ export class Inspector {
   handleSockets(sockets, control) {
     // we assume all sockets are of the same type here
     // and that the data key is set to 'inputs' or 'outputs'
+    const isOutput = control.dataKey === "outputs";
 
     this.node.data[control.dataKey] = sockets;
 
@@ -77,7 +78,7 @@ export class Inspector {
           });
 
         // handle removing the socket, either output or input
-        if (this.connectionType === "output") {
+        if (isOutput) {
           this.node.removeOutput(socket);
         } else {
           this.node.removeInput(socket);
@@ -86,12 +87,12 @@ export class Inspector {
 
     // any incoming outputs not on the node already are new and will be added.
     const newSockets = sockets.filter(
-      (socket) => !existingSockets.includes(socket)
+      (socket) => !existingSockets.includes(socket.socketKey)
     );
 
     // Here we are running over and ensuring that the outputs are in the tasks outputs
     // We only need to do this with outputs, as inputs don't need to be in the task
-    if (control.dataKey === "outputs") {
+    if (isOutput) {
       this.component.task.outputs = this.node.data.outputs.reduce(
         (acc, out) => {
           acc[out.socketKey] = out.taskType || "output";
@@ -104,8 +105,7 @@ export class Inspector {
     // Iterate over any new sockets and add them
     newSockets.forEach((socket) => {
       // get the right constructor method for the socket
-      const SocketConstructor =
-        this.connectionType === "output" ? Rete.Output : Rete.Input;
+      const SocketConstructor = isOutput ? Rete.Output : Rete.Input;
 
       // use the provided information from the socket to generate it
       const newSocket = new SocketConstructor(
@@ -114,14 +114,12 @@ export class Inspector {
         socketMap[socket.socketType]
       );
 
-      if (this.connectionType === "output") {
+      if (isOutput) {
         this.node.addOutput(newSocket);
       } else {
         this.node.addInput(newSocket);
       }
     });
-
-    this.node.update();
   }
 
   handleData(data) {
