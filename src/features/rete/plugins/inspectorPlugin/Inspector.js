@@ -46,26 +46,27 @@ export class Inspector {
 
     this.node.data[control.dataKey] = sockets;
 
+    // get all sockets currently on the node
     const existingSockets = [];
     this.node[control.dataKey].forEach((out) => {
       existingSockets.push(out.key);
     });
 
-    // get array of ignored socket names
     const ignored = control.data.ignored || [];
-    // this?.control?.data?.ignored.map((socket) => socket.socketKey) || [];
 
-    // Any outputs existing on the current node that arent incoming have been deleted
-    // and need to be removed.
+    // outputs that are on the node but not in the incoming sockets is removed
     existingSockets
       .filter(
         (existing) =>
           !sockets.some((incoming) => incoming.socketKey === existing)
       )
+      // filter out any sockets which we have set to be ignored
       .filter((existing) => ignored.some((socket) => socket !== existing))
+      // iterate over each socket after this to remove is
       .forEach((key) => {
         const socket = this.node[control.dataKey].get(key);
 
+        // we get the connections for the node and remove that connection
         this.node
           .getConnections()
           .filter((con) => con[control.connectionType].key === key)
@@ -73,6 +74,7 @@ export class Inspector {
             this.editor.removeConnection(con);
           });
 
+        // handle removing the socket, either output or input
         if (this.connectionType === "output") {
           this.node.removeOutput(socket);
         } else {
@@ -80,12 +82,12 @@ export class Inspector {
         }
       });
 
-    // any incoming outputs not already on the node are new and will be added.
+    // any incoming outputs not on the node already are new and will be added.
     const newSockets = sockets.filter(
       (socket) => !existingSockets.includes(socket)
     );
 
-    // Here we are running over and ensuring that the outputs are in the task
+    // Here we are running over and ensuring that the outputs are in the tasks outputs
     // We only need to do this with outputs, as inputs don't need to be in the task
     if (control.dataKey === "outputs") {
       this.component.task.outputs = this.node.data.outputs.reduce(
@@ -97,10 +99,13 @@ export class Inspector {
       );
     }
 
-    // From these new outputs, we iterate and add an output socket to the node
+    // Iterate over any new sockets and add them
     newSockets.forEach((socket) => {
+      // get the right constructor method for the socket
       const SocketConstructor =
         this.connectionType === "output" ? Rete.Output : Rete.Input;
+
+      // use the provided information from the socket to generate it
       const newSocket = new SocketConstructor(
         socket.socketKey || socket.name.toLowerCase(),
         socket.name,
@@ -126,23 +131,26 @@ export class Inspector {
     // Send data to a possibel node global handler
     this.onData(data);
 
-    // Send the right databack to each individual control callback handle
-
+    // go over each data control
     for (let [key, control] of this.dataControls) {
       const isEqual = deepEqual(this.cache[key], data[key]);
 
+      // compare agains the cache to see if it has changed
       if (isEqual) continue;
 
+      // if there is inputs in the data, only handle the incoming sockets
       if (data.inputs) {
         this.handleSockets(data["inputs"], control.control);
         continue;
       }
 
+      // if there is outputs in the data, only handle the incoming sockets
       if (data.inputs) {
         this.handleSockets(data["outputs"], control.control);
         continue;
       }
 
+      // only call onData if it exists
       if (!control?.onData) continue;
 
       control.onData(data[key]);
