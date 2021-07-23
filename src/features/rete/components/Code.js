@@ -6,10 +6,8 @@ import { InputControl } from "../dataControls/InputControl";
 import { SocketGeneratorControl } from "../dataControls/SocketGenerator";
 
 const defaultCode = `
-// inputs, outputs, and the node are your arguments
-// inputs and outputs are an object map where the keys 
-// are your defined inputs and outputs.
-function process(node, inputs, data) {
+// See component information in inspector for details.
+function worker(node, inputs, data) {
 
   // Keys of the object returned must match the names 
   // of your outputs you defined.
@@ -19,7 +17,7 @@ function process(node, inputs, data) {
 
 const info = `The code component is your swiss army knife when other components won't cut it.  You can define any number of inputs and outputs on it, and then write a custom worker function.  You have access to the any data plugged into the inputs you created on your component, and can send data out along your outputs.
 
-Please note that the return of your function must be an object whose keys are the same value as the names gives to your output sockets.  The incoming inputs argument is an object whose keys are the names you defined, and are an array.
+Please note that the return of your function must be an object whose keys are the same value as the names given to your output sockets.  The incoming inputs argument is an object whose keys are the names you defined, aand each is an array.
 `;
 
 export class Code extends Rete.Component {
