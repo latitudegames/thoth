@@ -99,7 +99,7 @@ const LayoutProvider = ({ children }) => {
 
   const saveTextEditor = (textData) => {
     const textUpdate = {
-      [textData.dataKey]: textData.data,
+      [textData.control.dataKey]: textData.data,
     };
 
     publish(events.$NODE_SET(textData.nodeId), textUpdate);
