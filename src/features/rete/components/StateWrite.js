@@ -2,6 +2,10 @@ import Rete from "rete";
 import { triggerSocket } from "../sockets";
 import { SocketGeneratorControl } from "../dataControls/SocketGenerator";
 
+const info = `The State Write component allows you to define any number of inputs, and to write values to the state manager which correspond to the namesof thise inputs.  If the value does not exist in the state, it willbe written.
+
+Note here that there are a few assumptions made, which will be changed once we have selectable socket types when generating inputs. If the key already exists in the state and it is an array, whatever value you insert will be added to the array. If the existing value is an object, the object will be updated by the incoming value.`;
+
 export class StateWrite extends Rete.Component {
   constructor() {
     // Name of the component
@@ -12,6 +16,7 @@ export class StateWrite extends Rete.Component {
     };
 
     this.category = "State";
+    this.info = info;
   }
 
   builder(node) {
