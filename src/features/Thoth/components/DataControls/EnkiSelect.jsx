@@ -19,6 +19,8 @@ const EnkiDetails = ({ initialTask, addThroughput, update }) => {
       },
     };
 
+    if (!enkiData || !enkiData.data[0]) return;
+
     enkiData.data[0].inputs.forEach((_input, index) => {
       throughput.inputsToAdd.push(`input${index + 1}`);
     });
@@ -90,12 +92,13 @@ const EnkiSelect = ({ updateData, control, initialValue, ...props }) => {
   const [inputs, setInputs] = useState([...initialInputs]);
   const [outputs, setOutputs] = useState([...initialOutputs]);
 
-  const { controls, dataKey } = control;
+  const { dataKey } = control;
 
   useEffect(() => {
     setInputs([...initialInputs]);
     setOutputs([...initialOutputs]);
   }, [initialValue]);
+
   const update = (update) => {
     updateData({ [dataKey]: update });
   };
@@ -104,14 +107,16 @@ const EnkiSelect = ({ updateData, control, initialValue, ...props }) => {
     const throughput = {
       inputs: [
         {
-          name: "data",
+          name: "Trigger",
+          socketKey: "trigger",
           socketType: "triggerSocket",
           taskType: "option",
         },
       ],
       outputs: [
         {
-          name: "data",
+          name: "Trigger",
+          socketKey: "trigger",
           socketType: "triggerSocket",
           taskType: "option",
         },
@@ -121,16 +126,19 @@ const EnkiSelect = ({ updateData, control, initialValue, ...props }) => {
     inputsToAdd.forEach((input) => {
       const newInput = {
         name: input,
+        socketKey: input.toLowerCase(),
         socketType: "stringSocket",
-        taskType: controls.data.taskType || "output",
+        taskType: "output",
       };
       throughput.inputs.push(newInput);
     });
+
     outputsToAdd.forEach((output) => {
       const newOutput = {
         name: output,
+        socketKey: output.toLowerCase(),
         socketType: "stringSocket",
-        taskType: controls.data.taskType || "output",
+        taskType: "output",
       };
       throughput.outputs.push(newOutput);
     });
@@ -138,7 +146,6 @@ const EnkiSelect = ({ updateData, control, initialValue, ...props }) => {
     setInputs(throughput.inputs);
     setOutputs(throughput.outputs);
 
-    console.log("thoughputs", throughput);
     update(throughput);
   };
 

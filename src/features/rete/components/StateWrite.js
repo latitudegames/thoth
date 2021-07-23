@@ -1,7 +1,6 @@
 import Rete from "rete";
 import { triggerSocket } from "../sockets";
 import { SocketGeneratorControl } from "../dataControls/SocketGenerator";
-import { InputGeneratorControl } from "../dataControls/InputGenerator";
 
 export class StateWrite extends Rete.Component {
   constructor() {
