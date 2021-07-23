@@ -1,6 +1,6 @@
 import Rete from "rete";
 import { anySocket, triggerSocket } from "../sockets";
-import { OutputGeneratorControl } from "../dataControls/OutputGenerator";
+import { SocketGeneratorControl } from "../dataControls/SocketGenerator";
 
 // function capitalizeFirstLetter(string) {
 //   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -14,17 +14,19 @@ export class SwitchGate extends Rete.Component {
     this.task = {
       outputs: { trigger: "option" },
     };
-    this.category = "Logic"
+    this.category = "Logic";
   }
 
   node = {};
 
   builder(node) {
-    const outputGenerator = new OutputGeneratorControl({
-      defaultOutputs: node.data.outputs,
+    const outputGenerator = new SocketGeneratorControl({
+      connectionType: "output",
       socketType: "triggerSocket",
       taskType: "option",
+      name: "Output Sockets",
     });
+
     node.inspector.add(outputGenerator);
 
     const input = new Rete.Input("input", "Input", anySocket);
@@ -41,7 +43,7 @@ export class SwitchGate extends Rete.Component {
     const input = inputs["input"][0];
 
     // close all outputs
-    this._task.closed = node.data.outputs.map((out) => out.name);
+    // this._task.closed = node.data.outputs.map((out) => out.name);
 
     if (this._task.closed.includes(input)) {
       // If the ouputs closed has the incoming text, filter closed outputs to not include it
