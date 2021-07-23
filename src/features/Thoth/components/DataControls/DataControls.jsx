@@ -57,8 +57,6 @@ const DataControls = ({
 
         const Component = controlMap[control.component] || StubComponent;
 
-        console.log("component", control.component);
-
         if (control.component === "info" && !control?.data?.info) return null;
 
         return (
