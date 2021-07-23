@@ -60,6 +60,10 @@ Fred: command the mercenaries to attack the dragon while you rescue the princess
 Third Person: Fred commands the mercenaries to attack the dragon while he rescues the princess.
 ---
 `;
+
+const info = `The Tense Transformer will take any string and attempt to turn it into the first person present tense.  It requires a name and text as an input, and will output the result.
+
+You can edit the fewshot in the text editor, but be aware that you must retain the fewshots data structure so processing will work.`;
 export class TenseTransformer extends Rete.Component {
   constructor() {
     // Name of the component
@@ -74,6 +78,7 @@ export class TenseTransformer extends Rete.Component {
 
     this.category = "AI/ML";
     this.display = true;
+    this.info = info;
   }
 
   // the builder is used to "assemble" the node component.
