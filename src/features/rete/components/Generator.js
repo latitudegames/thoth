@@ -33,7 +33,7 @@ export class Generator extends Rete.Component {
 
     const inputGenerator = new SocketGeneratorControl({
       connectionType: "input",
-      name: "Input sockets (new)",
+      name: "Input Sockets",
       ignored: ["trigger"],
     });
 
