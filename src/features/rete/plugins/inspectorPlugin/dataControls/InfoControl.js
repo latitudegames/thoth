@@ -6,6 +6,7 @@ export class InfoControl extends DataControl {
       dataKey: dataKey,
       name: name,
       component: "info",
+      icon: "info",
       data: {
         info,
       },
