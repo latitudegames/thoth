@@ -14,7 +14,7 @@ export class SocketGeneratorControl extends DataControl {
       (connectionType !== "input" && connectionType !== "output")
     )
       throw new Error(
-        "Direction of your generator must be defined and of the value 'input' or 'output'."
+        "connectionType of your generator must be defined and of the value 'input' or 'output'."
       );
 
     const name = nameInput || `Socket ${connectionType}s`;
