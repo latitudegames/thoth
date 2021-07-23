@@ -2,6 +2,8 @@ import Rete from "rete";
 import { TextInputControl } from "../controls/TextInputControl";
 import { stringSocket, arraySocket } from "../sockets";
 
+const info = `The Join List component takes in an array, and will join each item in the array together with a seperator, defined in the components input field.`;
+
 export class JoinListComponent extends Rete.Component {
   constructor() {
     // Name of the component
@@ -14,7 +16,8 @@ export class JoinListComponent extends Rete.Component {
       },
     };
 
-    this.category = "Logic"
+    this.category = "Logic";
+    this.info = info;
   }
 
   // the builder is used to "assemble" the node component.
