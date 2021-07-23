@@ -1,5 +1,7 @@
 import Rete from "rete";
 import { triggerSocket, stringSocket } from "../sockets";
+
+const info = `The Playtest Input component is connected to the playtest window. It received anything which is type dinto the playtest areavia the input and will trigger the running of your spell chain.`;
 export class PlaytestInput extends Rete.Component {
   constructor() {
     // Name of the component
@@ -17,6 +19,7 @@ export class PlaytestInput extends Rete.Component {
 
     this.category = "I/O";
     this.display = true;
+    this.info = info;
   }
 
   displayControl = {};
