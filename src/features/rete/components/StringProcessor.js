@@ -1,15 +1,15 @@
 import Rete from "rete";
-import { stringSocket, dataSocket } from "../sockets";
+import { stringSocket, triggerSocket } from "../sockets";
 import { OutputGeneratorControl } from "../dataControls/OutputGenerator";
 import { CodeControl } from "../dataControls/CodeControl";
 
-export class JsStringProcessor extends Rete.Component {
+export class StringProcessor extends Rete.Component {
   constructor() {
     // Name of the component
-    super("JS String Processor");
+    super("String Processor");
 
     this.task = {
-      outputs: { data: "option" },
+      outputs: { trigger: "option" },
     };
     this.category = "Logic";
   }
@@ -23,8 +23,8 @@ export class JsStringProcessor extends Rete.Component {
 
     // Rete controls
     const input = new Rete.Input("input", "Input", stringSocket);
-    const dataInput = new Rete.Input("data", "Data", dataSocket);
-    const dataOut = new Rete.Output("data", "Data", dataSocket);
+    const triggerIn = new Rete.Input("trigger", "Trigger", triggerSocket);
+    const triggerOut = new Rete.Output("trigger", "Trigger", triggerSocket);
 
     // Inspector controls
     const outputGenerator = new OutputGeneratorControl({
@@ -32,8 +32,8 @@ export class JsStringProcessor extends Rete.Component {
       taskType: "output",
       ignored: [
         {
-          name: "data",
-          socketType: "dataSocket",
+          name: "trigger",
+          socketType: "triggerSocket",
           taskType: "option",
         },
       ],
@@ -49,8 +49,8 @@ export class JsStringProcessor extends Rete.Component {
 
     return node
         .addInput(input)
-        .addInput(dataInput)
-        .addOutput(dataOut);
+        .addInput(triggerIn)
+        .addOutput(triggerOut);
   }
 
   async worker(node, inputs, data) {
