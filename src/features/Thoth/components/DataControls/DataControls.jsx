@@ -7,11 +7,13 @@ import InputGenerator from "./InputGenerator";
 import EnkiSelect from "./EnkiSelect";
 import css from "./datacontrols.module.css";
 import CodeControl from "./CodeControl";
+import SocketGenerator from "./SocketGenerator";
 
 const StubComponent = (props) => <div>{props.name}</div>;
 
 const controlMap = {
   enkiSelect: EnkiSelect,
+  socketGenerator: SocketGenerator,
   outputGenerator: OutputGenerator,
   inputGenerator: InputGenerator,
   longText: LongText,
@@ -54,6 +56,8 @@ const DataControls = ({
         };
 
         const Component = controlMap[control.component] || StubComponent;
+
+        console.log("component", control.component);
 
         if (control.component === "info" && !control?.data?.info) return null;
 
