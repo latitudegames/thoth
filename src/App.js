@@ -1,11 +1,9 @@
 import { Route, Switch, Redirect } from "wouter";
-import Joyride from "react-joyride";
 import ThothPageWrapper from "./features/common/ThothPage/ThothPageWrapper";
 import Thoth from "./features/Thoth/Thoth";
 import StartScreen from "./features/StartScreen/StartScreen";
 
 import { useTabManager } from "./contexts/TabManagerProvider";
-import { useJoyride } from "./contexts/JoyrideProvider";
 import LoadingScreen from "./features/common/LoadingScreen/LoadingScreen";
 
 import "flexlayout-react/style/dark.css";
@@ -16,7 +14,6 @@ import "./App.css";
 function App() {
   // Use our routes
   const { tabs } = useTabManager();
-  const { state } = useJoyride();
 
   const CreateNewScreen = () => {
     return <StartScreen createNew={true} />;
@@ -29,8 +26,6 @@ function App() {
   if (!tabs) return <LoadingScreen />;
 
   return (
-    <>
-      <Joyride steps={state.steps} />
       <ThothPageWrapper tabs={tabs}>
         <Switch>
           <Route path="/thoth">
@@ -48,7 +43,6 @@ function App() {
           </Route>
         </Switch>
       </ThothPageWrapper>
-    </>
   );
 }
 
