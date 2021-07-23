@@ -19,7 +19,7 @@ export class StringProcessor extends Rete.Component {
   builder(node) {
 
     // Add a default javascript template if the node is new and we don't have one.
-      if(!node.data.code) node.data.code =  "(inputStr) => {\n    return { \"outputKey\": \"outputValue\" }\n}";
+    if(!node.data.code) node.data.code =  "(inputStr) => {\n    return { \"outputKey\": \"outputValue\" }\n}";
 
     // Rete controls
     const input = new Rete.Input("input", "Input", stringSocket);
