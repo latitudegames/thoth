@@ -49,6 +49,7 @@ export class OutputGeneratorControl extends DataControl {
           });
 
         this.node.removeOutput(output);
+        delete this.component.task.outputs[key.toLowerCase()];
       });
 
     // any incoming outputs not already on the node are new and will be added.
