@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import Window from "../../common/Window/Window";
 import { useLayout } from "../../../contexts/LayoutProvider";
 import DataControls from "./DataControls";
-import css from "./DataControls/datacontrols.module.css";
 import Icon, { componentCategories } from "../../common/Icon/Icon";
+import WindowMessage from "./WindowMessage";
 
 const Inspector = (props) => {
   const { inspectorData, saveInspector } = useLayout();
@@ -51,8 +51,7 @@ const Inspector = (props) => {
     </>
   );
 
-  if (!inspectorData)
-    return <p className={css["message"]}>No component selected</p>;
+  if (!inspectorData) return <WindowMessage />;
 
   return (
     <Window toolbar={toolbar} darker outline borderless>
