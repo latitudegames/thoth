@@ -13,9 +13,10 @@ function install(editor) {
         defaultDisplay: "",
       });
 
-      node.addControl(display);
-
-      displayMap[node.id] = display;
+      if (component.display) {
+        node.addControl(display);
+        displayMap[node.id] = display;
+      }
 
       builder.call(component, node);
     };
