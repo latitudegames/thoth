@@ -4,21 +4,6 @@
   font-family: "IBM Plex Sans", "IBM Plex Mono", sans-serif;
   cursor: default !important;
 }
-/* Chrome, Edge, and Safari */
-.dds-scrollbars *::-webkit-scrollbar {
-  width: 20px;
-}
-
-.dds-scrollbars *::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0);
-}
-
-.dds-scrollbars *::-webkit-scrollbar-thumb {
-  background-color: var(--dark-3);
-  border: 9.5px solid var(--dark-1);
-  border-top: 20px solid var(--dark-1);
-  border-bottom: 20px solid var(--dark-1);
-}
 
 :root {
   --primary: #1290ce;
