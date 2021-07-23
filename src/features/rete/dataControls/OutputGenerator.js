@@ -55,6 +55,7 @@ export class OutputGeneratorControl extends DataControl {
           });
 
         this.node.removeOutput(output);
+        delete this.component.task.outputs[key.toLowerCase()];
       });
 
     // any incoming outputs not already on the node are new and will be added.
@@ -65,7 +66,7 @@ export class OutputGeneratorControl extends DataControl {
     // Here we are running over and ensuring that the outputs are in the task
     this.component.task.outputs = this.node.data.outputs.reduce(
       (acc, out) => {
-        acc[out.name] = out.taskType || "output";
+        acc[out.name.toLowerCase()] = out.taskType || "output";
         return acc;
       },
       { ...this.component.task.outputs }
