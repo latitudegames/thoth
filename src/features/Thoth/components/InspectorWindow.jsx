@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 
-import Window from "../../../common/Window/Window";
-import { useLayout } from "../../../../contexts/LayoutProvider";
-import DataControls from "./components/DataControls";
-import css from "./components/datacontrols.module.css";
+import Window from "../../common/Window/Window";
+import { useLayout } from "../../../contexts/LayoutProvider";
+import DataControls from "./DataControls";
+import css from "./DataControls/datacontrols.module.css";
 
 const Inspector = (props) => {
   const { inspectorData, saveInspector } = useLayout();

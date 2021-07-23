@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const SingleInput = (props) => {
+const SingleOutput = (props) => {
   return (
     <div style={{ marginBottom: 10, flex: 1, width: "100%" }}>
       <p style={{ display: "inline" }}>{props.name}</p>
@@ -13,7 +13,7 @@ const SingleInput = (props) => {
   );
 };
 
-const AddNewInput = (props) => {
+const AddNewOutput = (props) => {
   const [value, setValue] = useState("");
 
   const onChange = (e) => {
@@ -21,7 +21,7 @@ const AddNewInput = (props) => {
   };
 
   const onAdd = () => {
-    props.addInput(value);
+    props.addOutput(value);
     setValue("");
   };
 
@@ -32,7 +32,7 @@ const AddNewInput = (props) => {
         value={value}
         type="text"
         onChange={onChange}
-        placeholder={"Node input text..."}
+        placeholder={"Node output text..."}
       />
       <button style={{ flex: 1 }} onClick={onAdd}>
         + Add
@@ -41,52 +41,51 @@ const AddNewInput = (props) => {
   );
 };
 
-const InputGenerator = ({ updateData, control, initialValue, ...props }) => {
-  const [inputs, setInputs] = useState([...initialValue]);
-  const { controls, dataKey } = control;
+const OutputGenerator = ({ updateData, control, initialValue, ...props }) => {
+  const [outputs, setOutputs] = useState([...initialValue]);
+  const { data, dataKey } = control;
 
   useEffect(() => {
     if (!initialValue) return;
-    const newInputs = initialValue.filter(
+    const newOutputs = initialValue.filter(
       (input) =>
         !control.controls.data.ignored.some(
           (ignored) => ignored.name === input.name
         )
     );
-    console.log("new inputs", newInputs);
-    setInputs(newInputs);
-  }, [initialValue]);
+    setOutputs(newOutputs);
+  }, [initialValue, control]);
 
   const onDelete = (name) => {
-    const newInputs = inputs.filter((input) => input.name !== name);
-    setInputs(newInputs);
-    update(newInputs);
+    const newOutputs = outputs.filter((output) => output.name !== name);
+    setOutputs(newOutputs);
+    update(newOutputs);
   };
 
   const update = (update) => {
-    updateData({ [dataKey]: update });
+      updateData({ [dataKey]: [...update, ...control.controls.data.ignored] });
   };
 
-  const addInput = (input) => {
-    const newInput = {
-      name: input,
-      socketType: controls.data.socketType,
+  const addOutput = (output) => {
+    const newOutput = {
+      name: output,
+      socketType: data.socketType,
+      taskType: data.taskType || "output",
     };
 
-    const newInputs = [...inputs, newInput];
-
-    setInputs(newInputs);
-    update(newInputs);
+    const newOutputs = [...outputs, newOutput];
+    setOutputs(newOutputs);
+    update(newOutputs);
   };
 
   return (
     <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
-      {inputs.map((input, i) => (
-        <SingleInput name={input.name} key={i} delete={onDelete} />
+      {outputs.map((out, i) => (
+        <SingleOutput name={out.name} key={i} delete={onDelete} />
       ))}
-      <AddNewInput addInput={addInput} />
+      <AddNewOutput addOutput={addOutput} />
     </div>
   );
 };
 
-export default InputGenerator;
+export default OutputGenerator;
