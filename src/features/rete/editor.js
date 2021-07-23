@@ -24,7 +24,7 @@ import { PlaytestPrint } from "./components/PlaytestPrint";
 import { PlaytestInput } from "./components/PlaytestInput";
 import { StateWrite } from "./components/StateWrite";
 import { StateRead } from "./components/StateRead";
-import { JsStringProcessor } from "./components/JsStringProcessor";
+import { StringProcessor } from "./components/StringProcessor";
 import { ForEach } from "./components/ForEach";
 import { EnkiTask } from "./components/EnkiTask";
 import { Generator } from "./components/Generator";
@@ -56,7 +56,7 @@ const editor = async function ({ container, pubSub, thoth, tab }) {
     new SafetyVerifier(),
     new StateWrite(),
     new StateRead(),
-    new JsStringProcessor(),
+    new StringProcessor(),
     new SwitchGate(),
     new TenseTransformer(),
     new TimeDetectorComponent(),

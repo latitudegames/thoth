@@ -48,9 +48,9 @@ const OutputGenerator = ({ updateData, control, initialValue, ...props }) => {
   useEffect(() => {
     if (!initialValue) return;
     const newOutputs = initialValue.filter(
-      (input) =>
-        !control.controls.data.ignored.some(
-          (ignored) => ignored.name === input.name
+      (output) =>
+        !control.data.ignored.some(
+          (ignored) => ignored.name === output.name
         )
     );
     setOutputs(newOutputs);
@@ -63,7 +63,7 @@ const OutputGenerator = ({ updateData, control, initialValue, ...props }) => {
   };
 
   const update = (update) => {
-      updateData({ [dataKey]: [...update, ...control.controls.data.ignored] });
+      updateData({ [dataKey]: update });
   };
 
   const addOutput = (output) => {
