@@ -1,6 +1,3 @@
-import Rete from "rete";
-import * as socketMap from "../sockets";
-
 import { DataControl } from "../plugins/inspectorPlugin";
 
 export class SocketGeneratorControl extends DataControl {

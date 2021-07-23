@@ -72,7 +72,6 @@ const TextEditor = (props) => {
     if (!typing) return;
 
     const delayDebounceFn = setTimeout(() => {
-      // Send Axios request here
       save(code);
       setTyping(false);
     }, 2000);
