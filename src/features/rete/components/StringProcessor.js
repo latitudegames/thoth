@@ -65,8 +65,8 @@ export class StringProcessor extends Rete.Component {
     // but end-users shouldn't be aware of this.  When they write
     // their javascript snippet, it should return a dict with the keys
     // they typed in, then we lower-case the keys for them.
-    const lowerCasedOutputs = {};
-      Object.keys(outputs).map((key) => {return lowerCasedOutputs[key.toLowerCase()] = outputs[key];});
+    const lowerCasedOutputs =
+        Object.keys(outputs).reduce((prev, key) => {return {...prev, [key.toLowerCase()]: outputs[key] }; }, {});
 
     return lowerCasedOutputs;
   }
