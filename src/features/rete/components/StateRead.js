@@ -1,5 +1,5 @@
 import Rete from "rete";
-import { OutputGeneratorControl } from "../dataControls/OutputGenerator";
+import { SocketGeneratorControl } from "../dataControls/SocketGenerator";
 export class StateRead extends Rete.Component {
   constructor() {
     // Name of the component
@@ -8,13 +8,15 @@ export class StateRead extends Rete.Component {
     this.task = {
       outputs: {},
     };
-    this.category = "State"
+    this.category = "State";
   }
 
   builder(node) {
-    const outputGenerator = new OutputGeneratorControl({
-      defaultOutputs: node.data.outputs,
+    const outputGenerator = new SocketGeneratorControl({
+      connectionType: "output",
+      name: "Output sockets",
     });
+
     node.inspector.add(outputGenerator);
 
     return node;
@@ -26,7 +28,7 @@ export class StateRead extends Rete.Component {
     const gameState = await this.editor.thoth.getCurrentGameState();
 
     return Object.entries(gameState).reduce((acc, [key, value]) => {
-      if (node.data.outputs.some((out)=> out.name === key)) {
+      if (node.data.outputs.some((out) => out.name === key)) {
         acc[key] = value;
       }
 
