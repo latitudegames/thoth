@@ -24,6 +24,10 @@ Action, Type: journey to the city, travel
 Action, Type: drink your potion, use
 Action, Type: `;
 
+const info = `The Action type component will take in an action as text, and attempt to classify it into a discrete number of categories:
+
+look, get, use, craft, dialog, movement, travel, combat, consume, other.`;
+
 export class ActionTypeComponent extends Rete.Component {
   constructor() {
     // Name of the component
@@ -31,7 +35,8 @@ export class ActionTypeComponent extends Rete.Component {
     this.task = {
       outputs: { actionType: "output", trigger: "option" },
     };
-    this.category = "AI/ML"
+    this.category = "AI/ML";
+    this.info = info;
   }
 
   displayControl = {};
