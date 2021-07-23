@@ -67,10 +67,12 @@ export class Inspector {
         const socket = this.node[control.dataKey].get(key);
 
         // we get the connections for the node and remove that connection
-        this.node
+        const connections = this.node
           .getConnections()
-          .filter((con) => con[control.connectionType].key === key)
-          .forEach((con) => {
+          .filter((con) => con[control.data.connectionType].key === key);
+
+        if (connections)
+          connections.forEach((con) => {
             this.editor.removeConnection(con);
           });
 
@@ -139,13 +141,13 @@ export class Inspector {
       if (isEqual) continue;
 
       // if there is inputs in the data, only handle the incoming sockets
-      if (data.inputs) {
+      if (key === "inputs" && data["inputs"]) {
         this.handleSockets(data["inputs"], control.control);
         continue;
       }
 
       // if there is outputs in the data, only handle the incoming sockets
-      if (data.inputs) {
+      if (key === "outputs" && data["outputs"]) {
         this.handleSockets(data["outputs"], control.control);
         continue;
       }
