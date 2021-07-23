@@ -14,6 +14,7 @@ const BasicSelect = ({
   searchable,
   style,
   focusKey,
+  id
 }) => {
   const icons = {
     "AI/ML": "play-print",
@@ -25,14 +26,17 @@ const BasicSelect = ({
 
   const DropdownIndicator = () => {
     return searchable ? (
+      <div id={id && id}>
       <Icon name="search" size={"var(--small)"} />
+      </div>
     ) : (
       <div className={css["dropdown-indicator"]}>❯</div>
     );
   };
 
   const formatGroupLabel = (data) => (
-    <span className={css["group-header"]}>
+    <span           
+     className={css["group-header"]}>
       <Icon
         name={icons[data.label]}
         style={{ marginRight: "var(--extraSmall)" }}
