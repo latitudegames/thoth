@@ -7,10 +7,10 @@ function install(editor) {
   editor.on("componentregister", (component) => {
     const builder = component.builder;
 
-    // if (!component.info)
-    //   throw new Error(
-    //     "All components must contain an info property describing the component to the end user."
-    //   );
+    if (!component.info)
+      throw new Error(
+        "All components must contain an info property describing the component to the end user."
+      );
 
     // we are going to override the default builder with our own, and will invoke the original builder inside it.
     component.builder = (node) => {
