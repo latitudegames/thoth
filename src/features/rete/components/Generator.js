@@ -1,7 +1,7 @@
 import Rete from "rete";
 import Handlebars from "handlebars";
 import { triggerSocket, stringSocket } from "../sockets";
-import { InputGeneratorControl } from "../dataControls/InputGenerator";
+import { SocketGeneratorControl } from "../dataControls/SocketGenerator";
 import { InputControl } from "../dataControls/InputControl";
 import { FewshotControl } from "../dataControls/FewshotControl";
 import { completion } from "../../../utils/openaiHelper";
@@ -31,13 +31,10 @@ export class Generator extends Rete.Component {
       .addOutput(resultOut)
       .addOutput(composedOut);
 
-    const inputGenerator = new InputGeneratorControl({
-      ignored: [
-        {
-          name: "Data",
-          socketType: "triggerSocket",
-        },
-      ],
+    const inputGenerator = new SocketGeneratorControl({
+      connectionType: "input",
+      name: "Input sockets (new)",
+      ignored: ["trigger"],
     });
 
     const fewshotControl = new FewshotControl({
@@ -78,7 +75,11 @@ export class Generator extends Rete.Component {
       return acc;
     }, {});
 
-    const template = Handlebars.compile(node.data.fewshot);
+    const string = node.data.fewshot || "";
+
+    console.log(node.data.fewshot);
+
+    const template = Handlebars.compile(string);
     const prompt = template(inputs);
 
     const stop = node?.data?.stop
