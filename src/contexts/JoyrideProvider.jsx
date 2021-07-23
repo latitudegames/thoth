@@ -1,26 +1,46 @@
-import { useContext, createContext } from "react";
+import { useContext, createContext, useState } from "react";
+import { ACTIONS, EVENTS, STATUS } from "react-joyride";
 
-const state = {
+const basicFlowState = {
   steps: [
     {
-      target: ".startScreen_version-banner__2-Q0f",
+      target: "#basicFlow1",
       content: "Welcome to Thoth! Lets get started...",
-    },
-    {
-      target: ".startScreen_button-row__2XZch",
-      content: "Click here to compose your first spell",
+      showSkipButton: true
     },
   ],
+  stepIndex: 0,
+  run: true,
 };
 
 const Context = createContext({
-  state,
+  flowState: basicFlowState,
 });
 export const useJoyride = () => useContext(Context);
 
 const JoyrideProvider = ({ children }) => {
+  const [flowState, setFlowState] = useState(basicFlowState);
+
+  const joyrideCallback = (data) => {
+    const { action, index, status, type } = data;
+
+    if ([EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND].includes(type)) {
+      // Update state to advance the tour
+      // setFlowState({ stepIndex: index + (action === ACTIONS.PREV ? -1 : 1) });
+    } else if ([STATUS.FINISHED, STATUS.SKIPPED].includes(status)) {
+      // Need to set our running state to false, so we can restart if we click start again.
+      setFlowState({ run: false });
+    }
+
+    console.groupCollapsed(type);
+    console.log(data); //eslint-disable-line no-console
+    console.groupEnd();
+  };
+
   const publicInterface = {
-    state,
+    flowState,
+    setFlowState,
+    joyrideCallback,
   };
 
   return (

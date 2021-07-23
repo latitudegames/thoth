@@ -69,6 +69,7 @@ const EditorWindow = ({ tab, ...props }) => {
           style={{ width: "50%" }}
           value={null}
           focusKey="cmd+p, ctl+p"
+          id={"basicFlow1"}
         />
       </>
     );

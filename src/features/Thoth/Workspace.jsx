@@ -1,5 +1,6 @@
 import { useEffect } from "react";
-
+import Joyride from "react-joyride";
+import { useJoyride } from "../../contexts/JoyrideProvider";
 import WorkspaceProvider from "../../contexts/WorkspaceProvider";
 import { Editor } from "../../contexts/ReteProvider";
 import { Layout } from "../../contexts/LayoutProvider";
@@ -56,9 +57,19 @@ const Workspace = ({ tab, appPubSub }) => {
       }
     };
   };
-
+  const { flowState, setFlowState, joyrideCallback } = useJoyride();
+  const { run, steps, stepIndex } = flowState;
   return (
     <div style={{ visibility: !tab.active ? "hidden" : null, height: "100%" }}>
+      <Joyride
+        run={run}
+        callback={joyrideCallback}
+        steps={steps}
+        stepIndex={stepIndex}
+        showProgress={true}
+        showSkipButton={true}
+      />
+
       <EventHandler tab={tab} pubSub={appPubSub} />
       <Layout json={tab.layoutJson} factory={factory(tab)} tab={tab} />
     </div>
