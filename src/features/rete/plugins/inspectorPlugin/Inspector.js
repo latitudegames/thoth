@@ -40,16 +40,16 @@ export class Inspector {
     return this;
   }
 
-  handleSockets(sockets, control) {
+  handleSockets(sockets, control, type) {
     // we assume all sockets are of the same type here
     // and that the data key is set to 'inputs' or 'outputs'
-    const isOutput = control.dataKey === "outputs";
+    const isOutput = type === "outputs";
 
-    this.node.data[control.dataKey] = sockets;
+    this.node.data[type] = sockets;
 
     // get all sockets currently on the node
     const existingSockets = [];
-    this.node[control.dataKey].forEach((out) => {
+    this.node[type].forEach((out) => {
       existingSockets.push(out.key);
     });
 
@@ -62,15 +62,18 @@ export class Inspector {
           !sockets.some((incoming) => incoming.socketKey === existing)
       )
       // filter out any sockets which we have set to be ignored
-      .filter((existing) => ignored.some((socket) => socket !== existing))
+      .filter(
+        (existing) =>
+          ignored.length === 0 || ignored.some((socket) => socket !== existing)
+      )
       // iterate over each socket after this to remove is
       .forEach((key) => {
-        const socket = this.node[control.dataKey].get(key);
+        const socket = this.node[type].get(key);
 
         // we get the connections for the node and remove that connection
         const connections = this.node
           .getConnections()
-          .filter((con) => con[control.data.connectionType].key === key);
+          .filter((con) => con[type.slice(0, -1)].key === key);
 
         if (connections)
           connections.forEach((con) => {
@@ -131,6 +134,8 @@ export class Inspector {
     // Send data to a possibel node global handler
     this.onData(data);
 
+    console.log("DATA", data);
+
     // go over each data control
     for (let [key, control] of this.dataControls) {
       const isEqual = deepEqual(this.cache[key], data[key]);
@@ -140,14 +145,24 @@ export class Inspector {
 
       // if there is inputs in the data, only handle the incoming sockets
       if (key === "inputs" && data["inputs"]) {
-        this.handleSockets(data["inputs"], control.control);
+        this.handleSockets(data["inputs"], control.control, "inputs");
         continue;
       }
 
       // if there is outputs in the data, only handle the incoming sockets
       if (key === "outputs" && data["outputs"]) {
-        this.handleSockets(data["outputs"], control.control);
+        this.handleSockets(data["outputs"], control.control, "outputs");
         continue;
+      }
+
+      // handle the situation where a control is setting inputs and outputs itself
+      if (data[key].outputs) {
+        this.handleSockets(data[key].outputs, control.control, "outputs");
+      }
+
+      if (data[key].inputs) {
+        console.log("handling inputs", data[key]);
+        this.handleSockets(data[key].inputs, control.control, "inputs");
       }
 
       // only call onData if it exists
