@@ -1,8 +1,4 @@
-import Rete from "rete";
-import * as sockets from "../sockets";
-
 import { DataControl } from "../plugins/inspectorPlugin";
-
 export class EnkiThroughputControl extends DataControl {
   constructor({
     socketType = "String",
