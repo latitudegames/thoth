@@ -11,7 +11,7 @@ export class EnkiTask extends Rete.Component {
     this.task = {
       outputs: { trigger: "option" },
     };
-    this.category = "AI/ML"
+    this.category = "AI/ML";
   }
 
   node = {};
@@ -19,6 +19,7 @@ export class EnkiTask extends Rete.Component {
   builder(node) {
     const EnkiOutput = new EnkiThroughputControl({
       defaultOutputs: node.data.outputs,
+      name: "Enki",
       socketType: "stringSocket",
       taskType: "output",
       nodeId: node.id,
