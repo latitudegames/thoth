@@ -4,12 +4,10 @@ export class CodeControl extends DataControl {
     const options = {
       dataKey: dataKey,
       name: name,
-      controls: {
-        component: "code",
+      component: "code",
+      options: {
         editor: true,
-        data: {
-          language: "javascript",
-        },
+        language: "javascript",
       },
     };
 

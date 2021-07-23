@@ -19,6 +19,7 @@ export const events = {
   PLAYTEST_PRINT: "playtestPrint",
   INSPECTOR_SET: "inspectorSet",
   TEXT_EDITOR_SET: "textEditorSet",
+  TEXT_EDITOR_CLEAR: "textEditorClear",
   SAVE_CURRENT_SPELL: "saveCurrentSpell",
   $NODE_SET: (nodeId) => `nodeSet:${nodeId}`,
   // app to tab workspace events

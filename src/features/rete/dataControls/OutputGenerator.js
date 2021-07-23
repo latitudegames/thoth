@@ -4,22 +4,15 @@ import * as sockets from "../sockets";
 import { DataControl } from "../plugins/inspectorPlugin";
 
 export class OutputGeneratorControl extends DataControl {
-  constructor({
-    defaultOutputs = [],
-    socketType = "anySocket",
-    taskType = "output",
-    ignored = [],
-  }) {
+  constructor({ socketType = "anySocket", taskType = "output", ignored = [] }) {
     const options = {
       dataKey: "outputs",
       name: "Data Outputs",
-      controls: {
-        component: "outputGenerator",
-        data: {
-          ignored,
-          socketType,
-          taskType,
-        },
+      component: "outputGenerator",
+      data: {
+        ignored,
+        socketType,
+        taskType,
       },
     };
 
@@ -31,7 +24,8 @@ export class OutputGeneratorControl extends DataControl {
     this.node.data.outputs = outputs;
 
     const existingOutputs = [];
-    const ignored = this.controls.data.ignored.map((output) => output.name);
+    const ignored =
+      this?.control?.data?.ignored.map((output) => output.name) || [];
 
     this.node.outputs.forEach((out) => {
       existingOutputs.push(out.key);

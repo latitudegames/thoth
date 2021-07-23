@@ -4,19 +4,28 @@ export class DataControl {
   node = null;
   component = null;
 
-  constructor({ dataKey, name, controls, ...rest }) {
+  constructor({ dataKey, name, component, data = {}, options = {}, ...rest }) {
+    if (!dataKey) throw new Error(`Data key is required`);
+    if (!name) throw new Error(`Name is required`);
+    if (!component) throw new Error(`Component name is required`);
+
     this.dataKey = dataKey;
     this.name = name;
-    this.controls = controls;
+    this.componentData = data;
+    this.componentKey = component;
+    this.options = options;
     this.onData = rest.onData || this.onData;
   }
 
   //Serializer to easily extract the data controls information for publishing
-  data() {
+  get control() {
     return {
       dataKey: this.dataKey,
       name: this.name,
-      controls: this.controls,
+      component: this.componentKey,
+      data: this.componentData,
+      options: this.options,
+      id: this.id,
     };
   }
 

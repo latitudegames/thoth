@@ -1,6 +1,9 @@
+import deepEqual from "deep-equal";
+import { v4 as uuidv4 } from "uuid";
 export class Inspector {
   // Stub of function.  Can be a nodes catch all onData
   onData = () => {};
+  cache = {};
 
   constructor({ component, editor, node }) {
     this.component = component;
@@ -23,6 +26,7 @@ export class Inspector {
     control.editor = this.editor;
     control.node = this.node;
     control.component = this.component;
+    control.id = uuidv4();
 
     list.set(control.dataKey, control);
   }
@@ -44,8 +48,14 @@ export class Inspector {
 
     // Send the right databack to each individual control callback handle
     this.dataControls.forEach((control, key) => {
-      if (control?.onData) control.onData(data[key]);
+      const isEqual = deepEqual(this.cache[key], data[key]);
+
+      if (!isEqual && control?.onData) {
+        control.onData(data[key]);
+      }
     });
+
+    this.cache = data;
 
     // update the node at the end ofthid
     this.node.update();
@@ -58,7 +68,7 @@ export class Inspector {
     const dataControls = Array.from(this.dataControls.entries()).reduce(
       (acc, [key, val]) => {
         // use the data method on controls to get data shape
-        acc[key] = val.data();
+        acc[key] = val.control;
         return acc;
       },
       {}
