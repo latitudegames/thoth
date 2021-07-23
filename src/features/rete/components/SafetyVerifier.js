@@ -1,7 +1,6 @@
 import Rete from "rete";
 import { stringSocket, triggerSocket, booleanSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
-import { DisplayControl } from "../controls/DisplayControl";
 import { completion } from "../../../utils/openaiHelper";
 
 const fewshot = `Rate the actions according to the following content categories
@@ -80,10 +79,9 @@ export class SafetyVerifier extends Rete.Component {
         boolean: "output",
       },
     };
-    this.category = "AI/ML"
+    this.category = "AI/ML";
+    this.display = true;
   }
-
-  displayControl = {};
 
   builder(node) {
     node.data.fewshot = fewshot;
@@ -93,22 +91,15 @@ export class SafetyVerifier extends Rete.Component {
     const dataOutput = new Rete.Output("trigger", "Trigger", triggerSocket);
     const out = new Rete.Output("boolean", "Boolean", booleanSocket);
 
-    const display = new DisplayControl({
-      key: "display",
-    });
-
     const fewshotControl = new FewshotControl();
 
     node.inspector.add(fewshotControl);
-
-    this.displayControl = display;
 
     return node
       .addInput(inp)
       .addInput(dataInput)
       .addOutput(out)
-      .addOutput(dataOutput)
-      .addControl(display);
+      .addOutput(dataOutput);
   }
 
   async worker(node, inputs, outputs) {
@@ -124,7 +115,7 @@ export class SafetyVerifier extends Rete.Component {
     const raw = await completion(body);
     const result = raw.trim() !== "X";
 
-    this.displayControl.display(`${result}`);
+    node.display(`${result}`);
 
     return {
       boolean: result,

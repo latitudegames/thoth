@@ -1,7 +1,6 @@
 import Rete from "rete";
 import { stringSocket, triggerSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
-import { DisplayControl } from "../controls/DisplayControl";
 import { completion } from "../../../utils/openaiHelper";
 
 const fewshot = `Given an action classify the type of action it is
@@ -37,9 +36,8 @@ export class ActionTypeComponent extends Rete.Component {
     };
     this.category = "AI/ML";
     this.info = info;
+    this.display = true;
   }
-
-  displayControl = {};
 
   // the builder is used to "assemble" the node component.
   // when we have enki hooked up and have grabbed all few shots, we would use the builder
@@ -52,24 +50,15 @@ export class ActionTypeComponent extends Rete.Component {
     const dataInput = new Rete.Input("trigger", "Trigger", triggerSocket);
     const dataOutput = new Rete.Output("trigger", "Trigger", triggerSocket);
 
-    // controls are the internals of the node itself
-    // This default control sample has a text field.
-    const display = new DisplayControl({
-      key: "display",
-    });
-
     const fewshotControl = new FewshotControl();
 
     node.inspector.add(fewshotControl);
-
-    this.displayControl = display;
 
     return node
       .addInput(inp)
       .addInput(dataInput)
       .addOutput(out)
-      .addOutput(dataOutput)
-      .addControl(display);
+      .addOutput(dataOutput);
   }
 
   // the worker contains the main business logic of the node.  It will pass those results
@@ -86,7 +75,7 @@ export class ActionTypeComponent extends Rete.Component {
     };
     const raw = await completion(body);
     const result = raw.trim();
-    this.displayControl.display(result);
+    node.display(result);
 
     return {
       actionType: result,

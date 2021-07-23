@@ -1,6 +1,5 @@
 import Rete from "rete";
 import { stringSocket, triggerSocket } from "../sockets";
-import { DisplayControl } from "../controls/DisplayControl";
 import { FewshotControl } from "../dataControls/FewshotControl";
 import { completion } from "../../../utils/openaiHelper";
 
@@ -51,6 +50,7 @@ export class DifficultyDetectorComponent extends Rete.Component {
     };
     this.category = "AI/ML";
     this.info = info;
+    this.display = true;
   }
 
   displayControl = {};
@@ -69,23 +69,16 @@ export class DifficultyDetectorComponent extends Rete.Component {
     const triggerInput = new Rete.Input("trigger", "Trigger", triggerSocket);
     const triggerOutput = new Rete.Output("trigger", "Trigger", triggerSocket);
 
-    const display = new DisplayControl({
-      key: "display",
-    });
-
     const fewshotControl = new FewshotControl();
 
     node.inspector.add(fewshotControl);
-
-    this.displayControl = display;
 
     return node
       .addInput(inp)
       .addInput(triggerInput)
       .addOutput(triggerOutput)
       .addOutput(difficultyOut)
-      .addOutput(categoryOut)
-      .addControl(display);
+      .addOutput(categoryOut);
   }
 
   async worker(node, inputs, outputs) {
@@ -100,7 +93,7 @@ export class DifficultyDetectorComponent extends Rete.Component {
     };
     const raw = await completion(body);
     const result = raw.trim();
-    this.displayControl.display(result);
+    node.display(result);
 
     const [difficulty, category] = result.split(", ");
 

@@ -1,8 +1,6 @@
 import Rete from "rete";
 import { EnkiThroughputControl } from "../dataControls/EnkiThroughputControl";
 import { postEnkiCompletion } from "../../../services/game-api/enki";
-import { DisplayControl } from "../controls/DisplayControl";
-
 export class EnkiTask extends Rete.Component {
   constructor() {
     // Name of the component
@@ -12,6 +10,7 @@ export class EnkiTask extends Rete.Component {
       outputs: { trigger: "option" },
     };
     this.category = "AI/ML";
+    this.display = true;
   }
 
   node = {};
@@ -25,13 +24,6 @@ export class EnkiTask extends Rete.Component {
       nodeId: node.id,
     });
 
-    const display = new DisplayControl({
-      key: `display-${node.id}`,
-      defaultDisplay: "Awaiting result...",
-    });
-
-    this.displayControl = display;
-    node.addControl(display);
     node.inspector.add(EnkiOutput);
 
     return node;
@@ -62,7 +54,7 @@ export class EnkiTask extends Rete.Component {
     // console.log("test", test);
     // console.log(this.node.task);
 
-    this.displayControl.display(completionResponse.outputs.join(" "));
+    node.display(completionResponse.outputs.join(" "));
 
     return test;
   }

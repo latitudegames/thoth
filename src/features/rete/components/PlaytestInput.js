@@ -16,6 +16,7 @@ export class PlaytestInput extends Rete.Component {
     };
 
     this.category = "I/O";
+    this.display = true;
   }
 
   displayControl = {};

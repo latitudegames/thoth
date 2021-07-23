@@ -1,6 +1,5 @@
 import Rete from "rete";
 import { triggerSocket } from "../sockets";
-import { DisplayControl } from "../controls/DisplayControl";
 import { CodeControl } from "../dataControls/CodeControl";
 import { InputControl } from "../dataControls/InputControl";
 import { SocketGeneratorControl } from "../dataControls/SocketGenerator";
@@ -32,6 +31,7 @@ export class Code extends Rete.Component {
     };
     this.category = "Logic";
     this.info = info;
+    this.display = true;
   }
 
   builder(node) {
@@ -65,17 +65,10 @@ export class Code extends Rete.Component {
       .add(outputGenerator)
       .add(codeControl);
 
-    const displayControl = new DisplayControl({
-      key: "display",
-      defaultDisplay: "awaiting response",
-    });
-
-    this.displayControl = displayControl;
-
     const dataInput = new Rete.Input("trigger", "Trigger", triggerSocket);
     const dataOutput = new Rete.Output("trigger", "Trigger", triggerSocket);
 
-    node.addOutput(dataOutput).addInput(dataInput).addControl(displayControl);
+    node.addOutput(dataOutput).addInput(dataInput);
   }
 
   // the worker contains the main business logic of the node.  It will pass those results
@@ -92,11 +85,11 @@ export class Code extends Rete.Component {
 
     try {
       const value = runCodeWithArguments(node.data.code);
-      this.displayControl.display(`${JSON.stringify(value)}`);
+      node.display(`${JSON.stringify(value)}`);
 
       return value;
     } catch (err) {
-      this.displayControl.display(
+      node.display(
         "Error evaluating code.  Open your browser console for more information."
       );
       // close the data socket so it doesnt error out
