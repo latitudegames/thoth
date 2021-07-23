@@ -13,6 +13,8 @@ Action, Item: gather the valerian plant from the forest, valerian plant
 Action, Item: get the necklace from the box, necklace
 Action, Item: `;
 
+const info = `The item detector attempts to recognize what item in a give text string is being mentioned or used.  The input is a text string the output is a string of the object`;
+
 export class ItemTypeComponent extends Rete.Component {
   constructor() {
     // Name of the component
@@ -24,6 +26,7 @@ export class ItemTypeComponent extends Rete.Component {
 
     this.category = "AI/ML";
     this.display = true;
+    this.info = info;
   }
 
   builder(node) {
