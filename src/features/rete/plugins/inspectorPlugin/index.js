@@ -44,8 +44,12 @@ function install(editor) {
     };
   });
 
+  let currentNode;
+
   // handle publishing and subscribing to inspector
   editor.on("nodeselect", (node) => {
+    if (currentNode && node.id === currentNode.id) return;
+    currentNode = node;
     publish(events.TEXT_EDITOR_CLEAR);
     publish(events.INSPECTOR_SET, node.inspector.data());
   });
