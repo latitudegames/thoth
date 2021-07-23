@@ -25,6 +25,12 @@ Action, Time: sail across the ocean, weeks
 Action, Time: take over the kingdom, years
 Action, Time: `;
 
+const info = `The Time Detector will attempt to categorize an incoming action string into broad categories of duration, which are: 
+
+seconds, minutes, hours, days, weeks, years.
+
+You can edit the fewshot in the text editor, but be aware that you must retain the fewshots data structure so processing will work.`;
+
 export class TimeDetectorComponent extends Rete.Component {
   constructor() {
     super("Time Detector");
@@ -35,6 +41,7 @@ export class TimeDetectorComponent extends Rete.Component {
 
     this.category = "AI/ML";
     this.display = true;
+    this.info = info;
   }
 
   builder(node) {
