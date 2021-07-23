@@ -17,7 +17,7 @@ export class RunInputComponent extends Rete.Component {
         this.initialTask = task;
       },
     };
-    this.category = "I/O"
+    this.category = "I/O";
   }
 
   run() {

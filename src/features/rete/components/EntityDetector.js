@@ -1,7 +1,6 @@
 import Rete from "rete";
 import { stringSocket, triggerSocket, arraySocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
-import { DisplayControl } from "../controls/DisplayControl";
 import { completion } from "../../../utils/openaiHelper";
 
 const fewshot = `Given an action, detect what entities the player is interacting with. Ignore entities that the player is just asking about.
@@ -121,7 +120,8 @@ export class EntityDetector extends Rete.Component {
         trigger: "option",
       },
     };
-    this.category = "AI/ML"
+    this.category = "AI/ML";
+    this.display = true;
   }
 
   displayControl = {};
@@ -137,24 +137,15 @@ export class EntityDetector extends Rete.Component {
     const dataInput = new Rete.Input("trigger", "Trigger", triggerSocket);
     const dataOutput = new Rete.Output("trigger", "Trigger", triggerSocket);
 
-    // controls are the internals of the node itself
-    // This default control sample has a text field.
-    const display = new DisplayControl({
-      key: "display",
-    });
-
     const fewshotControl = new FewshotControl();
 
     node.inspector.add(fewshotControl);
-
-    this.displayControl = display;
 
     return node
       .addInput(inp)
       .addInput(dataInput)
       .addOutput(dataOutput)
-      .addOutput(out)
-      .addControl(display);
+      .addOutput(out);
   }
 
   // the worker contains the main business logic of the node.  It will pass those results
@@ -191,7 +182,7 @@ export class EntityDetector extends Rete.Component {
       type: types[i],
     }));
 
-    this.displayControl.display(JSON.stringify(allEntities));
+    node.display(JSON.stringify(allEntities));
 
     return {
       entities: allEntities,

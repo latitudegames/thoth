@@ -12,6 +12,7 @@ export class PlaytestPrint extends Rete.Component {
     };
 
     this.category = "I/O";
+    this.display = true;
   }
 
   // the builder is used to "assemble" the node component.

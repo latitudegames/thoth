@@ -77,8 +77,6 @@ export class Generator extends Rete.Component {
 
     const string = node.data.fewshot || "";
 
-    console.log(node.data.fewshot);
-
     const template = Handlebars.compile(string);
     const prompt = template(inputs);
 

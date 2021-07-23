@@ -1,6 +1,5 @@
 import Rete from "rete";
 import { stringSocket, triggerSocket } from "../sockets";
-import { DisplayControl } from "../controls/DisplayControl";
 import { FewshotControl } from "../dataControls/FewshotControl";
 import { completion } from "../../../utils/openaiHelper";
 
@@ -23,10 +22,9 @@ export class ItemTypeComponent extends Rete.Component {
       outputs: { detectedItem: "output", trigger: "option" },
     };
 
-    this.category = "AI/ML"
+    this.category = "AI/ML";
+    this.display = true;
   }
-
-  displayControl = {};
 
   builder(node) {
     node.data.fewshot = fewshot;
@@ -34,12 +32,6 @@ export class ItemTypeComponent extends Rete.Component {
     const out = new Rete.Output("detectedItem", "Item Detected", stringSocket);
     const dataInput = new Rete.Input("trigger", "Trigger", triggerSocket);
     const dataOutput = new Rete.Output("trigger", "Trigger", triggerSocket);
-
-    const display = new DisplayControl({
-      key: "display",
-    });
-
-    this.displayControl = display;
 
     const fewshotControl = new FewshotControl();
 
@@ -49,8 +41,7 @@ export class ItemTypeComponent extends Rete.Component {
       .addInput(inp)
       .addInput(dataInput)
       .addOutput(dataOutput)
-      .addOutput(out)
-      .addControl(display);
+      .addOutput(out);
   }
 
   async worker(node, inputs, outputs) {
@@ -65,7 +56,7 @@ export class ItemTypeComponent extends Rete.Component {
     };
     const raw = await completion(body);
     const result = raw.trim();
-    this.displayControl.display(result);
+    node.display(result);
 
     return {
       detectedItem: result,
