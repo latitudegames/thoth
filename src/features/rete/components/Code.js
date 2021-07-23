@@ -3,8 +3,7 @@ import { triggerSocket } from "../sockets";
 import { DisplayControl } from "../controls/DisplayControl";
 import { CodeControl } from "../dataControls/CodeControl";
 import { InputControl } from "../dataControls/InputControl";
-import { OutputGeneratorControl } from "../dataControls/OutputGenerator";
-import { InputGeneratorControl } from "../dataControls/InputGenerator";
+import { SocketGeneratorControl } from "../dataControls/SocketGenerator";
 
 const defaultCode = `
 // inputs, outputs, and the node are your arguments
@@ -40,22 +39,16 @@ export class Code extends Rete.Component {
   builder(node) {
     if (!node.data.code) node.data.code = defaultCode;
 
-    const outputGenerator = new OutputGeneratorControl({
-      ignored: [
-        {
-          name: "data",
-          socketType: "triggerSocket",
-        },
-      ],
+    const outputGenerator = new SocketGeneratorControl({
+      connectionType: "output",
+      ignored: ["trigger"],
+      name: "Output Sockets",
     });
 
-    const inputGenerator = new InputGeneratorControl({
-      ignored: [
-        {
-          name: "data",
-          socketType: "triggerSocket",
-        },
-      ],
+    const inputGenerator = new SocketGeneratorControl({
+      connectionType: "input",
+      ignored: ["trigger"],
+      name: "Input Sockets",
     });
 
     const codeControl = new CodeControl({
@@ -70,8 +63,8 @@ export class Code extends Rete.Component {
 
     node.inspector
       .add(nameControl)
-      .add(outputGenerator)
       .add(inputGenerator)
+      .add(outputGenerator)
       .add(codeControl);
 
     const displayControl = new DisplayControl({
