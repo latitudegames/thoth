@@ -2,6 +2,8 @@ import Rete from "rete";
 import { TextInputControl } from "../controls/TextInputControl";
 import { triggerSocket } from "../sockets";
 
+const info = `When the alert component is triggered, it will fire an alert with the message in the input box.`;
+
 export class Alert extends Rete.Component {
   constructor() {
     // Name of the component
@@ -10,7 +12,8 @@ export class Alert extends Rete.Component {
     this.task = {
       outputs: {},
     };
-    this.category = "I/O"
+    this.category = "I/O";
+    this.info = info;
   }
   // the builder is used to "assemble" the node component.
   // when we have enki hooked up and have grabbed all few shots, we would use the builder
