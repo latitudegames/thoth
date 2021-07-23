@@ -6,6 +6,7 @@ import AreaPlugin from "./plugins/areaPlugin";
 import TaskPlugin from "./plugins/taskPlugin";
 import InspectorPlugin from "./plugins/inspectorPlugin";
 import SocketGenerator from "./plugins/socketGenerator";
+import DisplayPlugin from "./plugins/displayPlugin";
 import { MyNode } from "../../features/common/Node/Node";
 import { InputComponent } from "./components/Input";
 import { JoinListComponent } from "./components/JoinList";
@@ -85,6 +86,7 @@ const editor = async function ({ container, pubSub, thoth, tab }) {
 
   // This should only be needed on client, not server
   editor.use(SocketGenerator);
+  editor.use(DisplayPlugin);
   editor.use(InspectorPlugin);
   editor.use(AreaPlugin, {
     scaleExtent: { min: 0.25, max: 2 },
