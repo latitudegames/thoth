@@ -66,7 +66,8 @@ const SocketGenerator = ({ updateData, control, initialValue, ...props }) => {
   const addSocket = (socket) => {
     const newSocket = {
       name: socket,
-      socketKey: data.socketKey,
+      // might also want to camel case any spacing here too
+      socketKey: socket.toLowerCase(),
       connectionType: data.connectionType,
       socketType: data.socketType,
     };
