@@ -9,7 +9,6 @@ export class SocketGeneratorControl extends DataControl {
     connectionType,
     name: nameInput,
   }) {
-    console.log("connection type", connectionType);
     if (
       !connectionType ||
       (connectionType !== "input" && connectionType !== "output")
