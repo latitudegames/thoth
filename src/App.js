@@ -7,7 +7,7 @@ import { useTabManager } from "./contexts/TabManagerProvider";
 import LoadingScreen from "./features/common/LoadingScreen/LoadingScreen";
 
 import "flexlayout-react/style/dark.css";
-import "./dds-globals/dds-globals.css";
+import "./design-globals/design-globals.css";
 import "./App.css";
 //These need to be imported last to override styles.
 

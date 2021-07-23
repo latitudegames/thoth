@@ -13,6 +13,9 @@ function install(editor) {
       // Inspector class which will handle regsistering data controls, serializing, etc.
       node.inspector = new Inspector({ component, editor, node });
 
+      // Adding category to node for display on node
+      node.category = component.category;
+
       node.subscription = subscribe(
         events.$NODE_SET(node.id),
         (event, data) => {

@@ -6,6 +6,7 @@ import InputGenerator from "./InputGenerator";
 import EnkiSelect from "./EnkiSelect";
 import css from "./datacontrols.module.css";
 import CodeControl from "./CodeControl";
+import { dataControlCategories } from "../../../common/Icon/Icon";
 
 const StubComponent = (props) => <div>{props.name}</div>;
 
@@ -29,15 +30,6 @@ const DataControls = ({
   nodeId,
   ...props
 }) => {
-  const icons = {
-    "Data Inputs": "properties",
-    "Data Outputs": "properties",
-    Fewshot: "fewshot",
-    Stop: "stop-sign",
-    Temperature: "temperature",
-    "Max Tokens": "moon",
-  };
-
   if (!dataControls)
     return <p className={css["message"]}>No component selected</p>;
   if (Object.keys(dataControls).length < 1)
@@ -66,7 +58,7 @@ const DataControls = ({
           <SimpleAccordion
             heading={control.name || key}
             key={key}
-            icon={icons[control.name]}
+            icon={dataControlCategories[control.name]}
           >
             <Component {...controlProps} />
           </SimpleAccordion>
