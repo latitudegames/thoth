@@ -109,6 +109,10 @@ Types: object (use), creature (target)
 
 Action: `;
 
+const info = `The entity detector takes in an action as a string, and attempts to report any discrete entities are mentioned, and their general type.
+
+The fewshot can be edited in the text edior, though note that the data structure must remian the same for proper processing.`;
+
 export class EntityDetector extends Rete.Component {
   constructor() {
     // Name of the component
@@ -122,9 +126,8 @@ export class EntityDetector extends Rete.Component {
     };
     this.category = "AI/ML";
     this.display = true;
+    this.info = info;
   }
-
-  displayControl = {};
 
   // the builder is used to "assemble" the node component.
   // when we have enki hooked up and have grabbed all few shots, we would use the builder
