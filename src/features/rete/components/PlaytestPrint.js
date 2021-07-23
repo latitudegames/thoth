@@ -1,5 +1,7 @@
 import Rete from "rete";
 import { triggerSocket, anySocket } from "../sockets";
+
+const info = `The Playtest Print component will print whatever value is attached to its input and print that valyue back to the playtest window.`;
 export class PlaytestPrint extends Rete.Component {
   constructor() {
     // Name of the component
@@ -13,6 +15,7 @@ export class PlaytestPrint extends Rete.Component {
 
     this.category = "I/O";
     this.display = true;
+    this.info = info;
   }
 
   // the builder is used to "assemble" the node component.
