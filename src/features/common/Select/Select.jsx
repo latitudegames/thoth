@@ -26,16 +26,15 @@ const BasicSelect = ({
 
   const DropdownIndicator = () => {
     return searchable ? (
-      <div id={id && id}>
       <Icon name="search" size={"var(--small)"} />
-      </div>
     ) : (
       <div className={css["dropdown-indicator"]}>❯</div>
     );
   };
 
   const formatGroupLabel = (data) => (
-    <span           
+    <span
+    id={id && id}            
      className={css["group-header"]}>
       <Icon
         name={icons[data.label]}

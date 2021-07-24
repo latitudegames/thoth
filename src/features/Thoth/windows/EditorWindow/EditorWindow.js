@@ -23,7 +23,7 @@ const EditorWindow = ({ tab, ...props }) => {
   const getNodeOptions = () => {
     const arr = [];
 
-    // Checks if a category already exists in the array and returns its address, 
+    // Checks if a category already exists in the array and returns its address,
     // otherwise returns false, and the nodeList map below creates a category.
     const doesCategoryExist = (arr, category) => {
       let address = false;
@@ -69,7 +69,6 @@ const EditorWindow = ({ tab, ...props }) => {
           style={{ width: "50%" }}
           value={null}
           focusKey="cmd+p, ctl+p"
-          id={"basicFlow1"}
         />
       </>
     );
@@ -77,7 +76,7 @@ const EditorWindow = ({ tab, ...props }) => {
 
   return (
     <div className={css["editor-container"]}>
-      <div className={css["editor-toolbar"]}>
+      <div id={"basicFlow1"} className={css["editor-toolbar"]}>
         <EditorToolbar />
       </div>
       <Editor tab={tab} />
