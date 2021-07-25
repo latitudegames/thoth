@@ -69,10 +69,16 @@ const Playtest = ({ ...props }) => {
     setValue(e.target.value);
   };
 
+  const onClear = () => {
+    setHistory([]);
+  };
+
   const toolbar = (
     <>
-      <button className="small">History</button>
-      <button className="small">Clear</button>
+      {/* <button className="small">History</button> */}
+      <button className="small" onClick={onClear}>
+        Clear
+      </button>
     </>
   );
 
