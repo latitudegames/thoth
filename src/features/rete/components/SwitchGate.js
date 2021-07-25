@@ -1,10 +1,12 @@
 import Rete from "rete";
 import { anySocket, triggerSocket } from "../sockets";
-import { OutputGeneratorControl } from "../dataControls/OutputGenerator";
+import { SocketGeneratorControl } from "../dataControls/SocketGenerator";
 
 // function capitalizeFirstLetter(string) {
 //   return string.charAt(0).toUpperCase() + string.slice(1);
 // }
+
+const info = `The Switch Gate component takes a single input, and allows you to define any number of outputs.  Its works the same as the javascript switch.  The component will try to match the value of the input to one of the output socketnames you have created.  It will route the trigger signal through that socket.`;
 
 export class SwitchGate extends Rete.Component {
   constructor() {
@@ -12,25 +14,30 @@ export class SwitchGate extends Rete.Component {
     super("Switch");
 
     this.task = {
-      outputs: { trigger: "option" },
+      outputs: { default: "option" },
     };
-    this.category = "Logic"
+    this.category = "Logic";
+    this.info = info;
   }
 
   node = {};
 
   builder(node) {
-    const outputGenerator = new OutputGeneratorControl({
-      defaultOutputs: node.data.outputs,
+    const outputGenerator = new SocketGeneratorControl({
+      connectionType: "output",
+      ignored: ["default"],
       socketType: "triggerSocket",
       taskType: "option",
+      name: "Output Sockets",
     });
+
     node.inspector.add(outputGenerator);
 
     const input = new Rete.Input("input", "Input", anySocket);
     const dataInput = new Rete.Input("trigger", "Trigger", triggerSocket);
+    const defaultOutput = new Rete.Input("default", "Default", triggerSocket);
 
-    node.addInput(input).addInput(dataInput);
+    node.addInput(input).addInput(dataInput).addOutput(defaultOutput);
 
     return node;
   }
@@ -41,7 +48,7 @@ export class SwitchGate extends Rete.Component {
     const input = inputs["input"][0];
 
     // close all outputs
-    this._task.closed = node.data.outputs.map((out) => out.name);
+    // this._task.closed = node.data.outputs.map((out) => out.name);
 
     if (this._task.closed.includes(input)) {
       // If the ouputs closed has the incoming text, filter closed outputs to not include it

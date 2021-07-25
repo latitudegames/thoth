@@ -1,8 +1,10 @@
 import Rete from "rete";
 import { EnkiThroughputControl } from "../dataControls/EnkiThroughputControl";
 import { postEnkiCompletion } from "../../../services/game-api/enki";
-import { DisplayControl } from "../controls/DisplayControl";
 
+const info = `Enki is a tool for building both fewshots, as well as entire data sets.  The enki component allows you to select an enki which you or someone else has made in the Enki tool and utilize it in your spell chains.
+
+Due to current limitations in data structure, the enki inputs and outputs are unnamed, so you will have to know the order of them and what to use them for by referencing their usage in Enki.`;
 export class EnkiTask extends Rete.Component {
   constructor() {
     // Name of the component
@@ -11,7 +13,9 @@ export class EnkiTask extends Rete.Component {
     this.task = {
       outputs: { trigger: "option" },
     };
-    this.category = "AI/ML"
+    this.category = "AI/ML";
+    this.display = true;
+    this.info = info;
   }
 
   node = {};
@@ -19,18 +23,12 @@ export class EnkiTask extends Rete.Component {
   builder(node) {
     const EnkiOutput = new EnkiThroughputControl({
       defaultOutputs: node.data.outputs,
+      name: "Enki",
       socketType: "stringSocket",
       taskType: "output",
       nodeId: node.id,
     });
 
-    const display = new DisplayControl({
-      key: `display-${node.id}`,
-      defaultDisplay: "Awaiting result...",
-    });
-
-    this.displayControl = display;
-    node.addControl(display);
     node.inspector.add(EnkiOutput);
 
     return node;
@@ -61,7 +59,7 @@ export class EnkiTask extends Rete.Component {
     // console.log("test", test);
     // console.log(this.node.task);
 
-    this.displayControl.display(completionResponse.outputs.join(" "));
+    node.display(completionResponse.outputs.join(" "));
 
     return test;
   }

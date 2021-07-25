@@ -2,6 +2,8 @@ import Rete from "rete";
 import { TextInputControl } from "../controls/TextInputControl";
 import { stringSocket } from "../sockets";
 
+const info = `The info component has a single control, an input field.  Whatever value you put into this input field will be sent out along the compoonents output socket.`;
+
 export class InputComponent extends Rete.Component {
   constructor() {
     // Name of the component
@@ -12,8 +14,9 @@ export class InputComponent extends Rete.Component {
         text: "output",
       },
     };
-    
-    this.category = "I/O"
+
+    this.category = "I/O";
+    this.info = info;
   }
 
   // the builder is used to "assemble" the node component.

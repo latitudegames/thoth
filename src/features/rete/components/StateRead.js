@@ -1,5 +1,7 @@
 import Rete from "rete";
-import { OutputGeneratorControl } from "../dataControls/OutputGenerator";
+import { SocketGeneratorControl } from "../dataControls/SocketGenerator";
+
+const info = `The State Read component allows you to read values from the state.  These can be found in and are managed by the State Manager window.  This window consists of a JSON object.  You can define any number ouf outputs where an outputs name corresponds to a key in the state manager.  Whatever value is assigned to that key will be read ans passed into your chain.`;
 export class StateRead extends Rete.Component {
   constructor() {
     // Name of the component
@@ -8,13 +10,16 @@ export class StateRead extends Rete.Component {
     this.task = {
       outputs: {},
     };
-    this.category = "State"
+    this.category = "State";
+    this.info = info;
   }
 
   builder(node) {
-    const outputGenerator = new OutputGeneratorControl({
-      defaultOutputs: node.data.outputs,
+    const outputGenerator = new SocketGeneratorControl({
+      connectionType: "output",
+      name: "Output sockets",
     });
+
     node.inspector.add(outputGenerator);
 
     return node;
@@ -26,7 +31,7 @@ export class StateRead extends Rete.Component {
     const gameState = await this.editor.thoth.getCurrentGameState();
 
     return Object.entries(gameState).reduce((acc, [key, value]) => {
-      if (node.data.outputs.some((out)=> out.name === key)) {
+      if (node.data.outputs.some((out) => out.name === key)) {
         acc[key] = value;
       }
 

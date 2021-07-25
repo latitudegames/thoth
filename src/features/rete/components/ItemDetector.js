@@ -1,6 +1,5 @@
 import Rete from "rete";
 import { stringSocket, triggerSocket } from "../sockets";
-import { DisplayControl } from "../controls/DisplayControl";
 import { FewshotControl } from "../dataControls/FewshotControl";
 import { completion } from "../../../utils/openaiHelper";
 
@@ -14,6 +13,8 @@ Action, Item: gather the valerian plant from the forest, valerian plant
 Action, Item: get the necklace from the box, necklace
 Action, Item: `;
 
+const info = `The item detector attempts to recognize what item in a give text string is being mentioned or used.  The input is a text string the output is a string of the object`;
+
 export class ItemTypeComponent extends Rete.Component {
   constructor() {
     // Name of the component
@@ -23,10 +24,10 @@ export class ItemTypeComponent extends Rete.Component {
       outputs: { detectedItem: "output", trigger: "option" },
     };
 
-    this.category = "AI/ML"
+    this.category = "AI/ML";
+    this.display = true;
+    this.info = info;
   }
-
-  displayControl = {};
 
   builder(node) {
     node.data.fewshot = fewshot;
@@ -34,12 +35,6 @@ export class ItemTypeComponent extends Rete.Component {
     const out = new Rete.Output("detectedItem", "Item Detected", stringSocket);
     const dataInput = new Rete.Input("trigger", "Trigger", triggerSocket);
     const dataOutput = new Rete.Output("trigger", "Trigger", triggerSocket);
-
-    const display = new DisplayControl({
-      key: "display",
-    });
-
-    this.displayControl = display;
 
     const fewshotControl = new FewshotControl();
 
@@ -49,8 +44,7 @@ export class ItemTypeComponent extends Rete.Component {
       .addInput(inp)
       .addInput(dataInput)
       .addOutput(dataOutput)
-      .addOutput(out)
-      .addControl(display);
+      .addOutput(out);
   }
 
   async worker(node, inputs, outputs) {
@@ -65,7 +59,7 @@ export class ItemTypeComponent extends Rete.Component {
     };
     const raw = await completion(body);
     const result = raw.trim();
-    this.displayControl.display(result);
+    node.display(result);
 
     return {
       detectedItem: result,

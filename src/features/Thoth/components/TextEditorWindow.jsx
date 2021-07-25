@@ -2,10 +2,11 @@ import { useState, useEffect } from "react";
 import Editor from "@monaco-editor/react";
 import { useSnackbar } from "notistack";
 
+import { useLayout } from "../../../contexts/LayoutProvider";
 import Window from "../../common/Window/Window";
+import WindowMessage from "./WindowMessage";
 
 import "../thoth.module.css";
-import { useLayout } from "../../../contexts/LayoutProvider";
 
 const TextEditor = (props) => {
   const [code, setCode] = useState("");
@@ -44,7 +45,7 @@ const TextEditor = (props) => {
     };
 
     setEditorOptions(options);
-  }, [textEditorData, language]);
+  }, [language]);
 
   useEffect(() => {
     if (!textEditorData) return;
@@ -72,7 +73,6 @@ const TextEditor = (props) => {
     if (!typing) return;
 
     const delayDebounceFn = setTimeout(() => {
-      // Send Axios request here
       save(code);
       setTyping(false);
     }, 2000);
@@ -116,13 +116,15 @@ const TextEditor = (props) => {
     </>
   );
 
+  if (!textEditorData.control)
+    return <WindowMessage content="Component has no editable text" />;
+
   return (
     <Window toolbar={toolbar}>
       <Editor
         theme="sds-dark"
         height={height}
         language={language}
-        defaultLanguage="javascript"
         value={code}
         options={editorOptions}
         defaultValue={code}

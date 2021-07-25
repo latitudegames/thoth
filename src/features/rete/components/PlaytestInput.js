@@ -1,7 +1,7 @@
 import Rete from "rete";
 import { triggerSocket, stringSocket } from "../sockets";
-import { DisplayControl } from "../controls/DisplayControl";
 
+const info = `The Playtest Input component is connected to the playtest window. It received anything which is type dinto the playtest areavia the input and will trigger the running of your spell chain.`;
 export class PlaytestInput extends Rete.Component {
   constructor() {
     // Name of the component
@@ -17,7 +17,9 @@ export class PlaytestInput extends Rete.Component {
       },
     };
 
-    this.category = "I/O"
+    this.category = "I/O";
+    this.display = true;
+    this.info = info;
   }
 
   displayControl = {};
@@ -48,22 +50,15 @@ export class PlaytestInput extends Rete.Component {
     const dataOutput = new Rete.Output("trigger", "Trigger", triggerSocket);
     const textOutput = new Rete.Output("text", "Text", stringSocket);
 
-    const display = new DisplayControl({
-      key: "display",
-      defaultDisplay: "Awaiting input...",
-    });
-
-    this.displayControl = display;
-
     this.subscribeToPlaytest(node);
 
-    return node.addOutput(textOutput).addOutput(dataOutput).addControl(display);
+    return node.addOutput(textOutput).addOutput(dataOutput);
   }
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connecte components
   worker(node, inputs, text) {
-    this.displayControl.display(text);
+    node.display(text);
 
     return {
       text,

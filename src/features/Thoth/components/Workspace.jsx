@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 
+import { debounce } from "../../../utils/debounce";
+
 import WorkspaceProvider from "../../../contexts/WorkspaceProvider";
 import { Editor } from "../../../contexts/ReteProvider";
 import { Layout } from "../../../contexts/LayoutProvider";
@@ -21,12 +23,10 @@ const Workspace = ({ tab, appPubSub }) => {
   useEffect(() => {
     if (!editor?.on) return;
     editor.on(
-      "process nodecreated noderemoved connectioncreated connectionremoved nodetranslated",
-      () => {
-        // Use a tab ref here because otherwise the state is stale inside the callback function.
-        // Handy pattern to remember when wanting to set things like callbacks, etc.
+      "nodecreated noderemoved connectioncreated connectionremoved nodetranslated",
+      debounce(() => {
         saveSpell(tab.spell, { graph: editor.toJSON() }, false);
-      }
+      }, 300)
     );
   }, [editor]);
 

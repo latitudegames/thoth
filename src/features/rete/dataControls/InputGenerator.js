@@ -9,11 +9,13 @@ export class InputGeneratorControl extends DataControl {
     socketType = "anySocket",
     taskType = "output",
     ignored = [],
+    icon = "properties",
   }) {
     const options = {
       dataKey: "inputs",
       name: "Data Inputs",
       component: "inputGenerator",
+      icon,
       data: {
         ignored,
         socketType,
