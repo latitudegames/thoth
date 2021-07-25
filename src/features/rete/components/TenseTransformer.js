@@ -1,7 +1,6 @@
 import Rete from "rete";
 import { stringSocket, triggerSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
-import { DisplayControl } from "../controls/DisplayControl";
 import { completion } from "../../../utils/openaiHelper";
 
 const fewshot = `Change each statement to be in the third person present tense and correct all grammar.
@@ -61,6 +60,10 @@ Fred: command the mercenaries to attack the dragon while you rescue the princess
 Third Person: Fred commands the mercenaries to attack the dragon while he rescues the princess.
 ---
 `;
+
+const info = `The Tense Transformer will take any string and attempt to turn it into the first person present tense.  It requires a name and text as an input, and will output the result.
+
+You can edit the fewshot in the text editor, but be aware that you must retain the fewshots data structure so processing will work.`;
 export class TenseTransformer extends Rete.Component {
   constructor() {
     // Name of the component
@@ -73,10 +76,10 @@ export class TenseTransformer extends Rete.Component {
       },
     };
 
-    this.category = "AI/ML"
+    this.category = "AI/ML";
+    this.display = true;
+    this.info = info;
   }
-
-  displayControl = {};
 
   // the builder is used to "assemble" the node component.
   // when we have enki hooked up and have grabbed all few shots, we would use the builder
@@ -91,26 +94,16 @@ export class TenseTransformer extends Rete.Component {
     const dataOutput = new Rete.Output("trigger", "Trigger", triggerSocket);
     const out = new Rete.Output("action", "Action", stringSocket);
 
-    // controls are the internals of the node itself
-    // This default control sample has a text field.
-    const display = new DisplayControl({
-      key: "display",
-      defaultDisplay: "awaiting response",
-    });
-
     const fewshotControl = new FewshotControl();
 
     node.inspector.add(fewshotControl);
-
-    this.displayControl = display;
 
     return node
       .addInput(dataInput)
       .addInput(textInput)
       .addInput(nameInput)
       .addOutput(out)
-      .addOutput(dataOutput)
-      .addControl(display);
+      .addOutput(dataOutput);
   }
 
   // the worker contains the main business logic of the node.  It will pass those results
@@ -129,7 +122,7 @@ export class TenseTransformer extends Rete.Component {
     const raw = await completion(body);
     const result = raw.trim();
 
-    this.displayControl.display(result);
+    node.display(result);
 
     return {
       action: result,

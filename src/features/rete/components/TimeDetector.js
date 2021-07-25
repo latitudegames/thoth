@@ -1,7 +1,6 @@
 import Rete from "rete";
 import { stringSocket, triggerSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
-import { DisplayControl } from "../controls/DisplayControl";
 import { completion } from "../../../utils/openaiHelper";
 
 // For simplicity quests should be ONE thing not complete X and Y
@@ -26,6 +25,12 @@ Action, Time: sail across the ocean, weeks
 Action, Time: take over the kingdom, years
 Action, Time: `;
 
+const info = `The Time Detector will attempt to categorize an incoming action string into broad categories of duration, which are: 
+
+seconds, minutes, hours, days, weeks, years.
+
+You can edit the fewshot in the text editor, but be aware that you must retain the fewshots data structure so processing will work.`;
+
 export class TimeDetectorComponent extends Rete.Component {
   constructor() {
     super("Time Detector");
@@ -34,10 +39,10 @@ export class TimeDetectorComponent extends Rete.Component {
       outputs: { detectedTime: "output", trigger: "option" },
     };
 
-    this.category = "AI/ML"
+    this.category = "AI/ML";
+    this.display = true;
+    this.info = info;
   }
-
-  displayControl = {};
 
   builder(node) {
     node.data.fewshot = fewshot;
@@ -45,12 +50,6 @@ export class TimeDetectorComponent extends Rete.Component {
     const out = new Rete.Output("detectedTime", "Time Detected", stringSocket);
     const dataInput = new Rete.Input("trigger", "Trigger", triggerSocket);
     const dataOutput = new Rete.Output("trigger", "Trigger", triggerSocket);
-
-    const display = new DisplayControl({
-      key: "display",
-    });
-
-    this.displayControl = display;
 
     const fewshotControl = new FewshotControl();
 
@@ -60,8 +59,7 @@ export class TimeDetectorComponent extends Rete.Component {
       .addInput(inp)
       .addInput(dataInput)
       .addOutput(out)
-      .addOutput(dataOutput)
-      .addControl(display);
+      .addOutput(dataOutput);
   }
 
   async worker(node, inputs, outputs) {
@@ -78,7 +76,7 @@ export class TimeDetectorComponent extends Rete.Component {
     };
     const raw = await completion(body);
     const result = raw.trim();
-    this.displayControl.display(result);
+    node.display(result);
 
     return {
       detectedTime: result,

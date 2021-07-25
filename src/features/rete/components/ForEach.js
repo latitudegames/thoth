@@ -1,13 +1,16 @@
 import Rete from "rete";
 import { arraySocket, triggerSocket, anySocket } from "../sockets";
 
+const info = `The forEach component takes in an array, and will iterate over each item in the array, firing a new trigger signal with the appropriate value,until all items in the array have beeb processed.`;
+
 export class ForEach extends Rete.Component {
   constructor() {
     super("ForEach");
     this.task = {
       outputs: { act: "option", element: "output", done: "option" },
     };
-    this.category = "Logic"
+    this.category = "Logic";
+    this.info = info;
   }
 
   builder(node) {

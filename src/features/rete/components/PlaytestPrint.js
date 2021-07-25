@@ -1,37 +1,36 @@
 import Rete from "rete";
 import { triggerSocket, anySocket } from "../sockets";
-import { DisplayControl } from "../controls/DisplayControl";
 
+const info = `The Playtest Print component will print whatever value is attached to its input and print that valyue back to the playtest window.`;
 export class PlaytestPrint extends Rete.Component {
   constructor() {
     // Name of the component
     super("Playtest Print");
 
     this.task = {
-      outputs: {},
+      outputs: {
+        trigger: "option",
+      },
     };
 
-    this.category = "I/O"
+    this.category = "I/O";
+    this.display = true;
+    this.info = info;
   }
-
-  displayControl = {};
 
   // the builder is used to "assemble" the node component.
   // when we have enki hooked up and have grabbed all few shots, we would use the builder
   // to generate the appropriate inputs and ouputs for the fewshot at build time
   builder(node) {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
-    const dataInput = new Rete.Input("trigger", "Trigger", triggerSocket);
+    const triggerInput = new Rete.Input("trigger", "Trigger", triggerSocket);
+    const triggerOutput = new Rete.Output("trigger", "Trigger", triggerSocket);
     const textInput = new Rete.Input("text", "Print", anySocket);
 
-    const display = new DisplayControl({
-      key: "display",
-      defaultDisplay: "Awaiting input...",
-    });
-
-    this.displayControl = display;
-
-    return node.addInput(textInput).addInput(dataInput).addControl(display);
+    return node
+      .addInput(textInput)
+      .addInput(triggerInput)
+      .addOutput(triggerOutput);
   }
 
   // the worker contains the main business logic of the node.  It will pass those results

@@ -1,6 +1,8 @@
 import Rete from "rete";
 import { booleanSocket, triggerSocket } from "../sockets";
 
+const info = `The boolean gate takes a boolean input, and depending on whether the value is true or false will only trigger one output or the other.`;
+
 export class BooleanGate extends Rete.Component {
   constructor() {
     // Name of the component
@@ -9,7 +11,8 @@ export class BooleanGate extends Rete.Component {
     this.task = {
       outputs: { true: "option", false: "option" },
     };
-    this.category = "Logic"
+    this.category = "Logic";
+    this.info = info;
   }
 
   // the builder is used to "assemble" the node component.

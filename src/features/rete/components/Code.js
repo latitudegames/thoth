@@ -1,21 +1,22 @@
 import Rete from "rete";
 import { triggerSocket } from "../sockets";
-import { DisplayControl } from "../controls/DisplayControl";
 import { CodeControl } from "../dataControls/CodeControl";
 import { InputControl } from "../dataControls/InputControl";
-import { OutputGeneratorControl } from "../dataControls/OutputGenerator";
-import { InputGeneratorControl } from "../dataControls/InputGenerator";
+import { SocketGeneratorControl } from "../dataControls/SocketGenerator";
 
 const defaultCode = `
-// inputs, outputs, and the node are your arguments
-// inputs and outputs are an object map where the keys 
-// are your defined inputs and outputs.
-function process(node, inputs, data) {
+// See component information in inspector for details.
+function worker(node, inputs, data) {
 
   // Keys of the object returned must match the names 
   // of your outputs you defined.
   return {}
 }
+`;
+
+const info = `The code component is your swiss army knife when other components won't cut it.  You can define any number of inputs and outputs on it, and then write a custom worker function.  You have access to the any data plugged into the inputs you created on your component, and can send data out along your outputs.
+
+Please note that the return of your function must be an object whose keys are the same value as the names given to your output sockets.  The incoming inputs argument is an object whose keys are the names you defined, aand each is an array.
 `;
 
 export class Code extends Rete.Component {
@@ -28,28 +29,24 @@ export class Code extends Rete.Component {
         trigger: "option",
       },
     };
-    this.category = "Logic"
+    this.category = "Logic";
+    this.info = info;
+    this.display = true;
   }
 
   builder(node) {
     if (!node.data.code) node.data.code = defaultCode;
 
-    const outputGenerator = new OutputGeneratorControl({
-      ignored: [
-        {
-          name: "data",
-          socketType: "triggerSocket",
-        },
-      ],
+    const outputGenerator = new SocketGeneratorControl({
+      connectionType: "output",
+      ignored: ["trigger"],
+      name: "Output Sockets",
     });
 
-    const inputGenerator = new InputGeneratorControl({
-      ignored: [
-        {
-          name: "data",
-          socketType: "triggerSocket",
-        },
-      ],
+    const inputGenerator = new SocketGeneratorControl({
+      connectionType: "input",
+      ignored: ["trigger"],
+      name: "Input Sockets",
     });
 
     const codeControl = new CodeControl({
@@ -64,21 +61,14 @@ export class Code extends Rete.Component {
 
     node.inspector
       .add(nameControl)
-      .add(outputGenerator)
       .add(inputGenerator)
+      .add(outputGenerator)
       .add(codeControl);
-
-    const displayControl = new DisplayControl({
-      key: "display",
-      defaultDisplay: "awaiting response",
-    });
-
-    this.displayControl = displayControl;
 
     const dataInput = new Rete.Input("trigger", "Trigger", triggerSocket);
     const dataOutput = new Rete.Output("trigger", "Trigger", triggerSocket);
 
-    node.addOutput(dataOutput).addInput(dataInput).addControl(displayControl);
+    node.addOutput(dataOutput).addInput(dataInput);
   }
 
   // the worker contains the main business logic of the node.  It will pass those results
@@ -95,11 +85,11 @@ export class Code extends Rete.Component {
 
     try {
       const value = runCodeWithArguments(node.data.code);
-      this.displayControl.display(`${JSON.stringify(value)}`);
+      node.display(`${JSON.stringify(value)}`);
 
       return value;
     } catch (err) {
-      this.displayControl.display(
+      node.display(
         "Error evaluating code.  Open your browser console for more information."
       );
       // close the data socket so it doesnt error out
