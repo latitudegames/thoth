@@ -24,6 +24,16 @@ function install(context, { engine, modules }) {
           if (inputsWorker) inputsWorker.apply(component, args);
         };
         break;
+      case "trigger":
+        let triggersWorker = component.worker;
+
+        moduleManager.registerTrigger(name, socket);
+
+        component.worker = (...args) => {
+          moduleManager.workerTriggers.apply(moduleManager, args);
+          if (triggersWorker) triggersWorker.apply(component, args);
+        };
+        break;
       case "module":
         const builder = component.builder;
 
