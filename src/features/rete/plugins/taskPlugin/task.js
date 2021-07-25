@@ -1,5 +1,6 @@
 export class Task {
-  constructor(inputs, component, worker) {
+  constructor(inputs, component, node, worker) {
+    this.node = node;
     this.inputs = inputs;
     this.component = component;
     this.worker = worker;
@@ -56,8 +57,15 @@ export class Task {
       if (propagate)
         await Promise.all(
           this.next
-            .filter((f) => !this.closed.includes(f.key))
-            .map(async (f) => await f.task.run(data, false, garbage))
+            .filter((con) => !this.closed.includes(con.key))
+            // pass the socket that is being calledikno
+            .map(async (con) => {
+              const newData = {
+                ...data,
+                socketKey: con.key,
+              };
+              return await con.task.run(newData, false, garbage);
+            })
         );
     }
 
