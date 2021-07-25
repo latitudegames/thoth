@@ -108,6 +108,9 @@ const editor = async function ({ container, pubSub, thoth, tab }) {
     return source !== "dblclick";
   });
 
+  editor.bind("run");
+  engine.bind("run");
+
   editor.on(
     "process nodecreated noderemoved connectioncreated connectionremoved",
     async () => {
