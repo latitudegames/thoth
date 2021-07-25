@@ -66,6 +66,7 @@ const Workspace = ({ tab, appPubSub }) => {
         callback={joyrideCallback}
         steps={steps}
         stepIndex={stepIndex}
+        continuous={true}
         showProgress={true}
         showSkipButton={true}
       />
