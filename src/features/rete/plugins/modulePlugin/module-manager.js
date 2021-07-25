@@ -7,6 +7,7 @@ export class ModuleManager {
     this.modules = modules;
     this.inputs = new Map();
     this.outputs = new Map();
+    this.triggers = new Map();
   }
 
   getInputs(data) {
@@ -23,6 +24,13 @@ export class ModuleManager {
     }));
   }
 
+  getTriggers(data) {
+    return extractNodes(data.nodes, this.triggers).map((node) => ({
+      name: node.data.name,
+      socket: this.socketFactory(node, this.outTriggers.get(node.name)),
+    }));
+  }
+
   socketFactory(node, socket) {
     socket = typeof socket === "function" ? socket(node) : socket;
 
@@ -36,6 +44,10 @@ export class ModuleManager {
 
   registerInput(name, socket) {
     this.inputs.set(name, socket);
+  }
+
+  registerSocket(name, socket) {
+    this.sockets.set(name, socket);
   }
 
   registerOutput(name, socket) {
@@ -56,11 +68,20 @@ export class ModuleManager {
       null,
       Object.assign({}, args, { module, silent: true })
     );
+    // find data socket that was triggered in the node
+    if (args?.data?.socketKey) {
+      console.log("We know which socket was triggered!");
+    }
+    // call await node.run()
+    // gather the outputs
     module.write(outputs);
   }
 
   workerInputs(node, inputs, outputs, { module } = {}) {
     if (!module) return;
+
+    // this is a worker.IN thoery it could return an object for the task instead
+    // or set a taskOutputs to themodule class itself
 
     outputs["output"] = (module.getInput(node.data.name) || [])[0];
   }
@@ -69,6 +90,12 @@ export class ModuleManager {
     if (!module) return;
 
     module.setOutput(node.data.name, inputs["input"][0]);
+  }
+
+  workerTriggers(node, inputs, outputs, { module } = {}) {
+    if (!module) return;
+
+    // module.setOutput(node.data.name, inputs["input"][0]);
   }
 
   setEngine(engine) {
