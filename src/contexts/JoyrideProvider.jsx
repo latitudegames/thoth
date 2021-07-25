@@ -5,8 +5,11 @@ const basicFlowState = {
   steps: [
     {
       target: "#basicFlow1",
-      content: "Welcome to Thoth! Lets get started...",
-      showSkipButton: true
+      content: "Welcome to Thoth! Lets get started..."
+    },
+    {
+      target: "#basicFlow2",
+      content: "Select the PlayTest Input component to start your first spell",
     },
   ],
   stepIndex: 0,
