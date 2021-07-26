@@ -60,6 +60,7 @@ const LayoutProvider = ({ children }) => {
   // inspector subscription
   useEffect(() => {
     return subscribe(events.INSPECTOR_SET, (event, data) => {
+      if (data?.nodeId !== inspectorData?.nodeId) setInspectorData({});
       setInspectorData(data);
 
       if (!data.dataControls) return;
