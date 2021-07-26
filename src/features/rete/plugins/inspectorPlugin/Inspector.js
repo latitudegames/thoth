@@ -134,8 +134,6 @@ export class Inspector {
     // Send data to a possibel node global handler
     this.onData(data);
 
-    console.log("DATA", data);
-
     // go over each data control
     for (let [key, control] of this.dataControls) {
       const isEqual = deepEqual(this.cache[key], data[key]);
