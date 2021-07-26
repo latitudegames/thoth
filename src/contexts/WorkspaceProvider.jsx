@@ -1,4 +1,5 @@
 import EditorProvider from "./EditorProvider";
+import ReteProvider from "./ReteProvider";
 import PubSubProvider from "./PubSubProvider";
 import SpellProvider from "./SpellProvider";
 import LayoutProvider from "./LayoutProvider";
@@ -8,6 +9,7 @@ const providers = [
   EditorProvider,
   SpellProvider,
   LayoutProvider,
+  ReteProvider,
 ];
 
 function ComposeProviders({ providers, children }) {
