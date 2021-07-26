@@ -1,4 +1,5 @@
 import Rete from "rete";
+import { ThothReteComponent } from "./ThothReteComponent";
 import { stringSocket, triggerSocket, booleanSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
 import { completion } from "../../../utils/openaiHelper";
@@ -72,7 +73,7 @@ const info = `The Safety Verifier component takes a string and attempts to class
 
 The fewshot can be edited in the text editor, however it contains content which may be triggering to some individuals. If you modify the fewshot, note that it must remian in the format for the processing to work.`;
 
-export class SafetyVerifier extends Rete.Component {
+export class SafetyVerifier extends ThothReteComponent {
   constructor() {
     // Name of the component
     super("Safety Verifier");

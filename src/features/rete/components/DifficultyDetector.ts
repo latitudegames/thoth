@@ -1,4 +1,5 @@
 import Rete from "rete";
+import { ThothReteComponent } from "./ThothReteComponent";
 import { stringSocket, triggerSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
 import { completion } from "../../../utils/openaiHelper";
@@ -40,7 +41,7 @@ strength, dexterity, endurance, intelligence, charisma
 You can also view and edit the fewshot in the text editor.  Note however that you must keep the same data format for the component to properly format the completion response.
 `;
 
-export class DifficultyDetectorComponent extends Rete.Component {
+export class DifficultyDetectorComponent extends ThothReteComponent {
   constructor() {
     // Name of the component
     super("Difficulty Detector");
@@ -92,10 +93,10 @@ export class DifficultyDetectorComponent extends Rete.Component {
       temperature: 0.0,
     };
     const raw = await completion(body);
-    const result = raw.trim();
+    const result = raw?.trim();
     node.display(result);
 
-    const [difficulty, category] = result.split(", ");
+    const [difficulty, category] = result ? result.split(", ") : [undefined, undefined];
 
     return {
       difficulty,

@@ -1,4 +1,5 @@
 import Rete from "rete";
+import { ThothReteComponent } from "./ThothReteComponent";
 import { stringSocket, triggerSocket } from "../sockets";
 import { OutputGeneratorControl } from "../dataControls/OutputGenerator";
 import { CodeControl } from "../dataControls/CodeControl";
@@ -7,7 +8,7 @@ const info = `The String Processor component take s astring as an input and allo
 
 Note that the return value of your function must be an objetc whose keys match the names of your generated output sockets.`;
 
-export class StringProcessor extends Rete.Component {
+export class StringProcessor extends ThothReteComponent {
   constructor() {
     // Name of the component
     super("String Processor");
