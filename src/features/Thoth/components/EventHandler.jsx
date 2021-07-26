@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 import { useLayout } from "../../../contexts/LayoutProvider";
-import { useRete } from "../../../contexts/ReteProvider";
+import { useEditor } from "../../../contexts/EditorProvider";
 import { useSpell } from "../../../contexts/SpellProvider";
 import { useTabManager } from "../../../contexts/TabManagerProvider";
 
 const EventHandler = ({ pubSub, tab }) => {
   // only using this to handle events, so not rendering anything with it.
   const { createOrFocus, windowTypes } = useLayout();
-  const { serialize } = useRete();
+  const { serialize } = useEditor();
   const { saveCurrentSpell, getSpell } = useSpell();
   const { activeTab } = useTabManager();
 

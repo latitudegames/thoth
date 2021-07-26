@@ -1,11 +1,11 @@
-import { Editor, useRete } from "../../../../contexts/ReteProvider";
+import { Editor, useEditor } from "../../../../contexts/EditorProvider";
 import { createNode } from "rete-context-menu-plugin/src/utils";
 import Select from "../../../common/Select/Select";
 
 import css from "./editorwindow.module.css";
 
 const EditorWindow = ({ tab, ...props }) => {
-  const { getNodes, getNodeMap, editor } = useRete();
+  const { getNodes, getNodeMap, editor } = useEditor();
 
   const nodeList = getNodes();
   const nodeMap = getNodeMap();
@@ -23,7 +23,7 @@ const EditorWindow = ({ tab, ...props }) => {
   const getNodeOptions = () => {
     const arr = [];
 
-    // Checks if a category already exists in the array and returns its address, 
+    // Checks if a category already exists in the array and returns its address,
     // otherwise returns false, and the nodeList map below creates a category.
     const doesCategoryExist = (arr, category) => {
       let address = false;
