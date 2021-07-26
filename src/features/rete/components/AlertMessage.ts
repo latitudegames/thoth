@@ -5,6 +5,10 @@ import { triggerSocket } from "../sockets";
 const info = `When the alert component is triggered, it will fire an alert with the message in the input box.`;
 
 export class Alert extends Rete.Component {
+  task: { outputs: object };
+  category: string;
+  info: string;
+
   constructor() {
     // Name of the component
     super("Alert");
