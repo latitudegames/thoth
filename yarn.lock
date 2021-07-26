@@ -11214,10 +11214,9 @@ rete-react-render-plugin@^0.2.1:
   resolved "https://registry.yarnpkg.com/rete-react-render-plugin/-/rete-react-render-plugin-0.2.1.tgz#71a6d73f18f850b85262563f678b40080a7b0e32"
   integrity sha512-2ZMXUP0v+EiejHVMqdrOmUwyDBHC2UDOJ/pFkElaZL1Kn/E40JZA5yzdBXi6ajYZI2DCzoW5ZBcA2Ihjtur8MQ==
 
-rete@^1.4.5-rc.1:
-  version "1.4.5-rc.1"
-  resolved "https://registry.yarnpkg.com/rete/-/rete-1.4.5-rc.1.tgz#963581892216264a3fb1dfce5146adf68bd64c7e"
-  integrity sha512-wdAfmi8d22h2/CbrVHnX4enhRZtJn4+5uRSOkl1jxZYSsmjzYZbebawcQuY0xIQRFBL3RSX4Wl4hzo4TAg/fOw==
+"rete@git+https://github.com/latitudegames/rete.git":
+  version "1.4.5"
+  resolved "git+https://github.com/latitudegames/rete.git#a37abe57e70895d1da188399d9e5c9809f90184b"
 
 retry@^0.12.0:
   version "0.12.0"
