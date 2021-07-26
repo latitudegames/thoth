@@ -30,12 +30,13 @@ import { ForEach } from "./components/ForEach";
 import { EnkiTask } from "./components/EnkiTask";
 import { Generator } from "./components/Generator";
 import { Code } from "./components/Code";
+import { EditLocationRounded } from "@material-ui/icons";
 
 /*
   Primary initialization function.  Takes a container ref to attach the rete editor to.
 */
 
-const editor = async function ({ container, pubSub, thoth, tab }) {
+const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
   // Here we load up all components of the builder into our editor for usage.
   // We might be able to programatically generate components from enki
   const components = [
@@ -69,6 +70,7 @@ const editor = async function ({ container, pubSub, thoth, tab }) {
   // Set up the reactcontext pubsub on the editor so rete components can talk to react
   editor.pubSub = pubSub;
   editor.thoth = thoth;
+  editor.thothV2 = thothV2;
   editor.tab = tab;
 
   // PLUGINS
