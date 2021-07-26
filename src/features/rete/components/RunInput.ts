@@ -1,11 +1,12 @@
 import Rete from "rete";
+import { ThothReteComponent } from "./ThothReteComponent";
 import { TextInputControl } from "../controls/TextInputControl";
 import { stringSocket, triggerSocket } from "../sockets";
 import { RunButtonControl } from "../controls/RunButtonControl";
 
 const info = `The Input With Run component lets you input a value into the provided input field, and trigger off your spell chain to run with that value passed out its output. May be depricated in favor of using the playtest input component.`;
 
-export class RunInputComponent extends Rete.Component {
+export class RunInputComponent extends ThothReteComponent {
   constructor() {
     // Name of the component
     super("Input With Run");

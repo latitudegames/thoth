@@ -1,4 +1,5 @@
 import Rete from "rete";
+import { ThothReteComponent } from "./ThothReteComponent";
 import Handlebars from "handlebars";
 import { triggerSocket, stringSocket } from "../sockets";
 import { SocketGeneratorControl } from "../dataControls/SocketGenerator";
@@ -12,7 +13,7 @@ Controls have also been added which give you control of some of the fundamental 
 
 The componet has two returns.  The composed will output your entire fewshot plus the completion, whereas the result output will only be the result of the completion. `;
 
-export class Generator extends Rete.Component {
+export class Generator extends ThothReteComponent {
   constructor() {
     super("Generator");
     this.task = {
@@ -76,8 +77,9 @@ export class Generator extends Rete.Component {
     return node;
   }
 
-  async worker(node, rawInputs, { element }) {
-    const inputs = Object.entries(rawInputs).reduce((acc, [key, value]) => {
+  async worker(node, rawInputs, outputs) {
+    const stringInputs = rawInputs as {[key: string]: string[]}
+    const inputs = Object.entries(stringInputs).reduce((acc, [key, value]) => {
       acc[key] = value[0];
       return acc;
     }, {});
@@ -103,7 +105,7 @@ export class Generator extends Rete.Component {
       temperature,
     };
     const raw = await completion(body);
-    const result = raw.trim();
+    const result = raw?.trim();
 
     const composed = `${prompt} ${result}`;
 

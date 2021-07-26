@@ -1,9 +1,10 @@
 import Rete from "rete";
+import { ThothReteComponent } from "./ThothReteComponent";
 import { booleanSocket, triggerSocket } from "../sockets";
 
 const info = `The boolean gate takes a boolean input, and depending on whether the value is true or false will only trigger one output or the other.`;
 
-export class BooleanGate extends Rete.Component {
+export class BooleanGate extends ThothReteComponent {
   constructor() {
     // Name of the component
     super("Boolean Gate");

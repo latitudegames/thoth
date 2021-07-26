@@ -1,4 +1,5 @@
 import Rete from "rete";
+import { ThothReteComponent } from "./ThothReteComponent";
 import { stringSocket, triggerSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
 import { completion } from "../../../utils/openaiHelper";
@@ -64,7 +65,7 @@ Third Person: Fred commands the mercenaries to attack the dragon while he rescue
 const info = `The Tense Transformer will take any string and attempt to turn it into the first person present tense.  It requires a name and text as an input, and will output the result.
 
 You can edit the fewshot in the text editor, but be aware that you must retain the fewshots data structure so processing will work.`;
-export class TenseTransformer extends Rete.Component {
+export class TenseTransformer extends ThothReteComponent {
   constructor() {
     // Name of the component
     super("Tense Transformer");

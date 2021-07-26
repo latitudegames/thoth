@@ -1,10 +1,11 @@
 import Rete from "rete";
+import { ThothReteComponent } from "./ThothReteComponent";
 import { TextInputControl } from "../controls/TextInputControl";
 import { stringSocket } from "../sockets";
 
 const info = `The info component has a single control, an input field.  Whatever value you put into this input field will be sent out along the compoonents output socket.`;
 
-export class InputComponent extends Rete.Component {
+export class InputComponent extends ThothReteComponent {
   constructor() {
     // Name of the component
     super("Input");

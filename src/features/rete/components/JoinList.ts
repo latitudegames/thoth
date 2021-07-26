@@ -1,10 +1,11 @@
 import Rete from "rete";
+import { ThothReteComponent } from "./ThothReteComponent";
 import { TextInputControl } from "../controls/TextInputControl";
 import { stringSocket, arraySocket } from "../sockets";
 
 const info = `The Join List component takes in an array, and will join each item in the array together with a seperator, defined in the components input field.`;
 
-export class JoinListComponent extends Rete.Component {
+export class JoinListComponent extends ThothReteComponent {
   constructor() {
     // Name of the component
     super("Join List");

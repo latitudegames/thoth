@@ -1,8 +1,9 @@
 import Rete from "rete";
+import { ThothReteComponent } from "./ThothReteComponent";
 import { triggerSocket, anySocket } from "../sockets";
 
 const info = `The Playtest Print component will print whatever value is attached to its input and print that valyue back to the playtest window.`;
-export class PlaytestPrint extends Rete.Component {
+export class PlaytestPrint extends ThothReteComponent {
   constructor() {
     // Name of the component
     super("Playtest Print");
