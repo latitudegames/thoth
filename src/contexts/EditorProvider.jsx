@@ -20,9 +20,9 @@ const Context = createContext({
   setContainer: () => {},
 });
 
-export const useRete = () => useContext(Context);
+export const useEditor = () => useContext(Context);
 
-const ReteProvider = ({ children }) => {
+const EditorProvider = ({ children }) => {
   const [editor, setEditorState] = useState();
   const editorRef = useRef(null);
   const pubSub = usePubSub();
@@ -85,7 +85,7 @@ const ReteProvider = ({ children }) => {
 
 export const Editor = ({ tab, children }) => {
   const [loaded, setLoaded] = useState(null);
-  const { buildEditor } = useRete();
+  const { buildEditor } = useEditor();
   const spell = useSpell();
 
   if (!tab) return <LoadingScreen />;
@@ -123,4 +123,4 @@ export const Editor = ({ tab, children }) => {
   );
 };
 
-export default ReteProvider;
+export default EditorProvider;

@@ -3,10 +3,10 @@ import { useEffect } from "react";
 import { debounce } from "../../../utils/debounce";
 
 import WorkspaceProvider from "../../../contexts/WorkspaceProvider";
-import { Editor } from "../../../contexts/ReteProvider";
+import { Editor } from "../../../contexts/EditorProvider";
 import { Layout } from "../../../contexts/LayoutProvider";
 import { useSpell } from "../../../contexts/SpellProvider";
-import { useRete } from "../../../contexts/ReteProvider";
+import { useEditor } from "../../../contexts/EditorProvider";
 
 import EventHandler from "./EventHandler";
 import StateManager from "./StateManagerWindow";
@@ -17,7 +17,7 @@ import TextEditor from "./TextEditorWindow";
 
 const Workspace = ({ tab, appPubSub }) => {
   const { saveSpell, loadSpell } = useSpell();
-  const { editor } = useRete();
+  const { editor } = useEditor();
 
   // Set up autosave for the workspace
   useEffect(() => {
