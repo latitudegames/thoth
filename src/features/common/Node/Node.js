@@ -9,7 +9,7 @@ export class MyNode extends Node {
     const { outputs, controls, inputs, selected } = this.state;
 
     return (
-      <div className={`${css["node"]} ${css[selected]}`}>
+      <div id={"basicFlow2"} className={`${css["node"]} ${css[selected]}`}>
         <div className={css["node-title"]}>{node.data.name || node.name}</div>
         <div className={css["connections-container"]}>
           {inputs.length > 0 && (
