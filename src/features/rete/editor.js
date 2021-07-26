@@ -2,6 +2,7 @@ import Rete from "rete";
 import ReactRenderPlugin from "rete-react-render-plugin";
 import ConnectionPlugin from "rete-connection-plugin";
 import ContextMenuPlugin from "rete-context-menu-plugin";
+import LifecyclePlugin from "./plugins/lifecyclePlugin";
 import AreaPlugin from "./plugins/areaPlugin";
 import TaskPlugin from "./plugins/taskPlugin";
 import InspectorPlugin from "./plugins/inspectorPlugin";
@@ -83,6 +84,7 @@ const editor = async function ({ container, pubSub, thoth, tab }) {
   });
 
   // renders a context menu on right click that shows available nodes
+  editor.use(LifecyclePlugin);
   editor.use(ContextMenuPlugin);
   editor.use(TaskPlugin);
 
