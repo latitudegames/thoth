@@ -2,6 +2,7 @@ import { useRef } from "react";
 import init from "../features/rete/editor";
 import gridimg from "../grid.png";
 
+import { useRete } from "./ReteProvider";
 import { usePubSub } from "./PubSubProvider";
 import { useSpell } from "./SpellProvider";
 
@@ -32,10 +33,12 @@ const EditorProvider = ({ children }) => {
     setEditorState(editor);
   };
 
-  const buildEditor = async (container, spell, tab) => {
+  const buildEditor = async (container, spell, tab, thoth) => {
     const newEditor = await init({
       container,
       pubSub,
+      // calling thothV2 during migration of features
+      thothV2: thoth,
       thoth: spell,
       tab,
     });
@@ -87,6 +90,8 @@ export const Editor = ({ tab, children }) => {
   const [loaded, setLoaded] = useState(null);
   const { buildEditor } = useEditor();
   const spell = useSpell();
+  // This will be the main interface between thoth and rete
+  const reteInterface = useRete();
 
   if (!tab) return <LoadingScreen />;
 
@@ -112,7 +117,7 @@ export const Editor = ({ tab, children }) => {
         <div
           ref={(el) => {
             if (el && !loaded) {
-              buildEditor(el, spell, tab);
+              buildEditor(el, spell, tab, reteInterface);
               setLoaded(true);
             }
           }}
