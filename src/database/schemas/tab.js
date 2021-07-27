@@ -1,6 +1,6 @@
 const tabSchema = {
   title: "Tab schema",
-  version: 0,
+  version: 1,
   description:
     "Tabs are a high level form of organization and represent a discrete workspace in thoth.",
   type: "object",
@@ -26,12 +26,21 @@ const tabSchema = {
       ref: "spell",
       type: "string",
     },
+    module: {
+      ref: "module",
+      type: "string",
+    },
   },
 };
 
 const collection = {
   tabs: {
     schema: tabSchema,
+    migrationStrategies: {
+      1: function (oldDoc) {
+        return oldDoc;
+      },
+    },
   },
 };
 
