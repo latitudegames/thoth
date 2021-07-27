@@ -5,11 +5,19 @@ import settingsCollection from "./schemas/settings";
 import tabCollection from "./schemas/tab";
 import moduleCollection from "./schemas/module";
 
+import loadSpellModel from "./models/spellModel";
+
 addRxPlugin(require("pouchdb-adapter-idb"));
 
 let database = null;
 const databaseName = "thoth_alpha";
 const adapter = "idb";
+
+export const loadModels = (db) => {
+  return {
+    spells: loadSpellModel(db),
+  };
+};
 
 export const initDB = async () => {
   if (database !== null) return database;
