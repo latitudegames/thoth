@@ -26,9 +26,9 @@ export class PlaytestInput extends Rete.Component {
   unsubscribe = null;
 
   subscribeToPlaytest(node) {
-    const { subscribe, events } = this.editor.pubSub;
+    const { onPlaytest } = this.editor.thothV2;
 
-    this.unsubscribe = subscribe(events.PLAYTEST_INPUT, (_, text) => {
+    this.unsubscribe = onPlaytest((text) => {
       // attach the text to the nodes data for access in worker
       node.data.text = text;
 
