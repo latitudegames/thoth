@@ -1,9 +1,9 @@
 // eslint-disable-next-line no-unused-vars
 import { createRxDatabase, addRxPlugin, removeRxDatabase } from "rxdb";
-import spellSchema from "./schemas/spell";
-import settingsSchema from "./schemas/settings";
-import tabSchema from "./schemas/tab";
-import moduleSchema from "./schemas/module";
+import spellCollection from "./schemas/spell";
+import settingsCollection from "./schemas/settings";
+import tabCollection from "./schemas/tab";
+import moduleCollection from "./schemas/module";
 
 addRxPlugin(require("pouchdb-adapter-idb"));
 
@@ -24,20 +24,17 @@ export const initDB = async () => {
     adapter: adapter, // <- storage-adapter
   });
 
-  await database.addCollections({
-    spells: {
-      schema: spellSchema,
-    },
-    settings: {
-      schema: settingsSchema,
-    },
-    tabs: {
-      schema: tabSchema,
-    },
-    modules: {
-      schema: moduleSchema,
-    },
-  });
+  const mergeCollections = (collectionArr) =>
+    collectionArr.reduce((acc, collection) => ({ ...acc, ...collection }), {});
+
+  const collections = [
+    spellCollection,
+    settingsCollection,
+    tabCollection,
+    moduleCollection,
+  ];
+
+  await database.addCollections(mergeCollections(collections));
 
   // middleware hooks
   database.spells.preInsert((doc) => {
