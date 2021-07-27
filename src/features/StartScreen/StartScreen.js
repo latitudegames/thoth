@@ -7,12 +7,14 @@ import { useSpell } from "../../contexts/SpellProvider";
 import { useTabManager } from "../../contexts/TabManagerProvider";
 
 import css from "./startScreen.module.css";
+import { useDB } from "../../contexts/DatabaseProvider";
 
 //MAIN
 
 const StartScreen = ({ createNew, allProjects, ...props }) => {
-
-  const { newSpell, getSpell } = useSpell();
+  const {
+    models: { spells },
+  } = useDB();
   const { openTab } = useTabManager();
 
   const projects = [
@@ -26,8 +28,10 @@ const StartScreen = ({ createNew, allProjects, ...props }) => {
     const spellData = JSON.parse(event.target.result);
     // TODO check for proper values here and throw errors
 
-    let existingSpell = await getSpell(spellData.name);
-    const spell = existingSpell ? existingSpell : await newSpell(spellData);
+    let existingSpell = await spells.getSpell(spellData.name);
+    const spell = existingSpell
+      ? existingSpell
+      : await spells.newSpell(spellData);
 
     await openTab({ name: spell.name, spellId: spell.name });
   };
