@@ -1,16 +1,9 @@
 import EditorProvider from "./EditorProvider";
 import ReteProvider from "./ReteProvider";
-import PubSubProvider from "./PubSubProvider";
 import SpellProvider from "./SpellProvider";
 import LayoutProvider from "./LayoutProvider";
 
-const providers = [
-  ReteProvider,
-  PubSubProvider,
-  EditorProvider,
-  SpellProvider,
-  LayoutProvider,
-];
+const providers = [ReteProvider, EditorProvider, SpellProvider, LayoutProvider];
 
 function ComposeProviders({ providers, children, ...parentProps }) {
   const _providers = [...providers].reverse();
