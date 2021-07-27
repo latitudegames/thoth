@@ -20,14 +20,12 @@ export const events = {
   INSPECTOR_SET: "inspectorSet",
   TEXT_EDITOR_SET: "textEditorSet",
   TEXT_EDITOR_CLEAR: "textEditorClear",
-  SAVE_CURRENT_SPELL: "saveCurrentSpell",
   //
   $PLAYTEST_INPUT: (tabId) => `playtestInput:${tabId}`,
   $PLAYTEST_PRINT: (tabId) => `playtestPrint:${tabId}`,
   $INSPECTOR_SET: (tabId) => `inspectorSet:${tabId}`,
   $TEXT_EDITOR_SET: (tabId) => `textEditorSet:${tabId}`,
   $TEXT_EDITOR_CLEAR: (tabId) => `textEditorClear:${tabId}`,
-  $SAVE_CURRENT_SPELL: (tabId) => `saveCurrentSpell:${tabId}`,
   $NODE_SET: (tabId, nodeId) => `nodeSet:${tabId}:${nodeId}`,
   // app to tab workspace events
   $SAVE_SPELL: (tabId) => `saveSpell:${tabId}`,
