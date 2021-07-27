@@ -3,7 +3,7 @@ import Modal from "../../features/common/Modal/Modal";
 const InfoModal = ({ title, content }) => {
   return (
     <Modal title={title} icon="info">
-      <p> {content} </p>
+      <p style={{whiteSpace: 'pre-line'}}> {content} </p>
     </Modal>
   );
 };

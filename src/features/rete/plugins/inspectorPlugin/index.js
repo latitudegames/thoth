@@ -22,14 +22,9 @@ function install(editor) {
       // Adding category to node for display on node
       node.category = component.category;
 
-      // here we attach the default info control to the component which will show up in the inspector
-      const infoControl = new InfoControl({
-        dataKey: "info",
-        name: "Information",
-        info: component.info,
-      });
+      node.info = component.info
 
-      node.inspector.add(infoControl);
+      // here we attach the default info control to the component which will show up in the inspector
 
       node.subscription = subscribe(
         events.$NODE_SET(node.id),
