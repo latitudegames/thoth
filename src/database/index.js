@@ -6,6 +6,7 @@ import tabCollection from "./schemas/tab";
 import moduleCollection from "./schemas/module";
 
 import loadSpellModel from "./models/spellModel";
+import loadModuleModel from "./models/moduleModel";
 
 addRxPlugin(require("pouchdb-adapter-idb"));
 
@@ -97,6 +98,7 @@ export const initDB = async () => {
 
   const models = {
     spells: loadSpellModel(database),
+    modules: loadModuleModel(database)
   };
 
   return {
