@@ -3,6 +3,7 @@ import { InfoControl } from "./dataControls/InfoControl";
 
 function install(editor) {
   const { publish, subscribe, events } = editor.pubSub;
+  const { onInspector, sendToInspector, clearTextEditor } = editor.thothV2;
 
   editor.on("componentregister", (component) => {
     const builder = component.builder;
@@ -31,14 +32,11 @@ function install(editor) {
 
       node.inspector.add(infoControl);
 
-      node.subscription = subscribe(
-        events.$NODE_SET(node.id),
-        (event, data) => {
-          node.inspector.handleData(data);
-          editor.trigger("nodecreated");
-          publish(events.INSPECTOR_SET, node.inspector.data());
-        }
-      );
+      node.subsription = onInspector(node, (data) => {
+        node.inspector.handleData(data);
+        editor.trigger("nodecreated");
+        sendToInspector(node.inspector.data());
+      });
 
       builder.call(component, node);
     };
@@ -50,8 +48,8 @@ function install(editor) {
   editor.on("nodeselect", (node) => {
     if (currentNode && node.id === currentNode.id) return;
     currentNode = node;
-    publish(events.TEXT_EDITOR_CLEAR);
-    publish(events.INSPECTOR_SET, node.inspector.data());
+    clearTextEditor();
+    sendToInspector(node.inspector.data());
   });
 }
 
