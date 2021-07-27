@@ -5,11 +5,11 @@ import SpellProvider from "./SpellProvider";
 import LayoutProvider from "./LayoutProvider";
 
 const providers = [
+  ReteProvider,
   PubSubProvider,
   EditorProvider,
   SpellProvider,
   LayoutProvider,
-  ReteProvider,
 ];
 
 function ComposeProviders({ providers, children, ...parentProps }) {
