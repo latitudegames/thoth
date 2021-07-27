@@ -2,7 +2,6 @@ import { Inspector } from "./Inspector";
 import { InfoControl } from "./dataControls/InfoControl";
 
 function install(editor) {
-  const { publish, subscribe, events } = editor.pubSub;
   const { onInspector, sendToInspector, clearTextEditor } = editor.thothV2;
 
   editor.on("componentregister", (component) => {
