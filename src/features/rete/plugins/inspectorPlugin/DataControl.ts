@@ -1,8 +1,19 @@
+import { Inspector } from "./Inspector";
+import { Node, NodeEditor, Component } from "rete";
+
 export class DataControl {
-  inspector = null;
-  editor = null;
-  node = null;
-  component = null;
+  inspector: Inspector | null = null;
+  editor: NodeEditor | null = null;
+  node: Node | null = null;
+  component: Component | null = null;
+  id: string | null = null;
+
+  dataKey: string;
+  name: string;
+  componentData: object;
+  componentKey: string;
+  options: object;
+  icon: string;
 
   constructor({
     dataKey,
