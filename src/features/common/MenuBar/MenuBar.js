@@ -4,6 +4,7 @@ import { useHotkeys } from "react-hotkeys-hook";
 
 import { useTabManager } from "../../../contexts/TabManagerProvider";
 import { usePubSub } from "../../../contexts/PubSubProvider";
+import { useModal } from "../../../contexts/ModalProvider";
 import css from "./menuBar.module.css";
 import thothlogo from "./thoth.png";
 
@@ -12,6 +13,7 @@ const MenuBar = (props) => {
   const [location, setLocation] = useLocation();
   const { publish, events } = usePubSub();
   const { activeTab } = useTabManager();
+  const { openModal } = useModal();
 
   const activeTabRef = useRef(null);
 
@@ -73,6 +75,10 @@ const MenuBar = (props) => {
   const onExport = () => {
     publish($EXPORT(activeTabRef.current.id));
   };
+
+  const onModal = () => {
+    openModal({modal: 'example', content: 'This is an example modal'})
+  }
 
   //Menu bar hotkeys
   useHotkeys(
@@ -151,6 +157,13 @@ const MenuBar = (props) => {
                 preamble: {},
               },
             },
+            test: {
+              items: {
+                "open modal ...": {
+                  onClick: onModal
+                }
+              }
+            }
           },
         },
         change_layout: {
