@@ -29,4 +29,10 @@ const tabSchema = {
   },
 };
 
-export default tabSchema;
+const collection = {
+  tabs: {
+    schema: tabSchema,
+  },
+};
+
+export default collection;
