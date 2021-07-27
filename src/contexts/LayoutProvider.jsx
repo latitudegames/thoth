@@ -42,7 +42,7 @@ const Context = createContext({
 
 export const useLayout = () => useContext(Context);
 
-const LayoutProvider = ({ children }) => {
+const LayoutProvider = ({ children, tab }) => {
   const { subscribe, publish, events } = usePubSub();
 
   const currentModelRef = useRef(null);
@@ -59,7 +59,7 @@ const LayoutProvider = ({ children }) => {
 
   // inspector subscription
   useEffect(() => {
-    return subscribe(events.INSPECTOR_SET, (event, data) => {
+    return subscribe(events.$INSPECTOR_SET(tab.id), (event, data) => {
       if (data?.nodeId !== inspectorData?.nodeId) setInspectorData({});
       setInspectorData(data);
 
