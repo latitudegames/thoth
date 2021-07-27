@@ -31,7 +31,6 @@ import { ForEach } from "./components/ForEach";
 import { EnkiTask } from "./components/EnkiTask";
 import { Generator } from "./components/Generator";
 import { Code } from "./components/Code";
-import { EditLocationRounded } from "@material-ui/icons";
 
 /*
   Primary initialization function.  Takes a container ref to attach the rete editor to.
