@@ -25,4 +25,10 @@ const spellSchema = {
   },
 };
 
-export default spellSchema;
+const collection = {
+  spells: {
+    schema: spellSchema,
+  },
+};
+
+export default collection;
