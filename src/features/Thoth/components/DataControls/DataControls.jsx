@@ -8,20 +8,22 @@ import EnkiSelect from "./EnkiSelect";
 import css from "./datacontrols.module.css";
 import CodeControl from "./CodeControl";
 import SocketGenerator from "./SocketGenerator";
+import ModuleSelect from "./ModuleSelect";
 
 const StubComponent = (props) => <div>{props.name}</div>;
 
 const controlMap = {
+  code: CodeControl,
+  dial: StubComponent,
   enkiSelect: EnkiSelect,
-  socketGenerator: SocketGenerator,
-  outputGenerator: OutputGenerator,
+  info: Info,
+  input: Input,
   inputGenerator: InputGenerator,
   longText: LongText,
-  input: Input,
+  moduleSelect: ModuleSelect,
+  outputGenerator: OutputGenerator,
   slider: StubComponent,
-  dial: StubComponent,
-  code: CodeControl,
-  info: Info,
+  socketGenerator: SocketGenerator,
 };
 
 const DataControls = ({
