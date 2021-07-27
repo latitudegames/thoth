@@ -6,7 +6,6 @@ import { useDB } from "./DatabaseProvider";
 const Context = createContext({
   currentSpell: {},
   updateCurrentSpell: {},
-  getSpell: () => {},
   loadSpell: () => {},
   saveSpell: () => {},
   newSpell: () => {},
@@ -22,7 +21,10 @@ const Context = createContext({
 export const useSpell = () => useContext(Context);
 
 const SpellProvider = ({ children }) => {
-  const { db } = useDB();
+  const {
+    db,
+    models: { spells },
+  } = useDB();
   const { enqueueSnackbar } = useSnackbar();
 
   const spellRef = useRef;
@@ -36,7 +38,7 @@ const SpellProvider = ({ children }) => {
   };
 
   const loadSpell = async (spellId) => {
-    const spellDoc = await getSpell(spellId);
+    const spellDoc = await spells.getSpell(spellId);
 
     if (!spellDoc) return;
 
@@ -49,18 +51,8 @@ const SpellProvider = ({ children }) => {
     return "Latitude Thoth 0.0.1";
   };
 
-  const getSpell = async (spellId) => {
-    return db.spells
-      .findOne({
-        selector: {
-          name: spellId,
-        },
-      })
-      .exec();
-  };
-
   const saveSpell = async (spellId, update, snack = true) => {
-    const spell = await getSpell(spellId);
+    const spell = await spells.getSpell(spellId);
 
     try {
       await spell.atomicUpdate((oldData) => {
@@ -90,7 +82,7 @@ const SpellProvider = ({ children }) => {
   };
 
   const getCurrentGameState = async () => {
-    const spellDoc = await getSpell(spellRef.current.name);
+    const spellDoc = await spells.getSpell(spellRef.current.name);
     const spell = spellDoc.toJSON();
     return spell.gameState;
   };
@@ -105,7 +97,7 @@ const SpellProvider = ({ children }) => {
   };
 
   const rewriteCurrentGameState = async (state) => {
-    const updatedSpell = await getSpell(spellRef.current.name);
+    const updatedSpell = await spells.getSpell(spellRef.current.name);
     setStateHistory([...stateHistory, updatedSpell.gameState]);
 
     await updatedSpell.atomicPatch({
@@ -120,7 +112,6 @@ const SpellProvider = ({ children }) => {
   const publicInterface = {
     currentSpell,
     getCurrentGameState,
-    getSpell,
     getThothVersion,
     loadSpell,
     newSpell,
@@ -130,6 +121,7 @@ const SpellProvider = ({ children }) => {
     setCurrentSpell,
     stateHistory,
     updateCurrentGameState,
+    ...spells,
   };
 
   return (
