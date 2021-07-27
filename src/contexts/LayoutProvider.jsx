@@ -86,14 +86,14 @@ const LayoutProvider = ({ children, tab }) => {
 
   // text editor subscription
   useEffect(() => {
-    return subscribe(events.TEXT_EDITOR_SET, (event, data) => {
+    return subscribe(events.$TEXT_EDITOR_SET(tab.id), (event, data) => {
       setTextEditorData(data);
     });
   }, [events, subscribe, publish]);
 
   // clear text editor subscription
   useEffect(() => {
-    return subscribe(events.TEXT_EDITOR_CLEAR, (event, data) => {
+    return subscribe(events.$TEXT_EDITOR_CLEAR(tab.id), (event, data) => {
       setTextEditorData({});
     });
   }, [events, subscribe, publish]);
