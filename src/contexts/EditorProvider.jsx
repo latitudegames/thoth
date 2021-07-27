@@ -46,7 +46,7 @@ const EditorProvider = ({ children }) => {
     // set editor to the map
     setEditor(newEditor);
 
-    const spellDoc = await spell.getSpell(tab.spell);
+    const spellDoc = await thoth.getSpell(tab.spell);
     newEditor.loadGraph(spellDoc.toJSON().graph);
   };
 
