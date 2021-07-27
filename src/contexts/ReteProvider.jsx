@@ -1,6 +1,7 @@
 import { useContext, createContext } from "react";
 
 import { usePubSub } from "./PubSubProvider";
+import { useDB } from "./DatabaseProvider";
 
 /* 
 Some notes here.  The new rete provider, not to be foncused with the old rete provider renamed to the editor provider, is designed to serve as the single source of truth for interfacing with the rete internal system.  This unified interface will lso allow us to replicate the same API in the server, where rete expects certain function to exist but doesn't care what is behind these functions to long as they work.
@@ -14,6 +15,7 @@ const Context = createContext({
   sendToPlaytest: () => {},
   sendToInspector: () => {},
   clearTextEditor: () => {},
+  getSpell: () => {},
   getGameState: () => {},
   setGameState: () => {},
 });
@@ -22,6 +24,9 @@ export const useRete = () => useContext(Context);
 
 const ReteProvider = ({ children, tab }) => {
   const { events, publish, subscribe } = usePubSub();
+  const {
+    models: { spells },
+  } = useDB();
 
   const {
     $PLAYTEST_INPUT,
@@ -55,12 +60,17 @@ const ReteProvider = ({ children, tab }) => {
     publish($TEXT_EDITOR_CLEAR(tab.id));
   };
 
+  const getSpell = async (spellName) => {
+    return spells.getSpell(spellName);
+  };
+
   const publicInterface = {
     onInspector,
     sendToInspector,
     sendToPlaytest,
     onPlaytest,
     clearTextEditor,
+    getSpell,
   };
 
   return (
