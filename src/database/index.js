@@ -13,12 +13,6 @@ let database = null;
 const databaseName = "thoth_alpha";
 const adapter = "idb";
 
-export const loadModels = (db) => {
-  return {
-    spells: loadSpellModel(db),
-  };
-};
-
 export const initDB = async () => {
   if (database !== null) return database;
 
@@ -101,5 +95,12 @@ export const initDB = async () => {
     }
   }, true);
 
-  return database;
+  const models = {
+    spells: loadSpellModel(database),
+  };
+
+  return {
+    database,
+    models,
+  };
 };
