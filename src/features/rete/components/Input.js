@@ -15,6 +15,11 @@ export class InputComponent extends Rete.Component {
       },
     };
 
+    this.module = {
+      nodeType: 'input',
+      socketType: stringSocket
+    }
+
     this.category = "I/O";
     this.info = info;
   }
