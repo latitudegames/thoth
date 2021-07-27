@@ -8,6 +8,8 @@ import TaskPlugin from "./plugins/taskPlugin";
 import InspectorPlugin from "./plugins/inspectorPlugin";
 import SocketGenerator from "./plugins/socketGenerator";
 import DisplayPlugin from "./plugins/displayPlugin";
+import ModulePlugin from "./plugins/modulePlugin";
+
 import { MyNode } from "../../features/common/Node/Node";
 import { InputComponent } from "./components/Input";
 import { JoinListComponent } from "./components/JoinList";
@@ -31,6 +33,7 @@ import { ForEach } from "./components/ForEach";
 import { EnkiTask } from "./components/EnkiTask";
 import { Generator } from "./components/Generator";
 import { Code } from "./components/Code";
+import { ModuleComponent } from './components/Module';
 
 /*
   Primary initialization function.  Takes a container ref to attach the rete editor to.
@@ -52,6 +55,7 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
     new InputComponent(),
     new ItemTypeComponent(),
     new JoinListComponent(),
+    new ModuleComponent(),
     new PlaytestPrint(),
     new PlaytestInput(),
     new RunInputComponent(),
@@ -87,6 +91,7 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
   // renders a context menu on right click that shows available nodes
   editor.use(LifecyclePlugin);
   editor.use(ContextMenuPlugin);
+  editor.use(ModulePlugin);
   editor.use(TaskPlugin);
 
   // This should only be needed on client, not server
