@@ -33,13 +33,13 @@ const Input = (props) => {
   );
 };
 
-const Playtest = ({ ...props }) => {
+const Playtest = ({ tab, ...props }) => {
   const [history, setHistory] = useState([]);
   const [value, setValue] = useState("");
 
   const { publish, subscribe, events } = usePubSub();
 
-  const { PLAYTEST_INPUT, PLAYTEST_PRINT } = events;
+  const { $PLAYTEST_INPUT, $PLAYTEST_PRINT } = events;
 
   const printToConsole = useCallback(
     (_, text) => {
@@ -50,18 +50,18 @@ const Playtest = ({ ...props }) => {
   );
 
   useEffect(() => {
-    const unsubscribe = subscribe(PLAYTEST_PRINT, printToConsole);
+    const unsubscribe = subscribe($PLAYTEST_PRINT(tab.id), printToConsole);
 
     // return a clean up function
     return unsubscribe;
-  }, [subscribe, printToConsole, PLAYTEST_PRINT]);
+  }, [subscribe, printToConsole, $PLAYTEST_PRINT]);
 
   const printItem = (text, key) => <li key={key}>{text}</li>;
 
   const onSend = () => {
     const newHistory = [...history, `You: ${value}`];
     setHistory(newHistory);
-    publish(PLAYTEST_INPUT, value);
+    publish($PLAYTEST_INPUT(tab.id), value);
     setValue("");
   };
 
