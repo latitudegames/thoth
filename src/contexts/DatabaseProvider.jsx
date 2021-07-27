@@ -1,5 +1,5 @@
 import { useContext, createContext, useState, useEffect } from "react";
-import { initDB, loadModels } from "../database";
+import { initDB } from "../database";
 
 import LoadingScreen from "../features/common/LoadingScreen/LoadingScreen";
 
@@ -18,8 +18,7 @@ const DatabaseProvider = ({ children }) => {
     (async () => {
       if (db) return;
 
-      const database = await initDB();
-      const models = loadModels(db);
+      const { database, models } = await initDB();
 
       setDb(database);
       setModels(models);
