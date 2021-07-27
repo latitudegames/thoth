@@ -37,20 +37,24 @@ const Workspace = ({ tab, appPubSub }) => {
 
   const factory = (tab) => {
     return (node) => {
+      const props = {
+        tab,
+        node,
+      };
       const component = node.getComponent();
       switch (component) {
         case "editor":
-          return <Editor />;
+          return <Editor {...props} />;
         case "stateManager":
-          return <StateManager node={node} />;
+          return <StateManager {...props} />;
         case "playtest":
-          return <Playtest />;
+          return <Playtest {...props} />;
         case "inspector":
-          return <Inspector node={node} />;
+          return <Inspector {...props} />;
         case "textEditor":
-          return <TextEditor node={node} />;
+          return <TextEditor {...props} />;
         case "editorWindow":
-          return <EditorWindow tab={tab} />;
+          return <EditorWindow {...props} />;
         default:
           return <p></p>;
       }
