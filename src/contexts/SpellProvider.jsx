@@ -22,7 +22,6 @@ export const useSpell = () => useContext(Context);
 
 const SpellProvider = ({ children }) => {
   const {
-    db,
     models: { spells },
   } = useDB();
   const { enqueueSnackbar } = useSnackbar();
@@ -52,29 +51,12 @@ const SpellProvider = ({ children }) => {
   };
 
   const saveSpell = async (spellId, update, snack = true) => {
-    const spell = await spells.getSpell(spellId);
-
     try {
-      await spell.atomicUpdate((oldData) => {
-        return {
-          ...oldData,
-          ...update,
-        };
-      });
+      await spells.updateSpell(spellId, update);
       if (snack) enqueueSnackbar("Spell saved");
     } catch (err) {
       if (snack) enqueueSnackbar("Error saving spell");
     }
-  };
-
-  const newSpell = async ({ graph, name, gameState = {} }) => {
-    const newSpell = {
-      name,
-      graph,
-      gameState,
-    };
-
-    return db.spells.insert(newSpell);
   };
 
   const saveCurrentSpell = async (update) => {
@@ -97,12 +79,11 @@ const SpellProvider = ({ children }) => {
   };
 
   const rewriteCurrentGameState = async (state) => {
-    const updatedSpell = await spells.getSpell(spellRef.current.name);
-    setStateHistory([...stateHistory, updatedSpell.gameState]);
+    const spell = await spells.getSpell(spellRef.current.name);
+    setStateHistory([...stateHistory, spell.gameState]);
 
-    await updatedSpell.atomicPatch({
-      gameState: state,
-    });
+    const update = { gameState: state };
+    const updatedSpell = await spells.updateSpell(spell.name, update);
 
     const updated = updatedSpell.toJSON();
     updateCurrentSpell(updated);
@@ -114,7 +95,6 @@ const SpellProvider = ({ children }) => {
     getCurrentGameState,
     getThothVersion,
     loadSpell,
-    newSpell,
     rewriteCurrentGameState,
     saveCurrentSpell,
     saveSpell,
