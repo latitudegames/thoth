@@ -18,7 +18,6 @@ const spellSchema = {
     },
     createdAt: {
       type: "number",
-      // default: Date.now(),
     },
     updatedAt: {
       type: "number",
