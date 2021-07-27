@@ -83,8 +83,8 @@ function install(context, { engine, modules }) {
   });
 }
 
-const module = {
+const moduleExport = {
   install,
 };
 
-export default module;
+export default moduleExport;
