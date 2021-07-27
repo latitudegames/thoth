@@ -1,5 +1,5 @@
 import Rete from "rete";
-import { TextInputControl } from "../controls/TextInputControl";
+import { ModuleControl } from "../dataControls/ModuleControl";
 
 const info = `The Module component allows you to add modules into your chain.  A module is a bundled self contained chain that defines inputs, outputs, and triggers using components.`;
 
@@ -21,13 +21,12 @@ export class ModuleComponent extends Rete.Component {
   }
 
   builder(node) {
-    var ctrl = new TextInputControl({
-      emitter: this.editor,
-      key: "module",
-      value: node.data.module || "",
+    const moduleControl = new ModuleControl({
+      name: "Module select",
     });
+    node.inspector.add(moduleControl);
 
-    return node.addControl(ctrl);
+    return node;
   }
 
   change(node, item) {
