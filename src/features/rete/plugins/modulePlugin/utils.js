@@ -24,7 +24,7 @@ export function addIO(node, inputs, outputs) {
   if (uniqueInputsCount !== inputs.length)
     throw new Error(`Module ${node.data.module} has duplicate inputs`);
   if (uniqueOutputsCount !== outputs.length)
-    throw new Error()`Module ${node.data.module} has duplicate outputs`);
+    throw new Error(`Module ${node.data.module} has duplicate outputs`);
 
   inputs.forEach((i) => node.addInput(new Input(i.name, i.name, i.socket)));
   outputs.forEach((o) => node.addOutput(new Output(o.name, o.name, o.socket)));
