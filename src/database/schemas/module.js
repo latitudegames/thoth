@@ -25,4 +25,10 @@ const moduleSchema = {
   },
 };
 
-export default moduleSchema;
+const collection = {
+  modules: {
+    schema: moduleSchema,
+  },
+};
+
+export default collection;
