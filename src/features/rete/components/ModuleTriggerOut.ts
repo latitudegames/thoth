@@ -34,7 +34,6 @@ export class ModuleTriggerOut extends Rete.Component {
   // to generate the appropriate inputs and ouputs for the fewshot at build time
   builder(node) {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
-    const out = new Rete.Output("trigger", "Trigger", triggerSocket);
     const input = new Rete.Input("trigger", "Trigger", triggerSocket);
 
     // Handle default value if data is present
@@ -45,7 +44,7 @@ export class ModuleTriggerOut extends Rete.Component {
 
     node.inspector.add(nameInput);
 
-    return node.addOutput(out).addInput(input);
+    return node.addInput(input);
   }
 
   async worker(node, inputs, outputs) {
