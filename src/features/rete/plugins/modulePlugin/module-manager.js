@@ -10,6 +10,20 @@ export class ModuleManager {
     this.triggers = new Map();
   }
 
+  addModule(module) {
+    this.modules.push(module);
+  }
+
+  setModules(modules) {
+    this.modules = modules;
+  }
+
+  updateModule(module) {
+    const index = this.modules.findIndex((mod) => mod.id === module.id);
+
+    if (index > -1) this.modules[index] = module;
+  }
+
   getInputs(data) {
     return extractNodes(data.nodes, this.inputs).map((node) => ({
       name: node.data.name,
