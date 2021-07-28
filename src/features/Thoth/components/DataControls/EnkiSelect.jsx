@@ -56,12 +56,10 @@ const EnkiDetails = ({ initialTask, addThroughput, update }) => {
   }, [activeTask]);
 
   const optionArray = () => {
-    let array = [];
-    taskList.map((task, index) => {
-      return array.push({ value: task.name, label: task.name });
-    });
-
-    return array;
+    return taskList.map((task, index) => ({
+      value: task.name,
+      label: task.name,
+    }));
   };
 
   return (
