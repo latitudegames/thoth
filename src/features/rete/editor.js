@@ -111,8 +111,15 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
   thothV2.getModules((moduleDocs) => {
     if (!moduleDocs) return;
 
-    modules = moduleDocs.map((doc) => doc.toJSON());
-    console.log("MODULES", modules);
+    modules = moduleDocs
+      .map((doc) => doc.toJSON())
+      .reduce((acc, module) => {
+        // todo handle better mapping
+        // see moduleSelect.tsx
+        acc[module.name] = module;
+        return acc;
+      }, {});
+
     editor.setModules(modules);
   });
 
