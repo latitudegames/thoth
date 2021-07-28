@@ -43,7 +43,7 @@ const CreateNew = ({ setNewVisible }) => {
       graph: defaultGraph,
       name: placeholderName,
     });
-    await openTab({ name: spell.name, spellId: spell.name });
+    await openTab({ name: spell.name, spellId: spell.name, type: "spell" });
   };
 
   return (
