@@ -2,9 +2,9 @@ import Rete from "rete";
 import { InputControl } from "../dataControls/InputControl";
 import { triggerSocket } from "../sockets";
 
-const info = `The module trigger out component adds a trigger out socket to the parent module.  It can be given a name, which is displayed on the parent.`;
+const info = `The module trigge in adds a trigger input socket to the parent module.  It can be given a name, which is displayed on the parent.`;
 
-export class ModuleTriggerOut extends Rete.Component {
+export class ModuleTriggerIn extends Rete.Component {
   task: object;
   module: object;
   category: string;
@@ -12,7 +12,7 @@ export class ModuleTriggerOut extends Rete.Component {
 
   constructor() {
     // Name of the component
-    super("Module Trigger Out");
+    super("Module Trigger In");
 
     this.task = {
       outputs: {
@@ -21,7 +21,7 @@ export class ModuleTriggerOut extends Rete.Component {
     };
 
     this.module = {
-      nodeType: "triggerOut",
+      nodeType: "triggerIn",
       socket: triggerSocket,
     };
 
@@ -35,7 +35,6 @@ export class ModuleTriggerOut extends Rete.Component {
   builder(node) {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const out = new Rete.Output("trigger", "Trigger", triggerSocket);
-    const input = new Rete.Input("trigger", "Trigger", triggerSocket);
 
     // Handle default value if data is present
     const nameInput = new InputControl({
@@ -45,7 +44,7 @@ export class ModuleTriggerOut extends Rete.Component {
 
     node.inspector.add(nameInput);
 
-    return node.addOutput(out).addInput(input);
+    return node.addOutput(out);
   }
 
   async worker(node, inputs, outputs) {

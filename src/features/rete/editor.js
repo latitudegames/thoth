@@ -38,6 +38,7 @@ import { ModuleComponent } from "./components/Module";
 import { ModuleInput } from "./components/ModuleInput";
 import { ModuleOutput } from "./components/ModuleOutput";
 import { ModuleTriggerOut } from "./components/ModuleTriggerOut";
+import { ModuleTriggerIn } from "./components/ModuleTriggerIn";
 
 /*
   Primary initialization function.  Takes a container ref to attach the rete editor to.
@@ -63,6 +64,7 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
     new ModuleInput(),
     new ModuleOutput(),
     new ModuleTriggerOut(),
+    new ModuleTriggerIn(),
     new PlaytestPrint(),
     new PlaytestInput(),
     // new RunInputComponent(),
