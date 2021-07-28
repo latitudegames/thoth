@@ -8,6 +8,8 @@ export class ModuleComponent extends Rete.Component {
   updateModuleSockets;
   task;
   info;
+  subscriptionMap: {} = {};
+  editor: any;
 
   constructor() {
     super("Module");
@@ -27,12 +29,17 @@ export class ModuleComponent extends Rete.Component {
 
     if (node.data.module) {
       this.updateModuleSockets(node);
+      this.subscribe(node);
     }
 
     moduleControl.onData = async (data) => {
-      this.updateModuleSockets(node);
+      // since the module has changed, we want to unsubscribe from the old module
+      this.unsubscribe(node);
+      this.updateSockets(node);
       if (this.editor) this.editor.trigger("process");
       node.update();
+      // attach a new subscription for this new module
+      this.subscribe(node);
     };
 
     node.inspector.add(moduleControl);
@@ -40,8 +47,34 @@ export class ModuleComponent extends Rete.Component {
     return node;
   }
 
-  change(node, item) {
-    node.data.module = item;
+  destroyed(node) {
+    this.unsubscribe(node);
+  }
+
+  unsubscribe(node) {
+    if (!this.subscriptionMap[node.id]) return;
+
+    this.subscriptionMap[node.id].unsubscribe();
+    delete this.subscriptionMap[node.id];
+  }
+
+  subscribe(node) {
+    // make sure we dont have a lingering subscription
+    if (!node.data.module) return;
+
+    this.unsubscribe(node);
+    this.subscriptionMap[node.id] = this.editor.thothV2.findOneModule(
+      { name: node.data.module },
+      (module) => {
+        this.updateSockets(node);
+      }
+    );
+  }
+
+  updateSockets(node) {
+    this.updateModuleSockets(node);
+    this.editor.trigger("process");
+    node.update();
   }
 
   worker() {}
