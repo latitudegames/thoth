@@ -1,6 +1,6 @@
 import Rete from "rete";
 import { InputControl } from "../dataControls/InputControl";
-import { stringSocket } from "../sockets";
+import { anySocket } from "../sockets";
 
 const info = `The module output component adds an output socket to the parent module.  It can be given a name, which is displayed on the parent.`;
 
@@ -22,7 +22,7 @@ export class ModuleOutput extends Rete.Component {
 
     this.module = {
       nodeType: "output",
-      socket: stringSocket,
+      socket: anySocket,
     };
 
     this.category = "I/O";
@@ -34,7 +34,8 @@ export class ModuleOutput extends Rete.Component {
   // to generate the appropriate inputs and ouputs for the fewshot at build time
   builder(node) {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
-    const out = new Rete.Output("name", "String", stringSocket);
+    const out = new Rete.Output("name", "String", anySocket);
+    const input = new Rete.Input("output", "String", anySocket);
 
     // Handle default value if data is present
     const nameInput = new InputControl({
@@ -44,7 +45,7 @@ export class ModuleOutput extends Rete.Component {
 
     node.inspector.add(nameInput);
 
-    return node.addOutput(out);
+    return node.addOutput(out).addInput(input);
   }
 
   async worker(node, inputs, outputs) {
