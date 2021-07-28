@@ -60,8 +60,8 @@ export class ModuleManager {
     this.inputs.set(name, socket);
   }
 
-  registerSocket(name, socket) {
-    this.sockets.set(name, socket);
+  registerTrigger(name, socket) {
+    this.triggers.set(name, socket);
   }
 
   registerOutput(name, socket) {
