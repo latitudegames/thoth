@@ -25,7 +25,7 @@ const Workspace = ({ tab, appPubSub }) => {
   useEffect(() => {
     if (!editor?.on) return;
     editor.on(
-      "nodecreated noderemoved connectioncreated connectionremoved nodetranslated",
+      "save nodecreated noderemoved connectioncreated connectionremoved nodetranslated",
       debounce(() => {
         if (tab.type === "spell")
           saveSpell(tab.spell, { graph: editor.toJSON() }, false);
