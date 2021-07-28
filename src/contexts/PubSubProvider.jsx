@@ -19,6 +19,7 @@ export const events = {
   $INSPECTOR_SET: (tabId) => `inspectorSet:${tabId}`,
   $TEXT_EDITOR_SET: (tabId) => `textEditorSet:${tabId}`,
   $TEXT_EDITOR_CLEAR: (tabId) => `textEditorClear:${tabId}`,
+  $CLOSE_EDITOR: (tabId) => `closeEditor:${tabId}`,
   $NODE_SET: (tabId, nodeId) => `nodeSet:${tabId}:${nodeId}`,
   $SAVE_SPELL: (tabId) => `saveSpell:${tabId}`,
   $CREATE_STATE_MANAGER: (tabId) => `createStateManage:${tabId}`,
