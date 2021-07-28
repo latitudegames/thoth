@@ -4,6 +4,18 @@ import { ModuleManager } from "./module-manager";
 function install(context, { engine, modules }) {
   const moduleManager = new ModuleManager(modules);
 
+  context.addModule = (module) => {
+    moduleManager.addModule(module);
+  };
+
+  context.updateModule = (module) => {
+    moduleManager.updateModule(module);
+  };
+
+  context.setModules = (modules) => {
+    moduleManager.setModules(modules);
+  };
+
   moduleManager.setEngine(engine);
 
   context.on("componentregister", (component) => {
