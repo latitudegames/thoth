@@ -9,6 +9,7 @@ import LoadingScreen from "../features/common/LoadingScreen/LoadingScreen";
 const Context = createContext({
   tabs: [],
   activeTab: {},
+  openTab: async (options) => {},
   switchTab: () => {},
   closeTab: () => {},
   saveTabLayout: () => {},
@@ -60,15 +61,18 @@ const TabManager = ({ children }) => {
 
   const openTab = async ({
     workspace = "default",
-    name = "My Spell",
-    spellId,
+    name = "Untitled",
+    type = "module",
+    moduleId,
+    spellId = null,
   }) => {
     const newTab = {
       layoutJson: workspaceMap[workspace],
       name,
       id: uuidv4(),
       spell: spellId,
-      type: "spell",
+      module: moduleId,
+      type: type,
       active: true,
     };
 
