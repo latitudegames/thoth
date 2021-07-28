@@ -12,7 +12,7 @@ const moduleSchema = {
     name: {
       type: "string",
     },
-    json: {
+    data: {
       type: "object",
       default: { id: "demo@0.1.0", nodes: {} },
     },
