@@ -7,7 +7,8 @@ export class ModuleManager {
     this.modules = modules;
     this.inputs = new Map();
     this.outputs = new Map();
-    this.triggers = new Map();
+    this.triggerIns = new Map();
+    this.triggerOuts = new Map();
   }
 
   addModule(module) {
@@ -38,10 +39,17 @@ export class ModuleManager {
     }));
   }
 
-  getTriggers(data) {
-    return extractNodes(data.nodes, this.triggers).map((node) => ({
+  getTriggerOuts(data) {
+    return extractNodes(data.nodes, this.triggerOuts).map((node) => ({
       name: node.data.name,
-      socket: this.socketFactory(node, this.triggers.get(node.name)),
+      socket: this.socketFactory(node, this.triggerOuts.get(node.name)),
+    }));
+  }
+
+  getTriggerIns(data) {
+    return extractNodes(data.nodes, this.triggerIns).map((node) => ({
+      name: node.data.name,
+      socket: this.socketFactory(node, this.triggerIns.get(node.name)),
     }));
   }
 
@@ -60,8 +68,12 @@ export class ModuleManager {
     this.inputs.set(name, socket);
   }
 
-  registerTrigger(name, socket) {
-    this.triggers.set(name, socket);
+  registerTriggerIn(name, socket) {
+    this.triggerIn.set(name, socket);
+  }
+
+  registerTriggerOut(name, socket) {
+    this.triggerOuts.set(name, socket);
   }
 
   registerOutput(name, socket) {
