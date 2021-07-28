@@ -6,6 +6,16 @@ const loadModuleModel = (db) => {
     return callback ? query.$.subscribe(callback) : query.exec();
   };
 
+  const getModule = async (moduleId) => {
+    return db.modules
+      .findOne({
+        selector: {
+          id: moduleId,
+        },
+      })
+      .exec();
+  };
+
   const newModule = ({ name }) => {
     const newModule = {
       name,
@@ -17,6 +27,7 @@ const loadModuleModel = (db) => {
 
   return {
     getModules,
+    getModule,
     newModule,
   };
 };
