@@ -19,6 +19,7 @@ const Context = createContext({
   getModule: () => {},
   getGameState: () => {},
   setGameState: () => {},
+  getModules: async () => {},
 });
 
 export const useRete = () => useContext(Context);
@@ -69,6 +70,10 @@ const ReteProvider = ({ children, tab }) => {
     return modules.getModule(moduleId);
   };
 
+  const getModules = async (callback = null) => {
+    return modules.getModules(callback);
+  };
+
   const publicInterface = {
     onInspector,
     sendToInspector,
@@ -77,6 +82,7 @@ const ReteProvider = ({ children, tab }) => {
     clearTextEditor,
     getSpell,
     getModule,
+    getModules,
   };
 
   return (
