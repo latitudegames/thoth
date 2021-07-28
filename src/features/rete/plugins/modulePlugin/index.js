@@ -4,17 +4,7 @@ import { ModuleManager } from "./module-manager";
 function install(context, { engine, modules }) {
   const moduleManager = new ModuleManager(modules);
 
-  context.addModule = (module) => {
-    moduleManager.addModule(module);
-  };
-
-  context.updateModule = (module) => {
-    moduleManager.updateModule(module);
-  };
-
-  context.setModules = (modules) => {
-    moduleManager.setModules(modules);
-  };
+  context.moduleManager = moduleManager;
 
   moduleManager.setEngine(engine);
 
@@ -51,6 +41,7 @@ function install(context, { engine, modules }) {
 
         if (builder) {
           component.updateModuleSockets = (node) => {
+            const modules = moduleManager.modules;
             removeIO(node, context);
 
             if (!node.data.module || !modules[node.data.module]) return;
@@ -75,6 +66,7 @@ function install(context, { engine, modules }) {
         const moduleWorker = component.worker;
 
         component.worker = async (...args) => {
+          console.log("working!");
           await moduleManager.workerModule.apply(moduleManager, args);
           if (moduleWorker) moduleWorker.apply(component, args);
         };
