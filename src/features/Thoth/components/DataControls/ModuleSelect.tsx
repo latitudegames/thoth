@@ -26,7 +26,7 @@ const ModuleSelect = () => {
     try {
       const module = await newModule({ name: value });
       await openTab({
-        name: `Module-${value}`,
+        name: value,
         type: "module",
         moduleId: module.id,
       });
