@@ -33,7 +33,7 @@ import { ForEach } from "./components/ForEach";
 import { EnkiTask } from "./components/EnkiTask";
 import { Generator } from "./components/Generator";
 import { Code } from "./components/Code";
-import { ModuleComponent } from './components/Module';
+import { ModuleComponent } from "./components/Module";
 
 /*
   Primary initialization function.  Takes a container ref to attach the rete editor to.
@@ -68,8 +68,13 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
     new TimeDetectorComponent(),
   ];
 
+  let modules = [];
+
   // create the main edtor
   const editor = new Rete.NodeEditor("demo@0.1.0", container);
+
+  // The engine is used to process/run the rete graph
+  const engine = new Rete.Engine("demo@0.1.0");
 
   // Set up the reactcontext pubsub on the editor so rete components can talk to react
   editor.pubSub = pubSub;
@@ -91,7 +96,7 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
   // renders a context menu on right click that shows available nodes
   editor.use(LifecyclePlugin);
   editor.use(ContextMenuPlugin);
-  editor.use(ModulePlugin);
+  editor.use(ModulePlugin, { engine, modules });
   editor.use(TaskPlugin);
 
   // This should only be needed on client, not server
@@ -102,8 +107,14 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
     scaleExtent: { min: 0.25, max: 2 },
   });
 
-  // The engine is used to process/run the rete graph
-  const engine = new Rete.Engine("demo@0.1.0");
+  // handle modules
+  thothV2.getModules((moduleDocs) => {
+    if (!moduleDocs) return;
+
+    modules = moduleDocs.map((doc) => doc.toJSON());
+    console.log("MODULES", modules);
+    editor.setModules(modules);
+  });
 
   // Register custom components with both the editor and the engine
   // We will need a wa to share components between client and server
