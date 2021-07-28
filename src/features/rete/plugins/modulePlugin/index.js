@@ -26,14 +26,24 @@ function install(context, { engine, modules }) {
           if (inputsWorker) inputsWorker.apply(component, args);
         };
         break;
-      case "trigger":
+      case "triggerOut":
         let triggersWorker = component.worker;
 
-        moduleManager.registerTrigger(name, socket);
+        moduleManager.registerTriggerOut(name, socket);
 
         component.worker = (...args) => {
           moduleManager.workerTriggers.apply(moduleManager, args);
           if (triggersWorker) triggersWorker.apply(component, args);
+        };
+        break;
+      case "triggerIn":
+        let triggerInWorker = component.worker;
+
+        moduleManager.registerTriggerIn(name, socket);
+
+        component.worker = (...args) => {
+          moduleManager.workerTriggers.apply(moduleManager, args);
+          if (triggerInWorker) triggersWorker.apply(component, args);
         };
         break;
       case "module":
@@ -49,10 +59,12 @@ function install(context, { engine, modules }) {
             const data = modules[node.data.module].data;
             const inputs = moduleManager.getInputs(data);
             const outputs = moduleManager.getOutputs(data);
-            const triggers = moduleManager.getTriggers(data);
+            const triggerOuts = moduleManager.getTriggerOuts(data);
+            const triggerIns = moduleManager.getTriggerIns(data);
 
             try {
-              addIO(node, inputs, outputs, triggers);
+              // The arguments for this are getting bit crazy
+              addIO(node, inputs, outputs, triggerOuts, triggerIns);
             } catch (e) {
               return context.trigger("warn", e);
             }
