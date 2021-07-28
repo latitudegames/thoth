@@ -24,14 +24,15 @@ const Workspace = ({ tab, appPubSub }) => {
   // Set up autosave for the workspace
   useEffect(() => {
     if (!editor?.on) return;
-    editor.on(
+    return editor.on(
       "save nodecreated noderemoved connectioncreated connectionremoved nodetranslated",
       debounce(() => {
         if (tab.type === "spell")
           saveSpell(tab.spell, { graph: editor.toJSON() }, false);
-        if (tab.type === "module")
+        if (tab.type === "module") {
           saveModule(tab.module, { data: editor.toJSON() }, false);
-      }, 300)
+        }
+      }, 500)
     );
   }, [editor]);
 
