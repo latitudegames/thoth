@@ -14,9 +14,11 @@ import Playtest from "./PlaytestWindow";
 import Inspector from "./InspectorWindow";
 import EditorWindow from "./EditorWindow";
 import TextEditor from "./TextEditorWindow";
+import { useModule } from "../../../contexts/ModuleProvider";
 
 const Workspace = ({ tab, appPubSub }) => {
   const { saveSpell, loadSpell } = useSpell();
+  const { saveModule } = useModule();
   const { editor } = useEditor();
 
   // Set up autosave for the workspace
@@ -25,7 +27,10 @@ const Workspace = ({ tab, appPubSub }) => {
     editor.on(
       "nodecreated noderemoved connectioncreated connectionremoved nodetranslated",
       debounce(() => {
-        saveSpell(tab.spell, { graph: editor.toJSON() }, false);
+        if (tab.type === "spell")
+          saveSpell(tab.spell, { graph: editor.toJSON() }, false);
+        if (tab.type === "module")
+          saveModule(tab.module, { data: editor.toJSON() }, false);
       }, 300)
     );
   }, [editor]);
