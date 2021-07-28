@@ -18,12 +18,12 @@ import { TenseTransformer } from "./components/TenseTransformer";
 // import { RunInputComponent } from "./components/RunInput";
 import { ActionTypeComponent } from "./components/ActionType";
 import { ItemTypeComponent } from "./components/ItemDetector";
-import { DifficultyDetectorComponent } from "./components/DifficultyDetector";
-import { EntityDetector } from "./components/EntityDetector";
+// import { DifficultyDetectorComponent } from "./components/DifficultyDetector";
+// import { EntityDetector } from "./components/EntityDetector";
 import { SafetyVerifier } from "./components/SafetyVerifier";
 import { BooleanGate } from "./components/BooleanGate";
-import { TimeDetectorComponent } from "./components/TimeDetector";
-import { Alert } from "./components/AlertMessage";
+// import { TimeDetectorComponent } from "./components/TimeDetector";
+// import { Alert } from "./components/AlertMessage";
 import { SwitchGate } from "./components/SwitchGate";
 import { PlaytestPrint } from "./components/PlaytestPrint";
 import { PlaytestInput } from "./components/PlaytestInput";
@@ -37,7 +37,7 @@ import { Code } from "./components/Code";
 import { ModuleComponent } from "./components/Module";
 import { ModuleInput } from "./components/ModuleInput";
 import { ModuleOutput } from "./components/ModuleOutput";
-import { ModuleTrigger } from "./components/ModuleTrigger";
+import { ModuleTriggerOut } from "./components/ModuleTriggerOut";
 
 /*
   Primary initialization function.  Takes a container ref to attach the rete editor to.
@@ -48,12 +48,12 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
   // We might be able to programatically generate components from enki
   const components = [
     new ActionTypeComponent(),
-    new Alert(),
+    // new Alert(),
     new BooleanGate(),
     new Code(),
-    new DifficultyDetectorComponent(),
+    // new DifficultyDetectorComponent(),
     new EnkiTask(),
-    new EntityDetector(),
+    // new EntityDetector(),
     new ForEach(),
     new Generator(),
     new InputComponent(),
@@ -62,7 +62,7 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
     new ModuleComponent(),
     new ModuleInput(),
     new ModuleOutput(),
-    new ModuleTrigger(),
+    new ModuleTriggerOut(),
     new PlaytestPrint(),
     new PlaytestInput(),
     // new RunInputComponent(),
@@ -72,7 +72,7 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
     new StringProcessor(),
     new SwitchGate(),
     new TenseTransformer(),
-    new TimeDetectorComponent(),
+    // new TimeDetectorComponent(),
   ];
 
   let modules = [];
