@@ -15,6 +15,16 @@ const loadModuleModel = (db) => {
     return callback ? query.$.subscribe(callback) : query.exec();
   };
 
+  const findOneModule = async (query) => {
+    const result = await db.modules
+      .findOne({
+        selector: query,
+      })
+      .exec();
+
+    return result.toJSON();
+  };
+
   const updateModule = async (moduleId: string, update: object) => {
     const module = await getModule(moduleId);
 
@@ -40,6 +50,7 @@ const loadModuleModel = (db) => {
     getModule,
     newModule,
     updateModule,
+    findOneModule,
   };
 };
 export default loadModuleModel;
