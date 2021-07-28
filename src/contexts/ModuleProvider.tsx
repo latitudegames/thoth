@@ -1,4 +1,6 @@
 import { useContext, createContext, useState, useEffect } from "react";
+import { useSnackbar } from "notistack";
+
 import { useDB } from "./DatabaseProvider";
 
 const Context = createContext({
@@ -9,6 +11,7 @@ const Context = createContext({
 export const useModule = () => useContext(Context);
 
 const ModuleProvider = ({ children }) => {
+  const { enqueueSnackbar } = useSnackbar();
   const [modules, setModules] = useState([] as any[]);
   const { models } = useDB();
 
@@ -22,8 +25,19 @@ const ModuleProvider = ({ children }) => {
     });
   }, [models]);
 
+  const saveModule = async (spellId, update, snack = true) => {
+    try {
+      await models.modules.updateModule(spellId, update);
+      if (snack) enqueueSnackbar("Module saved");
+    } catch (err) {
+      console.log("error saving module", module);
+      if (snack) enqueueSnackbar("Error saving module");
+    }
+  };
+
   const publicInterface = {
     modules,
+    saveModule,
     ...models.modules,
   };
 
