@@ -6,14 +6,24 @@ const loadModuleModel = (db) => {
     return callback ? query.$.subscribe(callback) : query.exec();
   };
 
-  const getModule = async (moduleId) => {
-    return db.modules
-      .findOne({
-        selector: {
-          id: moduleId,
-        },
-      })
-      .exec();
+  const getModule = async (moduleId, callback = null) => {
+    const query = db.modules.findOne({
+      selector: {
+        id: moduleId,
+      },
+    });
+    return callback ? query.$.subscribe(callback) : query.exec();
+  };
+
+  const updateModule = async (moduleId: string, update: object) => {
+    const module = await getModule(moduleId);
+
+    return module.atomicUpdate((oldData) => {
+      return {
+        ...oldData,
+        ...update,
+      };
+    });
   };
 
   const newModule = ({ name }) => {
@@ -29,6 +39,7 @@ const loadModuleModel = (db) => {
     getModules,
     getModule,
     newModule,
+    updateModule,
   };
 };
 export default loadModuleModel;
