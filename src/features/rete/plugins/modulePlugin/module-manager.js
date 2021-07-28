@@ -41,7 +41,7 @@ export class ModuleManager {
   getTriggers(data) {
     return extractNodes(data.nodes, this.triggers).map((node) => ({
       name: node.data.name,
-      socket: this.socketFactory(node, this.outTriggers.get(node.name)),
+      socket: this.socketFactory(node, this.triggers.get(node.name)),
     }));
   }
 
