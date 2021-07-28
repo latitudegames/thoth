@@ -35,7 +35,7 @@ const templates = [
 const CreateNew = ({ setNewVisible }) => {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const { newSpell } = useSpell();
-  const { openTab } = useTabManager();
+  const { openTab, clearTabs } = useTabManager();
 
   const onCreate = async () => {
     const placeholderName = uniqueNamesGenerator(customConfig);
@@ -43,6 +43,8 @@ const CreateNew = ({ setNewVisible }) => {
       graph: defaultGraph,
       name: placeholderName,
     });
+
+    await clearTabs();
     await openTab({ name: spell.name, spellId: spell.name, type: "spell" });
   };
 
