@@ -14,7 +14,7 @@ import { MyNode } from "../../features/common/Node/Node";
 import { InputComponent } from "./components/Input";
 import { JoinListComponent } from "./components/JoinList";
 import { TenseTransformer } from "./components/TenseTransformer";
-import { RunInputComponent } from "./components/RunInput";
+// import { RunInputComponent } from "./components/RunInput";
 import { ActionTypeComponent } from "./components/ActionType";
 import { ItemTypeComponent } from "./components/ItemDetector";
 import { DifficultyDetectorComponent } from "./components/DifficultyDetector";
@@ -34,10 +34,13 @@ import { EnkiTask } from "./components/EnkiTask";
 import { Generator } from "./components/Generator";
 import { Code } from "./components/Code";
 import { ModuleComponent } from "./components/Module";
+import { ModuleInput } from "./components/ModuleInput";
 
 /*
   Primary initialization function.  Takes a container ref to attach the rete editor to.
 */
+
+let subscribed = false;
 
 const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
   // Here we load up all components of the builder into our editor for usage.
@@ -53,12 +56,13 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
     new ForEach(),
     new Generator(),
     new InputComponent(),
+    new ModuleInput(),
     new ItemTypeComponent(),
     new JoinListComponent(),
     new ModuleComponent(),
     new PlaytestPrint(),
     new PlaytestInput(),
-    new RunInputComponent(),
+    // new RunInputComponent(),
     new SafetyVerifier(),
     new StateWrite(),
     new StateRead(),
@@ -108,20 +112,24 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
   });
 
   // handle modules
-  thothV2.getModules((moduleDocs) => {
-    if (!moduleDocs) return;
+  if (!subscribed) {
+    subscribed = true;
+    editor.moduleSubscription = thothV2.getModules((moduleDocs) => {
+      if (!moduleDocs) return;
 
-    modules = moduleDocs
-      .map((doc) => doc.toJSON())
-      .reduce((acc, module) => {
-        // todo handle better mapping
-        // see moduleSelect.tsx
-        acc[module.name] = module;
-        return acc;
-      }, {});
+      modules = moduleDocs
+        .map((doc) => doc.toJSON())
+        .reduce((acc, module) => {
+          // todo handle better mapping
+          // see moduleSelect.tsx
+          acc[module.name] = module;
+          return acc;
+        }, {});
 
-    editor.setModules(modules);
-  });
+      console.log("MODULES UDPATES", modules);
+      editor.setModules(modules);
+    });
+  }
 
   // Register custom components with both the editor and the engine
   // We will need a wa to share components between client and server
