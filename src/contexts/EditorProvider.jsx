@@ -46,8 +46,15 @@ const EditorProvider = ({ children }) => {
     // set editor to the map
     setEditor(newEditor);
 
-    const spellDoc = await thoth.getSpell(tab.spell);
-    newEditor.loadGraph(spellDoc.toJSON().graph);
+    if (tab.type === "spell") {
+      const spellDoc = await thoth.getSpell(tab.spell);
+      newEditor.loadGraph(spellDoc.toJSON().graph);
+    }
+
+    if (tab.type === "module") {
+      const moduleDoc = await thoth.getModule(tab.module);
+      newEditor.loadGraph(moduleDoc.toJSON().data);
+    }
   };
 
   const run = () => {
