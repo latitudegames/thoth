@@ -1,7 +1,9 @@
 import Rete from "rete";
+import deepEqual from "deep-equal";
 import ReactRenderPlugin from "rete-react-render-plugin";
 import ConnectionPlugin from "rete-connection-plugin";
 import ContextMenuPlugin from "rete-context-menu-plugin";
+import MinimapPlugin from "rete-minimap-plugin";
 import LifecyclePlugin from "./plugins/lifecyclePlugin";
 import AreaPlugin from "./plugins/areaPlugin";
 import TaskPlugin from "./plugins/taskPlugin";
@@ -39,8 +41,6 @@ import { ModuleInput } from "./components/ModuleInput";
 /*
   Primary initialization function.  Takes a container ref to attach the rete editor to.
 */
-
-let subscribed = false;
 
 const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
   // Here we load up all components of the builder into our editor for usage.
@@ -96,7 +96,6 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
     // MyNode is a custom default style for nodes
     component: MyNode,
   });
-
   // renders a context menu on right click that shows available nodes
   editor.use(LifecyclePlugin);
   editor.use(ContextMenuPlugin);
@@ -112,24 +111,24 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
   });
 
   // handle modules
-  if (!subscribed) {
-    subscribed = true;
-    editor.moduleSubscription = thothV2.getModules((moduleDocs) => {
-      if (!moduleDocs) return;
+  // NOTE watch this subscription as it may get intensive with lots of tabs open...
+  editor.moduleSubscription = thothV2.getModules((moduleDocs) => {
+    if (!moduleDocs) return;
 
-      modules = moduleDocs
-        .map((doc) => doc.toJSON())
-        .reduce((acc, module) => {
-          // todo handle better mapping
-          // see moduleSelect.tsx
-          acc[module.name] = module;
-          return acc;
-        }, {});
+    modules = moduleDocs
+      .map((doc) => doc.toJSON())
+      .reduce((acc, module) => {
+        // todo handle better mapping
+        // see moduleSelect.tsx
+        acc[module.name] = module;
+        return acc;
+      }, {});
 
-      console.log("MODULES UDPATES", modules);
-      editor.setModules(modules);
-    });
-  }
+    // we only want to proceed if the incoming modules have changed.
+    if (deepEqual(modules, editor.moduleManager.modules)) return;
+    editor.moduleManager.setModules(modules);
+    editor.trigger("save");
+  });
 
   // Register custom components with both the editor and the engine
   // We will need a wa to share components between client and server
@@ -143,6 +142,7 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
   });
 
   editor.bind("run");
+  editor.bind("save");
   engine.bind("run");
 
   editor.on(
