@@ -62,27 +62,14 @@ const ReteProvider = ({ children, tab }) => {
     publish($TEXT_EDITOR_CLEAR(tab.id));
   };
 
-  const getSpell = async (spellName) => {
-    return spells.getSpell(spellName);
-  };
-
-  const getModule = async (moduleId) => {
-    return modules.getModule(moduleId);
-  };
-
-  const getModules = async (callback = null) => {
-    return modules.getModules(callback);
-  };
-
   const publicInterface = {
     onInspector,
     sendToInspector,
     sendToPlaytest,
     onPlaytest,
     clearTextEditor,
-    getSpell,
-    getModule,
-    getModules,
+    ...modules,
+    ...spells,
   };
 
   return (
