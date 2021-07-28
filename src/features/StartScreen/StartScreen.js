@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import CreateNew from "./components/CreateNew";
 import OpenProject from "./components/OpenProject";
 import AllProjects from "./components/AllProjects";
-import { useSpell } from "../../contexts/SpellProvider";
 import { useTabManager } from "../../contexts/TabManagerProvider";
 
 import css from "./startScreen.module.css";
@@ -33,7 +32,7 @@ const StartScreen = ({ createNew, allProjects, ...props }) => {
       ? existingSpell
       : await spells.newSpell(spellData);
 
-    await openTab({ name: spell.name, spellId: spell.name });
+    await openTab({ name: spell.name, spellId: spell.name, type: "spell" });
   };
 
   const loadFile = (selectedFile) => {
