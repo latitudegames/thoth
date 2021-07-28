@@ -57,6 +57,10 @@ const LayoutProvider = ({ children, tab }) => {
     setCurrentModel(model);
   };
 
+  useEffect(() => {
+    window.getLayout = () => currentModelRef.current.toJson();
+  }, [currentModel]);
+
   // inspector subscription
   useEffect(() => {
     return subscribe(events.$INSPECTOR_SET(tab.id), (event, data) => {
