@@ -18,11 +18,18 @@ const ModuleProvider = ({ children }) => {
   // subscribe to all modules in the database
   useEffect(() => {
     if (!models) return;
+    let subscription;
 
-    models.modules.getModules((results) => {
-      if (!results) return;
-      setModules(results.map((module) => module.toJSON()) as any[]);
-    });
+    (async () => {
+      subscription = await models.modules.getModules((results) => {
+        if (!results) return;
+        setModules(results.map((module) => module.toJSON()) as any[]);
+      });
+    })();
+
+    return () => {
+      if (subscription.unsubscribe) subscription.unsubscribe();
+    };
   }, [models]);
 
   const saveModule = async (moduleId, update, snack = true) => {
