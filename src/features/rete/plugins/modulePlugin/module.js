@@ -9,7 +9,7 @@ export class Module {
   }
 
   write(outputs) {
-    Object.keys(this.outputs).map((key) => {
+    Object.keys(this.outputs).forEach((key) => {
       outputs[key] = this.outputs[key];
     });
   }

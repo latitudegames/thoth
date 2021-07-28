@@ -3,7 +3,6 @@ import deepEqual from "deep-equal";
 import ReactRenderPlugin from "rete-react-render-plugin";
 import ConnectionPlugin from "rete-connection-plugin";
 import ContextMenuPlugin from "rete-context-menu-plugin";
-import MinimapPlugin from "rete-minimap-plugin";
 import LifecyclePlugin from "./plugins/lifecyclePlugin";
 import AreaPlugin from "./plugins/areaPlugin";
 import TaskPlugin from "./plugins/taskPlugin";

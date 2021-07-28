@@ -1,5 +1,4 @@
 import Rete from "rete";
-import { TextInputControl } from "../controls/TextInputControl";
 import { InputControl } from "../dataControls/InputControl";
 import { stringSocket } from "../sockets";
 
