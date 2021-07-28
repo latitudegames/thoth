@@ -1,8 +1,9 @@
 import Rete from "rete";
 import { TextInputControl } from "../controls/TextInputControl";
+import { InputControl } from "../dataControls/InputControl";
 import { stringSocket } from "../sockets";
 
-const info = `The info component has a single control, an input field.  Whatever value you put into this input field will be sent out along the compoonents output socket.`;
+const info = `The module input component adds an input socket to the parent module.  It can be given a name, which is displayed on the parent.`;
 
 export class ModuleInput extends Rete.Component {
   task: object;
@@ -37,17 +38,14 @@ export class ModuleInput extends Rete.Component {
     const out = new Rete.Output("name", "String", stringSocket);
 
     // Handle default value if data is present
-    const value = node.data.name ? node.data.name : "Input name here";
-
-    // controls are the internals of the node itself
-    // This default control sample has a text field.
-    const input = new TextInputControl({
-      emitter: this.editor,
-      key: "name",
-      value,
+    const nameInput = new InputControl({
+      dataKey: "name",
+      name: "Input name",
     });
 
-    return node.addOutput(out).addControl(input);
+    node.inspector.add(nameInput);
+
+    return node.addOutput(out);
   }
 
   async worker(node, inputs, outputs) {
