@@ -15,14 +15,12 @@ const loadModuleModel = (db) => {
     return callback ? query.$.subscribe(callback) : query.exec();
   };
 
-  const findOneModule = async (query) => {
-    const result = await db.modules
-      .findOne({
-        selector: query,
-      })
-      .exec();
+  const findOneModule = async (_query, callback = null) => {
+    const query = await db.modules.findOne({
+      selector: _query,
+    });
 
-    return result.toJSON();
+    return callback ? query.$.subscribe(callback) : query.exec();
   };
 
   const updateModule = async (moduleId: string, update: object) => {
