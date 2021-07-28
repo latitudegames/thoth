@@ -31,10 +31,11 @@ function install(editor) {
 
       node.inspector.add(infoControl);
 
-      node.subsription = onInspector(node, (data) => {
+      node.subscription = onInspector(node, (data) => {
         node.inspector.handleData(data);
         editor.trigger("nodecreated");
-        sendToInspector(node.inspector.data());
+        // NOTE might still need this.  Keep an eye out.
+        // sendToInspector(node.inspector.data());
       });
 
       builder.call(component, node);
