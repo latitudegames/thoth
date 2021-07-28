@@ -1,8 +1,13 @@
+import { useSnackbar } from "notistack";
+
 import Select from "../../../common/Select/Select";
 import { useModule } from "../../../../contexts/ModuleProvider";
+import { useTabManager } from "../../../../contexts/TabManagerProvider";
 
 const ModuleSelect = () => {
   const { modules, newModule } = useModule();
+  const { openTab } = useTabManager();
+  const { enqueueSnackbar } = useSnackbar();
 
   const optionArray = () => {
     return modules.map((module, index) => ({
@@ -12,11 +17,25 @@ const ModuleSelect = () => {
   };
 
   const onChange = (value) => {
+    // change values here for pre-existing modules.
+    // This would be an "updat data" situation
     console.log("on change", value);
   };
 
-  const onCreateOption = (value) => {
-    console.log("on create option", value);
+  const onCreateOption = async (value) => {
+    try {
+      const module = await newModule({ name: value });
+      await openTab({
+        name: `Module-${value}`,
+        type: "module",
+        moduleId: module.id,
+      });
+    } catch (err) {
+      console.log("Error creating module", err);
+      enqueueSnackbar("Error creating module", {
+        variant: "error",
+      });
+    }
   };
 
   const noOptionsMessage = (inputValue) => {
@@ -24,7 +43,7 @@ const ModuleSelect = () => {
   };
 
   const isValidNewOption = (inputValue, selectValue, selectOptions) => {
-    return inputValue.length !== 0 && selectOptions.length === 0;
+    return inputValue.length !== 0;
   };
 
   return (
