@@ -2,6 +2,7 @@ import { useContext, createContext, useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { v4 as uuidv4 } from "uuid";
 import { useDB } from "./DatabaseProvider";
+import { usePubSub } from "./PubSubProvider";
 
 import defaultJson from "./layouts/defaultLayout.json";
 import LoadingScreen from "../features/common/LoadingScreen/LoadingScreen";
@@ -27,8 +28,8 @@ const TabManager = ({ children }) => {
   const { db } = useDB();
 
   // eslint-disable-next-line no-unused-vars
+  const { events, publish } = usePubSub();
   const [location, setLocation] = useLocation();
-
   const [tabs, setTabs] = useState(null);
   const [activeTab, setActiveTab] = useState(null);
 
@@ -83,6 +84,7 @@ const TabManager = ({ children }) => {
   const closeTab = async (tabId) => {
     const tab = await db.tabs.findOne({ selector: { id: tabId } }).exec();
     if (!tab) return;
+    publish(events.$CLOSE_EDITOR(tabId));
     await tab.remove();
     const tabs = await db.tabs.find().exec();
 
