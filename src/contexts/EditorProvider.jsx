@@ -81,6 +81,7 @@ const EditorProvider = ({ children }) => {
     run,
     serialize,
     editor,
+    editorRef,
     buildEditor,
     getNodeMap,
     getNodes,
