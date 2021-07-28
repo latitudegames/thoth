@@ -69,7 +69,7 @@ export class ModuleManager {
   }
 
   registerTriggerIn(name, socket) {
-    this.triggerIn.set(name, socket);
+    this.triggerIns.set(name, socket);
   }
 
   registerTriggerOut(name, socket) {
