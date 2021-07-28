@@ -3,8 +3,8 @@ import { useDB } from "./DatabaseProvider";
 
 const Context = createContext({
   modules: [] as any[],
-  newModule: () => {},
-});
+  saveModule: () => {},
+} as any);
 
 export const useModule = () => useContext(Context);
 
