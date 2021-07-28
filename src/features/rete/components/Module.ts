@@ -24,6 +24,11 @@ export class ModuleComponent extends Rete.Component {
     const moduleControl = new ModuleControl({
       name: "Module select",
     });
+
+    moduleControl.onData = async (data) => {
+      this.updateModuleSockets(node);
+    };
+
     node.inspector.add(moduleControl);
 
     return node;
