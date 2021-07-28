@@ -36,7 +36,5 @@ export function addIO(node, inputs, outputs, triggerOuts, triggerIns) {
   triggerOuts.forEach((o) =>
     node.addOutput(new Output(o.name, o.name, o.socket))
   );
-  triggerIns.forEach((o) =>
-    node.addOutput(new Input(o.name, o.name, o.socket))
-  );
+  triggerIns.forEach((o) => node.addInput(new Input(o.name, o.name, o.socket)));
 }
