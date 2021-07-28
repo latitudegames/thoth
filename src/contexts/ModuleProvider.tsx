@@ -25,10 +25,11 @@ const ModuleProvider = ({ children }) => {
     });
   }, [models]);
 
-  const saveModule = async (spellId, update, snack = true) => {
+  const saveModule = async (moduleId, update, snack = true) => {
     try {
-      await models.modules.updateModule(spellId, update);
+      const module = await models.modules.updateModule(moduleId, update);
       if (snack) enqueueSnackbar("Module saved");
+      return module;
     } catch (err) {
       console.log("error saving module", module);
       if (snack) enqueueSnackbar("Error saving module");
