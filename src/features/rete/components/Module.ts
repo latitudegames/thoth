@@ -58,12 +58,12 @@ export class ModuleComponent extends Rete.Component {
     delete this.subscriptionMap[node.id];
   }
 
-  subscribe(node) {
+  async subscribe(node) {
     // make sure we dont have a lingering subscription
     if (!node.data.module) return;
 
     this.unsubscribe(node);
-    this.subscriptionMap[node.id] = this.editor.thothV2.findOneModule(
+    this.subscriptionMap[node.id] = await this.editor.thothV2.findOneModule(
       { name: node.data.module },
       (module) => {
         this.updateSockets(node);

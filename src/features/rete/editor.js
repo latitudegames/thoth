@@ -112,7 +112,7 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
 
   // handle modules
   // NOTE watch this subscription as it may get intensive with lots of tabs open...
-  editor.moduleSubscription = thothV2.getModules((moduleDocs) => {
+  editor.moduleSubscription = await thothV2.getModules((moduleDocs) => {
     if (!moduleDocs) return;
 
     modules = moduleDocs
