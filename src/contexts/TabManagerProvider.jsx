@@ -13,6 +13,7 @@ const Context = createContext({
   switchTab: () => {},
   closeTab: () => {},
   saveTabLayout: () => {},
+  clearTabs: () => {},
 });
 
 // Map of workspaces
@@ -101,6 +102,10 @@ const TabManager = ({ children }) => {
     setActiveTab(tab.toJSON());
   };
 
+  const clearTabs = async () => {
+    return db.tabs.find().remove();
+  };
+
   const saveTabLayout = async (tabId, json) => {
     const tab = await db.tabs.findOne({ selector: { id: tabId } }).exec();
     await tab.atomicPatch({ layoutJson: json });
@@ -113,6 +118,7 @@ const TabManager = ({ children }) => {
     switchTab,
     closeTab,
     saveTabLayout,
+    clearTabs,
   };
 
   if (!tabs) return <LoadingScreen />;
