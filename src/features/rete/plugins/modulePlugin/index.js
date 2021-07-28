@@ -49,9 +49,10 @@ function install(context, { engine, modules }) {
             const data = modules[node.data.module].data;
             const inputs = moduleManager.getInputs(data);
             const outputs = moduleManager.getOutputs(data);
+            const triggers = moduleManager.getTriggers(data);
 
             try {
-              addIO(node, inputs, outputs);
+              addIO(node, inputs, outputs, triggers);
             } catch (e) {
               return context.trigger("warn", e);
             }

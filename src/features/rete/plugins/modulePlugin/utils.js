@@ -8,7 +8,6 @@ export function extractNodes(nodes, map) {
     .sort((n1, n2) => n1.position[1] > n2.position[1]);
 }
 
-
 export function removeIO(node, editor) {
   node.getConnections().forEach((c) => editor.removeConnection(c));
   Array.from(node.inputs.values()).forEach((input) => node.removeInput(input));
@@ -17,15 +16,19 @@ export function removeIO(node, editor) {
   );
 }
 
-export function addIO(node, inputs, outputs) {
+export function addIO(node, inputs, outputs, triggers) {
   const uniqueInputsCount = new Set(inputs.map((i) => i.name)).size;
   const uniqueOutputsCount = new Set(outputs.map((i) => i.name)).size;
+  const uniqueTriggersCount = new Set(triggers.map((i) => i.name)).size;
 
   if (uniqueInputsCount !== inputs.length)
     throw new Error(`Module ${node.data.module} has duplicate inputs`);
   if (uniqueOutputsCount !== outputs.length)
     throw new Error(`Module ${node.data.module} has duplicate outputs`);
+  if (uniqueTriggersCount !== triggers.length)
+    throw new Error(`Module ${node.data.module} has duplicate triggers`);
 
   inputs.forEach((i) => node.addInput(new Input(i.name, i.name, i.socket)));
   outputs.forEach((o) => node.addOutput(new Output(o.name, o.name, o.socket)));
+  triggers.forEach((o) => node.addOutput(new Output(o.name, o.name, o.socket)));
 }
