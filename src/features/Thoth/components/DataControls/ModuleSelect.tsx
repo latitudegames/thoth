@@ -69,8 +69,8 @@ const ModuleSelect = ({ control, updateData, initialValue }) => {
 
   const isValidNewOption = (inputValue, selectValue, selectOptions) => {
     return (
-      inputValue.length !== 0 &&
-      selectOptions.some((option) => option.value !== inputValue)
+      inputValue.length !== 0
+      // && selectOptions.some((option) => option.value !== inputValue)
     );
   };
 
