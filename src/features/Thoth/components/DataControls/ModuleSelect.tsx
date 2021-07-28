@@ -5,7 +5,7 @@ import { useModule } from "../../../../contexts/ModuleProvider";
 import { useTabManager } from "../../../../contexts/TabManagerProvider";
 
 const ModuleSelect = ({ control, updateData, initialValue }) => {
-  const { modules, newModule, findOneModule, getModules } = useModule();
+  const { modules, newModule, findOneModule } = useModule();
   const { openTab } = useTabManager();
   const { enqueueSnackbar } = useSnackbar();
   const { dataKey } = control;
@@ -18,16 +18,16 @@ const ModuleSelect = ({ control, updateData, initialValue }) => {
   };
 
   const onChange = async ({ value }) => {
-    const module = await findOneModule({ name: value });
-    const modules = await getModules();
-    console.log(modules);
-    if (!module) {
+    const _module = await findOneModule({ name: value });
+    if (!_module) {
       enqueueSnackbar("No module found", {
         variant: "error",
       });
       return;
     }
     update(value);
+
+    const module = _module.toJSON();
 
     await openTab({
       name: value,
