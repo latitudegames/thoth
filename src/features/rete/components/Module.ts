@@ -25,8 +25,14 @@ export class ModuleComponent extends Rete.Component {
       name: "Module select",
     });
 
+    if (node.data.module) {
+      this.updateModuleSockets(node);
+    }
+
     moduleControl.onData = async (data) => {
       this.updateModuleSockets(node);
+      if (this.editor) this.editor.trigger("process");
+      node.update();
     };
 
     node.inspector.add(moduleControl);
@@ -36,7 +42,6 @@ export class ModuleComponent extends Rete.Component {
 
   change(node, item) {
     node.data.module = item;
-    if (this.editor) this.editor.trigger("process");
   }
 
   worker() {}
