@@ -16,6 +16,7 @@ const Context = createContext({
   sendToInspector: () => {},
   clearTextEditor: () => {},
   getSpell: () => {},
+  getModule: () => {},
   getGameState: () => {},
   setGameState: () => {},
 });
@@ -25,7 +26,7 @@ export const useRete = () => useContext(Context);
 const ReteProvider = ({ children, tab }) => {
   const { events, publish, subscribe } = usePubSub();
   const {
-    models: { spells },
+    models: { spells, modules },
   } = useDB();
 
   const {
@@ -64,6 +65,10 @@ const ReteProvider = ({ children, tab }) => {
     return spells.getSpell(spellName);
   };
 
+  const getModule = async (moduleId) => {
+    return modules.getModule(moduleId);
+  };
+
   const publicInterface = {
     onInspector,
     sendToInspector,
@@ -71,6 +76,7 @@ const ReteProvider = ({ children, tab }) => {
     onPlaytest,
     clearTextEditor,
     getSpell,
+    getModule,
   };
 
   return (
