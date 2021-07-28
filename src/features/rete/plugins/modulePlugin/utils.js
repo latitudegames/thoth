@@ -16,19 +16,27 @@ export function removeIO(node, editor) {
   );
 }
 
-export function addIO(node, inputs, outputs, triggers) {
+export function addIO(node, inputs, outputs, triggerOuts, triggerIns) {
   const uniqueInputsCount = new Set(inputs.map((i) => i.name)).size;
   const uniqueOutputsCount = new Set(outputs.map((i) => i.name)).size;
-  const uniqueTriggersCount = new Set(triggers.map((i) => i.name)).size;
+  const uniqueTriggerOutsCount = new Set(triggerOuts.map((i) => i.name)).size;
+  const uniqueTriggerInsCount = new Set(triggerIns.map((i) => i.name)).size;
 
   if (uniqueInputsCount !== inputs.length)
     throw new Error(`Module ${node.data.module} has duplicate inputs`);
   if (uniqueOutputsCount !== outputs.length)
     throw new Error(`Module ${node.data.module} has duplicate outputs`);
-  if (uniqueTriggersCount !== triggers.length)
-    throw new Error(`Module ${node.data.module} has duplicate triggers`);
+  if (uniqueTriggerOutsCount !== triggerOuts.length)
+    throw new Error(`Module ${node.data.module} has duplicate trigger outs`);
+  if (uniqueTriggerInsCount !== triggerIns.length)
+    throw new Error(`Module ${node.data.module} has duplicate trigger ins`);
 
   inputs.forEach((i) => node.addInput(new Input(i.name, i.name, i.socket)));
   outputs.forEach((o) => node.addOutput(new Output(o.name, o.name, o.socket)));
-  triggers.forEach((o) => node.addOutput(new Output(o.name, o.name, o.socket)));
+  triggerOuts.forEach((o) =>
+    node.addOutput(new Output(o.name, o.name, o.socket))
+  );
+  triggerIns.forEach((o) =>
+    node.addOutput(new Input(o.name, o.name, o.socket))
+  );
 }
