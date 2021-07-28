@@ -7,7 +7,7 @@ import { useTabManager } from "../../../contexts/TabManagerProvider";
 const EventHandler = ({ pubSub, tab }) => {
   // only using this to handle events, so not rendering anything with it.
   const { createOrFocus, windowTypes } = useLayout();
-  const { serialize } = useEditor();
+  const { serialize, editorRef } = useEditor();
   const { saveCurrentSpell, getSpell } = useSpell();
   const { activeTab } = useTabManager();
 
@@ -21,6 +21,7 @@ const EventHandler = ({ pubSub, tab }) => {
     $CREATE_TEXT_EDITOR,
     $SERIALIZE,
     $EXPORT,
+    $CLOSE_EDITOR,
   } = events;
 
   const saveSpell = async () => {
@@ -70,6 +71,13 @@ const EventHandler = ({ pubSub, tab }) => {
     link.parentNode.removeChild(link);
   };
 
+  // clean up anything inside the editor which we need to shut down.
+  // mainly subscriptions, etc.
+  const onCloseEditor = () => {
+    if (editorRef.current.moduleSubscription)
+      editorRef.current.moduleSubscription.unsubscribe();
+  };
+
   const handlerMap = {
     [$SAVE_SPELL(tab.id)]: saveSpell,
     [$CREATE_STATE_MANAGER(tab.id)]: createStateManager,
@@ -78,6 +86,7 @@ const EventHandler = ({ pubSub, tab }) => {
     [$CREATE_TEXT_EDITOR(tab.id)]: createTextEditor,
     [$SERIALIZE(tab.id)]: onSerialize,
     [$EXPORT(tab.id)]: onExport,
+    [$CLOSE_EDITOR(tab.id)]: onCloseEditor,
   };
 
   useEffect(() => {
