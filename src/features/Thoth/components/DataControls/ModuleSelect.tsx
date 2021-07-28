@@ -4,10 +4,11 @@ import Select from "../../../common/Select/Select";
 import { useModule } from "../../../../contexts/ModuleProvider";
 import { useTabManager } from "../../../../contexts/TabManagerProvider";
 
-const ModuleSelect = () => {
-  const { modules, newModule } = useModule();
+const ModuleSelect = ({ control, updateData, initialValue }) => {
+  const { modules, newModule, findOneModule, getModules } = useModule();
   const { openTab } = useTabManager();
   const { enqueueSnackbar } = useSnackbar();
+  const { dataKey } = control;
 
   const optionArray = () => {
     return modules.map((module, index) => ({
@@ -16,10 +17,27 @@ const ModuleSelect = () => {
     }));
   };
 
-  const onChange = (value) => {
-    // change values here for pre-existing modules.
-    // This would be an "updat data" situation
-    console.log("on change", value);
+  const onChange = async ({ value }) => {
+    const module = await findOneModule({ name: value });
+    const modules = await getModules();
+    console.log(modules);
+    if (!module) {
+      enqueueSnackbar("No module found", {
+        variant: "error",
+      });
+      return;
+    }
+    update(value);
+
+    await openTab({
+      name: value,
+      type: "module",
+      moduleId: module.id,
+    });
+  };
+
+  const update = (update) => {
+    updateData({ [dataKey]: update });
   };
 
   const onCreateOption = async (value) => {
@@ -30,6 +48,13 @@ const ModuleSelect = () => {
         type: "module",
         moduleId: module.id,
       });
+
+      // todo better naming for rete modules.
+      // Handle displaying name as using ID for internal mapping
+      update(value);
+
+      // add data to node
+      //
     } catch (err) {
       console.log("Error creating module", err);
       enqueueSnackbar("Error creating module", {
@@ -43,7 +68,10 @@ const ModuleSelect = () => {
   };
 
   const isValidNewOption = (inputValue, selectValue, selectOptions) => {
-    return inputValue.length !== 0;
+    return (
+      inputValue.length !== 0 &&
+      selectOptions.some((option) => option.value !== inputValue)
+    );
   };
 
   return (
@@ -56,8 +84,9 @@ const ModuleSelect = () => {
         noOptionsMessage={noOptionsMessage}
         options={optionArray()}
         onChange={onChange}
+        defaultInputValue={initialValue}
         onCreateOption={onCreateOption}
-        placeholder="search modules"
+        placeholder="select module"
       />
     </div>
   );
