@@ -1,4 +1,5 @@
 import { Input, Output } from "rete";
+import { socketNameMap } from "../../sockets";
 export function extractNodes(nodes, map) {
   const names = Array.from(map.keys());
 
@@ -31,10 +32,46 @@ export function addIO(node, inputs, outputs, triggerOuts, triggerIns) {
   if (uniqueTriggerInsCount !== triggerIns.length)
     throw new Error(`Module ${node.data.module} has duplicate trigger ins`);
 
-  inputs.forEach((i) => node.addInput(new Input(i.name, i.name, i.socket)));
-  outputs.forEach((o) => node.addOutput(new Output(o.name, o.name, o.socket)));
-  triggerOuts.forEach((o) =>
-    node.addOutput(new Output(o.name, o.name, o.socket))
-  );
-  triggerIns.forEach((o) => node.addInput(new Input(o.name, o.name, o.socket)));
+  if (!node.data.inputs) node.data.inputs = [];
+  if (!node.data.outputs) node.data.outputs = [];
+
+  // handle writing these to the nodes data so spell refresh doesnt ruin connections
+  inputs.forEach((i) => {
+    node.addInput(new Input(i.name, i.name, i.socket));
+    node.data.inputs.push({
+      name: i.name,
+      socketKey: i.name,
+      connectionType: "input",
+      socketType: socketNameMap[i.socket.name],
+    });
+  });
+  triggerIns.forEach((i) => {
+    node.addInput(new Input(i.name, i.name, i.socket));
+    node.data.inputs.push({
+      name: i.name,
+      socketKey: i.name,
+      connectionType: "input",
+      socketType: socketNameMap[i.socket.name],
+    });
+  });
+  outputs.forEach((o) => {
+    node.addOutput(new Output(o.name, o.name, o.socket));
+    node.data.outputs.push({
+      name: o.name,
+      taskType: "output",
+      socketKey: o.name,
+      connectionType: "output",
+      socketType: socketNameMap[o.socket.name],
+    });
+  });
+  triggerOuts.forEach((o) => {
+    node.addOutput(new Output(o.name, o.name, o.socket));
+    node.data.outputs.push({
+      name: o.name,
+      taskType: "option",
+      socketKey: o.name,
+      connectionType: "output",
+      socketType: socketNameMap[o.socket.name],
+    });
+  });
 }
