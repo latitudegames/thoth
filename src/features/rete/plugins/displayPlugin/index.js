@@ -21,11 +21,14 @@ function install(editor) {
       builder.call(component, node);
     };
 
-    component.worker = (node, inputs, outputs) => {
-      if (displayMap[node.id])
+    component.worker = (node, inputs, outputs, data, ...args) => {
+      if (displayMap[node.id] && !module)
         node.display = displayMap[node.id].display.bind(displayMap[node.id]);
 
-      worker.call(component, node, inputs, outputs);
+      // handle modules, which are in the engine run
+      if (data?.silent) node.display = () => {};
+
+      return worker.call(component, node, inputs, outputs, data, ...args);
     };
   });
 }
