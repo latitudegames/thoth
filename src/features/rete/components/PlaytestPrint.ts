@@ -42,6 +42,6 @@ export class PlaytestPrint extends ThothReteComponent {
     const text = inputs.text[0];
 
     publish(events.PLAYTEST_PRINT, text);
-    this.displayControl.display(text);
+    node.display(text);
   }
 }
