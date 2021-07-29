@@ -43,7 +43,7 @@ function install(context, { engine, modules }) {
 
         component.worker = (...args) => {
           moduleManager.workerTriggers.apply(moduleManager, args);
-          if (triggerInWorker) triggersWorker.apply(component, args);
+          if (triggerInWorker) triggerInWorker.apply(component, args);
         };
         break;
       case "module":
@@ -79,7 +79,6 @@ function install(context, { engine, modules }) {
         const moduleWorker = component.worker;
 
         component.worker = async (...args) => {
-          console.log("working!");
           await moduleManager.workerModule.apply(moduleManager, args);
           if (moduleWorker) moduleWorker.apply(component, args);
         };
