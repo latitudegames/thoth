@@ -67,7 +67,14 @@ const TabManager = ({ children }) => {
     type = "module",
     moduleId,
     spellId = null,
+    openNew = true,
   }) => {
+    // don't open a new tab if one is already open
+    if (!openNew) {
+      const tabOpened = await switchTab(null, { module: { $eq: moduleId } });
+      if (tabOpened) return;
+    }
+
     const newTab = {
       layoutJson: workspaceMap[workspace],
       name,
@@ -96,12 +103,15 @@ const TabManager = ({ children }) => {
     switchTab(tabs[0].id);
   };
 
-  const switchTab = async (tabId) => {
-    const tab = await db.tabs.findOne({ selector: { id: tabId } }).exec();
-    if (!tab) return;
+  const switchTab = async (tabId, query) => {
+    const selector = query ? query : { id: tabId };
+    console.log("Selector", selector);
+    const tab = await db.tabs.findOne({ selector }).exec();
+    if (!tab) return false;
     await tab.atomicPatch({ active: true });
 
     setActiveTab(tab.toJSON());
+    return true;
   };
 
   const clearTabs = async () => {
