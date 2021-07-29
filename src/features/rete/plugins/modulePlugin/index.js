@@ -71,7 +71,7 @@ function install(context, { engine, modules }) {
           };
 
           component.builder = async (node) => {
-            component.updateModuleSockets(node);
+            if (!component.noBuildUpdate) component.updateModuleSockets(node);
             await builder.call(component, node);
           };
         }
