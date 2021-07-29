@@ -22,7 +22,7 @@ function install(editor) {
     };
 
     component.worker = (node, inputs, outputs, data, ...args) => {
-      if (displayMap[node.id] && !module)
+      if (displayMap[node.id])
         node.display = displayMap[node.id].display.bind(displayMap[node.id]);
 
       // handle modules, which are in the engine run
