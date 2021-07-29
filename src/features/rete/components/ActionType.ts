@@ -1,4 +1,5 @@
 import Rete from "rete";
+import { ThothReteComponent } from "./ThothReteComponent";
 import { stringSocket, triggerSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
 import { completion } from "../../../utils/openaiHelper";
@@ -27,12 +28,13 @@ const info = `The Action type component will take in an action as text, and atte
 
 look, get, use, craft, dialog, movement, travel, combat, consume, other.`;
 
-export class ActionTypeComponent extends Rete.Component {
+export class ActionTypeComponent extends ThothReteComponent {
   constructor() {
     // Name of the component
     super("Action Type Classifier");
     this.task = {
       outputs: { actionType: "output", trigger: "option" },
+      init: (task) => {},
     };
     this.category = "AI/ML";
     this.info = info;
@@ -74,7 +76,7 @@ export class ActionTypeComponent extends Rete.Component {
       temperature: 0.0,
     };
     const raw = await completion(body);
-    const result = raw.trim();
+    const result = raw?.trim();
     node.display(result);
 
     return {

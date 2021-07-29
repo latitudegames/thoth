@@ -1,11 +1,14 @@
 import Rete from "rete";
+import { ThothReteComponent } from "./ThothReteComponent";
 import { TextInputControl } from "../controls/TextInputControl";
 import { stringSocket, triggerSocket } from "../sockets";
 import { RunButtonControl } from "../controls/RunButtonControl";
+import { Task } from "../plugins/taskPlugin/task"
 
 const info = `The Input With Run component lets you input a value into the provided input field, and trigger off your spell chain to run with that value passed out its output. May be depricated in favor of using the playtest input component.`;
 
-export class RunInputComponent extends Rete.Component {
+export class RunInputComponent extends ThothReteComponent {
+  initialTask?: Task
   constructor() {
     // Name of the component
     super("Input With Run");
@@ -27,7 +30,7 @@ export class RunInputComponent extends Rete.Component {
     const initialData = {
       foo: "foo",
     };
-    this.initialTask.run(initialData);
+    this.initialTask?.run(initialData);
   }
 
   // the builder is used to "assemble" the node component.

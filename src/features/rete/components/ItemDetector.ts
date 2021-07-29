@@ -1,4 +1,5 @@
 import Rete from "rete";
+import { ThothReteComponent } from "./ThothReteComponent";
 import { stringSocket, triggerSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
 import { completion } from "../../../utils/openaiHelper";
@@ -15,13 +16,14 @@ Action, Item: `;
 
 const info = `The item detector attempts to recognize what item in a give text string is being mentioned or used.  The input is a text string the output is a string of the object`;
 
-export class ItemTypeComponent extends Rete.Component {
+export class ItemTypeComponent extends ThothReteComponent {
   constructor() {
     // Name of the component
     super("Item Detector");
 
     this.task = {
       outputs: { detectedItem: "output", trigger: "option" },
+      init: (task) => {},
     };
 
     this.category = "AI/ML";
@@ -58,7 +60,7 @@ export class ItemTypeComponent extends Rete.Component {
       temperature: 0.0,
     };
     const raw = await completion(body);
-    const result = raw.trim();
+    const result = raw?.trim();
     node.display(result);
 
     return {

@@ -1,4 +1,5 @@
 import Rete from "rete";
+import { ThothReteComponent } from "./ThothReteComponent";
 import { anySocket, triggerSocket } from "../sockets";
 import { SocketGeneratorControl } from "../dataControls/SocketGenerator";
 
@@ -8,13 +9,14 @@ import { SocketGeneratorControl } from "../dataControls/SocketGenerator";
 
 const info = `The Switch Gate component takes a single input, and allows you to define any number of outputs.  Its works the same as the javascript switch.  The component will try to match the value of the input to one of the output socketnames you have created.  It will route the trigger signal through that socket.`;
 
-export class SwitchGate extends Rete.Component {
+export class SwitchGate extends ThothReteComponent {
   constructor() {
     // Name of the component
     super("Switch");
 
     this.task = {
       outputs: { default: "option" },
+      init: (task) => {},
     };
     this.category = "Logic";
     this.info = info;

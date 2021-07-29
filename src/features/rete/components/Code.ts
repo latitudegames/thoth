@@ -1,4 +1,5 @@
 import Rete from "rete";
+import { ThothReteComponent } from "./ThothReteComponent";
 import { triggerSocket } from "../sockets";
 import { CodeControl } from "../dataControls/CodeControl";
 import { InputControl } from "../dataControls/InputControl";
@@ -19,7 +20,7 @@ const info = `The code component is your swiss army knife when other components 
 Please note that the return of your function must be an object whose keys are the same value as the names given to your output sockets.  The incoming inputs argument is an object whose keys are the names you defined, aand each is an array.
 `;
 
-export class Code extends Rete.Component {
+export class Code extends ThothReteComponent {
   constructor() {
     // Name of the component
     super("Code");
@@ -28,6 +29,7 @@ export class Code extends Rete.Component {
       outputs: {
         trigger: "option",
       },
+      init: (task) => {},
     };
     this.category = "Logic";
     this.info = info;
@@ -68,7 +70,7 @@ export class Code extends Rete.Component {
     const dataInput = new Rete.Input("trigger", "Trigger", triggerSocket);
     const dataOutput = new Rete.Output("trigger", "Trigger", triggerSocket);
 
-    node.addOutput(dataOutput).addInput(dataInput);
+    return node.addOutput(dataOutput).addInput(dataInput);
   }
 
   // the worker contains the main business logic of the node.  It will pass those results

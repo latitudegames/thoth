@@ -1,13 +1,15 @@
 import Rete from "rete";
+import { ThothReteComponent } from "./ThothReteComponent";
 import { arraySocket, triggerSocket, anySocket } from "../sockets";
 
 const info = `The forEach component takes in an array, and will iterate over each item in the array, firing a new trigger signal with the appropriate value,until all items in the array have beeb processed.`;
 
-export class ForEach extends Rete.Component {
+export class ForEach extends ThothReteComponent {
   constructor() {
     super("ForEach");
     this.task = {
       outputs: { act: "option", element: "output", done: "option" },
+      init: (task) => {},
     };
     this.category = "Logic";
     this.info = info;
@@ -28,15 +30,15 @@ export class ForEach extends Rete.Component {
       .addOutput(out3);
   }
 
-  async worker(node, inputs, { element }) {
-    if (element === undefined) {
+  async worker(node, inputs, outputs) {
+    if (outputs.element === undefined) {
       await Promise.all(
-        inputs.array[0].map((el) => this._task.clone().run({ element: el }))
+        inputs.array[0].map((el) => this._task.clone(false, null, null).run({ element: el }))
       );
       this._task.closed = ["act"];
     } else {
       this._task.closed = ["done"];
-      return { element };
+      return { element: outputs.element };
     }
   }
 }
