@@ -11,15 +11,21 @@ export class ModuleTriggerIn extends Rete.Component {
   info: string;
   workspaceType: "module" | "spell";
   contextMenuName: string;
+  nodeTaskMap = {};
 
   constructor() {
     // Name of the component
+    // If name of component chnages pelase update module-manager workerModule code
     super("Module Trigger In");
     this.contextMenuName = "Trigger In";
 
     this.task = {
       outputs: {
-        text: "output",
+        trigger: "option",
+      },
+      init: (task, node) => {
+        // store the nodes task inside the component
+        this.nodeTaskMap[node.id] = task;
       },
     };
 
@@ -31,6 +37,11 @@ export class ModuleTriggerIn extends Rete.Component {
     this.category = "Module";
     this.info = info;
     this.workspaceType = "module";
+  }
+
+  async run(node, data) {
+    const task = this.nodeTaskMap[node.id];
+    await task.run(data);
   }
 
   // the builder is used to "assemble" the node component.
@@ -53,8 +64,6 @@ export class ModuleTriggerIn extends Rete.Component {
 
   async worker(node, inputs, outputs) {
     console.log("trigger worker outputs", outputs);
-    return {
-      text: node.data.text,
-    };
+    return {};
   }
 }
