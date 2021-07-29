@@ -24,7 +24,7 @@ export class Task {
   getInputFromConnection(socketKey) {
     let input = null;
     Object.entries(this.inputs).forEach(([key, value]) => {
-      if (value.some((con) => con.key === socketKey)) {
+      if (value.some((con) => con && con.key === socketKey)) {
         input = key;
       }
     });
@@ -54,14 +54,15 @@ export class Task {
         this.getInputs("output").map(async (key) => {
           inputs[key] = await Promise.all(
             this.inputs[key].map(async (con) => {
-              if (con) return await con.task.run(data, false, garbage, false);
+              await con.task.run(data, false, garbage, false);
+              return con.task.outputData[con.key];
             })
           );
         })
       );
 
       const socketInfo = {
-        to: data.fromSocket
+        to: data?.fromSocket
           ? this.getInputFromConnection(data.fromSocket)
           : null,
       };
