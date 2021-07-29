@@ -33,6 +33,7 @@ const ModuleSelect = ({ control, updateData, initialValue }) => {
       name: value,
       type: "module",
       moduleId: module.id,
+      openNew: false,
     });
   };
 
@@ -47,6 +48,7 @@ const ModuleSelect = ({ control, updateData, initialValue }) => {
         name: value,
         type: "module",
         moduleId: module.id,
+        openNew: false,
       });
 
       // todo better naming for rete modules.
