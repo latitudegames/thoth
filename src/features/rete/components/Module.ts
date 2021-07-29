@@ -39,6 +39,7 @@ export class ModuleComponent extends Rete.Component {
 
     moduleControl.onData = async (moduleName) => {
       this.updateSockets(node, moduleName);
+      this.subscribe(node);
     };
 
     node.inspector.add(moduleControl);
@@ -66,7 +67,7 @@ export class ModuleComponent extends Rete.Component {
     this.subscriptionMap[node.id] = await this.editor.thothV2.findOneModule(
       { name: node.data.module },
       (module) => {
-        if (!initialLoad && !deepEqual(cache, module.toJSON()))
+        if (!initialLoad || !deepEqual(cache, module.toJSON()))
           this.updateSockets(node, module.name, true);
         initialLoad = false;
         cache = module.toJSON();
@@ -81,7 +82,6 @@ export class ModuleComponent extends Rete.Component {
     node.data.outputs = [];
     this.updateModuleSockets(node);
     this.editor.trigger("process");
-    this.subscribe(node);
     node.update();
   }
 
