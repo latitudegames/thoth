@@ -48,6 +48,7 @@ export class DifficultyDetectorComponent extends ThothReteComponent {
 
     this.task = {
       outputs: { difficulty: "output", category: "output", trigger: "option" },
+      init: (task) => {},
     };
     this.category = "AI/ML";
     this.info = info;

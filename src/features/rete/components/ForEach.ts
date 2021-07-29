@@ -9,6 +9,7 @@ export class ForEach extends ThothReteComponent {
     super("ForEach");
     this.task = {
       outputs: { act: "option", element: "output", done: "option" },
+      init: (task) => {},
     };
     this.category = "Logic";
     this.info = info;
@@ -32,7 +33,7 @@ export class ForEach extends ThothReteComponent {
   async worker(node, inputs, outputs) {
     if (outputs.element === undefined) {
       await Promise.all(
-        inputs.array[0].map((el) => this._task.clone().run({ element: el }))
+        inputs.array[0].map((el) => this._task.clone(false, null, null).run({ element: el }))
       );
       this._task.closed = ["act"];
     } else {

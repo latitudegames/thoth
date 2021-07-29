@@ -16,6 +16,7 @@ export class SwitchGate extends ThothReteComponent {
 
     this.task = {
       outputs: { default: "option" },
+      init: (task) => {},
     };
     this.category = "Logic";
     this.info = info;

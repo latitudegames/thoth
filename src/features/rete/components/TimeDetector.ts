@@ -38,6 +38,7 @@ export class TimeDetectorComponent extends ThothReteComponent {
 
     this.task = {
       outputs: { detectedTime: "output", trigger: "option" },
+      init: (task) => {},
     };
 
     this.category = "AI/ML";
@@ -76,7 +77,7 @@ export class TimeDetectorComponent extends ThothReteComponent {
       temperature: 0.0,
     };
     const raw = await completion(body);
-    const result = raw.trim();
+    const result = raw?.trim();
     node.display(result);
 
     return {

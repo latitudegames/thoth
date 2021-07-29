@@ -29,6 +29,7 @@ export class Code extends ThothReteComponent {
       outputs: {
         trigger: "option",
       },
+      init: (task) => {},
     };
     this.category = "Logic";
     this.info = info;

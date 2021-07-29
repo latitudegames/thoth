@@ -12,6 +12,7 @@ export class PlaytestPrint extends ThothReteComponent {
       outputs: {
         trigger: "option",
       },
+      init: (task) => {},
     };
 
     this.category = "I/O";

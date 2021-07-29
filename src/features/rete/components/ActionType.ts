@@ -34,6 +34,7 @@ export class ActionTypeComponent extends ThothReteComponent {
     super("Action Type Classifier");
     this.task = {
       outputs: { actionType: "output", trigger: "option" },
+      init: (task) => {},
     };
     this.category = "AI/ML";
     this.info = info;

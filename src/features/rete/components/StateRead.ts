@@ -1,4 +1,3 @@
-import Rete from "rete";
 import { ThothReteComponent } from "./ThothReteComponent";
 import { SocketGeneratorControl } from "../dataControls/SocketGenerator";
 
@@ -10,6 +9,7 @@ export class StateRead extends ThothReteComponent {
 
     this.task = {
       outputs: {},
+      init: (task) => {},
     };
     this.category = "State";
     this.info = info;

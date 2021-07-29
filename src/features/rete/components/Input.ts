@@ -14,6 +14,7 @@ export class InputComponent extends ThothReteComponent {
       outputs: {
         text: "output",
       },
+      init: (task) => {},
     };
 
     this.category = "I/O";

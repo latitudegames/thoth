@@ -1,4 +1,3 @@
-import Rete from "rete";
 import { ThothReteComponent } from "./ThothReteComponent";
 import { EnkiThroughputControl } from "../dataControls/EnkiThroughputControl";
 import { postEnkiCompletion } from "../../../services/game-api/enki";
@@ -13,6 +12,7 @@ export class EnkiTask extends ThothReteComponent {
 
     this.task = {
       outputs: { trigger: "option" },
+      init: (task) => {},
     };
     this.category = "AI/ML";
     this.display = true;
