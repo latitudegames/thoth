@@ -1,5 +1,19 @@
 import Rete from "rete";
 
+// TODO fix this very unmaintainable mapping
+// this is a horrible hack and only temprorary tunil we have a rete schema migration system set up
+// with the goal of changing the name of every socket to match the name of the variable.
+// Used in the module manager utils addIO function
+export const socketNameMap = {
+  "Any type": "anySocket",
+  Number: "numSocket",
+  Boolean: "booleanSocket",
+  Array: "arraySocket",
+  String: "stringSocket",
+  Object: "objectSocket",
+  Trigger: "triggerSocket",
+};
+
 export const anySocket = new Rete.Socket("Any type");
 
 export const numSocket = new Rete.Socket("Number");
