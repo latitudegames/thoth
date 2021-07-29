@@ -9,10 +9,13 @@ export class ModuleTriggerOut extends Rete.Component {
   module: object;
   category: string;
   info: string;
+  workspaceType: "module" | "spell";
+  contextMenuName: string;
 
   constructor() {
     // Name of the component
     super("Module Trigger Out");
+    this.contextMenuName = "Trigger Out";
 
     this.task = {
       outputs: {
@@ -25,8 +28,9 @@ export class ModuleTriggerOut extends Rete.Component {
       socket: triggerSocket,
     };
 
-    this.category = "I/O";
+    this.category = "Module";
     this.info = info;
+    this.workspaceType = "module";
   }
 
   // the builder is used to "assemble" the node component.
