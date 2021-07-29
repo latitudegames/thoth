@@ -107,7 +107,7 @@ const LayoutProvider = ({ children, tab }) => {
       [textData.control.dataKey]: textData.data,
     };
 
-    publish(events.$NODE_SET(textData.nodeId), textUpdate);
+    publish(events.$NODE_SET(tab.id, textData.nodeId), textUpdate);
     if (inspectorData) {
       setInspectorData({
         ...inspectorData,
