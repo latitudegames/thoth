@@ -23,6 +23,7 @@ export class ItemTypeComponent extends ThothReteComponent {
 
     this.task = {
       outputs: { detectedItem: "output", trigger: "option" },
+      init: (task) => {},
     };
 
     this.category = "AI/ML";

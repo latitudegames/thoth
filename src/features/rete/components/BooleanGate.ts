@@ -11,6 +11,7 @@ export class BooleanGate extends ThothReteComponent {
 
     this.task = {
       outputs: { true: "option", false: "option" },
+      init: (task) => {},
     };
     this.category = "Logic";
     this.info = info;

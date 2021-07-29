@@ -14,6 +14,7 @@ export class StateWrite extends ThothReteComponent {
 
     this.task = {
       outputs: {},
+      init: (task) => {},
     };
 
     this.category = "State";

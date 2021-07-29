@@ -13,6 +13,7 @@ export class Alert extends ThothReteComponent {
 
     this.task = {
       outputs: {},
+      init: (task) => {},
     };
     this.category = "I/O";
     this.info = info;

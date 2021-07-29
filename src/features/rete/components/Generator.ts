@@ -22,6 +22,7 @@ export class Generator extends ThothReteComponent {
         composed: "output",
         trigger: "option",
       },
+      init: (task) => {},
     };
     this.category = "AI/ML";
     this.info = info;

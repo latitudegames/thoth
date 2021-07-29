@@ -83,6 +83,7 @@ export class SafetyVerifier extends ThothReteComponent {
         trigger: "option",
         boolean: "output",
       },
+      init: (task) => {},
     };
     this.category = "AI/ML";
     this.display = true;
@@ -119,7 +120,7 @@ export class SafetyVerifier extends ThothReteComponent {
       temperature: 0.0,
     };
     const raw = await completion(body);
-    const result = raw.trim() !== "X";
+    const result = raw?.trim() !== "X";
 
     node.display(`${result}`);
 

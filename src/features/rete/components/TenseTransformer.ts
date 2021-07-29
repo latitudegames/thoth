@@ -75,6 +75,7 @@ export class TenseTransformer extends ThothReteComponent {
         action: "output",
         trigger: "option",
       },
+      init: (task) => {},
     };
 
     this.category = "AI/ML";
@@ -121,7 +122,7 @@ export class TenseTransformer extends ThothReteComponent {
       temperature: 0.0,
     };
     const raw = await completion(body);
-    const result = raw.trim();
+    const result = raw?.trim();
 
     node.display(result);
 

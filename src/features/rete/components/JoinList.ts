@@ -15,6 +15,7 @@ export class JoinListComponent extends ThothReteComponent {
         text: "output",
         trigger: "option",
       },
+      init: (task) => {},
     };
 
     this.category = "Logic";

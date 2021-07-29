@@ -124,6 +124,7 @@ export class EntityDetector extends ThothReteComponent {
         entities: "output",
         trigger: "option",
       },
+      init: (task) => {},
     };
     this.category = "AI/ML";
     this.display = true;
