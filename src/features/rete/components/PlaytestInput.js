@@ -57,8 +57,8 @@ export class PlaytestInput extends Rete.Component {
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connecte components
-  worker(node, inputs, outputs, { data }) {
-    node.display(data);
+  worker(node, inputs, outputs, { data, silent }) {
+    if (!silent) node.display(data);
 
     return {
       text: data,
