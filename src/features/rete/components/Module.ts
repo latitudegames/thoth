@@ -1,4 +1,5 @@
 import Rete from "rete";
+import deepEqual from "deep-equal";
 import { ModuleControl } from "../dataControls/ModuleControl";
 
 const info = `The Module component allows you to add modules into your chain.  A module is a bundled self contained chain that defines inputs, outputs, and triggers using components.`;
@@ -58,19 +59,26 @@ export class ModuleComponent extends Rete.Component {
 
   async subscribe(node) {
     if (!node.data.module) return;
+    let initialLoad = true;
+    let cache;
 
     this.unsubscribe(node);
     this.subscriptionMap[node.id] = await this.editor.thothV2.findOneModule(
       { name: node.data.module },
       (module) => {
-        this.updateSockets(node, module.name);
+        if (!initialLoad && !deepEqual(cache, module.toJSON()))
+          this.updateSockets(node, module.name, true);
+        initialLoad = false;
+        cache = module.toJSON();
       }
     );
   }
 
-  updateSockets(node, moduleName) {
-    if (node.data.module === moduleName) return;
+  updateSockets(node, moduleName, skipCheck = false) {
+    if (!skipCheck && node.data.module === moduleName) return;
     node.data.module = moduleName;
+    node.data.inputs = [];
+    node.data.outputs = [];
     this.updateModuleSockets(node);
     this.editor.trigger("process");
     this.subscribe(node);
