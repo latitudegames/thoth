@@ -11,6 +11,7 @@ export class ModuleComponent extends Rete.Component {
   subscriptionMap: {} = {};
   editor: any;
   noBuildUpdate: boolean;
+  category: string;
 
   constructor() {
     super("Module");
@@ -20,6 +21,7 @@ export class ModuleComponent extends Rete.Component {
     this.task = {
       outputs: {},
     };
+    this.category = "Core";
     this.info = info;
     this.noBuildUpdate = true;
   }
