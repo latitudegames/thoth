@@ -17,7 +17,7 @@ function install(editor) {
         node.data.outputs.forEach((key) => {
           if (outputMap[key]) return;
           const output = new Rete.Output(
-            key.name.toLowerCase(),
+            key.name ? key.name.toLowerCase() : "untitled",
             key.name,
             sockets[key.socketType]
           );
