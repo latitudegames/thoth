@@ -1,5 +1,6 @@
 import { Module } from "./module";
 import { extractNodes } from "./utils";
+import TaskPlugin from "../taskPlugin";
 
 export class ModuleManager {
   constructor(modules) {
@@ -80,6 +81,12 @@ export class ModuleManager {
     this.outputs.set(name, socket);
   }
 
+  getTriggeredNode(data, triggerName) {
+    return extractNodes(data.nodes, this.triggerIns).find(
+      (node) => node.data.name === triggerName
+    );
+  }
+
   async workerModule(node, inputs, outputs, args) {
     if (!node.data.module) return;
     if (!this.modules[node.data.module]) return;
@@ -88,23 +95,27 @@ export class ModuleManager {
     const module = new Module();
     const engine = this.engine.clone();
 
+    engine.use(TaskPlugin);
+
     module.read(inputs);
     await engine.process(
       data,
       null,
-      Object.assign({}, args, { module, silent: true })
+      Object.assign({}, args, { module, silent: false })
     );
-    // find data socket that was triggered in the node
-    if (args?.data?.socketKey) {
-      console.log("We know which socket was triggered!");
-    }
-    // call await node.run()
+
+    const triggeredNode = this.getTriggeredNode(data, args.socketInfo.to);
+    // todo need to remember toupdate this if/when componnet name changes
+    const component = engine.components.get("Module Trigger In");
+    await component.run(triggeredNode);
     // gather the outputs
     module.write(outputs);
   }
 
   workerInputs(node, inputs, outputs, { module } = {}) {
     if (!module) return;
+
+    console.log("worker inputs");
 
     // this is a worker.IN thoery it could return an object for the task instead
     // or set a taskOutputs to themodule class itself
