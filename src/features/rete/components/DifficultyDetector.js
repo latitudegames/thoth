@@ -81,7 +81,7 @@ export class DifficultyDetectorComponent extends Rete.Component {
       .addOutput(categoryOut);
   }
 
-  async worker(node, inputs, outputs) {
+  async worker(node, inputs, outputs, { silent }) {
     const action = inputs["action"][0];
     const prompt = node.data.fewshot + action + ",";
 
@@ -93,7 +93,7 @@ export class DifficultyDetectorComponent extends Rete.Component {
     };
     const raw = await completion(body);
     const result = raw.trim();
-    node.display(result);
+    if (!silent) node.display(result);
 
     const [difficulty, category] = result.split(", ");
 

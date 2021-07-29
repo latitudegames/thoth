@@ -34,7 +34,7 @@ export class EnkiTask extends Rete.Component {
     return node;
   }
 
-  async worker(node, inputs, outputs) {
+  async worker(node, inputs, outputs, { silent }) {
     const completionResponse = await postEnkiCompletion(
       node.data.name,
       Object.values(inputs).map((inputArray) => inputArray[0])
@@ -59,7 +59,7 @@ export class EnkiTask extends Rete.Component {
     // console.log("test", test);
     // console.log(this.node.task);
 
-    node.display(completionResponse.outputs.join(" "));
+    if (!silent) node.display(completionResponse.outputs.join(" "));
 
     return test;
   }

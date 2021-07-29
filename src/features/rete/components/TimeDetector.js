@@ -62,7 +62,7 @@ export class TimeDetectorComponent extends Rete.Component {
       .addOutput(dataOutput);
   }
 
-  async worker(node, inputs, outputs) {
+  async worker(node, inputs, outputs, { silent }) {
     node.data.fewshot = fewshot;
 
     const action = inputs["string"][0];
@@ -76,7 +76,7 @@ export class TimeDetectorComponent extends Rete.Component {
     };
     const raw = await completion(body);
     const result = raw.trim();
-    node.display(result);
+    if (!silent) node.display(result);
 
     return {
       detectedTime: result,

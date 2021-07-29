@@ -63,7 +63,7 @@ export class ActionTypeComponent extends Rete.Component {
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connsected components
-  async worker(node, inputs, outputs) {
+  async worker(node, inputs, outputs, { silent }) {
     const action = inputs["action"][0];
     const prompt = node.data.fewshot + action + ",";
 
@@ -75,7 +75,7 @@ export class ActionTypeComponent extends Rete.Component {
     };
     const raw = await completion(body);
     const result = raw.trim();
-    node.display(result);
+    if (!silent) node.display(result);
 
     return {
       actionType: result,

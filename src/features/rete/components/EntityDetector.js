@@ -153,7 +153,7 @@ export class EntityDetector extends Rete.Component {
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connected components
-  async worker(node, inputs, outputs) {
+  async worker(node, inputs, outputs, { silent }) {
     const action = inputs["action"][0];
     const prompt = node.data.fewshot + action + "\nEntities:";
 
@@ -185,7 +185,7 @@ export class EntityDetector extends Rete.Component {
       type: types[i],
     }));
 
-    node.display(JSON.stringify(allEntities));
+    if (!silent) node.display(JSON.stringify(allEntities));
 
     return {
       entities: allEntities,
