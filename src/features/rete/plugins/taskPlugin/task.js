@@ -21,6 +21,17 @@ export class Task {
       .filter((key) => this.inputs[key][0].type === type);
   }
 
+  getInputFromConnection(socketKey) {
+    let input = null;
+    Object.entries(this.inputs).forEach(([key, value]) => {
+      if (value.some((con) => con.key === socketKey)) {
+        input = key;
+      }
+    });
+
+    return input;
+  }
+
   reset() {
     this.outputData = null;
   }
@@ -43,16 +54,19 @@ export class Task {
         this.getInputs("output").map(async (key) => {
           inputs[key] = await Promise.all(
             this.inputs[key].map(async (con) => {
-              if (con) {
-                await con.task.run(data, false, garbage, false);
-                return con.task.outputData[con.key];
-              }
+              if (con) return await con.task.run(data, false, garbage, false);
             })
           );
         })
       );
 
-      this.outputData = await this.worker(this, inputs, data);
+      const socketInfo = {
+        to: data.fromSocket
+          ? this.getInputFromConnection(data.fromSocket)
+          : null,
+      };
+
+      this.outputData = await this.worker(this, inputs, data, socketInfo);
 
       if (propagate)
         await Promise.all(
@@ -61,8 +75,9 @@ export class Task {
             // pass the socket that is being calledikno
             .map(async (con) => {
               const newData = {
-                ...data,
-                socketKey: con.key,
+                data,
+                fromSocket: con.key,
+                from: this.getInputFromConnection(con.key),
               };
               return await con.task.run(newData, false, garbage);
             })
