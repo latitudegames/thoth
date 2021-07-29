@@ -1,4 +1,5 @@
 import Rete from "rete";
+import { ThothReteComponent } from "./ThothReteComponent";
 import { stringSocket, triggerSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
 import { completion } from "../../../utils/openaiHelper";
@@ -31,12 +32,13 @@ seconds, minutes, hours, days, weeks, years.
 
 You can edit the fewshot in the text editor, but be aware that you must retain the fewshots data structure so processing will work.`;
 
-export class TimeDetectorComponent extends Rete.Component {
+export class TimeDetectorComponent extends ThothReteComponent {
   constructor() {
     super("Time Detector");
 
     this.task = {
       outputs: { detectedTime: "output", trigger: "option" },
+      init: (task) => {},
     };
 
     this.category = "AI/ML";
@@ -75,7 +77,7 @@ export class TimeDetectorComponent extends Rete.Component {
       temperature: 0.0,
     };
     const raw = await completion(body);
-    const result = raw.trim();
+    const result = raw?.trim();
     node.display(result);
 
     return {

@@ -1,21 +1,24 @@
 import Rete from "rete";
+import { ThothReteComponent } from "./ThothReteComponent";
 import { TextInputControl } from "../controls/TextInputControl";
-import { stringSocket } from "../sockets";
+import { stringSocket, arraySocket } from "../sockets";
 
-const info = `The info component has a single control, an input field.  Whatever value you put into this input field will be sent out along the compoonents output socket.`;
+const info = `The Join List component takes in an array, and will join each item in the array together with a seperator, defined in the components input field.`;
 
-export class InputComponent extends Rete.Component {
+export class JoinListComponent extends ThothReteComponent {
   constructor() {
     // Name of the component
-    super("Input");
+    super("Join List");
 
     this.task = {
       outputs: {
         text: "output",
+        trigger: "option",
       },
+      init: (task) => {},
     };
 
-    this.category = "I/O";
+    this.category = "Logic";
     this.info = info;
   }
 
@@ -26,25 +29,27 @@ export class InputComponent extends Rete.Component {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const out = new Rete.Output("text", "String", stringSocket);
 
+    const inputList = new Rete.Input("list", "List", arraySocket);
+
     // Handle default value if data is present
-    const value = node.data.text ? node.data.text : "Input text here";
+    const separator = node.data.separator ? node.data.separator : " ";
 
     // controls are the internals of the node itself
     // This default control sample has a text field.
     const input = new TextInputControl({
       emitter: this.editor,
-      key: "text",
-      value,
+      key: "separator",
+      value: separator,
     });
 
-    return node.addOutput(out).addControl(input);
+    return node.addOutput(out).addControl(input).addInput(inputList);
   }
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connected components
   async worker(node, inputs, outputs) {
     return {
-      text: node.data.text,
+      text: inputs.list[0].join(node.data.separator),
     };
   }
 }
