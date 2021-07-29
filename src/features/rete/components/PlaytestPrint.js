@@ -35,12 +35,12 @@ export class PlaytestPrint extends Rete.Component {
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connected components
-  worker(node, inputs, data) {
+  worker(node, inputs, outputs, { silent }) {
     const { sendToPlaytest } = this.editor.thothV2;
     if (!inputs || !inputs.text) return null;
     const text = inputs.text[0];
 
     sendToPlaytest(text);
-    node.display(text);
+    if (!!silent) node.display(text);
   }
 }
