@@ -15,15 +15,15 @@ import { MyNode } from "../../features/common/Node/Node";
 import { InputComponent } from "./components/Input";
 import { JoinListComponent } from "./components/JoinList";
 import { TenseTransformer } from "./components/TenseTransformer";
-// import { RunInputComponent } from "./components/RunInput";
+import { RunInputComponent } from "./components/RunInput";
 import { ActionTypeComponent } from "./components/ActionType";
 import { ItemTypeComponent } from "./components/ItemDetector";
-// import { DifficultyDetectorComponent } from "./components/DifficultyDetector";
-// import { EntityDetector } from "./components/EntityDetector";
+import { DifficultyDetectorComponent } from "./components/DifficultyDetector";
+import { EntityDetector } from "./components/EntityDetector";
 import { SafetyVerifier } from "./components/SafetyVerifier";
 import { BooleanGate } from "./components/BooleanGate";
-// import { TimeDetectorComponent } from "./components/TimeDetector";
-// import { Alert } from "./components/AlertMessage";
+import { TimeDetectorComponent } from "./components/TimeDetector";
+import { Alert } from "./components/AlertMessage";
 import { SwitchGate } from "./components/SwitchGate";
 import { PlaytestPrint } from "./components/PlaytestPrint";
 import { PlaytestInput } from "./components/PlaytestInput";
@@ -49,12 +49,12 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
   // We might be able to programatically generate components from enki
   const components = [
     new ActionTypeComponent(),
-    // new Alert(),
+    new Alert(),
     new BooleanGate(),
     new Code(),
-    // new DifficultyDetectorComponent(),
+    new DifficultyDetectorComponent(),
     new EnkiTask(),
-    // new EntityDetector(),
+    new EntityDetector(),
     new ForEach(),
     new Generator(),
     new InputComponent(),
@@ -67,14 +67,14 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
     new ModuleTriggerIn(),
     new PlaytestPrint(),
     new PlaytestInput(),
-    // new RunInputComponent(),
+    new RunInputComponent(),
     new SafetyVerifier(),
     new StateWrite(),
     new StateRead(),
     new StringProcessor(),
     new SwitchGate(),
     new TenseTransformer(),
-    // new TimeDetectorComponent(),
+    new TimeDetectorComponent(),
   ];
 
   let modules = [];
@@ -103,7 +103,19 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
   });
   // renders a context menu on right click that shows available nodes
   editor.use(LifecyclePlugin);
-  editor.use(ContextMenuPlugin);
+  editor.use(ContextMenuPlugin, {
+    delay: 0,
+    rename(component) {
+      return component.contextMenuName || component.name;
+    },
+    allocate: (component) => {
+      const tabType = component.editor.tab.type;
+      const { workspaceType } = component;
+
+      if (workspaceType && workspaceType !== tabType) return null;
+      return [component.category];
+    },
+  });
   editor.use(ModulePlugin, { engine, modules });
   editor.use(TaskPlugin);
 
