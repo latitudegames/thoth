@@ -6,6 +6,7 @@ const info = `The Module component allows you to add modules into your chain.  A
 
 export class ModuleComponent extends Rete.Component {
   module;
+  _task;
   updateModuleSockets;
   task;
   info;
@@ -86,6 +87,12 @@ export class ModuleComponent extends Rete.Component {
   }
 
   worker(node, inputs, outputs, { module }) {
-    console.log("TESTING", outputs);
+    const open = Object.entries(module.outputs)
+      .filter(([key, value]) => typeof value === "boolean" && value)
+      .map(([key]) => key);
+    // close all triggers first
+    this._task.closed = node.data.outputs
+      .map((out) => out.name)
+      .filter((out) => !open.includes(out));
   }
 }
