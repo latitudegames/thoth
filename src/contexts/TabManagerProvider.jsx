@@ -105,7 +105,6 @@ const TabManager = ({ children }) => {
 
   const switchTab = async (tabId, query) => {
     const selector = query ? query : { id: tabId };
-    console.log("Selector", selector);
     const tab = await db.tabs.findOne({ selector }).exec();
     if (!tab) return false;
     await tab.atomicPatch({ active: true });
