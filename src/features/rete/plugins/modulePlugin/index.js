@@ -23,7 +23,7 @@ function install(context, { engine, modules }) {
 
         component.worker = (...args) => {
           moduleManager.workerInputs.apply(moduleManager, args);
-          if (inputsWorker) inputsWorker.apply(component, args);
+          if (inputsWorker) return inputsWorker.apply(component, args);
         };
         break;
       case "triggerOut":
@@ -80,7 +80,7 @@ function install(context, { engine, modules }) {
 
         component.worker = async (...args) => {
           await moduleManager.workerModule.apply(moduleManager, args);
-          if (moduleWorker) moduleWorker.apply(component, args);
+          if (moduleWorker) return moduleWorker.apply(component, args);
         };
         break;
       case "output":
@@ -90,7 +90,7 @@ function install(context, { engine, modules }) {
 
         component.worker = (...args) => {
           if (outputsWorker) outputsWorker.apply(component, args);
-          moduleManager.workerOutputs.apply(moduleManager, args);
+          return moduleManager.workerOutputs.apply(moduleManager, args);
         };
         break;
       default:
