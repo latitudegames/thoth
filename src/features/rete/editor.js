@@ -149,6 +149,7 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
 
   // Register custom components with both the editor and the engine
   // We will need a wa to share components between client and server
+  // WARNING all the plugins from the editor get installed onto the component and modify it.  This effects the components registered in the engine, which already have plugins installed.
   components.forEach((c) => {
     editor.register(c);
     engine.register(c);
