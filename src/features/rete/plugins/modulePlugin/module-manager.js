@@ -108,15 +108,12 @@ export class ModuleManager {
     }
     // gather the outputs
     module.write(outputs);
+
+    return module;
   }
 
   workerInputs(node, inputs, outputs, { module } = {}) {
     if (!module) return;
-
-    console.log("input worker outputs", outputs);
-
-    // this is a worker.IN thoery it could return an object for the task instead
-    // or set a taskOutputs to themodule class itself
 
     outputs["output"] = (module.getInput(node.data.name) || [])[0];
     return outputs;
@@ -128,10 +125,16 @@ export class ModuleManager {
     module.setOutput(node.data.name, inputs["input"][0]);
   }
 
-  workerTriggers(node, inputs, outputs, { module } = {}) {
+  workerTriggerIns(node, inputs, outputs, { module, ...rest } = {}) {
     if (!module) return;
 
     // module.setOutput(node.data.name, inputs["input"][0]);
+  }
+
+  workerTriggerOuts(node, inputs, outputs, { module, ...rest } = {}) {
+    if (!module) return;
+
+    module.setOutput(node.data.name, outputs["trigger"]);
   }
 
   setEngine(engine) {
