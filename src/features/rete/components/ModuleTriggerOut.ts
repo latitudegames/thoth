@@ -19,7 +19,7 @@ export class ModuleTriggerOut extends Rete.Component {
 
     this.task = {
       outputs: {
-        text: "output",
+        trigger: "output",
       },
     };
 
@@ -51,10 +51,9 @@ export class ModuleTriggerOut extends Rete.Component {
     return node.addInput(input);
   }
 
-  async worker(node, inputs, outputs) {
-    console.log("trigger worker outputs", outputs);
+  worker(node, inputs, outputs) {
     return {
-      text: node.data.text,
+      trigger: true,
     };
   }
 }
