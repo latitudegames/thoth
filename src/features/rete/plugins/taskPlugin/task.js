@@ -69,6 +69,9 @@ export class Task {
 
       this.outputData = await this.worker(this, inputs, data, socketInfo);
 
+      if (this.component.task.onRun)
+        this.component.task.onRun(this.node, this, data, socketInfo);
+
       if (propagate)
         await Promise.all(
           this.next
