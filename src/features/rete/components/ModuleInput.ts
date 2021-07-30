@@ -19,7 +19,7 @@ export class ModuleInput extends Rete.Component {
 
     this.task = {
       outputs: {
-        text: "output",
+        output: "output",
       },
     };
 
@@ -38,7 +38,7 @@ export class ModuleInput extends Rete.Component {
   // to generate the appropriate inputs and ouputs for the fewshot at build time
   builder(node) {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
-    const out = new Rete.Output("name", "String", anySocket);
+    const out = new Rete.Output("output", "output", anySocket);
 
     // Handle default value if data is present
     const nameInput = new InputControl({
@@ -51,10 +51,10 @@ export class ModuleInput extends Rete.Component {
     return node.addOutput(out);
   }
 
-  async worker(node, inputs, outputs) {
+  worker(node, inputs, outputs) {
     console.log("input worker outputs", outputs);
-    return {
-      text: node.data.text,
-    };
+    // outputs in this case is a key value oibject of outputs.
+    // perfect for task return
+    return outputs;
   }
 }
