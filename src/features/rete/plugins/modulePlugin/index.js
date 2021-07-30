@@ -31,9 +31,22 @@ function install(context, { engine, modules }) {
 
         moduleManager.registerTriggerOut(name, socket);
 
-        component.worker = (...args) => {
-          moduleManager.workerTriggers.apply(moduleManager, args);
-          if (triggersWorker) triggersWorker.apply(component, args);
+        component.worker = (node, inputs, outputs, context) => {
+          let _outputs = outputs;
+          if (triggersWorker) {
+            _outputs = triggersWorker.apply(component, [
+              node,
+              inputs,
+              outputs,
+              context,
+            ]);
+          }
+          return moduleManager.workerTriggerOuts.apply(moduleManager, [
+            node,
+            inputs,
+            _outputs,
+            context,
+          ]);
         };
         break;
       case "triggerIn":
@@ -42,7 +55,7 @@ function install(context, { engine, modules }) {
         moduleManager.registerTriggerIn(name, socket);
 
         component.worker = (...args) => {
-          moduleManager.workerTriggers.apply(moduleManager, args);
+          moduleManager.workerTriggerIns.apply(moduleManager, args);
           if (triggerInWorker) triggerInWorker.apply(component, args);
         };
         break;
@@ -78,9 +91,19 @@ function install(context, { engine, modules }) {
 
         const moduleWorker = component.worker;
 
-        component.worker = async (...args) => {
-          await moduleManager.workerModule.apply(moduleManager, args);
-          if (moduleWorker) return moduleWorker.apply(component, args);
+        component.worker = async (node, inputs, outputs, context) => {
+          const module = await moduleManager.workerModule.apply(moduleManager, [
+            node,
+            inputs,
+            outputs,
+            context,
+          ]);
+
+          if (moduleWorker)
+            return moduleWorker.call(component, node, inputs, outputs, {
+              ...context,
+              module,
+            });
         };
         break;
       case "output":
