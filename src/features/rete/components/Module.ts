@@ -60,16 +60,16 @@ export class ModuleComponent extends Rete.Component {
 
   async subscribe(node) {
     if (!node.data.module) return;
-    let initialLoad = true;
+
     let cache;
 
     this.unsubscribe(node);
     this.subscriptionMap[node.id] = await this.editor.thothV2.findOneModule(
       { name: node.data.module },
       (module) => {
-        if (!initialLoad || !deepEqual(cache, module.toJSON()))
+        // TODO the deep equal isnt catching the changed to node data from submodule, needed to rerender socket names
+        if (cache && !deepEqual(cache, module.toJSON()))
           this.updateSockets(node, module.name, true);
-        initialLoad = false;
         cache = module.toJSON();
       }
     );
@@ -85,5 +85,7 @@ export class ModuleComponent extends Rete.Component {
     node.update();
   }
 
-  worker() {}
+  worker(node, inputs, outputs, { module }) {
+    console.log("TESTING", outputs);
+  }
 }
