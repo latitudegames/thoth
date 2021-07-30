@@ -28,7 +28,7 @@ function install(editor) {
       // handle modules, which are in the engine run
       if (data?.silent) node.display = () => {};
 
-      return worker.call(component, node, inputs, outputs, data, ...args);
+      worker.apply(component, [node, inputs, outputs, data, ...args]);
     };
   });
 }
