@@ -28,7 +28,7 @@ export class ForEach extends Rete.Component {
       .addOutput(out3);
   }
 
-  async worker(node, inputs, { element }) {
+  async worker(node, inputs, outputs, { element }) {
     if (element === undefined) {
       await Promise.all(
         inputs.array[0].map((el) => this._task.clone().run({ element: el }))
