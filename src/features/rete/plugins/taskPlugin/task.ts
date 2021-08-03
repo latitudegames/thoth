@@ -1,5 +1,53 @@
+import { NodeData } from "rete/types/core/data";
+import { Component } from "rete/types";
+
+type TaskRef = {
+  key: string;
+  task: Task;
+};
+
+type TaskOptions = {
+  outputs: object;
+  init: Function;
+  onRun: Function;
+};
+
+// type SocketInfo = {
+//   from: string | null;
+//   fromSocket: string | null;
+// };
+
+type RunOptions = {
+  propagate?: boolean;
+  needReset?: boolean;
+  garbage?: Task[];
+  fromSocket?: string;
+};
+
+// interface WorkerFunction {
+//   inputs: object;
+// }
+
+interface IComponentWithTask extends Component {
+  task: TaskOptions;
+  _task: Task;
+}
+
 export class Task {
-  constructor(inputs, component, node, worker) {
+  node: NodeData;
+  inputs: object;
+  component: IComponentWithTask;
+  worker: Function;
+  next: TaskRef[];
+  outputData: object | null;
+  closed: string[];
+
+  constructor(
+    inputs: object,
+    component: IComponentWithTask,
+    node: NodeData,
+    worker: Function
+  ) {
     this.node = node;
     this.inputs = inputs;
     this.component = component;
@@ -22,7 +70,7 @@ export class Task {
   }
 
   getInputFromConnection(socketKey) {
-    let input = null;
+    let input: null | any = null;
     Object.entries(this.inputs).forEach(([key, value]) => {
       if (value.some((con) => con && con.key === socketKey)) {
         input = key;
@@ -36,7 +84,14 @@ export class Task {
     this.outputData = null;
   }
 
-  async run(data, needReset = true, garbage = [], propagate = true) {
+  async run(data: unknown, options: RunOptions = {}) {
+    const {
+      needReset = true,
+      garbage = [] as Task[],
+      propagate = true,
+      fromSocket,
+    } = options;
+
     if (needReset) garbage.push(this);
 
     // This would be a great place to run an animation showing the signal flow.
@@ -54,7 +109,11 @@ export class Task {
         this.getInputs("output").map(async (key) => {
           inputs[key] = await Promise.all(
             this.inputs[key].map(async (con) => {
-              await con.task.run(data, false, garbage, false);
+              await con.task.run(data, {
+                needReset: false,
+                garbage,
+                propagate: false,
+              });
               return con.task.outputData[con.key];
             })
           );
@@ -62,11 +121,10 @@ export class Task {
       );
 
       const socketInfo = {
-        to: data?.fromSocket
-          ? this.getInputFromConnection(data.fromSocket)
-          : null,
+        target: fromSocket ? this.getInputFromConnection(fromSocket) : null,
       };
 
+      console.log("INPUTS", inputs);
       this.outputData = await this.worker(this, inputs, data, socketInfo);
 
       if (this.component.task.onRun)
@@ -78,12 +136,11 @@ export class Task {
             .filter((con) => !this.closed.includes(con.key))
             // pass the socket that is being calledikno
             .map(async (con) => {
-              const newData = {
-                data,
+              return await con.task.run(data, {
+                needReset: false,
+                garbage,
                 fromSocket: con.key,
-                from: this.getInputFromConnection(con.key),
-              };
-              return await con.task.run(newData, false, garbage);
+              });
             })
         );
     }
@@ -106,7 +163,7 @@ export class Task {
         }));
       });
 
-    const task = new Task(inputs, this.component, this.worker);
+    const task = new Task(inputs, this.component, this.node, this.worker);
 
     // manually add a copies of follow tasks
     task.next = this.next.map((n) => ({
