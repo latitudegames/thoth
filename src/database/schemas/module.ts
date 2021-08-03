@@ -25,6 +25,14 @@ const moduleSchema = {
   },
 };
 
+export type Module = {
+  id: String;
+  name: string;
+  data: object;
+  createdAt: number;
+  updatedAt: number;
+};
+
 const collection = {
   modules: {
     schema: moduleSchema,
