@@ -1,4 +1,6 @@
 export class Module {
+  inputs: object;
+  outputs: object;
   constructor() {
     this.inputs = {};
     this.outputs = {};
