@@ -12,11 +12,6 @@ type TaskOptions = {
   onRun: Function;
 };
 
-// type SocketInfo = {
-//   from: string | null;
-//   fromSocket: string | null;
-// };
-
 type RunOptions = {
   propagate?: boolean;
   needReset?: boolean;
