@@ -1,3 +1,4 @@
+import { NodeData } from "rete/types/core/data";
 import { Task } from "./task";
 
 function install(editor) {
@@ -12,18 +13,18 @@ function install(editor) {
     const taskWorker = component.worker;
     const taskOptions = component.task;
 
-    component.worker = (node, inputs, outputs, args, ...rest) => {
+    component.worker = (node: NodeData, inputs, outputs, args, ...rest) => {
       const task = new Task(
         inputs,
         component,
         node,
-        (ctx, inps, data, socketInfo) => {
+        (ctx, inputs, data, socketInfo) => {
           component._task = task;
           // might change this interface, since we swap out data for outputs here, which just feels wrong.
           return taskWorker.call(
             component,
             node,
-            inps,
+            inputs,
             outputs,
             { ...args, data, socketInfo },
             ...rest
