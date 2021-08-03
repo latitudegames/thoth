@@ -1,8 +1,23 @@
+import { NodeData } from "rete/types/core/data";
+import { Engine, Socket, Component } from "rete";
+
+import { Module as ModuleType } from "../../../../database/schemas/module";
 import { Module } from "./module";
 import { extractNodes } from "./utils";
+
+interface ModuleComponent extends Component {
+  run: Function;
+}
+
 export class ModuleManager {
+  engine?: Engine | null;
+  modules: ModuleType[];
+  inputs = new Map<string, Socket>();
+  outputs = new Map<string, Socket>();
+  triggerIns = new Map<string, Socket>();
+  triggerOuts = new Map<string, Socket>();
+
   constructor(modules) {
-    this.engine = null;
     this.modules = modules;
     this.inputs = new Map();
     this.outputs = new Map();
@@ -10,22 +25,22 @@ export class ModuleManager {
     this.triggerOuts = new Map();
   }
 
-  addModule(module) {
+  addModule(module: ModuleType) {
     this.modules.push(module);
   }
 
-  setModules(modules) {
+  setModules(modules: ModuleType[]) {
     this.modules = modules;
   }
 
-  updateModule(module) {
+  updateModule(module: ModuleType) {
     const index = this.modules.findIndex((mod) => mod.id === module.id);
 
     if (index > -1) this.modules[index] = module;
   }
 
   getInputs(data) {
-    return extractNodes(data.nodes, this.inputs).map((node) => ({
+    return extractNodes(data.nodes, this.inputs).map((node: NodeData) => ({
       name: node.data.name,
       socket: this.socketFactory(node, this.inputs.get(node.name)),
     }));
@@ -52,7 +67,7 @@ export class ModuleManager {
     }));
   }
 
-  socketFactory(node, socket) {
+  socketFactory(node: NodeData, socket: Socket | Function | undefined) {
     socket = typeof socket === "function" ? socket(node) : socket;
 
     if (!socket)
@@ -89,12 +104,12 @@ export class ModuleManager {
     if (!node.data.module) return;
     if (!this.modules[node.data.module]) return;
 
-    const data = this.modules[node.data.module].data;
+    const data = this.modules[node.data.module].data as any;
     const module = new Module();
-    const engine = this.engine.clone();
+    const engine = this.engine?.clone();
 
     module.read(inputs);
-    await engine.process(
+    await engine?.process(
       data,
       null,
       Object.assign({}, args, { module, silent: true })
@@ -103,8 +118,10 @@ export class ModuleManager {
     if (args?.socketInfo?.target) {
       const triggeredNode = this.getTriggeredNode(data, args.socketInfo.target);
       // todo need to remember to update this if/when componnet name changes
-      const component = engine.components.get("Module Trigger In");
-      await component.run(triggeredNode);
+      const component = engine?.components.get(
+        "Module Trigger In"
+      ) as ModuleComponent;
+      await component?.run(triggeredNode);
     }
     // gather the outputs
     module.write(outputs);
@@ -112,26 +129,36 @@ export class ModuleManager {
     return module;
   }
 
-  workerInputs(node, inputs, outputs, { module } = {}) {
+  workerInputs(node, inputs, outputs, { module }: { module: Module }) {
     if (!module) return;
 
     outputs["output"] = (module.getInput(node.data.name) || [])[0];
     return outputs;
   }
 
-  workerOutputs(node, inputs, outputs, { module } = {}) {
+  workerOutputs(node, inputs, outputs, { module }: { module: Module }) {
     if (!module) return;
 
     module.setOutput(node.data.name, inputs["input"][0]);
   }
 
-  workerTriggerIns(node, inputs, outputs, { module, ...rest } = {}) {
+  workerTriggerIns(
+    node,
+    inputs,
+    outputs,
+    { module, ...rest }: { module: Module }
+  ) {
     if (!module) return;
 
     // module.setOutput(node.data.name, inputs["input"][0]);
   }
 
-  workerTriggerOuts(node, inputs, outputs, { module, ...rest } = {}) {
+  workerTriggerOuts(
+    node,
+    inputs,
+    outputs,
+    { module, ...rest }: { module: Module }
+  ) {
     if (!module) return;
 
     module.setOutput(node.data.name, outputs["trigger"]);
