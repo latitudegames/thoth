@@ -94,5 +94,7 @@ export class ModuleComponent extends Rete.Component {
     this._task.closed = node.data.outputs
       .map((out) => out.name)
       .filter((out) => !open.includes(out));
+
+    return module.outputs;
   }
 }
