@@ -35,10 +35,10 @@ export class EnkiTask extends ThothReteComponent {
 
   async worker(node, inputs, outputs) {
     // Assume the inputs is a list of strings (do we know this to be true?)
-    const stringInputs = inputs as { [key: string]: string[] }
+    const stringInputs = inputs as { [key: string]: string[] };
     const completionResponse = await postEnkiCompletion(
       node.data.name,
-        Object.values(stringInputs).map((inputArray) => inputArray[0])
+      Object.values(stringInputs).map((inputArray) => inputArray[0])
     );
 
     // handle this better
@@ -49,7 +49,7 @@ export class EnkiTask extends ThothReteComponent {
       return null;
     }
 
-    const test = completionResponse.outputs.reduce(
+    const enkiOutputs = completionResponse.outputs.reduce(
       (compiledOutputs, output, outputNumber) => {
         compiledOutputs[`output${outputNumber + 1}`] = output;
         return compiledOutputs;
@@ -57,11 +57,8 @@ export class EnkiTask extends ThothReteComponent {
       {}
     );
 
-    // console.log("test", test);
-    // console.log(this.node.task);
+    node.display(Object.values(enkiOutputs).join(" "));
 
-    node.display(completionResponse.outputs.join(" "));
-
-    return test;
+    return enkiOutputs;
   }
 }
