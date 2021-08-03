@@ -1,22 +1,50 @@
 import { Input, Output } from "rete";
 import { socketNameMap } from "../../sockets";
+
 export function extractNodes(nodes, map) {
   const names = Array.from(map.keys());
 
   return Object.keys(nodes)
     .filter((k) => names.includes(nodes[k].name))
     .map((k) => nodes[k])
-    .sort((n1, n2) => n1.position[1] > n2.position[1]);
+    .sort((n1, n2) => n1.position[1] - n2.position[1]);
 }
 
-export function removeIO(node, editor) {
-  node.getConnections().forEach((c) => editor.removeConnection(c));
-  Array.from(node.inputs.values()).forEach((input) => node.removeInput(input));
-  Array.from(node.outputs.values()).forEach((output) =>
-    node.removeOutput(output)
+const getRemovedSockets = (existingSockets, newSockets) => {
+  return existingSockets.filter(
+    (existing) =>
+      !newSockets.some((incoming) => incoming.socketKey === existing)
   );
+};
+
+const removeSockets = (node, sockets, type, editor) => {
+  sockets.forEach(({ name: key, socket }) => {
+    const connections = node
+      .getConnections()
+      .filter((con) => con[type].key === key);
+
+    if (connections)
+      connections.forEach((con) => {
+        editor.removeConnection(con);
+      });
+
+    node.removeInput(socket);
+  });
+};
+
+// here we can only remove the inputs and outputs that are not supposed to be on the node.
+// This means we determine which IO are present on the node but not in the incoming IO
+export function removeIO(node, editor, inputs, outputs) {
+  const existingInputs = node.data.inputs.map((input) => input.name);
+  const existingOutputs = node.data.outputs.map((output) => output.name);
+  const inputRemovals = getRemovedSockets(existingInputs, inputs);
+  const outputRemovals = getRemovedSockets(existingOutputs, outputs);
+
+  removeSockets(node, inputRemovals, "input", editor);
+  removeSockets(node, outputRemovals, "output", editor);
 }
 
+// here we will find any uncoming IO not already present on the node and add them
 export function addIO(node, inputs, outputs, triggerOuts, triggerIns) {
   const uniqueInputsCount = new Set(inputs.map((i) => i.name)).size;
   const uniqueOutputsCount = new Set(outputs.map((i) => i.name)).size;
