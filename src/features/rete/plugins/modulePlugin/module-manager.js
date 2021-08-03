@@ -100,8 +100,8 @@ export class ModuleManager {
       Object.assign({}, args, { module, silent: true })
     );
 
-    if (args?.socketInfo) {
-      const triggeredNode = this.getTriggeredNode(data, args.socketInfo.to);
+    if (args?.socketInfo?.target) {
+      const triggeredNode = this.getTriggeredNode(data, args.socketInfo.target);
       // todo need to remember to update this if/when componnet name changes
       const component = engine.components.get("Module Trigger In");
       await component.run(triggeredNode);
