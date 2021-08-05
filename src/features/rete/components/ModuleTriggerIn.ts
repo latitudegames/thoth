@@ -1,6 +1,7 @@
 import Rete from "rete";
 import { InputControl } from "../dataControls/InputControl";
 import { triggerSocket } from "../sockets";
+import { v4 as uuidv4 } from "uuid";
 
 const info = `The module trigge in adds a trigger input socket to the parent module.  It can be given a name, which is displayed on the parent.`;
 
@@ -50,6 +51,7 @@ export class ModuleTriggerIn extends Rete.Component {
   builder(node) {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const out = new Rete.Output("trigger", "Trigger", triggerSocket);
+    node.data.socketKey = uuidv4();
 
     // Handle default value if data is present
     const nameInput = new InputControl({
