@@ -1,6 +1,7 @@
 import Rete from "rete";
 import { InputControl } from "../dataControls/InputControl";
 import { anySocket, triggerSocket } from "../sockets";
+import { v4 as uuidv4 } from "uuid";
 
 const info = `The module output component adds an output socket to the parent module.  It can be given a name, which is displayed on the parent.`;
 
@@ -48,6 +49,7 @@ export class ModuleOutput extends Rete.Component {
     });
 
     node.inspector.add(nameInput);
+    node.data.socketKey = uuidv4();
 
     return node.addInput(input).addInput(socketInput);
   }
