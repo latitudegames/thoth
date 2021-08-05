@@ -83,11 +83,27 @@ const updateSockets = (node, sockets: ModuleSocketType[]) => {
       const input = node.inputs.get(socketKey);
       input.name = name;
       node.inputs.set(socketKey, input);
+      // Update the nodes data sockets as well
+      node.data.inputs = node.data.inputs.map((n) => {
+        if (n.socketKey === socketKey) {
+          n.name = name;
+        }
+
+        return n;
+      });
     }
     if (node.outputs.has(socketKey)) {
       const output = node.outputs.get(socketKey);
       output.name = name;
       node.outputs.set(socketKey, output);
+
+      node.data.outputs = node.data.outputs.map((n) => {
+        if (n.socketKey === socketKey) {
+          n.name = name;
+        }
+
+        return n;
+      });
     }
   });
 };
@@ -117,12 +133,13 @@ const addSockets = (
   );
 
   if (newSockets.length > 0)
-    newSockets.forEach(({ name, socket, socketKey }) => {
+    newSockets.forEach(({ name, socket, socketKey }, i) => {
+      const socketName = name || `socket-${i + 1}`;
       const Socket = connectionType === "output" ? Output : Input;
       const addMethod = connectionType === "output" ? "addOutput" : "addInput";
-      node[addMethod](new Socket(socketKey, name, socket));
+      node[addMethod](new Socket(socketKey, socketName, socket));
       node.data[connectionType + "s"].push({
-        name: name,
+        name: socketName,
         taskType: taskType,
         socketKey: socketKey,
         connectionType: connectionType,
