@@ -1,5 +1,5 @@
 import Rete from "rete";
-import deepEqual from "deep-equal";
+import isEqual from "lodash/isEqual";
 import { ModuleControl } from "../dataControls/ModuleControl";
 
 const info = `The Module component allows you to add modules into your chain.  A module is a bundled self contained chain that defines inputs, outputs, and triggers using components.`;
@@ -68,19 +68,18 @@ export class ModuleComponent extends Rete.Component {
     this.subscriptionMap[node.id] = await this.editor.thothV2.findOneModule(
       { name: node.data.module },
       (module) => {
-        // TODO the deep equal isnt catching the changed to node data from submodule, needed to rerender socket names
-        if (cache && !deepEqual(cache, module.toJSON()))
-          this.updateSockets(node, module.name, true);
+        if (cache && !isEqual(cache, module.toJSON())) {
+          // make sur ethat the module manager has the latest updated version of the module
+          this.editor.moduleManager.updateModule(module.toJSON());
+          this.updateSockets(node, module.name);
+        }
         cache = module.toJSON();
       }
     );
   }
 
-  updateSockets(node, moduleName, skipCheck = false) {
-    if (!skipCheck && node.data.module === moduleName) return;
+  updateSockets(node, moduleName) {
     node.data.module = moduleName;
-    node.data.inputs = [];
-    node.data.outputs = [];
     this.updateModuleSockets(node);
     this.editor.trigger("process");
     node.update();
