@@ -51,7 +51,7 @@ export class ModuleTriggerIn extends Rete.Component {
   builder(node) {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const out = new Rete.Output("trigger", "Trigger", triggerSocket);
-    node.data.socketKey = uuidv4();
+    node.data.socketKey = node?.data?.socketKey || uuidv4();
 
     // Handle default value if data is present
     const nameInput = new InputControl({
