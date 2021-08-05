@@ -17,7 +17,7 @@ function install(editor) {
         node.data.outputs.forEach((key) => {
           if (outputMap[key]) return;
           const output = new Rete.Output(
-            key.socket ? key.socket : key.name,
+            key.socketKey ? key.socketKey : key.name,
             key.name,
             sockets[key.socketType]
           );
@@ -46,7 +46,7 @@ function install(editor) {
           // If the input key is already on the node, return
           if (inputMap[key]) return;
           const input = new Rete.Input(
-            key.name.toLowerCase(),
+            key.socketKey ? key.socketKey : key.name,
             key.name,
             sockets[key.socketType]
           );
