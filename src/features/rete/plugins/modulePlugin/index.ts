@@ -119,20 +119,30 @@ function install(
         };
         break;
       case "module":
-        const builder = component.builder;
+        const builder: Function | undefined = component.builder;
 
         if (builder) {
           component.updateModuleSockets = (node) => {
             const modules = moduleManager.modules;
-            removeIO(node, runContext);
 
             if (!node.data.module || !modules[node.data.module]) return;
+
+            if (!node.data.inputs) node.data.inputs = [];
+            if (!node.data.outputs) node.data.outputs = [];
 
             const data = modules[node.data.module].data;
             const inputs = moduleManager.getInputs(data);
             const outputs = moduleManager.getOutputs(data);
             const triggerOuts = moduleManager.getTriggerOuts(data);
             const triggerIns = moduleManager.getTriggerIns(data);
+
+            // TODO OPTIMIZATION should find a way to cache these so we dont run over the whole add/remove IO sequence if we don't need to.
+            removeIO(
+              node,
+              runContext,
+              [...inputs, ...triggerIns],
+              [...outputs, ...triggerOuts]
+            );
 
             try {
               // The arguments for this are getting bit crazy
