@@ -1,5 +1,5 @@
 import Rete from "rete";
-import deepEqual from "deep-equal";
+import isEqual from "lodash/isEqual";
 import ReactRenderPlugin from "rete-react-render-plugin";
 import ConnectionPlugin from "rete-connection-plugin";
 import ContextMenuPlugin from "rete-context-menu-plugin";
@@ -142,7 +142,7 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
       }, {});
 
     // we only want to proceed if the incoming modules have changed.
-    if (deepEqual(modules, editor.moduleManager.modules)) return;
+    if (isEqual(modules, editor.moduleManager.modules)) return;
     editor.moduleManager.setModules(modules);
     editor.trigger("save");
   });
