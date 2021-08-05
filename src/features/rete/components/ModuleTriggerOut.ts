@@ -48,7 +48,7 @@ export class ModuleTriggerOut extends Rete.Component {
     });
 
     node.inspector.add(nameInput);
-    node.data.socketKey = uuidv4();
+    node.data.socketKey = node?.data?.socketKey || uuidv4();
 
     return node.addInput(input);
   }
