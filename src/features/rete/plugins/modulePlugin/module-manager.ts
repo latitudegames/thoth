@@ -1,4 +1,5 @@
 import { NodeData } from "rete/types/core/data";
+import { Socket as SocketType } from "rete/types";
 import { Engine, Socket, Component } from "rete";
 
 import { Module as ModuleType } from "../../../../database/schemas/module";
@@ -8,6 +9,12 @@ import { extractNodes } from "./utils";
 interface ModuleComponent extends Component {
   run: Function;
 }
+
+export type ModuleSocketType = {
+  name: string;
+  socketKey: string;
+  socket: SocketType;
+};
 
 export class ModuleManager {
   engine?: Engine | null;
@@ -34,40 +41,45 @@ export class ModuleManager {
   }
 
   updateModule(module: ModuleType) {
-    const index = this.modules.findIndex((mod) => mod.id === module.id);
-
-    if (index > -1) this.modules[index] = module;
+    this.modules[module.name] = module;
   }
 
-  getInputs(data) {
-    return extractNodes(data.nodes, this.inputs).map((node: NodeData) => ({
-      name: node.data.name,
+  getInputs(data): ModuleSocketType[] {
+    return extractNodes(data.nodes, this.inputs).map((node) => ({
+      name: node.data.name as string,
+      socketKey: node.data.socketKey as string,
       socket: this.socketFactory(node, this.inputs.get(node.name)),
     }));
   }
 
-  getOutputs(data) {
-    return extractNodes(data.nodes, this.outputs).map((node) => ({
-      name: node.data.name,
+  getOutputs(data): ModuleSocketType[] {
+    return extractNodes(data.nodes, this.outputs).map((node: NodeData) => ({
+      name: node.data.name as string,
+      socketKey: node.data.socketKey as string,
       socket: this.socketFactory(node, this.outputs.get(node.name)),
     }));
   }
 
-  getTriggerOuts(data) {
-    return extractNodes(data.nodes, this.triggerOuts).map((node) => ({
-      name: node.data.name,
+  getTriggerOuts(data): ModuleSocketType[] {
+    return extractNodes(data.nodes, this.triggerOuts).map((node: NodeData) => ({
+      name: node.data.name as string,
+      socketKey: node.data.socketKey as string,
       socket: this.socketFactory(node, this.triggerOuts.get(node.name)),
     }));
   }
 
   getTriggerIns(data) {
-    return extractNodes(data.nodes, this.triggerIns).map((node) => ({
-      name: node.data.name,
+    return extractNodes(data.nodes, this.triggerIns).map((node: NodeData) => ({
+      name: node.data.name as string,
+      socketKey: node.data.socketKey as string,
       socket: this.socketFactory(node, this.triggerIns.get(node.name)),
     }));
   }
 
-  socketFactory(node: NodeData, socket: Socket | Function | undefined) {
+  socketFactory(
+    node: NodeData,
+    socket: Socket | Function | undefined
+  ): SocketType {
     socket = typeof socket === "function" ? socket(node) : socket;
 
     if (!socket)
@@ -75,7 +87,7 @@ export class ModuleManager {
         `Socket not found for node with id = ${node.id} in the module`
       );
 
-    return socket;
+    return socket as SocketType;
   }
 
   registerInput(name, socket) {
