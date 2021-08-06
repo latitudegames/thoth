@@ -40,7 +40,10 @@ const removeSockets = (
     const connections = node.getConnections().filter((con) => {
       // cant use key to compare because it changes by user preference
       // unchanging key but mutable name? or add new id property to things?
-      return con[type].key === socket.socketKey;
+      return (
+        con.input.key === socket.socketKey ||
+        con.output.key === socket.socketKey
+      );
     });
 
     if (connections)
@@ -53,31 +56,16 @@ const removeSockets = (
     const removedSocket = node[type + "s"].get(socket.socketKey);
     if (removedSocket) node.removeInput(removedSocket);
     node.data[type + "s"] = node.data[type + "s"].filter(
-      (soc) => soc.socketKey === socket.socketKey
+      (soc) => soc.socketKey !== socket.socketKey
     );
   });
 };
 
-// here we can only remove the inputs and outputs that are not supposed to be on the node.
-// This means we determine which IO are present on the node but not in the incoming IO
-export function removeIO(
+const updateSockets = (
   node,
-  editor,
-  inputs: ModuleSocketType[],
-  outputs: ModuleSocketType[]
-) {
-  const existingInputs = node.data.inputs;
-  const existingOutputs = node.data.outputs;
-  const inputRemovals = getRemovedSockets(existingInputs, inputs);
-  const outputRemovals = getRemovedSockets(existingOutputs, outputs);
-
-  if (inputRemovals.length > 0)
-    removeSockets(node, inputRemovals, "input", editor);
-  if (outputRemovals.length > 0)
-    removeSockets(node, outputRemovals, "output", editor);
-}
-
-const updateSockets = (node, sockets: ModuleSocketType[]) => {
+  sockets: ModuleSocketType[],
+  taskType: "option" | "output" = "output"
+) => {
   sockets.forEach(({ socketKey, name }) => {
     if (node.inputs.has(socketKey)) {
       const input = node.inputs.get(socketKey);
@@ -104,6 +92,8 @@ const updateSockets = (node, sockets: ModuleSocketType[]) => {
 
         return n;
       });
+
+      node.inspector.component.task.outputs[name] = taskType;
     }
   });
 };
@@ -126,26 +116,30 @@ const addSockets = (
       } ${connectionType}s`
     );
 
-  updateSockets(node, sockets);
+  updateSockets(node, sockets, taskType);
 
   const newSockets = sockets.filter(
     (socket) => !existingSockets.includes(socket.socketKey)
   );
 
   if (newSockets.length > 0)
-    newSockets.forEach(({ name, socket, socketKey }, i) => {
-      const socketName = name || `socket-${i + 1}`;
+    newSockets.forEach((newSocket, i) => {
+      const { name, socket, socketKey } = newSocket;
+
       const Socket = connectionType === "output" ? Output : Input;
       const addMethod = connectionType === "output" ? "addOutput" : "addInput";
-      node[addMethod](new Socket(socketKey, socketName, socket));
+
       node.data[connectionType + "s"].push({
-        name: socketName,
+        name: name,
         taskType: taskType,
         socketKey: socketKey,
         connectionType: connectionType,
         socketType: socketNameMap[socket.name],
       });
-      node.inspector.component.task.outputs[name] = taskType;
+
+      node[addMethod](new Socket(socketKey, name, socket));
+      if (connectionType === "output")
+        node.inspector.component.task.outputs[name] = taskType;
     });
 };
 
@@ -161,4 +155,23 @@ export function addIO(
   if (outputs?.length > 0) addSockets(node, outputs, "output");
   if (triggerOuts?.length > 0)
     addSockets(node, triggerOuts, "output", "option");
+}
+
+// here we can only remove the inputs and outputs that are not supposed to be on the node.
+// This means we determine which IO are present on the node but not in the incoming IO
+export function removeIO(
+  node,
+  editor,
+  inputs: ModuleSocketType[],
+  outputs: ModuleSocketType[]
+) {
+  const existingInputs = node.data.inputs;
+  const existingOutputs = node.data.outputs;
+  const inputRemovals = getRemovedSockets(existingInputs, inputs);
+  const outputRemovals = getRemovedSockets(existingOutputs, outputs);
+
+  if (inputRemovals.length > 0)
+    removeSockets(node, inputRemovals, "input", editor);
+  if (outputRemovals.length > 0)
+    removeSockets(node, outputRemovals, "output", editor);
 }
