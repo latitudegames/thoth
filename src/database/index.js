@@ -98,7 +98,7 @@ export const initDB = async () => {
 
   const models = {
     spells: loadSpellModel(database),
-    modules: loadModuleModel(database)
+    modules: loadModuleModel(database),
   };
 
   return {
