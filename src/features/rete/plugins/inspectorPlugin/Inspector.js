@@ -155,14 +155,16 @@ export class Inspector {
         continue;
       }
 
-      // handle the situation where a control is setting inputs and outputs itself
-      if (data[key].outputs) {
-        this.handleSockets(data[key].outputs, control.control, "outputs");
-      }
+      if (data[key]) {
+        // handle the situation where a control is setting inputs and outputs itself
+        if (data[key].outputs) {
+          this.handleSockets(data[key].outputs, control.control, "outputs");
+        }
 
-      if (data[key].inputs) {
-        console.log("handling inputs", data[key]);
-        this.handleSockets(data[key].inputs, control.control, "inputs");
+        if (data[key].inputs) {
+          console.log("handling inputs", data[key]);
+          this.handleSockets(data[key].inputs, control.control, "inputs");
+        }
       }
 
       // only call onData if it exists

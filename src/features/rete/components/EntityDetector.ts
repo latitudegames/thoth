@@ -1,4 +1,5 @@
 import Rete from "rete";
+import { ThothReteComponent } from "./ThothReteComponent";
 import { stringSocket, triggerSocket, arraySocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
 import { completion } from "../../../utils/openaiHelper";
@@ -113,7 +114,7 @@ const info = `The entity detector takes in an action as a string, and attempts t
 
 The fewshot can be edited in the text edior, though note that the data structure must remian the same for proper processing.`;
 
-export class EntityDetector extends Rete.Component {
+export class EntityDetector extends ThothReteComponent {
   constructor() {
     // Name of the component
     super("Entity Detector");
@@ -123,6 +124,7 @@ export class EntityDetector extends Rete.Component {
         entities: "output",
         trigger: "option",
       },
+      init: (task) => {},
     };
     this.category = "AI/ML";
     this.display = true;
@@ -165,11 +167,14 @@ export class EntityDetector extends Rete.Component {
     };
     const result = await completion(body);
 
-    const split = result.replace("\n", "").trim().split("Types: ");
+    const split = result?.replace("\n", "")?.trim()?.split("Types: ");
 
-    const [entities, types] = split.map((item) =>
+    const [entities, types] = split ? split.map((item) =>
       item.split(", ").map((x) => x.trim())
-    );
+    ) : [undefined, undefined];
+
+    if (!entities || entities.length === 0) return [];
+    if (!types) return [];
 
     for (let i = 0; i < entities.length; i++) {
       if (types[i]?.includes("(dialog)")) {

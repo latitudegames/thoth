@@ -1,13 +1,11 @@
 import Rete from "rete";
+import { ThothReteComponent } from "./ThothReteComponent";
 import { TextInputControl } from "../controls/TextInputControl";
 import { triggerSocket } from "../sockets";
 
 const info = `When the alert component is triggered, it will fire an alert with the message in the input box.`;
 
-export class Alert extends Rete.Component {
-  task: { outputs: object };
-  category: string;
-  info: string;
+export class Alert extends ThothReteComponent {
 
   constructor() {
     // Name of the component
@@ -15,6 +13,7 @@ export class Alert extends Rete.Component {
 
     this.task = {
       outputs: {},
+      init: (task) => {},
     };
     this.category = "I/O";
     this.info = info;
