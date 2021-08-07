@@ -1,8 +1,12 @@
 import Rete from "rete";
+import { ThothReteComponent } from "./ThothReteComponent";
 import { triggerSocket, stringSocket } from "../sockets";
+import { Task } from "../plugins/taskPlugin/task";
 
 const info = `The Playtest Input component is connected to the playtest window. It received anything which is type dinto the playtest areavia the input and will trigger the running of your spell chain.`;
-export class PlaytestInput extends Rete.Component {
+export class PlaytestInput extends ThothReteComponent {
+  initialTask?: Task;
+
   constructor() {
     // Name of the component
     super("Playtest Input");
@@ -23,7 +27,7 @@ export class PlaytestInput extends Rete.Component {
   }
 
   displayControl = {};
-  unsubscribe = null;
+  unsubscribe?: () => void;
 
   subscribeToPlaytest(node) {
     const { onPlaytest } = this.editor.thothV2;
@@ -33,8 +37,8 @@ export class PlaytestInput extends Rete.Component {
       node.data.text = text;
 
       // will need to run this here with the stater rather than the text
-      this.initialTask.run(text);
-      this.initialTask.reset();
+      this.initialTask?.run(text);
+      this.initialTask?.reset();
       this.editor.trigger("process");
     });
   }
@@ -43,8 +47,8 @@ export class PlaytestInput extends Rete.Component {
   // when we have enki hooked up and have garbbed all few shots, we would use the builder
   // to generate the appropriate inputs and ouputs for the fewshot at build time
   builder(node) {
-    if (this.unsubscribe) this.unsubscribe();
-    this.unsubscribe = null;
+    this.unsubscribe?.();
+    this.unsubscribe = () => {};
 
     // create inputs here. First argument is th ename, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const dataOutput = new Rete.Output("trigger", "Trigger", triggerSocket);
