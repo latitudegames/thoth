@@ -92,8 +92,6 @@ const updateSockets = (
 
         return n;
       });
-
-      node.inspector.component.task.outputs[name] = taskType;
     }
   });
 };
@@ -139,7 +137,7 @@ const addSockets = (
 
       node[addMethod](new Socket(socketKey, name, socket));
       if (connectionType === "output")
-        node.inspector.component.task.outputs[name] = taskType;
+        node.inspector.component.task.outputs[socketKey] = taskType;
     });
 };
 
