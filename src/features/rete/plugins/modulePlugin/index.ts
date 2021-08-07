@@ -28,7 +28,7 @@ interface IModuleComponent extends Component {
 
 function install(
   runContext: IRunContextEngine | IRunContextEditor,
-  { engine, modules }
+  { engine, modules }: any
 ) {
   const moduleManager = new ModuleManager(modules);
 
@@ -210,6 +210,7 @@ function install(
 }
 
 const moduleExport = {
+  name: "Module Plugin",
   install,
 };
 

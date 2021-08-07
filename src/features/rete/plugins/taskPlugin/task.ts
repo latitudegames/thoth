@@ -4,6 +4,8 @@ import { Component } from "rete/types";
 type TaskRef = {
   key: string;
   task: Task;
+  run?: Function;
+  next?: any[];
 };
 
 type TaskOptions = {
@@ -79,7 +81,7 @@ export class Task {
     this.outputData = null;
   }
 
-  async run(data: unknown, options: RunOptions = {}) {
+  async run(data: unknown = {}, options: RunOptions = {}) {
     const {
       needReset = true,
       garbage = [] as Task[],
