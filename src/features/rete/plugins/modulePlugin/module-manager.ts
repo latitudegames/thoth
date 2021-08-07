@@ -103,9 +103,9 @@ export class ModuleManager {
     this.outputs.set(name, socket);
   }
 
-  getTriggeredNode(data, triggerName) {
+  getTriggeredNode(data, socketKey) {
     return extractNodes(data.nodes, this.triggerIns).find(
-      (node) => node.data.name === triggerName
+      (node) => node.data.socketKey === socketKey
     );
   }
 
@@ -117,7 +117,13 @@ export class ModuleManager {
     const module = new Module();
     const engine = this.engine?.clone();
 
-    module.read(inputs);
+    const parsedInputs = Object.entries(inputs).reduce((acc, [key, value]) => {
+      const name = node.data.inputs.find((n) => n.socketKey === key).name;
+      acc[name] = value;
+      return acc;
+    }, {});
+
+    module.read(parsedInputs);
     await engine?.process(
       data,
       null,
@@ -148,7 +154,7 @@ export class ModuleManager {
   workerOutputs(node, inputs, outputs, { module }: { module: Module }) {
     if (!module) return;
 
-    module.setOutput(node.data.name, inputs["input"][0]);
+    module.setOutput(node.data.socketKey, inputs["input"][0]);
   }
 
   workerTriggerIns(
@@ -170,7 +176,7 @@ export class ModuleManager {
   ) {
     if (!module) return;
 
-    module.setOutput(node.data.name, outputs["trigger"]);
+    module.setOutput(node.data.socketKey, outputs["trigger"]);
   }
 
   setEngine(engine) {
