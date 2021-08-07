@@ -41,6 +41,6 @@ export class PlaytestPrint extends Rete.Component {
     const text = inputs.text[0];
 
     sendToPlaytest(text);
-    if (!!silent) node.display(text);
+    if (!silent) node.display(text);
   }
 }
