@@ -1,4 +1,6 @@
-import Rete from "rete";
+import Rete, { NodeEditor } from "rete";
+import { EventsTypes as DefaultEventsTypes } from "rete/types/events";
+
 import isEqual from "lodash/isEqual";
 import ReactRenderPlugin from "rete-react-render-plugin";
 import ConnectionPlugin from "rete-connection-plugin";
@@ -11,7 +13,7 @@ import SocketGenerator from "./plugins/socketGenerator";
 import DisplayPlugin from "./plugins/displayPlugin";
 import ModulePlugin from "./plugins/modulePlugin";
 
-import { MyNode } from "../../features/common/Node/Node";
+import { MyNode } from "../common/Node/Node";
 import { InputComponent } from "./components/Input";
 import { JoinListComponent } from "./components/JoinList";
 import { TenseTransformer } from "./components/TenseTransformer";
@@ -39,6 +41,23 @@ import { ModuleInput } from "./components/ModuleInput";
 import { ModuleOutput } from "./components/ModuleOutput";
 import { ModuleTriggerOut } from "./components/ModuleTriggerOut";
 import { ModuleTriggerIn } from "./components/ModuleTriggerIn";
+
+interface EventsTypes extends DefaultEventsTypes {
+  run: void;
+  save: void;
+  [key: string]: any;
+}
+
+class ThothEditor extends NodeEditor<EventsTypes> {
+  pubSub;
+  thoth;
+  thothV2;
+  tab;
+  abort;
+  loadGraph;
+  moduleSubscription;
+  moduleManager;
+}
 
 /*
   Primary initialization function.  Takes a container ref to attach the rete editor to.
@@ -80,7 +99,7 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
   let modules = [];
 
   // create the main edtor
-  const editor = new Rete.NodeEditor("demo@0.1.0", container);
+  const editor = new ThothEditor("demo@0.1.0", container);
 
   // The engine is used to process/run the rete graph
   const engine = new Rete.Engine("demo@0.1.0");
