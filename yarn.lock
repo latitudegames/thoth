@@ -8280,7 +8280,7 @@ lodash.uniq@^4.5.0:
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
   integrity sha1-0CJTc662Uq3BvILklFM5qEJ1R3M=
 
-"lodash@>=3.5 <5", lodash@^4.17.11, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.17.5:
+"lodash@>=3.5 <5", lodash@^4.17.11, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.17.21, lodash@^4.17.5:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
@@ -11255,14 +11255,11 @@ rete-react-render-plugin@^0.2.1:
   resolved "https://registry.yarnpkg.com/rete-react-render-plugin/-/rete-react-render-plugin-0.2.1.tgz#71a6d73f18f850b85262563f678b40080a7b0e32"
   integrity sha512-2ZMXUP0v+EiejHVMqdrOmUwyDBHC2UDOJ/pFkElaZL1Kn/E40JZA5yzdBXi6ajYZI2DCzoW5ZBcA2Ihjtur8MQ==
 
-"rete@git+https://github.com/latitudegames/rete.git":
-  version "1.4.5"
-  resolved "git+https://github.com/latitudegames/rete.git#a37abe57e70895d1da188399d9e5c9809f90184b"
-
 "rete@https://github.com/latitudegames/rete.git#master":
   version "1.4.5"
-  resolved "https://github.com/latitudegames/rete.git#bc1ea53755ca56434917db76cd5aa0a41455187f"
+  resolved "https://github.com/latitudegames/rete.git#1759b2b9c949520455f273003c7c2fd6458dcb2e"
   dependencies:
+    lodash "^4.17.21"
     watch "^1.0.2"
 
 retry@^0.12.0:
