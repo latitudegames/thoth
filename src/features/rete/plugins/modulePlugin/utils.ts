@@ -53,8 +53,9 @@ const removeSockets = (
 
     // need to get the socket from the node first since this isnt the sockey object
 
+    const removeMethod = type === "input" ? "removeInput" : "removeOutput";
     const removedSocket = node[type + "s"].get(socket.socketKey);
-    if (removedSocket) node.removeInput(removedSocket);
+    if (removedSocket) node[removeMethod](removedSocket);
     node.data[type + "s"] = node.data[type + "s"].filter(
       (soc) => soc.socketKey !== socket.socketKey
     );
