@@ -190,7 +190,7 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
       // Alterative for now is for the client to call our own /openai endpoint.
       // NOTE need to consider authentication against games API from a web client
       await engine.abort();
-      await engine.process(editor.toJSON());
+      await engine.process(editor.toJSON(), null, { thoth: thothV2 });
     }
   );
 
