@@ -121,7 +121,6 @@ export class Task {
         target: fromSocket ? this.getInputFromConnection(fromSocket) : null,
       };
 
-      console.log("INPUTS", inputs);
       this.outputData = await this.worker(this, inputs, data, socketInfo);
 
       if (this.component.task.onRun)
