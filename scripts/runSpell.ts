@@ -1,80 +1,98 @@
 #!/usr/bin/env ts-node
 import "regenerator-runtime/runtime";
-import Rete from "rete";
-
+import { Component } from "rete";
 import spell from "./spell";
+import { Module } from "./module";
 
-import TaskPlugin from "../src/features/rete/plugins/taskPlugin";
-import ModulePlugin from "../src/features/rete/plugins/modulePlugin";
+import initEngine from "./engine";
+interface ModuleComponent extends Component {
+  run: Function;
+}
 
-import { InputComponent } from "../src/features/rete/components/Input";
-import { JoinListComponent } from "../src/features/rete/components/JoinList";
-import { TenseTransformer } from "../src/features/rete/components/TenseTransformer";
-import { RunInputComponent } from "../src/features/rete/components/RunInput";
-import { ActionTypeComponent } from "../src/features/rete/components/ActionType";
-import { ItemTypeComponent } from "../src/features/rete/components/ItemDetector";
-import { DifficultyDetectorComponent } from "../src/features/rete/components/DifficultyDetector";
-import { EntityDetector } from "../src/features/rete/components/EntityDetector";
-import { SafetyVerifier } from "../src/features/rete/components/SafetyVerifier";
-import { BooleanGate } from "../src/features/rete/components/BooleanGate";
-import { TimeDetectorComponent } from "../src/features/rete/components/TimeDetector";
-import { Alert } from "../src/features/rete/components/AlertMessage";
-import { SwitchGate } from "../src/features/rete/components/SwitchGate";
-import { PlaytestPrint } from "../src/features/rete/components/PlaytestPrint";
-import { PlaytestInput } from "../src/features/rete/components/PlaytestInput";
-import { StateWrite } from "../src/features/rete/components/StateWrite";
-import { StateRead } from "../src/features/rete/components/StateRead";
-import { StringProcessor } from "../src/features/rete/components/StringProcessor";
-import { ForEach } from "../src/features/rete/components/ForEach";
-import { EnkiTask } from "../src/features/rete/components/EnkiTask";
-import { Generator } from "../src/features/rete/components/Generator";
-import { Code } from "../src/features/rete/components/Code";
-import { ModuleComponent } from "../src/features/rete/components/Module";
-import { ModuleInput } from "../src/features/rete/components/ModuleInput";
-import { ModuleOutput } from "../src/features/rete/components/ModuleOutput";
-import { ModuleTriggerOut } from "../src/features/rete/components/ModuleTriggerOut";
-import { ModuleTriggerIn } from "../src/features/rete/components/ModuleTriggerIn";
+// this parses through all the nodes in the data and finds the nodes associated with the given map
+function extractNodes(nodes, map) {
+  const names = Array.from(map.keys());
 
-const components = [
-  new ActionTypeComponent(),
-  new Alert(),
-  new BooleanGate(),
-  new Code(),
-  new DifficultyDetectorComponent(),
-  new EnkiTask(),
-  new EntityDetector(),
-  new ForEach(),
-  new Generator(),
-  new InputComponent(),
-  new ItemTypeComponent(),
-  new JoinListComponent(),
-  new ModuleComponent(),
-  new ModuleInput(),
-  new ModuleOutput(),
-  new ModuleTriggerOut(),
-  new ModuleTriggerIn(),
-  new PlaytestPrint(),
-  new PlaytestInput(),
-  new RunInputComponent(),
-  new SafetyVerifier(),
-  new StateWrite(),
-  new StateRead(),
-  new StringProcessor(),
-  new SwitchGate(),
-  new TenseTransformer(),
-  new TimeDetectorComponent(),
-];
+  return Object.keys(nodes)
+    .filter((k) => names.includes(nodes[k].name))
+    .map((k) => nodes[k])
+    .sort((n1, n2) => n1.position[1] - n2.position[1]);
+}
 
-let modules = [];
-const engine = new Rete.Engine("demo@0.1.0");
+// This will get the node that was triggered given a socketKey associated with that node.
+function getTriggeredNode(data, socketKey, map) {
+  return extractNodes(data.nodes, map).find(
+    (node) => node.data.socketKey === socketKey
+  );
+}
 
-engine.use(ModulePlugin, { engine, modules });
-engine.use(TaskPlugin);
+// this will be the interface that we use to mirror any functionality from the client
+// on the server.  This completion function should make an actual openAI call.
+const thoth = {
+  completion: (body) => {
+    return "Joe looks around";
+  },
+};
 
-engine.bind("run");
+const main = async () => {
+  // only setting this as 'any' until we create a proper engine interface with the proper methods types on it.
+  const engine = initEngine() as any;
 
-components.forEach((c) => {
-  engine.register(c);
-});
+  // Themodule is an interface that the module system uses to write data to
+  // used internally by the module plugin, and we make use of it here too.
+  // we definitely want to watch out when we run nested modules to ensure nothing funky happens
+  // when child modules overwrite this with their own/.
+  const module = new Module();
 
-console.log("spell", spell);
+  // these map to the names of the module inputs that the user defined in their chains.
+  // we would likely expect them to know what to use based on what they defined.
+  // how can we type these?  Can we parse the spell chain for thsi information?
+  const inputs = {
+    text: "look around",
+    name: "Joe",
+  };
+
+  // this will have the eventiual outputs wirtten to it
+  const outputs = {};
+
+  // this attached inputs to the module, which is passed in when the engine runs.
+  // you can see this at work in the 'workerInputs' function of module-manager
+  module.read(inputs);
+
+  // this is the context object which is passed down into the engine and is used by workers.
+  const context = {
+    module,
+    thoth,
+    silent: true,
+  };
+
+  // processing here with the engine will just set up the tasks and prime the system for the first 'run' command.
+  // note that the thid
+  await engine?.process(JSON.parse(JSON.stringify(spell)), null, context);
+
+  // we grab all the "trigger ins" that the module manager has gathered for us.
+  const triggerIns = engine.moduleManager.triggerIns;
+
+  // We want to get a specific node that contains the socket we want to trigger to start our "run"
+  // this could evebtually be defined by a user as a param in their request body
+  const triggeredNode = getTriggeredNode(
+    spell,
+    "1a819a65-e1e2-4f77-9a42-9f99f546f7c4",
+    triggerIns
+  );
+
+  // Here we get the component that we want to start the run sequence from, since it is the component which has the run function on it.
+  const component = engine?.components.get(
+    "Module Trigger In"
+  ) as ModuleComponent;
+
+  // when we run the component, we need to pass to it WHICH node we are running from all the nodes that were built from it.
+  await component?.run(triggeredNode);
+
+  // when this is dome, we write all the data that was output by the module run to an object
+  module.write(outputs);
+
+  console.log("Outputs", outputs);
+};
+
+main();
