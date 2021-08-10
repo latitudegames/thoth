@@ -6,9 +6,12 @@ import DataControls from "./DataControls";
 import Icon, { componentCategories } from "../../common/Icon/Icon";
 import WindowMessage from "./WindowMessage";
 
+import { useModal } from "../../../contexts/ModalProvider";
+
 const Inspector = (props) => {
   const { inspectorData, saveInspector } = useLayout();
   const [width, setWidth] = useState();
+  const { openModal } = useModal();
 
   useEffect(() => {
     if (props?.node?._rect?.width) {
@@ -48,8 +51,24 @@ const Inspector = (props) => {
         />
         {inspectorData?.name}
       </div>
+      {/* I would like to make an "icon button" for this instead of "Help." Leaving it as help just for the function for now.*/}
+      {inspectorData?.info && (
+        <button
+          onClick={() =>
+            openModal({
+              modal: "infoModal",
+              content: inspectorData?.info,
+              title: inspectorData?.name,
+            })
+          }
+        >
+          Help
+        </button>
+      )}
     </>
   );
+
+  console.log(inspectorData)
 
   if (!inspectorData) return <WindowMessage />;
 
