@@ -1,5 +1,6 @@
 import { useContext, createContext } from "react";
 
+import { completion as _completion } from "../utils/openaiHelper";
 import { usePubSub } from "./PubSubProvider";
 import { useDB } from "./DatabaseProvider";
 
@@ -20,6 +21,7 @@ const Context = createContext({
   getGameState: () => {},
   setGameState: () => {},
   getModules: async () => {},
+  completion: async () => {},
 });
 
 export const useRete = () => useContext(Context);
@@ -58,6 +60,10 @@ const ReteProvider = ({ children, tab }) => {
     });
   };
 
+  const completion = async (body) => {
+    return _completion(body);
+  };
+
   const clearTextEditor = () => {
     publish($TEXT_EDITOR_CLEAR(tab.id));
   };
@@ -68,6 +74,7 @@ const ReteProvider = ({ children, tab }) => {
     sendToPlaytest,
     onPlaytest,
     clearTextEditor,
+    completion,
     ...modules,
     ...spells,
   };
