@@ -1,5 +1,4 @@
 import { Inspector } from "./Inspector";
-import { InfoControl } from "./dataControls/InfoControl";
 
 function install(editor) {
   const { onInspector, sendToInspector, clearTextEditor } = editor.thothV2;
@@ -22,7 +21,7 @@ function install(editor) {
       // Adding category to node for display on node
       node.category = component.category;
 
-      node.info = component.info
+      node.info = component.info;
 
       // here we attach the default info control to the component which will show up in the inspector
 
