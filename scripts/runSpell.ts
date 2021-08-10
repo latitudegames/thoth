@@ -68,7 +68,7 @@ const main = async () => {
 
   // processing here with the engine will just set up the tasks and prime the system for the first 'run' command.
   // note that the thid
-  await engine?.process(JSON.parse(JSON.stringify(spell)), null, context);
+  await engine?.process(spell, null, context);
 
   // we grab all the "trigger ins" that the module manager has gathered for us.
   const triggerIns = engine.moduleManager.triggerIns;
