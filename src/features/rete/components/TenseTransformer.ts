@@ -2,7 +2,6 @@ import Rete from "rete";
 import { ThothReteComponent } from "./ThothReteComponent";
 import { stringSocket, triggerSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
-import { completion } from "../../../utils/openaiHelper";
 
 const fewshot = `Change each statement to be in the third person present tense and correct all grammar.
 
@@ -110,7 +109,8 @@ export class TenseTransformer extends ThothReteComponent {
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connected components
-  async worker(node, inputs, outputs, { silent }) {
+  async worker(node, inputs, outputs, { silent, thoth }) {
+    const { completion } = thoth;
     // ADD ON INPUT
     const { name, text } = inputs;
     const prompt = `${node.data.fewshot}${name[0]}: ${text[0]}\nThird Person:`;
