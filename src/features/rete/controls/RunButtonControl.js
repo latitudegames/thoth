@@ -2,10 +2,8 @@ import { Control } from "rete";
 
 const ReactRunButton = (props) => {
   const onButton = () => {
-    // we have to re-run the chain in order to clear all task channels.
-    // not the best solution but for now it works.
-    props.emitter.trigger("process");
-    props.run();
+    const node = props.getNode();
+    props.emitter.trigger("run", { nodeId: node.id });
   };
 
   return <button onClick={onButton}>RUN</button>;
@@ -22,6 +20,11 @@ export class RunButtonControl extends Control {
     this.props = {
       emitter,
       run,
+      getNode: this.getNode.bind(this),
     };
+  }
+
+  getNode() {
+    return this.parent;
   }
 }

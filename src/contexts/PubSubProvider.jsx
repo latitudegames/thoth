@@ -14,15 +14,13 @@ export { PubSub };
 
 // Might want to namespace these
 export const events = {
-  // workspace specific events
-  PLAYTEST_INPUT: "playtestInput",
-  PLAYTEST_PRINT: "playtestPrint",
-  INSPECTOR_SET: "inspectorSet",
-  TEXT_EDITOR_SET: "textEditorSet",
-  TEXT_EDITOR_CLEAR: "textEditorClear",
-  SAVE_CURRENT_SPELL: "saveCurrentSpell",
-  $NODE_SET: (nodeId) => `nodeSet:${nodeId}`,
-  // app to tab workspace events
+  $PLAYTEST_INPUT: (tabId) => `playtestInput:${tabId}`,
+  $PLAYTEST_PRINT: (tabId) => `playtestPrint:${tabId}`,
+  $INSPECTOR_SET: (tabId) => `inspectorSet:${tabId}`,
+  $TEXT_EDITOR_SET: (tabId) => `textEditorSet:${tabId}`,
+  $TEXT_EDITOR_CLEAR: (tabId) => `textEditorClear:${tabId}`,
+  $CLOSE_EDITOR: (tabId) => `closeEditor:${tabId}`,
+  $NODE_SET: (tabId, nodeId) => `nodeSet:${tabId}:${nodeId}`,
   $SAVE_SPELL: (tabId) => `saveSpell:${tabId}`,
   $CREATE_STATE_MANAGER: (tabId) => `createStateManage:${tabId}`,
   $CREATE_PLAYTEST: (tabId) => `createPlaytest:${tabId}`,

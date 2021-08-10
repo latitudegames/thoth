@@ -1,125 +1,79 @@
-import { useRef } from "react";
-import init from "../features/rete/editor";
-import gridimg from "../grid.png";
+import { useContext, createContext } from "react";
 
 import { usePubSub } from "./PubSubProvider";
-import { useSpell } from "./SpellProvider";
+import { useDB } from "./DatabaseProvider";
 
-import { useContext, createContext, useState } from "react";
-import LoadingScreen from "../features/common/LoadingScreen/LoadingScreen";
+/* 
+Some notes here.  The new rete provider, not to be foncused with the old rete provider renamed to the editor provider, is designed to serve as the single source of truth for interfacing with the rete internal system.  This unified interface will lso allow us to replicate the same API in the server, where rete expects certain function to exist but doesn't care what is behind these functions to long as they work.
+Not all functions will be needed on the server, anf functions which are not will be labeled as such.
+*/
 
 const Context = createContext({
-  run: () => {},
-  editor: {},
-  serialize: () => {},
-  buildEditor: () => {},
-  setEditor: () => {},
-  getNodeMap: () => {},
-  getNodes: () => {},
-  loadGraph: () => {},
-  setContainer: () => {},
+  onInspector: () => {},
+  onPlayTest: () => {},
+  onGameState: () => {},
+  sendToPlaytest: () => {},
+  sendToInspector: () => {},
+  clearTextEditor: () => {},
+  getSpell: () => {},
+  getModule: () => {},
+  getGameState: () => {},
+  setGameState: () => {},
+  getModules: async () => {},
 });
 
 export const useRete = () => useContext(Context);
 
-const ReteProvider = ({ children }) => {
-  const [editor, setEditorState] = useState();
-  const editorRef = useRef(null);
-  const pubSub = usePubSub();
+const ReteProvider = ({ children, tab }) => {
+  const { events, publish, subscribe } = usePubSub();
+  const {
+    models: { spells, modules },
+  } = useDB();
 
-  const setEditor = (editor) => {
-    editorRef.current = editor;
-    setEditorState(editor);
-  };
+  const {
+    $PLAYTEST_INPUT,
+    $PLAYTEST_PRINT,
+    $INSPECTOR_SET,
+    $TEXT_EDITOR_CLEAR,
+    $NODE_SET,
+  } = events;
 
-  const buildEditor = async (container, spell, tab) => {
-    const newEditor = await init({
-      container,
-      pubSub,
-      thoth: spell,
-      tab,
+  const onInspector = (node, callback) => {
+    return subscribe($NODE_SET(tab.id, node.id), (event, data) => {
+      callback(data);
     });
-
-    // set editor to the map
-    setEditor(newEditor);
-
-    const spellDoc = await spell.getSpell(tab.spell);
-    newEditor.loadGraph(spellDoc.toJSON().graph);
   };
 
-  const run = () => {
-    console.log("RUN");
+  const sendToInspector = (data) => {
+    publish($INSPECTOR_SET(tab.id), data);
   };
 
-  const serialize = () => {
-    return editorRef.current.toJSON();
+  const sendToPlaytest = (data) => {
+    publish($PLAYTEST_PRINT(tab.id), data);
   };
 
-  const getNodeMap = () => {
-    return editor && editor.components;
+  const onPlaytest = (callback) => {
+    return subscribe($PLAYTEST_INPUT(tab.id), (event, data) => {
+      callback(data);
+    });
   };
 
-  const getNodes = () => {
-    return editor && Object.fromEntries(editor.components);
-  };
-
-  const loadGraph = (graph) => {
-    editor.loadGraph(graph);
+  const clearTextEditor = () => {
+    publish($TEXT_EDITOR_CLEAR(tab.id));
   };
 
   const publicInterface = {
-    run,
-    serialize,
-    editor,
-    buildEditor,
-    getNodeMap,
-    getNodes,
-    loadGraph,
-    setEditor,
+    onInspector,
+    sendToInspector,
+    sendToPlaytest,
+    onPlaytest,
+    clearTextEditor,
+    ...modules,
+    ...spells,
   };
 
   return (
     <Context.Provider value={publicInterface}>{children}</Context.Provider>
-  );
-};
-
-export const Editor = ({ tab, children }) => {
-  const [loaded, setLoaded] = useState(null);
-  const { buildEditor } = useRete();
-  const spell = useSpell();
-
-  if (!tab) return <LoadingScreen />;
-
-  if (loaded && tab.active) {
-  }
-
-  return (
-    <>
-      <div
-        style={{
-          textAlign: "left",
-          width: "100vw",
-          height: "100vh",
-          position: "absolute",
-          backgroundColor: "#191919",
-          backgroundImage: `url('${gridimg}')`,
-        }}
-        onDragOver={(e) => {
-          e.preventDefault();
-        }}
-        onDrop={(e) => {}}
-      >
-        <div
-          ref={(el) => {
-            if (el && !loaded) {
-              buildEditor(el, spell, tab);
-              setLoaded(true);
-            }
-          }}
-        />
-      </div>
-      {children}
-    </>
   );
 };
 

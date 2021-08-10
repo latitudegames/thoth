@@ -42,7 +42,7 @@ const Context = createContext({
 
 export const useLayout = () => useContext(Context);
 
-const LayoutProvider = ({ children }) => {
+const LayoutProvider = ({ children, tab }) => {
   const { subscribe, publish, events } = usePubSub();
 
   const currentModelRef = useRef(null);
@@ -57,9 +57,13 @@ const LayoutProvider = ({ children }) => {
     setCurrentModel(model);
   };
 
+  useEffect(() => {
+    window.getLayout = () => currentModelRef.current.toJson();
+  }, [currentModel]);
+
   // inspector subscription
   useEffect(() => {
-    return subscribe(events.INSPECTOR_SET, (event, data) => {
+    return subscribe(events.$INSPECTOR_SET(tab.id), (event, data) => {
       if (data?.nodeId !== inspectorData?.nodeId) setInspectorData({});
       setInspectorData(data);
 
@@ -86,14 +90,14 @@ const LayoutProvider = ({ children }) => {
 
   // text editor subscription
   useEffect(() => {
-    return subscribe(events.TEXT_EDITOR_SET, (event, data) => {
+    return subscribe(events.$TEXT_EDITOR_SET(tab.id), (event, data) => {
       setTextEditorData(data);
     });
   }, [events, subscribe, publish]);
 
   // clear text editor subscription
   useEffect(() => {
-    return subscribe(events.TEXT_EDITOR_CLEAR, (event, data) => {
+    return subscribe(events.$TEXT_EDITOR_CLEAR(tab.id), (event, data) => {
       setTextEditorData({});
     });
   }, [events, subscribe, publish]);
@@ -103,7 +107,7 @@ const LayoutProvider = ({ children }) => {
       [textData.control.dataKey]: textData.data,
     };
 
-    publish(events.$NODE_SET(textData.nodeId), textUpdate);
+    publish(events.$NODE_SET(tab.id, textData.nodeId), textUpdate);
     if (inspectorData) {
       setInspectorData({
         ...inspectorData,
@@ -114,7 +118,7 @@ const LayoutProvider = ({ children }) => {
 
   const saveInspector = (inspectorData) => {
     setInspectorData(inspectorData);
-    publish(events.$NODE_SET(inspectorData.nodeId), inspectorData.data);
+    publish(events.$NODE_SET(tab.id, inspectorData.nodeId), inspectorData.data);
   };
 
   const createModel = (json) => {

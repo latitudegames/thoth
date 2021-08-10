@@ -128,11 +128,6 @@ export class Inspector {
   }
 
   handleData(data) {
-    this.node.data = {
-      ...this.node.data,
-      ...data,
-    };
-
     // Send data to a possibel node global handler
     this.onData(data);
 
@@ -142,6 +137,13 @@ export class Inspector {
 
       // compare agains the cache to see if it has changed
       if (isEqual) continue;
+
+      // Write the data to the node, unless the control has specified otherwise
+      if (control.write)
+        this.node.data = {
+          ...this.node.data,
+          [key]: data[key],
+        };
 
       // if there is inputs in the data, only handle the incoming sockets
       if (key === "inputs" && data["inputs"]) {
@@ -155,14 +157,16 @@ export class Inspector {
         continue;
       }
 
-      // handle the situation where a control is setting inputs and outputs itself
-      if (data[key].outputs) {
-        this.handleSockets(data[key].outputs, control.control, "outputs");
-      }
+      if (data[key]) {
+        // handle the situation where a control is setting inputs and outputs itself
+        if (data[key].outputs) {
+          this.handleSockets(data[key].outputs, control.control, "outputs");
+        }
 
-      if (data[key].inputs) {
-        console.log("handling inputs", data[key]);
-        this.handleSockets(data[key].inputs, control.control, "inputs");
+        if (data[key].inputs) {
+          console.log("handling inputs", data[key]);
+          this.handleSockets(data[key].inputs, control.control, "inputs");
+        }
       }
 
       // only call onData if it exists
