@@ -8,7 +8,7 @@ const EventHandler = ({ pubSub, tab }) => {
   // only using this to handle events, so not rendering anything with it.
   const { createOrFocus, windowTypes } = useLayout();
   const { serialize, editorRef } = useEditor();
-  const { saveCurrentSpell, getSpell } = useSpell();
+  const { saveCurrentSpell, getSpell, getCurrentSpell } = useSpell();
   const { activeTab } = useTabManager();
 
   const { events, subscribe } = pubSub;
@@ -50,25 +50,26 @@ const EventHandler = ({ pubSub, tab }) => {
   };
 
   const onExport = async () => {
-    console.log("exporting in workspace!");
-    const spellDoc = await getSpell(activeTab.spell);
-    console.log("spell doc");
-    const spell = spellDoc.toJSON();
-    const json = JSON.stringify(spell);
-    const blob = new Blob([json], { type: "application/json" });
-    const url = window.URL.createObjectURL(new Blob([blob]));
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", `${spell.name}.thoth`);
+    console.log("current spell!", getCurrentSpell());
 
-    // Append to html link element page
-    document.body.appendChild(link);
+    //   const spellDoc = await getSpell(activeTab.spell);
+    //   console.log("spell doc");
+    //   const spell = spellDoc.toJSON();
+    //   const json = JSON.stringify(spell);
+    //   const blob = new Blob([json], { type: "application/json" });
+    //   const url = window.URL.createObjectURL(new Blob([blob]));
+    //   const link = document.createElement("a");
+    //   link.href = url;
+    //   link.setAttribute("download", `${spell.name}.thoth`);
 
-    // Start download
-    link.click();
+    //   // Append to html link element page
+    //   document.body.appendChild(link);
 
-    // Clean up and remove the link
-    link.parentNode.removeChild(link);
+    //   // Start download
+    //   link.click();
+
+    //   // Clean up and remove the link
+    //   link.parentNode.removeChild(link);
   };
 
   // clean up anything inside the editor which we need to shut down.
