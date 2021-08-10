@@ -13,6 +13,8 @@ export class Inspector {
     this.dataControls = new Map();
     this.node = node;
     this.category = component.category;
+    this.info = component.info;
+    console.log(component)
   }
 
   _add(list, control, prop) {
@@ -198,6 +200,7 @@ export class Inspector {
       dataControls,
       data: this.node.data,
       category: this.node.category,
+      info: this.node.info
     };
   }
 
