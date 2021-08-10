@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 
-import Select from "react-select";
+import Creatable from "react-select/creatable";
 import Icon, { componentCategories } from "../Icon/Icon";
 import Chip from "../Chip/Chip";
 
@@ -11,15 +11,17 @@ const BasicSelect = ({
   options,
   onChange,
   placeholder,
-  searchable,
-  style,
-  focusKey,
-  nested
+  style = {},
+  focusKey = "",
+  nested = false,
+  isValidNewOption = (inputValue, selectValue, selectOptions, accessors) =>
+    true,
+  ...props
 }) => {
   const selectRef = useRef(null);
 
   const DropdownIndicator = () => {
-    return searchable ? (
+    return props.searchable ? (
       <Icon name="search" size={"var(--small)"} />
     ) : (
       <div className={css["dropdown-indicator"]}>❯</div>
@@ -127,18 +129,25 @@ const BasicSelect = ({
     }),
   };
 
+  const _isValidNewOption = (...args) => {
+    if (!props.creatable) return false;
+    return isValidNewOption(...args);
+  };
+
   return (
     <span className={css["select-dropdown-container"]} style={style}>
       {options ? (
-        <Select
+        <Creatable
+          isValidNewOption={_isValidNewOption}
           options={options}
           onChange={onChange}
           styles={styles}
           placeholder={placeholder}
           components={{ DropdownIndicator }}
-          isSearchable={searchable ? true : false}
+          isSearchable={props.searchable}
           ref={selectRef}
           formatGroupLabel={formatGroupLabel}
+          {...props}
         />
       ) : (
         <Chip noEvents label={"No options available..."} />

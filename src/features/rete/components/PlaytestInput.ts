@@ -1,11 +1,11 @@
 import Rete from "rete";
 import { ThothReteComponent } from "./ThothReteComponent";
 import { triggerSocket, stringSocket } from "../sockets";
-import { Task } from "../plugins/taskPlugin/task"
+import { Task } from "../plugins/taskPlugin/task";
 
 const info = `The Playtest Input component is connected to the playtest window. It received anything which is type dinto the playtest areavia the input and will trigger the running of your spell chain.`;
 export class PlaytestInput extends ThothReteComponent {
-  initialTask?: Task
+  initialTask?: Task;
 
   constructor() {
     // Name of the component
@@ -30,9 +30,9 @@ export class PlaytestInput extends ThothReteComponent {
   unsubscribe?: () => void;
 
   subscribeToPlaytest(node) {
-    const { subscribe, events } = this.editor?.pubSub;
+    const { onPlaytest } = this.editor.thothV2;
 
-    this.unsubscribe = subscribe(events.PLAYTEST_INPUT, (_, text) => {
+    this.unsubscribe = onPlaytest((text) => {
       // attach the text to the nodes data for access in worker
       node.data.text = text;
 
@@ -61,11 +61,11 @@ export class PlaytestInput extends ThothReteComponent {
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connecte components
-  worker(node, inputs, text) {
-    node.display(text);
+  worker(node, inputs, outputs, { data, silent }) {
+    if (!silent) node.display(data);
 
     return {
-      text,
+      text: data,
     };
   }
 }

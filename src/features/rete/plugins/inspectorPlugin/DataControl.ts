@@ -1,8 +1,20 @@
+import { Inspector } from "./Inspector";
+import { Node, NodeEditor, Component } from "rete";
+
 export class DataControl {
-  inspector = null;
-  editor = null;
-  node = null;
-  component = null;
+  inspector: Inspector | null = null;
+  editor: NodeEditor | null = null;
+  node: Node | null = null;
+  component: Component | null = null;
+  id: string | null = null;
+
+  dataKey: string;
+  name: string;
+  componentData: object;
+  componentKey: string;
+  options: object;
+  icon: string;
+  write: boolean;
 
   constructor({
     dataKey,
@@ -10,6 +22,7 @@ export class DataControl {
     component,
     data = {},
     options = {},
+    write = true,
     icon = "ankh",
     ...rest
   }) {
@@ -24,6 +37,7 @@ export class DataControl {
     this.options = options;
     this.onData = rest.onData || this.onData;
     this.icon = icon;
+    this.write = write;
   }
 
   //Serializer to easily extract the data controls information for publishing

@@ -49,7 +49,7 @@ export class ItemTypeComponent extends ThothReteComponent {
       .addOutput(out);
   }
 
-  async worker(node, inputs, outputs) {
+  async worker(node, inputs, outputs, { silent }) {
     const action = inputs["string"][0];
     const prompt = node.data.fewshots + action + ",";
 
@@ -61,7 +61,7 @@ export class ItemTypeComponent extends ThothReteComponent {
     };
     const raw = await completion(body);
     const result = raw?.trim();
-    node.display(result);
+    if (!silent) node.display(result);
 
     return {
       detectedItem: result,

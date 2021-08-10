@@ -22,6 +22,7 @@ function install(editor, params) {
 }
 
 const plugin = {
+  name: "Area Plugin",
   install,
   zoomAt,
 };

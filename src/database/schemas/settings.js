@@ -15,4 +15,10 @@ const settingsSchema = {
   },
 };
 
-export default settingsSchema;
+const collection = {
+  settings: {
+    schema: settingsSchema,
+  },
+};
+
+export default collection;

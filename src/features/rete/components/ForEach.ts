@@ -30,10 +30,12 @@ export class ForEach extends ThothReteComponent {
       .addOutput(out3);
   }
 
-  async worker(node, inputs, outputs) {
-    if (outputs.element === undefined) {
+  async worker(node, inputs, outputs, { element }) {
+    if (element === undefined) {
       await Promise.all(
-        inputs.array[0].map((el) => this._task.clone(false, null, null).run({ element: el }))
+        inputs.array[0].map((el) =>
+          this._task.clone(false, null, null).run({ element: el })
+        )
       );
       this._task.closed = ["act"];
     } else {
