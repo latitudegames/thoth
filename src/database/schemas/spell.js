@@ -18,7 +18,6 @@ const spellSchema = {
     },
     createdAt: {
       type: "number",
-      // default: Date.now(),
     },
     updatedAt: {
       type: "number",
@@ -26,4 +25,10 @@ const spellSchema = {
   },
 };
 
-export default spellSchema;
+const collection = {
+  spells: {
+    schema: spellSchema,
+  },
+};
+
+export default collection;

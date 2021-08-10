@@ -1,13 +1,19 @@
-import Rete from "rete";
+import Rete, { NodeEditor } from "rete";
+import { EventsTypes as DefaultEventsTypes } from "rete/types/events";
+
+import isEqual from "lodash/isEqual";
 import ReactRenderPlugin from "rete-react-render-plugin";
 import ConnectionPlugin from "rete-connection-plugin";
 import ContextMenuPlugin from "rete-context-menu-plugin";
+import LifecyclePlugin from "./plugins/lifecyclePlugin";
 import AreaPlugin from "./plugins/areaPlugin";
 import TaskPlugin from "./plugins/taskPlugin";
 import InspectorPlugin from "./plugins/inspectorPlugin";
 import SocketGenerator from "./plugins/socketGenerator";
 import DisplayPlugin from "./plugins/displayPlugin";
-import { MyNode } from "../../features/common/Node/Node";
+import ModulePlugin from "./plugins/modulePlugin";
+
+import { MyNode } from "../common/Node/Node";
 import { InputComponent } from "./components/Input";
 import { JoinListComponent } from "./components/JoinList";
 import { TenseTransformer } from "./components/TenseTransformer";
@@ -30,12 +36,34 @@ import { ForEach } from "./components/ForEach";
 import { EnkiTask } from "./components/EnkiTask";
 import { Generator } from "./components/Generator";
 import { Code } from "./components/Code";
+import { ModuleComponent } from "./components/Module";
+import { ModuleInput } from "./components/ModuleInput";
+import { ModuleOutput } from "./components/ModuleOutput";
+import { ModuleTriggerOut } from "./components/ModuleTriggerOut";
+import { ModuleTriggerIn } from "./components/ModuleTriggerIn";
+
+interface EventsTypes extends DefaultEventsTypes {
+  run: void;
+  save: void;
+  [key: string]: any;
+}
+
+class ThothEditor extends NodeEditor<EventsTypes> {
+  pubSub;
+  thoth;
+  thothV2;
+  tab;
+  abort;
+  loadGraph;
+  moduleSubscription;
+  moduleManager;
+}
 
 /*
   Primary initialization function.  Takes a container ref to attach the rete editor to.
 */
 
-const editor = async function ({ container, pubSub, thoth, tab }) {
+const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
   // Here we load up all components of the builder into our editor for usage.
   // We might be able to programatically generate components from enki
   const components = [
@@ -51,6 +79,11 @@ const editor = async function ({ container, pubSub, thoth, tab }) {
     new InputComponent(),
     new ItemTypeComponent(),
     new JoinListComponent(),
+    new ModuleComponent(),
+    new ModuleInput(),
+    new ModuleOutput(),
+    new ModuleTriggerOut(),
+    new ModuleTriggerIn(),
     new PlaytestPrint(),
     new PlaytestInput(),
     new RunInputComponent(),
@@ -63,12 +96,18 @@ const editor = async function ({ container, pubSub, thoth, tab }) {
     new TimeDetectorComponent(),
   ];
 
+  let modules = [];
+
   // create the main edtor
-  const editor = new Rete.NodeEditor("demo@0.1.0", container);
+  const editor = new ThothEditor("demo@0.1.0", container);
+
+  // The engine is used to process/run the rete graph
+  const engine = new Rete.Engine("demo@0.1.0");
 
   // Set up the reactcontext pubsub on the editor so rete components can talk to react
   editor.pubSub = pubSub;
   editor.thoth = thoth;
+  editor.thothV2 = thothV2;
   editor.tab = tab;
 
   // PLUGINS
@@ -81,9 +120,22 @@ const editor = async function ({ container, pubSub, thoth, tab }) {
     // MyNode is a custom default style for nodes
     component: MyNode,
   });
-
   // renders a context menu on right click that shows available nodes
-  editor.use(ContextMenuPlugin);
+  editor.use(LifecyclePlugin);
+  editor.use(ContextMenuPlugin, {
+    delay: 0,
+    rename(component) {
+      return component.contextMenuName || component.name;
+    },
+    allocate: (component) => {
+      const tabType = component.editor.tab.type;
+      const { workspaceType } = component;
+
+      if (workspaceType && workspaceType !== tabType) return null;
+      return [component.category];
+    },
+  });
+  editor.use(ModulePlugin, { engine, modules });
   editor.use(TaskPlugin);
 
   // This should only be needed on client, not server
@@ -94,11 +146,29 @@ const editor = async function ({ container, pubSub, thoth, tab }) {
     scaleExtent: { min: 0.25, max: 2 },
   });
 
-  // The engine is used to process/run the rete graph
-  const engine = new Rete.Engine("demo@0.1.0");
+  // handle modules
+  // NOTE watch this subscription as it may get intensive with lots of tabs open...
+  editor.moduleSubscription = await thothV2.getModules((moduleDocs) => {
+    if (!moduleDocs) return;
+
+    modules = moduleDocs
+      .map((doc) => doc.toJSON())
+      .reduce((acc, module) => {
+        // todo handle better mapping
+        // see moduleSelect.tsx
+        acc[module.name] = module;
+        return acc;
+      }, {});
+
+    // we only want to proceed if the incoming modules have changed.
+    if (isEqual(modules, editor.moduleManager.modules)) return;
+    editor.moduleManager.setModules(modules);
+    editor.trigger("save");
+  });
 
   // Register custom components with both the editor and the engine
   // We will need a wa to share components between client and server
+  // WARNING all the plugins from the editor get installed onto the component and modify it.  This effects the components registered in the engine, which already have plugins installed.
   components.forEach((c) => {
     editor.register(c);
     engine.register(c);
@@ -107,6 +177,10 @@ const editor = async function ({ container, pubSub, thoth, tab }) {
   editor.on("zoom", ({ source }) => {
     return source !== "dblclick";
   });
+
+  editor.bind("run");
+  editor.bind("save");
+  engine.bind("run");
 
   editor.on(
     "process nodecreated noderemoved connectioncreated connectionremoved",

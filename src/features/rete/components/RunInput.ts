@@ -3,34 +3,57 @@ import { ThothReteComponent } from "./ThothReteComponent";
 import { TextInputControl } from "../controls/TextInputControl";
 import { stringSocket, triggerSocket } from "../sockets";
 import { RunButtonControl } from "../controls/RunButtonControl";
-import { Task } from "../plugins/taskPlugin/task"
+import { Task } from "../plugins/taskPlugin/task";
 
 const info = `The Input With Run component lets you input a value into the provided input field, and trigger off your spell chain to run with that value passed out its output. May be depricated in favor of using the playtest input component.`;
 
 export class RunInputComponent extends ThothReteComponent {
-  initialTask?: Task
+  initialTask?: Task;
+  subscriptionMap: any;
+
   constructor() {
     // Name of the component
     super("Input With Run");
+
+    this.subscriptionMap = {};
 
     this.task = {
       outputs: {
         text: "output",
         trigger: "option",
       },
-      init: (task) => {
-        this.initialTask = task;
+      init: (task, node) => {
+        // we only want one subscription present per node
+        if (this.subscriptionMap[node.id]) {
+          this.subscriptionMap[node.id]();
+          delete this.subscriptionMap[node.id];
+        }
+
+        // subscribe to the run function
+        // TODO abstract this into something more reusable.
+        // maybe modifyy the task plugin to set a run function to the node itself?
+        const unsubscribe = this.editor.on("run", (args) => {
+          if (args.nodeId === node.id) {
+            console.log("RUNNING");
+            task.run();
+          }
+        });
+
+        this.subscriptionMap[node.id] = unsubscribe;
       },
     };
     this.category = "I/O";
     this.info = info;
   }
 
-  run() {
-    const initialData = {
-      foo: "foo",
-    };
-    this.initialTask?.run(initialData);
+  // from lifecycle plugin
+  destroyed(node) {
+    // Cleanup subscriptions on the node
+    if (!this.subscriptionMap[node.id]) return;
+    const unsubscribe = this.subscriptionMap[node.id];
+    console.log(unsubscribe);
+    unsubscribe();
+    delete this.subscriptionMap[node.id];
   }
 
   // the builder is used to "assemble" the node component.
@@ -43,16 +66,17 @@ export class RunInputComponent extends ThothReteComponent {
 
     // controls are the internals of the node itself
     // This default control sample has a text field.
+    console.log("node text", node.data);
     const input = new TextInputControl({
       emitter: this.editor,
       key: "text",
-      value: "Input text",
+      value: node.data.text || "Input text",
     });
 
     const run = new RunButtonControl({
       emitter: this.editor,
       key: "run",
-      run: this.run.bind(this),
+      run: node,
     });
 
     return node

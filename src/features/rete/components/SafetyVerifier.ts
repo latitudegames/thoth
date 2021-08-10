@@ -109,7 +109,7 @@ export class SafetyVerifier extends ThothReteComponent {
       .addOutput(dataOutput);
   }
 
-  async worker(node, inputs, outputs) {
+  async worker(node, inputs, outputs, { silent }) {
     const action = inputs["string"][0];
     const prompt = node.data.fewshot + action + "\nRating:";
 
@@ -122,7 +122,7 @@ export class SafetyVerifier extends ThothReteComponent {
     const raw = await completion(body);
     const result = raw?.trim() !== "X";
 
-    node.display(`${result}`);
+    if (!silent) node.display(`${result}`);
 
     return {
       boolean: result,

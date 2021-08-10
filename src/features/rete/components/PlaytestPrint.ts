@@ -37,12 +37,12 @@ export class PlaytestPrint extends ThothReteComponent {
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connected components
-  worker(node, inputs, data) {
-    const { publish, events } = this.editor.pubSub;
+  worker(node, inputs, outputs, { silent }) {
+    const { sendToPlaytest } = this.editor.thothV2;
     if (!inputs || !inputs.text) return null;
     const text = inputs.text[0];
 
-    publish(events.PLAYTEST_PRINT, text);
-    node.display(text);
+    sendToPlaytest(text);
+    if (!silent) node.display(text);
   }
 }

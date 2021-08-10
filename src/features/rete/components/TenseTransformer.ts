@@ -110,7 +110,7 @@ export class TenseTransformer extends ThothReteComponent {
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connected components
-  async worker(node, inputs, outputs) {
+  async worker(node, inputs, outputs, { silent }) {
     // ADD ON INPUT
     const { name, text } = inputs;
     const prompt = `${node.data.fewshot}${name[0]}: ${text[0]}\nThird Person:`;
@@ -124,7 +124,7 @@ export class TenseTransformer extends ThothReteComponent {
     const raw = await completion(body);
     const result = raw?.trim();
 
-    node.display(result);
+    if (!silent) node.display(result);
 
     return {
       action: result,

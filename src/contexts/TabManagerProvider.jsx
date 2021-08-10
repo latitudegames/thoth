@@ -2,6 +2,7 @@ import { useContext, createContext, useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { v4 as uuidv4 } from "uuid";
 import { useDB } from "./DatabaseProvider";
+import { usePubSub } from "./PubSubProvider";
 
 import defaultJson from "./layouts/defaultLayout.json";
 import LoadingScreen from "../features/common/LoadingScreen/LoadingScreen";
@@ -9,9 +10,11 @@ import LoadingScreen from "../features/common/LoadingScreen/LoadingScreen";
 const Context = createContext({
   tabs: [],
   activeTab: {},
+  openTab: async (options) => {},
   switchTab: () => {},
   closeTab: () => {},
   saveTabLayout: () => {},
+  clearTabs: () => {},
 });
 
 // Map of workspaces
@@ -25,8 +28,8 @@ const TabManager = ({ children }) => {
   const { db } = useDB();
 
   // eslint-disable-next-line no-unused-vars
+  const { events, publish } = usePubSub();
   const [location, setLocation] = useLocation();
-
   const [tabs, setTabs] = useState(null);
   const [activeTab, setActiveTab] = useState(null);
 
@@ -60,15 +63,25 @@ const TabManager = ({ children }) => {
 
   const openTab = async ({
     workspace = "default",
-    name = "My Spell",
-    spellId,
+    name = "Untitled",
+    type = "module",
+    moduleId,
+    spellId = null,
+    openNew = true,
   }) => {
+    // don't open a new tab if one is already open
+    if (!openNew) {
+      const tabOpened = await switchTab(null, { module: { $eq: moduleId } });
+      if (tabOpened) return;
+    }
+
     const newTab = {
       layoutJson: workspaceMap[workspace],
       name,
       id: uuidv4(),
       spell: spellId,
-      type: "spell",
+      module: moduleId,
+      type: type,
       active: true,
     };
 
@@ -78,6 +91,7 @@ const TabManager = ({ children }) => {
   const closeTab = async (tabId) => {
     const tab = await db.tabs.findOne({ selector: { id: tabId } }).exec();
     if (!tab) return;
+    publish(events.$CLOSE_EDITOR(tabId));
     await tab.remove();
     const tabs = await db.tabs.find().exec();
 
@@ -89,12 +103,18 @@ const TabManager = ({ children }) => {
     switchTab(tabs[0].id);
   };
 
-  const switchTab = async (tabId) => {
-    const tab = await db.tabs.findOne({ selector: { id: tabId } }).exec();
-    if (!tab) return;
+  const switchTab = async (tabId, query) => {
+    const selector = query ? query : { id: tabId };
+    const tab = await db.tabs.findOne({ selector }).exec();
+    if (!tab) return false;
     await tab.atomicPatch({ active: true });
 
     setActiveTab(tab.toJSON());
+    return true;
+  };
+
+  const clearTabs = async () => {
+    return db.tabs.find().remove();
   };
 
   const saveTabLayout = async (tabId, json) => {
@@ -109,6 +129,7 @@ const TabManager = ({ children }) => {
     switchTab,
     closeTab,
     saveTabLayout,
+    clearTabs,
   };
 
   if (!tabs) return <LoadingScreen />;
