@@ -68,8 +68,6 @@ const Inspector = (props) => {
     </>
   );
 
-  console.log(inspectorData)
-
   if (!inspectorData) return <WindowMessage />;
 
   return (
