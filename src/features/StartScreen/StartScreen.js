@@ -33,13 +33,13 @@ const StartScreen = ({ createNew, allProjects, ...props }) => {
       : await spells.newSpell(spellData);
 
     // Load modules from the spell
-    const moduleDocs = await Promise.all(
-      spellData.modules.map((module) => {
-        return modules.updateOrCreate(module);
-      })
-    );
 
-    console.log("moduleDocs", moduleDocs);
+    if (spellData?.modules && spellData.modules.length > 0)
+      await Promise.all(
+        spellData.modules.map((module) => {
+          return modules.updateOrCreate(module);
+        })
+      );
 
     await openTab({ name: spell.name, spellId: spell.name, type: "spell" });
   };
