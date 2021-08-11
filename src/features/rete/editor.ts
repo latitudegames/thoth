@@ -63,7 +63,10 @@ class ThothEditor extends NodeEditor<EventsTypes> {
   Primary initialization function.  Takes a container ref to attach the rete editor to.
 */
 
+let editorTabMap = {};
+
 const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
+  if (editorTabMap[tab.id]) editorTabMap[tab.id].clear();
   // Here we load up all components of the builder into our editor for usage.
   // We might be able to programatically generate components from enki
   const components = [
@@ -100,6 +103,8 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
 
   // create the main edtor
   const editor = new ThothEditor("demo@0.1.0", container);
+
+  editorTabMap[tab.id] = editor;
 
   // The engine is used to process/run the rete graph
   const engine = new Rete.Engine("demo@0.1.0");
