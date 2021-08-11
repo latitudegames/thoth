@@ -34,7 +34,27 @@ const loadModuleModel = (db) => {
     });
   };
 
-  const newModule = ({ name }) => {
+  const updateOrCreate = async (doc) => {
+    let existing = await getModule(doc.id);
+
+    if (!existing) {
+      existing = await insert(doc);
+    } else {
+      const moduleId = doc.id;
+      // avoid conflict
+      delete doc.id;
+      existing = await updateModule(moduleId, doc);
+    }
+
+    return existing;
+  };
+
+  const insert = async (doc) => {
+    if (!doc.id) doc.id = uuidv4();
+    return db.modules.insert(doc);
+  };
+
+  const newModule = async ({ name }) => {
     const newModule = {
       name,
       id: uuidv4(),
@@ -44,11 +64,13 @@ const loadModuleModel = (db) => {
   };
 
   return {
+    insert,
     getModules,
     getModule,
     newModule,
     updateModule,
     findOneModule,
+    updateOrCreate,
   };
 };
 export default loadModuleModel;
