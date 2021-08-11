@@ -109,9 +109,6 @@ export const Editor = ({ tab, children }) => {
 
   if (!tab) return <LoadingScreen />;
 
-  if (loaded && tab.active) {
-  }
-
   return (
     <>
       <div
