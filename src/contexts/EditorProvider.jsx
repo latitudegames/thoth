@@ -11,6 +11,7 @@ import LoadingScreen from "../features/common/LoadingScreen/LoadingScreen";
 
 const Context = createContext({
   run: () => {},
+  getEditor: () => {},
   editor: {},
   serialize: () => {},
   buildEditor: () => {},
@@ -31,6 +32,10 @@ const EditorProvider = ({ children }) => {
   const setEditor = (editor) => {
     editorRef.current = editor;
     setEditorState(editor);
+  };
+
+  const getEditor = () => {
+    return editorRef.current;
   };
 
   const buildEditor = async (container, spell, tab, thoth) => {
@@ -87,6 +92,7 @@ const EditorProvider = ({ children }) => {
     getNodes,
     loadGraph,
     setEditor,
+    getEditor,
   };
 
   return (
