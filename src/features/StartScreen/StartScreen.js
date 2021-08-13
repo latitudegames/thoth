@@ -33,7 +33,6 @@ const StartScreen = ({ createNew, allProjects, ...props }) => {
       : await spells.newSpell(spellData);
 
     // Load modules from the spell
-
     if (spellData?.modules && spellData.modules.length > 0)
       await Promise.all(
         spellData.modules.map((module) => {
