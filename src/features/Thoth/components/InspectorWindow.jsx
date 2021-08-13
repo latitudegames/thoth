@@ -30,6 +30,18 @@ const Inspector = (props) => {
     };
   }, [props]);
 
+  const updateControl = (control) => {
+    const newData = {
+      ...inspectorData,
+      dataControls: {
+        ...inspectorData.dataControls,
+        control,
+      },
+    };
+
+    saveInspector(newData);
+  };
+
   const updateData = (update) => {
     const newData = {
       ...inspectorData,
@@ -79,6 +91,7 @@ const Inspector = (props) => {
         data={inspectorData.data}
         width={width}
         updateData={updateData}
+        updateControl={updateControl}
       />
     </Window>
   );
