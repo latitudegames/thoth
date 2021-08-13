@@ -32,7 +32,7 @@ const ModuleSelect = ({ control, updateData, initialValue }) => {
     await openTab({
       name: value,
       type: "module",
-      moduleId: module.id,
+      moduleName: module.name,
       openNew: false,
     });
   };
@@ -47,7 +47,7 @@ const ModuleSelect = ({ control, updateData, initialValue }) => {
       await openTab({
         name: value,
         type: "module",
-        moduleId: module.id,
+        moduleName: module.name,
         openNew: false,
       });
 

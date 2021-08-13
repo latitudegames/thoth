@@ -34,9 +34,9 @@ const ModuleProvider = ({ children }) => {
     };
   }, [models]);
 
-  const saveModule = async (moduleId, update, snack = true) => {
+  const saveModule = async (moduleName, update, snack = true) => {
     try {
-      const module = await models.modules.updateModule(moduleId, update);
+      const module = await models.modules.updateModule(moduleName, update);
       if (snack) enqueueSnackbar("Module saved");
       return module;
     } catch (err) {
