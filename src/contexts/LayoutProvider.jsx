@@ -118,7 +118,7 @@ const LayoutProvider = ({ children, tab }) => {
 
   const saveInspector = (inspectorData) => {
     setInspectorData(inspectorData);
-    publish(events.$NODE_SET(tab.id, inspectorData.nodeId), inspectorData.data);
+    publish(events.$NODE_SET(tab.id, inspectorData.nodeId), inspectorData);
   };
 
   const createModel = (json) => {
