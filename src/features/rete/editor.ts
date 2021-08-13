@@ -41,6 +41,7 @@ import { ModuleInput } from "./components/ModuleInput";
 import { ModuleOutput } from "./components/ModuleOutput";
 import { ModuleTriggerOut } from "./components/ModuleTriggerOut";
 import { ModuleTriggerIn } from "./components/ModuleTriggerIn";
+import { HuggingfaceComponent } from "./components/Huggingface";
 
 interface EventsTypes extends DefaultEventsTypes {
   run: void;
@@ -79,6 +80,7 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
     new EntityDetector(),
     new ForEach(),
     new Generator(),
+    new HuggingfaceComponent(),
     new InputComponent(),
     new ItemTypeComponent(),
     new JoinListComponent(),
