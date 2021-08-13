@@ -141,12 +141,11 @@ export class Inspector {
     this.node.data.dataControls = cache;
   }
 
-  handleData(controlData) {
+  handleData(data) {
     // store all data controls inside the nodes data
     // WATCH in case our graphs start getting quite large.
-    this.cacheControls(controlData.dataControls);
+    if (data.dataControls) this.cacheControls(data.dataControls);
 
-    const { data } = controlData;
     // Send data to a possibel node global handler
     this.onData(data);
 
