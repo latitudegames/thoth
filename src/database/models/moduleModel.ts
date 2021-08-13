@@ -6,10 +6,10 @@ const loadModuleModel = (db) => {
     return callback ? query.$.subscribe(callback) : query.exec();
   };
 
-  const getModule = async (moduleId, callback = null) => {
+  const getModule = async (moduleName, callback = null) => {
     const query = db.modules.findOne({
       selector: {
-        id: moduleId,
+        name: moduleName,
       },
     });
     return callback ? query.$.subscribe(callback) : query.exec();
@@ -23,8 +23,8 @@ const loadModuleModel = (db) => {
     return callback ? query.$.subscribe(callback) : query.exec();
   };
 
-  const updateModule = async (moduleId: string, update: object) => {
-    const module = await getModule(moduleId);
+  const updateModule = async (moduleName: string, update: object) => {
+    const module = await getModule(moduleName);
 
     return module.atomicUpdate((oldData) => {
       return {
@@ -35,15 +35,15 @@ const loadModuleModel = (db) => {
   };
 
   const updateOrCreate = async (doc) => {
-    let existing = await getModule(doc.id);
+    let existing = await getModule(doc.name);
 
     if (!existing) {
       existing = await insert(doc);
     } else {
-      const moduleId = doc.id;
+      const moduleName = doc.name;
       // avoid conflict
-      delete doc.id;
-      existing = await updateModule(moduleId, doc);
+      delete doc.name;
+      existing = await updateModule(moduleName, doc);
     }
 
     return existing;
