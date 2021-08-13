@@ -62,7 +62,7 @@ const DataControls = ({
 
         const setExpanded = (state) => {
           control.expanded = state;
-          updateControl(control);
+          updateControl({ [control.dataKey]: control });
         };
 
         if (control.component === "info" && !control?.data?.info) return null;
@@ -70,7 +70,7 @@ const DataControls = ({
         return (
           <SimpleAccordion
             heading={control.name || key}
-            defaultExpanded={control.expanded || true}
+            defaultExpanded={true}
             expanded={control.expanded}
             setExpanded={setExpanded}
             key={key}
