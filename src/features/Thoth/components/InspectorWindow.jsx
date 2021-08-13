@@ -35,7 +35,7 @@ const Inspector = (props) => {
       ...inspectorData,
       dataControls: {
         ...inspectorData.dataControls,
-        control,
+        ...control,
       },
     };
 
