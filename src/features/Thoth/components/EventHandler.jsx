@@ -2,13 +2,16 @@ import { useEffect } from "react";
 import { useLayout } from "../../../contexts/LayoutProvider";
 import { useEditor } from "../../../contexts/EditorProvider";
 import { useSpell } from "../../../contexts/SpellProvider";
+import { useModule } from "../../../contexts/ModuleProvider";
 import { useTabManager } from "../../../contexts/TabManagerProvider";
 
 const EventHandler = ({ pubSub, tab }) => {
   // only using this to handle events, so not rendering anything with it.
   const { createOrFocus, windowTypes } = useLayout();
   const { serialize, editorRef } = useEditor();
+  const { getModule } = useModule()
   const { saveCurrentSpell, getSpell } = useSpell();
+
   const { activeTab } = useTabManager();
 
   const { events, subscribe } = pubSub;
@@ -51,15 +54,20 @@ const EventHandler = ({ pubSub, tab }) => {
 
   const onExport = async () => {
     console.log("exporting in workspace!");
-    const spellDoc = await getSpell(activeTab.spell);
-    console.log("spell doc");
-    const spell = spellDoc.toJSON();
-    const json = JSON.stringify(spell);
+    let activeTabDoc
+    if (activeTab.type === "spell"){
+      activeTabDoc = await getSpell(activeTab.spell);
+    }
+    if (activeTab.type === "module"){
+      activeTabDoc = await getModule(activeTab.module);
+    }
+    const exportDoc = activeTabDoc.toJSON();
+    const json = JSON.stringify(exportDoc);
     const blob = new Blob([json], { type: "application/json" });
     const url = window.URL.createObjectURL(new Blob([blob]));
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", `${spell.name}.thoth`);
+    link.setAttribute("download", `${exportDoc.name}.thoth`);
 
     // Append to html link element page
     document.body.appendChild(link);
