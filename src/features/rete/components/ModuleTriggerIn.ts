@@ -3,7 +3,7 @@ import { InputControl } from "../dataControls/InputControl";
 import { triggerSocket } from "../sockets";
 import { v4 as uuidv4 } from "uuid";
 
-const info = `The module trigge in adds a trigger input socket to the parent module.  It can be given a name, which is displayed on the parent.`;
+const info = `The module trigger in adds a trigger input socket to the parent module.  It can be given a name, which is displayed on the parent.`;
 
 export class ModuleTriggerIn extends Rete.Component {
   task: object;
