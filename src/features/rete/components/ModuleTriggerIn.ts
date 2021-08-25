@@ -16,7 +16,7 @@ export class ModuleTriggerIn extends Rete.Component {
 
   constructor() {
     // Name of the component
-    // If name of component chnages pelase update module-manager workerModule code
+    // If name of component changes please update module-manager workerModule code
     super("Module Trigger In");
     this.contextMenuName = "Trigger In";
 
