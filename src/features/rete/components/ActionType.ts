@@ -2,7 +2,7 @@ import Rete from "rete";
 import { ThothReteComponent } from "./ThothReteComponent";
 import { stringSocket, triggerSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
-import { completion } from "../../../utils/openaiHelper";
+import { completion } from "../utils/openaiHelper";
 
 const fewshot = `Given an action classify the type of action it is
 

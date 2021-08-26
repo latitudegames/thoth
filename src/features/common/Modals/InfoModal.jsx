@@ -1,4 +1,4 @@
-import Modal from "../../features/common/Modal/Modal";
+import Modal from "../Modal/Modal";
 
 const InfoModal = ({ title, content }) => {
   return (

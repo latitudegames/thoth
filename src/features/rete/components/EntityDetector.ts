@@ -2,7 +2,7 @@ import Rete from "rete";
 import { ThothReteComponent } from "./ThothReteComponent";
 import { stringSocket, triggerSocket, arraySocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
-import { completion } from "../../../utils/openaiHelper";
+import { completion } from "../utils/openaiHelper";
 
 const fewshot = `Given an action, detect what entities the player is interacting with. Ignore entities that the player is just asking about.
 

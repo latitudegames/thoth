@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import { debounce } from "../../../utils/debounce";
+import { debounce } from "../../rete/utils/debounce";
 
 import WorkspaceProvider from "../../../contexts/WorkspaceProvider";
 import { Editor } from "../../../contexts/EditorProvider";

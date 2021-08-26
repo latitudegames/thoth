@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { getModals } from '../services/Modals'
+import { getModals } from '../features/common/Modals'
 
 const Context = React.createContext({
   activeModal: '',

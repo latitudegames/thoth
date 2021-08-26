@@ -1,5 +1,5 @@
 import { useContext, createContext, useState, useEffect } from "react";
-import { initDB } from "../database";
+import { initDB } from "../features/rete/database";
 
 import LoadingScreen from "../features/common/LoadingScreen/LoadingScreen";
 

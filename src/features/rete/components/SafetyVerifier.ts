@@ -2,7 +2,7 @@ import Rete from "rete";
 import { ThothReteComponent } from "./ThothReteComponent";
 import { stringSocket, triggerSocket, booleanSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
-import { completion } from "../../../utils/openaiHelper";
+import { completion } from "../utils/openaiHelper";
 
 const fewshot = `Rate the actions according to the following content categories
 X: Explicit sexual content, rape, cannibalism, incest

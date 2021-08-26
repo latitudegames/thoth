@@ -5,7 +5,7 @@ import { triggerSocket, stringSocket } from "../sockets";
 import { SocketGeneratorControl } from "../dataControls/SocketGenerator";
 import { InputControl } from "../dataControls/InputControl";
 import { FewshotControl } from "../dataControls/FewshotControl";
-import { completion } from "../../../utils/openaiHelper";
+import { completion } from "../utils/openaiHelper";
 
 const info = `The generator component is our general purpose completion component.  You can define any number of inputs, and utilise those inputs in a templating language known as Handlebars.  Any value which is wrapped like {{this}} in double braces will be replaced with the corresponding value coming in to the input with the same name.  This allows you to write almost any fewshot you might need, and input values from anywhere else in your chain.
 
