@@ -2,7 +2,7 @@ import { NodeData } from "rete/types/core/data";
 import { Socket as SocketType } from "rete/types";
 import { Engine, Socket, Component } from "rete";
 
-import { Module as ModuleType } from "../../../../database/schemas/module";
+import { Module as ModuleType } from "../../database/schemas/module";
 import { Module } from "./module";
 import { extractNodes } from "./utils";
 
