@@ -64,7 +64,7 @@ export class ActionTypeComponent extends ThothReteComponent {
   }
 
   // the worker contains the main business logic of the node.  It will pass those results
-  // to the outputs to be consumed by any connsected components
+  // to the outputs to be consumed by any connected components
   async worker(node, inputs, outputs, { silent }) {
     const action = inputs["action"][0];
     const prompt = node.data.fewshot + action + ",";
