@@ -65,13 +65,13 @@ const TabManager = ({ children }) => {
     workspace = "default",
     name = "Untitled",
     type = "module",
-    moduleId,
+    moduleName,
     spellId = null,
     openNew = true,
   }) => {
     // don't open a new tab if one is already open
     if (!openNew) {
-      const tabOpened = await switchTab(null, { module: { $eq: moduleId } });
+      const tabOpened = await switchTab(null, { module: { $eq: moduleName } });
       if (tabOpened) return;
     }
 
@@ -80,7 +80,7 @@ const TabManager = ({ children }) => {
       name,
       id: uuidv4(),
       spell: spellId,
-      module: moduleId,
+      module: moduleName,
       type: type,
       active: true,
     };

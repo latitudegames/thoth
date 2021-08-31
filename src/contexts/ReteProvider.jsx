@@ -1,6 +1,7 @@
 import { useContext, createContext } from "react";
 
 import { completion as _completion } from "../utils/openaiHelper";
+import { invokeInference } from "../utils/huggingfaceHelper";
 import { usePubSub } from "./PubSubProvider";
 import { useDB } from "./DatabaseProvider";
 
@@ -22,6 +23,7 @@ const Context = createContext({
   setGameState: () => {},
   getModules: async () => {},
   completion: async () => {},
+  huggingface: async () => {},
 });
 
 export const useRete = () => useContext(Context);
@@ -64,6 +66,10 @@ const ReteProvider = ({ children, tab }) => {
     return _completion(body);
   };
 
+  const huggingface = async (model, data) => {
+    return invokeInference(model, data);
+  };
+
   const clearTextEditor = () => {
     publish($TEXT_EDITOR_CLEAR(tab.id));
   };
@@ -75,6 +81,7 @@ const ReteProvider = ({ children, tab }) => {
     onPlaytest,
     clearTextEditor,
     completion,
+    huggingface,
     ...modules,
     ...spells,
   };

@@ -14,7 +14,6 @@ export class Inspector {
     this.node = node;
     this.category = component.category;
     this.info = component.info;
-    console.log(component)
   }
 
   _add(list, control, prop) {
@@ -127,7 +126,28 @@ export class Inspector {
     });
   }
 
-  handleData(data) {
+  cacheControls(dataControls) {
+    const cache = Object.entries(dataControls).reduce(
+      (acc, [key, { expanded = true }]) => {
+        acc[key] = {
+          expanded,
+        };
+
+        return acc;
+      },
+      {}
+    );
+
+    this.node.data.dataControls = cache;
+  }
+
+  handleData(update) {
+    // store all data controls inside the nodes data
+    // WATCH in case our graphs start getting quite large.
+    if (update.dataControls) this.cacheControls(update.dataControls);
+
+    const { data } = update;
+
     // Send data to a possibel node global handler
     this.onData(data);
 
@@ -187,8 +207,10 @@ export class Inspector {
   data() {
     const dataControls = Array.from(this.dataControls.entries()).reduce(
       (acc, [key, val]) => {
+        const cache = this.node?.data?.dataControls;
+        const cachedControl = cache && cache[key] ? cache[key] : {};
         // use the data method on controls to get data shape
-        acc[key] = val.control;
+        acc[key] = { ...val.control, ...cachedControl };
         return acc;
       },
       {}
@@ -200,7 +222,7 @@ export class Inspector {
       dataControls,
       data: this.node.data,
       category: this.node.category,
-      info: this.node.info
+      info: this.node.info,
     };
   }
 

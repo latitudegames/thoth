@@ -107,18 +107,20 @@ const LayoutProvider = ({ children, tab }) => {
       [textData.control.dataKey]: textData.data,
     };
 
-    publish(events.$NODE_SET(tab.id, textData.nodeId), textUpdate);
+    const update = {
+      ...inspectorData,
+      ...textUpdate,
+    };
+
+    publish(events.$NODE_SET(tab.id, textData.nodeId), update);
     if (inspectorData) {
-      setInspectorData({
-        ...inspectorData,
-        ...textUpdate,
-      });
+      setInspectorData(update);
     }
   };
 
   const saveInspector = (inspectorData) => {
     setInspectorData(inspectorData);
-    publish(events.$NODE_SET(tab.id, inspectorData.nodeId), inspectorData.data);
+    publish(events.$NODE_SET(tab.id, inspectorData.nodeId), inspectorData);
   };
 
   const createModel = (json) => {

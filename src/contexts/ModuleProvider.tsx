@@ -6,6 +6,8 @@ import { useDB } from "./DatabaseProvider";
 const Context = createContext({
   modules: [] as any[],
   saveModule: () => {},
+  getModule: () => {},
+  getSpellModules: () => {},
 } as any);
 
 export const useModule = () => useContext(Context);
@@ -32,9 +34,9 @@ const ModuleProvider = ({ children }) => {
     };
   }, [models]);
 
-  const saveModule = async (moduleId, update, snack = true) => {
+  const saveModule = async (moduleName, update, snack = true) => {
     try {
-      const module = await models.modules.updateModule(moduleId, update);
+      const module = await models.modules.updateModule(moduleName, update);
       if (snack) enqueueSnackbar("Module saved");
       return module;
     } catch (err) {
@@ -43,9 +45,28 @@ const ModuleProvider = ({ children }) => {
     }
   };
 
+  const getModule = async (moduleName) => {
+    return models.modules.findOneModule({ name: moduleName });
+  };
+
+  const getSpellModules = async (spell) => {
+    // should actually look for spells that have a data.module key set to a string
+    const moduleNames = Object.values(spell.graph.nodes)
+      .filter((n: any) => n.name === "Module")
+      .map((n: any) => n.data.name);
+
+    const moduleDocs = await Promise.all(
+      moduleNames.map((moduleName) => getModule(moduleName))
+    );
+
+    return moduleDocs.map((module) => module.toJSON());
+  };
+
   const publicInterface = {
     modules,
     saveModule,
+    getModule,
+    getSpellModules,
     ...models.modules,
   };
 

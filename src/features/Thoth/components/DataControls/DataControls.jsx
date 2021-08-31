@@ -29,6 +29,7 @@ const controlMap = {
 const DataControls = ({
   dataControls,
   updateData,
+  updateControl,
   width,
   data,
   inspectorData,
@@ -59,11 +60,19 @@ const DataControls = ({
 
         const Component = controlMap[control.component] || StubComponent;
 
+        const setExpanded = (state) => {
+          control.expanded = state;
+          updateControl({ [control.dataKey]: control });
+        };
+
         if (control.component === "info" && !control?.data?.info) return null;
 
         return (
           <SimpleAccordion
             heading={control.name || key}
+            defaultExpanded={true}
+            expanded={control.expanded}
+            setExpanded={setExpanded}
             key={key}
             icon={control.icon}
           >

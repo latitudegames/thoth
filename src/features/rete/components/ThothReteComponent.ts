@@ -16,7 +16,7 @@ export abstract class ThothReteComponent extends Rete.Component {
   editor: ThothReteNodeEditor;
   task: {
     outputs: { [key: string]: string };
-    init: (task: Task, node: NodeData) => void;
+    init?: (task: Task, node: NodeData) => void;
   };
   category: string;
   info: string;

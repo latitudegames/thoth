@@ -1,16 +1,16 @@
 const moduleSchema = {
   title: "Module schema",
-  version: 0,
+  version: 1,
   description:
     "A module is a self contained spell chain which can act as a component inside another spell chain.",
   type: "object",
   properties: {
     id: {
       type: "string",
-      primary: true,
     },
     name: {
       type: "string",
+      primary: true,
     },
     data: {
       type: "object",
@@ -36,6 +36,11 @@ export type Module = {
 const collection = {
   modules: {
     schema: moduleSchema,
+    migrationStrategies: {
+      1: function (oldDoc) {
+        return oldDoc;
+      },
+    },
   },
 };
 

@@ -5,6 +5,7 @@ import { useDB } from "./DatabaseProvider";
 
 const Context = createContext({
   currentSpell: {},
+  getCurrentSpell: () => {},
   updateCurrentSpell: {},
   loadSpell: () => {},
   saveSpell: () => {},
@@ -26,7 +27,7 @@ const SpellProvider = ({ children }) => {
   } = useDB();
   const { enqueueSnackbar } = useSnackbar();
 
-  const spellRef = useRef;
+  const spellRef = useRef();
 
   const [currentSpell, setCurrentSpell] = useState({});
   const [stateHistory, setStateHistory] = useState([]);
@@ -34,6 +35,10 @@ const SpellProvider = ({ children }) => {
   const updateCurrentSpell = (activeTab) => {
     spellRef.current = activeTab;
     setCurrentSpell(activeTab);
+  };
+
+  const getCurrentSpell = () => {
+    return spellRef.current;
   };
 
   const loadSpell = async (spellId) => {
@@ -92,6 +97,7 @@ const SpellProvider = ({ children }) => {
   // Check for existing currentSpell in the db
   const publicInterface = {
     currentSpell,
+    getCurrentSpell,
     getCurrentGameState,
     getThothVersion,
     loadSpell,
