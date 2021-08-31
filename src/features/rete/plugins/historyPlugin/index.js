@@ -68,7 +68,9 @@ function install(editor, { keyboard = true }) {
 
 export const Action = Act;
 
-export default {
+const defaultExport = {
   name: "history",
   install,
 };
+
+export default defaultExport;
