@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 
 import { debounce } from "../../../utils/debounce";
 
@@ -35,6 +36,24 @@ const Workspace = ({ tab, appPubSub }) => {
       }, 500)
     );
   }, [editor]);
+
+  useHotkeys(
+    "Control+z",
+    () => {
+      if (!editor || !tab.active) return;
+      editor.trigger("undo");
+    },
+    [editor]
+  );
+
+  useHotkeys(
+    "Control+Shift+z",
+    () => {
+      if (!editor || !tab.active) return;
+      editor.trigger("redo");
+    },
+    [editor]
+  );
 
   useEffect(() => {
     if (!tab) return;
