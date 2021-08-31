@@ -53,7 +53,7 @@ export class TimeDetectorComponent extends ThothReteComponent {
     const dataInput = new Rete.Input("trigger", "Trigger", triggerSocket);
     const dataOutput = new Rete.Output("trigger", "Trigger", triggerSocket);
 
-    const fewshotControl = new FewshotControl();
+    const fewshotControl = new FewshotControl({});
 
     node.inspector.add(fewshotControl);
 
