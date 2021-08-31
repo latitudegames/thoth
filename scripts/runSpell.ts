@@ -27,7 +27,7 @@ function getTriggeredNode(data, socketKey, map) {
 }
 
 // this will be the interface that we use to mirror any functionality from the client
-// on the server.  This completion function should make an actual openAI call.
+// on the server. This completion function should make an actual openAI call.
 const thoth = {
   completion: (body) => {
     return "Joe looks around";
@@ -38,24 +38,24 @@ const main = async () => {
   // only setting this as 'any' until we create a proper engine interface with the proper methods types on it.
   const engine = initEngine() as any;
 
-  // Themodule is an interface that the module system uses to write data to
+  // The module is an interface that the module system uses to write data to
   // used internally by the module plugin, and we make use of it here too.
   // we definitely want to watch out when we run nested modules to ensure nothing funky happens
-  // when child modules overwrite this with their own/.
+  // when child modules overwrite this with their own.
   const module = new Module();
 
   // these map to the names of the module inputs that the user defined in their chains.
   // we would likely expect them to know what to use based on what they defined.
-  // how can we type these?  Can we parse the spell chain for thsi information?
+  // how can we type these?  Can we parse the spell chain for this information?
   const inputs = {
     text: "look around",
     name: "Joe",
   };
 
-  // this will have the eventiual outputs wirtten to it
+  // this will have the eventual outputs written to it
   const outputs = {};
 
-  // this attached inputs to the module, which is passed in when the engine runs.
+  // this attaches inputs to the module, which is passed in when the engine runs.
   // you can see this at work in the 'workerInputs' function of module-manager
   module.read(inputs);
 
@@ -74,7 +74,7 @@ const main = async () => {
   const triggerIns = engine.moduleManager.triggerIns;
 
   // We want to get a specific node that contains the socket we want to trigger to start our "run"
-  // this could evebtually be defined by a user as a param in their request body
+  // this could eventually be defined by a user as a param in their request body
   const triggeredNode = getTriggeredNode(
     spell,
     "1a819a65-e1e2-4f77-9a42-9f99f546f7c4",
@@ -89,7 +89,7 @@ const main = async () => {
   // when we run the component, we need to pass to it WHICH node we are running from all the nodes that were built from it.
   await component?.run(triggeredNode);
 
-  // when this is dome, we write all the data that was output by the module run to an object
+  // when this is done, we write all the data that was output by the module run to an object
   module.write(outputs);
 
   console.log("Outputs", outputs);
