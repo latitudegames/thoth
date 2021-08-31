@@ -28,6 +28,8 @@ export const events = {
   $CREATE_TEXT_EDITOR: (tabId) => `createTextEditor:${tabId}`,
   $SERIALIZE: (tabId) => `serialize:${tabId}`,
   $EXPORT: (tabId) => `export:${tabId}`,
+  $UNDO: (tabId) => `undo:${tabId}`,
+  $REDO: (tabId) => `redo:${tabId}`,
 };
 
 const PubSubProvider = ({ children }) => {
