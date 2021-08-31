@@ -3,16 +3,14 @@ import { useLayout } from "../../../contexts/LayoutProvider";
 import { useEditor } from "../../../contexts/EditorProvider";
 import { useSpell } from "../../../contexts/SpellProvider";
 import { useModule } from "../../../contexts/ModuleProvider";
-import { useTabManager } from "../../../contexts/TabManagerProvider";
 
 const EventHandler = ({ pubSub, tab }) => {
   // only using this to handle events, so not rendering anything with it.
   const { createOrFocus, windowTypes } = useLayout();
-  const { serialize, editorRef } = useEditor();
-  const { getModule } = useModule()
-  const { saveCurrentSpell, getSpell } = useSpell();
 
-  const { activeTab } = useTabManager();
+  const { serialize, getEditor } = useEditor();
+  const { saveCurrentSpell, getSpell, getCurrentSpell } = useSpell();
+  const { getSpellModules } = useModule();
 
   const { events, subscribe } = pubSub;
 
@@ -53,21 +51,21 @@ const EventHandler = ({ pubSub, tab }) => {
   };
 
   const onExport = async () => {
-    console.log("exporting in workspace!");
-    let activeTabDoc
-    if (activeTab.type === "spell"){
-      activeTabDoc = await getSpell(activeTab.spell);
-    }
-    if (activeTab.type === "module"){
-      activeTabDoc = await getModule(activeTab.module);
-    }
-    const exportDoc = activeTabDoc.toJSON();
-    const json = JSON.stringify(exportDoc);
+    const currentSpell = getCurrentSpell();
+    // refetch spell from local DB to ensure it is the most up to date
+    const spellDoc = await getSpell(currentSpell.name);
+    const spell = spellDoc.toJSON();
+    const modules = await getSpellModules(spell);
+    // attach modules to spell to be exported
+    spell.modules = modules;
+
+    const json = JSON.stringify(spell);
+
     const blob = new Blob([json], { type: "application/json" });
     const url = window.URL.createObjectURL(new Blob([blob]));
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", `${exportDoc.name}.thoth`);
+    link.setAttribute("download", `${spellDoc.name}.thoth`);
 
     // Append to html link element page
     document.body.appendChild(link);
@@ -82,8 +80,8 @@ const EventHandler = ({ pubSub, tab }) => {
   // clean up anything inside the editor which we need to shut down.
   // mainly subscriptions, etc.
   const onCloseEditor = () => {
-    if (editorRef.current.moduleSubscription)
-      editorRef.current.moduleSubscription.unsubscribe();
+    const editor = getEditor();
+    if (editor.moduleSubscription) editor.moduleSubscription.unsubscribe();
   };
 
   const handlerMap = {

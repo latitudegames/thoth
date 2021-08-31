@@ -40,6 +40,11 @@ export class Generator extends ThothReteComponent {
       .addOutput(resultOut)
       .addOutput(composedOut);
 
+    const nameControl = new InputControl({
+      dataKey: "name",
+      name: "Component Name",
+    });
+
     const inputGenerator = new SocketGeneratorControl({
       connectionType: "input",
       name: "Input Sockets",
@@ -69,6 +74,7 @@ export class Generator extends ThothReteComponent {
     });
 
     node.inspector
+      .add(nameControl)
       .add(inputGenerator)
       .add(fewshotControl)
       .add(stopControl)
@@ -79,7 +85,7 @@ export class Generator extends ThothReteComponent {
   }
 
   async worker(node, rawInputs, outputs) {
-    const stringInputs = rawInputs as {[key: string]: string[]}
+    const stringInputs = rawInputs as { [key: string]: string[] };
     const inputs = Object.entries(stringInputs).reduce((acc, [key, value]) => {
       acc[key] = value[0];
       return acc;

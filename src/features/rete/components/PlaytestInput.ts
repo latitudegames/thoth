@@ -26,13 +26,15 @@ export class PlaytestInput extends ThothReteComponent {
     this.info = info;
   }
 
-  displayControl = {};
+  subscriptionMap = {};
+
   unsubscribe?: () => void;
 
   subscribeToPlaytest(node) {
     const { onPlaytest } = this.editor.thothV2;
 
-    this.unsubscribe = onPlaytest((text) => {
+    // store the unsubscribe function in our node map
+    this.subscriptionMap[node.id] = onPlaytest((text) => {
       // attach the text to the nodes data for access in worker
       node.data.text = text;
 
@@ -43,12 +45,17 @@ export class PlaytestInput extends ThothReteComponent {
     });
   }
 
+  destroyed(node) {
+    if (this.subscriptionMap[node.id]) this.subscriptionMap[node.id]();
+    delete this.subscriptionMap[node.id];
+  }
+
   // the builder is used to "assemble" the node component.
   // when we have enki hooked up and have garbbed all few shots, we would use the builder
   // to generate the appropriate inputs and ouputs for the fewshot at build time
   builder(node) {
-    this.unsubscribe?.();
-    this.unsubscribe = () => {};
+    if (this.subscriptionMap[node.id]) this.subscriptionMap[node.id]();
+    delete this.subscriptionMap[node.id];
 
     // create inputs here. First argument is th ename, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const dataOutput = new Rete.Output("trigger", "Trigger", triggerSocket);

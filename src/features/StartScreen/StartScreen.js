@@ -12,7 +12,7 @@ import { useDB } from "../../contexts/DatabaseProvider";
 
 const StartScreen = ({ createNew, allProjects, ...props }) => {
   const {
-    models: { spells },
+    models: { spells, modules },
   } = useDB();
   const { openTab } = useTabManager();
 
@@ -31,6 +31,14 @@ const StartScreen = ({ createNew, allProjects, ...props }) => {
     const spell = existingSpell
       ? existingSpell
       : await spells.newSpell(spellData);
+
+    // Load modules from the spell
+    if (spellData?.modules && spellData.modules.length > 0)
+      await Promise.all(
+        spellData.modules.map((module) => {
+          return modules.updateOrCreate(module);
+        })
+      );
 
     await openTab({ name: spell.name, spellId: spell.name, type: "spell" });
   };

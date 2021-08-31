@@ -5,7 +5,7 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import Icon from '../common/Icon/Icon'
+import Icon from "../common/Icon/Icon";
 
 import css from "./accordion.module.css";
 import "./accordion-overrides.css";
@@ -41,9 +41,19 @@ const useStyles = makeStyles((theme) => ({
 export const SimpleAccordion = (props) => {
   const classes = useStyles();
 
+  const onChange = (_, expanded) => {
+    props.setExpanded(expanded);
+  };
+
   return (
     <div className={css["accordion"]}>
-      <Accordion square={true} elevation={0}>
+      <Accordion
+        square={true}
+        elevation={0}
+        onChange={onChange}
+        expanded={props.expanded}
+        defaultExpanded={props.defaultExpanded}
+      >
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
@@ -55,10 +65,8 @@ export const SimpleAccordion = (props) => {
           }}
           id="panel1a-header"
         >
-          <Icon name={props.icon} style={{ marginRight: 'var(--c1)' }}/>
-          <Typography className={classes.heading}>
-            {props.heading}
-            </Typography>
+          <Icon name={props.icon} style={{ marginRight: "var(--c1)" }} />
+          <Typography className={classes.heading}>{props.heading}</Typography>
         </AccordionSummary>
         <AccordionDetails classes={{ root: classes.detailsRoot }}>
           {/* <Typography>
