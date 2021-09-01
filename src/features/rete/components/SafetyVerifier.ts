@@ -98,7 +98,7 @@ export class SafetyVerifier extends ThothReteComponent {
     const dataOutput = new Rete.Output("trigger", "Trigger", triggerSocket);
     const out = new Rete.Output("boolean", "Boolean", booleanSocket);
 
-    const fewshotControl = new FewshotControl();
+    const fewshotControl = new FewshotControl({});
 
     node.inspector.add(fewshotControl);
 

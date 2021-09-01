@@ -142,7 +142,7 @@ export class EntityDetector extends ThothReteComponent {
     const dataInput = new Rete.Input("trigger", "Trigger", triggerSocket);
     const dataOutput = new Rete.Output("trigger", "Trigger", triggerSocket);
 
-    const fewshotControl = new FewshotControl();
+    const fewshotControl = new FewshotControl({});
 
     node.inspector.add(fewshotControl);
 
@@ -169,9 +169,9 @@ export class EntityDetector extends ThothReteComponent {
 
     const split = result?.replace("\n", "")?.trim()?.split("Types: ");
 
-    const [entities, types] = split ? split.map((item) =>
-      item.split(", ").map((x) => x.trim())
-    ) : [undefined, undefined];
+    const [entities, types] = split
+      ? split.map((item) => item.split(", ").map((x) => x.trim()))
+      : [undefined, undefined];
 
     if (!entities || entities.length === 0) return [];
     if (!types) return [];
