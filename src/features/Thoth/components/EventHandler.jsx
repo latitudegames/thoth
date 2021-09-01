@@ -8,13 +8,15 @@ const EventHandler = ({ pubSub, tab }) => {
   // only using this to handle events, so not rendering anything with it.
   const { createOrFocus, windowTypes } = useLayout();
 
-  const { serialize, getEditor } = useEditor();
+  const { serialize, getEditor, undo, redo } = useEditor();
   const { saveCurrentSpell, getSpell, getCurrentSpell } = useSpell();
   const { getSpellModules } = useModule();
 
   const { events, subscribe } = pubSub;
 
   const {
+    $UNDO,
+    $REDO,
     $SAVE_SPELL,
     $CREATE_STATE_MANAGER,
     $CREATE_PLAYTEST,
@@ -48,6 +50,14 @@ const EventHandler = ({ pubSub, tab }) => {
 
   const onSerialize = () => {
     console.log(serialize());
+  };
+
+  const onUndo = () => {
+    undo();
+  };
+
+  const onRedo = () => {
+    redo();
   };
 
   const onExport = async () => {
@@ -93,6 +103,8 @@ const EventHandler = ({ pubSub, tab }) => {
     [$SERIALIZE(tab.id)]: onSerialize,
     [$EXPORT(tab.id)]: onExport,
     [$CLOSE_EDITOR(tab.id)]: onCloseEditor,
+    [$UNDO(tab.id)]: onUndo,
+    [$REDO(tab.id)]: onRedo,
   };
 
   useEffect(() => {
