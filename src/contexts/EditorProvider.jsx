@@ -20,6 +20,8 @@ const Context = createContext({
   getNodes: () => {},
   loadGraph: () => {},
   setContainer: () => {},
+  undo: () => {},
+  redo: () => {},
 });
 
 export const useEditor = () => useContext(Context);
@@ -66,6 +68,14 @@ const EditorProvider = ({ children }) => {
     console.log("RUN");
   };
 
+  const undo = () => {
+    editorRef.current.trigger("undo");
+  };
+
+  const redo = () => {
+    editorRef.current.trigger("redo");
+  };
+
   const serialize = () => {
     return editorRef.current.toJSON();
   };
@@ -93,6 +103,8 @@ const EditorProvider = ({ children }) => {
     loadGraph,
     setEditor,
     getEditor,
+    undo,
+    redo,
   };
 
   return (

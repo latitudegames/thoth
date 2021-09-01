@@ -5,6 +5,7 @@ import isEqual from "lodash/isEqual";
 import ReactRenderPlugin from "rete-react-render-plugin";
 import ConnectionPlugin from "rete-connection-plugin";
 import ContextMenuPlugin from "rete-context-menu-plugin";
+import HistoryPlugin from "./plugins/historyPlugin";
 import LifecyclePlugin from "./plugins/lifecyclePlugin";
 import AreaPlugin from "./plugins/areaPlugin";
 import TaskPlugin from "./plugins/taskPlugin";
@@ -116,6 +117,9 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
   editor.thoth = thoth;
   editor.thothV2 = thothV2;
   editor.tab = tab;
+
+  // History plugin for undo/redo
+  editor.use(HistoryPlugin, { keyboard: false });
 
   // PLUGINS
   // https://github.com/retejs/comment-plugin

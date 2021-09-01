@@ -95,7 +95,7 @@ export class TenseTransformer extends ThothReteComponent {
     const dataOutput = new Rete.Output("trigger", "Trigger", triggerSocket);
     const out = new Rete.Output("action", "Action", stringSocket);
 
-    const fewshotControl = new FewshotControl();
+    const fewshotControl = new FewshotControl({});
 
     node.inspector.add(fewshotControl);
 
