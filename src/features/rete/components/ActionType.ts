@@ -2,7 +2,6 @@ import Rete from "rete";
 import { ThothReteComponent } from "./ThothReteComponent";
 import { stringSocket, triggerSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
-import { completion } from "../../../utils/openaiHelper";
 
 const fewshot = `Given an action classify the type of action it is
 
@@ -65,7 +64,8 @@ export class ActionTypeComponent extends ThothReteComponent {
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connsected components
-  async worker(node, inputs, outputs, { silent }) {
+  async worker(node, inputs, outputs, { silent, thoth }) {
+    const { completion } = thoth;
     const action = inputs["action"][0];
     const prompt = node.data.fewshot + action + ",";
 
