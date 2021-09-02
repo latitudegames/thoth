@@ -43,6 +43,7 @@ import { ModuleOutput } from "./components/ModuleOutput";
 import { ModuleTriggerOut } from "./components/ModuleTriggerOut";
 import { ModuleTriggerIn } from "./components/ModuleTriggerIn";
 import { HuggingfaceComponent } from "./components/Huggingface";
+import { ProseToScript } from "./components/ProseToScript";
 
 interface EventsTypes extends DefaultEventsTypes {
   run: void;
@@ -100,6 +101,7 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
     new SwitchGate(),
     new TenseTransformer(),
     new TimeDetectorComponent(),
+    new ProseToScript(),
   ];
 
   let modules = [];
