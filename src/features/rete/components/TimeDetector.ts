@@ -2,7 +2,6 @@ import Rete from "rete";
 import { ThothReteComponent } from "./ThothReteComponent";
 import { stringSocket, triggerSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
-import { completion } from "../../../utils/openaiHelper";
 
 // For simplicity quests should be ONE thing not complete X and Y
 const fewshot = `Given an action, predict how long it would take to complete out of the following categories: seconds, minutes, hours, days, weeks, years.
@@ -64,7 +63,8 @@ export class TimeDetectorComponent extends ThothReteComponent {
       .addOutput(dataOutput);
   }
 
-  async worker(node, inputs, outputs, { silent }) {
+  async worker(node, inputs, outputs, { silent, thoth }) {
+    const { completion } = thoth;
     node.data.fewshot = fewshot;
 
     const action = inputs["string"][0];
