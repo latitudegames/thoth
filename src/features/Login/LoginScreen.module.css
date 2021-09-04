@@ -1,0 +1,25 @@
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(20, 20, 20, 0.8);
+  z-index: 99;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.template-panel:hover {
+  /* background-color: var(--dark-3); */
+  border: 1px solid var(--primary);
+}
+.center-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--small);
+}
+.center-container h1 {
+  margin-top: var(--extraSmall);
+  margin-bottom: var(--small);
+}
