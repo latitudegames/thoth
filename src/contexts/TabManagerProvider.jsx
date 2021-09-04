@@ -29,14 +29,15 @@ const TabManager = ({ children }) => {
 
   // eslint-disable-next-line no-unused-vars
   const { events, publish } = usePubSub();
+  // eslint-disable-next-line no-unused-vars
   const [location, setLocation] = useLocation();
   const [tabs, setTabs] = useState(null);
   const [activeTab, setActiveTab] = useState(null);
 
   // handle redirection when active tab changes
-  useEffect(() => {
-    if (location !== "/thoth") setLocation("/thoth");
-  }, [activeTab]);
+  // useEffect(() => {
+  //   if (location !== "/thoth") setLocation("/thoth");
+  // }, [activeTab]);
 
   // Suscribe to changes in the database for active tab, and all tabs
   useEffect(() => {
