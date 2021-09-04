@@ -2,6 +2,7 @@ import { Route, Switch, Redirect } from "wouter";
 import ThothPageWrapper from "./features/common/ThothPage/ThothPageWrapper";
 import Thoth from "./features/Thoth/Thoth";
 import StartScreen from "./features/StartScreen/StartScreen";
+import LoginScreen from "./features/Login/LoginScreen";
 
 import { useTabManager } from "./contexts/TabManagerProvider";
 import LoadingScreen from "./features/common/LoadingScreen/LoadingScreen";
@@ -28,6 +29,7 @@ function App() {
   return (
     <ThothPageWrapper tabs={tabs}>
       <Switch>
+        <Route path="/login" component={LoginScreen} />
         <Route path="/thoth">
           <Thoth />
         </Route>
