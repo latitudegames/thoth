@@ -1,5 +1,5 @@
-import Modal from "../../features/common/Modal/Modal";
-import { useModal } from "../../contexts/ModalProvider";
+import Modal from "../Modal/Modal";
+import { useModal } from "../../../contexts/ModalProvider";
 
 const ExampleModal = ({ content }) => {
   const { closeModal } = useModal();

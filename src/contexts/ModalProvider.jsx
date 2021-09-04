@@ -1,28 +1,27 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
 
-import { getModals } from '../services/Modals'
+import { getModals } from "../features/common/Modals";
 
 const Context = React.createContext({
-  activeModal: '',
+  activeModal: "",
   openModal: () => {},
   closeModal: () => {},
-})
+});
 
-export const useModal = () => React.useContext(Context)
+export const useModal = () => React.useContext(Context);
 
 const ModalContext = ({ children }) => {
-  const modalList = getModals()
-  const [activeModal, setActiveModal] = useState('')
+  const modalList = getModals();
+  const [activeModal, setActiveModal] = useState("");
 
-  const openModal = ({modal, content, title, icon}) => {
-    console.log("hello")
-    setActiveModal({modal, content, title})
-  }
+  const openModal = ({ modal, content, title, icon }) => {
+    setActiveModal({ modal, content, title });
+  };
 
-  const closeModal = modal => {
-    setActiveModal('')
-  }
-  const Modal = modalList[activeModal.modal]
+  const closeModal = (modal) => {
+    setActiveModal("");
+  };
+  const Modal = modalList[activeModal.modal];
 
   return (
     <Context.Provider
@@ -31,10 +30,16 @@ const ModalContext = ({ children }) => {
         closeModal,
       }}
     >
-      {activeModal && <Modal content={activeModal.content} title={activeModal.title} icon={activeModal.icon} />}
+      {activeModal && (
+        <Modal
+          content={activeModal.content}
+          title={activeModal.title}
+          icon={activeModal.icon}
+        />
+      )}
       {children}
     </Context.Provider>
-  )
-}
+  );
+};
 
-export default ModalContext
+export default ModalContext;
