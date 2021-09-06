@@ -4,7 +4,6 @@ export const completion = async (body) => {
   try {
     const response = await fetch(url + "/ml/text/completions", {
       method: "POST",
-      prompt,
       mode: "cors",
       headers: {
         "Content-Type": "application/json",
