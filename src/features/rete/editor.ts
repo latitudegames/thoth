@@ -68,7 +68,7 @@ class ThothEditor extends NodeEditor<EventsTypes> {
 
 let editorTabMap = {};
 
-const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
+const editor = async function ({ container, pubSub, thoth, tab, thothV2 }:{container: any, pubSub: any, thoth: any, tab: any, thothV2: any}) {
   if (editorTabMap[tab.id]) editorTabMap[tab.id].clear();
   // Here we load up all components of the builder into our editor for usage.
   // We might be able to programatically generate components from enki
