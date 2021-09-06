@@ -1,6 +1,5 @@
 import { ThothReteComponent } from "./ThothReteComponent";
 import { EnkiThroughputControl } from "../dataControls/EnkiThroughputControl";
-import { postEnkiCompletion } from "../../../services/game-api/enki";
 
 const info = `Enki is a tool for building both fewshots, as well as entire data sets.  The enki component allows you to select an enki which you or someone else has made in the Enki tool and utilize it in your spell chains.
 
@@ -33,11 +32,12 @@ export class EnkiTask extends ThothReteComponent {
     return node;
   }
 
-  async worker(node, inputs, outputs, { silent }) {
+  async worker(node, inputs, outputs, { silent, thoth }) {
+    const {enkiCompletion} = thoth
     // Assume the inputs is a list of strings (do we know this to be true?)
     const stringInputs = inputs as { [key: string]: string[] };
 
-    const completionResponse = await postEnkiCompletion(
+    const completionResponse = await enkiCompletion(
       node.data.name,
       Object.values(stringInputs).map((inputArray) => inputArray[0])
     );
