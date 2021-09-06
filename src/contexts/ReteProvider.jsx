@@ -67,8 +67,8 @@ const ReteProvider = ({ children, tab }) => {
     return _completion(body);
   };
 
-  const enkiCompletion = async (body) => {
-    return postEnkiCompletion(body);
+  const enkiCompletion = async (taskName,inputs) => {
+    return postEnkiCompletion(taskName,inputs);
   };
 
   const huggingface = async (model, data) => {
