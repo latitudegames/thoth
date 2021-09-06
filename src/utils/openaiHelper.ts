@@ -8,7 +8,7 @@ export const completion = async (body) => {
       mode: "cors",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": process.env.REACT_APP_GAME_KEY,
+        "x-api-key": process.env.REACT_APP_GAME_KEY || "",
       },
       body: JSON.stringify({ ...body, prompt: body.prompt.trimEnd() }),
     });
