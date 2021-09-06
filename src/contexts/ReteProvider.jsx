@@ -1,5 +1,5 @@
 import { useContext, createContext } from "react";
-
+import { postEnkiCompletion } from "../services/game-api/enki";
 import { completion as _completion } from "../utils/openaiHelper";
 import { invokeInference } from "../utils/huggingfaceHelper";
 import { usePubSub } from "./PubSubProvider";
@@ -23,6 +23,7 @@ const Context = createContext({
   setGameState: () => {},
   getModules: async () => {},
   completion: async () => {},
+  enkiCompletion: async () => {},
   huggingface: async () => {},
 });
 
@@ -66,6 +67,10 @@ const ReteProvider = ({ children, tab }) => {
     return _completion(body);
   };
 
+  const enkiCompletion = async (body) => {
+    return postEnkiCompletion(body);
+  };
+
   const huggingface = async (model, data) => {
     return invokeInference(model, data);
   };
@@ -81,6 +86,7 @@ const ReteProvider = ({ children, tab }) => {
     onPlaytest,
     clearTextEditor,
     completion,
+    enkiCompletion,
     huggingface,
     ...modules,
     ...spells,
