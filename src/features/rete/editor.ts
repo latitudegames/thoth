@@ -201,7 +201,7 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
       // Here we would swap out local processing for an endpoint that we send the serialised JSON too.
       // Then we run the fewshots, etc on the backend rather than on the client.
       // Alterative for now is for the client to call our own /openai endpoint.
-      // NOTE need to consider authentication against games API from a web client
+      // NOTE need to consider authentication against Latitude API from a web client
       await engine.abort();
       await engine.process(editor.toJSON(), null, { thoth: thothV2 });
     }
