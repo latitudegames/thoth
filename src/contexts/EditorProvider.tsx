@@ -8,6 +8,7 @@ import { useSpell } from "./SpellProvider";
 
 import { useContext, createContext, useState } from "react";
 import LoadingScreen from "../features/common/LoadingScreen/LoadingScreen";
+import { ModelCompletionOpts, OpenAIResultChoice } from "../utils/openaiHelper";
 
 export type SpellContext = {
   currentSpell: {},
@@ -25,7 +26,11 @@ export type SpellContext = {
   getThothVersion: () => void
 }
 
-export type ReteContext = {
+export type EngineContext = {
+  completion: (body: ModelCompletionOpts) => Promise<String | OpenAIResultChoice | undefined>,
+}
+
+export interface ReteContext extends EngineContext {
   onInspector: () => void,
   onPlayTest: () => void,
   onGameState: () => void,
@@ -37,7 +42,6 @@ export type ReteContext = {
   getGameState: () => void,
   setGameState: () => void,
   getModules: () => void,
-  completion: () => void,
   enkiCompletion: () => void,
   huggingface: () => void,
 }
