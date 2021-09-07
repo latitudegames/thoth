@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import InputComponent from "../../../common/Input/Input";
+
 const Input = ({ control, updateData, initialValue }) => {
   const [value, setValue] = useState(initialValue);
   const { dataKey } = control;
@@ -13,7 +15,7 @@ const Input = ({ control, updateData, initialValue }) => {
 
   return (
     <div style={{ flex: 1, display: "flex" }}>
-      <input
+      <InputComponent
         style={{ flex: 6 }}
         value={value}
         type="text"
