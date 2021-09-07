@@ -1,4 +1,4 @@
-import Rete, { NodeEditor } from "rete";
+import { NodeEditor } from "rete";
 import { EventsTypes as DefaultEventsTypes } from "rete/types/events";
 
 import isEqual from "lodash/isEqual";
@@ -45,6 +45,8 @@ import { ModuleTriggerIn } from "./components/ModuleTriggerIn";
 import { HuggingfaceComponent } from "./components/Huggingface";
 import { ProseToScript } from "./components/ProseToScript";
 
+import { initSharedEngine } from "./engine"
+
 interface EventsTypes extends DefaultEventsTypes {
   run: void;
   save: void;
@@ -67,24 +69,6 @@ class ThothEditor extends NodeEditor<EventsTypes> {
 */
 
 let editorTabMap = {};
-
-export const initSharedEngine = (name: string, modules: any[], components: any[], server: boolean = false) => {
-  const engine = new Rete.Engine(name);
-
-  engine.use(ModulePlugin, { engine, modules } as any);
-
-  if (server) {
-    engine.use(TaskPlugin);
-  }
-
-  engine.bind("run");
-
-  components.forEach((c) => {
-    engine.register(c);
-  });
-
-  return engine;
-}
 
 const editor = async function ({ container, pubSub, thoth, tab, thothV2 }: { container: any, pubSub: any, thoth: any, tab: any, thothV2: any }) {
   if (editorTabMap[tab.id]) editorTabMap[tab.id].clear();
