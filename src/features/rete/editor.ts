@@ -68,11 +68,14 @@ class ThothEditor extends NodeEditor<EventsTypes> {
 
 let editorTabMap = {};
 
-const initSharedEngine=(name: string, modules: any[], components: any[])=>{
+const initSharedEngine = (name: string, modules: any[], components: any[], server: boolean = false) => {
   const engine = new Rete.Engine(name);
 
   engine.use(ModulePlugin, { engine, modules } as any);
-  engine.use(TaskPlugin);
+
+  if (server) {
+    engine.use(TaskPlugin);
+  }
 
   engine.bind("run");
 
@@ -83,7 +86,7 @@ const initSharedEngine=(name: string, modules: any[], components: any[])=>{
   return engine;
 }
 
-const editor = async function ({ container, pubSub, thoth, tab, thothV2 }:{container: any, pubSub: any, thoth: any, tab: any, thothV2: any}) {
+const editor = async function ({ container, pubSub, thoth, tab, thothV2 }: { container: any, pubSub: any, thoth: any, tab: any, thothV2: any }) {
   if (editorTabMap[tab.id]) editorTabMap[tab.id].clear();
   // Here we load up all components of the builder into our editor for usage.
   // We might be able to programatically generate components from enki
@@ -126,8 +129,7 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }:{conta
 
   editorTabMap[tab.id] = editor;
 
-  // The engine is used to process/run the rete graph
-  const engine = new Rete.Engine("demo@0.1.0");
+
 
   // Set up the reactcontext pubsub on the editor so rete components can talk to react
   editor.pubSub = pubSub;
@@ -163,7 +165,6 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }:{conta
       return [component.category];
     },
   });
-  editor.use(ModulePlugin, { engine, modules });
   editor.use(TaskPlugin);
 
   // This should only be needed on client, not server
@@ -195,12 +196,16 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }:{conta
   });
 
   // Register custom components with both the editor and the engine
-  // We will need a wa to share components between client and server
+  // We will need a way to share components between client and server (@seang: this should be covered by upcoming package)
   // WARNING all the plugins from the editor get installed onto the component and modify it.  This effects the components registered in the engine, which already have plugins installed.
   components.forEach((c) => {
     editor.register(c);
-    engine.register(c);
   });
+
+  // The engine is used to process/run the rete graph
+  const engine = initSharedEngine("demo@0.1.0", modules, components)
+  // @seang: moving these two functions to attempt to preserve loading order after the introduction of initSharedEngine
+  editor.use(ModulePlugin, { engine, modules });
 
   editor.on("zoom", ({ source }) => {
     return source !== "dblclick";
@@ -208,7 +213,6 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }:{conta
 
   editor.bind("run");
   editor.bind("save");
-  engine.bind("run");
 
   editor.on(
     "process nodecreated noderemoved connectioncreated connectionremoved",
