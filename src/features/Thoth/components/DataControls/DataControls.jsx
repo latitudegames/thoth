@@ -9,6 +9,7 @@ import css from "./datacontrols.module.css";
 import CodeControl from "./CodeControl";
 import SocketGenerator from "./SocketGenerator";
 import ModuleSelect from "./ModuleSelect";
+import NumberSockets from "./NumberSockets";
 
 const StubComponent = (props) => <div>{props.name}</div>;
 
@@ -24,6 +25,7 @@ const controlMap = {
   outputGenerator: OutputGenerator,
   slider: StubComponent,
   socketGenerator: SocketGenerator,
+  numberSockets: NumberSockets,
 };
 
 const DataControls = ({

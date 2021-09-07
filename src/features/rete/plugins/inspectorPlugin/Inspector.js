@@ -110,7 +110,6 @@ export class Inspector {
     newSockets.forEach((socket) => {
       // get the right constructor method for the socket
       const SocketConstructor = isOutput ? Rete.Output : Rete.Input;
-
       // use the provided information from the socket to generate it
       const newSocket = new SocketConstructor(
         socket.socketKey || socket.name.toLowerCase(),

@@ -38,7 +38,7 @@ import { EnkiTask } from "./components/EnkiTask";
 import { Generator } from "./components/Generator";
 import { RawGenerator } from "./components/RawGenerator";
 import { ResponseToText } from "./components/ResponseToText";
-import { ArrayToStrings } from "./components/ArrayToStrings";
+import { ArrayToItems } from "./components/ArrayToItems";
 import { ResponseToCompletions } from "./components/ResponseToCompletions";
 import { Code } from "./components/Code";
 import { ModuleComponent } from "./components/Module";
@@ -110,7 +110,7 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
     new RawGenerator(),
     new ResponseToText(),
     new ResponseToCompletions(),
-    new ArrayToStrings(),
+    new ArrayToItems(),
     new Condition(),
   ];
 
