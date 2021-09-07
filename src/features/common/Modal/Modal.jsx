@@ -4,7 +4,7 @@ import css from "./modal.module.css";
 import { useModal } from "../../../contexts/ModalProvider";
 import Icon from "../Icon/Icon";
 
-const Modal = ({ options, title, type, icon, pro, ...props }) => {
+const Modal = ({ options = [], title, icon, onClose = () => {}, ...props }) => {
   const { closeModal } = useModal();
   return (
     <div className={css["modal-bg"]}>
@@ -26,31 +26,31 @@ const Modal = ({ options, title, type, icon, pro, ...props }) => {
               {title}
             </h1>
           </div>
-          <div style={{margin: icon ? 'var(--c4)' : 0, marginTop: 0}}>
+          <div style={{ margin: icon ? "var(--c4)" : 0, marginTop: 0 }}>
             {props.children}
           </div>
         </div>
-        <div
-          className={`${css["modal-action-strip"]}`}
-        >
-            <button
-              onClick={() => {
-                closeModal();
-              }}
-            >
-              Close
-            </button>
-          {options && options.map((item, index) => {
-            return (
-              <button
-                key={item}
-                onClick={item.onClick}
-                className={item.className}
-              >
-                {item.label}
-              </button>
-            );
-          })}
+        <div className={`${css["modal-action-strip"]}`}>
+          <button
+            onClick={() => {
+              closeModal();
+              onClose();
+            }}
+          >
+            Close
+          </button>
+          {options &&
+            options.map((item, index) => {
+              return (
+                <button
+                  key={item}
+                  onClick={item.onClick}
+                  className={item.className}
+                >
+                  {item.label}
+                </button>
+              );
+            })}
         </div>
       </div>
     </div>
