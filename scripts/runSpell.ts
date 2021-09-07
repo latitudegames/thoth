@@ -37,7 +37,7 @@ const thoth: EngineContext = {
 
 const main = async () => {
   // only setting this as 'any' until we create a proper engine interface with the proper methods types on it.
-  const engine = initSharedEngine("demo@0.1.0",modules,components) as any;
+  const engine = initSharedEngine("demo@0.1.0",modules,components,true) as any;
 
   // The module is an interface that the module system uses to write data to
   // used internally by the module plugin, and we make use of it here too.
