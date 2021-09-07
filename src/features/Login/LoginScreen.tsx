@@ -11,11 +11,23 @@ const LoginScreen = () => {
     alert("closed");
   };
 
+  const onLogin = () => {
+    alert("Login");
+  };
+
+  const options = [
+    {
+      label: "Login",
+      className: "loginButton",
+      onClick: onLogin,
+    },
+  ];
+
   useEffect(() => {
     openModal({
       modal: "loginModal",
-      content: "TESTING",
-      title: "Login",
+      title: "LOG IN",
+      options,
       onClose,
     });
   }, []);
