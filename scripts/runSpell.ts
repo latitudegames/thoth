@@ -4,7 +4,8 @@ import { Component } from "rete";
 import spell from "./spell";
 import { Module } from "./module";
 import {EngineContext} from "../src/contexts/EditorProvider"
-import initEngine from "./engine";
+import {modules, components} from "./engine"
+import {initSharedEngine} from "../src/features/rete/editor";
 interface ModuleComponent extends Component {
   run: Function;
 }
@@ -36,7 +37,7 @@ const thoth: EngineContext = {
 
 const main = async () => {
   // only setting this as 'any' until we create a proper engine interface with the proper methods types on it.
-  const engine = initEngine() as any;
+  const engine = initSharedEngine("demo@0.1.0",modules,components) as any;
 
   // The module is an interface that the module system uses to write data to
   // used internally by the module plugin, and we make use of it here too.
