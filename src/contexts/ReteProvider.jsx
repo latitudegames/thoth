@@ -22,7 +22,7 @@ const Context = createContext({
   getGameState: () => {},
   setGameState: () => {},
   getModules: async () => {},
-  completion: async () => {},
+  completion: _completion,
   enkiCompletion: async () => {},
   huggingface: async () => {},
 });
