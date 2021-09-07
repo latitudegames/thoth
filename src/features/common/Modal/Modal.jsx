@@ -26,7 +26,13 @@ const Modal = ({ options = [], title, icon, onClose = () => {}, ...props }) => {
               {title}
             </h1>
           </div>
-          <div style={{ margin: icon ? "var(--c4)" : 0, marginTop: 0 }}>
+          <div
+            style={{
+              margin: icon ? "var(--c4)" : 0,
+              marginTop: 0,
+              display: "flex",
+            }}
+          >
             {props.children}
           </div>
         </div>
