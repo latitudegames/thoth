@@ -68,7 +68,7 @@ class ThothEditor extends NodeEditor<EventsTypes> {
 
 let editorTabMap = {};
 
-const initSharedEngine = (name: string, modules: any[], components: any[], server: boolean = false) => {
+export const initSharedEngine = (name: string, modules: any[], components: any[], server: boolean = false) => {
   const engine = new Rete.Engine(name);
 
   engine.use(ModulePlugin, { engine, modules } as any);
