@@ -17,6 +17,23 @@ export type ModelCompletionOpts = {
   logitBias?: { [token: string]: number }
 }
 
+export type OpenAIResultChoice = {
+  text: string,
+  index: number,
+  logprobs: number[],
+  "top_logprobs": any[],
+  "text_offset": number[]
+}
+
+export type  OpenAIResponse =  {
+  id: string,
+  object: string,
+  created: number,
+  model: string,
+  choices: OpenAIResultChoice[]
+  "finish_reason": string
+}
+
 export const completion = async (body: ModelCompletionOpts) => {
   const url = process.env.REACT_APP_API_URL;
 
@@ -31,7 +48,7 @@ export const completion = async (body: ModelCompletionOpts) => {
       body: JSON.stringify({ ...body, prompt: body.prompt?.trimEnd() }),
     });
     const parsedResponse = await response.json();
-    const { result } = parsedResponse;
+    const { result }:{result: OpenAIResultChoice | string} = parsedResponse;
     return result;
   } catch (err) {
     console.log("fetch error", err);
