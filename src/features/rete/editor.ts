@@ -36,6 +36,10 @@ import { StringProcessor } from "./components/StringProcessor";
 import { ForEach } from "./components/ForEach";
 import { EnkiTask } from "./components/EnkiTask";
 import { Generator } from "./components/Generator";
+import { RawGenerator } from "./components/RawGenerator";
+import { ResponseToText } from "./components/ResponseToText";
+import { ArrayToStrings } from "./components/ArrayToStrings";
+import { ResponseToCompletions } from "./components/ResponseToCompletions";
 import { Code } from "./components/Code";
 import { ModuleComponent } from "./components/Module";
 import { ModuleInput } from "./components/ModuleInput";
@@ -44,6 +48,7 @@ import { ModuleTriggerOut } from "./components/ModuleTriggerOut";
 import { ModuleTriggerIn } from "./components/ModuleTriggerIn";
 import { HuggingfaceComponent } from "./components/Huggingface";
 import { ProseToScript } from "./components/ProseToScript";
+import { Condition } from "./components/Condition";
 
 interface EventsTypes extends DefaultEventsTypes {
   run: void;
@@ -102,6 +107,11 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
     new TenseTransformer(),
     new TimeDetectorComponent(),
     new ProseToScript(),
+    new RawGenerator(),
+    new ResponseToText(),
+    new ResponseToCompletions(),
+    new ArrayToStrings(),
+    new Condition(),
   ];
 
   let modules = [];

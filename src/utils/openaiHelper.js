@@ -1,4 +1,4 @@
-export const completion = async (body) => {
+const callModel = async (body) => {
   const url = process.env.REACT_APP_API_URL;
 
   try {
@@ -13,9 +13,20 @@ export const completion = async (body) => {
       body: JSON.stringify({ ...body, prompt: body.prompt.trimEnd() }),
     });
     const parsedResponse = await response.json();
-    const { result } = parsedResponse;
-    return result;
+    return parsedResponse;
   } catch (err) {
     console.log("fetch error", err);
   }
+}
+
+export const completion = async (body) => {
+    const parsedResponse = await callModel(body);
+    const { result } = parsedResponse;
+    return result;
 };
+
+export const fullCompletion = async (body) => {
+  const parsedResponse = await callModel(body);
+  return parsedResponse;
+};
+
