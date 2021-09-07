@@ -1,5 +1,3 @@
-import Rete from "rete";
-
 // import spell from "./spell";
 
 import { TenseTransformer } from "../src/features/rete/components/TenseTransformer";
