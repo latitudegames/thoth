@@ -4,6 +4,7 @@ import { EventsTypes as DefaultEventsTypes } from "rete/types/events";
 import isEqual from "lodash/isEqual";
 import ReactRenderPlugin from "rete-react-render-plugin";
 import ConnectionPlugin from "rete-connection-plugin";
+import ConnectionReroutePlugin from "rete-connection-reroute-plugin";
 import ContextMenuPlugin from "rete-context-menu-plugin";
 import HistoryPlugin from "./plugins/historyPlugin";
 import LifecyclePlugin from "./plugins/lifecyclePlugin";
@@ -127,6 +128,7 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
   // https://github.com/retejs/comment-plugin
   // connection plugin is used to render conections between nodes
   editor.use(ConnectionPlugin);
+  editor.use(ConnectionReroutePlugin);
 
   // React rendering for the editor
   editor.use(ReactRenderPlugin, {
