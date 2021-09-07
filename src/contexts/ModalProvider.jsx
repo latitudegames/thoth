@@ -4,7 +4,7 @@ import { getModals } from "../features/common/Modals";
 
 const Context = React.createContext({
   activeModal: "",
-  openModal: () => {},
+  openModal: (options) => {},
   closeModal: () => {},
 });
 
@@ -14,8 +14,8 @@ const ModalContext = ({ children }) => {
   const modalList = getModals();
   const [activeModal, setActiveModal] = useState("");
 
-  const openModal = ({ modal, content, title, icon }) => {
-    setActiveModal({ modal, content, title });
+  const openModal = ({ modal, content, title, icon, onClose }) => {
+    setActiveModal({ modal, content, title, onClose });
   };
 
   const closeModal = (modal) => {
@@ -35,6 +35,7 @@ const ModalContext = ({ children }) => {
           content={activeModal.content}
           title={activeModal.title}
           icon={activeModal.icon}
+          onClose={activeModal.onClose}
         />
       )}
       {children}
