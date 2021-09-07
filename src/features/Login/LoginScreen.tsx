@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 
+import "./LoginScreen.css";
 import css from "./LoginScreen.module.css";
 
 import { useModal } from "../../contexts/ModalProvider";
