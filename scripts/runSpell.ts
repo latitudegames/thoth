@@ -3,7 +3,7 @@ import "regenerator-runtime/runtime";
 import { Component } from "rete";
 import spell from "./spell";
 import { Module } from "./module";
-import {ReteContext} from "../src/contexts/EditorProvider"
+import {EngineContext} from "../src/contexts/EditorProvider"
 import initEngine from "./engine";
 interface ModuleComponent extends Component {
   run: Function;
@@ -28,9 +28,9 @@ function getTriggeredNode(data, socketKey, map) {
 
 // this will be the interface that we use to mirror any functionality from the client
 // on the server. This completion function should make an actual openAI call.
-const thoth: ReteContext = {
+const thoth: EngineContext = {
   completion: (body) => {
-    return "Joe looks around";
+    return new Promise((resolve,reject)=>{resolve("Joe looks around")})
   },
 };
 
