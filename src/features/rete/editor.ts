@@ -15,35 +15,7 @@ import DisplayPlugin from "./plugins/displayPlugin";
 import ModulePlugin from "./plugins/modulePlugin";
 
 import { MyNode } from "../common/Node/Node";
-import { InputComponent } from "./components/Input";
-import { JoinListComponent } from "./components/JoinList";
-import { TenseTransformer } from "./components/TenseTransformer";
-import { RunInputComponent } from "./components/RunInput";
-import { ActionTypeComponent } from "./components/ActionType";
-import { ItemTypeComponent } from "./components/ItemDetector";
-import { DifficultyDetectorComponent } from "./components/DifficultyDetector";
-import { EntityDetector } from "./components/EntityDetector";
-import { SafetyVerifier } from "./components/SafetyVerifier";
-import { BooleanGate } from "./components/BooleanGate";
-import { TimeDetectorComponent } from "./components/TimeDetector";
-import { Alert } from "./components/AlertMessage";
-import { SwitchGate } from "./components/SwitchGate";
-import { PlaytestPrint } from "./components/PlaytestPrint";
-import { PlaytestInput } from "./components/PlaytestInput";
-import { StateWrite } from "./components/StateWrite";
-import { StateRead } from "./components/StateRead";
-import { StringProcessor } from "./components/StringProcessor";
-import { ForEach } from "./components/ForEach";
-import { EnkiTask } from "./components/EnkiTask";
-import { Generator } from "./components/Generator";
-import { Code } from "./components/Code";
-import { ModuleComponent } from "./components/Module";
-import { ModuleInput } from "./components/ModuleInput";
-import { ModuleOutput } from "./components/ModuleOutput";
-import { ModuleTriggerOut } from "./components/ModuleTriggerOut";
-import { ModuleTriggerIn } from "./components/ModuleTriggerIn";
-import { HuggingfaceComponent } from "./components/Huggingface";
-import { ProseToScript } from "./components/ProseToScript";
+import {components} from "./components/components"
 
 import { initSharedEngine } from "./engine"
 
@@ -72,39 +44,6 @@ let editorTabMap = {};
 
 const editor = async function ({ container, pubSub, thoth, tab, thothV2 }: { container: any, pubSub: any, thoth: any, tab: any, thothV2: any }) {
   if (editorTabMap[tab.id]) editorTabMap[tab.id].clear();
-  // Here we load up all components of the builder into our editor for usage.
-  // We might be able to programatically generate components from enki
-  const components = [
-    new ActionTypeComponent(),
-    new Alert(),
-    new BooleanGate(),
-    new Code(),
-    new DifficultyDetectorComponent(),
-    new EnkiTask(),
-    new EntityDetector(),
-    new ForEach(),
-    new Generator(),
-    new HuggingfaceComponent(),
-    new InputComponent(),
-    new ItemTypeComponent(),
-    new JoinListComponent(),
-    new ModuleComponent(),
-    new ModuleInput(),
-    new ModuleOutput(),
-    new ModuleTriggerOut(),
-    new ModuleTriggerIn(),
-    new PlaytestPrint(),
-    new PlaytestInput(),
-    new RunInputComponent(),
-    new SafetyVerifier(),
-    new StateWrite(),
-    new StateRead(),
-    new StringProcessor(),
-    new SwitchGate(),
-    new TenseTransformer(),
-    new TimeDetectorComponent(),
-    new ProseToScript(),
-  ];
 
   let modules = [];
 
