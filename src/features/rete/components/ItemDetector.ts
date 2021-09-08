@@ -2,7 +2,6 @@ import Rete from "rete";
 import { ThothReteComponent } from "./ThothReteComponent";
 import { stringSocket, triggerSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
-import { completion } from "../../../utils/openaiHelper";
 
 // For simplicity quests should be ONE thing not complete X and Y
 const fewshot = `Given an action, detect the item which is taken.
@@ -49,7 +48,8 @@ export class ItemTypeComponent extends ThothReteComponent {
       .addOutput(out);
   }
 
-  async worker(node, inputs, outputs, { silent }) {
+  async worker(node, inputs, outputs, { silent, thoth }) {
+    const { completion } = thoth;
     const action = inputs["string"][0];
     const prompt = node.data.fewshots + action + ",";
 

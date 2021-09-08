@@ -1,9 +1,4 @@
-import Rete from "rete";
-
 // import spell from "./spell";
-
-import TaskPlugin from "../src/features/rete/plugins/taskPlugin";
-import ModulePlugin from "../src/features/rete/plugins/modulePlugin";
 
 import { TenseTransformer } from "../src/features/rete/components/TenseTransformer";
 import { ModuleInput } from "../src/features/rete/components/ModuleInput";
@@ -33,7 +28,7 @@ import { ModuleTriggerIn } from "../src/features/rete/components/ModuleTriggerIn
 // import { Code } from "../src/features/rete/components/Code";
 // import { ModuleComponent } from "../src/features/rete/components/Module";
 
-const components = [
+export const components = [
   // new ActionTypeComponent(),
   // new Alert(),
   // new BooleanGate(),
@@ -63,21 +58,4 @@ const components = [
   // new TimeDetectorComponent(),
 ];
 
-let modules = [];
-
-const initEngine = () => {
-  const engine = new Rete.Engine("demo@0.1.0");
-
-  engine.use(ModulePlugin, { engine, modules } as any);
-  engine.use(TaskPlugin);
-
-  engine.bind("run");
-
-  components.forEach((c) => {
-    engine.register(c);
-  });
-
-  return engine;
-};
-
-export default initEngine;
+export let modules = [];

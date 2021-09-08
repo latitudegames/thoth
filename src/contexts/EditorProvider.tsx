@@ -8,27 +8,85 @@ import { useSpell } from "./SpellProvider";
 
 import { useContext, createContext, useState } from "react";
 import LoadingScreen from "../features/common/LoadingScreen/LoadingScreen";
+import { ModelCompletionOpts, OpenAIResultChoice } from "../utils/openaiHelper";
+
+export type SpellContext = {
+  currentSpell: {},
+  getCurrentSpell: () => void,
+  updateCurrentSpell: {},
+  loadSpell: () => void,
+  saveSpell: () => void,
+  newSpell: () => void,
+  saveCurrentSpell: () => void,
+  stateHistory: never[],
+  currentGameState: {},
+  getCurrentGameState: () => void,
+  rewriteCurrentGameState: () => void,
+  updateCurrentGameState: () => void,
+  getThothVersion: () => void
+}
+
+export type EngineContext = {
+  completion: (body: ModelCompletionOpts) => Promise<String | OpenAIResultChoice | undefined>,
+  getCurrentGameState: () => void,
+  updateCurrentGameState: ()=> void
+}
+
+export interface ReteContext extends EngineContext {
+  onInspector: () => void,
+  onPlayTest: () => void,
+  onGameState: () => void,
+  sendToPlaytest: () => void,
+  sendToInspector: () => void,
+  clearTextEditor: () => void,
+  getSpell: () => void,
+  getModule: () => void,
+  getGameState: () => void,
+  setGameState: () => void,
+  getModules: () => void,
+  enkiCompletion: () => void,
+  huggingface: () => void,
+}
+
+export type ThothTab = {
+  layoutJson: string,
+  name: string,
+  id: string,
+  spell: string,
+  module: string,
+  type: string,
+  active: boolean,
+}
 
 const Context = createContext({
-  run: () => {},
-  getEditor: () => {},
+  run: () => { },
+  getEditor: () => { },
   editor: {},
-  serialize: () => {},
-  buildEditor: () => {},
-  setEditor: () => {},
-  getNodeMap: () => {},
-  getNodes: () => {},
-  loadGraph: () => {},
-  setContainer: () => {},
-  undo: () => {},
-  redo: () => {},
+  serialize: () => { },
+  buildEditor: (el: HTMLDivElement, spell: SpellContext, tab: ThothTab, reteInterface: ReteContext) => { },
+  setEditor: (editor: any) => { },
+  getNodeMap: () => { },
+  getNodes: () => { },
+  loadGraph: (graph: any) => { },
+  setContainer: () => { },
+  undo: () => { },
+  redo: () => { },
 });
 
 export const useEditor = () => useContext(Context);
 
 const EditorProvider = ({ children }) => {
-  const [editor, setEditorState] = useState();
-  const editorRef = useRef(null);
+  const [editor, setEditorState] = useState({
+    components: [],
+    loadGraph: (graph: any) => { }
+  });
+  const editorRef = useRef({
+    trigger: (
+      event: string) => { },
+    toJSON: () => { }
+  }
+
+  );
   const pubSub = usePubSub();
 
   const setEditor = (editor) => {
@@ -92,6 +150,10 @@ const EditorProvider = ({ children }) => {
     editor.loadGraph(graph);
   };
 
+  const setContainer = () => {
+    console.log("set container")
+  }
+
   const publicInterface = {
     run,
     serialize,
@@ -105,6 +167,7 @@ const EditorProvider = ({ children }) => {
     getEditor,
     undo,
     redo,
+    setContainer
   };
 
   return (
@@ -113,9 +176,10 @@ const EditorProvider = ({ children }) => {
 };
 
 export const Editor = ({ tab, children }) => {
-  const [loaded, setLoaded] = useState(null);
+  const [loaded, setLoaded] = useState(false);
   const { buildEditor } = useEditor();
   const spell = useSpell();
+  const { getCurrentGameState,updateCurrentGameState } = spell
   // This will be the main interface between thoth and rete
   const reteInterface = useRete();
 
@@ -135,12 +199,12 @@ export const Editor = ({ tab, children }) => {
         onDragOver={(e) => {
           e.preventDefault();
         }}
-        onDrop={(e) => {}}
+        onDrop={(e) => { }}
       >
         <div
           ref={(el) => {
             if (el && !loaded) {
-              buildEditor(el, spell, tab, reteInterface);
+              buildEditor(el, spell, tab, { ...reteInterface, getCurrentGameState, updateCurrentGameState });
               setLoaded(true);
             }
           }}
