@@ -1,4 +1,4 @@
-import Rete, { NodeEditor } from "rete";
+import { NodeEditor } from "rete";
 import { EventsTypes as DefaultEventsTypes } from "rete/types/events";
 
 import isEqual from "lodash/isEqual";
@@ -15,35 +15,9 @@ import DisplayPlugin from "./plugins/displayPlugin";
 import ModulePlugin from "./plugins/modulePlugin";
 
 import { MyNode } from "../common/Node/Node";
-import { InputComponent } from "./components/Input";
-import { JoinListComponent } from "./components/JoinList";
-import { TenseTransformer } from "./components/TenseTransformer";
-import { RunInputComponent } from "./components/RunInput";
-import { ActionTypeComponent } from "./components/ActionType";
-import { ItemTypeComponent } from "./components/ItemDetector";
-import { DifficultyDetectorComponent } from "./components/DifficultyDetector";
-import { EntityDetector } from "./components/EntityDetector";
-import { SafetyVerifier } from "./components/SafetyVerifier";
-import { BooleanGate } from "./components/BooleanGate";
-import { TimeDetectorComponent } from "./components/TimeDetector";
-import { Alert } from "./components/AlertMessage";
-import { SwitchGate } from "./components/SwitchGate";
-import { PlaytestPrint } from "./components/PlaytestPrint";
-import { PlaytestInput } from "./components/PlaytestInput";
-import { StateWrite } from "./components/StateWrite";
-import { StateRead } from "./components/StateRead";
-import { StringProcessor } from "./components/StringProcessor";
-import { ForEach } from "./components/ForEach";
-import { EnkiTask } from "./components/EnkiTask";
-import { Generator } from "./components/Generator";
-import { Code } from "./components/Code";
-import { ModuleComponent } from "./components/Module";
-import { ModuleInput } from "./components/ModuleInput";
-import { ModuleOutput } from "./components/ModuleOutput";
-import { ModuleTriggerOut } from "./components/ModuleTriggerOut";
-import { ModuleTriggerIn } from "./components/ModuleTriggerIn";
-import { HuggingfaceComponent } from "./components/Huggingface";
-import { ProseToScript } from "./components/ProseToScript";
+import {components} from "./components/components"
+
+import { initSharedEngine } from "./engine"
 
 interface EventsTypes extends DefaultEventsTypes {
   run: void;
@@ -68,41 +42,8 @@ class ThothEditor extends NodeEditor<EventsTypes> {
 
 let editorTabMap = {};
 
-const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
+const editor = async function ({ container, pubSub, thoth, tab, thothV2 }: { container: any, pubSub: any, thoth: any, tab: any, thothV2: any }) {
   if (editorTabMap[tab.id]) editorTabMap[tab.id].clear();
-  // Here we load up all components of the builder into our editor for usage.
-  // We might be able to programatically generate components from enki
-  const components = [
-    new ActionTypeComponent(),
-    new Alert(),
-    new BooleanGate(),
-    new Code(),
-    new DifficultyDetectorComponent(),
-    new EnkiTask(),
-    new EntityDetector(),
-    new ForEach(),
-    new Generator(),
-    new HuggingfaceComponent(),
-    new InputComponent(),
-    new ItemTypeComponent(),
-    new JoinListComponent(),
-    new ModuleComponent(),
-    new ModuleInput(),
-    new ModuleOutput(),
-    new ModuleTriggerOut(),
-    new ModuleTriggerIn(),
-    new PlaytestPrint(),
-    new PlaytestInput(),
-    new RunInputComponent(),
-    new SafetyVerifier(),
-    new StateWrite(),
-    new StateRead(),
-    new StringProcessor(),
-    new SwitchGate(),
-    new TenseTransformer(),
-    new TimeDetectorComponent(),
-    new ProseToScript(),
-  ];
 
   let modules = [];
 
@@ -111,8 +52,7 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
 
   editorTabMap[tab.id] = editor;
 
-  // The engine is used to process/run the rete graph
-  const engine = new Rete.Engine("demo@0.1.0");
+
 
   // Set up the reactcontext pubsub on the editor so rete components can talk to react
   editor.pubSub = pubSub;
@@ -148,7 +88,6 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
       return [component.category];
     },
   });
-  editor.use(ModulePlugin, { engine, modules });
   editor.use(TaskPlugin);
 
   // This should only be needed on client, not server
@@ -180,12 +119,16 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
   });
 
   // Register custom components with both the editor and the engine
-  // We will need a wa to share components between client and server
+  // We will need a way to share components between client and server (@seang: this should be covered by upcoming package)
   // WARNING all the plugins from the editor get installed onto the component and modify it.  This effects the components registered in the engine, which already have plugins installed.
   components.forEach((c) => {
     editor.register(c);
-    engine.register(c);
   });
+
+  // The engine is used to process/run the rete graph
+  const engine = initSharedEngine("demo@0.1.0", modules, components)
+  // @seang: moving these two functions to attempt to preserve loading order after the introduction of initSharedEngine
+  editor.use(ModulePlugin, { engine, modules });
 
   editor.on("zoom", ({ source }) => {
     return source !== "dblclick";
@@ -193,15 +136,14 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
 
   editor.bind("run");
   editor.bind("save");
-  engine.bind("run");
 
   editor.on(
     "process nodecreated noderemoved connectioncreated connectionremoved",
     async () => {
       // Here we would swap out local processing for an endpoint that we send the serialised JSON too.
       // Then we run the fewshots, etc on the backend rather than on the client.
-      // Alterative for now is for the client to call our own /openai endpoint.
-      // NOTE need to consider authentication against games API from a web client
+      // Alternative for now is for the client to call our own /openai endpoint.
+      // NOTE need to consider authentication against Latitude API from a web client
       await engine.abort();
       await engine.process(editor.toJSON(), null, { thoth: thothV2 });
     }

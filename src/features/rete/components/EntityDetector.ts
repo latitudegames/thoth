@@ -2,7 +2,6 @@ import Rete from "rete";
 import { ThothReteComponent } from "./ThothReteComponent";
 import { stringSocket, triggerSocket, arraySocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
-import { completion } from "../../../utils/openaiHelper";
 
 const fewshot = `Given an action, detect what entities the player is interacting with. Ignore entities that the player is just asking about.
 
@@ -155,7 +154,8 @@ export class EntityDetector extends ThothReteComponent {
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connected components
-  async worker(node, inputs, outputs, { silent }) {
+  async worker(node, inputs, outputs, { silent, thoth }) {
+    const { completion } = thoth;
     const action = inputs["action"][0];
     const prompt = node.data.fewshot + action + "\nEntities:";
 

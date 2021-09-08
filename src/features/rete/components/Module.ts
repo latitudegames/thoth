@@ -69,7 +69,7 @@ export class ModuleComponent extends Rete.Component {
       { name: node.data.module },
       (module) => {
         if (cache && !isEqual(cache, module.toJSON())) {
-          // make sur ethat the module manager has the latest updated version of the module
+          // make sure that the module manager has the latest updated version of the module
           this.editor.moduleManager.updateModule(module.toJSON());
           this.updateSockets(node, module.name);
         }
