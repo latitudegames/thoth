@@ -28,6 +28,8 @@ export type SpellContext = {
 
 export type EngineContext = {
   completion: (body: ModelCompletionOpts) => Promise<String | OpenAIResultChoice | undefined>,
+  getCurrentGameState: () => void,
+  updateCurrentGameState: ()=> void
 }
 
 export interface ReteContext extends EngineContext {
@@ -177,6 +179,7 @@ export const Editor = ({ tab, children }) => {
   const [loaded, setLoaded] = useState(false);
   const { buildEditor } = useEditor();
   const spell = useSpell();
+  const { getCurrentGameState,updateCurrentGameState } = spell
   // This will be the main interface between thoth and rete
   const reteInterface = useRete();
 
@@ -201,7 +204,7 @@ export const Editor = ({ tab, children }) => {
         <div
           ref={(el) => {
             if (el && !loaded) {
-              buildEditor(el, spell, tab, reteInterface);
+              buildEditor(el, spell, tab, { ...reteInterface, getCurrentGameState, updateCurrentGameState });
               setLoaded(true);
             }
           }}
