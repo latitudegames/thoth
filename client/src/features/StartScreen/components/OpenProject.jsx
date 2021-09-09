@@ -3,7 +3,7 @@ import Panel from "../../common/Panel/Panel";
 import ProjectRow from "./ProjectRow";
 import FileInput from "./FileInput";
 import thothBanner from "../version-banner-0.0.0beta.jpg";
-import Icon from "../../common/Icon/Icon";
+import Icon from "@thoth/core/react/Icon/Icon";
 import { useSpell } from "../../../contexts/SpellProvider";
 import { useLocation } from "wouter";
 import { useTabManager } from "../../../contexts/TabManagerProvider";
