@@ -1,16 +1,37 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useLocation } from "wouter";
+
 import Modal from "../Modal/Modal";
+import { useModal } from "../../../contexts/ModalProvider";
+import { useAuth } from "../../../contexts/AuthProvider";
 
 import css from "./loginModal.module.css";
 
 const LoginModal = ({ title, onClose }) => {
+  const [, setLocation] = useLocation();
+  const [error, setError] = useState("");
+  const { login } = useAuth();
+  const { closeModal } = useModal();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = handleSubmit((data) => console.log(data));
+  const onSubmit = handleSubmit(async (data) => {
+    const response: any = await login(data.email, data.password);
+
+    if (response.error) {
+      setError(response.error.message);
+    }
+
+    if (response.id) {
+      closeModal();
+      setLocation("/home");
+    }
+  });
 
   const options = [
     {
@@ -22,10 +43,11 @@ const LoginModal = ({ title, onClose }) => {
 
   return (
     <Modal title={title} icon="info" onClose={onClose} options={options}>
-      <div className={css["loginContainer"]}>
+      <div className={css["login-container"]}>
+        {error && <span className={css["error-message"]}>{error}</span>}
         <form>
           {/* register your input into the hook by invoking the "register" function */}
-          <div className={css["inputContainer"]}>
+          <div className={css["input-container"]}>
             <label className={css["label"]} htmlFor="">
               Email
             </label>
@@ -38,7 +60,7 @@ const LoginModal = ({ title, onClose }) => {
           </div>
 
           {/* include validation with required or other standard HTML validation rules */}
-          <div className={css["inputContainer"]}>
+          <div className={css["input-container"]}>
             <label className={css["label"]} htmlFor="">
               Password
             </label>
