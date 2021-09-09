@@ -1,18 +1,57 @@
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 import Modal from "../Modal/Modal";
-import InputComponent from "../Input/Input";
 
-const LoginModal = ({ title, onClose, options }) => {
-  const [value, setValue] = useState("");
+import css from "./loginModal.module.css";
 
-  const inputStyle = {
-    flex: 6,
-    marginTop: 25,
-  };
+const LoginModal = ({ title, onClose }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = handleSubmit((data) => console.log(data));
+
+  const options = [
+    {
+      className: `${css["loginButton"]} primary`,
+      label: "login",
+      onClick: onSubmit,
+    },
+  ];
 
   return (
     <Modal title={title} icon="info" onClose={onClose} options={options}>
-      <InputComponent value={value} onChange={setValue} style={inputStyle} />
+      <div className={css["loginContainer"]}>
+        <form>
+          {/* register your input into the hook by invoking the "register" function */}
+          <div className={css["inputContainer"]}>
+            <label className={css["label"]} htmlFor="">
+              Email
+            </label>
+            <input
+              type="text"
+              className={css["input"]}
+              defaultValue="test"
+              {...register("email", { required: true })}
+            />
+          </div>
+
+          {/* include validation with required or other standard HTML validation rules */}
+          <div className={css["inputContainer"]}>
+            <label className={css["label"]} htmlFor="">
+              Password
+            </label>
+            <input
+              type="text"
+              className={css["input"]}
+              {...register("password", { required: true })}
+            />
+          </div>
+          {/* errors will return when field validation fails  */}
+          {errors.password && <span>This field is required</span>}
+        </form>
+      </div>
     </Modal>
   );
 };
