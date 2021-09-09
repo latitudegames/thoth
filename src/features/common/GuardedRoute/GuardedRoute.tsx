@@ -4,7 +4,7 @@ const GuardedRoute = ({ component: Component, auth, ...rest }) => (
   <Route
     {...rest}
     component={(props) =>
-      auth === true ? <Component {...props} /> : <Redirect to="/" />
+      auth ? <Component {...props} /> : <Redirect to="/" />
     }
   />
 );
