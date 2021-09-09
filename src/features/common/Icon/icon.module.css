@@ -6,6 +6,9 @@
   position: relative;
 }
 
+.account {
+  background-image: url(./account.svg);
+}
 .add {
   background-image: url(./add.svg);
 }
@@ -50,6 +53,9 @@
 }
 .pause {
   background-image: url(./pause.svg);
+}
+.person {
+  background-image: url(./person.svg);
 }
 .play-print {
   background-image: url(./play-print.svg);
@@ -123,4 +129,3 @@
 .tiles {
   background-image: url(./tiles.svg);
 }
-
