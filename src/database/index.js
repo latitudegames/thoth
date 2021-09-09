@@ -4,6 +4,7 @@ import spellCollection from "./schemas/spell";
 import settingsCollection from "./schemas/settings";
 import tabCollection from "./schemas/tab";
 import moduleCollection from "./schemas/module";
+import userCollection from "./schemas/user";
 
 import loadSpellModel from "./models/spellModel";
 import loadModuleModel from "./models/moduleModel";
@@ -35,6 +36,7 @@ export const initDB = async () => {
     settingsCollection,
     tabCollection,
     moduleCollection,
+    userCollection,
   ];
 
   await database.addCollections(mergeCollections(collections));
