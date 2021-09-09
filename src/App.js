@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { Route, Switch, Redirect } from "wouter";
 import { useAuth } from "./contexts/AuthProvider";
+import { useTabManager } from "./contexts/TabManagerProvider";
+import GuardedRoute from "./features/common/GuardedRoute/GuardedRoute";
 import ThothPageWrapper from "./features/common/ThothPage/ThothPageWrapper";
+import LoadingScreen from "./features/common/LoadingScreen/LoadingScreen";
+
 import Thoth from "./features/Thoth/Thoth";
 import StartScreen from "./features/StartScreen/StartScreen";
 import LoginScreen from "./features/Login/LoginScreen";
-
-import { useTabManager } from "./contexts/TabManagerProvider";
-import LoadingScreen from "./features/common/LoadingScreen/LoadingScreen";
 
 import "flexlayout-react/style/dark.css";
 import "./design-globals/design-globals.css";
@@ -19,6 +20,8 @@ function App() {
   const [checked, setChecked] = useState(false);
   const { tabs } = useTabManager();
   const { user, getUser, checkIn } = useAuth();
+
+  const authCheck = user && user.accessToken;
 
   useEffect(() => {
     (async () => {
@@ -46,11 +49,19 @@ function App() {
   return (
     <ThothPageWrapper tabs={tabs}>
       <Switch>
-        <Route path="/login" component={LoginScreen} />
-        <Route path="/thoth" component={Thoth} />
-        <Route path="/home" component={StartScreen} />
-        <Route path="/home/create-new" component={CreateNewScreen} />
-        <Route path="/home/aall-projects" component={AllProjectsScreen} />
+        <Route path="/login" auth={authCheck} component={LoginScreen} />
+        <Route path="/thoth" auth={authCheck} component={Thoth} />
+        <GuardedRoute path="/home" auth={authCheck} component={StartScreen} />
+        <Route
+          path="/home/create-new"
+          auth={authCheck}
+          component={CreateNewScreen}
+        />
+        <Route
+          path="/home/aall-projects"
+          auth={user}
+          component={AllProjectsScreen}
+        />
         <Route path="/">
           {user ? <Redirect to="/home" /> : <Redirect to="/login" />}
         </Route>
