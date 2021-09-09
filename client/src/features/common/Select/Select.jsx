@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 
 import Creatable from "react-select/creatable";
-import Icon, { componentCategories } from "../Icon/Icon";
+import Icon, { componentCategories } from "@thoth/core/react/Icon/Icon";
 import Chip from "../Chip/Chip";
 
 import css from "./select.module.css";

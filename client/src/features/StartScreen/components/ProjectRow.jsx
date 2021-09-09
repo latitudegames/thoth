@@ -1,4 +1,4 @@
-import Icon from "../../common/Icon/Icon";
+import Icon from "@thoth/core/react/Icon/Icon";
 import css from "../startScreen.module.css";
 
 const ProjectRow = ({
