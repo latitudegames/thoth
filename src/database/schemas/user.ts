@@ -15,7 +15,7 @@ const userSchema = {
 };
 
 const collection = {
-  settings: {
+  user: {
     schema: userSchema,
   },
 };
