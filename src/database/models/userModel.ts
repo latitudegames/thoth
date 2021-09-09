@@ -1,5 +1,5 @@
 const loadSpellModel = (db) => {
-  const getUser = async (id) => {
+  const getUserById = async (id) => {
     return db.user
       .findOne({
         selector: {
@@ -9,13 +9,19 @@ const loadSpellModel = (db) => {
       .exec();
   };
 
+  const getUser = async () => {
+    const userDocs = await db.user.find().exec();
+
+    return userDocs.length > 0 ? userDocs[0].toJSON() : null;
+  };
+
   const createUser = async (id) => {
     return db.user.insert({ id });
   };
 
   const getOrCreate = async (id) => {
     try {
-      let user = await getUser(id);
+      let user = await getUserById(id);
       if (!user) {
         user = await createUser(id);
       }
@@ -28,7 +34,7 @@ const loadSpellModel = (db) => {
   };
 
   const updateUser = async (id, update) => {
-    const user = await getUser(id);
+    const user = await getUserById(id);
 
     return user.atomicUpdate((oldDoc) => {
       return { ...oldDoc, ...update };
@@ -36,7 +42,7 @@ const loadSpellModel = (db) => {
   };
 
   const setAuthData = async (id, authData) => {
-    const user = await getUser(id);
+    const user = await getUserById(id);
 
     return user.atomicUpdate((oldData) => {
       return {
