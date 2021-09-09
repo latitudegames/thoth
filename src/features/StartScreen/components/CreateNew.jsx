@@ -5,6 +5,8 @@ import {
   colors,
 } from "unique-names-generator";
 
+import { useLocation } from "wouter";
+
 import css from "../startScreen.module.css";
 import Panel from "../../common/Panel/Panel";
 import TemplatePanel from "./TemplatePanel";
@@ -33,6 +35,7 @@ const templates = [
 ];
 
 const CreateNew = ({ setNewVisible }) => {
+  const [, setLocation] = useLocation();
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const { newSpell } = useSpell();
   const { openTab, clearTabs } = useTabManager();
@@ -46,6 +49,7 @@ const CreateNew = ({ setNewVisible }) => {
 
     await clearTabs();
     await openTab({ name: spell.name, spellId: spell.name, type: "spell" });
+    setLocation("/thoth");
   };
 
   return (
