@@ -55,7 +55,7 @@ const TabManager = ({ children }) => {
       await db.tabs.find().$.subscribe((result) => {
         if (!result) return;
         // If there are no tabs, we route the person back to the home screen
-        if (result.length === 0) setLocation("/home");
+        // if (result.length === 0) setLocation("/home");
 
         setTabs(result.map((tab) => tab.toJSON()));
       });
