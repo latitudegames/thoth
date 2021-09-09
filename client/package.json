@@ -45,7 +45,8 @@
     "unique-names-generator": "^4.5.0",
     "uuid": "^8.3.2",
     "web-vitals": "^1.0.1",
-    "wouter": "^2.7.4"
+    "wouter": "^2.7.4",
+    "@thoth/core": "0.0.1"
   },
   "scripts": {
     "start": "PORT=3001 FAST_REFRESH=false react-scripts start",
