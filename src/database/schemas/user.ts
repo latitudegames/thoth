@@ -8,6 +8,21 @@ const userSchema = {
       type: "string",
       primary: true,
     },
+    username: {
+      type: "string",
+    },
+    email: {
+      type: "string",
+    },
+    accessToken: {
+      type: "string",
+    },
+    groups: {
+      type: "array",
+    },
+    lastLogin: {
+      type: "number",
+    },
     authData: {
       type: "string",
     },
