@@ -3,8 +3,11 @@ import classnames from "classnames";
 import { VscClose } from "react-icons/vsc";
 import MenuBar from "../MenuBar/MenuBar";
 
+import Icon from "../Icon/Icon";
+
 import css from "./tabBar.module.css";
 import { useTabManager } from "../../../contexts/TabManagerProvider";
+import { useAuth } from "../../../contexts/AuthProvider";
 
 const Tab = (props) => {
   const { switchTab, closeTab } = useTabManager();
@@ -37,6 +40,8 @@ const Tab = (props) => {
 };
 
 const TabBar = ({ tabs }) => {
+  const { user } = useAuth();
+
   return (
     <div className={css["th-tabbar"]}>
       <div className={css["tabbar-section"]}>
@@ -44,6 +49,9 @@ const TabBar = ({ tabs }) => {
       </div>
       <div className={css["tabbar-section"]}>
         {tabs && tabs.map((tab, i) => <Tab {...tab} key={i} />)}
+      </div>
+      <div className={css["tabbar-user"]}>
+        {<Icon name="account" size={24} />}
       </div>
     </div>
   );
