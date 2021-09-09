@@ -14,7 +14,7 @@ import SocketGenerator from "./plugins/socketGenerator";
 import DisplayPlugin from "./plugins/displayPlugin";
 import ModulePlugin from "./plugins/modulePlugin";
 
-import { MyNode } from "../common/Node/Node";
+import { MyNode } from "./react/Node/Node";
 import {components} from "./components/components"
 
 import { initSharedEngine } from "./engine"
