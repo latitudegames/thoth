@@ -7,7 +7,7 @@
   align-items: center;
   box-sizing: border-box;
   z-index: 8;
-  margin-bottom: var(--extraSmall)
+  margin-bottom: var(--extraSmall);
 }
 .tabbar-section {
   display: flex;
@@ -38,6 +38,12 @@
   align-items: center;
   flex: 1;
   cursor: pointer !important;
+}
+
+.tabbar-user {
+  display: inline-block;
+  position: absolute;
+  right: 15px;
 }
 
 .tabbar-tab.active {
