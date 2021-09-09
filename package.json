@@ -1,6 +1,6 @@
 {
-  "name": "@thoth/root", 
-  "version": "0.0.1", 
+  "name": "@thoth/root",
+  "version": "0.0.1",
   "private": true,
   "workspaces": {
     "packages": [
@@ -11,6 +11,8 @@
     "node": ">=14.17.6",
     "npm": ">=6.12.0",
     "yarn": "^1.22.11"
+  },
+  "devDependencies": {
+    "lerna": "^4.0.0"
   }
 }
-
