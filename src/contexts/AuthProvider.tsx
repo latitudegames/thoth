@@ -6,7 +6,8 @@ import { useDB } from "./DatabaseProvider";
 const Context = createContext({
   login: (email, password) => {},
   user: {} as any,
-  checkIn: () => {},
+  checkIn: (user) => {},
+  getUser: () => {},
   authHeader: () => {},
 });
 
@@ -32,7 +33,13 @@ const AuthProvider = ({ children }) => {
     return response;
   };
 
-  const checkIn = () => {};
+  const getUser = async () => {
+    return models.user.getUser();
+  };
+
+  const checkIn = (user) => {
+    setUser(user);
+  };
 
   const authHeader = () => {
     if (user && user?.authData) {
@@ -47,6 +54,7 @@ const AuthProvider = ({ children }) => {
     user,
     checkIn,
     authHeader,
+    getUser,
   };
 
   return (
