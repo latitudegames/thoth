@@ -7,6 +7,9 @@
       "client"
     ]
   },
+  "scripts": {
+    "start": "lerna exec --scope @thoth/client -- yarn start"
+  },
   "engines": {
     "node": ">=14.17.6",
     "npm": ">=6.12.0",
