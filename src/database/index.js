@@ -8,6 +8,7 @@ import userCollection from "./schemas/user";
 
 import loadSpellModel from "./models/spellModel";
 import loadModuleModel from "./models/moduleModel";
+import userModel from "./models/userModel";
 
 addRxPlugin(require("pouchdb-adapter-idb"));
 
@@ -101,6 +102,7 @@ export const initDB = async () => {
   const models = {
     spells: loadSpellModel(database),
     modules: loadModuleModel(database),
+    user: userModel(database),
   };
 
   return {
