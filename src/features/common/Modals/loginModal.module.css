@@ -1,14 +1,21 @@
 .input {
   flex: 1;
   width: 100%;
-  margin-top: 10px;
+  margin-top: var(--c1);
 }
 
-.inputContainer {
-  margin-top: 20px;
+.input-container {
+  margin-top: var(--c3);
 }
 
-.loginContainer {
+.login-container {
   display: flex;
   flex-direction: column;
+  margin-bottom: var(--c1);
+}
+
+.error-message {
+  margin-top: var(--c1);
+  color: var(--red);
+  text-align: center;
 }
