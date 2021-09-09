@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 
-import "./LoginScreen.css";
 import css from "./LoginScreen.module.css";
 
 import { useModal } from "../../contexts/ModalProvider";
@@ -12,23 +11,10 @@ const LoginScreen = () => {
     alert("closed");
   };
 
-  const onLogin = () => {
-    alert("Login");
-  };
-
-  const options = [
-    {
-      label: "Login",
-      className: "loginButton",
-      onClick: onLogin,
-    },
-  ];
-
   useEffect(() => {
     openModal({
       modal: "loginModal",
       title: "LOG IN",
-      options,
       onClose,
     });
   }, []);
