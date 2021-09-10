@@ -67,7 +67,7 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2, node }:
 
   // React rendering for the editor
   editor.use(ReactRenderPlugin, {
-    // MyNode is a custom default style for nodes
+    // this component parameter is a custom default style for nodes
     component: node,
   });
   // renders a context menu on right click that shows available nodes
