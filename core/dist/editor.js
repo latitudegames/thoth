@@ -62,8 +62,6 @@ import InspectorPlugin from "./plugins/inspectorPlugin";
 import SocketGenerator from "./plugins/socketGenerator";
 import DisplayPlugin from "./plugins/displayPlugin";
 import ModulePlugin from "./plugins/modulePlugin";
-import { MyNode } from "./react/Node/Node";
-import { components } from "./components/components";
 import { initSharedEngine } from "./engine";
 var ThothEditor = /** @class */ (function (_super) {
     __extends(ThothEditor, _super);
@@ -77,7 +75,7 @@ var ThothEditor = /** @class */ (function (_super) {
 */
 var editorTabMap = {};
 var editor = function (_a) {
-    var container = _a.container, pubSub = _a.pubSub, thoth = _a.thoth, tab = _a.tab, thothV2 = _a.thothV2;
+    var container = _a.container, pubSub = _a.pubSub, thoth = _a.thoth, tab = _a.tab, thothV2 = _a.thothV2, node = _a.node, components = _a.components;
     return __awaiter(this, void 0, void 0, function () {
         var modules, editor, _b, engine;
         var _this = this;
@@ -103,7 +101,7 @@ var editor = function (_a) {
                     // React rendering for the editor
                     editor.use(ReactRenderPlugin, {
                         // MyNode is a custom default style for nodes
-                        component: MyNode,
+                        component: node,
                     });
                     // renders a context menu on right click that shows available nodes
                     editor.use(LifecyclePlugin);
