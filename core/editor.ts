@@ -127,9 +127,9 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }: { con
 
   // The engine is used to process/run the rete graph
   const engine = initSharedEngine("demo@0.1.0", modules, components)
-  // @seang: moving these two functions to attempt to preserve loading order after the introduction of initSharedEngine
-  editor.use(ModulePlugin, { engine, modules });
-
+  // @seang TODO: update types for editor.use rather than casting as unknown here, we may want to bring our custom rete directly into the monorepo at this point 
+  editor.use(ModulePlugin, { engine, modules } as unknown as void);
+  // @seang: moved these two functions to attempt to preserve loading order after the introduction of initSharedEngine
   editor.on("zoom", ({ source }) => {
     return source !== "dblclick";
   });
