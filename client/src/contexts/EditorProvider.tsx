@@ -108,6 +108,7 @@ const EditorProvider = ({ children }) => {
       thothV2: thoth,
       thoth: spell,
       tab,
+      // MyNode is a custom default style for nodes
       node: MyNode
     });
 
