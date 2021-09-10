@@ -1,3 +1,6 @@
+
+# MacOS Window Manager
+.DS_Store
+
+# Dependencies
 node_modules
-.env
-build
