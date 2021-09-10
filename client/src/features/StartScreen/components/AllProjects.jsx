@@ -1,5 +1,5 @@
 import Panel from "../../common/Panel/Panel";
-import Icon from "@thoth/core/react/Icon/Icon";
+import Icon from "../../common/Icon/Icon";
 import ProjectRow from "./ProjectRow";
 import FileInput from "./FileInput";
 

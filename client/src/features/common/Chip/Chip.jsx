@@ -1,4 +1,4 @@
-import Icon from "@thoth/core/react/Icon/Icon";
+import Icon from "../Icon/Icon";
 import css from "./chip.module.css";
 
 const Chip = ({ label, onClick, noEvents }) => {

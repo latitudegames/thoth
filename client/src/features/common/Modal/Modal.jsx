@@ -2,7 +2,7 @@
 
 import css from "./modal.module.css";
 import { useModal } from "../../../contexts/ModalProvider";
-import Icon from "@thoth/core/react/Icon/Icon";
+import Icon from "../Icon/Icon";
 
 const Modal = ({ options, title, type, icon, pro, ...props }) => {
   const { closeModal } = useModal();
