@@ -5,7 +5,7 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import Icon from "../Icon/Icon";
+import Icon from "./Icon/Icon";
 
 import css from "./accordion.module.css";
 import "./accordion-overrides.css";
