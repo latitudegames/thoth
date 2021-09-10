@@ -1,0 +1,36 @@
+{
+    "name": "@thoth/core",
+    "version": "0.0.1",
+    "description": "core logic for rete implementation in thoth",
+    "private": true,
+    "scripts": {
+        "build": "tsc",
+        "prepublishOnly": "npm run build"
+    },
+    "main": "dist",
+    "dependencies": {
+        "deep-equal": "^2.0.5",
+        "handlebars": "^4.7.7",
+        "react": "^17.0.2",
+        "rete": "https://github.com/latitudegames/rete.git#master",
+        "rete-area-plugin": "^0.2.1",
+        "rete-connection-plugin": "^0.9.0",
+        "rete-context-menu-plugin": "^0.6.0-rc.1",
+        "rete-module-plugin": "^0.4.1",
+        "rete-react-render-plugin": "^0.2.1",
+        "typescript": "^4.2.0",
+        "uuid": "^8.3.2"
+    },
+    "devDependencies": {
+        "@types/jest": "^26.0.24",
+        "@types/node": "^16.4.3",
+        "@types/react": "^17.0.15"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/latitudegames/thoth.git"
+      },
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com/"
+    }
+}
