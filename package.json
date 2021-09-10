@@ -9,7 +9,9 @@
     ]
   },
   "scripts": {
-    "start": "lerna exec --scope @thoth/client -- yarn start"
+    "start": "lerna exec --scope @thoth/client -- yarn start",
+    "build:client": "lerna exec --scope @thoth/client -- yarn build",
+    "build:core": "lerna exec --scope @thoth/core -- yarn build"
   },
   "engines": {
     "node": ">=14.17.6",
