@@ -23,6 +23,9 @@
     "strictNullChecks": true,
     "strict": false 
   },
+  "typeRoots": [
+    "@types/@thoth"
+  ],
   "include": [
     "src"
   ]
