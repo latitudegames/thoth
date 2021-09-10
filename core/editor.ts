@@ -14,9 +14,6 @@ import SocketGenerator from "./plugins/socketGenerator";
 import DisplayPlugin from "./plugins/displayPlugin";
 import ModulePlugin from "./plugins/modulePlugin";
 
-import { MyNode } from "./react/Node/Node";
-import {components} from "./components/components"
-
 import { initSharedEngine } from "./engine"
 
 interface EventsTypes extends DefaultEventsTypes {
@@ -42,7 +39,7 @@ class ThothEditor extends NodeEditor<EventsTypes> {
 
 let editorTabMap = {};
 
-const editor = async function ({ container, pubSub, thoth, tab, thothV2 }: { container: any, pubSub: any, thoth: any, tab: any, thothV2: any }) {
+const editor = async function ({ container, pubSub, thoth, tab, thothV2, node, components}: { container: any, pubSub: any, thoth: any, tab: any, thothV2: any, node: any, components: any }) {
   if (editorTabMap[tab.id]) editorTabMap[tab.id].clear();
 
   let modules = [];
@@ -71,7 +68,7 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }: { con
   // React rendering for the editor
   editor.use(ReactRenderPlugin, {
     // MyNode is a custom default style for nodes
-    component: MyNode,
+    component: node,
   });
   // renders a context menu on right click that shows available nodes
   editor.use(LifecyclePlugin);
