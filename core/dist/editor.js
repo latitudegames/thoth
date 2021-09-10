@@ -63,6 +63,7 @@ import SocketGenerator from "./plugins/socketGenerator";
 import DisplayPlugin from "./plugins/displayPlugin";
 import ModulePlugin from "./plugins/modulePlugin";
 import { initSharedEngine } from "./engine";
+import { components } from "./components/components";
 var ThothEditor = /** @class */ (function (_super) {
     __extends(ThothEditor, _super);
     function ThothEditor() {
@@ -75,7 +76,7 @@ var ThothEditor = /** @class */ (function (_super) {
 */
 var editorTabMap = {};
 var editor = function (_a) {
-    var container = _a.container, pubSub = _a.pubSub, thoth = _a.thoth, tab = _a.tab, thothV2 = _a.thothV2, node = _a.node, components = _a.components;
+    var container = _a.container, pubSub = _a.pubSub, thoth = _a.thoth, tab = _a.tab, thothV2 = _a.thothV2, node = _a.node;
     return __awaiter(this, void 0, void 0, function () {
         var modules, editor, _b, engine;
         var _this = this;
