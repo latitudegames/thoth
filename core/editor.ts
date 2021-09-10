@@ -15,7 +15,7 @@ import DisplayPlugin from "./plugins/displayPlugin";
 import ModulePlugin from "./plugins/modulePlugin";
 
 import { initSharedEngine } from "./engine"
-
+import { components} from "./components/components"
 interface EventsTypes extends DefaultEventsTypes {
   run: void;
   save: void;
@@ -39,7 +39,7 @@ class ThothEditor extends NodeEditor<EventsTypes> {
 
 let editorTabMap = {};
 
-const editor = async function ({ container, pubSub, thoth, tab, thothV2, node, components}: { container: any, pubSub: any, thoth: any, tab: any, thothV2: any, node: any, components: any }) {
+const editor = async function ({ container, pubSub, thoth, tab, thothV2, node }: { container: any, pubSub: any, thoth: any, tab: any, thothV2: any, node: any}) {
   if (editorTabMap[tab.id]) editorTabMap[tab.id].clear();
 
   let modules = [];
