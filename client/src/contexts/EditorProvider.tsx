@@ -10,6 +10,8 @@ import { useContext, createContext, useState } from "react";
 import LoadingScreen from "../features/common/LoadingScreen/LoadingScreen";
 import { ModelCompletionOpts, OpenAIResultChoice } from "../utils/openaiHelper";
 
+import {MyNode} from "../features/common/Node/Node"
+
 export type SpellContext = {
   currentSpell: {},
   getCurrentSpell: () => void,
@@ -106,6 +108,7 @@ const EditorProvider = ({ children }) => {
       thothV2: thoth,
       thoth: spell,
       tab,
+      node: MyNode
     });
 
     // set editor to the map
