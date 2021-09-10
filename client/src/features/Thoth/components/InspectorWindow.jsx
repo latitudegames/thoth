@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Window from "../../common/Window/Window";
 import { useLayout } from "../../../contexts/LayoutProvider";
 import DataControls from "./DataControls";
-import Icon, { componentCategories } from "@thoth/core/react/Icon/Icon";
+import Icon, {componentCategories} from "../../common/Icon/Icon";
 import WindowMessage from "./WindowMessage";
 
 import { useModal } from "../../../contexts/ModalProvider";
