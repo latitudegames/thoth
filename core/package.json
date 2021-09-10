@@ -4,9 +4,10 @@
     "description": "core logic for rete implementation in thoth",
     "private": true,
     "scripts": {
-        "build": "tsc --outDir dist/",
+        "build": "tsc",
         "prepublishOnly": "npm run build"
     },
+    "main": "dist",
     "dependencies": {
         "deep-equal": "^2.0.5",
         "handlebars": "^4.7.7",
