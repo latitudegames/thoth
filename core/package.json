@@ -1,13 +1,12 @@
 {
-    "name": "@thoth/core",
+    "name": "@latitudegames/thoth-core",
     "version": "0.0.1",
     "description": "core logic for rete implementation in thoth",
-    "private": true,
     "scripts": {
         "build": "tsc",
         "prepublishOnly": "npm run build"
     },
-    "main": "dist",
+    "files": ["dist/*"],
     "dependencies": {
         "deep-equal": "^2.0.5",
         "handlebars": "^4.7.7",
@@ -28,7 +27,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/latitudegames/thoth.git"
+        "url": "git+https://github.com/latitudegames/thoth.git"
       },
     "publishConfig": {
         "registry": "https://npm.pkg.github.com/"
