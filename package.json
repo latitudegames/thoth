@@ -10,7 +10,7 @@
   },
   "scripts": {
     "start": "lerna exec --scope @thoth/client -- yarn start",
-    "build:client": "lerna exec --scope @thoth/client -- yarn build",
+    "build": "lerna exec --scope @thoth/client -- yarn build",
     "build:core": "lerna exec --scope @thoth/core -- yarn build"
   },
   "engines": {
