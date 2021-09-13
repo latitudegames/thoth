@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import init from "@thoth/core/editor";
+import init from "@latitudegames/thoth-core/editor";
 import gridimg from "../grid.png";
 
 import { useRete } from "./ReteProvider";
