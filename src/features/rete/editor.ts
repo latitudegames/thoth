@@ -48,7 +48,11 @@ import { ModuleTriggerOut } from "./components/ModuleTriggerOut";
 import { ModuleTriggerIn } from "./components/ModuleTriggerIn";
 import { HuggingfaceComponent } from "./components/Huggingface";
 import { ProseToScript } from "./components/ProseToScript";
-import { Condition } from "./components/Condition";
+import { Curator } from "./components/Curator";
+import { Logprobs } from "./components/Logprobs";
+import { LogprobOf } from "./components/LogprobOf";
+import { LogprobToProb } from "./components/LogprobToProb";
+import { ProbThreshold } from "./components/ProbThreshold";
 
 interface EventsTypes extends DefaultEventsTypes {
   run: void;
@@ -111,7 +115,11 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2 }) {
     new ResponseToText(),
     new ResponseToCompletions(),
     new ArrayToItems(),
-    new Condition(),
+    new Curator(),
+    new Logprobs(),
+    new LogprobOf(),
+    new LogprobToProb(),
+    new ProbThreshold(),
   ];
 
   let modules = [];
