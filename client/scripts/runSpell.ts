@@ -5,7 +5,7 @@ import spell from "./spell";
 import { Module } from "./module";
 import { EngineContext } from "../src/contexts/EditorProvider"
 import { modules, components } from "./engine"
-import { initSharedEngine } from "@thoth/core/engine";
+import { initSharedEngine } from "@latitudegames/thoth-core/engine";
 interface ModuleComponent extends Component {
   run: Function;
 }
