@@ -1,6 +1,6 @@
 {
     "name": "@latitudegames/thoth-core",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "core logic for rete implementation in thoth",
     "scripts": {
         "build": "tsc",
