@@ -4,7 +4,8 @@
     "description": "core logic for rete implementation in thoth",
     "scripts": {
         "build": "tsc",
-        "clean": "rimraf dist"
+        "clean": "rimraf dist",
+        "prepublishOnly": "yarn build && copyfiles package.json .npmrc dist && cd dist"
     },
     "dependencies": {
         "deep-equal": "^2.0.5",
@@ -23,6 +24,7 @@
         "@types/jest": "^26.0.24",
         "@types/node": "^16.4.3",
         "@types/react": "^17.0.15",
+        "copyfiles": "^2.4.1",
         "rimraf": "^3.0.2"
     },
     "repository": {
