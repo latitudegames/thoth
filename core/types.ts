@@ -8,9 +8,6 @@ export type ThothNode = Node & {
   inspector: Inspector
 }
 
-export type ThothComponent = Component & {
-  builder(node: Node): Promise<Node>
-}
 export type ModuleType = {
     id: String;
     name: string;
