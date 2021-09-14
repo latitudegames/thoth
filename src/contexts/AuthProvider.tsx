@@ -8,7 +8,8 @@ const Context = createContext({
   user: {} as any,
   checkIn: (user) => {},
   getUser: () => {},
-  authHeader: () => {},
+  authHeader: (authData) => {},
+  storeAuthHeader: (authHeader) => {},
 });
 
 export const useAuth = () => useContext(Context);
@@ -41,9 +42,16 @@ const AuthProvider = ({ children }) => {
     setUser(user);
   };
 
-  const authHeader = () => {
-    if (user && user?.authData) {
-      return { Authorization: "Basic " + user?.authData };
+  const storeAuthHeader = (authHeader) => {
+    window.localStorage.setItem("authHeader", authHeader);
+  };
+
+  const authHeader = (authData) => {
+    if ((user && user?.authData) || authData) {
+      const auth = user?.authData ? user?.authData : authData;
+      return {
+        Authorization: "Basic " + auth,
+      };
     } else {
       return {};
     }
@@ -55,6 +63,7 @@ const AuthProvider = ({ children }) => {
     checkIn,
     authHeader,
     getUser,
+    storeAuthHeader,
   };
 
   return (
