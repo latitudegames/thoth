@@ -1,38 +1,5 @@
 
-export type ModelCompletionOpts = {
-  model: string
-  prompt?: string
-  maxTokens?: number
-  temperature?: number
-  topP?: number
-  n?: number
-  stream?: boolean
-  logprobs?: number
-  echo?: boolean
-  stop?: string | string[]
-  presencePenalty?: number
-  frequencyPenalty?: number
-  bestOf?: number
-  user?: string
-  logitBias?: { [token: string]: number }
-}
-
-export type OpenAIResultChoice = {
-  text: string,
-  index: number,
-  logprobs: number[],
-  "top_logprobs": any[],
-  "text_offset": number[]
-}
-
-export type  OpenAIResponse =  {
-  id: string,
-  object: string,
-  created: number,
-  model: string,
-  choices: OpenAIResultChoice[]
-  "finish_reason": string
-}
+import { ModelCompletionOpts, OpenAIResultChoice } from "@latitudegames/thoth-core/types";
 
 export const completion = async (body: ModelCompletionOpts) => {
   const url = process.env.REACT_APP_API_URL;
