@@ -5,7 +5,8 @@
     "scripts": {
         "build": "tsc",
         "clean": "rimraf dist",
-        "prepublishOnly": "yarn build && copyfiles package.json .npmrc dist && cd dist"
+        "prepublishOnly": "yarn build && copyfiles package.json .npmrc dist && cd dist",
+        "postpublish": "yarn clean"
     },
     "dependencies": {
         "deep-equal": "^2.0.5",
