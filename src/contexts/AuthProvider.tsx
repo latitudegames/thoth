@@ -27,8 +27,10 @@ const AuthProvider = ({ children }) => {
 
       await models.user.setAuthData(user.id, authData);
       const updatedUser = await models.user.updateUser(user.id, response);
+      const finalUser = updatedUser.toJSON();
 
-      setUser(updatedUser.toJSON());
+      setUser(finalUser);
+      storeAuthHeader(authHeader(finalUser.authData));
     }
 
     return response;
