@@ -1,7 +1,7 @@
 import { Component } from "rete";
 import { Node } from "rete/types";
 import { Inspector } from "./plugins/inspectorPlugin/Inspector";
-import { NodeData as ReteNodeData } from "rete/types/core/data";
+import { NodeData as ReteNodeData, WorkerInputs, WorkerOutputs } from "rete/types/core/data";
 
 
 export type ThothNode = Node & {
@@ -92,3 +92,6 @@ export type ModelCompletionOpts = {
     id: string,
     nodes: Record<number, Node>
   }
+
+  export type ThothWorkerInputs = WorkerInputs & {}
+  export type ThothWorkerOutputs = WorkerOutputs & {}
