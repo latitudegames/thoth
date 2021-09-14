@@ -2,6 +2,13 @@
 import Rete from "rete";
 import ModulePlugin from "./plugins/modulePlugin";
 import TaskPlugin from "./plugins/taskPlugin";
+import { ModelCompletionOpts,OpenAIResultChoice, Node, Spell } from "./types";
+
+export type EngineContext = {
+  completion: (body: ModelCompletionOpts) => Promise<String | OpenAIResultChoice | undefined>,
+  getCurrentGameState: () => void,
+  updateCurrentGameState: ()=> void
+}
 
 export const initSharedEngine = (name: string, modules: any[], components: any[], server: boolean = false) => {
     const engine = new Rete.Engine(name);
@@ -20,3 +27,20 @@ export const initSharedEngine = (name: string, modules: any[], components: any[]
   
     return engine;
   }
+
+  // this parses through all the nodes in the data and finds the nodes associated with the given map
+export const  extractNodes = (nodes: Record<string, Node>, map: Set<unknown>) => {
+  const names = Array.from(map.keys());
+
+  return Object.keys(nodes)
+    .filter((k) => names.includes(nodes[k].name))
+    .map((k) => nodes[k])
+    .sort((n1, n2) => n1.position[1] - n2.position[1]);
+}
+
+// This will get the node that was triggered given a socketKey associated with that node.
+export const getTriggeredNode = (data: Spell, socketKey: string, map: Set<unknown>)=>{
+  return extractNodes(data.nodes, map).find(
+    (node) => node.data.socketKey === socketKey
+  );
+}
