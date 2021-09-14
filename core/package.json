@@ -3,10 +3,11 @@
     "version": "0.0.2",
     "description": "core logic for rete implementation in thoth",
     "scripts": {
-        "build": "tsc",
-        "prepublishOnly": "npm run build"
+        "build": "tsc"
     },
-    "files": ["dist/*"],
+    "files": [
+        "dist/*"
+    ],
     "dependencies": {
         "deep-equal": "^2.0.5",
         "handlebars": "^4.7.7",
@@ -28,7 +29,7 @@
     "repository": {
         "type": "git",
         "url": "git+https://github.com/latitudegames/thoth.git"
-      },
+    },
     "publishConfig": {
         "registry": "https://npm.pkg.github.com/"
     }
