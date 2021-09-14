@@ -3,7 +3,8 @@
     "version": "0.0.3",
     "description": "core logic for rete implementation in thoth",
     "scripts": {
-        "build": "tsc"
+        "build": "tsc",
+        "clean": "rimraf dist"
     },
     "dependencies": {
         "deep-equal": "^2.0.5",
@@ -21,7 +22,8 @@
     "devDependencies": {
         "@types/jest": "^26.0.24",
         "@types/node": "^16.4.3",
-        "@types/react": "^17.0.15"
+        "@types/react": "^17.0.15",
+        "rimraf": "^3.0.2"
     },
     "repository": {
         "type": "git",
