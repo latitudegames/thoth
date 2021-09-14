@@ -8,7 +8,7 @@ import { useSpell } from "./SpellProvider";
 
 import { useContext, createContext, useState } from "react";
 import LoadingScreen from "../features/common/LoadingScreen/LoadingScreen";
-import { ModelCompletionOpts, OpenAIResultChoice } from "../utils/openaiHelper";
+import { EngineContext } from "@latitudegames/thoth-core/engine";
 
 import {MyNode} from "../features/common/Node/Node"
 
@@ -26,12 +26,6 @@ export type SpellContext = {
   rewriteCurrentGameState: () => void,
   updateCurrentGameState: () => void,
   getThothVersion: () => void
-}
-
-export type EngineContext = {
-  completion: (body: ModelCompletionOpts) => Promise<String | OpenAIResultChoice | undefined>,
-  getCurrentGameState: () => void,
-  updateCurrentGameState: ()=> void
 }
 
 export interface ReteContext extends EngineContext {
