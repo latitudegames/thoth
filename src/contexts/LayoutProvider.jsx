@@ -109,7 +109,10 @@ const LayoutProvider = ({ children, tab }) => {
 
     const update = {
       ...inspectorData,
-      ...textUpdate,
+      data: {
+        ...inspectorData.data,
+        ...textUpdate,
+      },
     };
 
     publish(events.$NODE_SET(tab.id, textData.nodeId), update);
