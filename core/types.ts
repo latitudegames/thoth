@@ -1,5 +1,16 @@
 import { Component } from "rete";
+import { Node } from "rete/types";
+import { Inspector } from "./plugins/inspectorPlugin/Inspector";
+import { NodeData as ReteNodeData } from "rete/types/core/data";
 
+
+export type ThothNode = Node & {
+  inspector: Inspector
+}
+
+export type ThothComponent = Component & {
+  builder(node: Node): Promise<Node>
+}
 export type ModuleType = {
     id: String;
     name: string;
@@ -66,19 +77,16 @@ export type ModelCompletionOpts = {
     }
   }
   
-  export type NodeData = {
-    socketKey?: string,
-    [DataKey: string]: unknown
-  }
+ export type NodeData = ReteNodeData & {}
   
-  export type Node = {
-    id: number,
-    data: NodeData,
-    name: string,
-    inputs: NodeOutputs,
-    outputs?: NodeOutputs,
-    position: number[]
-  }
+  // export type Node = {
+  //   id: number,
+  //   data: NodeData,
+  //   name: string,
+  //   inputs: NodeOutputs,
+  //   outputs?: NodeOutputs,
+  //   position: number[]
+  // }
   
   export type Spell = {
     id: string,
