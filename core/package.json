@@ -5,9 +5,6 @@
     "scripts": {
         "build": "tsc"
     },
-    "files": [
-        "dist/*"
-    ],
     "dependencies": {
         "deep-equal": "^2.0.5",
         "handlebars": "^4.7.7",
