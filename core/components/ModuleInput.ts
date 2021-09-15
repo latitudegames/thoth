@@ -2,12 +2,12 @@ import Rete from "rete";
 import { InputControl } from "../dataControls/InputControl";
 import { anySocket } from "../sockets";
 import { v4 as uuidv4 } from "uuid";
-import { ThothNode, NodeData, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
-import {ThothComponent} from "../thoth-component"
+import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
+import {ThothComponent, ThothTask} from "../thoth-component"
 const info = `The module input component adds an input socket to the parent module.  It can be given a name, which is displayed on the parent.`;
 
 export class ModuleInput extends ThothComponent {
-  task: object;
+  task: ThothTask;
   module: object;
   category: string;
   info: string;
@@ -54,7 +54,7 @@ export class ModuleInput extends ThothComponent {
     return node.addOutput(out);
   } 
 
-  worker(node: NodeData, Inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs) {
+  worker(node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs) {
     console.log("input worker outputs", outputs);
     // outputs in this case is a key value object of outputs.
     // perfect for task return
