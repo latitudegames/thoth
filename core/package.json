@@ -25,6 +25,7 @@
         "@types/jest": "^26.0.24",
         "@types/lodash": "^4.14.172",
         "@types/node": "^16.4.3",
+        "@types/pubsub-js": "^1.8.2",
         "@types/react": "^17.0.15",
         "@types/uuid": "^8.3.1",
         "copyfiles": "^2.4.1",
