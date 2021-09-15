@@ -1,21 +1,21 @@
 import Rete from "rete";
-import { ThothReteComponent } from "./ThothReteComponent";
 import { stringSocket, triggerSocket } from "../sockets";
 import { OutputGeneratorControl } from "../dataControls/OutputGenerator";
 import { CodeControl } from "../dataControls/CodeControl";
-
+import { ThothComponent } from "../thoth-component"
+import { ThothNode, ThothWorkerInputs} from "../types";
 const info = `The String Processor component take s astring as an input and allows you to write a function in the text editor to parse that string in whatever way you need.  You can define any number of outputs which you can pass the result of your parsing out through.
 
 Note that the return value of your function must be an objetc whose keys match the names of your generated output sockets.`;
 
-export class StringProcessor extends ThothReteComponent {
+export class StringProcessor extends ThothComponent {
   constructor() {
     // Name of the component
     super("String Processor");
 
     this.task = {
       outputs: { trigger: "option" },
-      init: (task) => {},
+      init: (task) => { },
     };
     this.category = "Logic";
     this.info = info;
@@ -23,7 +23,7 @@ export class StringProcessor extends ThothReteComponent {
 
   node = {};
 
-  builder(node) {
+  builder(node: ThothNode) {
     // Add a default javascript template if the node is new and we don't have one.
     if (!node.data.code)
       node.data.code =
@@ -58,12 +58,13 @@ export class StringProcessor extends ThothReteComponent {
     return node.addInput(input).addInput(triggerIn).addOutput(triggerOut);
   }
 
-  async worker(node, inputs, data) {
+  async worker(node: ThothNode, inputs: ThothWorkerInputs) {
     const input = inputs["input"][0];
 
     // TODO (mitchg) - obviously this is bad, but we want this for games week. Figure out security later.
+    const code = node.data.code as string
     // eslint-disable-next-line
-    const stringProcessor = eval(node.data.code);
+    const stringProcessor = eval(code);
     const outputs = stringProcessor(input);
 
     // Note: outputGenerator lower-cases the output connection name,
