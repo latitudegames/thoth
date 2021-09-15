@@ -1,8 +1,9 @@
 import Rete from "rete";
-import { ThothReteComponent } from "./ThothReteComponent";
+import { ThothComponent } from "../thoth-component"
 import { stringSocket, triggerSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
-
+import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
+import { EngineContext } from "../engine";
 // For simplicity quests should be ONE thing not complete X and Y
 const fewshot = `Given an action, predict how hard it would be for a normal human in a fantasy world and what type of stat it uses.
 
@@ -40,7 +41,7 @@ strength, dexterity, endurance, intelligence, charisma
 You can also view and edit the fewshot in the text editor.  Note however that you must keep the same data format for the component to properly format the completion response.
 `;
 
-export class DifficultyDetectorComponent extends ThothReteComponent {
+export class DifficultyDetectorComponent extends ThothComponent {
   constructor() {
     // Name of the component
     super("Difficulty Detector");
@@ -56,7 +57,7 @@ export class DifficultyDetectorComponent extends ThothReteComponent {
 
   displayControl = {};
 
-  builder(node) {
+  builder(node: ThothNode) {
     node.data.fewshot = fewshot;
     const inp = new Rete.Input("action", "Action", stringSocket);
     const difficultyOut = new Rete.Output(
@@ -82,10 +83,11 @@ export class DifficultyDetectorComponent extends ThothReteComponent {
       .addOutput(categoryOut);
   }
 
-  async worker(node, inputs, outputs, { silent, thoth }) {
+  async worker(node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent, thoth }: { silent: boolean, thoth: EngineContext }) {
     const { completion } = thoth;
     const action = inputs["action"][0];
-    const prompt = node.data.fewshot + action + ",";
+    const fewshot = node.data.fewshot as string
+    const prompt = fewshot + action + ",";
 
     const body = {
       prompt,
@@ -93,7 +95,7 @@ export class DifficultyDetectorComponent extends ThothReteComponent {
       maxTokens: 100,
       temperature: 0.0,
     };
-    const raw = await completion(body);
+    const raw = await completion(body) as string;
     const result = raw?.trim();
     if (!silent) node.display(result);
 
