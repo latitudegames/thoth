@@ -10,6 +10,8 @@ import { ThothNode } from "./types";
 import { Engine } from 'rete';
 import { WorkerInputs, WorkerOutputs } from 'rete/src/core/data';
 
+
+export type WorkerReturn = Node | ThothWorkerOutputs | void | Promise<void> | Promise<{actionType: string}> | Promise<{difficulty?: string, category?: string}>
 export abstract class ThothEngineComponent {
 // Original Class: https://github.com/latitudegames/rete/blob/master/src/engine/component.ts
     name: string;
@@ -20,7 +22,7 @@ export abstract class ThothEngineComponent {
         this.name = name;
     }
 
-    abstract worker(node: ThothNode, inputs: WorkerInputs, outputs: WorkerOutputs, ...args: unknown[]): Node | ThothWorkerOutputs | void | Promise<void> | Promise<{actionType: string}>;
+    abstract worker(node: ThothNode, inputs: WorkerInputs, outputs: WorkerOutputs, ...args: unknown[]): WorkerReturn
 }
 export type EngineContext = {
   completion: (body: ModelCompletionOpts) => Promise<String | OpenAIResultChoice | undefined>,
