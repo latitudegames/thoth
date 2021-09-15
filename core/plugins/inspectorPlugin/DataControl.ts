@@ -31,10 +31,10 @@ export class DataControl {
     dataKey: string,
     name: string,
     component: string
-    data: Record<string, unknown>,
-    options: Record<string, unknown>,
-    write: boolean,
-    icon: string,
+    data?: Record<string, unknown>,
+    options?: Record<string, unknown>,
+    write?: boolean,
+    icon?: string,
     onData?: () => Promise<void>
   }) {
     if (!dataKey) throw new Error(`Data key is required`);
