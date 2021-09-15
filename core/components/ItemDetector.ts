@@ -1,8 +1,9 @@
 import Rete from "rete";
-import { ThothReteComponent } from "./ThothReteComponent";
 import { stringSocket, triggerSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
-
+import { ThothComponent } from "../thoth-component"
+import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
+import { EngineContext } from "../engine";
 // For simplicity quests should be ONE thing not complete X and Y
 const fewshot = `Given an action, detect the item which is taken.
 
@@ -15,14 +16,14 @@ Action, Item: `;
 
 const info = `The item detector attempts to recognize what item in a give text string is being mentioned or used.  The input is a text string the output is a string of the object`;
 
-export class ItemTypeComponent extends ThothReteComponent {
+export class ItemTypeComponent extends ThothComponent {
   constructor() {
     // Name of the component
     super("Item Detector");
 
     this.task = {
       outputs: { detectedItem: "output", trigger: "option" },
-      init: (task) => {},
+      init: (task) => { },
     };
 
     this.category = "AI/ML";
@@ -30,7 +31,7 @@ export class ItemTypeComponent extends ThothReteComponent {
     this.info = info;
   }
 
-  builder(node) {
+  builder(node: ThothNode) {
     node.data.fewshot = fewshot;
     const inp = new Rete.Input("string", "Text", stringSocket);
     const out = new Rete.Output("detectedItem", "Item Detected", stringSocket);
@@ -48,10 +49,11 @@ export class ItemTypeComponent extends ThothReteComponent {
       .addOutput(out);
   }
 
-  async worker(node, inputs, outputs, { silent, thoth }) {
+  async worker(node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent, thoth }: { silent: boolean, thoth: EngineContext }) {
     const { completion } = thoth;
     const action = inputs["string"][0];
-    const prompt = node.data.fewshots + action + ",";
+    const fewshot = node.data.fewshot as string
+    const prompt = fewshot + action + ",";
 
     const body = {
       prompt,
@@ -59,7 +61,7 @@ export class ItemTypeComponent extends ThothReteComponent {
       maxTokens: 100,
       temperature: 0.0,
     };
-    const raw = await completion(body);
+    const raw = await completion(body) as string;
     const result = raw?.trim();
     if (!silent) node.display(result);
 
