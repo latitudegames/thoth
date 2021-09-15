@@ -1,9 +1,9 @@
 import Rete from "rete";
-import { ThothReteComponent } from "./ThothReteComponent";
 import { triggerSocket, anySocket } from "../sockets";
-
+import { ThothComponent } from "../thoth-component"
+import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
 const info = `The Playtest Print component will print whatever value is attached to its input and print that valyue back to the playtest window.`;
-export class PlaytestPrint extends ThothReteComponent {
+export class PlaytestPrint extends ThothComponent {
   constructor() {
     // Name of the component
     super("Playtest Print");
@@ -12,7 +12,7 @@ export class PlaytestPrint extends ThothReteComponent {
       outputs: {
         trigger: "option",
       },
-      init: (task) => {},
+      init: (task) => { },
     };
 
     this.category = "I/O";
@@ -23,7 +23,7 @@ export class PlaytestPrint extends ThothReteComponent {
   // the builder is used to "assemble" the node component.
   // when we have enki hooked up and have grabbed all few shots, we would use the builder
   // to generate the appropriate inputs and ouputs for the fewshot at build time
-  builder(node) {
+  builder(node: ThothNode) {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const triggerInput = new Rete.Input("trigger", "Trigger", triggerSocket);
     const triggerOutput = new Rete.Output("trigger", "Trigger", triggerSocket);
@@ -37,12 +37,12 @@ export class PlaytestPrint extends ThothReteComponent {
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connected components
-  worker(node, inputs, outputs, { silent }) {
-    const { sendToPlaytest } = this.editor.thothV2;
+  async worker(node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent }: { silent: boolean }) {
+    const { sendToPlaytest } = this.editor?.thothV2;
     if (!inputs || !inputs.text) return null;
     const text = inputs.text[0];
 
     sendToPlaytest(text);
-    if (!silent) node.display(text);
+    if (!silent) node.display(text as string);
   }
 }
