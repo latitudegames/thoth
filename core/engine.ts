@@ -26,8 +26,8 @@ export abstract class ThothEngineComponent {
 }
 export type EngineContext = {
   completion: (body: ModelCompletionOpts) => Promise<String | OpenAIResultChoice | undefined>,
-  getCurrentGameState: () => void,
-  updateCurrentGameState: ()=> void
+  getCurrentGameState: () => Record<string,unknown>
+  updateCurrentGameState: ()=> Record<string,unknown>
 }
 
 export const initSharedEngine = (name: string, modules: any[], components: any[], server: boolean = false) => {
