@@ -1,8 +1,9 @@
 import Rete from "rete";
-import { ThothReteComponent } from "./ThothReteComponent";
 import { stringSocket, triggerSocket } from "../sockets";
-
-const fewshot = (prose) => { 
+import { ThothComponent } from "../thoth-component"
+import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
+import { EngineContext } from "../engine";
+const fewshot = (prose: string) => {
   const prompt = `Rewrite narrative snippets as a script:
 
 1
@@ -54,20 +55,20 @@ Rewritten as a script:
 
 -`;
 
-return prompt;
+  return prompt;
 
 }
 
 const info = `The prose to script converter transforms narrative prose into a screenplay-style script, attributing dialogue to characters in the scene, and discarding all text that is not speech. The input is a text string the output is a string of the script`;
 
-export class ProseToScript extends ThothReteComponent {
+export class ProseToScript extends ThothComponent {
   constructor() {
     // Name of the component
     super("Prose to Script");
 
     this.task = {
       outputs: { detectedItem: "output", trigger: "option" },
-      init: (task) => {},
+      init: (task) => { },
     };
 
     this.category = "AI/ML";
@@ -75,7 +76,7 @@ export class ProseToScript extends ThothReteComponent {
     this.info = info;
   }
 
-  builder(node) {
+  builder(node: ThothNode) {
     node.data.fewshot = fewshot;
     const inp = new Rete.Input("string", "Text", stringSocket);
     const out = new Rete.Output("script", "Script", stringSocket);
@@ -93,9 +94,9 @@ export class ProseToScript extends ThothReteComponent {
       .addOutput(dataOutput);
   }
 
-  async worker(node, inputs, outputs, { silent, thoth }) {
+  async worker(node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent, thoth }: { silent: boolean, thoth: EngineContext }) {
     const { completion } = thoth;
-    const prose = inputs["string"][0];
+    const prose = inputs["string"][0] as string;
     const prompt = fewshot(prose);
 
     const body = {
@@ -104,9 +105,9 @@ export class ProseToScript extends ThothReteComponent {
       maxTokens: 300,
       temperature: 0.0,
     };
-    const raw = await completion(body);
+    const raw = await completion(body) as string;
     const result = raw?.trim();
-    if (!silent) node.display(result); 
+    if (!silent) node.display(result);
 
     return {
       detectedItem: result,
