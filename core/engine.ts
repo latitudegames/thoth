@@ -11,7 +11,7 @@ import { Engine } from 'rete';
 import { WorkerInputs, WorkerOutputs } from 'rete/src/core/data';
 
 
-export type WorkerReturn = Node | ThothWorkerOutputs | void | Promise<void> | Promise<{ actionType: string }> | Promise<{ difficulty?: string, category?: string }> | Promise<{ [output: string]: string } | null>
+export type WorkerReturn = Node | ThothWorkerOutputs | void | Promise<void> | Promise<{ actionType: string }> | Promise<{ difficulty?: string, category?: string }> | Promise<{ [output: string]: string } | null> | Promise<never[] | { entities: { name: string; type: string; }[]; }>
 export abstract class ThothEngineComponent {
   // Original Class: https://github.com/latitudegames/rete/blob/master/src/engine/component.ts
   name: string;
