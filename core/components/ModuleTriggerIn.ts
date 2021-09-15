@@ -2,17 +2,18 @@ import Rete from "rete";
 import { InputControl } from "../dataControls/InputControl";
 import { triggerSocket } from "../sockets";
 import { v4 as uuidv4 } from "uuid";
-
+import { ThothComponent, ThothTask } from "../thoth-component"
+import { NodeData, ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
 const info = `The module trigger in adds a trigger input socket to the parent module.  It can be given a name, which is displayed on the parent.`;
 
-export class ModuleTriggerIn extends Rete.Component {
-  task: object;
+export class ModuleTriggerIn extends ThothComponent {
+  task: ThothTask;
   module: object;
   category: string;
   info: string;
   workspaceType: "module" | "spell";
   contextMenuName: string;
-  nodeTaskMap = {};
+  nodeTaskMap: Record<number,ThothTask> = {};
 
   constructor() {
     // Name of the component
@@ -23,12 +24,8 @@ export class ModuleTriggerIn extends Rete.Component {
     this.task = {
       outputs: {
         trigger: "option",
-      },
-      init: (task, node) => {
-        // store the nodes task inside the component
-        this.nodeTaskMap[node.id] = task;
-      },
-    };
+      }
+    } as unknown as ThothTask
 
     this.module = {
       nodeType: "triggerIn",
@@ -40,7 +37,7 @@ export class ModuleTriggerIn extends Rete.Component {
     this.workspaceType = "module";
   }
 
-  async run(node, data) {
+  async run(node: ThothNode, data: NodeData ) {
     const task = this.nodeTaskMap[node.id];
     await task.run(data);
   }
@@ -48,7 +45,7 @@ export class ModuleTriggerIn extends Rete.Component {
   // the builder is used to "assemble" the node component.
   // when we have enki hooked up and have grabbed all few shots, we would use the builder
   // to generate the appropriate inputs and ouputs for the fewshot at build time
-  builder(node) {
+  builder(node: ThothNode) {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const out = new Rete.Output("trigger", "Trigger", triggerSocket);
     node.data.socketKey = node?.data?.socketKey || uuidv4();
@@ -64,7 +61,7 @@ export class ModuleTriggerIn extends Rete.Component {
     return node.addOutput(out);
   }
 
-  async worker(node, inputs, outputs) {
+  async worker(node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs) {
     console.log("trigger worker outputs", outputs);
     return {};
   }

@@ -23,7 +23,7 @@ export class ModuleTriggerOut extends ThothComponent {
       outputs: {
         trigger: "output",
       },
-    };
+    } as unknown as ThothTask
 
     this.module = {
       nodeType: "triggerOut",
