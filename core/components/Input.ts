@@ -1,11 +1,12 @@
 import Rete from "rete";
-import { ThothReteComponent } from "./ThothReteComponent";
 import { TextInputControl } from "../controls/TextInputControl";
 import { stringSocket } from "../sockets";
-
+import { ThothComponent } from "../thoth-component"
+import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
+import { EngineContext } from "../engine";
 const info = `The info component has a single control, an input field.  Whatever value you put into this input field will be sent out along the compoonents output socket.`;
 
-export class InputComponent extends ThothReteComponent {
+export class InputComponent extends ThothComponent {
   constructor() {
     // Name of the component
     super("Input");
@@ -14,7 +15,7 @@ export class InputComponent extends ThothReteComponent {
       outputs: {
         text: "output",
       },
-      init: (task) => {},
+      init: (task) => { },
     };
 
     this.category = "I/O";
@@ -24,7 +25,7 @@ export class InputComponent extends ThothReteComponent {
   // the builder is used to "assemble" the node component.
   // when we have enki hooked up and have grabbed all few shots, we would use the builder
   // to generate the appropriate inputs and ouputs for the fewshot at build time
-  builder(node) {
+  builder(node: ThothNode) {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const out = new Rete.Output("text", "String", stringSocket);
 
@@ -44,7 +45,7 @@ export class InputComponent extends ThothReteComponent {
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connected components
-  async worker(node, inputs, outputs) {
+  async worker(node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs) {
     return {
       text: node.data.text,
     };
