@@ -36,16 +36,16 @@ export abstract class ThothComponent extends ThothEngineComponent {
         super(name);
     }
 
-    abstract builder(node: Node): Promise<ThothNode> | ThothNode;
+    abstract builder(node: ThothNode): Promise<ThothNode> | ThothNode;
 
-    async build(node: Node) {
+    async build(node: ThothNode) {
         await this.builder(node);
 
         return node;
     }
 
     async createNode(data = {}) {
-        const node = new Node(this.name);
+        const node = new Node(this.name) as ThothNode;
         
         node.data = data;
         await this.build(node);
