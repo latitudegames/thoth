@@ -1,7 +1,7 @@
 import Rete from "rete";
-import { ThothComponent } from "../thoth-component"
 import { stringSocket, triggerSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
+import { ThothComponent } from "../thoth-component"
 import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
 import { EngineContext } from "../engine";
 const fewshot = `Given an action classify the type of action it is
