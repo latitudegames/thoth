@@ -10,7 +10,7 @@ export class ModuleComponent extends ThothComponent {
   updateModuleSockets: Function;
   task;
   info;
-  subscriptionMap: {} = {};
+  subscriptionMap: Record<number, { unsubscribe: () => void }> = {};
   editor: any;
   noBuildUpdate: boolean;
   category: string;
@@ -22,6 +22,7 @@ export class ModuleComponent extends ThothComponent {
     };
     this.task = {
       outputs: {},
+      closed: [] as { [key: string]: string }[]
     };
     this.category = "Core";
     this.info = info;
@@ -38,7 +39,7 @@ export class ModuleComponent extends ThothComponent {
       this.subscribe(node);
     }
 
-    moduleControl.onData = async (moduleName:string) => {
+    moduleControl.onData = async (moduleName: string) => {
       this.updateSockets(node, moduleName);
       this.subscribe(node);
     };
@@ -62,12 +63,15 @@ export class ModuleComponent extends ThothComponent {
   async subscribe(node: ThothNode) {
     if (!node.data.module) return;
 
-    let cache;
+    let cache: string;
 
     this.unsubscribe(node);
     this.subscriptionMap[node.id] = await this.editor.thothV2.findOneModule(
       { name: node.data.module },
-      (module) => {
+      (module: {
+        toJSON: Function,
+        name: string
+      }) => {
         if (cache && !isEqual(cache, module.toJSON())) {
           // make sure that the module manager has the latest updated version of the module
           this.editor.moduleManager.updateModule(module.toJSON());
@@ -85,15 +89,15 @@ export class ModuleComponent extends ThothComponent {
     node.update();
   }
 
-  worker(node: ThothNode, inputs: ThothWorkerInputs, outputs: { [key: string]: string }, { module }) {
+  worker(node: ThothNode, inputs: ThothWorkerInputs, outputs: { [key: string]: string }, { module }: { module: { outputs: ThothWorkerOutputs[] } }) {
     const open = Object.entries(module.outputs)
       .filter(([key, value]) => typeof value === "boolean" && value)
       .map(([key]) => key);
     // close all triggers first
-    const nodeOutputs = node.data.outputs as { [key: string]: string }[]
-    this._task.closed = nodeOutputs
-      .map((out: ThothWorkerOutputs) => out.name)
-      .filter((out) => !open.includes(out as string));
+    const dataOutputs = node.data.outputs as ThothWorkerOutputs[]
+    this._task.closed = dataOutputs
+      .map((out: { name: string }) => out.name)
+      .filter((out: string) => !open.includes(out));
 
     return module.outputs;
   }
