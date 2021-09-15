@@ -1,7 +1,7 @@
 import Rete from "rete";
 import {ThothComponent} from "../thoth-component"
 import { TextInputControl } from "../controls/TextInputControl";
-import { ThothNode, NodeData, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
+import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
 
 import { triggerSocket } from "../sockets";
 
@@ -40,7 +40,7 @@ export class Alert extends ThothComponent {
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connected components
-  async worker(node: NodeData, Inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs) {
+  async worker(node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs) {
     alert(node.data.text);
   }
 }
