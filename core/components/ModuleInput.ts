@@ -3,7 +3,7 @@ import { InputControl } from "../dataControls/InputControl";
 import { anySocket } from "../sockets";
 import { v4 as uuidv4 } from "uuid";
 import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
-import {ThothComponent, ThothTask} from "../thoth-component"
+import { ThothComponent, ThothTask } from "../thoth-component"
 const info = `The module input component adds an input socket to the parent module.  It can be given a name, which is displayed on the parent.`;
 
 export class ModuleInput extends ThothComponent {
@@ -18,13 +18,13 @@ export class ModuleInput extends ThothComponent {
     // Name of the component
     super("Module Input");
     this.contextMenuName = "Input";
-
+    //@seang todo: sort out proper task initialization and types
     this.task = {
       outputs: {
         output: "output",
       },
-    };
-
+    } as unknown as ThothTask
+    
     this.module = {
       nodeType: "input",
       socket: anySocket,
@@ -38,7 +38,7 @@ export class ModuleInput extends ThothComponent {
   // the builder is used to "assemble" the node component.
   // when we have enki hooked up and have grabbed all few shots, we would use the builder
   // to generate the appropriate inputs and ouputs for the fewshot at build time
-    builder(node: ThothNode ):ThothNode{
+  builder(node: ThothNode): ThothNode {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const out = new Rete.Output("output", "output", anySocket);
 
@@ -52,7 +52,7 @@ export class ModuleInput extends ThothComponent {
     node.data.socketKey = node?.data?.socketKey || uuidv4();
 
     return node.addOutput(out);
-  } 
+  }
 
   worker(node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs) {
     console.log("input worker outputs", outputs);
