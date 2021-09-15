@@ -1,13 +1,13 @@
-import Rete from "rete";
-import { ThothReteComponent } from "./ThothReteComponent";
+import Rete, { Control } from "rete";
 import { TextInputControl } from "../controls/TextInputControl";
 import { stringSocket, triggerSocket } from "../sockets";
 import { RunButtonControl } from "../controls/RunButtonControl";
 import { Task } from "../plugins/taskPlugin/task";
-
+import { ThothComponent } from "../thoth-component"
+import { ThothNode } from "../types";
 const info = `The Input With Run component lets you input a value into the provided input field, and trigger off your spell chain to run with that value passed out its output. May be depricated in favor of using the playtest input component.`;
 
-export class RunInputComponent extends ThothReteComponent {
+export class RunInputComponent extends ThothComponent {
   initialTask?: Task;
   subscriptionMap: any;
 
@@ -32,7 +32,7 @@ export class RunInputComponent extends ThothReteComponent {
         // subscribe to the run function
         // TODO abstract this into something more reusable.
         // maybe modifyy the task plugin to set a run function to the node itself?
-        const unsubscribe = this.editor.on("run", (args) => {
+        const unsubscribe = this.editor?.on("run", (args) => {
           if (args.nodeId === node.id) {
             console.log("RUNNING");
             task.run();
@@ -47,7 +47,7 @@ export class RunInputComponent extends ThothReteComponent {
   }
 
   // from lifecycle plugin
-  destroyed(node) {
+  destroyed(node: ThothNode) {
     // Cleanup subscriptions on the node
     if (!this.subscriptionMap[node.id]) return;
     const unsubscribe = this.subscriptionMap[node.id];
@@ -59,7 +59,7 @@ export class RunInputComponent extends ThothReteComponent {
   // the builder is used to "assemble" the node component.
   // when we have enki hooked up and have grabbed all few shots, we would use the builder
   // to generate the appropriate inputs and ouputs for the fewshot at build time
-  builder(node) {
+  builder(node: ThothNode) {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const out = new Rete.Output("text", "String", stringSocket);
     const data = new Rete.Output("trigger", "Trigger", triggerSocket);
@@ -83,12 +83,12 @@ export class RunInputComponent extends ThothReteComponent {
       .addOutput(out)
       .addOutput(data)
       .addControl(input)
-      .addControl(run);
+      .addControl(run as Control);
   }
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connected components
-  async worker(node, inputs, data) {
+  async worker(node: ThothNode) {
     return {
       text: node.data.text,
     };
