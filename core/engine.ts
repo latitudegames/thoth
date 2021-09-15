@@ -11,7 +11,7 @@ import { Engine } from 'rete';
 import { WorkerInputs, WorkerOutputs } from 'rete/src/core/data';
 
 
-export type WorkerReturn = Node | ThothWorkerOutputs | void | Promise<void> | Promise<{ actionType: string }> | Promise<{ difficulty?: string, category?: string }> | Promise<{ [output: string]: string } | null> | Promise<never[] | { entities: { name: string; type: string; }[]; }> | Promise<{ element: unknown; } | undefined>
+export type WorkerReturn = Node | ThothWorkerOutputs | void | Promise<void> | Promise<{ actionType: string }> | Promise<{ difficulty?: string, category?: string }> | Promise<{ [output: string]: string } | null> | Promise<never[] | { entities: { name: string; type: string; }[]; }> | Promise<{ element: unknown; } | undefined> | Promise<{result: {error: unknown, [key: string]: unknown}} | { result?: undefined }>
 export abstract class ThothEngineComponent {
   // Original Class: https://github.com/latitudegames/rete/blob/master/src/engine/component.ts
   name: string;
@@ -28,7 +28,8 @@ export type EngineContext = {
   completion: (body: ModelCompletionOpts) => Promise<String | OpenAIResultChoice | undefined>,
   getCurrentGameState: () => Record<string, unknown>
   updateCurrentGameState: () => Record<string, unknown>,
-  enkiCompletion: (taskName: string, inputs: string[]) => { outputs: string[] }
+  enkiCompletion: (taskName: string, inputs: string[]) => { outputs: string[] },
+  huggingface: (model: string, request: string)=> {error: unknown, [key: string]: unknown}
 }
 
 export const initSharedEngine = (name: string, modules: any[], components: any[], server: boolean = false) => {
