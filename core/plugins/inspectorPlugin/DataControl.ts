@@ -35,7 +35,7 @@ export class DataControl {
     options?: Record<string, unknown>,
     write?: boolean,
     icon?: string,
-    onData?: () => Promise<void>
+    onData?: (moduleName:string) => Promise<void>
   }) {
     if (!dataKey) throw new Error(`Data key is required`);
     if (!name) throw new Error(`Name is required`);
@@ -69,7 +69,7 @@ export class DataControl {
   }
 
   // stub function
-  async onData() {
+  async onData(moduleName: string) {
     return;
   }
 }
