@@ -1,7 +1,10 @@
 import Rete from "rete";
-import { ThothReteComponent } from "./ThothReteComponent";
 import { stringSocket, triggerSocket, booleanSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
+
+import { ThothComponent } from "../thoth-component"
+import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
+import { EngineContext } from "../engine";
 
 const fewshot = `Rate the actions according to the following content categories
 X: Explicit sexual content, rape, cannibalism, incest
@@ -72,7 +75,7 @@ const info = `The Safety Verifier component takes a string and attempts to class
 
 The fewshot can be edited in the text editor, however it contains content which may be triggering to some individuals. If you modify the fewshot, note that it must remian in the format for the processing to work.`;
 
-export class SafetyVerifier extends ThothReteComponent {
+export class SafetyVerifier extends ThothComponent {
   constructor() {
     // Name of the component
     super("Safety Verifier");
@@ -82,14 +85,14 @@ export class SafetyVerifier extends ThothReteComponent {
         trigger: "option",
         boolean: "output",
       },
-      init: (task) => {},
+      init: (task) => { },
     };
     this.category = "AI/ML";
     this.display = true;
     this.info = info;
   }
 
-  builder(node) {
+  builder(node: ThothNode) {
     node.data.fewshot = fewshot;
 
     const inp = new Rete.Input("string", "Text", stringSocket);
@@ -108,10 +111,11 @@ export class SafetyVerifier extends ThothReteComponent {
       .addOutput(dataOutput);
   }
 
-  async worker(node, inputs, outputs, { silent, thoth }) {
+  async worker(node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent, thoth }: { silent: boolean, thoth: EngineContext }) {
     const { completion } = thoth;
     const action = inputs["string"][0];
-    const prompt = node.data.fewshot + action + "\nRating:";
+    const fewshot = node.data.fewshot as string
+    const prompt = fewshot + action + "\nRating:";
 
     const body = {
       prompt,
@@ -119,7 +123,7 @@ export class SafetyVerifier extends ThothReteComponent {
       maxTokens: 10,
       temperature: 0.0,
     };
-    const raw = await completion(body);
+    const raw = await completion(body) as string;
     const result = raw?.trim() !== "X";
 
     if (!silent) node.display(`${result}`);
