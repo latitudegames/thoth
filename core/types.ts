@@ -6,7 +6,8 @@ import { NodeData as ReteNodeData, WorkerInputs, WorkerOutputs } from "rete/type
 
 export type ThothNode = Node & {
   inspector: Inspector
-  display: (content: string) => void
+  display: (content: string) => void,
+  outputs: {name: string, [key:string]:unknown}[]
 }
 
 export type ModuleType = {
