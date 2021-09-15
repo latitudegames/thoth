@@ -1,8 +1,9 @@
 import Rete from "rete";
-import { ThothReteComponent } from "./ThothReteComponent";
 import { stringSocket, triggerSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
-
+import { ThothComponent } from "../thoth-component"
+import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
+import { EngineContext } from "../engine";
 // For simplicity quests should be ONE thing not complete X and Y
 const fewshot = `Given an action, predict how long it would take to complete out of the following categories: seconds, minutes, hours, days, weeks, years.
 
@@ -31,13 +32,13 @@ seconds, minutes, hours, days, weeks, years.
 
 You can edit the fewshot in the text editor, but be aware that you must retain the fewshots data structure so processing will work.`;
 
-export class TimeDetectorComponent extends ThothReteComponent {
+export class TimeDetectorComponent extends ThothComponent {
   constructor() {
     super("Time Detector");
 
     this.task = {
       outputs: { detectedTime: "output", trigger: "option" },
-      init: (task) => {},
+      init: (task) => { },
     };
 
     this.category = "AI/ML";
@@ -45,7 +46,7 @@ export class TimeDetectorComponent extends ThothReteComponent {
     this.info = info;
   }
 
-  builder(node) {
+  builder(node: ThothNode) {
     node.data.fewshot = fewshot;
     const inp = new Rete.Input("string", "Text", stringSocket);
     const out = new Rete.Output("detectedTime", "Time Detected", stringSocket);
@@ -63,12 +64,11 @@ export class TimeDetectorComponent extends ThothReteComponent {
       .addOutput(dataOutput);
   }
 
-  async worker(node, inputs, outputs, { silent, thoth }) {
+  async worker(node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent, thoth }: { silent: boolean, thoth: EngineContext }) {
     const { completion } = thoth;
-    node.data.fewshot = fewshot;
-
+    const fewshot = node.data.fewshot as string
     const action = inputs["string"][0];
-    const prompt = node.data.fewshot + action + ",";
+    const prompt = fewshot + action + ",";
 
     const body = {
       prompt,
@@ -76,7 +76,7 @@ export class TimeDetectorComponent extends ThothReteComponent {
       maxTokens: 100,
       temperature: 0.0,
     };
-    const raw = await completion(body);
+    const raw = await completion(body) as string;
     const result = raw?.trim();
     if (!silent) node.display(result);
 
