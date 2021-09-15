@@ -1,9 +1,10 @@
 import Rete from "rete";
-import { ThothReteComponent } from "./ThothReteComponent";
 import { triggerSocket } from "../sockets";
 import { CodeControl } from "../dataControls/CodeControl";
 import { InputControl } from "../dataControls/InputControl";
 import { SocketGeneratorControl } from "../dataControls/SocketGenerator";
+import {ThothComponent} from "../thoth-component"
+import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
 
 const defaultCode = `
 // See component information in inspector for details.
@@ -20,7 +21,7 @@ const info = `The code component is your swiss army knife when other components 
 Please note that the return of your function must be an object whose keys are the same value as the names given to your output sockets.  The incoming inputs argument is an object whose keys are the names you defined, aand each is an array.
 `;
 
-export class Code extends ThothReteComponent {
+export class Code extends ThothComponent {
   constructor() {
     // Name of the component
     super("Code");
@@ -36,7 +37,7 @@ export class Code extends ThothReteComponent {
     this.display = true;
   }
 
-  builder(node) {
+  builder(node: ThothNode ):ThothNode{
     if (!node.data.code) node.data.code = defaultCode;
 
     const outputGenerator = new SocketGeneratorControl({
@@ -75,8 +76,8 @@ export class Code extends ThothReteComponent {
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connected components
-  async worker(node, inputs, outputs, { silent, data }) {
-    function runCodeWithArguments(obj) {
+  async worker(node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent, data }:{silent:boolean,data:{code:unknown}}) {
+    function runCodeWithArguments(obj: unknown) {
       // eslint-disable-next-line no-new-func
       return Function('"use strict";return (' + obj + ")")()(
         node,
