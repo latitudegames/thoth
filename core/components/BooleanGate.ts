@@ -1,10 +1,11 @@
 import Rete from "rete";
-import { ThothReteComponent } from "./ThothReteComponent";
+import {ThothComponent} from "../thoth-component"
+import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
 import { booleanSocket, triggerSocket } from "../sockets";
 
 const info = `The boolean gate takes a boolean input, and depending on whether the value is true or false will only trigger one output or the other.`;
 
-export class BooleanGate extends ThothReteComponent {
+export class BooleanGate extends ThothComponent {
   constructor() {
     // Name of the component
     super("Boolean Gate");
@@ -20,7 +21,7 @@ export class BooleanGate extends ThothReteComponent {
   // the builder is used to "assemble" the node component.
   // when we have enki hooked up and have grabbed all few shots, we would use the builder
   // to generate the appropriate inputs and ouputs for the fewshot at build time
-  builder(node) {
+  builder(node: ThothNode) {
     const bool = new Rete.Input("boolean", "Boolean", booleanSocket);
     const dataInput = new Rete.Input("trigger", "Trigger", triggerSocket);
     const isTrue = new Rete.Output("true", "True", triggerSocket);
@@ -35,7 +36,7 @@ export class BooleanGate extends ThothReteComponent {
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connected components
-  async worker(node, inputs, outputs) {
+  async worker(node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs) {
     const isTrue = inputs["boolean"][0];
 
     if (isTrue) {
