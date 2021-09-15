@@ -19,7 +19,7 @@ export abstract class ThothEngineComponent {
         this.name = name;
     }
 
-    abstract worker(node: NodeData, inputs: WorkerInputs, outputs: WorkerOutputs, ...args: unknown[]): Node | void | ThothWorkerOutputs;
+    abstract worker(node: NodeData, inputs: WorkerInputs, outputs: WorkerOutputs, ...args: unknown[]): Node | ThothWorkerOutputs | void | Promise<void>;
 }
 export type EngineContext = {
   completion: (body: ModelCompletionOpts) => Promise<String | OpenAIResultChoice | undefined>,
