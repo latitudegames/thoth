@@ -18,7 +18,7 @@ export type ModuleType = {
 };
 
 export type ModelCompletionOpts = {
-  model: string
+  model?: string
   prompt?: string
   maxTokens?: number
   temperature?: number
