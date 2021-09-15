@@ -1,5 +1,6 @@
 import { useContext, createContext, useState } from "react";
 
+import { setAuthHeader } from "../utils/authHelper";
 import { login as userLogin } from "./../services/game-api/auth";
 import { useDB } from "./DatabaseProvider";
 
@@ -8,8 +9,6 @@ const Context = createContext({
   user: {} as any,
   checkIn: (user) => {},
   getUser: () => {},
-  authHeader: (authData) => {},
-  storeAuthHeader: (authHeader) => {},
 });
 
 export const useAuth = () => useContext(Context);
@@ -30,7 +29,7 @@ const AuthProvider = ({ children }) => {
       const finalUser = updatedUser.toJSON();
 
       setUser(finalUser);
-      storeAuthHeader(authHeader(finalUser.authData));
+      setAuthHeader(finalUser.authData);
     }
 
     return response;
@@ -42,30 +41,14 @@ const AuthProvider = ({ children }) => {
 
   const checkIn = (user) => {
     setUser(user);
-  };
-
-  const storeAuthHeader = (authHeader) => {
-    window.localStorage.setItem("authHeader", authHeader);
-  };
-
-  const authHeader = (authData) => {
-    if ((user && user?.authData) || authData) {
-      const auth = user?.authData ? user?.authData : authData;
-      return {
-        Authorization: "Basic " + auth,
-      };
-    } else {
-      return {};
-    }
+    setAuthHeader(user.authData);
   };
 
   const publicInterface = {
     login,
     user,
     checkIn,
-    authHeader,
     getUser,
-    storeAuthHeader,
   };
 
   return (
