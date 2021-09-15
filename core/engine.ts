@@ -4,10 +4,11 @@ import ModulePlugin from "./plugins/modulePlugin";
 import TaskPlugin from "./plugins/taskPlugin";
 import { ModelCompletionOpts,OpenAIResultChoice, Spell, ThothWorkerOutputs } from "./types";
 import { Node } from "rete/types";
+import { ThothNode } from "./types";
 
 
 import { Engine } from 'rete';
-import { NodeData, WorkerInputs, WorkerOutputs } from 'rete/src/core/data';
+import { WorkerInputs, WorkerOutputs } from 'rete/src/core/data';
 
 export abstract class ThothEngineComponent {
 // Original Class: https://github.com/latitudegames/rete/blob/master/src/engine/component.ts
@@ -19,7 +20,7 @@ export abstract class ThothEngineComponent {
         this.name = name;
     }
 
-    abstract worker(node: NodeData, inputs: WorkerInputs, outputs: WorkerOutputs, ...args: unknown[]): Node | ThothWorkerOutputs | void | Promise<void>;
+    abstract worker(node: ThothNode, inputs: WorkerInputs, outputs: WorkerOutputs, ...args: unknown[]): Node | ThothWorkerOutputs | void | Promise<void> | Promise<{actionType: string}>;
 }
 export type EngineContext = {
   completion: (body: ModelCompletionOpts) => Promise<String | OpenAIResultChoice | undefined>,
