@@ -1,3 +1,5 @@
+import { getAuthHeader } from "../../utils/authHelper";
+
 const url = process.env.REACT_APP_API_URL;
 
 export const getEnkiPrompt = async (taskName) => {
@@ -8,7 +10,7 @@ export const getEnkiPrompt = async (taskName) => {
       mode: "cors",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": process.env.REACT_APP_GAME_KEY,
+        ...getAuthHeader(),
       },
     });
 
@@ -28,7 +30,7 @@ export const getEnkis = async () => {
       mode: "cors",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": process.env.REACT_APP_GAME_KEY,
+        ...getAuthHeader(),
       },
     });
 
@@ -49,7 +51,7 @@ export const postEnkiCompletion = async (taskName, inputs) => {
       body: JSON.stringify({ inputs }),
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": process.env.REACT_APP_GAME_KEY,
+        ...getAuthHeader(),
       },
     });
 
