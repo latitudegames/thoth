@@ -1,8 +1,9 @@
 import Rete from "rete";
-import { ThothReteComponent } from "./ThothReteComponent";
+import { ThothComponent } from "../thoth-component"
 import { stringSocket, triggerSocket, arraySocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
-
+import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
+import { EngineContext } from "../engine";
 const fewshot = `Given an action, detect what entities the player is interacting with. Ignore entities that the player is just asking about.
 
 Entity types: food, person, creature, object, place, other, none
@@ -113,7 +114,7 @@ const info = `The entity detector takes in an action as a string, and attempts t
 
 The fewshot can be edited in the text edior, though note that the data structure must remian the same for proper processing.`;
 
-export class EntityDetector extends ThothReteComponent {
+export class EntityDetector extends ThothComponent {
   constructor() {
     // Name of the component
     super("Entity Detector");
@@ -123,7 +124,7 @@ export class EntityDetector extends ThothReteComponent {
         entities: "output",
         trigger: "option",
       },
-      init: (task) => {},
+      init: (task) => { },
     };
     this.category = "AI/ML";
     this.display = true;
@@ -133,7 +134,7 @@ export class EntityDetector extends ThothReteComponent {
   // the builder is used to "assemble" the node component.
   // when we have enki hooked up and have grabbed all few shots, we would use the builder
   // to generate the appropriate inputs and ouputs for the fewshot at build time
-  builder(node) {
+  builder(node: ThothNode) {
     node.data.fewshot = fewshot;
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const inp = new Rete.Input("action", "Action", stringSocket);
@@ -154,10 +155,11 @@ export class EntityDetector extends ThothReteComponent {
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connected components
-  async worker(node, inputs, outputs, { silent, thoth }) {
+  async worker(node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent, thoth }: { silent: boolean, thoth: EngineContext }) {
     const { completion } = thoth;
     const action = inputs["action"][0];
-    const prompt = node.data.fewshot + action + "\nEntities:";
+    const fewshot = node.data.fewshot as string
+    const prompt = fewshot + action + "\nEntities:";
 
     const body = {
       prompt,
@@ -165,7 +167,7 @@ export class EntityDetector extends ThothReteComponent {
       maxTokens: 50,
       temperature: 0.0,
     };
-    const result = await completion(body);
+    const result = await completion(body) as string;
 
     const split = result?.replace("\n", "")?.trim()?.split("Types: ");
 
