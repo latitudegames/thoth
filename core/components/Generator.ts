@@ -1,18 +1,19 @@
 import Rete from "rete";
-import { ThothReteComponent } from "./ThothReteComponent";
 import Handlebars from "handlebars";
 import { triggerSocket, stringSocket } from "../sockets";
 import { SocketGeneratorControl } from "../dataControls/SocketGenerator";
 import { InputControl } from "../dataControls/InputControl";
 import { FewshotControl } from "../dataControls/FewshotControl";
-
+import { ThothComponent } from "../thoth-component"
+import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
+import { EngineContext } from "../engine";
 const info = `The generator component is our general purpose completion component.  You can define any number of inputs, and utilise those inputs in a templating language known as Handlebars.  Any value which is wrapped like {{this}} in double braces will be replaced with the corresponding value coming in to the input with the same name.  This allows you to write almost any fewshot you might need, and input values from anywhere else in your chain.
 
 Controls have also been added which give you control of some of the fundamental settings of the OpenAI completion endpoint, including temperature, max tokens, and your stop sequence.
 
 The componet has two returns.  The composed will output your entire fewshot plus the completion, whereas the result output will only be the result of the completion. `;
 
-export class Generator extends ThothReteComponent {
+export class Generator extends ThothComponent {
   constructor() {
     super("Generator");
     this.task = {
@@ -21,13 +22,13 @@ export class Generator extends ThothReteComponent {
         composed: "output",
         trigger: "option",
       },
-      init: (task) => {},
+      init: (task) => { },
     };
     this.category = "AI/ML";
     this.info = info;
   }
 
-  builder(node) {
+  builder(node: ThothNode) {
     const dataIn = new Rete.Input("trigger", "Trigger", triggerSocket);
     const dataOut = new Rete.Output("trigger", "Trigger", triggerSocket);
     const resultOut = new Rete.Output("result", "Result", stringSocket);
@@ -83,26 +84,28 @@ export class Generator extends ThothReteComponent {
     return node;
   }
 
-  async worker(node, rawInputs, outputs, {thoth}) {
+  async worker(node: ThothNode, rawInputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent, thoth }: { silent: boolean, thoth: EngineContext }) {
     const { completion } = thoth;
     const stringInputs = rawInputs as { [key: string]: string[] };
     const inputs = Object.entries(stringInputs).reduce((acc, [key, value]) => {
       acc[key] = value[0];
       return acc;
-    }, {});
+    }, {} as Record<string, string>);
 
-    const string = node.data.fewshot || "";
-
-    const template = Handlebars.compile(string);
+    const fewshot = node.data.fewshot as string || "";
+    const stopSequence = node.data.stop as string
+    const temp = node.data.temp as string
+    const maxTokensData = node?.data?.maxTokens as string
+    const template = Handlebars.compile(fewshot);
     const prompt = template(inputs);
 
     const stop = node?.data?.stop
-      ? node.data.stop.split(",").map((i) => i.trim())
+      ? stopSequence.split(",").map((i) => i.trim())
       : ["/n"];
 
-    const temperature = node?.data?.temp ? parseFloat(node.data.temp) : 0.7;
-    const maxTokens = node?.data?.maxTokens
-      ? parseInt(node.data.maxTokens)
+    const temperature = node?.data?.temp ? parseFloat(temp) : 0.7;
+    const maxTokens = maxTokensData
+      ? parseInt(maxTokensData)
       : 50;
 
     const body = {
@@ -111,7 +114,7 @@ export class Generator extends ThothReteComponent {
       maxTokens,
       temperature,
     };
-    const raw = await completion(body);
+    const raw = await completion(body) as string;
     const result = raw?.trim();
 
     const composed = `${prompt} ${result}`;
