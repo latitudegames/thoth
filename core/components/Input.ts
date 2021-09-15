@@ -3,7 +3,6 @@ import { TextInputControl } from "../controls/TextInputControl";
 import { stringSocket } from "../sockets";
 import { ThothComponent } from "../thoth-component"
 import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
-import { EngineContext } from "../engine";
 const info = `The info component has a single control, an input field.  Whatever value you put into this input field will be sent out along the compoonents output socket.`;
 
 export class InputComponent extends ThothComponent {
