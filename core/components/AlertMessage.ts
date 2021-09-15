@@ -1,11 +1,13 @@
 import Rete from "rete";
-import { ThothReteComponent } from "./ThothReteComponent";
+import {ThothComponent} from "../thoth-component"
 import { TextInputControl } from "../controls/TextInputControl";
+import { ThothNode, NodeData, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
+
 import { triggerSocket } from "../sockets";
 
 const info = `When the alert component is triggered, it will fire an alert with the message in the input box.`;
 
-export class Alert extends ThothReteComponent {
+export class Alert extends ThothComponent {
 
   constructor() {
     // Name of the component
@@ -21,7 +23,7 @@ export class Alert extends ThothReteComponent {
   // the builder is used to "assemble" the node component.
   // when we have enki hooked up and have grabbed all few shots, we would use the builder
   // to generate the appropriate inputs and ouputs for the fewshot at build time
-  builder(node) {
+  builder(node: ThothNode ):ThothNode{
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const dataInput = new Rete.Input("trigger", "Trigger", triggerSocket);
 
@@ -38,7 +40,7 @@ export class Alert extends ThothReteComponent {
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connected components
-  async worker(node, inputs, data) {
+  async worker(node: NodeData, Inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs) {
     alert(node.data.text);
   }
 }
