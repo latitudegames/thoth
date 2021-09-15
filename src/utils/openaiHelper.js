@@ -1,3 +1,5 @@
+import { getAuthHeader } from "../utils/authHelper";
+
 export const completion = async (body) => {
   const url = process.env.REACT_APP_API_URL;
 
@@ -8,7 +10,7 @@ export const completion = async (body) => {
       mode: "cors",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": process.env.REACT_APP_GAME_KEY,
+        ...getAuthHeader(),
       },
       body: JSON.stringify({ ...body, prompt: body.prompt.trimEnd() }),
     });
