@@ -19,7 +19,7 @@ function App() {
   // Use our routes
   const [checked, setChecked] = useState(false);
   const { tabs } = useTabManager();
-  const { user, getUser, checkIn, storeAuthHeader, authHeader } = useAuth();
+  const { user, getUser, checkIn } = useAuth();
 
   const authCheck = user && user.accessToken;
 
@@ -30,7 +30,6 @@ function App() {
       if (currentUser) {
         // checkin?
         checkIn(currentUser);
-        storeAuthHeader(authHeader(currentUser.authData));
       }
 
       setChecked(true);
