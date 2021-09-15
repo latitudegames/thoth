@@ -1,17 +1,18 @@
-import { ThothReteComponent } from "./ThothReteComponent";
+import { ThothComponent } from "../thoth-component"
 import { EnkiThroughputControl } from "../dataControls/EnkiThroughputControl";
-
+import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
+import { EngineContext } from "../engine";
 const info = `Enki is a tool for building both fewshots, as well as entire data sets.  The enki component allows you to select an enki which you or someone else has made in the Enki tool and utilize it in your spell chains.
 
 Due to current limitations in data structure, the enki inputs and outputs are unnamed, so you will have to know the order of them and what to use them for by referencing their usage in Enki.`;
-export class EnkiTask extends ThothReteComponent {
+export class EnkiTask extends ThothComponent {
   constructor() {
     // Name of the component
     super("Enki Task");
 
     this.task = {
       outputs: { trigger: "option" },
-      init: (task) => {},
+      init: (task) => { },
     };
     this.category = "AI/ML";
     this.display = true;
@@ -20,7 +21,7 @@ export class EnkiTask extends ThothReteComponent {
 
   node = {};
 
-  builder(node) {
+  builder(node: ThothNode) {
     const EnkiOutput = new EnkiThroughputControl({
       socketType: "stringSocket",
       taskType: "output",
@@ -32,13 +33,13 @@ export class EnkiTask extends ThothReteComponent {
     return node;
   }
 
-  async worker(node, inputs, outputs, { silent, thoth }) {
-    const {enkiCompletion} = thoth
+  async worker(node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent, thoth }: { silent: boolean, thoth: EngineContext }) {
+    const { enkiCompletion } = thoth
     // Assume the inputs is a list of strings (do we know this to be true?)
     const stringInputs = inputs as { [key: string]: string[] };
-
+    const taskName = node.data.name as string
     const completionResponse = await enkiCompletion(
-      node.data.name,
+      taskName,
       Object.values(stringInputs).map((inputArray) => inputArray[0])
     );
 
@@ -55,7 +56,7 @@ export class EnkiTask extends ThothReteComponent {
         compiledOutputs[`output${outputNumber + 1}`] = output;
         return compiledOutputs;
       },
-      {}
+      {} as { [output: string]: string }
     );
 
     node.display(Object.values(enkiOutputs).join(" "));
