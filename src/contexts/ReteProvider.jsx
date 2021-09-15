@@ -1,6 +1,6 @@
 import { useContext, createContext } from "react";
 
-import { completion as _completion } from "../utils/openaiHelper";
+import { completion as _completion } from "../services/game-api/text";
 import { invokeInference } from "../utils/huggingfaceHelper";
 import { usePubSub } from "./PubSubProvider";
 import { useDB } from "./DatabaseProvider";
