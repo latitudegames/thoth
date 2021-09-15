@@ -1,13 +1,13 @@
-import Rete from "rete";
 import isEqual from "lodash/isEqual";
 import { ModuleControl } from "../dataControls/ModuleControl";
-
+import { ThothComponent } from "../thoth-component"
+import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
 const info = `The Module component allows you to add modules into your chain.  A module is a bundled self contained chain that defines inputs, outputs, and triggers using components.`;
-
-export class ModuleComponent extends Rete.Component {
+import { Task } from '@latitudegames/thoth-core/plugins/taskPlugin/task'
+export class ModuleComponent extends ThothComponent {
   module;
-  _task;
-  updateModuleSockets;
+  _task: Task;
+  updateModuleSockets: Function;
   task;
   info;
   subscriptionMap: {} = {};
@@ -28,7 +28,7 @@ export class ModuleComponent extends Rete.Component {
     this.noBuildUpdate = true;
   }
 
-  builder(node) {
+  builder(node: ThothNode) {
     const moduleControl = new ModuleControl({
       name: "Module select",
       write: false,
@@ -38,7 +38,7 @@ export class ModuleComponent extends Rete.Component {
       this.subscribe(node);
     }
 
-    moduleControl.onData = async (moduleName) => {
+    moduleControl.onData = async (moduleName:string) => {
       this.updateSockets(node, moduleName);
       this.subscribe(node);
     };
@@ -48,18 +48,18 @@ export class ModuleComponent extends Rete.Component {
     return node;
   }
 
-  destroyed(node) {
+  destroyed(node: ThothNode) {
     this.unsubscribe(node);
   }
 
-  unsubscribe(node) {
+  unsubscribe(node: ThothNode) {
     if (!this.subscriptionMap[node.id]) return;
 
     this.subscriptionMap[node.id].unsubscribe();
     delete this.subscriptionMap[node.id];
   }
 
-  async subscribe(node) {
+  async subscribe(node: ThothNode) {
     if (!node.data.module) return;
 
     let cache;
@@ -78,21 +78,22 @@ export class ModuleComponent extends Rete.Component {
     );
   }
 
-  updateSockets(node, moduleName) {
+  updateSockets(node: ThothNode, moduleName: string) {
     node.data.module = moduleName;
     this.updateModuleSockets(node);
     this.editor.trigger("process");
     node.update();
   }
 
-  worker(node, inputs, outputs, { module }) {
+  worker(node: ThothNode, inputs: ThothWorkerInputs, outputs: { [key: string]: string }, { module }) {
     const open = Object.entries(module.outputs)
       .filter(([key, value]) => typeof value === "boolean" && value)
       .map(([key]) => key);
     // close all triggers first
-    this._task.closed = node.data.outputs
-      .map((out) => out.name)
-      .filter((out) => !open.includes(out));
+    const nodeOutputs = node.data.outputs as { [key: string]: string }[]
+    this._task.closed = nodeOutputs
+      .map((out: ThothWorkerOutputs) => out.name)
+      .filter((out) => !open.includes(out as string));
 
     return module.outputs;
   }
