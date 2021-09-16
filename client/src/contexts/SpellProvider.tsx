@@ -5,18 +5,18 @@ import { useDB } from "./DatabaseProvider";
 
 const Context = createContext({
   currentSpell: {},
-  getCurrentSpell: () => {},
+  getCurrentSpell: () => { },
   updateCurrentSpell: {},
-  loadSpell: () => {},
-  saveSpell: () => {},
-  newSpell: () => {},
-  saveCurrentSpell: () => {},
+  loadSpell: () => { },
+  saveSpell: () => { },
+  newSpell: () => { },
+  saveCurrentSpell: () => { },
   stateHistory: [],
   currentGameState: {},
-  getCurrentGameState: () => {},
-  rewriteCurrentGameState: () => {},
-  updateCurrentGameState: () => {},
-  getThothVersion: () => {},
+  getCurrentGameState: (): Record<string, unknown> => { return {} },
+  rewriteCurrentGameState: (): Record<string, unknown> => { return {} },
+  updateCurrentGameState: (): Record<string, unknown> => { return {} },
+  getThothVersion: () => { },
 });
 
 export const useSpell = () => useContext(Context);
@@ -27,10 +27,10 @@ const SpellProvider = ({ children }) => {
   } = useDB();
   const { enqueueSnackbar } = useSnackbar();
 
-  const spellRef = useRef();
+  const spellRef = useRef<{ name: string, gameState: Record<string, unknown> }>();
 
   const [currentSpell, setCurrentSpell] = useState({});
-  const [stateHistory, setStateHistory] = useState([]);
+  const [stateHistory, setStateHistory] = useState([] as Record<string, unknown>[]);
 
   const updateCurrentSpell = (activeTab) => {
     spellRef.current = activeTab;
@@ -65,18 +65,18 @@ const SpellProvider = ({ children }) => {
   };
 
   const saveCurrentSpell = async (update) => {
-    return saveSpell(spellRef.current.name, update);
+    return saveSpell(spellRef?.current?.name, update);
   };
 
   const getCurrentGameState = async () => {
-    const spellDoc = await spells.getSpell(spellRef.current.name);
+    const spellDoc = await spells.getSpell(spellRef?.current?.name);
     const spell = spellDoc.toJSON();
     return spell.gameState;
   };
 
   const updateCurrentGameState = async (update) => {
     const newState = {
-      ...spellRef.current.gameState,
+      ...spellRef?.current?.gameState,
       ...update,
     };
 
@@ -84,8 +84,9 @@ const SpellProvider = ({ children }) => {
   };
 
   const rewriteCurrentGameState = async (state) => {
-    const spell = await spells.getSpell(spellRef.current.name);
-    setStateHistory([...stateHistory, spell.gameState]);
+    const spell = await spells.getSpell(spellRef?.current?.name);
+    const gamestate = spell?.gameState as Record<string, unknown>
+    setStateHistory([...stateHistory, gamestate]);
 
     const update = { gameState: state };
     const updatedSpell = await spells.updateSpell(spell.name, update);
