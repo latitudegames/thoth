@@ -4,7 +4,7 @@ import { CodeControl } from "../dataControls/CodeControl";
 import { InputControl } from "../dataControls/InputControl";
 import { SocketGeneratorControl } from "../dataControls/SocketGenerator";
 import {ThothComponent} from "../thoth-component"
-import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
+import { NodeData, ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
 
 const defaultCode = `
 // See component information in inspector for details.
@@ -29,8 +29,7 @@ export class Code extends ThothComponent {
     this.task = {
       outputs: {
         trigger: "option",
-      },
-      init: (task) => {},
+      }
     };
     this.category = "Logic";
     this.info = info;
@@ -76,7 +75,7 @@ export class Code extends ThothComponent {
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connected components
-  async worker(node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent, data }:{silent:boolean,data:{code:unknown}}) {
+  async worker(node: NodeData, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent, data }:{silent:boolean,data:{code:unknown}}) {
     function runCodeWithArguments(obj: unknown) {
       // eslint-disable-next-line no-new-func
       return Function('"use strict";return (' + obj + ")")()(

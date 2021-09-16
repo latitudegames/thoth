@@ -1,7 +1,7 @@
 import Rete from "rete";
 import { stringSocket, triggerSocket } from "../sockets";
 import { ThothComponent } from "../thoth-component"
-import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
+import { NodeData, ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
 import { EngineContext } from "../engine";
 const fewshot = (prose: string) => {
   const prompt = `Rewrite narrative snippets as a script:
@@ -68,7 +68,7 @@ export class ProseToScript extends ThothComponent {
 
     this.task = {
       outputs: { detectedItem: "output", trigger: "option" },
-      init: (task) => { },
+      init: () => { },
     };
 
     this.category = "AI/ML";
@@ -94,7 +94,7 @@ export class ProseToScript extends ThothComponent {
       .addOutput(dataOutput);
   }
 
-  async worker(node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent, thoth }: { silent: boolean, thoth: EngineContext }) {
+  async worker(node: NodeData, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent, thoth }: { silent: boolean, thoth: EngineContext }) {
     const { completion } = thoth;
     const prose = inputs["string"][0] as string;
     const prompt = fewshot(prose);

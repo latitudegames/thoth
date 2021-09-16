@@ -47,7 +47,7 @@ export class JoinListComponent extends ThothComponent {
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connected components
-  async worker(node: ThothNode, inputs: ThothWorkerInputs & { list: [string][] }, outputs: ThothWorkerOutputs) {
+  async worker(node: NodeData, inputs: ThothWorkerInputs & { list: [string][] }, outputs: ThothWorkerOutputs) {
     return {
       text: inputs.list[0].join(node.data.separator as string),
     };

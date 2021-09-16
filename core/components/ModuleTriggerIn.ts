@@ -61,7 +61,7 @@ export class ModuleTriggerIn extends ThothComponent {
     return node.addOutput(out);
   }
 
-  async worker(node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs) {
+  async worker(node: NodeData, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs) {
     console.log("trigger worker outputs", outputs);
     return {};
   }

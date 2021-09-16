@@ -1,6 +1,6 @@
 import Rete from "rete";
 import {ThothComponent} from "../thoth-component"
-import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
+import { NodeData, ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
 import { booleanSocket, triggerSocket } from "../sockets";
 
 const info = `The boolean gate takes a boolean input, and depending on whether the value is true or false will only trigger one output or the other.`;
@@ -12,8 +12,7 @@ export class BooleanGate extends ThothComponent {
 
     this.task = {
       outputs: { true: "option", false: "option" },
-      init: (task) => {},
-    };
+    }
     this.category = "Logic";
     this.info = info;
   }
@@ -36,7 +35,7 @@ export class BooleanGate extends ThothComponent {
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connected components
-  async worker(node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs) {
+  async worker(node: NodeData, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs) {
     const isTrue = inputs["boolean"][0];
 
     if (isTrue) {

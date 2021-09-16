@@ -1,9 +1,10 @@
 import Rete from "rete";
 import {ThothComponent} from "../thoth-component"
 import { TextInputControl } from "../controls/TextInputControl";
-import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
+import { NodeData, ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
 
 import { triggerSocket } from "../sockets";
+import { TaskOptions } from "../plugins/taskPlugin/task";
 
 const info = `When the alert component is triggered, it will fire an alert with the message in the input box.`;
 
@@ -15,8 +16,9 @@ export class Alert extends ThothComponent {
 
     this.task = {
       outputs: {},
-      init: (task) => {},
-    };
+      init: () => {},
+      onRun: ()=>{}
+    } as TaskOptions;
     this.category = "I/O";
     this.info = info;
   }
@@ -40,7 +42,7 @@ export class Alert extends ThothComponent {
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connected components
-  async worker(node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs) {
+  async worker(node: NodeData, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs) {
     alert(node.data.text);
   }
 }

@@ -2,7 +2,7 @@ import Rete from "rete";
 import { ThothComponent } from "../thoth-component"
 import { stringSocket, triggerSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
-import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
+import { NodeData, ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
 import { EngineContext } from "../engine";
 // For simplicity quests should be ONE thing not complete X and Y
 const fewshot = `Given an action, predict how hard it would be for a normal human in a fantasy world and what type of stat it uses.
@@ -47,8 +47,7 @@ export class DifficultyDetectorComponent extends ThothComponent {
     super("Difficulty Detector");
 
     this.task = {
-      outputs: { difficulty: "output", category: "output", trigger: "option" },
-      init: (task) => {},
+      outputs: { difficulty: "output", category: "output", trigger: "option" }
     };
     this.category = "AI/ML";
     this.info = info;
@@ -83,7 +82,7 @@ export class DifficultyDetectorComponent extends ThothComponent {
       .addOutput(categoryOut);
   }
 
-  async worker(node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent, thoth }: { silent: boolean, thoth: EngineContext }) {
+  async worker(node: NodeData, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent, thoth }: { silent: boolean, thoth: EngineContext }) {
     const { completion } = thoth;
     const action = inputs["action"][0];
     const fewshot = node.data.fewshot as string

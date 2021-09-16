@@ -64,7 +64,7 @@ export class TimeDetectorComponent extends ThothComponent {
       .addOutput(dataOutput);
   }
 
-  async worker(node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent, thoth }: { silent: boolean, thoth: EngineContext }) {
+  async worker(node: NodeData, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent, thoth }: { silent: boolean, thoth: EngineContext }) {
     const { completion } = thoth;
     const fewshot = node.data.fewshot as string
     const action = inputs["string"][0];

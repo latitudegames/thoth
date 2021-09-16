@@ -2,9 +2,8 @@ import Rete from "rete";
 import { stringSocket, triggerSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
 import { ThothComponent } from "../thoth-component"
-import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
+import { NodeData, ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
 import { EngineContext } from "../engine";
-import { TaskOptions } from "../plugins/taskPlugin/task";
 const fewshot = `Given an action classify the type of action it is
 
 Types: look, get, use, craft, dialog, movement, travel, combat, consume, other
@@ -35,9 +34,7 @@ export class ActionTypeComponent extends ThothComponent {
     super("Action Type Classifier");
     this.task = {
       outputs: { actionType: "output", trigger: "option" },
-      init: () => { },
-      onRun: ()=>{}
-    } as TaskOptions;
+    }
     this.category = "AI/ML";
     this.info = info;
     this.display = true;
@@ -67,7 +64,7 @@ export class ActionTypeComponent extends ThothComponent {
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connsected components
-  async worker(node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent, thoth }: { silent: boolean, thoth: EngineContext }) {
+  async worker(node: NodeData, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent, thoth }: { silent: boolean, thoth: EngineContext }) {
     const { completion } = thoth;
     const action = inputs["action"][0];
     const fewshot = node.data.fewshot as string

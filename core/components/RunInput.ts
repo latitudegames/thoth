@@ -88,7 +88,7 @@ export class RunInputComponent extends ThothComponent {
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connected components
-  async worker(node: ThothNode) {
+  async worker(node: NodeData) {
     return {
       text: node.data.text,
     };

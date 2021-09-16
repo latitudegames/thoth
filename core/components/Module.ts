@@ -89,7 +89,7 @@ export class ModuleComponent extends ThothComponent {
     node.update();
   }
 
-  worker(node: ThothNode, inputs: ThothWorkerInputs, outputs: { [key: string]: string }, { module }: { module: { outputs: ThothWorkerOutputs[] } }) {
+  worker(node: NodeData, inputs: ThothWorkerInputs, outputs: { [key: string]: string }, { module }: { module: { outputs: ThothWorkerOutputs[] } }) {
     const open = Object.entries(module.outputs)
       .filter(([key, value]) => typeof value === "boolean" && value)
       .map(([key]) => key);
