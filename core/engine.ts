@@ -28,8 +28,8 @@ export type EngineContext = {
   completion: (body: ModelCompletionOpts) => Promise<String | OpenAIResultChoice | undefined>,
   getCurrentGameState: () => Record<string, unknown>
   updateCurrentGameState: () => Record<string, unknown>,
-  enkiCompletion: (taskName: string, inputs: string[]) => { outputs: string[] },
-  huggingface: (model: string, request: string) => { error: unknown, [key: string]: unknown }
+  enkiCompletion: (taskName: string, inputs: string[]) => Promise<{ outputs: string[] }>,
+  huggingface: (model: string, request: string) => Promise<{ error: unknown, [key: string]: unknown }>
 }
 
 export const initSharedEngine = (name: string, modules: any[], components: any[], server: boolean = false) => {
