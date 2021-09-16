@@ -4,6 +4,7 @@ import { FewshotControl } from "../dataControls/FewshotControl";
 import { ThothComponent } from "../thoth-component"
 import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
 import { EngineContext } from "../engine";
+import { TaskOptions } from "../plugins/taskPlugin/task";
 const fewshot = `Given an action classify the type of action it is
 
 Types: look, get, use, craft, dialog, movement, travel, combat, consume, other
@@ -34,8 +35,9 @@ export class ActionTypeComponent extends ThothComponent {
     super("Action Type Classifier");
     this.task = {
       outputs: { actionType: "output", trigger: "option" },
-      init: (task) => { },
-    };
+      init: () => { },
+      onRun: ()=>{}
+    } as TaskOptions;
     this.category = "AI/ML";
     this.info = info;
     this.display = true;
