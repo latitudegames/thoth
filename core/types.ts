@@ -3,6 +3,7 @@ import { Node } from "rete/types";
 import { Inspector } from "./plugins/inspectorPlugin/Inspector";
 import { NodeData as ReteNodeData, WorkerInputs, WorkerOutputs } from "rete/types/core/data";
 import { ModuleGraphData } from "./plugins/modulePlugin/module-manager";
+import { TaskOutputTypes } from "./plugins/taskPlugin/task";
 
 
 export type ThothNode = Node & {
@@ -78,7 +79,8 @@ export type NodeOutputs = {
 }
 
 export type NodeData = ReteNodeData & {
-  fewshot?: string
+  fewshot?: string,
+  display: Function
 }
 
 // export type Node = {
@@ -95,7 +97,7 @@ export type Spell = {
   nodes: Record<number, Node>
 }
 
-export type ThothWorkerInputs = WorkerInputs & {}
-export type ThothWorkerOutputs = WorkerOutputs & {}
+export type ThothWorkerInputs = WorkerInputs & {type: TaskOutputTypes;key: string, outputData:unknown}
+export type ThothWorkerOutputs = WorkerOutputs & {[key: string]: string[];}
 export type WorkerReturn = Node | ThothWorkerOutputs | void | Promise<void> | Promise<{ actionType: string }> | Promise<{ difficulty?: string, category?: string }> | Promise<{ [output: string]: string } | null> | Promise<never[] | { entities: { name: string; type: string; }[]; }> | Promise<{ element: unknown; } | undefined> | Promise<{ result: { error: unknown, [key: string]: unknown } } | { result?: undefined }> | Promise<{ text: unknown }> | Promise<{ boolean: boolean; }> | Promise<null | undefined> | WorkerOutputs[]
 export type ThothWorker = (node: ThothNode, inputs: WorkerInputs, outputs: WorkerOutputs, ...args: unknown[])=> WorkerReturn
