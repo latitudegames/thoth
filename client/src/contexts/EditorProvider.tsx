@@ -22,8 +22,8 @@ export type SpellContext = {
   saveCurrentSpell: () => void,
   stateHistory: never[],
   currentGameState: {},
-  getCurrentGameState: () => void,
-  rewriteCurrentGameState: () => void,
+  getCurrentGameState: () => Record<string, unknown>,
+  rewriteCurrentGameState: () => Record<string, unknown>,
   updateCurrentGameState: () => void,
   getThothVersion: () => void
 }
@@ -40,8 +40,6 @@ export interface ReteContext extends EngineContext {
   getGameState: () => void,
   setGameState: () => void,
   getModules: () => void,
-  enkiCompletion: () => void,
-  huggingface: () => void,
 }
 
 export type ThothTab = {
