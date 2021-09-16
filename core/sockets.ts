@@ -4,7 +4,7 @@ import Rete from "rete";
 // this is a horrible hack and only temprorary tunil we have a rete schema migration system set up
 // with the goal of changing the name of every socket to match the name of the variable.
 // Used in the module manager utils addIO function
-export const socketNameMap = {
+export const socketNameMap: Record<string,string> = {
   "Any type": "anySocket",
   Number: "numSocket",
   Boolean: "booleanSocket",
