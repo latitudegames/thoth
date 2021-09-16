@@ -1,11 +1,10 @@
-import { NodeData } from "rete/types/core/data";
 import { Socket as SocketType } from "rete/types";
 import { Engine, Socket, Component } from "rete";
 
 import { Module } from "./module";
 import { ModuleType } from "../../types"
 import { extractNodes } from "./utils";
-
+import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../../types";
 interface ModuleComponent extends Component {
   run: Function;
 }
@@ -14,17 +13,19 @@ export type ModuleSocketType = {
   name: string;
   socketKey: string;
   socket: SocketType;
+  [key: string]: unknown
 };
 
+export type ModuleGraphData = { nodes: Record<string, ThothNode> }
 export class ModuleManager {
   engine?: Engine | null;
-  modules: ModuleType[];
+  modules: Record<string, ModuleType>;
   inputs = new Map<string, Socket>();
   outputs = new Map<string, Socket>();
   triggerIns = new Map<string, Socket>();
   triggerOuts = new Map<string, Socket>();
 
-  constructor(modules) {
+  constructor(modules: Record<string, ModuleType>) {
     this.modules = modules;
     this.inputs = new Map();
     this.outputs = new Map();
@@ -33,18 +34,18 @@ export class ModuleManager {
   }
 
   addModule(module: ModuleType) {
-    this.modules.push(module);
+    this.modules[module.name] = module;
   }
 
-  setModules(modules: ModuleType[]) {
+  setModules(modules: Record<string, ModuleType>) {
     this.modules = modules;
   }
 
   updateModule(module: ModuleType) {
-    this.modules[module.name] = module;
+    this.modules[module.name as string] = module;
   }
 
-  getSockets(data, typeMap, defaultName: string): ModuleSocketType[] {
+  getSockets(data: { nodes: Record<string, ThothNode> }, typeMap: Map<string, Socket>, defaultName: string): ModuleSocketType[] {
     return extractNodes(data.nodes, typeMap).map(
       (node, i): ModuleSocketType => {
         node.data.name = node.data.name || `${defaultName}-${i + 1}`;
@@ -57,24 +58,24 @@ export class ModuleManager {
     );
   }
 
-  getInputs(data): ModuleSocketType[] {
+  getInputs(data: ModuleGraphData): ModuleSocketType[] {
     return this.getSockets(data, this.inputs, "input");
   }
 
-  getOutputs(data): ModuleSocketType[] {
+  getOutputs(data: ModuleGraphData): ModuleSocketType[] {
     return this.getSockets(data, this.outputs, "output");
   }
 
-  getTriggerOuts(data): ModuleSocketType[] {
+  getTriggerOuts(data: ModuleGraphData): ModuleSocketType[] {
     return this.getSockets(data, this.triggerOuts, "trigger");
   }
 
-  getTriggerIns(data) {
+  getTriggerIns(data: ModuleGraphData) {
     return this.getSockets(data, this.triggerIns, "trigger");
   }
 
   socketFactory(
-    node: NodeData,
+    node: ThothNode,
     socket: Socket | Function | undefined
   ): SocketType {
     socket = typeof socket === "function" ? socket(node) : socket;
@@ -87,41 +88,44 @@ export class ModuleManager {
     return socket as SocketType;
   }
 
-  registerInput(name, socket) {
+  registerInput(name: string, socket: Socket) {
     this.inputs.set(name, socket);
   }
 
-  registerTriggerIn(name, socket) {
+  registerTriggerIn(name: string, socket: Socket) {
     this.triggerIns.set(name, socket);
   }
 
-  registerTriggerOut(name, socket) {
+  registerTriggerOut(name: string, socket: Socket) {
     this.triggerOuts.set(name, socket);
   }
 
-  registerOutput(name, socket) {
+  registerOutput(name: string, socket: Socket) {
     this.outputs.set(name, socket);
   }
 
-  getTriggeredNode(data, socketKey) {
+  getTriggeredNode(data: { nodes: Record<string, ThothNode> }, socketKey: string) {
     return extractNodes(data.nodes, this.triggerIns).find(
       (node) => node.data.socketKey === socketKey
     );
   }
 
-  async workerModule(node, inputs, outputs, args) {
+  async workerModule(node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, args: { socketInfo: { target: string } }) {
     if (!node.data.module) return;
-    if (!this.modules[node.data.module]) return;
-
-    const data = this.modules[node.data.module].data as any;
+    if (!this.modules[node.data.module as number]) return;
+    const moduleName = node.data.module as string
+    const data = this.modules[moduleName].data as any;
     const module = new Module();
     const engine = this.engine?.clone();
 
     const parsedInputs = Object.entries(inputs).reduce((acc, [key, value]) => {
-      const name = node.data.inputs.find((n) => n.socketKey === key).name;
-      acc[name] = value;
-      return acc;
-    }, {});
+      const nodeInputs = node.data.inputs as ModuleSocketType[]
+      const name = nodeInputs?.find((n: ModuleSocketType) => n?.socketKey === key)?.name
+      if (typeof name === "string") {
+        acc[name] = value;
+        return acc;
+      }
+    }, {} as Record<string, unknown>) as Record<string, unknown>;
 
     module.read(parsedInputs);
     await engine?.process(
@@ -144,23 +148,21 @@ export class ModuleManager {
     return module;
   }
 
-  workerInputs(node, inputs, outputs, { module }: { module: Module }) {
+  workerInputs(node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { module }: { module: Module }) {
     if (!module) return;
-
-    outputs["output"] = (module.getInput(node.data.name) || [])[0];
+    const nodeDataName = node.data.name as string
+    outputs["output"] = (module.getInput(nodeDataName) as string || [])[0];
     return outputs;
   }
 
-  workerOutputs(node, inputs, outputs, { module }: { module: Module }) {
+  workerOutputs(node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { module }: { module: Module }) {
     if (!module) return;
-
-    module.setOutput(node.data.socketKey, inputs["input"][0]);
+    const socketKey = node.data.socketKey as string
+    module.setOutput(socketKey, inputs["input"][0]);
   }
 
   workerTriggerIns(
-    node,
-    inputs,
-    outputs,
+    node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs,
     { module, ...rest }: { module: Module }
   ) {
     if (!module) return;
@@ -169,17 +171,15 @@ export class ModuleManager {
   }
 
   workerTriggerOuts(
-    node,
-    inputs,
-    outputs,
+    node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs,
     { module, ...rest }: { module: Module }
   ) {
     if (!module) return;
-
-    module.setOutput(node.data.socketKey, outputs["trigger"]);
+    const socketKey = node.data.socketKey as string
+    module.setOutput(socketKey, outputs["trigger"]);
   }
 
-  setEngine(engine) {
+  setEngine(engine: Engine) {
     this.engine = engine;
   }
 }
