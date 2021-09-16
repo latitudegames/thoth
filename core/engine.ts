@@ -2,13 +2,10 @@
 import Rete from "rete";
 import ModulePlugin from "./plugins/modulePlugin";
 import TaskPlugin from "./plugins/taskPlugin";
-import { ModelCompletionOpts, OpenAIResultChoice, Spell, WorkerReturn } from "./types";
+import { ModelCompletionOpts, NodeData, OpenAIResultChoice, Spell, ThothWorkerInputs, ThothWorkerOutputs, WorkerReturn } from "./types";
 import { Node } from "rete/types";
-import { ThothNode } from "./types";
-
-
 import { Engine } from 'rete';
-import { WorkerInputs, WorkerOutputs } from 'rete/src/core/data';
+import { WorkerOutputs } from 'rete/src/core/data';
 
 
 export abstract class ThothEngineComponent {
@@ -21,7 +18,7 @@ export abstract class ThothEngineComponent {
     this.name = name;
   }
 
-  abstract worker(node: ThothNode, inputs: WorkerInputs, outputs: WorkerOutputs, ...args: unknown[]): WorkerReturn
+  abstract worker(node: NodeData, inputs: Record<string,ThothWorkerInputs[]>, outputs: WorkerOutputs, ...args: unknown[]): WorkerReturn
 }
 export type EngineContext = {
   completion: (body: ModelCompletionOpts) => Promise<String | OpenAIResultChoice | undefined>,
