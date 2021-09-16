@@ -1,55 +1,60 @@
 import { Node, NodeEditor } from 'rete';
 import { ThothEngineComponent } from './engine';
-import { NodeData } from "rete/types/core/data";
-import { Task } from "./plugins/taskPlugin/task";
+import { Task, TaskOptions } from "./plugins/taskPlugin/task";
 import { ThothNode } from './types';
 
 // Note: We do this so Typescript knows what extra properties we're
 // adding to the NodeEditor (in rete/editor.js). In an ideal world, we
 // would be extending the class there, when we instantiate it.
-class ThothReteNodeEditor extends NodeEditor {
-    pubSub;
-    thoth;
-    thothV2;
-    tab;
-  }
+export type PubSubContext = {
+  publish: (event: string, data: unknown) => boolean
+  subscribe: (event: string, callback: Function) => void
+  events: Record<string, (tabId: string) => string>
+  PubSub: PubSubJS.Base
+}
 
-export type ThothTask = {
-    outputs: { [key: string]: string };
-    init?: (task: Task, node: NodeData) => void;
-  };
+class ThothReteNodeEditor extends NodeEditor {
+  pubSub: PubSubContext;
+  thoth;
+  thothV2;
+  tab;
+}
+
+export interface ThothTask extends Task {
+  outputs?: { [key: string]: string };
+  init?: (task?: ThothTask, node?: ThothNode) => void;
+  onRun?: Function
+};
 
 export abstract class ThothComponent extends ThothEngineComponent {
-// Original Class: https://github.com/latitudegames/rete/blob/master/src/component.ts
-    editor: ThothReteNodeEditor | null = null;
-    data: unknown = {};
-    task: {
-        outputs: { [key: string]: string };
-        init?: (task: Task, node: NodeData) => void;
-      };
-      category: string;
-      info: string;
-      display: boolean;
-      _task: Task;
-    
-    constructor(name: string) {
-        super(name);
-    }
+  // Original interface for task and _task: IComponentWithTask from the Rete Task Plugin
+  task: TaskOptions;
+  _task: ThothTask;
+  // Original Class: https://github.com/latitudegames/rete/blob/master/src/component.ts
+  editor: ThothReteNodeEditor | null = null;
+  data: unknown = {};
+  category: string;
+  info: string;
+  display: boolean;
 
-    abstract builder(node: ThothNode): Promise<ThothNode> | ThothNode;
+  constructor(name: string) {
+    super(name);
+  }
 
-    async build(node: ThothNode) {
-        await this.builder(node);
+  abstract builder(node: ThothNode): Promise<ThothNode> | ThothNode;
 
-        return node;
-    }
+  async build(node: ThothNode) {
+    await this.builder(node);
 
-    async createNode(data = {}) {
-        const node = new Node(this.name) as ThothNode;
-        
-        node.data = data;
-        await this.build(node);
+    return node;
+  }
 
-        return node;
-    }
+  async createNode(data = {}) {
+    const node = new Node(this.name) as ThothNode;
+
+    node.data = data;
+    await this.build(node);
+
+    return node;
+  }
 }
