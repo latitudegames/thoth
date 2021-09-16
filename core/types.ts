@@ -2,6 +2,7 @@ import { Component } from "rete";
 import { Node } from "rete/types";
 import { Inspector } from "./plugins/inspectorPlugin/Inspector";
 import { NodeData as ReteNodeData, WorkerInputs, WorkerOutputs } from "rete/types/core/data";
+import { ModuleGraphData } from "./plugins/modulePlugin/module-manager";
 
 
 export type ThothNode = Node & {
@@ -13,7 +14,7 @@ export type ThothNode = Node & {
 export type ModuleType = {
   id: String;
   name: string;
-  data: object;
+  data: ModuleGraphData;
   createdAt: number;
   updatedAt: number;
 };
@@ -96,3 +97,5 @@ export type Spell = {
 
 export type ThothWorkerInputs = WorkerInputs & {}
 export type ThothWorkerOutputs = WorkerOutputs & {}
+export type WorkerReturn = Node | ThothWorkerOutputs | void | Promise<void> | Promise<{ actionType: string }> | Promise<{ difficulty?: string, category?: string }> | Promise<{ [output: string]: string } | null> | Promise<never[] | { entities: { name: string; type: string; }[]; }> | Promise<{ element: unknown; } | undefined> | Promise<{ result: { error: unknown, [key: string]: unknown } } | { result?: undefined }> | Promise<{ text: unknown }> | Promise<{ boolean: boolean; }> | Promise<null | undefined> | WorkerOutputs[]
+export type ThothWorker = (node: ThothNode, inputs: WorkerInputs, outputs: WorkerOutputs, ...args: unknown[])=> WorkerReturn
