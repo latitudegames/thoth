@@ -14,7 +14,7 @@ export class StateWrite extends ThothReteComponent {
 
     this.task = {
       outputs: {},
-      init: (task) => {},
+      init: (task) => { },
     };
 
     this.category = "State";
@@ -36,8 +36,10 @@ export class StateWrite extends ThothReteComponent {
     return node;
   }
 
-  async worker(node, inputs, data) {
-    const gameState = await this.editor.thoth.getCurrentGameState();
+  async worker(node, inputs, outputs, { silent, thoth }) {
+
+    const { getCurrentGameState, updateCurrentGameState } = thoth
+    const gameState = await getCurrentGameState();
     let value;
 
     const updates = Object.entries(inputs).reduce((acc, [key, val]) => {
@@ -64,6 +66,6 @@ export class StateWrite extends ThothReteComponent {
       return acc;
     }, {});
 
-    await this.editor.thoth.updateCurrentGameState(updates);
+    await updateCurrentGameState(updates);
   }
 }

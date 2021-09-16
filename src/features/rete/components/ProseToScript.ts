@@ -1,7 +1,6 @@
 import Rete from "rete";
 import { ThothReteComponent } from "./ThothReteComponent";
 import { stringSocket, triggerSocket } from "../sockets";
-import { completion } from "../../../utils/openaiHelper";
 
 const fewshot = (prose) => { 
   const prompt = `Rewrite narrative snippets as a script:
@@ -94,7 +93,8 @@ export class ProseToScript extends ThothReteComponent {
       .addOutput(dataOutput);
   }
 
-  async worker(node, inputs, outputs, { silent }) {
+  async worker(node, inputs, outputs, { silent, thoth }) {
+    const { completion } = thoth;
     const prose = inputs["string"][0];
     const prompt = fewshot(prose);
 

@@ -2,7 +2,6 @@ import Rete from "rete";
 import { ThothReteComponent } from "./ThothReteComponent";
 import { stringSocket, triggerSocket, booleanSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
-import { completion } from "../../../utils/openaiHelper";
 
 const fewshot = `Rate the actions according to the following content categories
 X: Explicit sexual content, rape, cannibalism, incest
@@ -109,7 +108,8 @@ export class SafetyVerifier extends ThothReteComponent {
       .addOutput(dataOutput);
   }
 
-  async worker(node, inputs, outputs, { silent }) {
+  async worker(node, inputs, outputs, { silent, thoth }) {
+    const { completion } = thoth;
     const action = inputs["string"][0];
     const prompt = node.data.fewshot + action + "\nRating:";
 
