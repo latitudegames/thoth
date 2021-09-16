@@ -1,6 +1,6 @@
 import { ThothComponent } from "../thoth-component"
 import { EnkiThroughputControl } from "../dataControls/EnkiThroughputControl";
-import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
+import { NodeData, ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
 import { EngineContext } from "../engine";
 const info = `Enki is a tool for building both fewshots, as well as entire data sets.  The enki component allows you to select an enki which you or someone else has made in the Enki tool and utilize it in your spell chains.
 
@@ -11,8 +11,7 @@ export class EnkiTask extends ThothComponent {
     super("Enki Task");
 
     this.task = {
-      outputs: { trigger: "option" },
-      init: (task) => { },
+      outputs: { trigger: "option" }
     };
     this.category = "AI/ML";
     this.display = true;
@@ -33,7 +32,7 @@ export class EnkiTask extends ThothComponent {
     return node;
   }
 
-  async worker(node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent, thoth }: { silent: boolean, thoth: EngineContext }) {
+  async worker(node: NodeData, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent, thoth }: { silent: boolean, thoth: EngineContext }) {
     const { enkiCompletion } = thoth
     // Assume the inputs is a list of strings (do we know this to be true?)
     const stringInputs = inputs as { [key: string]: string[] };

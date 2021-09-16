@@ -5,7 +5,7 @@ import { SocketGeneratorControl } from "../dataControls/SocketGenerator";
 import { InputControl } from "../dataControls/InputControl";
 import { FewshotControl } from "../dataControls/FewshotControl";
 import { ThothComponent } from "../thoth-component"
-import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
+import { NodeData, ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
 import { EngineContext } from "../engine";
 const info = `The generator component is our general purpose completion component.  You can define any number of inputs, and utilise those inputs in a templating language known as Handlebars.  Any value which is wrapped like {{this}} in double braces will be replaced with the corresponding value coming in to the input with the same name.  This allows you to write almost any fewshot you might need, and input values from anywhere else in your chain.
 
@@ -21,9 +21,8 @@ export class Generator extends ThothComponent {
         result: "output",
         composed: "output",
         trigger: "option",
-      },
-      init: (task) => { },
-    };
+      }
+        };
     this.category = "AI/ML";
     this.info = info;
   }
@@ -84,7 +83,7 @@ export class Generator extends ThothComponent {
     return node;
   }
 
-  async worker(node: ThothNode, rawInputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent, thoth }: { silent: boolean, thoth: EngineContext }) {
+  async worker(node: NodeData, rawInputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent, thoth }: { silent: boolean, thoth: EngineContext }) {
     const { completion } = thoth;
     const stringInputs = rawInputs as { [key: string]: string[] };
     const inputs = Object.entries(stringInputs).reduce((acc, [key, value]) => {

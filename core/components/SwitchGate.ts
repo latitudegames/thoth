@@ -46,7 +46,7 @@ export class SwitchGate extends ThothComponent {
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connected components
-  async worker(node: ThothNode, inputs: ThothWorkerInputs) {
+  async worker(node: NodeData, inputs: ThothWorkerInputs) {
     const input = inputs["input"][0] as string;
 
     // close all outputs

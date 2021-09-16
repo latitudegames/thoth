@@ -1,7 +1,7 @@
 import Rete from "rete";
 import { triggerSocket, anySocket } from "../sockets";
 import { ThothComponent } from "../thoth-component"
-import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
+import { NodeData, ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
 const info = `The Playtest Print component will print whatever value is attached to its input and print that valyue back to the playtest window.`;
 export class PlaytestPrint extends ThothComponent {
   constructor() {
@@ -11,8 +11,7 @@ export class PlaytestPrint extends ThothComponent {
     this.task = {
       outputs: {
         trigger: "option",
-      },
-      init: (task) => { },
+      }
     };
 
     this.category = "I/O";
@@ -37,7 +36,7 @@ export class PlaytestPrint extends ThothComponent {
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connected components
-  async worker(node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent }: { silent: boolean }) {
+  async worker(node: NodeData, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent }: { silent: boolean }) {
     const { sendToPlaytest } = this.editor?.thothV2;
     if (!inputs || !inputs.text) return null;
     const text = inputs.text[0];

@@ -56,7 +56,7 @@ export class ModuleOutput extends ThothComponent {
     return node.addInput(input).addInput(socketInput);
   }
 
-  async worker(node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs) {
+  async worker(node: NodeData, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs) {
     console.log("output worker outputs", outputs);
     return {
       text: inputs.input[0],

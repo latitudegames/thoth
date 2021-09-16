@@ -2,8 +2,9 @@ import Rete from "rete";
 import { ThothComponent } from "../thoth-component"
 import { stringSocket, triggerSocket, arraySocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
-import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
+import { NodeData, ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
 import { EngineContext } from "../engine";
+import { TaskOptions } from "../plugins/taskPlugin/task";
 const fewshot = `Given an action, detect what entities the player is interacting with. Ignore entities that the player is just asking about.
 
 Entity types: food, person, creature, object, place, other, none
@@ -124,8 +125,9 @@ export class EntityDetector extends ThothComponent {
         entities: "output",
         trigger: "option",
       },
-      init: (task) => { },
-    };
+      init: () => { },
+      onRun: ()=>{}
+    } as TaskOptions
     this.category = "AI/ML";
     this.display = true;
     this.info = info;
@@ -155,7 +157,7 @@ export class EntityDetector extends ThothComponent {
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connected components
-  async worker(node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent, thoth }: { silent: boolean, thoth: EngineContext }) {
+  async worker(node: NodeData, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent, thoth }: { silent: boolean, thoth: EngineContext }) {
     const { completion } = thoth;
     const action = inputs["action"][0];
     const fewshot = node.data.fewshot as string

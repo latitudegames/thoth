@@ -2,7 +2,7 @@ import Rete from "rete";
 import { TextInputControl } from "../controls/TextInputControl";
 import { stringSocket } from "../sockets";
 import { ThothComponent } from "../thoth-component"
-import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
+import { NodeData, ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
 const info = `The info component has a single control, an input field.  Whatever value you put into this input field will be sent out along the compoonents output socket.`;
 
 export class InputComponent extends ThothComponent {
@@ -13,8 +13,7 @@ export class InputComponent extends ThothComponent {
     this.task = {
       outputs: {
         text: "output",
-      },
-      init: (task) => { },
+      }
     };
 
     this.category = "I/O";
@@ -44,7 +43,7 @@ export class InputComponent extends ThothComponent {
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connected components
-  async worker(node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs) {
+  async worker(node: NodeData, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs) {
     return {
       text: node.data.text,
     };
