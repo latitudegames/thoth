@@ -13,7 +13,7 @@ function install(editor) {
         defaultDisplay: "",
       });
 
-      if (component.display) {
+      if (component.display && !node.controls.has("display")) {
         node.addControl(display);
         displayMap[node.id] = display;
       }
