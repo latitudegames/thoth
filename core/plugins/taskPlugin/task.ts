@@ -1,17 +1,18 @@
 import { NodeData } from "rete/types/core/data";
-import { Component } from "rete/types";
+import { ThothComponent, ThothTask } from "../../thoth-component";
+import { ThothWorkerInputs, ThothWorkerOutputs } from "../../types";
 
 type TaskRef = {
   key: string;
-  task: Task;
+  task: ThothTask;
   run?: Function;
   next?: any[];
 };
 
-type TaskOptions = {
-  outputs: object;
-  init: Function;
-  onRun: Function;
+export type TaskOptions = {
+  outputs: Record<string, unknown>;
+  init?: Function;
+  onRun?: Function;
 };
 
 type RunOptions = {
@@ -21,52 +22,47 @@ type RunOptions = {
   fromSocket?: string;
 };
 
-// interface WorkerFunction {
-//   inputs: object;
-// }
-
-interface IComponentWithTask extends Component {
-  task: TaskOptions;
-  _task: Task;
-}
+export type TaskOutputTypes = "option" | "output"
 
 export class Task {
   node: NodeData;
-  inputs: object;
-  component: IComponentWithTask;
+  inputs: Record<string, ThothWorkerInputs[]>;
+  component: ThothComponent;
   worker: Function;
   next: TaskRef[];
-  outputData: object | null;
+  outputData: Record<string, unknown> | null;
   closed: string[];
 
   constructor(
-    inputs: object,
-    component: IComponentWithTask,
+    inputs: Record<string, ThothWorkerInputs[]>,
+    component: ThothComponent,
     node: NodeData,
     worker: Function
   ) {
     this.node = node;
-    this.inputs = inputs;
+    this.inputs = inputs as Record<string, ThothWorkerInputs[]>;
     this.component = component;
     this.worker = worker;
     this.next = [];
     this.outputData = null;
     this.closed = [];
 
-    this.getInputs("option").forEach((key) => {
-      this.inputs[key].forEach((con) => {
-        con.task.next.push({ key: con.key, task: this });
+    this.getInputs("option").forEach((key: string) => {
+      this.inputs[key].forEach((workerInput: ThothWorkerInputs) => {
+        workerInput.task.next.push({ key: workerInput.key, task: this });
       });
     });
   }
 
-  getInputs(type) {
+
+  getInputs(type: TaskOutputTypes): string[] {
     return Object.keys(this.inputs)
       .filter((key) => this.inputs[key][0])
-      .filter((key) => this.inputs[key][0].type === type);
+      .filter((key) => this.inputs[key][0].type === type
+      );
   }
 
-  getInputFromConnection(socketKey) {
+  getInputFromConnection(socketKey: string) {
     let input: null | any = null;
     Object.entries(this.inputs).forEach(([key, value]) => {
       if (value.some((con) => con && con.key === socketKey)) {
@@ -96,7 +92,7 @@ export class Task {
     // And animations should follow the flow of the data, not the main IO paths
 
     if (!this.outputData) {
-      const inputs = {};
+      const inputs: Record<string, ThothWorkerInputs[]> = {};
       // TODO seang: breaking cash
       // here we run through all INPUTS connected to other OUTPUTS for the node.
       // We run eachinput back to whatever node it is connected to.
@@ -104,16 +100,19 @@ export class Task {
       // associate it with This nodes input key
       await Promise.all(
         this.getInputs("output").map(async (key) => {
-          inputs[key] = await Promise.all(
+          const thothWorkerinputs = await Promise.all(
             this.inputs[key].map(async (con) => {
               await con.task.run(data, {
                 needReset: false,
                 garbage,
                 propagate: false,
               });
-              return con.task.outputData[con.key];
+              const outputData = con.task.outputData as Record<string, unknown>
+              return outputData[con.key];
             })
           );
+
+          inputs[key] = thothWorkerinputs as ThothWorkerInputs[]
         })
       );
 
@@ -144,19 +143,19 @@ export class Task {
     if (needReset) garbage.map((t) => t.reset());
   }
 
-  clone(root = true, oldTask, newTask) {
-    const inputs = Object.assign({}, this.inputs);
+  clone(root = true, oldTask: ThothTask, newTask: ThothTask) {
+    const inputs = Object.assign({}, this.inputs) as Record<string, ThothWorkerInputs[]>;
 
     if (root)
       // prevent of adding this task to `next` property of predecessor
       this.getInputs("option").map((key) => delete inputs[key]);
     // replace old tasks with new copies
     else
-      Object.keys(inputs).forEach((key) => {
+      Object.keys(inputs).forEach((key: string) => {
         inputs[key] = inputs[key].map((con) => ({
           ...con,
-          task: con.task === oldTask ? newTask : con.task,
-        }));
+          task: con.task === oldTask ? newTask : con.task as ThothTask,
+        } as ThothWorkerInputs));
       });
 
     const task = new Task(inputs, this.component, this.node, this.worker);
