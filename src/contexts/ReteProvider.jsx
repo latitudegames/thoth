@@ -1,13 +1,13 @@
 import { useContext, createContext } from "react";
-
 import { completion as _completion } from "../services/game-api/text";
+import { postEnkiCompletion } from "../services/game-api/enki";
 import { invokeInference } from "../utils/huggingfaceHelper";
 import { usePubSub } from "./PubSubProvider";
 import { useDB } from "./DatabaseProvider";
 
 /* 
-Some notes here.  The new rete provider, not to be foncused with the old rete provider renamed to the editor provider, is designed to serve as the single source of truth for interfacing with the rete internal system.  This unified interface will lso allow us to replicate the same API in the server, where rete expects certain function to exist but doesn't care what is behind these functions to long as they work.
-Not all functions will be needed on the server, anf functions which are not will be labeled as such.
+Some notes here.  The new rete provider, not to be confused with the old rete provider renamed to the editor provider, is designed to serve as the single source of truth for interfacing with the rete internal system.  This unified interface will also allow us to replicate the same API in the server, where rete expects certain functions to exist but doesn't care what is behind these functions so long as they work.
+Not all functions will be needed on the server, and functions which are not will be labeled as such.
 */
 
 const Context = createContext({
@@ -22,7 +22,8 @@ const Context = createContext({
   getGameState: () => {},
   setGameState: () => {},
   getModules: async () => {},
-  completion: async () => {},
+  completion: _completion,
+  enkiCompletion: async () => {},
   huggingface: async () => {},
 });
 
@@ -66,6 +67,10 @@ const ReteProvider = ({ children, tab }) => {
     return _completion(body);
   };
 
+  const enkiCompletion = async (taskName, inputs) => {
+    return postEnkiCompletion(taskName, inputs);
+  };
+
   const huggingface = async (model, data) => {
     return invokeInference(model, data);
   };
@@ -81,6 +86,7 @@ const ReteProvider = ({ children, tab }) => {
     onPlaytest,
     clearTextEditor,
     completion,
+    enkiCompletion,
     huggingface,
     ...modules,
     ...spells,
