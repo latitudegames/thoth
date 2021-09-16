@@ -3,6 +3,7 @@ import { Engine, NodeEditor, Component, Socket } from "rete/types";
 import { addIO, removeIO } from "./utils";
 import { ModuleManager } from "./module-manager";
 import { Module } from "./module";
+import { ThothNode } from "../../types";
 
 //need to fix this interface.  For some reason doing the joing
 interface IRunContextEngine extends Engine {
@@ -11,7 +12,7 @@ interface IRunContextEngine extends Engine {
   trigger: any;
 }
 
-interface IRunContextEditor extends NodeEditor {
+export interface IRunContextEditor extends NodeEditor {
   moduleManager: ModuleManager;
 }
 
@@ -122,15 +123,15 @@ function install(
         const builder: Function | undefined = component.builder;
 
         if (builder) {
-          component.updateModuleSockets = (node) => {
+          component.updateModuleSockets = (node: ThothNode) => {
             const modules = moduleManager.modules;
-
-            if (!node.data.module || !modules[node.data.module]) return;
+            const currentNodeModule = node.data.module as number
+            if (!node.data.module || !modules[currentNodeModule]) return;
 
             if (!node.data.inputs) node.data.inputs = [];
             if (!node.data.outputs) node.data.outputs = [];
 
-            const data = modules[node.data.module].data;
+            const data = modules[currentNodeModule].data;
             const inputs = moduleManager.getInputs(data);
             const outputs = moduleManager.getOutputs(data);
             const triggerOuts = moduleManager.getTriggerOuts(data);
@@ -139,7 +140,7 @@ function install(
             // TODO OPTIMIZATION should find a way to cache these so we dont run over the whole add/remove IO sequence if we don't need to.
             removeIO(
               node,
-              runContext,
+              runContext as IRunContextEditor,
               [...inputs, ...triggerIns],
               [...outputs, ...triggerOuts]
             );
