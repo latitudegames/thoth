@@ -5,12 +5,13 @@ import { Module } from "./module";
 import { ModuleType } from "../../types"
 import { extractNodes } from "./utils";
 import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../../types";
+import { SocketNameType } from "../../sockets";
 interface ModuleComponent extends Component {
   run: Function;
 }
 
 export type ModuleSocketType = {
-  name: string;
+  name: SocketNameType;
   socketKey: string;
   socket: SocketType;
   [key: string]: unknown
@@ -50,7 +51,7 @@ export class ModuleManager {
       (node, i): ModuleSocketType => {
         node.data.name = node.data.name || `${defaultName}-${i + 1}`;
         return {
-          name: node.data.name as string,
+          name: node.data.name as SocketNameType,
           socketKey: node.data.socketKey as string,
           socket: this.socketFactory(node, typeMap.get(node.name)),
         };
