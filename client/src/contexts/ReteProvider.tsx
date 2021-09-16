@@ -23,8 +23,8 @@ const Context = createContext({
   setGameState: () => {},
   getModules: async () => {},
   completion: _completion,
-  enkiCompletion: async () => {},
-  huggingface: async () => {},
+  enkiCompletion: async (): Promise<{ outputs: string[] }> => (new Promise((resolve)=>{resolve({} as { outputs: string[] })})),
+  huggingface: async ():Promise<{ [key: string]: unknown; error: unknown; }> => (new Promise((resolve)=>{resolve({} as { [key: string]: unknown; error: unknown; })})),
 });
 
 export const useRete = () => useContext(Context);
