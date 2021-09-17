@@ -13,11 +13,9 @@ const throwError = (message) =>
   });
 
 module.exports = {
-  babel:{
-    dangerouslyAddModulePathsToTranspile: [
-      // Ensure that all packages starting with @latitudegames are transpiled.
-      '@latitudegames',
-    ],
+  babel: {
+    presets: ["@babel/preset-react","@babel/preset-typescript"],
+    plugins: ["babel-plugin-transform-class-properties"]
   },
   webpack: {
     configure: (webpackConfig, { paths }) => {
