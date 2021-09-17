@@ -1,40 +1,3 @@
-///////// REQUIRED FOR LOCAL DEPLOYMENT (if you are referencing unpublished changes from the @latitudegames/thoth-core directory*):
-///////// *You can also deploy to Netlify with these config settings, if your current local @latitudegames/thoth-core version matches the client dependency target in client/package.json
-///////// in which case the deployment will use the code in this repository at build time, and not what has been published to GitHub packages
-
-///////// Monorepo Symlink Config:
-
-// const path = require("path");
-// const { getLoader, loaderByName } = require("@craco/craco");
-
-// const packages = [];
-// packages.push(path.join(__dirname, "../core"));
-// module.exports = {
-//   webpack: {
-//     configure: (webpackConfig, arg) => {
-//       const { isFound, match } = getLoader(
-//         webpackConfig,
-//         loaderByName("babel-loader")
-//       );
-//       if (isFound) {
-//         const include = Array.isArray(match.loader.include)
-//           ? match.loader.include
-//           : [match.loader.include];
-
-//         match.loader.include = include.concat(packages);
-//       }
-//       return webpackConfig;
-//     },
-//   },
-// };
-
-
-
-///////// REQUIRED FOR NETLIFY DEPLOYMENT (If you are referencing publised versions of @latitudegames/thoth-core )
-///////// https://github.com/latitudegames/thoth/packages/983711
-
-///////// Client Build With Github Package Config:
-
 const path = require("path");
 const { getLoaders, removeLoaders, addAfterLoader, loaderByName, throwUnexpectedConfigError } = require("@craco/craco");
 
@@ -51,7 +14,7 @@ const throwError = (message) =>
 
 module.exports = {
   babel: {
-    presets: ["@babel/preset-react","@babel/preset-typescript"],
+    presets: ["@babel/preset-react", "@babel/preset-typescript"],
     plugins: ["babel-plugin-transform-class-properties"]
   },
   webpack: {
@@ -77,28 +40,36 @@ module.exports = {
       if (!tsLoaderIsAdded) throwError('failed to add ts-loader');
       console.log('added ts-loader');
 
+        // Disable symlink for netlify deploy to encourage only using published packages for deployed clients
+        const include = Array.isArray(matches[1].loader.include)
+          ? matches[1].loader.include
+          : [matches[1].loaderinclude];
+
+        matches[1].loader.loader.include = include.concat(packages);
+
+
       console.log('adding non-application JS babel-loader back');
       const { isAdded: babelLoaderIsAdded } = addAfterLoader(
         webpackConfig,
         loaderByName('ts-loader'),
         matches[1].loader // babel-loader
       );
+
+
       if (!babelLoaderIsAdded) throwError('failed to add back babel-loader for non-application JS');
       console.log('added non-application JS babel-loader back');
 
-        // ts-loader is required to reference external typescript projects/files (non-transpiled)
-        webpackConfig.module.rules.push({
-          test: /\.ts?$/,
-          loader: 'ts-loader',
-          options: {
-            transpileOnly: true,
-            configFile: 'tsconfig.json',
-          },
-        })
+      // ts-loader is required to reference external typescript projects/files (non-transpiled)
+      webpackConfig.module.rules.push({
+        test: /\.ts?$/,
+        loader: 'ts-loader',
+        options: {
+          transpileOnly: true,
+          configFile: 'tsconfig.json',
+        },
+      })
 
       return webpackConfig;
     },
   },
 };
-
-
