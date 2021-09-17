@@ -50,7 +50,7 @@
   },
   "scripts": {
     "start": "PORT=3001 FAST_REFRESH=false craco start",
-    "build": "craco build",
+    "build": "react-scripts build",
     "test": "craco test",
     "eject": "cracp eject"
   },
