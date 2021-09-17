@@ -2,7 +2,7 @@
 import Rete from "rete";
 import ModulePlugin from "./plugins/modulePlugin";
 import TaskPlugin from "./plugins/taskPlugin";
-import { ModelCompletionOpts, NodeData, OpenAIResultChoice, Spell, ThothWorkerInputs, ThothWorkerOutputs, WorkerReturn } from "./types";
+import { ModelCompletionOpts, NodeData, OpenAIResultChoice, Spell, ThothWorkerInputs, WorkerReturn } from "./types";
 import { Node } from "rete/types";
 import { Engine } from 'rete';
 import { WorkerOutputs } from 'rete/src/core/data';
@@ -18,7 +18,7 @@ export abstract class ThothEngineComponent {
     this.name = name;
   }
 
-  abstract worker(node: NodeData, inputs: Record<string,ThothWorkerInputs[]>, outputs: WorkerOutputs, ...args: unknown[]): WorkerReturn
+  abstract worker(node: NodeData, inputs: ThothWorkerInputs, outputs: WorkerOutputs, ...args: unknown[]): WorkerReturn
 }
 export type EngineContext = {
   completion: (body: ModelCompletionOpts) => Promise<String | OpenAIResultChoice | undefined>,
@@ -26,6 +26,8 @@ export type EngineContext = {
   updateCurrentGameState: () => Record<string, unknown>,
   enkiCompletion: (taskName: string, inputs: string[]) => Promise<{ outputs: string[] }>,
   huggingface: (model: string, request: string) => Promise<{ error: unknown, [key: string]: unknown }>
+  onPlaytest?: Function,
+  sendToPlaytest?: Function
 }
 
 export const initSharedEngine = (name: string, modules: any[], components: any[], server: boolean = false) => {
