@@ -1,3 +1,32 @@
+/////////REQUIRED FOR LOCAL DEPLOYMENT:  Monorepo Symlink Config /////////
+// const path = require("path");
+// const { getLoader, loaderByName } = require("@craco/craco");
+
+// const packages = [];
+// packages.push(path.join(__dirname, "../core"));
+
+// module.exports = {
+//   webpack: {
+//     configure: (webpackConfig, arg) => {
+//       const { isFound, match } = getLoader(
+//         webpackConfig,
+//         loaderByName("babel-loader")
+//       );
+//       if (isFound) {
+//         const include = Array.isArray(match.loader.include)
+//           ? match.loader.include
+//           : [match.loader.include];
+
+//         match.loader.include = include.concat(packages);
+//       }
+//       return webpackConfig;
+//     },
+//   },
+// };
+
+
+
+///////// REQUIRED FOR DEPLOYMENT: Client Build With Github Package Config /////////
 const path = require("path");
 const { getLoaders, removeLoaders, addAfterLoader, loaderByName, throwUnexpectedConfigError } = require("@craco/craco");
 
@@ -63,3 +92,5 @@ module.exports = {
     },
   },
 };
+
+
