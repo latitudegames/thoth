@@ -139,7 +139,7 @@ const addSockets = (
         taskType: taskType,
         socketKey: socketKey,
         connectionType: connectionType,
-        socketType: socketNameMap[socket.name],
+        socketType: socketNameMap[socket.name as SocketNameType],
       });
 
       node[addMethod](new Socket(socketKey, name, socket) as Input & Output);
