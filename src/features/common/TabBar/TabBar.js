@@ -7,7 +7,7 @@ import Icon from "../Icon/Icon";
 
 import css from "./tabBar.module.css";
 import { useTabManager } from "../../../contexts/TabManagerProvider";
-import { useAuth } from "../../../contexts/AuthProvider";
+// import { useAuth } from "../../../contexts/AuthProvider";
 
 const Tab = (props) => {
   const { switchTab, closeTab } = useTabManager();
@@ -40,7 +40,7 @@ const Tab = (props) => {
 };
 
 const TabBar = ({ tabs }) => {
-  const { user } = useAuth();
+  // const { user } = useAuth();
 
   return (
     <div className={css["th-tabbar"]}>
