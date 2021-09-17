@@ -1,5 +1,5 @@
 import { Node, NodeEditor } from 'rete';
-import { ThothEngineComponent } from './engine';
+import { EngineContext, ThothEngineComponent } from './engine';
 import { Task, TaskOptions } from "./plugins/taskPlugin/task";
 import { ThothNode } from './types';
 
@@ -15,9 +15,9 @@ export type PubSubContext = {
 
 class ThothReteNodeEditor extends NodeEditor {
   pubSub: PubSubContext;
-  thoth;
-  thothV2;
-  tab;
+  thoth: unknown;
+  thothV2: EngineContext;
+  tab: unknown;
 }
 
 export interface ThothTask extends Task {
