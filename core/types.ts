@@ -1,5 +1,7 @@
 import { Component } from "rete";
 import { Node } from "rete/types";
+//@seang todo: convert inspector plugin fully to typescript
+//@ts-ignore 
 import { Inspector } from "./plugins/inspectorPlugin/Inspector";
 import { NodeData as ReteNodeData, WorkerInputs, WorkerOutputs } from "rete/types/core/data";
 import { ModuleGraphData } from "./plugins/modulePlugin/module-manager";
