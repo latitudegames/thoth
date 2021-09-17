@@ -1,6 +1,6 @@
 # THOTH
 
-Thoth is a multishot system builder. it leverages a visual coding style interface to allows game designers and developers to rapidly create powerful natural language understanding systems, and prototype games.
+Thoth is a multishot system builder. It leverages a visual coding style interface to allows game designers and developers to rapidly create powerful natural language systems and prototype games.
 
 ## Setup
 
@@ -26,13 +26,13 @@ These two methods of compiling the application can be used for either local deve
 
 These two distinct code blocks are in `client/craco.config.js` with further instructions as to their use. 
 
-**It is important to note** that *only one of the two configuration code blocks can be uncommented at a time* for the build to be valid. We hope to streamline this further soon.
+**It is important to note that:**  `only one of the two configuration code blocks can be uncommented at a time for the build to be valid.` We hope to streamline this further soon.
 
 ## Publishing @latitudegames/thoth-core
 
-In order to support code sharing with the Latitude API, changes we make to the `core` directory need to be published to GitHub Packages once tested and considered stable for use.
+In order to support code sharing with the Latitude API, any changes we make to the `core` directory need to be periodically published to GitHub Packages once tested and considered stable for use.
 
-Assuming your NPM_TOKEN is configured with `write:packages` permissions as described in the setup section above:
+Assuming your `NPM_TOKEN` is configured with `write:packages` permissions as described in the setup section above:
 
 1. Ensure the version in `core/package.json` is at least one minor version higher than the [last published version](https://github.com/latitudegames/thoth/packages/983711)
 2. run `cd core`
