@@ -14,8 +14,12 @@ import SocketGenerator from "./plugins/socketGenerator";
 import DisplayPlugin from "./plugins/displayPlugin";
 import ModulePlugin from "./plugins/modulePlugin";
 
-import { initSharedEngine } from "./engine"
-import { components} from "./components/components"
+import { EngineContext, initSharedEngine } from "./engine"
+import { components } from "./components/components"
+import { ModuleType } from "./types";
+import { Data } from "rete/src/core/data";
+import { PubSubContext } from "./thoth-component";
+import { ModuleManager } from "./plugins/modulePlugin/module-manager";
 interface EventsTypes extends DefaultEventsTypes {
   run: void;
   save: void;
@@ -23,26 +27,26 @@ interface EventsTypes extends DefaultEventsTypes {
 }
 
 class ThothEditor extends NodeEditor<EventsTypes> {
-  pubSub;
-  thoth;
-  thothV2;
-  tab;
-  abort;
-  loadGraph;
-  moduleSubscription;
-  moduleManager;
+  pubSub: PubSubContext;
+  thoth: unknown;
+  thothV2: EngineContext;
+  tab: { type: string };
+  abort: unknown;
+  loadGraph: (graph: Data)=> Promise<void>;
+  moduleSubscription: unknown;
+  moduleManager: ModuleManager;
 }
 
 /*
   Primary initialization function.  Takes a container ref to attach the rete editor to.
 */
 
-let editorTabMap = {};
+let editorTabMap: Record<string, ThothEditor> = {};
 
-const editor = async function ({ container, pubSub, thoth, tab, thothV2, node }: { container: any, pubSub: any, thoth: any, tab: any, thothV2: any, node: any}) {
+const editor = async function ({ container, pubSub, thoth, tab, thothV2, node }: { container: any, pubSub: any, thoth: any, tab: any, thothV2: any, node: any }) {
   if (editorTabMap[tab.id]) editorTabMap[tab.id].clear();
 
-  let modules = [];
+  let modules: Record<string, ModuleType> = {};
 
   // create the main edtor
   const editor = new ThothEditor("demo@0.1.0", container);
@@ -68,16 +72,16 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2, node }:
   // React rendering for the editor
   editor.use(ReactRenderPlugin, {
     // this component parameter is a custom default style for nodes
-    component: node,
+    component: node as { contextMenuName: string, name: string },
   });
   // renders a context menu on right click that shows available nodes
   editor.use(LifecyclePlugin);
   editor.use(ContextMenuPlugin, {
     delay: 0,
-    rename(component) {
+    rename(component: { contextMenuName: any; name: any; }) {
       return component.contextMenuName || component.name;
     },
-    allocate: (component) => {
+    allocate: (component: { editor: ThothEditor, workspaceType: unknown, category: string }) => {
       const tabType = component.editor.tab.type;
       const { workspaceType } = component;
 
@@ -97,17 +101,17 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2, node }:
 
   // handle modules
   // NOTE watch this subscription as it may get intensive with lots of tabs open...
-  editor.moduleSubscription = await thothV2.getModules((moduleDocs) => {
+  editor.moduleSubscription = await thothV2.getModules((moduleDocs: { toJSON: Function }[]) => {
     if (!moduleDocs) return;
 
     modules = moduleDocs
-      .map((doc) => doc.toJSON())
-      .reduce((acc, module) => {
+      .map((doc: { toJSON: Function }) => doc.toJSON())
+      .reduce((acc: Record<string, ModuleType>, module: ModuleType) => {
         // todo handle better mapping
         // see moduleSelect.tsx
         acc[module.name] = module;
         return acc;
-      }, {});
+      }, {} as Record<string, ModuleType>);
 
     // we only want to proceed if the incoming modules have changed.
     if (isEqual(modules, editor.moduleManager.modules)) return;
@@ -119,11 +123,13 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2, node }:
   // We will need a way to share components between client and server (@seang: this should be covered by upcoming package)
   // WARNING all the plugins from the editor get installed onto the component and modify it.  This effects the components registered in the engine, which already have plugins installed.
   components.forEach((c) => {
+    //@ts-ignore
+    // the problematic type here is coming directly from node modules, we may need to revisit further customizing the Editor Register type expectations or it's class
     editor.register(c);
   });
 
   // The engine is used to process/run the rete graph
-  const engine = initSharedEngine("demo@0.1.0", modules, components)
+  const engine = initSharedEngine("demo@0.1.0", Object.values(modules), components)
   // @seang TODO: update types for editor.use rather than casting as unknown here, we may want to bring our custom rete directly into the monorepo at this point 
   editor.use(ModulePlugin, { engine, modules } as unknown as void);
   // @seang: moved these two functions to attempt to preserve loading order after the introduction of initSharedEngine
@@ -150,14 +156,13 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2, node }:
     await engine.abort();
   };
 
-  editor.loadGraph = async (graph) => {
+   editor.loadGraph = async (graph: Data) => {
     await engine.abort();
     editor.fromJSON(graph);
     editor.view.resize();
     AreaPlugin.zoomAt(editor);
-  };
-
-  return editor;
+  }
+  return editor
 };
 
 export default editor;
