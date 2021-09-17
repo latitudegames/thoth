@@ -10,7 +10,7 @@ import { useContext, createContext, useState } from "react";
 import LoadingScreen from "../features/common/LoadingScreen/LoadingScreen";
 import { EngineContext } from "@latitudegames/thoth-core/engine";
 
-import {MyNode} from "../features/common/Node/Node"
+import { MyNode } from "../features/common/Node/Node"
 
 export type SpellContext = {
   currentSpell: {},
@@ -102,7 +102,7 @@ const EditorProvider = ({ children }) => {
       tab,
       // MyNode is a custom default style for nodes
       node: MyNode
-    });
+    })
 
     // set editor to the map
     setEditor(newEditor);
@@ -175,7 +175,7 @@ export const Editor = ({ tab, children }) => {
   const [loaded, setLoaded] = useState(false);
   const { buildEditor } = useEditor();
   const spell = useSpell();
-  const { getCurrentGameState,updateCurrentGameState } = spell
+  const { getCurrentGameState, updateCurrentGameState } = spell
   // This will be the main interface between thoth and rete
   const reteInterface = useRete();
 
