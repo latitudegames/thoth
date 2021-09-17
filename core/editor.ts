@@ -20,7 +20,7 @@ import { ModuleType } from "./types";
 import { Data } from "rete/src/core/data";
 import { PubSubContext } from "./thoth-component";
 import { ModuleManager } from "./plugins/modulePlugin/module-manager";
-interface EventsTypes extends DefaultEventsTypes {
+ type EventsTypes = DefaultEventsTypes & {
   run: void;
   save: void;
   [key: string]: any;
