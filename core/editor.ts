@@ -1,6 +1,4 @@
 import { NodeEditor } from "rete";
-import { EventsTypes as DefaultEventsTypes } from "rete/types/events";
-
 import isEqual from "lodash/isEqual";
 import ReactRenderPlugin from "rete-react-render-plugin";
 import ConnectionPlugin from "rete-connection-plugin";
@@ -16,17 +14,10 @@ import ModulePlugin from "./plugins/modulePlugin";
 
 import { EngineContext, initSharedEngine } from "./engine"
 import { components } from "./components/components"
-import { ModuleType } from "./types";
+import { EventsTypes, ModuleType } from "./types";
 import { Data } from "rete/src/core/data";
 import { PubSubContext } from "./thoth-component";
 import { ModuleManager } from "./plugins/modulePlugin/module-manager";
-
-export type EventsTypes = DefaultEventsTypes & {
-  run: void;
-  save: void;
-  [key: string]: unknown;
-}
-
 class ThothEditor extends NodeEditor<EventsTypes> {
   pubSub: PubSubContext;
   thoth: unknown;

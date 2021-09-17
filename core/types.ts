@@ -1,4 +1,5 @@
 import { Component } from "rete";
+import { EventsTypes as DefaultEventsTypes } from "rete/types/events";
 import { Node } from "rete/types";
 //@seang todo: convert inspector plugin fully to typescript
 //@ts-ignore 
@@ -8,6 +9,11 @@ import { ModuleGraphData } from "./plugins/modulePlugin/module-manager";
 import { TaskOutputTypes } from "./plugins/taskPlugin/task";
 import { ThothTask } from "./thoth-component";
 
+export type EventsTypes = DefaultEventsTypes & {
+  run: void;
+  save: void;
+  [key: string]: unknown;
+}
 
 export type ThothNode = Node & {
   inspector: Inspector
