@@ -1,6 +1,6 @@
 import { NodeData } from "rete/types/core/data";
 import { ThothComponent, ThothTask } from "../../thoth-component";
-import { ThothWorkerInputs } from "../../types";
+import { ThothWorkerBaseInput, ThothWorkerInputs } from "../../types";
 
 type TaskRef = {
   key: string;
@@ -26,7 +26,7 @@ export type TaskOutputTypes = "option" | "output"
 
 export class Task {
   node: NodeData;
-  inputs: Record<string, ThothWorkerInputs[]>;
+  inputs: ThothWorkerInputs;
   component: ThothComponent;
   worker: Function;
   next: TaskRef[];
@@ -34,13 +34,13 @@ export class Task {
   closed: string[];
 
   constructor(
-    inputs: Record<string, ThothWorkerInputs[]>,
+    inputs: ThothWorkerInputs,
     component: ThothComponent,
     node: NodeData,
     worker: Function
   ) {
     this.node = node;
-    this.inputs = inputs as Record<string, ThothWorkerInputs[]>;
+    this.inputs = inputs as ThothWorkerInputs;
     this.component = component;
     this.worker = worker;
     this.next = [];
@@ -48,7 +48,7 @@ export class Task {
     this.closed = [];
 
     this.getInputs("option").forEach((key: string) => {
-      this.inputs[key].forEach((workerInput: ThothWorkerInputs) => {
+      this.inputs[key].forEach((workerInput: ThothWorkerBaseInput) => {
         workerInput.task.next.push({ key: workerInput.key, task: this });
       });
     });
@@ -58,14 +58,17 @@ export class Task {
   getInputs(type: TaskOutputTypes): string[] {
     return Object.keys(this.inputs)
       .filter((key) => this.inputs[key][0])
-      .filter((key) => this.inputs[key][0].type === type
+      .filter((key) => {
+        const workerBase = this.inputs[key][0] as ThothWorkerBaseInput;
+        return workerBase.type === type
+      }
       );
   }
 
   getInputFromConnection(socketKey: string) {
     let input: null | any = null;
     Object.entries(this.inputs).forEach(([key, value]) => {
-      if (value.some((con) => con && con.key === socketKey)) {
+      if (value.some((con: ThothWorkerBaseInput) => con && con.key === socketKey)) {
         input = key;
       }
     });
@@ -92,8 +95,7 @@ export class Task {
     // And animations should follow the flow of the data, not the main IO paths
 
     if (!this.outputData) {
-      const inputs: Record<string, ThothWorkerInputs[]> = {};
-      // TODO seang: breaking cash
+      const inputs = {} as Record<string, unknown[]>
       // here we run through all INPUTS connected to other OUTPUTS for the node.
       // We run eachinput back to whatever node it is connected to.
       // We run that nodes task run, and then return its output data and
@@ -101,7 +103,7 @@ export class Task {
       await Promise.all(
         this.getInputs("output").map(async (key) => {
           const thothWorkerinputs = await Promise.all(
-            this.inputs[key].map(async (con) => {
+            this.inputs[key].map(async (con: ThothWorkerBaseInput) => {
               await con.task.run(data, {
                 needReset: false,
                 garbage,
@@ -112,7 +114,7 @@ export class Task {
             })
           );
 
-          inputs[key] = thothWorkerinputs as ThothWorkerInputs[]
+          inputs[key] = thothWorkerinputs
         })
       );
 
@@ -144,7 +146,7 @@ export class Task {
   }
 
   clone(root = true, oldTask: ThothTask, newTask: ThothTask) {
-    const inputs = Object.assign({}, this.inputs) as Record<string, ThothWorkerInputs[]>;
+    const inputs = Object.assign({}, this.inputs) as ThothWorkerInputs;
 
     if (root)
       // prevent of adding this task to `next` property of predecessor
@@ -152,10 +154,10 @@ export class Task {
     // replace old tasks with new copies
     else
       Object.keys(inputs).forEach((key: string) => {
-        inputs[key] = inputs[key].map((con) => ({
+        inputs[key] = inputs[key].map((con: ThothWorkerBaseInput) => ({
           ...con,
           task: con.task === oldTask ? newTask : con.task as ThothTask,
-        } as ThothWorkerInputs));
+        }));
       });
 
     const task = new Task(inputs, this.component, this.node, this.worker);
