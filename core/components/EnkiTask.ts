@@ -32,14 +32,13 @@ export class EnkiTask extends ThothComponent {
     return node;
   }
 
-  async worker(node: NodeData, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent, thoth }: { silent: boolean, thoth: EngineContext }) {
+  async worker(node: NodeData, inputs: ThothWorkerInputs | string[], outputs: ThothWorkerOutputs, { silent, thoth }: { silent: boolean, thoth: EngineContext }) {
     const { enkiCompletion } = thoth
     // Assume the inputs is a list of strings (do we know this to be true?)
-    const stringInputs = inputs as { [key: string]: string[] };
     const taskName = node.data.name as string
     const completionResponse = await enkiCompletion(
       taskName,
-      Object.values(stringInputs).map((inputArray) => inputArray[0])
+      Object.values(inputs).map((inputArray) => inputArray[0])
     );
 
     // handle this better
