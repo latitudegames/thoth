@@ -3,6 +3,7 @@ import { triggerSocket, stringSocket } from "../sockets";
 import { Task } from "../plugins/taskPlugin/task";
 import { ThothComponent } from "../thoth-component"
 import { NodeData, ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
+import { EngineContext } from "../engine";
 const info = `The Playtest Input component is connected to the playtest window. It received anything which is type dinto the playtest areavia the input and will trigger the running of your spell chain.`;
 export class PlaytestInput extends ThothComponent {
   initialTask?: Task;
@@ -31,18 +32,20 @@ export class PlaytestInput extends ThothComponent {
   unsubscribe?: () => void;
 
   subscribeToPlaytest(node: ThothNode) {
-    const { onPlaytest } = this.editor?.thothV2;
+    const { onPlaytest } = this.editor?.thothV2 as EngineContext;
 
-    // store the unsubscribe function in our node map
-    this.subscriptionMap[node.id] = onPlaytest((text: string) => {
-      // attach the text to the nodes data for access in worker
-      node.data.text = text;
+    if (onPlaytest) {
+      // store the unsubscribe function in our node map
+      this.subscriptionMap[node.id] = onPlaytest((text: string) => {
+        // attach the text to the nodes data for access in worker
+        node.data.text = text;
 
-      // will need to run this here with the stater rather than the text
-      this.initialTask?.run(text);
-      this.initialTask?.reset();
-      this.editor?.trigger("process");
-    });
+        // will need to run this here with the stater rather than the text
+        this.initialTask?.run(text);
+        this.initialTask?.reset();
+        this.editor?.trigger("process");
+      });
+    }
   }
 
   destroyed(node: ThothNode) {
