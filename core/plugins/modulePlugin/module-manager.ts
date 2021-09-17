@@ -152,7 +152,7 @@ export class ModuleManager {
   workerInputs(node: ThothNode, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { module }: { module: Module }) {
     if (!module) return;
     const nodeDataName = node.data.name as string
-    outputs["output"] = (module.getInput(nodeDataName) as string || [])[0];
+    outputs["output"] = (module.getInput(nodeDataName) as string[] || [] as string[])[0];
     return outputs;
   }
 
