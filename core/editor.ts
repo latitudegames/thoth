@@ -20,7 +20,9 @@ import { ModuleType } from "./types";
 import { Data } from "rete/src/core/data";
 import { PubSubContext } from "./thoth-component";
 import { ModuleManager } from "./plugins/modulePlugin/module-manager";
- type EventsTypes = DefaultEventsTypes & {
+//@seang todo: explore why this is crashing only on netlify
+//@ts-ignore
+export type EventsTypes = DefaultEventsTypes & {
   run: void;
   save: void;
   [key: string]: any;
