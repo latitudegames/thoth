@@ -1,4 +1,6 @@
 import Rete from "rete";
+// @seang todo: convert data controls to typescript to remove this
+//@ts-ignore
 import { InputControl } from "../dataControls/InputControl";
 import { anySocket } from "../sockets";
 import { v4 as uuidv4 } from "uuid";

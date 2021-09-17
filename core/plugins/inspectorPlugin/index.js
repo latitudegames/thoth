@@ -1,3 +1,5 @@
+// @seang todo: convert data controls to typescript to remove this
+//@ts-ignore
 import { Inspector } from "./Inspector";
 
 function install(editor) {
