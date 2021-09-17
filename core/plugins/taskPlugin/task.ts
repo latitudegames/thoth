@@ -1,6 +1,6 @@
 import { NodeData } from "rete/types/core/data";
 import { ThothComponent, ThothTask } from "../../thoth-component";
-import { ThothWorkerInputs, ThothWorkerOutputs } from "../../types";
+import { ThothWorkerInputs } from "../../types";
 
 type TaskRef = {
   key: string;
