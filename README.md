@@ -17,18 +17,11 @@ Thoth is a multishot system builder. It leverages a visual coding style interfac
 
 Within the yarn workspace we need to be mindful of which version of the shared package @latitudegames/thoth-core we are including in our local development setup and our deploys to Netlify.
 
-We can either:
+You can either:
 
-1. Target a published version of [@latitudegames/thoth-core](https://github.com/latitudegames/thoth/packages/983711)
+1. Target a published version of [@latitudegames/thoth-core](https://github.com/latitudegames/thoth/packages/983711) in client/package.json
 2. Or actively develop against the current state of the repository. (By ensuring that client/package.json is targetting the same version of @latitudegames/thoth-core that is currently listed in core/package.json)
-
-These two methods of compiling the application can be used for either local development or deployment, and require a separate configuration for [CRACO](https://github.com/gsoft-inc/craco). 
-
-These two distinct code blocks are in `client/craco.config.js` with further instructions as to their use. 
-
-**It is important to note that:**  `only one of the two configuration code blocks can be uncommented at a time for the build to be valid.` We hope to streamline this further soon.
-
-## Publishing @latitudegames/thoth-core
+ ## Publishing @latitudegames/thoth-core
 
 In order to support code sharing with the Latitude API, any changes we make to the `core` directory need to be periodically published to GitHub Packages once tested and considered stable for use.
 
