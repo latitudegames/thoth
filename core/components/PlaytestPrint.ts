@@ -1,4 +1,5 @@
 import Rete from "rete";
+import { EngineContext } from "../engine";
 import { triggerSocket, anySocket } from "../sockets";
 import { ThothComponent } from "../thoth-component"
 import { NodeData, ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
@@ -37,11 +38,14 @@ export class PlaytestPrint extends ThothComponent {
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connected components
   async worker(node: NodeData, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent }: { silent: boolean }) {
-    const { sendToPlaytest } = this.editor?.thothV2;
+    const { sendToPlaytest } = this.editor?.thothV2 as EngineContext;
     if (!inputs || !inputs.text) return null;
     const text = inputs.text[0];
 
-    sendToPlaytest(text);
+    if (sendToPlaytest) {
+      sendToPlaytest(text);
+    }
     if (!silent) node.display(text as string);
+    new Promise((resolve) => resolve(null))
   }
 }
