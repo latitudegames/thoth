@@ -13,6 +13,12 @@ const throwError = (message) =>
   });
 
 module.exports = {
+  babel:{
+    dangerouslyAddModulePathsToTranspile: [
+      // Ensure that all packages starting with @latitudegames are transpiled.
+      '@latitudegames',
+    ],
+  },
   webpack: {
     configure: (webpackConfig, { paths }) => {
       const { hasFoundAny, matches } = getLoaders(webpackConfig, loaderByName('babel-loader'));
@@ -44,6 +50,16 @@ module.exports = {
       );
       if (!babelLoaderIsAdded) throwError('failed to add back babel-loader for non-application JS');
       console.log('added non-application JS babel-loader back');
+
+        // ts-loader is required to reference external typescript projects/files (non-transpiled)
+        webpackConfig.module.rules.push({
+          test: /\.ts?$/,
+          loader: 'ts-loader',
+          options: {
+            transpileOnly: true,
+            configFile: 'tsconfig.json',
+          },
+        })
 
       return webpackConfig;
     },
