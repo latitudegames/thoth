@@ -1,7 +1,7 @@
 import { Node, NodeEditor } from 'rete';
 import { EngineContext, ThothEngineComponent } from './engine';
 import { Task, TaskOptions } from "./plugins/taskPlugin/task";
-import { ThothNode } from './types';
+import { PubSubBase, ThothNode } from './types';
 
 // Note: We do this so Typescript knows what extra properties we're
 // adding to the NodeEditor (in rete/editor.js). In an ideal world, we
@@ -10,7 +10,7 @@ export type PubSubContext = {
   publish: (event: string, data: unknown) => boolean
   subscribe: (event: string, callback: Function) => void
   events: Record<string, (tabId: string) => string>
-  PubSub: PubSubJS.Base
+  PubSub: PubSubBase
 }
 
 class ThothReteNodeEditor extends NodeEditor {

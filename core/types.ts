@@ -104,3 +104,48 @@ export type ThothWorkerInputs = {[key:string]:ThothWorkerInput[]}
 export type ThothWorkerOutputs = WorkerOutputs & { [key: string]: string[] | string; }
 export type WorkerReturn = Node | ThothWorkerOutputs | void | Promise<void> | Promise<{ actionType: string }> | Promise<{ difficulty?: string, category?: string }> | Promise<{ [output: string]: string } | null> | Promise<never[] | { entities: { name: string; type: string; }[]; }> | Promise<{ element: unknown; } | undefined> | Promise<{ result: { error: unknown, [key: string]: unknown } } | { result?: undefined }> | Promise<{ text: unknown }> | Promise<{ boolean: boolean; }> | Promise<null | undefined> | WorkerOutputs[] | { trigger: boolean }
 export type ThothWorker = (node: ThothNode, inputs: WorkerInputs, outputs: WorkerOutputs, ...args: unknown[]) => WorkerReturn
+
+// Type definitions for PubSubJS 1.8.0
+// Project: https://github.com/mroderick/PubSubJS
+// Definitions by: Boris Yankov <https://github.com/borisyankov>
+//                 Matthias Lindinger <https://github.com/morpheus-87>
+// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+
+export interface PubSubBase
+        extends CountSubscriptions,
+            ClearAllSubscriptions,
+            GetSubscriptions,
+            Publish,
+            Subscribe,
+            Unsubscribe {
+        name: string;
+        version: string;
+    }
+
+    interface CountSubscriptions {
+        countSubscriptions(token: any): number;
+    }
+
+    interface ClearAllSubscriptions {
+        clearAllSubscriptions(token?: any): void;
+    }
+
+    interface GetSubscriptions {
+        getSubscriptions(token: any): any[];
+    }
+
+    interface Publish {
+        publish(message: string | Symbol, data?: any): boolean;
+
+        publishSync(message: string | Symbol, data?: any): boolean;
+    }
+
+    interface Subscribe {
+        subscribe(message: string | Symbol, func: Function): string;
+
+        subscribeOnce(message: string | Symbol, func: Function): any;
+    }
+
+    interface Unsubscribe {
+        unsubscribe(tokenOrFunction: any): any;
+    }
