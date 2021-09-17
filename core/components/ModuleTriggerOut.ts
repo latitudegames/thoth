@@ -2,12 +2,13 @@ import Rete from "rete";
 import { InputControl } from "../dataControls/InputControl";
 import { triggerSocket } from "../sockets";
 import { v4 as uuidv4 } from "uuid";
-import { ThothComponent, ThothTask } from "../thoth-component"
+import { ThothComponent } from "../thoth-component"
 import { ThothNode, } from "../types";
+import { TaskOptions } from "../plugins/taskPlugin/task";
 const info = `The module trigger out component adds a trigger out socket to the parent module.  It can be given a name, which is displayed on the parent.`;
 
 export class ModuleTriggerOut extends ThothComponent {
-  task: ThothTask;
+  task: TaskOptions;
   module: object;
   category: string;
   info: string;
@@ -23,7 +24,7 @@ export class ModuleTriggerOut extends ThothComponent {
       outputs: {
         trigger: "output",
       },
-    } as unknown as ThothTask
+    }
 
     this.module = {
       nodeType: "triggerOut",

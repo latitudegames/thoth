@@ -4,16 +4,17 @@ import { triggerSocket } from "../sockets";
 import { v4 as uuidv4 } from "uuid";
 import { ThothComponent, ThothTask } from "../thoth-component"
 import { NodeData, ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
+import { TaskOptions } from "../plugins/taskPlugin/task";
 const info = `The module trigger in adds a trigger input socket to the parent module.  It can be given a name, which is displayed on the parent.`;
 
 export class ModuleTriggerIn extends ThothComponent {
-  task: ThothTask;
+  task: TaskOptions;
   module: object;
   category: string;
   info: string;
   workspaceType: "module" | "spell";
   contextMenuName: string;
-  nodeTaskMap: Record<number,ThothTask> = {};
+  nodeTaskMap: Record<number, ThothTask> = {};
 
   constructor() {
     // Name of the component
@@ -25,7 +26,7 @@ export class ModuleTriggerIn extends ThothComponent {
       outputs: {
         trigger: "option",
       }
-    } as unknown as ThothTask
+    }
 
     this.module = {
       nodeType: "triggerIn",
@@ -37,7 +38,7 @@ export class ModuleTriggerIn extends ThothComponent {
     this.workspaceType = "module";
   }
 
-  async run(node: ThothNode, data: NodeData ) {
+  async run(node: ThothNode, data: NodeData) {
     const task = this.nodeTaskMap[node.id];
     await task.run(data);
   }
