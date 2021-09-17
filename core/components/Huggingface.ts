@@ -73,11 +73,10 @@ export class HuggingfaceComponent extends ThothComponent {
   async worker(node: NodeData, rawInputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { thoth }: { silent: boolean, thoth: EngineContext }) {
     this._task.closed = ["error"];
 
-    const stringInputs = rawInputs as { [key: string]: string[] };
-    const inputs = Object.entries(stringInputs).reduce((acc, [key, value]) => {
+    const inputs = Object.entries(rawInputs).reduce((acc, [key, value]) => {
       acc[key] = value[0];
       return acc;
-    }, {} as Record<string, string>);
+    }, {} as Record<string, unknown>);
 
     const string = node.data.request || "";
     const template = Handlebars.compile(string);
