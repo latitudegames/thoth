@@ -3,8 +3,8 @@ import { TextInputControl } from "../controls/TextInputControl";
 import { stringSocket, triggerSocket } from "../sockets";
 import { RunButtonControl } from "../controls/RunButtonControl";
 import { Task } from "../plugins/taskPlugin/task";
-import { ThothComponent } from "../thoth-component"
-import { ThothNode } from "../types";
+import { ThothComponent, ThothTask } from "../thoth-component"
+import { NodeData, ThothNode } from "../types";
 const info = `The Input With Run component lets you input a value into the provided input field, and trigger off your spell chain to run with that value passed out its output. May be depricated in favor of using the playtest input component.`;
 
 export class RunInputComponent extends ThothComponent {
@@ -22,7 +22,7 @@ export class RunInputComponent extends ThothComponent {
         text: "output",
         trigger: "option",
       },
-      init: (task, node) => {
+      init: (task: ThothTask, node: ThothNode) => {
         // we only want one subscription present per node
         if (this.subscriptionMap[node.id]) {
           this.subscriptionMap[node.id]();

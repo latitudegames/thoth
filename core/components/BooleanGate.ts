@@ -1,5 +1,5 @@
 import Rete from "rete";
-import {ThothComponent} from "../thoth-component"
+import { ThothComponent } from "../thoth-component"
 import { NodeData, ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
 import { booleanSocket, triggerSocket } from "../sockets";
 

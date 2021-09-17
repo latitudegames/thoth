@@ -2,7 +2,7 @@ import Rete from "rete";
 import { TextInputControl } from "../controls/TextInputControl";
 import { stringSocket, arraySocket } from "../sockets";
 import { ThothComponent } from "../thoth-component"
-import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
+import { NodeData, ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
 const info = `The Join List component takes in an array, and will join each item in the array together with a seperator, defined in the components input field.`;
 
 export class JoinListComponent extends ThothComponent {
@@ -15,7 +15,7 @@ export class JoinListComponent extends ThothComponent {
         text: "output",
         trigger: "option",
       },
-      init: (task) => { },
+      init: () => { },
     };
 
     this.category = "Logic";

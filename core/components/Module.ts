@@ -1,7 +1,7 @@
 import isEqual from "lodash/isEqual";
 import { ModuleControl } from "../dataControls/ModuleControl";
 import { ThothComponent } from "../thoth-component"
-import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
+import { NodeData, ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
 const info = `The Module component allows you to add modules into your chain.  A module is a bundled self contained chain that defines inputs, outputs, and triggers using components.`;
 import { Task } from '@latitudegames/thoth-core/plugins/taskPlugin/task'
 export class ModuleComponent extends ThothComponent {
