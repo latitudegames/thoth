@@ -21,5 +21,11 @@
   "devDependencies": {
     "craco": "^0.0.3",
     "lerna": "^4.0.0"
+  },
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.31.1",
+    "@typescript-eslint/parser": "^4.31.1",
+    "eslint-plugin-import": "^2.24.2",
+    "prettier": "^2.4.1"
   }
 }
