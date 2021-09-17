@@ -1,10 +1,14 @@
-/////////REQUIRED FOR LOCAL DEPLOYMENT:  Monorepo Symlink Config /////////
+///////// REQUIRED FOR LOCAL DEPLOYMENT (if you are referencing unpublished changes from the @latitudegames/thoth-core directory*):
+///////// *You can also deploy to Netlify with these config settings, if your current local @latitudegames/thoth-core version matches the client dependency target in client/package.json
+///////// in which case the deployment will use the code in this repository at build time, and not what has been published to GitHub packages
+
+///////// Monorepo Symlink Config:
+
 // const path = require("path");
 // const { getLoader, loaderByName } = require("@craco/craco");
 
 // const packages = [];
 // packages.push(path.join(__dirname, "../core"));
-
 // module.exports = {
 //   webpack: {
 //     configure: (webpackConfig, arg) => {
@@ -26,7 +30,11 @@
 
 
 
-///////// REQUIRED FOR DEPLOYMENT: Client Build With Github Package Config /////////
+///////// REQUIRED FOR NETLIFY DEPLOYMENT (If you are referencing publised versions of @latitudegames/thoth-core )
+///////// https://github.com/latitudegames/thoth/packages/983711
+
+///////// Client Build With Github Package Config:
+
 const path = require("path");
 const { getLoaders, removeLoaders, addAfterLoader, loaderByName, throwUnexpectedConfigError } = require("@craco/craco");
 
