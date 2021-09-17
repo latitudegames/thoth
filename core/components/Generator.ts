@@ -2,6 +2,8 @@ import Rete from "rete";
 import Handlebars from "handlebars";
 import { triggerSocket, stringSocket } from "../sockets";
 import { SocketGeneratorControl } from "../dataControls/SocketGenerator";
+// @seang todo: convert data controls to typescript to remove this
+//@ts-ignore
 import { InputControl } from "../dataControls/InputControl";
 import { FewshotControl } from "../dataControls/FewshotControl";
 import { ThothComponent } from "../thoth-component"

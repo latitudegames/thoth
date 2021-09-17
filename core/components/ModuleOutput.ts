@@ -1,5 +1,7 @@
 import Rete from "rete";
 import { Task } from "../plugins/taskPlugin/task";
+// @seang todo: convert data controls to typescript to remove this
+//@ts-ignore
 import { InputControl } from "../dataControls/InputControl";
 import { anySocket, triggerSocket } from "../sockets";
 import { v4 as uuidv4 } from "uuid";

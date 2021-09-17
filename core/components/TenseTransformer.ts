@@ -1,5 +1,7 @@
 import Rete from "rete";
 import { stringSocket, triggerSocket } from "../sockets";
+// @seang todo: convert data controls to typescript to remove this
+//@ts-ignore
 import { FewshotControl } from "../dataControls/FewshotControl";
 import { ThothComponent } from "../thoth-component"
 import { NodeData, ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";

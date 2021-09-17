@@ -1,6 +1,8 @@
 import Rete from "rete";
 import { triggerSocket } from "../sockets";
 import { CodeControl } from "../dataControls/CodeControl";
+// @seang todo: convert data controls to typescript to remove this
+//@ts-ignore
 import { InputControl } from "../dataControls/InputControl";
 import { SocketGeneratorControl } from "../dataControls/SocketGenerator";
 import { ThothComponent } from "../thoth-component"
