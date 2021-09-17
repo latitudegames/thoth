@@ -20,12 +20,11 @@ import { ModuleType } from "./types";
 import { Data } from "rete/src/core/data";
 import { PubSubContext } from "./thoth-component";
 import { ModuleManager } from "./plugins/modulePlugin/module-manager";
-//@seang todo: explore why this is crashing only on netlify
-//@ts-ignore
+
 export type EventsTypes = DefaultEventsTypes & {
   run: void;
   save: void;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 class ThothEditor extends NodeEditor<EventsTypes> {
@@ -34,7 +33,7 @@ class ThothEditor extends NodeEditor<EventsTypes> {
   thothV2: EngineContext;
   tab: { type: string };
   abort: unknown;
-  loadGraph: (graph: Data)=> Promise<void>;
+  loadGraph: (graph: Data) => Promise<void>;
   moduleSubscription: unknown;
   moduleManager: ModuleManager;
 }
@@ -158,7 +157,7 @@ const editor = async function ({ container, pubSub, thoth, tab, thothV2, node }:
     await engine.abort();
   };
 
-   editor.loadGraph = async (graph: Data) => {
+  editor.loadGraph = async (graph: Data) => {
     await engine.abort();
     editor.fromJSON(graph);
     editor.view.resize();
