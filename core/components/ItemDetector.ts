@@ -2,7 +2,7 @@ import Rete from "rete";
 import { stringSocket, triggerSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
 import { ThothComponent } from "../thoth-component"
-import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
+import { NodeData, ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
 import { EngineContext } from "../engine";
 // For simplicity quests should be ONE thing not complete X and Y
 const fewshot = `Given an action, detect the item which is taken.
@@ -23,7 +23,7 @@ export class ItemTypeComponent extends ThothComponent {
 
     this.task = {
       outputs: { detectedItem: "output", trigger: "option" },
-      init: (task) => { },
+
     };
 
     this.category = "AI/ML";

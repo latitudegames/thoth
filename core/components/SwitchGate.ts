@@ -2,7 +2,7 @@ import Rete from "rete";
 import { anySocket, triggerSocket } from "../sockets";
 import { SocketGeneratorControl } from "../dataControls/SocketGenerator";
 import { ThothComponent } from "../thoth-component"
-import { ThothNode, ThothWorkerInputs } from "../types";
+import { NodeData, ThothNode, ThothWorkerInputs } from "../types";
 // function capitalizeFirstLetter(string) {
 //   return string.charAt(0).toUpperCase() + string.slice(1);
 // }
@@ -16,7 +16,7 @@ export class SwitchGate extends ThothComponent {
 
     this.task = {
       outputs: { default: "option" },
-      init: (task) => { },
+
     };
     this.category = "Logic";
     this.info = info;

@@ -2,7 +2,7 @@ import Rete from "rete";
 import { stringSocket, triggerSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
 import { ThothComponent } from "../thoth-component"
-import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
+import { NodeData, ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
 import { EngineContext } from "../engine";
 // For simplicity quests should be ONE thing not complete X and Y
 const fewshot = `Given an action, predict how long it would take to complete out of the following categories: seconds, minutes, hours, days, weeks, years.
@@ -37,8 +37,7 @@ export class TimeDetectorComponent extends ThothComponent {
     super("Time Detector");
 
     this.task = {
-      outputs: { detectedTime: "output", trigger: "option" },
-      init: (task) => { },
+      outputs: { detectedTime: "output", trigger: "option" }
     };
 
     this.category = "AI/ML";

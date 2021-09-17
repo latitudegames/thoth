@@ -1,6 +1,6 @@
 import { ThothComponent } from "../thoth-component"
 import { SocketGeneratorControl } from "../dataControls/SocketGenerator";
-import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
+import { NodeData, ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
 import { EngineContext } from "../engine";
 const info = `The State Read component allows you to read values from the state.  These can be found in and are managed by the State Manager window.  This window consists of a JSON object.  You can define any number ouf outputs where an outputs name corresponds to a key in the state manager.  Whatever value is assigned to that key will be read ans passed into your chain.`;
 export class StateRead extends ThothComponent {
@@ -10,7 +10,7 @@ export class StateRead extends ThothComponent {
 
     this.task = {
       outputs: {},
-      init: (task) => { },
+
     };
     this.category = "State";
     this.info = info;

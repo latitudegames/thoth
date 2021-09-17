@@ -4,7 +4,7 @@ import { InputControl } from "../dataControls/InputControl";
 import { anySocket, triggerSocket } from "../sockets";
 import { v4 as uuidv4 } from "uuid";
 import { ThothComponent } from "../thoth-component"
-import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
+import { NodeData, ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
 const info = `The module output component adds an output socket to the parent module.  It can be given a name, which is displayed on the parent.`;
 
 export class ModuleOutput extends ThothComponent {

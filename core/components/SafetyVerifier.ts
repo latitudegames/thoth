@@ -3,7 +3,7 @@ import { stringSocket, triggerSocket, booleanSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
 
 import { ThothComponent } from "../thoth-component"
-import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
+import { NodeData, ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
 import { EngineContext } from "../engine";
 
 const fewshot = `Rate the actions according to the following content categories
@@ -85,7 +85,7 @@ export class SafetyVerifier extends ThothComponent {
         trigger: "option",
         boolean: "output",
       },
-      init: (task) => { },
+
     };
     this.category = "AI/ML";
     this.display = true;

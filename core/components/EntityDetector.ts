@@ -126,7 +126,7 @@ export class EntityDetector extends ThothComponent {
         trigger: "option",
       },
       init: () => { },
-      onRun: ()=>{}
+      onRun: () => { }
     } as TaskOptions
     this.category = "AI/ML";
     this.display = true;

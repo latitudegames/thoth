@@ -2,7 +2,7 @@ import Rete from "rete";
 import { stringSocket, triggerSocket } from "../sockets";
 import { FewshotControl } from "../dataControls/FewshotControl";
 import { ThothComponent } from "../thoth-component"
-import { ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
+import { NodeData, ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
 import { EngineContext } from "../engine";
 const fewshot = `Change each statement to be in the third person present tense and correct all grammar.
 
@@ -75,7 +75,6 @@ export class TenseTransformer extends ThothComponent {
         action: "output",
         trigger: "option",
       },
-      init: (task) => { },
     };
 
     this.category = "AI/ML";
