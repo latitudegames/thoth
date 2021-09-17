@@ -24,7 +24,9 @@ We can either:
 
 These two methods of compiling the application can be used for either local development or deployment, and require a separate configuration for [CRACO](https://github.com/gsoft-inc/craco). 
 
-These two distinct code blocks are in `client/craco.config.js` with further instructions as to their use. It is important to not that only one of the two configuration block can be uncommented at a type for the build to be valid. We hope to streamline this further soon.
+These two distinct code blocks are in `client/craco.config.js` with further instructions as to their use. 
+
+**It is important to note** that *only one of the two configuration code blocks can be uncommented at a time* for the build to be valid. We hope to streamline this further soon.
 
 ## Publishing @latitudegames/thoth-core
 
