@@ -50,9 +50,9 @@
   },
   "scripts": {
     "start": "PORT=3001 FAST_REFRESH=false craco start",
-    "build": "react-scripts build",
+    "build": "craco build",
     "test": "craco test",
-    "eject": "cracp eject"
+    "eject": "craco eject"
   },
   "eslintConfig": {
     "extends": [
@@ -71,5 +71,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/preset-typescript": "^7.15.0"
   }
 }

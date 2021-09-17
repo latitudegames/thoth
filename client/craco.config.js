@@ -5,6 +5,9 @@ const packages = [];
 packages.push(path.join(__dirname, "../core"));
 
 module.exports = {
+  babel: {
+    presets: ["@babel/preset-typescript"]
+  },  
   webpack: {
     configure: (webpackConfig, arg) => {
       const { isFound, match } = getLoader(

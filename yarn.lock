@@ -923,7 +923,7 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.14.5"
 
-"@babel/plugin-transform-typescript@^7.12.1":
+"@babel/plugin-transform-typescript@^7.12.1", "@babel/plugin-transform-typescript@^7.15.0":
   version "7.15.4"
   resolved "https://registry.yarnpkg.com/@babel/plugin-transform-typescript/-/plugin-transform-typescript-7.15.4.tgz#db7a062dcf8be5fc096bc0eeb40a13fbfa1fa251"
   integrity sha512-sM1/FEjwYjXvMwu1PJStH11kJ154zd/lpY56NQJ5qH2D0mabMv1CAy/kdvS9RP4Xgfj9fBBA3JiSLdDHgXdzOA==
@@ -1141,6 +1141,15 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.10.4"
     "@babel/plugin-transform-typescript" "^7.12.1"
+
+"@babel/preset-typescript@^7.15.0":
+  version "7.15.0"
+  resolved "https://registry.yarnpkg.com/@babel/preset-typescript/-/preset-typescript-7.15.0.tgz#e8fca638a1a0f64f14e1119f7fe4500277840945"
+  integrity sha512-lt0Y/8V3y06Wq/8H/u0WakrqciZ7Fz7mwPDHWUJAXlABL5hiUG42BNlRXiELNjeWjO5rWmnNKlx+yzJvxezHow==
+  dependencies:
+    "@babel/helper-plugin-utils" "^7.14.5"
+    "@babel/helper-validator-option" "^7.14.5"
+    "@babel/plugin-transform-typescript" "^7.15.0"
 
 "@babel/runtime-corejs3@^7.10.2":
   version "7.15.4"
@@ -1662,6 +1671,23 @@
     "@types/node" "*"
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
+
+"@latitudegames/thoth-core@0.0.10":
+  version "0.0.10"
+  resolved "https://npm.pkg.github.com/download/@latitudegames/thoth-core/0.0.10/ffa8fa22374088c65fc78ac961111b6e139dde7b55a80b84f7cf2a63023fccb5#3044385140fd842770ace70d0d05145ef5a829f1"
+  integrity sha512-VnzJgg+KJvgXjH9pk5gklFmxtjJKLg59wrh5CtHsH+8276YLXp5gY+rm8VkoyjDXBo/sIPW6WMuX4olv7BvFxA==
+  dependencies:
+    deep-equal "^2.0.5"
+    handlebars "^4.7.7"
+    react "^17.0.2"
+    rete "https://github.com/latitudegames/rete.git#master"
+    rete-area-plugin "^0.2.1"
+    rete-connection-plugin "^0.9.0"
+    rete-context-menu-plugin "^0.6.0-rc.1"
+    rete-module-plugin "^0.4.1"
+    rete-react-render-plugin "^0.2.1"
+    typescript "^4.2.0"
+    uuid "^8.3.2"
 
 "@lerna/add@4.0.0":
   version "4.0.0"
