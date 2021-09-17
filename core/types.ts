@@ -114,8 +114,8 @@ export type Spell = {
   nodes: Record<number, Node>
 }
 
-export type ThothWorkerBaseInput = { type: TaskOutputTypes; outputData: unknown; task: ThothTask, key: string }
-export type ThothWorkerInput = ThothWorkerBaseInput | string | unknown[]
+export type ThothReteInput = { type: TaskOutputTypes; outputData: unknown; task: ThothTask, key: string }
+export type ThothWorkerInput =  string | unknown | unknown[]
 export type ThothWorkerInputs = { [key: string]: ThothWorkerInput[] }
 export type ThothWorkerOutputs = WorkerOutputs & { [key: string]: string[] | string; }
 export type WorkerReturn = Node | ThothWorkerOutputs | void | Promise<void> | Promise<{ actionType: string }> | Promise<{ difficulty?: string, category?: string }> | Promise<{ [output: string]: string } | null> | Promise<never[] | { entities: { name: string; type: string; }[]; }> | Promise<{ element: unknown; } | undefined> | Promise<{ result: { error: unknown, [key: string]: unknown } } | { result?: undefined }> | Promise<{ text: unknown }> | Promise<{ boolean: boolean; }> | Promise<null | undefined> | WorkerOutputs[] | { trigger: boolean }
