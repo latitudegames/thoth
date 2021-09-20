@@ -1,8 +1,11 @@
 {
   "name": "@latitudegames/thoth-core",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "core logic for rete implementation in thoth",
   "type": "module",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "clean": "rimraf dist",
