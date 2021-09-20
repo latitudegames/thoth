@@ -4,7 +4,6 @@ module.exports = {
     node: true,
   },
   extends: [
-    'standard',
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'prettier',
@@ -17,10 +16,6 @@ module.exports = {
     warnOnUnsupportedTypeScriptVersion: false,
   },
   ignorePatterns: ['.eslintrc.js'],
-  extends: [
-    'plugin:functional/external-recommended',
-    'plugin:functional/recommended',
-  ],
   rules: {
     'prettier/prettier': 'error',
     '@typescript-eslint/no-floating-promises': 'error',
