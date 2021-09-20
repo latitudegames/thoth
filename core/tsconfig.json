@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -24,8 +20,5 @@
     "outDir": "./dist/",
     "declaration": true
   },
-  "exclude": [
-    "./node_modules/",
-    "./dist/"
-  ]
+  "exclude": ["./node_modules/", "./dist/"]
 }

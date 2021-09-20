@@ -1,96 +1,24 @@
-/////////REQUIRED FOR LOCAL DEPLOYMENT:  Monorepo Symlink Config /////////
-// const path = require("path");
-// const { getLoader, loaderByName } = require("@craco/craco");
-
-// const packages = [];
-// packages.push(path.join(__dirname, "../core"));
-
-// module.exports = {
-//   webpack: {
-//     configure: (webpackConfig, arg) => {
-//       const { isFound, match } = getLoader(
-//         webpackConfig,
-//         loaderByName("babel-loader")
-//       );
-//       if (isFound) {
-//         const include = Array.isArray(match.loader.include)
-//           ? match.loader.include
-//           : [match.loader.include];
-
-//         match.loader.include = include.concat(packages);
-//       }
-//       return webpackConfig;
-//     },
-//   },
-// };
-
-
-
-///////// REQUIRED FOR DEPLOYMENT: Client Build With Github Package Config /////////
 const path = require("path");
-const { getLoaders, removeLoaders, addAfterLoader, loaderByName, throwUnexpectedConfigError } = require("@craco/craco");
+const { getLoader, loaderByName } = require("@craco/craco");
 
 const packages = [];
 packages.push(path.join(__dirname, "../core"));
 
-const throwError = (message) =>
-  throwUnexpectedConfigError({
-    packageName: 'craco',
-    githubRepo: 'gsoft-inc/craco',
-    message,
-    githubIssueQuery: 'webpack',
-  });
-
 module.exports = {
-  babel: {
-    presets: ["@babel/preset-react","@babel/preset-typescript"],
-    plugins: ["babel-plugin-transform-class-properties"]
-  },
   webpack: {
-    configure: (webpackConfig, { paths }) => {
-      const { hasFoundAny, matches } = getLoaders(webpackConfig, loaderByName('babel-loader'));
-      if (!hasFoundAny) throwError('failed to find babel-loader');
-
-      console.log('removing babel-loader');
-      const { hasRemovedAny, removedCount } = removeLoaders(webpackConfig, loaderByName('babel-loader'));
-      if (!hasRemovedAny) throwError('no babel-loader to remove');
-      if (removedCount !== 2) throwError('had expected to remove 2 babel loader instances');
-
-      console.log('adding ts-loader');
-
-      const tsLoader = {
-        test: /\.(js|mjs|jsx|ts|tsx)$/,
-        include: paths.appSrc,
-        loader: require.resolve('ts-loader'),
-        options: { transpileOnly: true },
-      };
-
-      const { isAdded: tsLoaderIsAdded } = addAfterLoader(webpackConfig, loaderByName('url-loader'), tsLoader);
-      if (!tsLoaderIsAdded) throwError('failed to add ts-loader');
-      console.log('added ts-loader');
-
-      console.log('adding non-application JS babel-loader back');
-      const { isAdded: babelLoaderIsAdded } = addAfterLoader(
+    configure: (webpackConfig, arg) => {
+      const { isFound, match } = getLoader(
         webpackConfig,
-        loaderByName('ts-loader'),
-        matches[1].loader // babel-loader
+        loaderByName("babel-loader")
       );
-      if (!babelLoaderIsAdded) throwError('failed to add back babel-loader for non-application JS');
-      console.log('added non-application JS babel-loader back');
+      if (isFound) {
+        const include = Array.isArray(match.loader.include)
+          ? match.loader.include
+          : [match.loader.include];
 
-        // ts-loader is required to reference external typescript projects/files (non-transpiled)
-        webpackConfig.module.rules.push({
-          test: /\.ts?$/,
-          loader: 'ts-loader',
-          options: {
-            transpileOnly: true,
-            configFile: 'tsconfig.json',
-          },
-        })
-
+        match.loader.include = include.concat(packages);
+      }
       return webpackConfig;
     },
   },
 };
-
-

@@ -1,5 +1,5 @@
 import { Control } from "rete";
-
+import React from "react"
 const ReactTextInputControl = (props) => {
   return <p style={{ width: 200 }}>Result: {props.display}</p>;
 };
