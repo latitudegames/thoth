@@ -17,6 +17,7 @@
     "@types/react-dom": "^17.0.9",
     "classnames": "^2.3.1",
     "deep-equal": "^2.0.5",
+    "eslint-config-react-app": "^6.0.0",
     "flexlayout-react": "^0.5.12",
     "handlebars": "^4.7.7",
     "json-format": "^1.0.1",
