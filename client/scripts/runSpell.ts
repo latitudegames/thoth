@@ -3,8 +3,8 @@ import "regenerator-runtime/runtime";
 import { Component } from "rete";
 import spell from "./spell";
 import { Module } from "./module";
-import { EngineContext } from "../src/contexts/EditorProvider"
-import { modules, components } from "./engine"
+import { EngineContext } from "@latitudegames/thoth-core/engine";
+import { modules, components } from "./engine";
 import { initSharedEngine } from "@latitudegames/thoth-core/engine";
 interface ModuleComponent extends Component {
   run: Function;
@@ -31,15 +31,37 @@ function getTriggeredNode(data, socketKey, map) {
 // on the server. This completion function should make an actual openAI call.
 const thoth: EngineContext = {
   completion: (body) => {
-    return new Promise((resolve, reject) => { resolve("Joe looks around") })
+    return new Promise((resolve, reject) => {
+      resolve("Joe looks around");
+    });
   },
-  getCurrentGameState: () => { },
-  updateCurrentGameState: () => { }
+  getCurrentGameState: () => {
+    return {};
+  },
+  updateCurrentGameState: () => {
+    return {};
+  },
+  huggingface: () => {
+    return new Promise((resolve) => {
+      resolve({ string: {} as unknown, error: {} as unknown } as {
+        [key: string]: unknown;
+        error: unknown;
+      });
+    });
+  },
+  enkiCompletion: () => {
+    return new Promise((resolve) => {});
+  },
 };
 
 const main = async () => {
   // only setting this as 'any' until we create a proper engine interface with the proper methods types on it.
-  const engine = initSharedEngine("demo@0.1.0", modules, components, true) as any;
+  const engine = initSharedEngine(
+    "demo@0.1.0",
+    modules,
+    components,
+    true
+  ) as any;
 
   // The module is an interface that the module system uses to write data to
   // used internally by the module plugin, and we make use of it here too.
