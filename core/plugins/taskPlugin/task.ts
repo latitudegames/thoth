@@ -1,6 +1,6 @@
 import { NodeData } from "rete/types/core/data";
 import { ThothComponent, ThothTask } from "../../thoth-component";
-import { ThothWorkerBaseInput, ThothWorkerInputs } from "../../types";
+import { ThothReteInput, ThothWorkerInputs } from "../../types";
 
 type TaskRef = {
   key: string;
@@ -48,7 +48,7 @@ export class Task {
     this.closed = [];
 
     this.getInputs("option").forEach((key: string) => {
-      this.inputs[key].forEach((workerInput: ThothWorkerBaseInput) => {
+      this.inputs[key].forEach((workerInput: ThothReteInput) => {
         workerInput.task.next.push({ key: workerInput.key, task: this });
       });
     });
@@ -59,7 +59,7 @@ export class Task {
     return Object.keys(this.inputs)
       .filter((key) => this.inputs[key][0])
       .filter((key) => {
-        const workerBase = this.inputs[key][0] as ThothWorkerBaseInput;
+        const workerBase = this.inputs[key][0] as ThothReteInput;
         return workerBase.type === type
       }
       );
@@ -68,7 +68,7 @@ export class Task {
   getInputFromConnection(socketKey: string) {
     let input: null | any = null;
     Object.entries(this.inputs).forEach(([key, value]) => {
-      if (value.some((con: ThothWorkerBaseInput) => con && con.key === socketKey)) {
+      if (value.some((con: ThothReteInput) => con && con.key === socketKey)) {
         input = key;
       }
     });
@@ -103,7 +103,7 @@ export class Task {
       await Promise.all(
         this.getInputs("output").map(async (key) => {
           const thothWorkerinputs = await Promise.all(
-            this.inputs[key].map(async (con: ThothWorkerBaseInput) => {
+            this.inputs[key].map(async (con: ThothReteInput) => {
               await con.task.run(data, {
                 needReset: false,
                 garbage,
@@ -154,7 +154,7 @@ export class Task {
     // replace old tasks with new copies
     else
       Object.keys(inputs).forEach((key: string) => {
-        inputs[key] = inputs[key].map((con: ThothWorkerBaseInput) => ({
+        inputs[key] = inputs[key].map((con: ThothReteInput) => ({
           ...con,
           task: con.task === oldTask ? newTask : con.task as ThothTask,
         }));
