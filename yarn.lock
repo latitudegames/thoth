@@ -1672,10 +1672,10 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
-"@latitudegames/thoth-core@0.0.17":
-  version "0.0.17"
-  resolved "https://npm.pkg.github.com/download/@latitudegames/thoth-core/0.0.17/64c8bc8a0ae92e684d46696cd5cbdadebfefe7f774a6c334ce7e801daba93edd#e329bc8538b4854af476e2e73f109fa9130766f2"
-  integrity sha512-BALGRXjnaZGsvB2IDzPXZpaEUiSpmmk+1EONWOJ9EKtOnn+0qNAQmSC+WWR7gDgSujYKpNozImCH+PustJJW5A==
+"@latitudegames/thoth-core@0.0.19":
+  version "0.0.19"
+  resolved "https://npm.pkg.github.com/download/@latitudegames/thoth-core/0.0.19/8fbe46fe344414c2d2cb4f670b65f5df6ee10a5d4754030130e6b07092268fae#ba65c13de91ae85d00a75b1e2b67b6bb82ed8952"
+  integrity sha512-ZZ0W4l0xgRZnMD+8DjQI2YMSHB3zQcPsnn59Nv572YmqSBGSCHINqSOw9MEWKcdC3nXSvTsHZCbWEgF1RDYMtQ==
   dependencies:
     deep-equal "^2.0.5"
     handlebars "^4.7.7"
