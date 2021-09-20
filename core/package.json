@@ -5,6 +5,7 @@
   "scripts": {
     "build": "tsc",
     "clean": "rimraf dist",
+    "lint": "eslint . --ignore-path ../.eslintignore --ext ts --ext tsx --ext js --ext jsx",
     "prepub": "yarn build && copyfiles package.json .npmrc dist && cd plugins/areaPlugin/ && copyfiles style.css ../../dist && cd ../../dist && npm publish",
     "postpublish": "yarn clean"
   },

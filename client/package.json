@@ -51,6 +51,7 @@
   },
   "scripts": {
     "start": "PORT=3001 FAST_REFRESH=false craco start",
+    "lint": "eslint . --ignore-path ../.eslintignore --ext ts --ext tsx --ext js --ext jsx",
     "build": "craco build",
     "test": "craco test",
     "eject": "craco eject"
