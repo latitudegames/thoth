@@ -1,14 +1,12 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
-  env: {
-    node: true,
-  },
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'prettier',
+    // 'prettier/@typescript-eslint',
   ],
-  plugins: ['import', '@typescript-eslint', 'prettier'],
+  plugins: ['@typescript-eslint', 'prettier'],
   parserOptions: {
     project: './tsconfig.json',
     ecmaVersion: 2018,
@@ -18,13 +16,13 @@ module.exports = {
   ignorePatterns: ['.eslintrc.js'],
   rules: {
     'prettier/prettier': 'error',
-    '@typescript-eslint/no-floating-promises': 'error',
+    // '@typescript-eslint/no-floating-promises': 'error',
     'require-await': 'error',
     'comma-spacing': ['error', { before: false, after: true }],
     'import/no-namespace': 'error',
     'import/no-default-export': 'error',
     'no-invalid-this': 'error',
-    'no-autofix/no-unreachable': 'error',
+    // 'no-autofix/no-unreachable': 'error',
     'space-in-parens': 'error',
     '@typescript-eslint/no-unused-vars': 'error',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
@@ -61,19 +59,19 @@ module.exports = {
 
     // enforced functional rules
     'prefer-const': 'error',
-    'functional/prefer-type-literal': 'error',
-    'functional/no-loop-statement': 'error',
-    'functional/no-let': 'error',
+    // 'functional/prefer-type-literal': 'error',
+    // 'functional/no-loop-statement': 'error',
+    // 'functional/no-let': 'error',
 
-    // not enforced functional rules
-    'functional/immutable-data': 'off',
-    'functional/no-try-statement': 'off',
-    'functional/no-throw-statement': 'off',
-    'functional/no-expression-statement': 'off',
-    'functional/prefer-readonly-type': 'off',
-    'functional/functional-parameters': 'off',
-    '@typescript-eslint/explicit-function-return-type': 'off',
-    'functional/no-conditional-statement': 'off',
-    'functional/no-mixed-type': 'off',
+    // // not enforced functional rules
+    // 'functional/immutable-data': 'off',
+    // 'functional/no-try-statement': 'off',
+    // 'functional/no-throw-statement': 'off',
+    // 'functional/no-expression-statement': 'off',
+    // 'functional/prefer-readonly-type': 'off',
+    // 'functional/functional-parameters': 'off',
+    // '@typescript-eslint/explicit-function-return-type': 'off',
+    // 'functional/no-conditional-statement': 'off',
+    // 'functional/no-mixed-type': 'off',
   },
 }
