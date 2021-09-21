@@ -1672,10 +1672,10 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
-"@latitudegames/thoth-core@0.0.19":
-  version "0.0.19"
-  resolved "https://npm.pkg.github.com/download/@latitudegames/thoth-core/0.0.19/8fbe46fe344414c2d2cb4f670b65f5df6ee10a5d4754030130e6b07092268fae#ba65c13de91ae85d00a75b1e2b67b6bb82ed8952"
-  integrity sha512-ZZ0W4l0xgRZnMD+8DjQI2YMSHB3zQcPsnn59Nv572YmqSBGSCHINqSOw9MEWKcdC3nXSvTsHZCbWEgF1RDYMtQ==
+"@latitudegames/thoth-core@0.0.23":
+  version "0.0.23"
+  resolved "https://npm.pkg.github.com/download/@latitudegames/thoth-core/0.0.23/5ca5ded3cec7282f8e870ac26d6a8aa174ebc1beb26d18398ac56dea8dc81e2b#33e1ff86ac0b7c72902f8ede1c9daa1ebba90691"
+  integrity sha512-ssgC4gxvVraiPcJ8I1kFySeVAYkM9SGaeuX4UknH+wusuaQ9VB1ijES4v3KspS4U6Zaq+WnNjq26VtEDXD0udQ==
   dependencies:
     deep-equal "^2.0.5"
     handlebars "^4.7.7"
@@ -13832,8 +13832,7 @@ rete-react-render-plugin@^0.2.1:
 
 "rete@git+https://github.com/latitudegames/rete.git#master":
   version "1.4.5"
-  uid "1759b2b9c949520455f273003c7c2fd6458dcb2e"
-  resolved "git+https://github.com/latitudegames/rete.git#1759b2b9c949520455f273003c7c2fd6458dcb2e"
+  resolved "git+https://github.com/latitudegames/rete.git#94ec42a3e51628c961294d167923783d8432e01e"
   dependencies:
     lodash "^4.17.21"
     watch "^1.0.2"
