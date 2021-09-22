@@ -6080,18 +6080,6 @@ cyclist@^1.0.1:
   resolved "https://registry.yarnpkg.com/cyclist/-/cyclist-1.0.1.tgz#596e9698fd0c80e12038c2b82d6eb1b35b6224d9"
   integrity sha1-WW6WmP0MgOEgOMK4LW6xs1tiJNk=
 
-d3-path@1:
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/d3-path/-/d3-path-1.0.9.tgz#48c050bb1fe8c262493a8caf5524e3e9591701cf"
-  integrity sha512-VLaYcn81dtHVTjEHd8B+pbe9yHWpXKZUC87PzoFmsFrJqgFwDe/qxfp5MlfsfM1V5E/iVt0MmEbWQ7FVIXh/bg==
-
-d3-shape@^1.3.5:
-  version "1.3.7"
-  resolved "https://registry.yarnpkg.com/d3-shape/-/d3-shape-1.3.7.tgz#df63801be07bc986bc54f63789b4fe502992b5d7"
-  integrity sha512-EUkvKjqPFUAZyOlhY5gzCxCeI0Aep04LwIRpsZ/mLFelJiUfnK56jo5JMDSE7yyP2kLSb6LtF+S5chMk7uqPqw==
-  dependencies:
-    d3-path "1"
-
 d@1, d@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/d/-/d-1.0.1.tgz#8698095372d58dbee346ffd0c7093f99f8f9eb5a"
@@ -13210,10 +13198,10 @@ react-error-overlay@^6.0.9:
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-6.0.9.tgz#3c743010c9359608c375ecd6bc76f35d93995b0a"
   integrity sha512-nQTTcUu+ATDbrSD1BZHr5kgSD4oF8OFjxun8uAaL8RwPBacGBNPf/yAuVVdx17N8XNzRDMrZ9XcKZHCjPW+9ew==
 
-react-hook-form@^7.15.1:
-  version "7.15.1"
-  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.15.1.tgz#445003b9b653a4fe09971390ca1cb088e59a0519"
-  integrity sha512-+f4T2dXWE9mJFq+b4J91yQ7cTD/2974O8J2TMGIgVjuz+fb3DdT+8vPx7SHzoCE0ZanfZ95mL0Fan7zxdeGSNA==
+react-hook-form@^7.15.4:
+  version "7.15.4"
+  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.15.4.tgz#5ddb9cb286ed5e261ce47fdbfe019c469980b3f5"
+  integrity sha512-jEtsDBPfpkz1uuJVlTLDOg+jO3cG9pFHT3g5uayVvlNT551IetXE1iwrSaxUR/QPWyJA2FLx4Q/VjO2viZNfLg==
 
 react-hotkeys-hook@^3.3.2:
   version "3.4.0"
@@ -13829,14 +13817,6 @@ rete-connection-plugin@^0.9.0:
   resolved "https://registry.yarnpkg.com/rete-connection-plugin/-/rete-connection-plugin-0.9.0.tgz#3a6df36f55493a5c2ea021ae3147a0f0a6ada6ed"
   integrity sha512-D+H1yAONBBFYXeMkz0sdpDm76XiqcF2N3FduaqMUqcoThocMaFB2O8TX3nJc76ksuYaLYqo/+OLXTxNa+5HQYQ==
 
-rete-connection-reroute-plugin@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/rete-connection-reroute-plugin/-/rete-connection-reroute-plugin-0.4.0.tgz#30fb8f8e2d5d32a379f8c8bd743145a326a42e08"
-  integrity sha512-DWZrK/qk9kt83o2cELjKpabD0YIJ6rhzp7rnTqEV4IHpSJxhruNSBKG2V7hxXq4wMy7T0zVFh9f0TIRJ5qvTqQ==
-  dependencies:
-    d3-shape "^1.3.5"
-    vue "2.6.10"
-
 rete-context-menu-plugin@^0.6.0-rc.1:
   version "0.6.0-rc.1"
   resolved "https://registry.yarnpkg.com/rete-context-menu-plugin/-/rete-context-menu-plugin-0.6.0-rc.1.tgz#0e5ba94057952ec9c07c0efd0d2ab27e9cc683a1"
@@ -13854,13 +13834,6 @@ rete-react-render-plugin@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/rete-react-render-plugin/-/rete-react-render-plugin-0.2.1.tgz#71a6d73f18f850b85262563f678b40080a7b0e32"
   integrity sha512-2ZMXUP0v+EiejHVMqdrOmUwyDBHC2UDOJ/pFkElaZL1Kn/E40JZA5yzdBXi6ajYZI2DCzoW5ZBcA2Ihjtur8MQ==
-
-"rete@git+https://github.com/latitudegames/rete.git#master":
-  version "1.4.5"
-  resolved "git+https://github.com/latitudegames/rete.git#94ec42a3e51628c961294d167923783d8432e01e"
-  dependencies:
-    lodash "^4.17.21"
-    watch "^1.0.2"
 
 "rete@https://github.com/latitudegames/rete.git#master":
   version "1.4.5"
@@ -15826,11 +15799,6 @@ vm-browserify@^1.0.1:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-1.1.2.tgz#78641c488b8e6ca91a75f511e7a3b32a86e5dda0"
   integrity sha512-2ham8XPWTONajOR0ohOKOHXkm3+gaBmGut3SRuu75xLd/RRaY6vqgh8NBYYk7+RW3u5AtzPQZG8F10LHkl0lAQ==
-
-vue@2.6.10:
-  version "2.6.10"
-  resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.10.tgz#a72b1a42a4d82a721ea438d1b6bf55e66195c637"
-  integrity sha512-ImThpeNU9HbdZL3utgMCq0oiMzAkt1mcgy3/E6zWC/G6AaQoeuFdsl9nDhTDU3X1R6FK7nsIUuRACVcjI+A2GQ==
 
 vue@^2.5.17:
   version "2.6.14"
