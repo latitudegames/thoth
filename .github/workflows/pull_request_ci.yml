@@ -8,7 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Check for corechanges files
-        run: echo ::set-output name=corechanges::$(if git diff --quiet origin/main..${{ github.head_ref  }} -- core; then echo "true"; else echo "false"; fi)
+        run: echo ::set-output name=corechanges::$(if git diff --quiet origin/main..origin/${{ github.head_ref  }} -- core; then echo "true"; else echo "false"; fi)
       - name: Check thoth-core labels
         uses: docker://agilepathway/pull-request-label-checker:latest
         id: thoth_core_exists
