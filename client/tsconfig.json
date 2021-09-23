@@ -11,15 +11,11 @@
     "rootDir": ".",
     "noEmit": true
   },
-  "typeRoots": [
-    "@types/@thoth"
-  ],
+  "typeRoots": ["@types/@thoth"],
   "references": [
     {
       "path": "../core"
     }
   ],
-  "include": [
-    "src"
-  ]
+  "include": ["src", "defaultLayout.json"]
 }
