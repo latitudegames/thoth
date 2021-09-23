@@ -1,4 +1,4 @@
-ame: thoth-core pull request ci
+name: thoth-core pull request ci
 
 on: [pull_request]
 
