@@ -8,10 +8,16 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Check for corechanges files
-        run: echo ::set-output name=changes::$(git diff --quiet origin/main..origin/${{ github.head_ref  }} -- core)
+        run: echo ::set-output name=gitdiff::$(git diff --quiet origin/main..origin/${{ github.head_ref  }} -- core)
+        id: thore_core_dir
+      - name: Check for corechanges files
+        run: echo ::set-output name=exitcode::$($?} -- core)
         id: thore_core_check
+      - name: Check for corechanges files
+        run: echo steps.thoth_core_check.exitcode
+        id: thore_core_echo
       - name: Check thoth-core labels
-        if: steps.thoth_core_check.changes == '/usr/bin/bash -e {1}'
+        if: steps.thoth_core_check.exitcode == 1
         uses: docker://agilepathway/pull-request-label-checker:latest
         id: thoth_core_exists
         with:
@@ -19,12 +25,12 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
         continue-on-error: true
       - name: Label thoth-core draft prs
-        if: steps.thoth_core_check.changes == '/usr/bin/bash -e {1}' && steps.thoth_core_exists.outcome == 'success'
+        if: steps.thoth_core_check.exitcode == 1 && steps.thoth_core_exists.outcome == 'success'
         uses: actions-ecosystem/action-add-labels@v1
         with:
           labels: thoth-core-draft
       - name: Label thoth-core prs
-        if: steps.thoth_core_check.changes  == '/usr/bin/bash -e {1}' && steps.thoth_core_exists.outcome != 'success'
+        if: steps.thoth_core_check.exitcode == 1 && steps.thoth_core_exists.outcome != 'success'
         uses: actions-ecosystem/action-add-labels@v1
         with:
           labels: thoth-core
