@@ -11,7 +11,7 @@ jobs:
         run: echo ::set-output name=gitdiff::$(git diff --quiet origin/main..origin/${{ github.head_ref  }} -- core)
         id: thore_core_dir
       - name: Check for corechanges files
-        run: echo ::set-output name=exitcode::$($?} -- core)
+        run: echo ::set-output name=exitcode::$($?)
         id: thore_core_check
       - name: Check for corechanges files
         run: echo steps.thoth_core_check.exitcode
