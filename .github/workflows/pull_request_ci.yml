@@ -15,10 +15,10 @@ jobs:
         # uses: docker://agilepathway/pull-request-label-checker:latest
         run: echo steps.thoth_core_check.changes
         id: thoth_core_exists
-        with:
-          one_of: thoth-core
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-        continue-on-error: true
+        # with:
+        #   one_of: thoth-core
+        #   repo_token: ${{ secrets.GITHUB_TOKEN }}
+        # continue-on-error: true
       - name: Label thoth-core draft prs
         if: steps.thoth_core_check.changes == 'true' && steps.thoth_core_exists.outcome == 'success'
         uses: actions-ecosystem/action-add-labels@v1
