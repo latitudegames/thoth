@@ -1672,23 +1672,6 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
-"@latitudegames/thoth-core@0.0.23":
-  version "0.0.23"
-  resolved "https://npm.pkg.github.com/download/@latitudegames/thoth-core/0.0.23/5ca5ded3cec7282f8e870ac26d6a8aa174ebc1beb26d18398ac56dea8dc81e2b#33e1ff86ac0b7c72902f8ede1c9daa1ebba90691"
-  integrity sha512-ssgC4gxvVraiPcJ8I1kFySeVAYkM9SGaeuX4UknH+wusuaQ9VB1ijES4v3KspS4U6Zaq+WnNjq26VtEDXD0udQ==
-  dependencies:
-    deep-equal "^2.0.5"
-    handlebars "^4.7.7"
-    react "^17.0.2"
-    rete "https://github.com/latitudegames/rete.git#master"
-    rete-area-plugin "^0.2.1"
-    rete-connection-plugin "^0.9.0"
-    rete-context-menu-plugin "^0.6.0-rc.1"
-    rete-module-plugin "^0.4.1"
-    rete-react-render-plugin "^0.2.1"
-    typescript "^4.2.0"
-    uuid "^8.3.2"
-
 "@lerna/add@4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@lerna/add/-/add-4.0.0.tgz#c36f57d132502a57b9e7058d1548b7a565ef183f"
@@ -6079,6 +6062,18 @@ cyclist@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/cyclist/-/cyclist-1.0.1.tgz#596e9698fd0c80e12038c2b82d6eb1b35b6224d9"
   integrity sha1-WW6WmP0MgOEgOMK4LW6xs1tiJNk=
+
+d3-path@1:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/d3-path/-/d3-path-1.0.9.tgz#48c050bb1fe8c262493a8caf5524e3e9591701cf"
+  integrity sha512-VLaYcn81dtHVTjEHd8B+pbe9yHWpXKZUC87PzoFmsFrJqgFwDe/qxfp5MlfsfM1V5E/iVt0MmEbWQ7FVIXh/bg==
+
+d3-shape@^1.3.5:
+  version "1.3.7"
+  resolved "https://registry.yarnpkg.com/d3-shape/-/d3-shape-1.3.7.tgz#df63801be07bc986bc54f63789b4fe502992b5d7"
+  integrity sha512-EUkvKjqPFUAZyOlhY5gzCxCeI0Aep04LwIRpsZ/mLFelJiUfnK56jo5JMDSE7yyP2kLSb6LtF+S5chMk7uqPqw==
+  dependencies:
+    d3-path "1"
 
 d@1, d@^1.0.1:
   version "1.0.1"
@@ -13817,6 +13812,14 @@ rete-connection-plugin@^0.9.0:
   resolved "https://registry.yarnpkg.com/rete-connection-plugin/-/rete-connection-plugin-0.9.0.tgz#3a6df36f55493a5c2ea021ae3147a0f0a6ada6ed"
   integrity sha512-D+H1yAONBBFYXeMkz0sdpDm76XiqcF2N3FduaqMUqcoThocMaFB2O8TX3nJc76ksuYaLYqo/+OLXTxNa+5HQYQ==
 
+rete-connection-reroute-plugin@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/rete-connection-reroute-plugin/-/rete-connection-reroute-plugin-0.4.0.tgz#30fb8f8e2d5d32a379f8c8bd743145a326a42e08"
+  integrity sha512-DWZrK/qk9kt83o2cELjKpabD0YIJ6rhzp7rnTqEV4IHpSJxhruNSBKG2V7hxXq4wMy7T0zVFh9f0TIRJ5qvTqQ==
+  dependencies:
+    d3-shape "^1.3.5"
+    vue "2.6.10"
+
 rete-context-menu-plugin@^0.6.0-rc.1:
   version "0.6.0-rc.1"
   resolved "https://registry.yarnpkg.com/rete-context-menu-plugin/-/rete-context-menu-plugin-0.6.0-rc.1.tgz#0e5ba94057952ec9c07c0efd0d2ab27e9cc683a1"
@@ -15799,6 +15802,11 @@ vm-browserify@^1.0.1:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-1.1.2.tgz#78641c488b8e6ca91a75f511e7a3b32a86e5dda0"
   integrity sha512-2ham8XPWTONajOR0ohOKOHXkm3+gaBmGut3SRuu75xLd/RRaY6vqgh8NBYYk7+RW3u5AtzPQZG8F10LHkl0lAQ==
+
+vue@2.6.10:
+  version "2.6.10"
+  resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.10.tgz#a72b1a42a4d82a721ea438d1b6bf55e66195c637"
+  integrity sha512-ImThpeNU9HbdZL3utgMCq0oiMzAkt1mcgy3/E6zWC/G6AaQoeuFdsl9nDhTDU3X1R6FK7nsIUuRACVcjI+A2GQ==
 
 vue@^2.5.17:
   version "2.6.14"
