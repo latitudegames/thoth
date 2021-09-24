@@ -1,21 +1,29 @@
-import Panel from "../../common/Panel/Panel";
-import Icon from "../../common/Icon/Icon";
-import ProjectRow from "./ProjectRow";
-import FileInput from "./FileInput";
+import Icon from '../../common/Icon/Icon'
+import Panel from '../../common/Panel/Panel'
+import css from '../startScreen.module.css'
+import FileInput from './FileInput'
+import ProjectRow from './ProjectRow'
 
-import css from "../startScreen.module.css";
-
-const AllProjects = ({ projects, setSelectedProject, selectedProject, loadFile }) => {
+const AllProjects = ({
+  projects,
+  setSelectedProject,
+  selectedProject,
+  loadFile,
+}) => {
   return (
     <Panel shadow>
       <h1>
-        <Icon name={"properties"} size={'var(--medium)'} style={{marginRight: 'var(--extraSmall)', top: '3px'}}/>
+        <Icon
+          name={'properties'}
+          size={'var(--medium)'}
+          style={{ marginRight: 'var(--extraSmall)', top: '3px' }}
+        />
         All Projects
       </h1>
       <Panel
-        style={{ width: "var(--c62)", backgroundColor: "var(--dark-1)" }}
+        style={{ width: 'var(--c62)', backgroundColor: 'var(--dark-1)' }}
         flexColumn
-        gap={"var(--small)"}
+        gap={'var(--small)'}
         roundness="round"
         unpadded
       >
@@ -26,27 +34,27 @@ const AllProjects = ({ projects, setSelectedProject, selectedProject, loadFile }
             selectedProject={selectedProject}
             label={project.label}
             onClick={() => {
-              setSelectedProject(project.label);
+              setSelectedProject(project.label)
             }}
           />
         ))}
       </Panel>
 
-      <div className={css["button-row"]}>
+      <div className={css['button-row']}>
         <button
           onClick={() => {
-            window.history.back();
+            window.history.back()
           }}
         >
           back
         </button>
         <FileInput loadFile={loadFile} />
-        <button className={!selectedProject ? "disabled" : "primary"}>
-            OPEN
-          </button>
+        <button className={!selectedProject ? 'disabled' : 'primary'}>
+          OPEN
+        </button>
       </div>
     </Panel>
-  );
-};
+  )
+}
 
-export default AllProjects;
+export default AllProjects

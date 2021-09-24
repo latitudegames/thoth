@@ -1,21 +1,21 @@
-import { DataControl } from "../plugins/inspectorPlugin";
+import { DataControl } from '../plugins/inspectorPlugin'
 export class CodeControl extends DataControl {
-  constructor({ dataKey, name, icon = "feathers" }) {
+  constructor({ dataKey, name, icon = 'feathers' }) {
     const options = {
       dataKey: dataKey,
       name: name,
-      component: "code",
+      component: 'code',
       icon,
       options: {
         editor: true,
-        language: "javascript",
+        language: 'javascript',
       },
-    };
+    }
 
-    super(options);
+    super(options)
   }
 
-  onData(data) {
-    return;
+  onData() {
+    return
   }
 }

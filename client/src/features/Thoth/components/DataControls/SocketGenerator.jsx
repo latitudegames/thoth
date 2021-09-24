@@ -1,69 +1,69 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react'
 
-const SingleSocket = (props) => {
+const SingleSocket = props => {
   return (
-    <div style={{ marginBottom: 10, flex: 1, width: "100%" }}>
-      <p style={{ display: "inline" }}>{props.name}</p>
-      <span style={{ float: "right" }}>
+    <div style={{ marginBottom: 10, flex: 1, width: '100%' }}>
+      <p style={{ display: 'inline' }}>{props.name}</p>
+      <span style={{ float: 'right' }}>
         <button className="list" onClick={() => props.delete(props.name)}>
           Delete
         </button>
       </span>
     </div>
-  );
-};
+  )
+}
 
-const AddNewSocket = (props) => {
-  const [value, setValue] = useState("");
+const AddNewSocket = props => {
+  const [value, setValue] = useState('')
 
-  const onChange = (e) => {
-    setValue(e.target.value);
-  };
+  const onChange = e => {
+    setValue(e.target.value)
+  }
 
   const onAdd = () => {
-    props.addSocket(value);
-    setValue("");
-  };
+    props.addSocket(value)
+    setValue('')
+  }
 
   return (
-    <div style={{ display: "flex", gap: "var(--extraSmall)" }}>
+    <div style={{ display: 'flex', gap: 'var(--extraSmall)' }}>
       <input
         style={{ flex: 6 }}
         value={value}
         type="text"
         onChange={onChange}
-        placeholder={"Name your socket..."}
+        placeholder={'Name your socket...'}
       />
       <button style={{ flex: 1 }} onClick={onAdd}>
         + Add
       </button>
     </div>
-  );
-};
+  )
+}
 
-const SocketGenerator = ({ updateData, control, initialValue, ...props }) => {
-  const [sockets, setSockets] = useState([...initialValue]);
-  const { data, dataKey } = control;
+const SocketGenerator = ({ updateData, control, initialValue }) => {
+  const [sockets, setSockets] = useState([...initialValue])
+  const { data, dataKey } = control
 
   useEffect(() => {
-    if (!initialValue) return;
+    if (!initialValue) return
     const newSockets = initialValue.filter(
-      (socket) => !data.ignored.some((ignored) => ignored.name === socket.name)
-    );
-    setSockets(newSockets);
-  }, [initialValue]);
+      socket => !data.ignored.some(ignored => ignored.name === socket.name)
+    )
+    setSockets(newSockets)
+  }, [initialValue])
 
-  const onDelete = (name) => {
-    const newSockets = sockets.filter((socket) => socket.name !== name);
-    setSockets(newSockets);
-    update(newSockets);
-  };
+  const onDelete = name => {
+    const newSockets = sockets.filter(socket => socket.name !== name)
+    setSockets(newSockets)
+    update(newSockets)
+  }
 
-  const update = (update) => {
-    updateData({ [dataKey]: update });
-  };
+  const update = update => {
+    updateData({ [dataKey]: update })
+  }
 
-  const addSocket = (socket) => {
+  const addSocket = socket => {
     const newSocket = {
       name: socket,
       taskType: data.taskType,
@@ -71,22 +71,22 @@ const SocketGenerator = ({ updateData, control, initialValue, ...props }) => {
       socketKey: socket.toLowerCase(),
       connectionType: data.connectionType,
       socketType: data.socketType,
-    };
+    }
 
-    const newSockets = [...sockets, newSocket];
+    const newSockets = [...sockets, newSocket]
 
-    setSockets(newSockets);
-    update(newSockets);
-  };
+    setSockets(newSockets)
+    update(newSockets)
+  }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
+    <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
       {sockets.map((socket, i) => (
         <SingleSocket name={socket.name} key={i} delete={onDelete} />
       ))}
       <AddNewSocket addSocket={addSocket} />
     </div>
-  );
-};
+  )
+}
 
-export default SocketGenerator;
+export default SocketGenerator

@@ -1,11 +1,18 @@
-import Rete from "rete";
-import { stringSocket, triggerSocket } from "../sockets";
+import Rete from 'rete'
+
+import { FewshotControl } from '../dataControls/FewshotControl'
+import { EngineContext } from '../engine'
+import { stringSocket, triggerSocket } from '../sockets'
 // @seang todo: convert data controls to typescript to remove this
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore
-import { FewshotControl } from "../dataControls/FewshotControl";
-import { ThothComponent } from "../thoth-component"
-import { NodeData, ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
-import { EngineContext } from "../engine";
+import { ThothComponent } from '../thoth-component'
+import {
+  NodeData,
+  ThothNode,
+  ThothWorkerInputs,
+  ThothWorkerOutputs,
+} from '../types'
 const fewshot = `Change each statement to be in the third person present tense and correct all grammar.
 
 Matt: am sleepy.
@@ -62,26 +69,26 @@ Third Person: James says, "Okay!"
 Fred: command the mercenaries to attack the dragon while you rescue the princess.
 Third Person: Fred commands the mercenaries to attack the dragon while he rescues the princess.
 ---
-`;
+`
 
 const info = `The Tense Transformer will take any string and attempt to turn it into the first person present tense.  It requires a name and text as an input, and will output the result.
 
-You can edit the fewshot in the text editor, but be aware that you must retain the fewshots data structure so processing will work.`;
+You can edit the fewshot in the text editor, but be aware that you must retain the fewshots data structure so processing will work.`
 export class TenseTransformer extends ThothComponent {
   constructor() {
     // Name of the component
-    super("Tense Transformer");
+    super('Tense Transformer')
 
     this.task = {
       outputs: {
-        action: "output",
-        trigger: "option",
+        action: 'output',
+        trigger: 'option',
       },
-    };
+    }
 
-    this.category = "AI/ML";
-    this.display = true;
-    this.info = info;
+    this.category = 'AI/ML'
+    this.display = true
+    this.info = info
   }
 
   // the builder is used to "assemble" the node component.
@@ -89,47 +96,52 @@ export class TenseTransformer extends ThothComponent {
   // to generate the appropriate inputs and ouputs for the fewshot at build time
   builder(node: ThothNode) {
     // Set fewshot into nodes data
-    node.data.fewshot = fewshot;
+    node.data.fewshot = fewshot
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
-    const textInput = new Rete.Input("text", "Text", stringSocket);
-    const nameInput = new Rete.Input("name", "Name", stringSocket);
-    const dataInput = new Rete.Input("trigger", "Trigger", triggerSocket);
-    const dataOutput = new Rete.Output("trigger", "Trigger", triggerSocket);
-    const out = new Rete.Output("action", "Action", stringSocket);
+    const textInput = new Rete.Input('text', 'Text', stringSocket)
+    const nameInput = new Rete.Input('name', 'Name', stringSocket)
+    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket)
+    const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
+    const out = new Rete.Output('action', 'Action', stringSocket)
 
-    const fewshotControl = new FewshotControl({});
+    const fewshotControl = new FewshotControl({})
 
-    node.inspector.add(fewshotControl);
+    node.inspector.add(fewshotControl)
 
     return node
       .addInput(dataInput)
       .addInput(textInput)
       .addInput(nameInput)
       .addOutput(out)
-      .addOutput(dataOutput);
+      .addOutput(dataOutput)
   }
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connected components
-  async worker(node: NodeData, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent, thoth }: { silent: boolean, thoth: EngineContext }) {
-    const { completion } = thoth;
+  async worker(
+    node: NodeData,
+    inputs: ThothWorkerInputs,
+    outputs: ThothWorkerOutputs,
+    { silent, thoth }: { silent: boolean; thoth: EngineContext }
+  ) {
+    const { completion } = thoth
     // ADD ON INPUT
-    const { name, text } = inputs;
-    const prompt = `${node.data.fewshot}${name[0]}: ${text[0]}\nThird Person:`;
+    const { name, text } = inputs
+    const prompt = `${node.data.fewshot}${name[0]}: ${text[0]}\nThird Person:`
 
     const body = {
       prompt,
-      stop: ["\n"],
+      stop: ['\n'],
       maxTokens: 100,
       temperature: 0.0,
-    };
-    const raw = await completion(body) as string;
-    const result = raw?.trim();
+    }
+    const raw = (await completion(body)) as string
+    const result = raw?.trim()
 
-    if (!silent) node.display(result);
+    if (!silent) node.display(result)
 
     return {
       action: result,
-    };
+    }
   }
 }

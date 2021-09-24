@@ -1,13 +1,13 @@
-import { useLayout } from "../../../../contexts/LayoutProvider";
+import { useLayout } from '../../../../contexts/LayoutProvider'
 
 const CodeControl = () => {
-  const { createOrFocus, windowTypes } = useLayout();
+  const { createOrFocus, windowTypes } = useLayout()
 
   const onClick = () => {
-    createOrFocus(windowTypes.TEXT_EDITOR, "Text Editor");
-  };
+    createOrFocus(windowTypes.TEXT_EDITOR, 'Text Editor')
+  }
 
-  return <button onClick={onClick}>Edit code in editor</button>;
-};
+  return <button onClick={onClick}>Edit code in editor</button>
+}
 
-export default CodeControl;
+export default CodeControl

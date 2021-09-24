@@ -1,91 +1,89 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react'
 
-const SingleOutput = (props) => {
+const SingleOutput = props => {
   return (
-    <div style={{ marginBottom: 10, flex: 1, width: "100%" }}>
-      <p style={{ display: "inline" }}>{props.name}</p>
-      <span style={{ float: "right" }}>
+    <div style={{ marginBottom: 10, flex: 1, width: '100%' }}>
+      <p style={{ display: 'inline' }}>{props.name}</p>
+      <span style={{ float: 'right' }}>
         <button className="list" onClick={() => props.delete(props.name)}>
           Delete
         </button>
       </span>
     </div>
-  );
-};
+  )
+}
 
-const AddNewOutput = (props) => {
-  const [value, setValue] = useState("");
+const AddNewOutput = props => {
+  const [value, setValue] = useState('')
 
-  const onChange = (e) => {
-    setValue(e.target.value);
-  };
+  const onChange = e => {
+    setValue(e.target.value)
+  }
 
   const onAdd = () => {
-    props.addOutput(value);
-    setValue("");
-  };
+    props.addOutput(value)
+    setValue('')
+  }
 
   return (
-    <div style={{ display: "flex", gap: "var(--extraSmall)" }}>
+    <div style={{ display: 'flex', gap: 'var(--extraSmall)' }}>
       <input
         style={{ flex: 6 }}
         value={value}
         type="text"
         onChange={onChange}
-        placeholder={"Node output text..."}
+        placeholder={'Node output text...'}
       />
       <button style={{ flex: 1 }} onClick={onAdd}>
         + Add
       </button>
     </div>
-  );
-};
+  )
+}
 
-const OutputGenerator = ({ updateData, control, initialValue, ...props }) => {
-  const [outputs, setOutputs] = useState([...initialValue]);
-  const { data, dataKey } = control;
+const OutputGenerator = ({ updateData, control, initialValue }) => {
+  const [outputs, setOutputs] = useState([...initialValue])
+  const { data, dataKey } = control
 
   useEffect(() => {
-    if (!initialValue) return;
+    if (!initialValue) return
     const newOutputs = initialValue.filter(
-      (output) =>
-        !control.data.ignored.some(
-          (ignored) => ignored.name === output.name
-        )
-    );
-    setOutputs(newOutputs);
-  }, [initialValue, control]);
+      output =>
+        !control.data.ignored.some(ignored => ignored.name === output.name)
+    )
+    setOutputs(newOutputs)
+  }, [initialValue, control])
 
-  const onDelete = (name) => {
-    const newOutputs = outputs.filter((output) => output.name !== name);
-    setOutputs(newOutputs);
-    update(newOutputs);
-  };
+  const onDelete = name => {
+    const newOutputs = outputs.filter(output => output.name !== name)
+    setOutputs(newOutputs)
+    update(newOutputs)
+  }
 
-  const update = (update) => {
-      updateData({ [dataKey]: update });
-  };
+  const update = update => {
+    updateData({ [dataKey]: update })
+  }
 
-  const addOutput = (output) => {
+  const addOutput = output => {
     const newOutput = {
       name: output,
       socketType: data.socketType,
-      taskType: data.taskType || "output",
-    };
+      taskType: data.taskType || 'output',
+    }
 
-    const newOutputs = [...outputs, newOutput];
-    setOutputs(newOutputs);
-    update(newOutputs);
-  };
+    const newOutputs = [...outputs, newOutput]
+    setOutputs(newOutputs)
+    update(newOutputs)
+  }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
+    <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
       {outputs.map((out, i) => (
         <SingleOutput name={out.name} key={i} delete={onDelete} />
       ))}
       <AddNewOutput addOutput={addOutput} />
     </div>
-  );
-};
+  )
+}
 
-export default OutputGenerator;
+export default OutputGenerator

@@ -1,36 +1,38 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // eslint-disable-next-line no-unused-vars
-import { createRxDatabase, addRxPlugin, removeRxDatabase } from "rxdb";
-import spellCollection from "./schemas/spell";
-import settingsCollection from "./schemas/settings";
-import tabCollection from "./schemas/tab";
-import moduleCollection from "./schemas/module";
-import userCollection from "./schemas/user";
+import { createRxDatabase, addRxPlugin, removeRxDatabase } from 'rxdb'
 
-import loadSpellModel from "./models/spellModel";
-import loadModuleModel from "./models/moduleModel";
-import userModel from "./models/userModel";
+import loadModuleModel from './models/moduleModel'
+import loadSpellModel from './models/spellModel'
+import userModel from './models/userModel'
+import moduleCollection from './schemas/module'
+import settingsCollection from './schemas/settings'
+import spellCollection from './schemas/spell'
+import tabCollection from './schemas/tab'
+import userCollection from './schemas/user'
 
-addRxPlugin(require("pouchdb-adapter-idb"));
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+addRxPlugin(require('pouchdb-adapter-idb'))
 
-let database = null;
-const databaseName = "thoth_alpha";
-const adapter = "idb";
+let database = null
+const databaseName = 'thoth_alpha'
+const adapter = 'idb'
 
 export const initDB = async () => {
-  if (database !== null) return database;
+  if (database !== null) return database
 
   // Uncomment this for fast deletion of DB
-  if (process.env.NODE_ENV !== "production") {
+  if (process.env.NODE_ENV !== 'production') {
     // await removeRxDatabase(databaseName, adapter);
   }
 
   database = await createRxDatabase({
     name: databaseName, // <- name
     adapter: adapter, // <- storage-adapter
-  });
+  })
 
-  const mergeCollections = (collectionArr) =>
-    collectionArr.reduce((acc, collection) => ({ ...acc, ...collection }), {});
+  const mergeCollections = collectionArr =>
+    collectionArr.reduce((acc, collection) => ({ ...acc, ...collection }), {})
 
   const collections = [
     spellCollection,
@@ -38,24 +40,24 @@ export const initDB = async () => {
     tabCollection,
     moduleCollection,
     userCollection,
-  ];
+  ]
 
-  await database.addCollections(mergeCollections(collections));
+  await database.addCollections(mergeCollections(collections))
 
   // middleware hooks
-  database.spells.preInsert((doc) => {
-    doc.createdAt = Date.now();
-  }, false);
+  database.spells.preInsert(doc => {
+    doc.createdAt = Date.now()
+  }, false)
 
-  database.spells.preSave((doc) => {
-    doc.updatedAt = Date.now();
-  }, false);
+  database.spells.preSave(doc => {
+    doc.updatedAt = Date.now()
+  }, false)
 
-  database.tabs.preInsert(async (doc) => {
+  database.tabs.preInsert(async doc => {
     if (doc.active) {
       const query = database.tabs
         .find()
-        .where("active")
+        .where('active')
         .eq(true)
         .and([
           {
@@ -63,23 +65,23 @@ export const initDB = async () => {
               $ne: doc.id,
             },
           },
-        ]);
+        ])
 
       await query.update({
         $set: {
           active: false,
         },
-      });
+      })
 
-      return doc;
+      return doc
     }
-  }, true);
+  }, true)
 
-  database.tabs.preSave(async (doc) => {
+  database.tabs.preSave(async doc => {
     if (doc.active) {
       const query = database.tabs
         .find()
-        .where("active")
+        .where('active')
         .eq(true)
         .and([
           {
@@ -87,26 +89,26 @@ export const initDB = async () => {
               $ne: doc.id,
             },
           },
-        ]);
+        ])
 
       await query.update({
         $set: {
           active: false,
         },
-      });
+      })
 
-      return doc;
+      return doc
     }
-  }, true);
+  }, true)
 
   const models = {
     spells: loadSpellModel(database),
     modules: loadModuleModel(database),
     user: userModel(database),
-  };
+  }
 
   return {
     database,
     models,
-  };
-};
+  }
+}

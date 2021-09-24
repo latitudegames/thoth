@@ -1,13 +1,13 @@
-import { useLayout } from "../../../../contexts/LayoutProvider";
+import { useLayout } from '../../../../contexts/LayoutProvider'
 
-const LongText = ({ initialValue, name, control, dataKey, nodeId }) => {
-  const { createOrFocus, windowTypes } = useLayout();
+const LongText = () => {
+  const { createOrFocus, windowTypes } = useLayout()
 
   const onClick = () => {
-    createOrFocus(windowTypes.TEXT_EDITOR, "Text Editor");
-  };
+    createOrFocus(windowTypes.TEXT_EDITOR, 'Text Editor')
+  }
 
-  return <button onClick={onClick}>Open in text editor</button>;
-};
+  return <button onClick={onClick}>Open in text editor</button>
+}
 
-export default LongText;
+export default LongText

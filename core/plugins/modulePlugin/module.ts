@@ -1,26 +1,26 @@
 export class Module {
-  inputs: Record<string, unknown>;
-  outputs: Record<string, unknown>;
+  inputs: Record<string, unknown>
+  outputs: Record<string, unknown>
   constructor() {
-    this.inputs = {};
-    this.outputs = {};
+    this.inputs = {}
+    this.outputs = {}
   }
 
   read(inputs: Record<string, unknown>) {
-    this.inputs = inputs;
+    this.inputs = inputs
   }
 
   write(outputs: Record<string, unknown>) {
-    Object.keys(this.outputs).forEach((key) => {
-      outputs[key] = this.outputs[key];
-    });
+    Object.keys(this.outputs).forEach(key => {
+      outputs[key] = this.outputs[key]
+    })
   }
 
   getInput(key: string) {
-    return this.inputs[key];
+    return this.inputs[key]
   }
 
   setOutput(key: string, value: unknown) {
-    this.outputs[key] = value;
+    this.outputs[key] = value
   }
 }

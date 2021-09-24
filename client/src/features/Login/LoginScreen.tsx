@@ -1,25 +1,24 @@
-import { useEffect } from "react";
+import { useEffect } from 'react'
 
-import css from "./LoginScreen.module.css";
-
-import { useModal } from "../../contexts/ModalProvider";
+import { useModal } from '../../contexts/ModalProvider'
+import css from './LoginScreen.module.css'
 
 const LoginScreen = () => {
-  const { openModal } = useModal();
+  const { openModal } = useModal()
 
   const onClose = () => {
-    alert("closed");
-  };
+    alert('closed')
+  }
 
   useEffect(() => {
     openModal({
-      modal: "loginModal",
-      title: "LOG IN",
+      modal: 'loginModal',
+      title: 'LOG IN',
       onClose,
-    });
-  }, []);
+    })
+  }, [])
 
-  return <div className={css["overlay"]}></div>;
-};
+  return <div className={css['overlay']}></div>
+}
 
-export default LoginScreen;
+export default LoginScreen

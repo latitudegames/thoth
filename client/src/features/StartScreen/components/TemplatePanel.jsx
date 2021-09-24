@@ -1,5 +1,5 @@
-import css from "../startScreen.module.css";
-import Panel from "../../common/Panel/Panel";
+import Panel from '../../common/Panel/Panel'
+import css from '../startScreen.module.css'
 
 const TemplatePanel = ({
   label,
@@ -9,26 +9,26 @@ const TemplatePanel = ({
 }) => {
   return (
     <div
-      className={`${css["template-container"]} ${
-        css[selectedTemplate === label && "selected"]
+      className={`${css['template-container']} ${
+        css[selectedTemplate === label && 'selected']
       }`}
       onClick={() => {
-        setSelectedTemplate(label);
+        setSelectedTemplate(label)
       }}
     >
       <Panel
         shadow
         style={{
-          width: "var(--c20)",
-          height: "var(--c12)",
-          backgroundColor: "var(--dark-3)",
+          width: 'var(--c20)',
+          height: 'var(--c12)',
+          backgroundColor: 'var(--dark-3)',
           backgroundImage: `url(${bg})`,
         }}
-        className={css["template-panel"]}
+        className={css['template-panel']}
       ></Panel>
       <p>{label}</p>
     </div>
-  );
-};
+  )
+}
 
-export default TemplatePanel;
+export default TemplatePanel
