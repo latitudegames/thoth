@@ -7,8 +7,6 @@
   # directory located at the absolute path "root/project/build-output"
   publish = "client/build/"
 
-  # Default build command.
-  # command = "echo 'default context'"
 
 [[plugins]]
 package = "/netlify/plugins/conditional-canary"
