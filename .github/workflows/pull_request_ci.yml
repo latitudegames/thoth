@@ -9,6 +9,9 @@ jobs:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
+      - name: Fail thoth-core-draft
+        if: contains(github.event.pull_request.labels.*.name, 'thoth-core-draft')
+        run: exit 1
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
@@ -31,6 +34,9 @@ jobs:
         uses: actions-ecosystem/action-add-labels@v1
         with:
           labels: thoth-core-draft
+      - name: Fail thoth-core-draft
+        if: contains(github.event.pull_request.labels.*.name, 'thoth-core-draft')
+        run: exit 1
       - name: Label unique thoth-core pr for canary deployment
         if: steps.core_diff.outcome != 'success' && steps.no_thoth_core_label.outcome == 'success'
         uses: actions-ecosystem/action-add-labels@v1
