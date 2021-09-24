@@ -7,8 +7,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+      - run: git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
       - name: Check for core changes
-        run: if git diff --quiet origin/main..origin/${{ github.head_ref }} -- core; then echo "cores_changes=false" >> $GITHUB_ENV; else echo "cores_changes=true" >> $GITHUB_ENV; fi
+        run: if git diff --quiet origin/main HEAD -- core; then echo "cores_changes=false" >> $GITHUB_ENV; else echo "cores_changes=true" >> $GITHUB_ENV; fi
       - name: Check thoth-core labels
         if: env.core_changes == 'true'
         uses: docker://agilepathway/pull-request-label-checker:latest
