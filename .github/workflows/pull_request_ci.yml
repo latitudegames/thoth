@@ -5,6 +5,8 @@ on: [pull_request]
 jobs:
   check-and-set-labels:
     runs-on: ubuntu-latest
+    env:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
       - uses: actions/checkout@v2
         with:
