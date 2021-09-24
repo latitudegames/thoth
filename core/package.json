@@ -40,5 +40,11 @@
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
+  },
+  "author": "Sean Gillespie <sean@latitude.io>",
+  "auto": {
+    "plugins": [
+      "npm"
+    ]
   }
 }
