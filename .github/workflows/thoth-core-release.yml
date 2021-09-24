@@ -1,0 +1,26 @@
+name: thoth-core release conditions
+on:
+  pull_request:
+    types: [closed]
+jobs:
+  merge_job:
+    # this job will only run if a PR has been merged
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for thoth-core label and checkout main if present
+        if: contains(github.event.pull_request.labels.*.name, 'thoth-core')
+        uses: actions/checkout@v2
+        with:
+          ref: main
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        if: contains(github.event.pull_request.labels.*.name, 'thoth-core')
+        with:
+          node-version: "14.17.6"
+      - name: Install Dependencies
+        run: yarn install
+        if: contains(github.event.pull_request.labels.*.name, 'thoth-core')
+      - name: Prepare and Publish
+        run: cd core && yarn preship
+        if: contains(github.event.pull_request.labels.*.name, 'thoth-core')
