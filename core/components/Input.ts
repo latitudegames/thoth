@@ -46,7 +46,7 @@ export class InputComponent extends ThothComponent {
   // to the outputs to be consumed by any connected components
   worker(node: NodeData) {
     return {
-      text: node.data.text,
+      text: node.data.text as string,
     }
   }
 }
