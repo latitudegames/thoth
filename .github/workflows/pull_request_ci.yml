@@ -9,26 +9,26 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Check for core changes
+      - name: Check for git variance in the /core directory
         run: git diff --quiet origin/main origin/${{ github.head_ref }} -- core
-        id: thoth_core_diff
+        id: core_diff
         shell: bash {0}
         continue-on-error: true
-      - name: Check thoth-core labels
-        if: steps.thoth_core_diff.outcome != 'success'
+      - name: Check for an existing unique thoth-core label
+        if: steps.core_diff.outcome != 'success'
         uses: docker://agilepathway/pull-request-label-checker:latest
         id: thoth_core_exists
         with:
           none_of: thoth-core
           repo_token: ${{ secrets.GITHUB_TOKEN }}
         continue-on-error: true
-      - name: Label thoth-core draft prs
-        if: steps.thoth_core_diff.outcome != 'success' && steps.thoth_core_exists.outcome == 'success'
+      - name: Label thoth-core-draft prs in queue for canary deployment
+        if: steps.core_diff.outcome != 'success' && steps.thoth_core_exists.outcome == 'success'
         uses: actions-ecosystem/action-add-labels@v1
         with:
           labels: thoth-core-draft
-      - name: Label thoth-core prs
-        if: steps.thoth_core_diff.outcome != 'success' && steps.thoth_core_exists.outcome != 'success'
+      - name: Label unique thoth-core pr for canary deployment
+        if: steps.core_diff.outcome != 'success' && steps.thoth_core_exists.outcome != 'success'
         uses: actions-ecosystem/action-add-labels@v1
         with:
           labels: thoth-core
