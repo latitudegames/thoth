@@ -1,5 +1,5 @@
 module.exports = {
-  onPreBuild: ({ utils: { netlifyConfig, git } }) => {
+  onPreBuild: ({ netlifyConfig, utils: { git } }) => {
     console.log('conditional-canary plugin')
     const coreChanges = git.fileMatch('core/**/*')
     const coreChanged = coreChanges.edited.length !== 0
