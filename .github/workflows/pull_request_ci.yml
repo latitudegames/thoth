@@ -8,7 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Check for corechanges files
-        run: if git diff --quiet origin/main..origin/${{ github.head_ref }} -- core; then ::set-output name=changes::$("false"); else ::set-output name=changes::$("true"); fi
+        run: if git diff --quiet origin/main..origin/${{ github.head_ref }} -- core; then echo("::set-output name=changes::$("false")"); else echo("::set-output name=changes::$("true")"); fi
         id: thore_core_check
       - name: Check thoth-core labels
         if: steps.thoth_core_check.changes
