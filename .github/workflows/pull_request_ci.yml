@@ -27,7 +27,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
         continue-on-error: true
       - name: Label thoth-core-draft prs in queue for canary deployment
-        if: steps.core_diff.outcome != 'success' && steps.no_thoth_core_label.outcome != 'success'
+        if: steps.core_diff.outcome != 'success' && steps.no_thoth_core_label.outcome != 'success' && !contains(github.event.pull_request.labels.*.name, 'thoth-core')
         uses: actions-ecosystem/action-add-labels@v1
         with:
           labels: thoth-core-draft
