@@ -92,7 +92,7 @@ const editor = async function ({
       workspaceType: unknown
       category: string
     }) => {
-      const tabType = component.editor.tab.type
+      const tabType = editor.tab.type
       const { workspaceType } = component
 
       if (workspaceType && workspaceType !== tabType) return null
