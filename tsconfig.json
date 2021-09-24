@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -16,14 +12,13 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
     "jsx": "react-jsx",
     "noImplicitAny": false,
     "noUnusedLocals": true,
     "strictNullChecks": true,
-    "strict": false 
+    "strict": false
   },
-  "include": [
-    "src"
-  ]
+  "references": [{ "path": "core" }, { "path": "client" }],
+  "exclude": ["node_modules", "dist", "*.d.ts"],
+  "typeRoots": ["@types/@thoth"]
 }
