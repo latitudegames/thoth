@@ -9,3 +9,6 @@
 
   # Default build command.
   # command = "echo 'default context'"
+
+[[plugins]]
+package = ".netlify/plugins/conditional-canary"
