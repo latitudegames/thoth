@@ -1,21 +1,21 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Accordion from "@material-ui/core/Accordion";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import Typography from "@material-ui/core/Typography";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import Icon from "./Icon/Icon";
+import Accordion from '@material-ui/core/Accordion'
+import AccordionDetails from '@material-ui/core/AccordionDetails'
+import AccordionSummary from '@material-ui/core/AccordionSummary'
+import { makeStyles } from '@material-ui/core/styles'
+import Typography from '@material-ui/core/Typography'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import React from 'react'
 
-import css from "./accordion.module.css";
-import "./accordion-overrides.css";
+import css from './accordion.module.css'
+import Icon from './Icon/Icon'
+import './accordion-overrides.css'
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
-    width: "100%",
-    backgroundColor: "var(--dark-3)",
-    boxShadow: "none",
-    padding: "0",
+    width: '100%',
+    backgroundColor: 'var(--dark-3)',
+    boxShadow: 'none',
+    padding: '0',
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     margin: 0,
   },
   accordionSummary: {
-    flexDirection: "row-reverse",
+    flexDirection: 'row-reverse',
     margin: 0,
   },
   expandIcon: {
@@ -31,22 +31,22 @@ const useStyles = makeStyles((theme) => ({
     padding: 0,
   },
   detailsRoot: {
-    backgroundColor: "var(--dark-2)",
+    backgroundColor: 'var(--dark-2)',
   },
   summaryContent: {
     margin: 0,
   },
-}));
+}))
 
-export const SimpleAccordion = (props) => {
-  const classes = useStyles();
+export const SimpleAccordion = props => {
+  const classes = useStyles()
 
   const onChange = (_, expanded) => {
-    props.setExpanded(expanded);
-  };
+    props.setExpanded(expanded)
+  }
 
   return (
-    <div className={css["accordion"]}>
+    <div className={css['accordion']}>
       <Accordion
         square={true}
         elevation={0}
@@ -65,7 +65,7 @@ export const SimpleAccordion = (props) => {
           }}
           id="panel1a-header"
         >
-          <Icon name={props.icon} style={{ marginRight: "var(--c1)" }} />
+          <Icon name={props.icon} style={{ marginRight: 'var(--c1)' }} />
           <Typography className={classes.heading}>{props.heading}</Typography>
         </AccordionSummary>
         <AccordionDetails classes={{ root: classes.detailsRoot }}>
@@ -77,5 +77,5 @@ export const SimpleAccordion = (props) => {
         </AccordionDetails>
       </Accordion>
     </div>
-  );
-};
+  )
+}

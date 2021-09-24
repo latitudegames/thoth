@@ -1,9 +1,15 @@
-import Rete from "rete";
-import { ThothComponent } from "../thoth-component"
-import { stringSocket, triggerSocket } from "../sockets";
-import { FewshotControl } from "../dataControls/FewshotControl";
-import { NodeData, ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
-import { EngineContext } from "../engine";
+import Rete from 'rete'
+
+import { FewshotControl } from '../dataControls/FewshotControl'
+import { EngineContext } from '../engine'
+import { stringSocket, triggerSocket } from '../sockets'
+import { ThothComponent } from '../thoth-component'
+import {
+  NodeData,
+  ThothNode,
+  ThothWorkerInputs,
+  ThothWorkerOutputs,
+} from '../types'
 // For simplicity quests should be ONE thing not complete X and Y
 const fewshot = `Given an action, predict how hard it would be for a normal human in a fantasy world and what type of stat it uses.
 
@@ -32,79 +38,84 @@ Action, Difficulty, Type: climb up the mountain, 6/20, endurance
 Action, Difficulty, Type: goes to talk to the king, 2/20, charisma
 Action, Difficulty, Type: ask who the evil demon king is, 2/20, charisma
 Action, Difficulty, Type: do a back flip, 6/20, dexterity
-Action, Difficulty, Type: `;
+Action, Difficulty, Type: `
 
 const info = `The difficulty detector will attempt to tell you the difficulty of an action out of 20 in the format 5/20, as well as the stat category.  The categories it will attempt to classify the action into are:
 
 strength, dexterity, endurance, intelligence, charisma
 
 You can also view and edit the fewshot in the text editor.  Note however that you must keep the same data format for the component to properly format the completion response.
-`;
+`
 
 export class DifficultyDetectorComponent extends ThothComponent {
   constructor() {
     // Name of the component
-    super("Difficulty Detector");
+    super('Difficulty Detector')
 
     this.task = {
-      outputs: { difficulty: "output", category: "output", trigger: "option" }
-    };
-    this.category = "AI/ML";
-    this.info = info;
-    this.display = true;
+      outputs: { difficulty: 'output', category: 'output', trigger: 'option' },
+    }
+    this.category = 'AI/ML'
+    this.info = info
+    this.display = true
   }
 
-  displayControl = {};
+  displayControl = {}
 
   builder(node: ThothNode) {
-    node.data.fewshot = fewshot;
-    const inp = new Rete.Input("action", "Action", stringSocket);
+    node.data.fewshot = fewshot
+    const inp = new Rete.Input('action', 'Action', stringSocket)
     const difficultyOut = new Rete.Output(
-      "difficulty",
-      "Difficulty",
+      'difficulty',
+      'Difficulty',
       stringSocket
-    );
+    )
 
-    const categoryOut = new Rete.Output("category", "Category", stringSocket);
+    const categoryOut = new Rete.Output('category', 'Category', stringSocket)
 
-    const triggerInput = new Rete.Input("trigger", "Trigger", triggerSocket);
-    const triggerOutput = new Rete.Output("trigger", "Trigger", triggerSocket);
+    const triggerInput = new Rete.Input('trigger', 'Trigger', triggerSocket)
+    const triggerOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
 
-    const fewshotControl = new FewshotControl({});
+    const fewshotControl = new FewshotControl({})
 
-    node.inspector.add(fewshotControl);
+    node.inspector.add(fewshotControl)
 
     return node
       .addInput(inp)
       .addInput(triggerInput)
       .addOutput(triggerOutput)
       .addOutput(difficultyOut)
-      .addOutput(categoryOut);
+      .addOutput(categoryOut)
   }
 
-  async worker(node: NodeData, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent, thoth }: { silent: boolean, thoth: EngineContext }) {
-    const { completion } = thoth;
-    const action = inputs["action"][0];
+  async worker(
+    node: NodeData,
+    inputs: ThothWorkerInputs,
+    outputs: ThothWorkerOutputs,
+    { silent, thoth }: { silent: boolean; thoth: EngineContext }
+  ) {
+    const { completion } = thoth
+    const action = inputs['action'][0]
     const fewshot = node.data.fewshot as string
-    const prompt = fewshot + action + ",";
+    const prompt = fewshot + action + ','
 
     const body = {
       prompt,
-      stop: ["\n"],
+      stop: ['\n'],
       maxTokens: 100,
       temperature: 0.0,
-    };
-    const raw = await completion(body) as string;
-    const result = raw?.trim();
-    if (!silent) node.display(result);
+    }
+    const raw = (await completion(body)) as string
+    const result = raw?.trim()
+    if (!silent) node.display(result)
 
     const [difficulty, category] = result
-      ? result.split(", ")
-      : [undefined, undefined];
+      ? result.split(', ')
+      : [undefined, undefined]
 
     return {
       difficulty,
       category,
-    };
+    }
   }
 }

@@ -1,17 +1,14 @@
 import Rete from 'rete'
 // @seang todo: convert data controls to typescript to remove this
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore
+import { v4 as uuidv4 } from 'uuid'
+
 import { InputControl } from '../dataControls/InputControl'
 import { TaskOptions } from '../plugins/taskPlugin/task'
 import { triggerSocket } from '../sockets'
-import { v4 as uuidv4 } from 'uuid'
 import { ThothComponent, ThothTask } from '../thoth-component'
-import {
-  NodeData,
-  ThothNode,
-  ThothWorkerInputs,
-  ThothWorkerOutputs,
-} from '../types'
+import { NodeData, ThothNode } from '../types'
 const info = `The module trigger in adds a trigger input socket to the parent module.  It can be given a name, which is displayed on the parent.`
 
 export class ModuleTriggerIn extends ThothComponent {
@@ -73,12 +70,7 @@ export class ModuleTriggerIn extends ThothComponent {
     return node.addOutput(out)
   }
 
-  async worker(
-    node: NodeData,
-    inputs: ThothWorkerInputs,
-    outputs: ThothWorkerOutputs
-  ) {
-    console.log('trigger worker outputs', outputs)
+  worker() {
     return {}
   }
 }

@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react'
 
-import css from "./panel.module.css";
+import css from './panel.module.css'
 
 const Panel = ({
   style,
@@ -19,15 +19,15 @@ const Panel = ({
   return (
     <div
       className={
-        `${css["panel"]} ${css[unpadded && "unpadded"]} ${
-          css[shadow && "shadow"]
-        } ${css[hover && "hover"]} ${css[roundness]} ${
-          css[shade && "shade-" + shade]
+        `${css['panel']} ${css[unpadded && 'unpadded']} ${
+          css[shadow && 'shadow']
+        } ${css[hover && 'hover']} ${css[roundness]} ${
+          css[shade && 'shade-' + shade]
         } ` + className
       }
       style={{
-        display: flexColumn || (flexRow && "flex"),
-        flexDirection: flexRow ? "row" : "column",
+        display: flexColumn || (flexRow && 'flex'),
+        flexDirection: flexRow ? 'row' : 'column',
         gap: gap,
         backgroundImage: bacgkroundImageURL ? bacgkroundImageURL : null,
         ...style,
@@ -35,7 +35,7 @@ const Panel = ({
     >
       {props.children}
     </div>
-  );
-};
+  )
+}
 
-export default Panel;
+export default Panel

@@ -1,25 +1,25 @@
-import { Input, Output, Node, Connection } from 'rete';
+import { Input, Output, Node, Connection } from 'rete'
 
 export interface OnCreated {
-    created(node: Node): void;
+  created(node: Node): void
 }
 
 export interface OnDestroyed {
-    destroyed(node: Node): void;
+  destroyed(node: Node): void
 }
 
 export interface OnConnect {
-    onconnect(io: Input | Output): boolean;
+  onconnect(io: Input | Output): boolean
 }
 
 export interface OnConnected {
-    connected(io: Connection): void;
+  connected(io: Connection): void
 }
 
 export interface OnDisconnect {
-    ondisconnect(io: Connection): boolean;
+  ondisconnect(io: Connection): boolean
 }
 
 export interface OnDisconnected {
-    disconnected(io: Connection): void;
+  disconnected(io: Connection): void
 }

@@ -1,10 +1,15 @@
-import Rete from "rete";
-import { stringSocket, triggerSocket, booleanSocket } from "../sockets";
-import { FewshotControl } from "../dataControls/FewshotControl";
+import Rete from 'rete'
 
-import { ThothComponent } from "../thoth-component"
-import { NodeData, ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
-import { EngineContext } from "../engine";
+import { FewshotControl } from '../dataControls/FewshotControl'
+import { EngineContext } from '../engine'
+import { stringSocket, triggerSocket, booleanSocket } from '../sockets'
+import { ThothComponent } from '../thoth-component'
+import {
+  NodeData,
+  ThothNode,
+  ThothWorkerInputs,
+  ThothWorkerOutputs,
+} from '../types'
 
 const fewshot = `Rate the actions according to the following content categories
 X: Explicit sexual content, rape, cannibalism, incest
@@ -69,67 +74,71 @@ Rating: M
 Action: Jerk off
 Rating: X
 
-Action: `;
+Action: `
 
 const info = `The Safety Verifier component takes a string and attempts to classify if that string is safe or not.  It returns a boolean value that represents whether or not the input is safe.
 
-The fewshot can be edited in the text editor, however it contains content which may be triggering to some individuals. If you modify the fewshot, note that it must remian in the format for the processing to work.`;
+The fewshot can be edited in the text editor, however it contains content which may be triggering to some individuals. If you modify the fewshot, note that it must remian in the format for the processing to work.`
 
 export class SafetyVerifier extends ThothComponent {
   constructor() {
     // Name of the component
-    super("Safety Verifier");
+    super('Safety Verifier')
 
     this.task = {
       outputs: {
-        trigger: "option",
-        boolean: "output",
+        trigger: 'option',
+        boolean: 'output',
       },
-
-    };
-    this.category = "AI/ML";
-    this.display = true;
-    this.info = info;
+    }
+    this.category = 'AI/ML'
+    this.display = true
+    this.info = info
   }
 
   builder(node: ThothNode) {
-    node.data.fewshot = fewshot;
+    node.data.fewshot = fewshot
 
-    const inp = new Rete.Input("string", "Text", stringSocket);
-    const dataInput = new Rete.Input("trigger", "Trigger", triggerSocket);
-    const dataOutput = new Rete.Output("trigger", "Trigger", triggerSocket);
-    const out = new Rete.Output("boolean", "Boolean", booleanSocket);
+    const inp = new Rete.Input('string', 'Text', stringSocket)
+    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket)
+    const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
+    const out = new Rete.Output('boolean', 'Boolean', booleanSocket)
 
-    const fewshotControl = new FewshotControl({});
+    const fewshotControl = new FewshotControl({})
 
-    node.inspector.add(fewshotControl);
+    node.inspector.add(fewshotControl)
 
     return node
       .addInput(inp)
       .addInput(dataInput)
       .addOutput(out)
-      .addOutput(dataOutput);
+      .addOutput(dataOutput)
   }
 
-  async worker(node: NodeData, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent, thoth }: { silent: boolean, thoth: EngineContext }) {
-    const { completion } = thoth;
-    const action = inputs["string"][0];
+  async worker(
+    node: NodeData,
+    inputs: ThothWorkerInputs,
+    outputs: ThothWorkerOutputs,
+    { silent, thoth }: { silent: boolean; thoth: EngineContext }
+  ) {
+    const { completion } = thoth
+    const action = inputs['string'][0]
     const fewshot = node.data.fewshot as string
-    const prompt = fewshot + action + "\nRating:";
+    const prompt = fewshot + action + '\nRating:'
 
     const body = {
       prompt,
-      stop: ["\n"],
+      stop: ['\n'],
       maxTokens: 10,
       temperature: 0.0,
-    };
-    const raw = await completion(body) as string;
-    const result = raw?.trim() !== "X";
+    }
+    const raw = (await completion(body)) as string
+    const result = raw?.trim() !== 'X'
 
-    if (!silent) node.display(`${result}`);
+    if (!silent) node.display(`${result}`)
 
     return {
       boolean: result,
-    };
+    }
   }
 }

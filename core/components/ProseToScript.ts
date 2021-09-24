@@ -1,8 +1,14 @@
-import Rete from "rete";
-import { stringSocket, triggerSocket } from "../sockets";
-import { ThothComponent } from "../thoth-component"
-import { NodeData, ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
-import { EngineContext } from "../engine";
+import Rete from 'rete'
+
+import { EngineContext } from '../engine'
+import { stringSocket, triggerSocket } from '../sockets'
+import { ThothComponent } from '../thoth-component'
+import {
+  NodeData,
+  ThothNode,
+  ThothWorkerInputs,
+  ThothWorkerOutputs,
+} from '../types'
 const fewshot = (prose: string) => {
   const prompt = `Rewrite narrative snippets as a script:
 
@@ -53,35 +59,34 @@ ${prose}
 
 Rewritten as a script:
 
--`;
+-`
 
-  return prompt;
-
+  return prompt
 }
 
-const info = `The prose to script converter transforms narrative prose into a screenplay-style script, attributing dialogue to characters in the scene, and discarding all text that is not speech. The input is a text string the output is a string of the script`;
+const info = `The prose to script converter transforms narrative prose into a screenplay-style script, attributing dialogue to characters in the scene, and discarding all text that is not speech. The input is a text string the output is a string of the script`
 
 export class ProseToScript extends ThothComponent {
   constructor() {
     // Name of the component
-    super("Prose to Script");
+    super('Prose to Script')
 
     this.task = {
-      outputs: { detectedItem: "output", trigger: "option" },
-      init: () => { },
-    };
+      outputs: { detectedItem: 'output', trigger: 'option' },
+      init: () => {},
+    }
 
-    this.category = "AI/ML";
-    this.display = true;
-    this.info = info;
+    this.category = 'AI/ML'
+    this.display = true
+    this.info = info
   }
 
   builder(node: ThothNode) {
-    node.data.fewshot = fewshot;
-    const inp = new Rete.Input("string", "Text", stringSocket);
-    const out = new Rete.Output("script", "Script", stringSocket);
-    const dataInput = new Rete.Input("trigger", "Trigger", triggerSocket);
-    const dataOutput = new Rete.Output("trigger", "Trigger", triggerSocket);
+    node.data.fewshot = fewshot
+    const inp = new Rete.Input('string', 'Text', stringSocket)
+    const out = new Rete.Output('script', 'Script', stringSocket)
+    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket)
+    const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
 
     //const fewshotControl = new FewshotControl();
 
@@ -91,26 +96,31 @@ export class ProseToScript extends ThothComponent {
       .addInput(inp)
       .addInput(dataInput)
       .addOutput(out)
-      .addOutput(dataOutput);
+      .addOutput(dataOutput)
   }
 
-  async worker(node: NodeData, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs, { silent, thoth }: { silent: boolean, thoth: EngineContext }) {
-    const { completion } = thoth;
-    const prose = inputs["string"][0] as string;
-    const prompt = fewshot(prose);
+  async worker(
+    node: NodeData,
+    inputs: ThothWorkerInputs,
+    outputs: ThothWorkerOutputs,
+    { silent, thoth }: { silent: boolean; thoth: EngineContext }
+  ) {
+    const { completion } = thoth
+    const prose = inputs['string'][0] as string
+    const prompt = fewshot(prose)
 
     const body = {
       prompt,
-      stop: ["\n4"],
+      stop: ['\n4'],
       maxTokens: 300,
       temperature: 0.0,
-    };
-    const raw = await completion(body) as string;
-    const result = raw?.trim();
-    if (!silent) node.display(result);
+    }
+    const raw = (await completion(body)) as string
+    const result = raw?.trim()
+    if (!silent) node.display(result)
 
     return {
       detectedItem: result,
-    };
+    }
   }
 }

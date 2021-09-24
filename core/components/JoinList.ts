@@ -1,25 +1,26 @@
-import Rete from "rete";
-import { TextInputControl } from "../controls/TextInputControl";
-import { stringSocket, arraySocket } from "../sockets";
-import { ThothComponent } from "../thoth-component"
-import { NodeData, ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
-const info = `The Join List component takes in an array, and will join each item in the array together with a seperator, defined in the components input field.`;
+import Rete from 'rete'
+
+import { TextInputControl } from '../controls/TextInputControl'
+import { stringSocket, arraySocket } from '../sockets'
+import { ThothComponent } from '../thoth-component'
+import { NodeData, ThothNode, ThothWorkerInputs } from '../types'
+const info = `The Join List component takes in an array, and will join each item in the array together with a seperator, defined in the components input field.`
 
 export class JoinListComponent extends ThothComponent {
   constructor() {
     // Name of the component
-    super("Join List");
+    super('Join List')
 
     this.task = {
       outputs: {
-        text: "output",
-        trigger: "option",
+        text: 'output',
+        trigger: 'option',
       },
-      init: () => { },
-    };
+      init: () => {},
+    }
 
-    this.category = "Logic";
-    this.info = info;
+    this.category = 'Logic'
+    this.info = info
   }
 
   // the builder is used to "assemble" the node component.
@@ -27,29 +28,31 @@ export class JoinListComponent extends ThothComponent {
   // to generate the appropriate inputs and ouputs for the fewshot at build time
   builder(node: ThothNode) {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
-    const out = new Rete.Output("text", "String", stringSocket);
+    const out = new Rete.Output('text', 'String', stringSocket)
 
-    const inputList = new Rete.Input("list", "List", arraySocket);
+    const inputList = new Rete.Input('list', 'List', arraySocket)
 
     // Handle default value if data is present
-    const separator = node.data.separator ? node.data.separator as string : " ";
+    const separator = node.data.separator
+      ? (node.data.separator as string)
+      : ' '
 
     // controls are the internals of the node itself
     // This default control sample has a text field.
     const input = new TextInputControl({
       emitter: this.editor,
-      key: "separator",
+      key: 'separator',
       value: separator,
-    });
+    })
 
-    return node.addOutput(out).addControl(input).addInput(inputList);
+    return node.addOutput(out).addControl(input).addInput(inputList)
   }
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connected components
-  async worker(node: NodeData, inputs: ThothWorkerInputs & { list: [string][] }, outputs: ThothWorkerOutputs) {
+  worker(node: NodeData, inputs: ThothWorkerInputs & { list: [string][] }) {
     return {
       text: inputs.list[0].join(node.data.separator as string),
-    };
+    }
   }
 }

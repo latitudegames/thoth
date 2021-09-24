@@ -1,30 +1,32 @@
+/* eslint-disable no-console */
+/* eslint-disable camelcase */
 const getPreamble = (data, serialization) => {
-  let parts = [];
-  parts.push(serialization.introduction);
-  for (let d of data) {
+  const parts = []
+  parts.push(serialization.introduction)
+  for (const d of data) {
     for (let i = 0; i < d.inputs.length; ++i) {
-      parts.push(serialization.beforeEachInput[i]);
-      parts.push(d.inputs[i]);
+      parts.push(serialization.beforeEachInput[i])
+      parts.push(d.inputs[i])
     }
-    parts.push(serialization.inBetween);
+    parts.push(serialization.inBetween)
     for (let i = 0; i < d.outputs.length; ++i) {
-      parts.push(serialization.beforeEachOutput[i]);
-      parts.push(d.outputs[i]);
+      parts.push(serialization.beforeEachOutput[i])
+      parts.push(d.outputs[i])
     }
-    parts.push(serialization.atTheEnd);
+    parts.push(serialization.atTheEnd)
   }
-  return parts.join("");
-};
+  return parts.join('')
+}
 
 export const getPrompt = (inputs, data, serialization) => {
-  let parts = [getPreamble(data, serialization)];
+  const parts = [getPreamble(data, serialization)]
   for (let i = 0; i < inputs.length; ++i) {
-    parts.push(serialization.beforeEachInput[i]);
-    parts.push(inputs[i]);
+    parts.push(serialization.beforeEachInput[i])
+    parts.push(inputs[i])
   }
-  parts.push(serialization.inBetween);
-  return parts.join("");
-};
+  parts.push(serialization.inBetween)
+  return parts.join('')
+}
 
 /**
  * Extraction code for finding the text interleaved between sentinels in a prefix
@@ -44,50 +46,50 @@ export const extractUsingSentinels = (
   sentinels,
   startPosition
 ) => {
-  const results = [];
-  const num_sentinels = sentinels.length;
+  const results = []
+  const num_sentinels = sentinels.length
   if (sentinels.length < 2) {
     console.log(
-      "Extract using sentinels called with less than 2 sentinels",
+      'Extract using sentinels called with less than 2 sentinels',
       sentinels
-    );
-    return null;
+    )
+    return null
   }
   // Must start with first sentinel.
   if (
     sentinels[0].length > 0 &&
     text.indexOf(sentinels[0], startPosition) !== startPosition
   ) {
-    console.log("Sentinel 0 not found", {
+    console.log('Sentinel 0 not found', {
       text,
       sentinels,
       startPosition,
-    });
-    return null;
+    })
+    return null
   }
-  let position = startPosition;
+  let position = startPosition
   for (
     let sentinel_index = 0;
     sentinel_index < num_sentinels - 1;
     ++sentinel_index
   ) {
-    position += sentinels[sentinel_index].length;
-    const nextSentinel = sentinels[sentinel_index + 1];
-    const nextSentinelIndex = text.indexOf(nextSentinel, position);
+    position += sentinels[sentinel_index].length
+    const nextSentinel = sentinels[sentinel_index + 1]
+    const nextSentinelIndex = text.indexOf(nextSentinel, position)
     if (nextSentinelIndex === -1) {
-      console.log("Sentinel not found", {
+      console.log('Sentinel not found', {
         text,
         sentinels,
         position,
         sentinel_index,
-      });
-      return null;
+      })
+      return null
     }
-    results.push(text.substr(position, nextSentinelIndex - position));
-    position = nextSentinelIndex;
+    results.push(text.substr(position, nextSentinelIndex - position))
+    position = nextSentinelIndex
   }
-  return { results, position };
-};
+  return { results, position }
+}
 
 export const extractOutput = (text, data, serialization) => {
   const xResult = extractUsingSentinels(
@@ -96,9 +98,9 @@ export const extractOutput = (text, data, serialization) => {
     text,
     serialization.beforeEachOutput.concat([serialization.atTheEnd]),
     0
-  );
-  return xResult ? xResult.results : null;
-};
+  )
+  return xResult ? xResult.results : null
+}
 
 export const extractDatum = (data, serialization, text) => {
   const inputResult = extractUsingSentinels(
@@ -107,7 +109,7 @@ export const extractDatum = (data, serialization, text) => {
     text,
     serialization.beforeEachInput.concat([serialization.inBetween]),
     0
-  );
+  )
   if (inputResult) {
     const outputResult = extractUsingSentinels(
       data,
@@ -117,10 +119,10 @@ export const extractDatum = (data, serialization, text) => {
         serialization.beforeEachOutput.concat([serialization.atTheEnd])
       ),
       inputResult.position
-    );
+    )
     return outputResult
       ? { inputs: inputResult.results, outputs: outputResult.results.slice(1) }
-      : null;
+      : null
   }
-  return null;
-};
+  return null
+}

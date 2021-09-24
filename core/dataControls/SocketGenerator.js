@@ -1,28 +1,28 @@
-import { DataControl } from "../plugins/inspectorPlugin";
+import { DataControl } from '../plugins/inspectorPlugin'
 
 export class SocketGeneratorControl extends DataControl {
   constructor({
-    socketType = "anySocket",
-    taskType = "output",
+    socketType = 'anySocket',
+    taskType = 'output',
     ignored = [],
-    icon = "properties",
+    icon = 'properties',
     connectionType,
     name: nameInput,
   }) {
     if (
       !connectionType ||
-      (connectionType !== "input" && connectionType !== "output")
+      (connectionType !== 'input' && connectionType !== 'output')
     )
       throw new Error(
         "connectionType of your generator must be defined and of the value 'input' or 'output'."
-      );
+      )
 
-    const name = nameInput || `Socket ${connectionType}s`;
+    const name = nameInput || `Socket ${connectionType}s`
 
     const options = {
-      dataKey: connectionType + "s",
+      dataKey: connectionType + 's',
       name,
-      component: "socketGenerator",
+      component: 'socketGenerator',
       icon,
       data: {
         ignored,
@@ -30,10 +30,10 @@ export class SocketGeneratorControl extends DataControl {
         taskType,
         connectionType,
       },
-    };
+    }
 
-    super(options);
+    super(options)
 
-    this.connectionType = connectionType;
+    this.connectionType = connectionType
   }
 }

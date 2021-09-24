@@ -1,47 +1,48 @@
-import Rete from "rete";
-import { ThothComponent } from "../thoth-component"
-import { NodeData, ThothNode, ThothWorkerInputs, ThothWorkerOutputs } from "../types";
-import { booleanSocket, triggerSocket } from "../sockets";
+import Rete from 'rete'
 
-const info = `The boolean gate takes a boolean input, and depending on whether the value is true or false will only trigger one output or the other.`;
+import { booleanSocket, triggerSocket } from '../sockets'
+import { ThothComponent } from '../thoth-component'
+import { NodeData, ThothNode, ThothWorkerInputs } from '../types'
+
+const info = `The boolean gate takes a boolean input, and depending on whether the value is true or false will only trigger one output or the other.`
 
 export class BooleanGate extends ThothComponent {
   constructor() {
     // Name of the component
-    super("Boolean Gate");
+    super('Boolean Gate')
 
     this.task = {
-      outputs: { true: "option", false: "option" },
+      outputs: { true: 'option', false: 'option' },
     }
-    this.category = "Logic";
-    this.info = info;
+    this.category = 'Logic'
+    this.info = info
   }
 
   // the builder is used to "assemble" the node component.
   // when we have enki hooked up and have grabbed all few shots, we would use the builder
   // to generate the appropriate inputs and ouputs for the fewshot at build time
   builder(node: ThothNode) {
-    const bool = new Rete.Input("boolean", "Boolean", booleanSocket);
-    const dataInput = new Rete.Input("trigger", "Trigger", triggerSocket);
-    const isTrue = new Rete.Output("true", "True", triggerSocket);
-    const isFalse = new Rete.Output("false", "False", triggerSocket);
+    const bool = new Rete.Input('boolean', 'Boolean', booleanSocket)
+    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket)
+    const isTrue = new Rete.Output('true', 'True', triggerSocket)
+    const isFalse = new Rete.Output('false', 'False', triggerSocket)
 
     return node
       .addInput(bool)
       .addInput(dataInput)
       .addOutput(isTrue)
-      .addOutput(isFalse);
+      .addOutput(isFalse)
   }
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connected components
-  async worker(node: NodeData, inputs: ThothWorkerInputs, outputs: ThothWorkerOutputs) {
-    const isTrue = inputs["boolean"][0];
+  worker(node: NodeData, inputs: ThothWorkerInputs) {
+    const isTrue = inputs['boolean'][0]
 
     if (isTrue) {
-      this._task.closed = ["false"];
+      this._task.closed = ['false']
     } else {
-      this._task.closed = ["true"];
+      this._task.closed = ['true']
     }
   }
 }

@@ -1,38 +1,38 @@
 const userSchema = {
-  title: "user schema",
+  title: 'user schema',
   version: 0,
-  description: "The main user object",
-  type: "object",
+  description: 'The main user object',
+  type: 'object',
   properties: {
     id: {
-      type: "string",
+      type: 'string',
       primary: true,
     },
     username: {
-      type: "string",
+      type: 'string',
     },
     email: {
-      type: "string",
+      type: 'string',
     },
     accessToken: {
-      type: "string",
+      type: 'string',
     },
     groups: {
-      type: "array",
+      type: 'array',
     },
     lastLogin: {
-      type: "number",
+      type: 'number',
     },
     authData: {
-      type: "string",
+      type: 'string',
     },
   },
-};
+}
 
 const collection = {
   user: {
     schema: userSchema,
   },
-};
+}
 
-export default collection;
+export default collection

@@ -1,27 +1,27 @@
-import { DataControl } from "../plugins/inspectorPlugin";
+import { DataControl } from '../plugins/inspectorPlugin'
 
 export class FewshotControl extends DataControl {
   constructor({
-    language = "plaintext",
-    icon = "fewshot",
-    dataKey = "fewshot",
-    name = "fewshot",
+    language = 'plaintext',
+    icon = 'fewshot',
+    dataKey = 'fewshot',
+    name = 'fewshot',
   }) {
     const options = {
       dataKey,
       name,
-      component: "longText",
+      component: 'longText',
       icon,
       options: {
         editor: true,
         language: language,
       },
-    };
+    }
 
-    super(options);
+    super(options)
   }
 
-  onData(data) {
-    return;
+  onData() {
+    return
   }
 }

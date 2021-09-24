@@ -1,22 +1,23 @@
+/* eslint-disable no-invalid-this */
 export function debounceLeading(func, timeout = 300) {
-  let timer;
+  let timer
   return (...args) => {
     if (!timer) {
-      func.apply(this, args);
+      func.apply(this, args)
     }
-    clearTimeout(timer);
+    clearTimeout(timer)
     timer = setTimeout(() => {
-      timer = undefined;
-    }, timeout);
-  };
+      timer = undefined
+    }, timeout)
+  }
 }
 
 export function debounce(func, timeout = 300) {
-  let timer;
+  let timer
   return (...args) => {
-    clearTimeout(timer);
+    clearTimeout(timer)
     timer = setTimeout(() => {
-      func.apply(this, args);
-    }, timeout);
-  };
+      func.apply(this, args)
+    }, timeout)
+  }
 }

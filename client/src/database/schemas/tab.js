@@ -1,50 +1,50 @@
 const tabSchema = {
-  title: "Tab schema",
+  title: 'Tab schema',
   version: 2,
   description:
-    "Tabs are a high level form of organization and represent a discrete workspace in thoth.",
-  type: "object",
+    'Tabs are a high level form of organization and represent a discrete workspace in thoth.',
+  type: 'object',
   properties: {
     id: {
-      type: "string",
+      type: 'string',
       primary: true,
     },
     name: {
-      type: "string",
+      type: 'string',
     },
     active: {
-      type: "boolean",
+      type: 'boolean',
       default: false,
     },
     layoutJson: {
-      type: "object",
+      type: 'object',
     },
     type: {
-      type: "string",
+      type: 'string',
     },
     spell: {
-      ref: "spell",
-      type: ["string", "null"],
+      ref: 'spell',
+      type: ['string', 'null'],
     },
     module: {
-      ref: "module",
-      type: ["string", "null"],
+      ref: 'module',
+      type: ['string', 'null'],
     },
   },
-};
+}
 
 const collection = {
   tabs: {
     schema: tabSchema,
     migrationStrategies: {
       1: function (oldDoc) {
-        return oldDoc;
+        return oldDoc
       },
       2: function (oldDoc) {
-        return oldDoc;
+        return oldDoc
       },
     },
   },
-};
+}
 
-export default collection;
+export default collection

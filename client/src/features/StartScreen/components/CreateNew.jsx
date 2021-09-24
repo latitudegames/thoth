@@ -1,67 +1,65 @@
-import { useState } from "react";
+import { useState } from 'react'
 import {
   uniqueNamesGenerator,
   adjectives,
   colors,
-} from "unique-names-generator";
+} from 'unique-names-generator'
+import { useLocation } from 'wouter'
 
-import { useLocation } from "wouter";
-
-import css from "../startScreen.module.css";
-import Panel from "../../common/Panel/Panel";
-import TemplatePanel from "./TemplatePanel";
-
-import enkiImg from "../enki.png";
-import emptyImg from "../empty.png";
-import langImg from "../lang.png";
-import { useSpell } from "../../../contexts/SpellProvider";
-import { useTabManager } from "../../../contexts/TabManagerProvider";
+import { useSpell } from '../../../contexts/SpellProvider'
+import { useTabManager } from '../../../contexts/TabManagerProvider'
+import Panel from '../../common/Panel/Panel'
+import emptyImg from '../empty.png'
+import enkiImg from '../enki.png'
+import langImg from '../lang.png'
+import css from '../startScreen.module.css'
+import TemplatePanel from './TemplatePanel'
 
 const customConfig = {
   dictionaries: [adjectives, colors],
-  separator: " ",
+  separator: ' ',
   length: 2,
-};
+}
 
 const defaultGraph = {
-  id: "demo@0.1.0",
+  id: 'demo@0.1.0',
   nodes: {},
-};
+}
 
 const templates = [
-  { label: "Empty", bg: emptyImg },
-  { label: "Language example", bg: langImg },
-  { label: "Enki example", bg: enkiImg },
-];
+  { label: 'Empty', bg: emptyImg },
+  { label: 'Language example', bg: langImg },
+  { label: 'Enki example', bg: enkiImg },
+]
 
-const CreateNew = ({ setNewVisible }) => {
-  const [, setLocation] = useLocation();
-  const [selectedTemplate, setSelectedTemplate] = useState(null);
-  const { newSpell } = useSpell();
-  const { openTab, clearTabs } = useTabManager();
+const CreateNew = () => {
+  const [, setLocation] = useLocation()
+  const [selectedTemplate, setSelectedTemplate] = useState(null)
+  const { newSpell } = useSpell()
+  const { openTab, clearTabs } = useTabManager()
 
   const onCreate = async () => {
-    const placeholderName = uniqueNamesGenerator(customConfig);
+    const placeholderName = uniqueNamesGenerator(customConfig)
     const spell = await newSpell({
       graph: defaultGraph,
       name: placeholderName,
-    });
+    })
 
-    await clearTabs();
-    await openTab({ name: spell.name, spellId: spell.name, type: "spell" });
-    setLocation("/thoth");
-  };
+    await clearTabs()
+    await openTab({ name: spell.name, spellId: spell.name, type: 'spell' })
+    setLocation('/thoth')
+  }
 
   return (
     <Panel shadow flexColumn>
       <h1> Create New </h1>
       <div
         style={{
-          width: "var(--c62)",
-          backgroundColor: "var(--dark-2)",
-          display: "flex",
-          flexDirection: "row",
-          gap: "var(--extraSmall)",
+          width: 'var(--c62)',
+          backgroundColor: 'var(--dark-2)',
+          display: 'flex',
+          flexDirection: 'row',
+          gap: 'var(--extraSmall)',
         }}
       >
         {templates.map((template, i) => (
@@ -74,23 +72,23 @@ const CreateNew = ({ setNewVisible }) => {
           />
         ))}
       </div>
-      <div className={css["button-row"]}>
+      <div className={css['button-row']}>
         <button
           onClick={() => {
-            window.history.back();
+            window.history.back()
           }}
         >
           cancel
         </button>
         <button
-          className={!selectedTemplate ? "disabled" : "primary"}
+          className={!selectedTemplate ? 'disabled' : 'primary'}
           onClick={onCreate}
         >
           CREATE
         </button>
       </div>
     </Panel>
-  );
-};
+  )
+}
 
-export default CreateNew;
+export default CreateNew
