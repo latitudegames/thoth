@@ -19,7 +19,7 @@ jobs:
         uses: docker://agilepathway/pull-request-label-checker:latest
         id: thoth_core_exists
         with:
-          one_of: thoth-core
+          none_of: thoth-core
           repo_token: ${{ secrets.GITHUB_TOKEN }}
         continue-on-error: true
       - name: Label thoth-core draft prs
