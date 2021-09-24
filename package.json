@@ -12,7 +12,8 @@
     "start": "lerna exec --scope @thoth/client -- yarn start",
     "lint": "lerna run lint --parallel",
     "build": "lerna exec --scope @thoth/client -- yarn build",
-    "build:core": "lerna exec --scope @latitudegames/thoth-core -- yarn build"
+    "build:core": "lerna exec --scope @latitudegames/thoth-core -- yarn build",
+    "publish:canary": "lerna exec --scope @latitudegames/thoth-core -- yarn auto canary"
   },
   "engines": {
     "node": ">=14.17.6",
