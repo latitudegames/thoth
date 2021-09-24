@@ -1,0 +1,25 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "node",
+    "jsx": "react-jsx",
+    "noImplicitAny": false,
+    "strictNullChecks": true,
+    "strict": false,
+    "composite": true,
+    "rootDir": ".",
+    "noEmit": true
+  },
+  "typeRoots": [
+    "@types/@thoth"
+  ],
+  "references": [
+    {
+      "path": "../core"
+    }
+  ],
+  "include": [
+    "src"
+  ]
+}
