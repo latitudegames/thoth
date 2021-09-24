@@ -1,0 +1,42 @@
+{
+  "name": "@latitudegames/thoth-core",
+  "version": "0.0.24",
+  "description": "core logic for rete implementation in thoth",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rimraf dist",
+    "lint": "eslint . --ignore-path ../.eslintignore --ext ts --ext tsx --ext js --ext jsx",
+    "prepub": "yarn build && copyfiles package.json .npmrc dist && cd plugins/areaPlugin/ && copyfiles style.css ../../dist/plugins/areaPlugin/ && cd ../../dist && npm publish && yarn clean",
+    "postpublish": "yarn clean"
+  },
+  "dependencies": {
+    "deep-equal": "^2.0.5",
+    "handlebars": "^4.7.7",
+    "react": "^17.0.2",
+    "rete": "https://github.com/latitudegames/rete.git#master",
+    "rete-area-plugin": "^0.2.1",
+    "rete-connection-plugin": "^0.9.0",
+    "rete-context-menu-plugin": "^0.6.0-rc.1",
+    "rete-module-plugin": "^0.4.1",
+    "rete-react-render-plugin": "^0.2.1",
+    "typescript": "^4.2.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.24",
+    "@types/lodash": "^4.14.172",
+    "@types/node": "^16.4.3",
+    "@types/pubsub-js": "^1.8.2",
+    "@types/react": "^17.0.15",
+    "@types/uuid": "^8.3.1",
+    "copyfiles": "^2.4.1",
+    "rimraf": "^3.0.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/latitudegames/thoth.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  }
+}
