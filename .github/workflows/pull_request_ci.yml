@@ -12,7 +12,7 @@ jobs:
       - name: Check for core changes
         run: if git diff --quiet origin/main origin/${{ github.head_ref }} -- core; then echo "cores_changes=false" >> $GITHUB_ENV; else echo "cores_changes=true" >> $GITHUB_ENV; fi
       - name: Check thoth-core labels
-        if: env.core_changes == 'true'
+        if: env.core_changes == 'false'
         uses: docker://agilepathway/pull-request-label-checker:latest
         id: thoth_core_exists
         with:
