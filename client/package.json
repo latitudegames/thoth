@@ -55,7 +55,8 @@
     "lint": "eslint . --ignore-path ../.eslintignore --ext ts --ext tsx --ext js --ext jsx",
     "build": "DISABLE_ESLINT_PLUGIN=true craco build",
     "test": "craco test",
-    "eject": "craco eject"
+    "eject": "craco eject",
+    "install:canary": "yarn add @latitudegames/thoth-core@canary"
   },
   "eslintConfig": {
     "extends": [

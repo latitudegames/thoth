@@ -1,21 +1,23 @@
 {
   "name": "@latitudegames/thoth-core",
   "version": "0.0.24",
-  "description": "core logic for rete implementation in thoth",
+  "description": "core shareable logic for thoth",
   "scripts": {
     "build": "tsc",
     "clean": "rimraf dist",
     "lint": "eslint . --ignore-path ../.eslintignore --ext ts --ext tsx --ext js --ext jsx",
-    "prepub": "yarn build && copyfiles package.json .npmrc dist && cd plugins/areaPlugin/ && copyfiles style.css ../../dist/plugins/areaPlugin/ && cd ../../dist && npm publish && yarn clean",
+    "preship": "yarn build && copyfiles package.json .npmrc dist && cd plugins/areaPlugin/ && copyfiles style.css ../../dist/plugins/areaPlugin/ && cd ../../dist && auto shipit",
     "postpublish": "yarn clean"
   },
   "dependencies": {
+    "auto": "^10.32.0",
     "deep-equal": "^2.0.5",
     "handlebars": "^4.7.7",
     "react": "^17.0.2",
     "rete": "https://github.com/latitudegames/rete.git#master",
     "rete-area-plugin": "^0.2.1",
     "rete-connection-plugin": "^0.9.0",
+    "rete-connection-reroute-plugin": "^0.4.0",
     "rete-context-menu-plugin": "^0.6.0-rc.1",
     "rete-module-plugin": "^0.4.1",
     "rete-react-render-plugin": "^0.2.1",
@@ -38,5 +40,11 @@
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
+  },
+  "author": "Sean Gillespie <sean@latitude.io>",
+  "auto": {
+    "plugins": [
+      "npm"
+    ]
   }
 }
