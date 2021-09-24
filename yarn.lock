@@ -1772,17 +1772,19 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
-"@latitudegames/thoth-core@^0.0.25--canary.0945a23.0":
-  version "0.0.25--canary.0945a23.0"
-  resolved "https://npm.pkg.github.com/download/@latitudegames/thoth-core/0.0.25--canary.0945a23.0/f082b76e6a6cf97c5191d950bbdf9c4805360b995edaf5a29252d8719128a035#7d0e10844218ac5403ce027d9941a9991bd675f5"
-  integrity sha512-SZgRh6r1dETo6JYZ4MCBiFCcKqiTYUDpvHpIlVSyqFgSHOJhkRvBJz6mun9k80gGXVgXXkYbWL+HbqA9+dZfbw==
+"@latitudegames/thoth-core@^0.0.25--canary.c2061e3.0":
+  version "0.0.25--canary.c2061e3.0"
+  resolved "https://npm.pkg.github.com/download/@latitudegames/thoth-core/0.0.25--canary.c2061e3.0/628cc258e57903fc8a4cab6a95ee42927c52b6c5b10b091a6b2aeb87bf2beab2#5f4a96339a9d1f9bcad6fd704f31391654226fb0"
+  integrity sha512-hBp3Jj2ZGq8pGEzXf+jnIquxWAgxUKSmuK2sA2gFDrAbJn9mNnzUAtwGjKsDDAJq8WEjakbuqDvOGfiD083ZCA==
   dependencies:
+    auto "^10.32.0"
     deep-equal "^2.0.5"
     handlebars "^4.7.7"
     react "^17.0.2"
     rete "https://github.com/latitudegames/rete.git#master"
     rete-area-plugin "^0.2.1"
     rete-connection-plugin "^0.9.0"
+    rete-connection-reroute-plugin "^0.4.0"
     rete-context-menu-plugin "^0.6.0-rc.1"
     rete-module-plugin "^0.4.1"
     rete-react-render-plugin "^0.2.1"
