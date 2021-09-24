@@ -7,12 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Check for corechanges files
-        run: echo ::set-output name=changes::$(if git diff-index origin/main..origin/${{ github.head_ref }} -- core; then echo "false"; else echo "true"; fi)
-        # run: if git diff --quiet origin/main..origin/${{ github.head_ref }} -- core; then echo("::set-output name=changes::$("false")"); else echo("::set-output name=changes::$("true")"); fi
-        id: thore_core_check
+      - name: Check for core changes
+        run: if git diff --quiet origin/main..origin/${{ github.head_ref }} -- core; then echo "cores_changes=false" >> $GITHUB_ENV; else echo "cores_changes=true" >> $GITHUB_ENV; fi
       - name: Check thoth-core labels
-        if: steps.thoth_core_check.changes == 'true'
+        if: env.core_changes == 'true'
         uses: docker://agilepathway/pull-request-label-checker:latest
         id: thoth_core_exists
         with:
@@ -20,12 +18,12 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
         continue-on-error: true
       - name: Label thoth-core draft prs
-        if: steps.thoth_core_check.changes == 'true' && steps.thoth_core_exists.outcome == 'success'
+        if: env.core_changes == 'true' && steps.thoth_core_exists.outcome == 'success'
         uses: actions-ecosystem/action-add-labels@v1
         with:
           labels: thoth-core-draft
       - name: Label thoth-core prs
-        if: steps.thoth_core_check.changes == 'true' && steps.thoth_core_exists.outcome != 'success'
+        if: env.core_changes == 'true' && steps.thoth_core_exists.outcome != 'success'
         uses: actions-ecosystem/action-add-labels@v1
         with:
           labels: thoth-core
