@@ -63,5 +63,5 @@ export abstract class DataControl {
     return
   }
 
-  onData?: () => Promise<void> | void
+  onData?: (...args: any[]) => Promise<void> | void
 }
