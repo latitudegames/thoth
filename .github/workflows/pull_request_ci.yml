@@ -18,30 +18,30 @@ jobs:
       - name: Check for an existing unique thoth-core label
         if: steps.core_diff.outcome != 'success'
         uses: docker://agilepathway/pull-request-label-checker:latest
-        id: thoth_core_label_exists
+        id: no_thoth_core_label
         with:
           none_of: thoth-core
           repo_token: ${{ secrets.GITHUB_TOKEN }}
         continue-on-error: true
       - name: Label thoth-core-draft prs in queue for canary deployment
-        if: steps.core_diff.outcome != 'success' && steps.thoth_core_label_exists.outcome == 'success'
+        if: steps.core_diff.outcome != 'success' && steps.no_thoth_core_label.outcome == 'success'
         uses: actions-ecosystem/action-add-labels@v1
         with:
           labels: thoth-core-draft
       - name: Label unique thoth-core pr for canary deployment
-        if: steps.core_diff.outcome != 'success' && steps.thoth_core_label_exists.outcome != 'success'
+        if: steps.core_diff.outcome != 'success' && steps.no_thoth_core_label.outcome != 'success'
         uses: actions-ecosystem/action-add-labels@v1
         with:
           labels: thoth-core
 
       - name: Setup Node
         uses: actions/setup-node@v2
-        if: steps.core_diff.outcome != 'success' && steps.thoth_core_label_exists.outcome != 'success'
+        if: steps.core_diff.outcome != 'success' && steps.no_thoth_core_label.outcome != 'success'
         with:
           node-version: "14.17.6"
       - name: Install Dependencies
         run: yarn install
-        if: steps.core_diff.outcome != 'success' && steps.thoth_core_label_exists.outcome != 'success'
+        if: steps.core_diff.outcome != 'success' && steps.no_thoth_core_label.outcome != 'success'
       - name: Publish next canary release of @latitudegames/thoth-core
         run: yarn publish:canary
-        if: steps.core_diff.outcome != 'success' && steps.thoth_core_label_exists.outcome != 'success'
+        if: steps.core_diff.outcome != 'success' && steps.no_thoth_core_label.outcome != 'success'
