@@ -11,4 +11,4 @@
   # command = "echo 'default context'"
 
 [[plugins]]
-package = ".netlify/plugins/conditional-canary"
+package = "./.netlify/plugins/conditional-canary"
