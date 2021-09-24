@@ -1,7 +1,7 @@
 {
   "name": "@latitudegames/thoth-core",
   "version": "0.0.24",
-  "description": "core shareable logic for thoth",
+  "description": "core shared code for thoth",
   "scripts": {
     "build": "tsc",
     "clean": "rimraf dist",
