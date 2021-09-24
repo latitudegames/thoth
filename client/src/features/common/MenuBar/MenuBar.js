@@ -179,7 +179,7 @@ const MenuBar = () => {
 
   //Menu bar rendering
   const ListItem = ({ item, _label, topLevel, onClick }) => {
-    const label = _label.replace(/_/g, ' ')
+    const label = _label ? _label.replace(/_/g, ' ') : _label
     let children = null
     if (item.items && Object.keys(item.items)) {
       children = (
