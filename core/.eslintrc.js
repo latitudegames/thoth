@@ -1,5 +1,6 @@
 module.exports = {
   extends: '../.eslintrc.js',
+  ignorePatterns: ['dist/**/*'],
   parserOptions: {
     project: './tsconfig.json',
     ecmaFeatures: {
