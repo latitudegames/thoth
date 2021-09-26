@@ -4,16 +4,16 @@ import Rete from 'rete'
 //@ts-ignore
 import { v4 as uuidv4 } from 'uuid'
 
-import { InputControl } from '../dataControls/InputControl'
-import { TaskOptions } from '../plugins/taskPlugin/task'
-import { anySocket } from '../sockets'
-import { ThothComponent } from '../thoth-component'
 import {
   NodeData,
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
-} from '../types'
+} from '../../types'
+import { InputControl } from '../dataControls/InputControl'
+import { TaskOptions } from '../plugins/taskPlugin/task'
+import { anySocket } from '../sockets'
+import { ThothComponent } from '../thoth-component'
 const info = `The module input component adds an input socket to the parent module.  It can be given a name, which is displayed on the parent.`
 
 export class ModuleInput extends ThothComponent {

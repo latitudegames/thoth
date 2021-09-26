@@ -4,11 +4,11 @@ import Rete from 'rete'
 //@ts-ignore
 import { v4 as uuidv4 } from 'uuid'
 
+import { NodeData, ThothNode } from '../../types'
 import { InputControl } from '../dataControls/InputControl'
 import { TaskOptions } from '../plugins/taskPlugin/task'
 import { triggerSocket } from '../sockets'
 import { ThothComponent, ThothTask } from '../thoth-component'
-import { NodeData, ThothNode } from '../types'
 const info = `The module trigger in adds a trigger input socket to the parent module.  It can be given a name, which is displayed on the parent.`
 
 export class ModuleTriggerIn extends ThothComponent {

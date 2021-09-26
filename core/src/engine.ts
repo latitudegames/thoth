@@ -2,8 +2,6 @@ import Rete, { Engine } from 'rete'
 import { WorkerOutputs } from 'rete/src/core/data'
 import { Node } from 'rete/types'
 
-import ModulePlugin from './plugins/modulePlugin'
-import TaskPlugin from './plugins/taskPlugin'
 import {
   ModelCompletionOpts,
   NodeData,
@@ -11,7 +9,9 @@ import {
   Spell,
   ThothWorkerInputs,
   WorkerReturn,
-} from './types'
+} from '../types'
+import ModulePlugin from './plugins/modulePlugin'
+import TaskPlugin from './plugins/taskPlugin'
 
 export abstract class ThothEngineComponent {
   // Original Class: https://github.com/latitudegames/rete/blob/master/src/engine/component.ts

@@ -6,6 +6,7 @@ import ContextMenuPlugin from 'rete-context-menu-plugin'
 import ReactRenderPlugin from 'rete-react-render-plugin'
 import { Data } from 'rete/src/core/data'
 
+import { EventsTypes, ModuleType } from '../types'
 import { components } from './components/components'
 import { EngineContext, initSharedEngine } from './engine'
 import AreaPlugin from './plugins/areaPlugin'
@@ -18,7 +19,6 @@ import { ModuleManager } from './plugins/modulePlugin/module-manager'
 import SocketGenerator from './plugins/socketGenerator'
 import TaskPlugin from './plugins/taskPlugin'
 import { PubSubContext } from './thoth-component'
-import { EventsTypes, ModuleType } from './types'
 export class ThothEditor extends NodeEditor<EventsTypes> {
   pubSub: PubSubContext
   thoth: unknown

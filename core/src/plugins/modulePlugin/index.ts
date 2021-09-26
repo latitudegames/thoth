@@ -2,7 +2,7 @@
 import { Engine, NodeEditor, Component, Socket } from 'rete/types'
 import { NodeData, WorkerInputs, WorkerOutputs } from 'rete/types/core/data'
 
-import { ThothNode } from '../../types'
+import { ThothNode } from '../../../types'
 import { Module } from './module'
 import { ModuleManager } from './module-manager'
 import { addIO, removeIO } from './utils'
