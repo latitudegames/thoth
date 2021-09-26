@@ -2,8 +2,11 @@
   "name": "@latitudegames/thoth-core",
   "version": "0.0.24",
   "description": "core logic for rete implementation in thoth",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
   "scripts": {
-    "build": "tsc",
+    "build": "webpack",
+    "start": "webpack --watch",
     "clean": "rimraf dist",
     "lint": "eslint . --ignore-path ../.eslintignore --ext ts --ext tsx --ext js --ext jsx",
     "lint:fix": "eslint . --ignore-path ../.eslintignore --ext ts --ext tsx --ext js --ext jsx --fix",
@@ -13,6 +16,7 @@
   "dependencies": {
     "deep-equal": "^2.0.5",
     "handlebars": "^4.7.7",
+    "path": "^0.12.7",
     "react": "^17.0.2",
     "rete": "https://github.com/latitudegames/rete.git#master",
     "rete-area-plugin": "^0.2.1",
@@ -25,6 +29,8 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "babel-loader": "^8.2.2",
+    "@rollup/plugin-babel": "^5.3.0",
     "@types/jest": "^26.0.24",
     "@types/lodash": "^4.14.172",
     "@types/node": "^16.4.3",
@@ -32,7 +38,10 @@
     "@types/react": "^17.0.15",
     "@types/uuid": "^8.3.1",
     "copyfiles": "^2.4.1",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "webpack": "^5.54.0",
+    "webpack-cli": "^4.8.0",
+    "webpack-dev-server": "^4.3.0"
   },
   "repository": {
     "type": "git",
