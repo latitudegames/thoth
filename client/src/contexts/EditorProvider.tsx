@@ -1,5 +1,4 @@
-import init from '@latitudegames/thoth-core/editor'
-import { EngineContext } from '@latitudegames/thoth-core/engine'
+import thothCore, { initEditor, EngineContext } from '@latitudeGames/thoth-core'
 import { useRef, useContext, createContext, useState } from 'react'
 
 import LoadingScreen from '../features/common/LoadingScreen/LoadingScreen'
@@ -92,7 +91,10 @@ const EditorProvider = ({ children }) => {
   }
 
   const buildEditor = async (container, spell, tab, thoth) => {
-    const newEditor = await init({
+    // console.log('init editor', initEditor)
+    // eslint-disable-next-line no-console
+    console.log('thoth', thothCore)
+    const newEditor = await initEditor({
       container,
       pubSub,
       // calling thothV2 during migration of features
