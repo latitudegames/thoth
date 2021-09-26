@@ -2,7 +2,7 @@ import deepEqual from 'deep-equal'
 import Rete from 'rete'
 import { v4 as uuidv4 } from 'uuid'
 
-import * as socketMap from '../../sockets'
+import * as socketMap from '../sockets'
 export class Inspector {
   // Stub of function.  Can be a nodes catch all onData
   onData = () => {}

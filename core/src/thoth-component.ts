@@ -1,8 +1,8 @@
 import { Node, NodeEditor } from 'rete'
 
+import { PubSubBase, ThothNode } from '../types'
 import { EngineContext, ThothEngineComponent } from './engine'
 import { Task, TaskOptions } from './plugins/taskPlugin/task'
-import { PubSubBase, ThothNode } from './types'
 
 // Note: We do this so Typescript knows what extra properties we're
 // adding to the NodeEditor (in rete/editor.js). In an ideal world, we

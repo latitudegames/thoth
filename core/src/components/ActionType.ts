@@ -1,15 +1,15 @@
 import Rete from 'rete'
 
-import { FewshotControl } from '../dataControls/FewshotControl'
-import { EngineContext } from '../engine'
-import { stringSocket, triggerSocket } from '../sockets'
-import { ThothComponent } from '../thoth-component'
 import {
   NodeData,
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
-} from '../types'
+} from '../../types'
+import { FewshotControl } from '../dataControls/FewshotControl'
+import { EngineContext } from '../engine'
+import { stringSocket, triggerSocket } from '../sockets'
+import { ThothComponent } from '../thoth-component'
 const fewshot = `Given an action classify the type of action it is
 
 Types: look, get, use, craft, dialog, movement, travel, combat, consume, other

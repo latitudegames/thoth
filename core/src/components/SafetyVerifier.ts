@@ -1,15 +1,15 @@
 import Rete from 'rete'
 
-import { FewshotControl } from '../dataControls/FewshotControl'
-import { EngineContext } from '../engine'
-import { stringSocket, triggerSocket, booleanSocket } from '../sockets'
-import { ThothComponent } from '../thoth-component'
 import {
   NodeData,
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
-} from '../types'
+} from '../../types'
+import { FewshotControl } from '../dataControls/FewshotControl'
+import { EngineContext } from '../engine'
+import { stringSocket, triggerSocket, booleanSocket } from '../sockets'
+import { ThothComponent } from '../thoth-component'
 
 const fewshot = `Rate the actions according to the following content categories
 X: Explicit sexual content, rape, cannibalism, incest

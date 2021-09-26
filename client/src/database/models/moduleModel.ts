@@ -26,7 +26,10 @@ const loadModuleModel = db => {
   const updateModule = async (moduleName: string, update: object) => {
     const module = await getModule(moduleName)
 
-    return module.atomicUpdate(oldData => {
+    // eslint-disable-next-line
+    console.log('module', module)
+
+    return await module.atomicUpdate(oldData => {
       return {
         ...oldData,
         ...update,

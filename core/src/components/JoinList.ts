@@ -1,9 +1,9 @@
 import Rete from 'rete'
 
+import { NodeData, ThothNode, ThothWorkerInputs } from '../../types'
 import { TextInputControl } from '../controls/TextInputControl'
 import { stringSocket, arraySocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
-import { NodeData, ThothNode, ThothWorkerInputs } from '../types'
 const info = `The Join List component takes in an array, and will join each item in the array together with a seperator, defined in the components input field.`
 
 export class JoinListComponent extends ThothComponent {

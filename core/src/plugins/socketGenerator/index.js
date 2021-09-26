@@ -1,6 +1,6 @@
 import Rete from 'rete'
 
-import * as sockets from '../../sockets'
+import * as sockets from '../sockets'
 
 function install(editor) {
   editor.on('componentregister', component => {

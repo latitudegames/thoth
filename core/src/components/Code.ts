@@ -1,5 +1,11 @@
 import Rete from 'rete'
 
+import {
+  NodeData,
+  ThothNode,
+  ThothWorkerInputs,
+  ThothWorkerOutputs,
+} from '../../types'
 import { CodeControl } from '../dataControls/CodeControl'
 // @seang todo: convert data controls to typescript to remove this
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -8,12 +14,6 @@ import { InputControl } from '../dataControls/InputControl'
 import { SocketGeneratorControl } from '../dataControls/SocketGenerator'
 import { triggerSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
-import {
-  NodeData,
-  ThothNode,
-  ThothWorkerInputs,
-  ThothWorkerOutputs,
-} from '../types'
 
 const defaultCode = `
 // See component information in inspector for details.

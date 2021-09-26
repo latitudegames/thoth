@@ -1,9 +1,9 @@
 import Rete from 'rete'
 
+import { NodeData, ThothNode } from '../../types'
 import { TextInputControl } from '../controls/TextInputControl'
 import { stringSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
-import { NodeData, ThothNode } from '../types'
 const info = `The info component has a single control, an input field.  Whatever value you put into this input field will be sent out along the compoonents output socket.`
 
 export class InputComponent extends ThothComponent {
