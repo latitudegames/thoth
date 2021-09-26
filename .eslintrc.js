@@ -1,3 +1,5 @@
+const isProduction = process.env.NODE_ENV === 'production'
+
 module.exports = {
   parser: '@typescript-eslint/parser',
   extends: [
@@ -37,7 +39,7 @@ module.exports = {
     'operator-linebreak': 'off',
     'no-useless-escape': 'off',
     'no-var': 'error',
-    'no-console': 'error',
+    'no-console': isProduction ? 'error' : 'warn',
     'no-func-assign': 'error',
     'no-const-assign': 'error',
     'no-class-assign': 'error',
