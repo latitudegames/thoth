@@ -1,14 +1,14 @@
 import Rete from 'rete'
 
-import { EngineContext } from '../engine'
-import { stringSocket, triggerSocket } from '../sockets'
-import { ThothComponent } from '../thoth-component'
 import {
   NodeData,
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
-} from '../types'
+} from '../../types'
+import { EngineContext } from '../engine'
+import { stringSocket, triggerSocket } from '../sockets'
+import { ThothComponent } from '../thoth-component'
 const fewshot = (prose: string) => {
   const prompt = `Rewrite narrative snippets as a script:
 

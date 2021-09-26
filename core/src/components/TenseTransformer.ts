@@ -1,5 +1,11 @@
 import Rete from 'rete'
 
+import {
+  NodeData,
+  ThothNode,
+  ThothWorkerInputs,
+  ThothWorkerOutputs,
+} from '../../types'
 import { FewshotControl } from '../dataControls/FewshotControl'
 import { EngineContext } from '../engine'
 import { stringSocket, triggerSocket } from '../sockets'
@@ -7,12 +13,6 @@ import { stringSocket, triggerSocket } from '../sockets'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore
 import { ThothComponent } from '../thoth-component'
-import {
-  NodeData,
-  ThothNode,
-  ThothWorkerInputs,
-  ThothWorkerOutputs,
-} from '../types'
 const fewshot = `Change each statement to be in the third person present tense and correct all grammar.
 
 Matt: am sleepy.

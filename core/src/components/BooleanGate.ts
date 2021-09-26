@@ -1,8 +1,8 @@
 import Rete from 'rete'
 
+import { NodeData, ThothNode, ThothWorkerInputs } from '../../types'
 import { booleanSocket, triggerSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
-import { NodeData, ThothNode, ThothWorkerInputs } from '../types'
 
 const info = `The boolean gate takes a boolean input, and depending on whether the value is true or false will only trigger one output or the other.`
 

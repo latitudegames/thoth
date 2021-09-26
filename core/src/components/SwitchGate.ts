@@ -1,9 +1,9 @@
 import Rete from 'rete'
 
+import { NodeData, ThothNode, ThothWorkerInputs } from '../../types'
 import { SocketGeneratorControl } from '../dataControls/SocketGenerator'
 import { anySocket, triggerSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
-import { NodeData, ThothNode, ThothWorkerInputs } from '../types'
 // function capitalizeFirstLetter(string) {
 //   return string.charAt(0).toUpperCase() + string.slice(1);
 // }

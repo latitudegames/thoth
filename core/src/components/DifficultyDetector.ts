@@ -1,15 +1,15 @@
 import Rete from 'rete'
 
-import { FewshotControl } from '../dataControls/FewshotControl'
-import { EngineContext } from '../engine'
-import { stringSocket, triggerSocket } from '../sockets'
-import { ThothComponent } from '../thoth-component'
 import {
   NodeData,
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
-} from '../types'
+} from '../../types'
+import { FewshotControl } from '../dataControls/FewshotControl'
+import { EngineContext } from '../engine'
+import { stringSocket, triggerSocket } from '../sockets'
+import { ThothComponent } from '../thoth-component'
 // For simplicity quests should be ONE thing not complete X and Y
 const fewshot = `Given an action, predict how hard it would be for a normal human in a fantasy world and what type of stat it uses.
 
