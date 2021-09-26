@@ -1,13 +1,13 @@
 import { Engine, Socket, Component } from 'rete'
 import { Socket as SocketType } from 'rete/types'
 
-import { SocketNameType } from '../../sockets'
 import {
   ModuleType,
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
-} from '../../types'
+} from '../../../types'
+import { SocketNameType } from '../../sockets'
 import { Module } from './module'
 import { extractNodes } from './utils'
 interface ModuleComponent extends Component {

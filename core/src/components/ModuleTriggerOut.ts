@@ -4,11 +4,11 @@ import Rete from 'rete'
 //@ts-ignore
 import { v4 as uuidv4 } from 'uuid'
 
+import { ThothNode } from '../../types'
 import { InputControl } from '../dataControls/InputControl'
 import { TaskOptions } from '../plugins/taskPlugin/task'
 import { triggerSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
-import { ThothNode } from '../types'
 const info = `The module trigger out component adds a trigger out socket to the parent module.  It can be given a name, which is displayed on the parent.`
 
 export class ModuleTriggerOut extends ThothComponent {

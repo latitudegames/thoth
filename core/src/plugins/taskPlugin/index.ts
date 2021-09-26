@@ -1,8 +1,8 @@
 import { NodeEditor } from 'rete'
 import { NodeData } from 'rete/types/core/data'
 
+import { ThothWorkerInputs } from '../../../types'
 import { ThothComponent } from '../../thoth-component'
-import { ThothWorkerInputs } from '../../types'
 import { Task } from './task'
 
 function install(editor: NodeEditor) {

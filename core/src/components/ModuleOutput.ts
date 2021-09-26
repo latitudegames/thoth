@@ -1,6 +1,7 @@
 import Rete from 'rete'
 import { v4 as uuidv4 } from 'uuid'
 
+import { NodeData, ThothNode, ThothWorkerInputs } from '../../types'
 import { InputControl } from '../dataControls/InputControl'
 import { Task } from '../plugins/taskPlugin/task'
 // @seang todo: convert data controls to typescript to remove this
@@ -8,7 +9,6 @@ import { Task } from '../plugins/taskPlugin/task'
 //@ts-ignore
 import { anySocket, triggerSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
-import { NodeData, ThothNode, ThothWorkerInputs } from '../types'
 const info = `The module output component adds an output socket to the parent module.  It can be given a name, which is displayed on the parent.`
 
 export class ModuleOutput extends ThothComponent {

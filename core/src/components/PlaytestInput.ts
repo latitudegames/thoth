@@ -1,15 +1,15 @@
 import Rete from 'rete'
 
-import { EngineContext } from '../engine'
-import { Task } from '../plugins/taskPlugin/task'
-import { triggerSocket, stringSocket } from '../sockets'
-import { ThothComponent } from '../thoth-component'
 import {
   NodeData,
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
-} from '../types'
+} from '../../types'
+import { EngineContext } from '../engine'
+import { Task } from '../plugins/taskPlugin/task'
+import { triggerSocket, stringSocket } from '../sockets'
+import { ThothComponent } from '../thoth-component'
 const info = `The Playtest Input component is connected to the playtest window. It received anything which is type dinto the playtest areavia the input and will trigger the running of your spell chain.`
 export class PlaytestInput extends ThothComponent {
   initialTask?: Task

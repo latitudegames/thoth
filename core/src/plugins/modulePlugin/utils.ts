@@ -1,8 +1,8 @@
 import { Input, NodeEditor, Output, Socket } from 'rete'
 
 import { IRunContextEditor } from '.'
+import { ThothNode } from '../../../types'
 import { socketNameMap, SocketNameType, SocketType } from '../../sockets'
-import { ThothNode } from '../../types'
 import { ModuleSocketType } from './module-manager'
 
 type DataSocketType = {

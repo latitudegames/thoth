@@ -1,14 +1,14 @@
 import isEqual from 'lodash/isEqual'
 
-import { ModuleControl } from '../dataControls/ModuleControl'
-import { Task } from '../plugins/taskPlugin/task'
-import { ThothComponent } from '../thoth-component'
 import {
   NodeData,
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
-} from '../types'
+} from '../../types'
+import { ModuleControl } from '../dataControls/ModuleControl'
+import { Task } from '../plugins/taskPlugin/task'
+import { ThothComponent } from '../thoth-component'
 
 const info = `The Module component allows you to add modules into your chain.  A module is a bundled self contained chain that defines inputs, outputs, and triggers using components.`
 export class ModuleComponent extends ThothComponent {
