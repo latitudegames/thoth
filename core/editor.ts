@@ -19,7 +19,7 @@ import SocketGenerator from './plugins/socketGenerator'
 import TaskPlugin from './plugins/taskPlugin'
 import { PubSubContext } from './thoth-component'
 import { EventsTypes, ModuleType } from './types'
-class ThothEditor extends NodeEditor<EventsTypes> {
+export class ThothEditor extends NodeEditor<EventsTypes> {
   pubSub: PubSubContext
   thoth: unknown
   thothV2: EngineContext
@@ -36,7 +36,7 @@ class ThothEditor extends NodeEditor<EventsTypes> {
 
 const editorTabMap: Record<string, ThothEditor> = {}
 
-const editor = async function ({
+export const initEditor = async function ({
   container,
   pubSub,
   thoth,
@@ -181,5 +181,3 @@ const editor = async function ({
   }
   return editor
 }
-
-export default editor
