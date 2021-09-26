@@ -8,7 +8,6 @@
     "strictNullChecks": true,
     "strict": false,
     "composite": true,
-    "rootDir": ".",
     "noEmit": true
   },
   "typeRoots": ["@types/@thoth"],
