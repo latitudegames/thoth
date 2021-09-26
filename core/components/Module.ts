@@ -1,7 +1,7 @@
-import { Task } from '@latitudegames/thoth-core/plugins/taskPlugin/task'
 import isEqual from 'lodash/isEqual'
 
 import { ModuleControl } from '../dataControls/ModuleControl'
+import { Task } from '../plugins/taskPlugin/task'
 import { ThothComponent } from '../thoth-component'
 import {
   NodeData,

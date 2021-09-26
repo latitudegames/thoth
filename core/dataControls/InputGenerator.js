@@ -1,7 +1,7 @@
 import Rete from 'rete'
 
 import { DataControl } from '../plugins/inspectorPlugin'
-import * as sockets from '../sockets'
+import * as sockets from '../../sockets'
 
 export class InputGeneratorControl extends DataControl {
   constructor({
