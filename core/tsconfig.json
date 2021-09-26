@@ -1,18 +1,20 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "allowJs": true,
+    "module": "es2015",
     "jsx": "react-jsx",
     "noImplicitAny": true,
     "noUnusedLocals": true,
     "strictNullChecks": true,
     "strict": false,
-    "rootDir": ".",
     "outDir": "./dist/",
     "declaration": true,
-    "composite": true
+    "composite": true,
+    "noEmit": false,
+    "target": "es6",
+    "sourceMap": true
   },
   "include": ["./"],
-  "exclude": ["./node_modules/", "./dist/"]
+  "exclude": ["./node_modules/", "./dist/", "./rollup.config.js"]
 }
