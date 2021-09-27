@@ -1,7 +1,7 @@
 {
   "name": "@latitudegames/thoth-core",
-  "version": "0.0.24",
-  "description": "core logic for rete implementation in thoth",
+  "version": "0.0.34",
+  "description": "core shared code for thoth",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "scripts": {
@@ -10,10 +10,13 @@
     "clean": "rimraf dist",
     "lint": "eslint . --ignore-path ../.eslintignore --ext ts --ext tsx --ext js --ext jsx",
     "lint:fix": "eslint . --ignore-path ../.eslintignore --ext ts --ext tsx --ext js --ext jsx --fix",
-    "prepub": "yarn build && copyfiles package.json .npmrc dist && cd plugins/areaPlugin/ && copyfiles style.css ../../dist/plugins/areaPlugin/ && cd ../../dist && npm publish && yarn clean",
-    "postpublish": "yarn clean"
+    "postpublish": "yarn clean",
+    "preship": "yarn build && copyfiles package.json .npmrc dist && cd plugins/areaPlugin/ && copyfiles style.css ../../dist/plugins/areaPlugin/ && cd ../../dist",
+    "ship": "auto release --prerelease --base-branch main",
+    "release": "yarn preship && yarn ship"
   },
   "dependencies": {
+    "auto": "^10.32.0",
     "deep-equal": "^2.0.5",
     "handlebars": "^4.7.7",
     "path": "^0.12.7",
@@ -49,5 +52,11 @@
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
+  },
+  "author": "Sean Gillespie <sean@latitude.io>",
+  "auto": {
+    "plugins": [
+      "npm"
+    ]
   }
 }
