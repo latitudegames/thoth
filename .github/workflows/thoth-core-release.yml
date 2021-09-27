@@ -5,25 +5,37 @@ on:
 jobs:
   merge_job:
     # this job will only run if a PR has been merged
-    if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'thoth-core')
     runs-on: ubuntu-latest
     env:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Check for thoth-core label and checkout main if present
-        if: contains(github.event.pull_request.labels.*.name, 'thoth-core')
         uses: actions/checkout@v2
         with:
           ref: main
       - name: Setup Node
         uses: actions/setup-node@v2
-        if: contains(github.event.pull_request.labels.*.name, 'thoth-core')
         with:
-          node-version: "14.17.6"
+          node-version: '14.17.6'
+      - name: git setup
+        run: |
+          git config --global user.name 'Thoth CI'
+          git config --global user.email 'sean+thothci@latitude.io'
+      - name: set git tag name to enviroment
+        run: echo "LATEST_TAG=v$(npm view @latitudegames/thoth-core version)" >> $GITHUB_ENV
+      - name: add and push git tag
+        run: |
+          git tag ${{ env.LATEST_TAG }}
+          git push --tags
       - name: Install Dependencies
         run: yarn install
-        if: contains(github.event.pull_request.labels.*.name, 'thoth-core')
-      - name: Prepare and Publish
-        run: cd core && yarn preship
-        if: contains(github.event.pull_request.labels.*.name, 'thoth-core')
+      - name: Prepare and Release
+        run: cd core && yarn release
+      - name: Increment package for future prelease, commit and push
+        run: |
+          npm version patch
+          git add package.json
+          git commit -m "[skip ci] Bump thoth-core to v$(npm view @latitudegames/thoth-core version)"
+          git push
