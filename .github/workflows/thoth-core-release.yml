@@ -26,10 +26,9 @@ jobs:
       - name: set git tag name to enviroment
         working-directory: core
         run: echo "LATEST_TAG=v$(node -pe "require('./package.json').version")" >> $GITHUB_ENV
-      - name: add and push git tag
+      - name: add git tag
         run: |
           git tag ${{ env.LATEST_TAG }}
-          git push --tags
       - name: Install Dependencies
         run: yarn install
       - name: Prepare and Release
