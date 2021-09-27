@@ -29,8 +29,7 @@ jobs:
           git tag ${{ env.LATEST_TAG }}
           git push --tags
       - name: Install Dependencies
-        working-directory: core
-        run: yarn install --focus
+        run: yarn install
       - name: Prepare and Release
         working-directory: core
         run: yarn release
