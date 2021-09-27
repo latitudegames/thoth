@@ -6,7 +6,9 @@
     "build": "tsc",
     "clean": "rimraf dist",
     "lint": "eslint . --ignore-path ../.eslintignore --ext ts --ext tsx --ext js --ext jsx",
-    "preship": "yarn build && copyfiles package.json .npmrc dist && cd plugins/areaPlugin/ && copyfiles style.css ../../dist/plugins/areaPlugin/ && cd ../../dist && auto shipit --prerelease --base-branch main",
+    "preship": "yarn build && copyfiles package.json .npmrc dist && cd plugins/areaPlugin/ && copyfiles style.css ../../dist/plugins/areaPlugin/ && cd ../../dist",
+    "ship": "auto release --prerelease --base-branch main",
+    "release": "yarn preship && yarn ship",
     "postpublish": "yarn clean"
   },
   "dependencies": {
