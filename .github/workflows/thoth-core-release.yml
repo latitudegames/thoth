@@ -1,0 +1,47 @@
+name: thoth-core release conditions
+on:
+  pull_request:
+    types: [closed]
+jobs:
+  merge_job:
+    # this job will only run if a PR has been merged
+    if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'thoth-core')
+    runs-on: ubuntu-latest
+    env:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Check for thoth-core label and checkout main if present
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14.17.6'
+      - name: git setup
+        run: |
+          git config --global user.name 'Thoth CI'
+          git config --global user.email 'sean+thothci@latitude.io'
+      - name: set git tag name to enviroment
+        working-directory: core
+        run: echo "LATEST_TAG=v$(node -pe "require('./package.json').version")" >> $GITHUB_ENV
+      - name: add git tag and push
+        run: |
+          git tag ${{ env.LATEST_TAG }}
+          git push --tags
+      - name: Install Dependencies
+        run: yarn install
+      - name: Prepare and Release
+        working-directory: core
+        run: yarn preship && yarn auto release --prerelease
+      - name: Publish to GitHub Packages
+        working-directory: core/dist
+        run: npm publish
+      - name: Increment package for future prelease, commit and push
+        working-directory: core
+        run: |
+          npm version patch
+          git add package.json
+          git commit -m "[skip ci] Bump thoth-core to v$(node -pe "require('./package.json').version")"
+          git push

@@ -1,0 +1,56 @@
+name: thoth-core pull request ci
+
+on: [pull_request]
+
+jobs:
+  check-and-set-labels:
+    runs-on: ubuntu-latest
+    env:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Fail thoth-core-draft
+        if: contains(github.event.pull_request.labels.*.name, 'thoth-core-draft')
+        run: exit 1
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Check for git variance in the /core directory
+        run: git diff --quiet origin/main origin/${{ github.head_ref }} -- core
+        id: core_diff
+        shell: bash {0}
+        continue-on-error: true
+
+      - name: Check for an existing unique thoth-core label
+        if: steps.core_diff.outcome != 'success'
+        uses: docker://agilepathway/pull-request-label-checker:latest
+        id: no_thoth_core_label
+        with:
+          none_of: thoth-core
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
+      - name: Label thoth-core-draft prs in queue for canary deployment
+        if: steps.core_diff.outcome != 'success' && steps.no_thoth_core_label.outcome != 'success' && !contains(github.event.pull_request.labels.*.name, 'thoth-core')
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          labels: thoth-core-draft
+      - name: Fail thoth-core-draft
+        if: contains(github.event.pull_request.labels.*.name, 'thoth-core-draft')
+        run: exit 1
+      - name: Label unique thoth-core pr for canary deployment
+        if: steps.core_diff.outcome != 'success' && steps.no_thoth_core_label.outcome == 'success'
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          labels: thoth-core
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        if: steps.core_diff.outcome != 'success' && steps.no_thoth_core_label.outcome == 'success'
+        with:
+          node-version: '14.17.6'
+      - name: Install Dependencies
+        run: yarn install
+        if: steps.core_diff.outcome != 'success' && steps.no_thoth_core_label.outcome == 'success'
+      - name: Publish next canary release of @latitudegames/thoth-core
+        run: yarn publish:canary
+        if: steps.core_diff.outcome != 'success' && steps.no_thoth_core_label.outcome == 'success'
