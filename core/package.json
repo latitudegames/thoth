@@ -1,6 +1,6 @@
 {
   "name": "@latitudegames/thoth-core",
-  "version": "0.0.32",
+  "version": "0.0.33",
   "description": "core shared code for thoth",
   "scripts": {
     "build": "tsc",
