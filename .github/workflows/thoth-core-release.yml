@@ -32,7 +32,7 @@ jobs:
         run: yarn install
       - name: Prepare and Release
         working-directory: core
-        run: yarn preship && auto release --from={{ env.LATEST_TAG }} --prerelease --base-branch main
+        run: yarn preship && yarn auto release --from={{ env.LATEST_TAG }} --prerelease --base-branch main
       - name: Increment package for future prelease, commit and push
         working-directory: core
         run: |
