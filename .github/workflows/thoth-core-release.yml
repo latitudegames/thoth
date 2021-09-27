@@ -22,7 +22,7 @@ jobs:
           git config --global user.name 'Thoth CI'
           git config --global user.email 'sean+thothci@latitude.io'
       - name: set git tag name to enviroment
-        run: echo `LATEST_TAG=v$(node -pe "require('./package.json').version")` >> $GITHUB_ENV
+        run: echo "LATEST_TAG=v$(node -pe "require('./package.json').version")" >> $GITHUB_ENV
       - name: add and push git tag
         run: |
           git tag ${{ env.LATEST_TAG }}
