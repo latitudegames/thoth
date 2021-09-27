@@ -6,7 +6,7 @@
   "module": "dist/index.esm.js",
   "scripts": {
     "build": "webpack",
-    "start": "webpack --watch",
+    "start": "yarn clean && webpack --watch",
     "clean": "rimraf dist",
     "lint": "eslint . --ignore-path ../.eslintignore --ext ts --ext tsx --ext js --ext jsx",
     "lint:fix": "eslint . --ignore-path ../.eslintignore --ext ts --ext tsx --ext js --ext jsx --fix",
