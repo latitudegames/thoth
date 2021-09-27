@@ -22,7 +22,7 @@ jobs:
           git config --global user.name 'Thoth CI'
           git config --global user.email 'sean+thothci@latitude.io'
       - name: set git tag name to enviroment
-        run: echo "LATEST_TAG=v$(npm view @latitudegames/thoth-core version)" >> $GITHUB_ENV
+        run: echo `LATEST_TAG=v$(node -pe "require('./package.json').version")` >> $GITHUB_ENV
       - name: add and push git tag
         run: |
           git tag ${{ env.LATEST_TAG }}
@@ -35,5 +35,5 @@ jobs:
         run: |
           npm version patch
           git add package.json
-          git commit -m "[skip ci] Bump thoth-core to v$(npm view @latitudegames/thoth-core version)"
+          git commit -m "[skip ci] Bump thoth-core to v$(node -pe "require('./package.json').version")"
           git push
