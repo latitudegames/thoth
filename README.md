@@ -4,14 +4,12 @@ Thoth is a multishot system builder. It leverages a visual coding style interfac
 
 ## Setup
 
-
 1. Generate a [Personal Access Token](https://github.com/settings/tokens) on Github which will allow you to install private latitude packages. Make sure you check the `write:packages` option. (`read:packages` will suffice as well if you aren't planning on publishing new versions of @latitudegames/thoth-core)
 1. In your `~/.bashrc`, append the line `export NPM_TOKEN=YourTokenGoesHere`, and restart your terminal (you can run `source ~/.bashrc` to do so)
 1. Clone the repository
 1. Navigate to the project root by running `cd thoth`
 1. Run `yarn install` to install project dependencies
 1. Run `yarn start` to start the @thoth/client app
-
 
 ## Monorepo Development
 
@@ -21,17 +19,22 @@ You can either:
 
 1. Target a published version of [@latitudegames/thoth-core](https://github.com/latitudegames/thoth/packages/983711) in client/package.json
 2. Or actively develop against the current state of the repository. (By ensuring that client/package.json is targetting the same version of @latitudegames/thoth-core that is currently listed in core/package.json)
- ## Publishing @latitudegames/thoth-core
 
-In order to support code sharing with the Latitude API, any changes we make to the `core` directory need to be periodically published to GitHub Packages once tested and considered stable for use.
+## @latitudegames/thoth-core CI
 
-Assuming your `NPM_TOKEN` is configured with `write:packages` permissions as described in the setup section above:
+### Testing
 
-1. Ensure the version in `core/package.json` is at least one minor version higher than the [last published version](https://github.com/latitudegames/thoth/packages/983711)
-2. run `cd core`
-3. run `npm publish`
-4. If the package is published successfully, increment the version in `core/package.json` at least one minor version and commit the changes
+On Pull Request, GitHub actions will first determine if the diff contains changes in the `core` directory. If so
+and there isn't an active `thoth-core` labelled PR already open - it will proceed with building and deploying a Canary Release
+to GitHub packages. There can only be one `thoth-core` labelled PR active at a time, so if one exists additional PR's will be labelled `thoth-core-draft` by the CI. This `thoth-core-draft` label can be removed, and the CI re-run to build a canary once the unique `thoth-core` label position has been vacated.
 
+The latest canary release can be tested and installed locally with `yarn add @latitudegames/thoth-core@canary`. The Netlify Deploy Preview is configured to sense `thoth-core` PR's as well and targets the latest canary release, but it runs concurrently to the canary publishing process. You can test a canary release of `thoth-core` on your branch's Deploy Preview by re-deploying from the Netlify UI for your branch. It is important to note that `thoth-core-draft` PR's will still have a deploy preview on Netlify, but will be building with the latest canary release of `thoth-core` which may be unrelated to that PR's changes until it had it's own canary release and been re-deployed.
+
+### Releases
+
+When a `thoth-core` PR has been merged with main, the CI will create a prerelease based on the last commit, publish
+@latitudegames/thoth-core to GitHub packages and take care of incrementing the patch version in core/package.json to prepare
+for the next prerelease.
 
 ## Available Scripts
 
@@ -49,4 +52,3 @@ Builds the @thoth/client app for production to the `client/build` folder.
 ### `yarn build:core`
 
 Builds the @thoth/core package for production to the `core/build` folder.
-
