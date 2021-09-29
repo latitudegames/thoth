@@ -4,7 +4,7 @@ import ConnectionPlugin from 'rete-connection-plugin'
 import ConnectionReroutePlugin from 'rete-connection-reroute-plugin'
 import ContextMenuPlugin from 'rete-context-menu-plugin'
 import ReactRenderPlugin from 'rete-react-render-plugin'
-import { Data } from 'rete/src/core/data'
+import { Data } from 'rete/types/core/data'
 
 import { EventsTypes, ModuleType } from '../types'
 import { components } from './components/components'
