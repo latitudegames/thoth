@@ -1,5 +1,3 @@
-const BundleAnalyzerPlugin =
-  require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const { merge } = require('webpack-merge')
 const common = require('./webpack.common')
 
@@ -17,7 +15,6 @@ module.exports = () => {
       port: process.env.PORT || 3001,
       historyApiFallback: true,
     },
-    plugins: [new BundleAnalyzerPlugin()],
   }
 
   return merge(commonConfig, devConfig)
