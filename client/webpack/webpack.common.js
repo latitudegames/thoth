@@ -34,7 +34,7 @@ module.exports = () => {
   return {
     entry: ['regenerator-runtime/runtime.js', './src/index.js'],
     output: {
-      path: path.resolve(__dirname, 'build'),
+      path: path.resolve(__dirname, '../build'),
       filename: '[name].bundle.js',
       clean: true,
     },
