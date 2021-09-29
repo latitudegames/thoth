@@ -1,3 +1,4 @@
+const Dotenv = require('dotenv-webpack')
 const { merge } = require('webpack-merge')
 const common = require('./webpack.common')
 
@@ -15,6 +16,12 @@ module.exports = () => {
       port: process.env.PORT || 3001,
       historyApiFallback: true,
     },
+    plugins: [
+      new Dotenv({
+        path: './.env',
+        safe: true,
+      }),
+    ],
   }
 
   return merge(commonConfig, devConfig)
