@@ -13,14 +13,18 @@ module.exports = {
     },
   },
   mode: process.env.NODE_ENV || 'development',
-  devtool: 'inline-source-map',
+  devtool: 'eval-source-map',
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
     alias: {
       handlebars: 'handlebars/dist/handlebars.js',
     },
   },
-  devServer: { static: path.join(__dirname, 'dist') },
+  devServer: {
+    static: path.join(__dirname, 'dist'),
+    port: process.env.PORT || 3001,
+    historyApiFallback: true,
+  },
   module: {
     rules: [
       {
@@ -31,7 +35,12 @@ module.exports = {
       {
         test: /\.(ts|tsx)$/,
         exclude: /node_modules/,
-        use: ['ts-loader'],
+        loader: 'ts-loader',
+        options: {
+          compilerOptions: {
+            outDir: './dist',
+          },
+        },
       },
       {
         test: /\.(css|scss)$/,
