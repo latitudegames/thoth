@@ -1,5 +1,4 @@
 import Rete, { Engine } from 'rete'
-import { WorkerOutputs } from 'rete/src/core/data'
 import { Node } from 'rete/types'
 
 import {
@@ -13,6 +12,9 @@ import {
 import ModulePlugin from './plugins/modulePlugin'
 import TaskPlugin from './plugins/taskPlugin'
 
+interface WorkerOutputs {
+  [key: string]: unknown
+}
 export abstract class ThothEngineComponent {
   // Original Class: https://github.com/latitudegames/rete/blob/master/src/engine/component.ts
   name: string
