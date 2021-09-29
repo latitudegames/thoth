@@ -7,7 +7,8 @@
     "clean": "rimraf dist",
     "lint": "eslint . --ignore-path ../.eslintignore --ext ts --ext tsx --ext js --ext jsx",
     "lint:fix": "eslint . --ignore-path ../.eslintignore --ext ts --ext tsx --ext js --ext jsx --fix",
-    "build": "yarn clean && webpack --config webpack.prod.js",
+    "build": "yarn clean && webpack build --config webpack.prod.js",
+    "build:analyze": "BUNDLE_ANALYZE=true yarn build",
     "test": "echo test",
     "install:canary": "yarn add @latitudegames/thoth-core@canary"
   },
