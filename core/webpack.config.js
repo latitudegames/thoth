@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path')
+const TerserPlugin = require('terser-webpack-plugin')
 
 module.exports = {
   entry: './index.ts',
@@ -12,13 +13,20 @@ module.exports = {
       type: 'umd',
     },
   },
-  mode: process.env.NODE_ENV || 'development',
-  devtool: 'eval-source-map',
+  externals: {
+    react: 'react',
+  },
+  mode: 'production',
+  devtool: 'source-map',
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
     alias: {
       handlebars: 'handlebars/dist/handlebars.js',
     },
+  },
+  optimization: {
+    minimize: true,
+    minimizer: [new TerserPlugin()],
   },
   devServer: {
     static: path.join(__dirname, 'dist'),
