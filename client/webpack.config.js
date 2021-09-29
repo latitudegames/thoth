@@ -57,19 +57,10 @@ module.exports = () => {
         },
         {
           test: /\.css$/i,
-          use: ['style-loader', 'css-loader'],
-        },
-        {
-          test: /\.ts(x?)$/,
-          exclude: /node_modules/,
           use: [
-            {
-              loader: 'babel-loader',
-              options: babelOptions,
-            },
-            {
-              loader: 'ts-loader',
-            },
+            { loader: 'style-loader' },
+            { loader: 'css-modules-typescript-loader' },
+            { loader: 'css-loader' },
           ],
         },
         {
@@ -83,6 +74,19 @@ module.exports = () => {
             {
               loader: 'babel-loader',
               options: babelOptions,
+            },
+          ],
+        },
+        {
+          test: /\.ts(x?)$/,
+          exclude: /node_modules/,
+          use: [
+            {
+              loader: 'babel-loader',
+              options: babelOptions,
+            },
+            {
+              loader: 'ts-loader',
             },
           ],
         },
