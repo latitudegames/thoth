@@ -30,6 +30,5 @@
     }
   ],
   "exclude": ["node_modules", "dist", "*.d.ts"],
-  "typeRoots": ["@types/@thoth"],
-  "include": ["src"]
+  "typeRoots": ["@types/@thoth"]
 }
