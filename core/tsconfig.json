@@ -2,13 +2,14 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "allowJs": true,
-    "module": "es2015",
+    "module": "commonjs",
     "jsx": "react-jsx",
     "noImplicitAny": true,
     "noUnusedLocals": true,
     "strictNullChecks": true,
     "strict": false,
     "outDir": "./dist/",
+    "rootDir": ".",
     "declaration": true,
     "composite": true,
     "noEmit": false,
@@ -16,5 +17,5 @@
     "sourceMap": true
   },
   "include": ["./"],
-  "exclude": ["./node_modules/", "./dist/", "./rollup.config.js"]
+  "exclude": ["./node_modules/", "./dist/"]
 }
