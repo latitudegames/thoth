@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
 const CopyPlugin = require('copy-webpack-plugin')
-const dotenv = require('dotenv')
 const HtmlWebPackPlugin = require('html-webpack-plugin')
 const path = require('path')
 const webpack = require('webpack')
@@ -24,13 +23,6 @@ const babelOptions = {
 }
 
 module.exports = () => {
-  const env = dotenv.config().parsed
-
-  const envKeys = Object.keys(env).reduce((prev, next) => {
-    prev[`process.env.${next}`] = JSON.stringify(env[next])
-    return prev
-  }, {})
-
   return {
     entry: ['regenerator-runtime/runtime.js', './src/index.js'],
     output: {
@@ -104,10 +96,8 @@ module.exports = () => {
         inject: true,
       }),
       new webpack.DefinePlugin({
-        ...envKeys,
         'process.env.NODE_DEBUG': JSON.stringify(process.env.NODE_DEBUG),
       }),
-
       new CopyPlugin({
         patterns: [{ from: 'public', to: '.' }],
       }),
