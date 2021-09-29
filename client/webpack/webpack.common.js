@@ -81,7 +81,7 @@ module.exports = () => {
               options: {
                 compilerOptions: {
                   noEmit: false,
-                  outDir: 'dist',
+                  outDir: 'build',
                 },
               },
             },
