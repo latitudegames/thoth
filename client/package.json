@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "webpack serve",
+    "start": "webpack serve --config webpack.dev.js",
+    "clean": "rimraf dist",
     "lint": "eslint . --ignore-path ../.eslintignore --ext ts --ext tsx --ext js --ext jsx",
     "lint:fix": "eslint . --ignore-path ../.eslintignore --ext ts --ext tsx --ext js --ext jsx --fix",
-    "build": "NODE_ENV=production webpack",
+    "build": "yarn clean && webpack --config webpack.prod.js",
     "test": "echo test",
     "install:canary": "yarn add @latitudegames/thoth-core@canary"
   },
@@ -65,6 +66,7 @@
     "@testing-library/user-event": "^12.1.10",
     "babel-loader": "^8.2.2",
     "babel-plugin-transform-class-properties": "^6.24.1",
+    "compression-webpack-plugin": "^9.0.0",
     "copy-webpack-plugin": "^9.0.1",
     "crypto-browserify": "^3.12.0",
     "css-loader": "^6.3.0",
@@ -75,15 +77,19 @@
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.3.2",
     "jest": "^27.2.3",
+    "rimraf": "^3.0.2",
     "source-map-loader": "^3.0.0",
     "stream-browserify": "^3.0.0",
     "style-loader": "^3.3.0",
+    "terser-webpack-plugin": "^5.2.4",
     "ts-jest": "^27.0.5",
     "ts-loader": "8.2.0",
     "typescript": "^4.2.0",
     "webpack": "^5.4.0",
+    "webpack-bundle-analyzer": "^4.4.2",
     "webpack-cli": "^4.8.0",
-    "webpack-dev-server": "^4.3.0"
+    "webpack-dev-server": "^4.3.0",
+    "webpack-merge": "^5.8.0"
   },
   "eslintConfig": {
     "extends": [
