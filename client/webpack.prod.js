@@ -11,7 +11,19 @@ module.exports = () => {
 
   const prodConfig = {
     mode: 'production',
-    plugins: [new BundleAnalyzerPlugin(), new CompressionPlugin()],
+    plugins: [
+      new CompressionPlugin(),
+      // {
+      //   apply: compiler => {
+      //     compiler.hooks.done.tap('DonePlugin', stats => {
+      //       console.log('Compile is done !')
+      //       setTimeout(() => {
+      //         process.exit(0)
+      //       })
+      //     })
+      //   },
+      // },
+    ],
     optimization: {
       minimize: true,
       minimizer: [new TerserPlugin()],
@@ -25,6 +37,12 @@ module.exports = () => {
         },
       },
     },
+  }
+
+  const isAnalyze = typeof process.env.BUNDLE_ANALYZE !== 'undefined'
+
+  if (isAnalyze) {
+    prodConfig.plugins.push(new BundleAnalyzerPlugin())
   }
 
   return merge(commonConfig, prodConfig)
