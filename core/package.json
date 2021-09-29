@@ -6,6 +6,7 @@
   "module": "dist/index.esm.js",
   "scripts": {
     "build": "webpack",
+    "build:analyze": "BUNDLE_ANALZE=true webpack",
     "start": "yarn clean && webpack --watch",
     "clean": "rimraf dist",
     "lint": "eslint . --ignore-path ../.eslintignore --ext ts --ext tsx --ext js --ext jsx",
