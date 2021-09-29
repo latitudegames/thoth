@@ -16,6 +16,16 @@ module.exports = () => {
       port: process.env.PORT || 3001,
       historyApiFallback: true,
     },
+    module: {
+      rules: [
+        {
+          test: /\.js$/,
+          enforce: 'pre',
+          // include: [path.resolve(__dirname, 'node_modules/@latitudegames')],
+          use: ['source-map-loader'],
+        },
+      ],
+    },
     plugins: [
       new Dotenv({
         path: './.env',

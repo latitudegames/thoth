@@ -8,7 +8,6 @@ const webpack = require('webpack')
 const prod = process.env.NODE_ENV === 'production'
 
 const babelOptions = {
-  sourceType: 'unambiguous',
   presets: [
     '@babel/env',
     [
@@ -40,12 +39,6 @@ module.exports = () => {
     ignoreWarnings: [/Failed to parse source map/],
     module: {
       rules: [
-        {
-          test: /\.js$/,
-          enforce: 'pre',
-          // include: [path.resolve(__dirname, 'node_modules/@latitudegames')],
-          use: ['source-map-loader'],
-        },
         {
           test: /\.css$/i,
           use: [
