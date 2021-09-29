@@ -1,4 +1,4 @@
-import thothCore, { initEditor, EngineContext } from '@latitudeGames/thoth-core'
+import thothCore, { initEditor, EngineContext } from '@latitudegames/thoth-core'
 import { useRef, useContext, createContext, useState } from 'react'
 
 import LoadingScreen from '../features/common/LoadingScreen/LoadingScreen'
