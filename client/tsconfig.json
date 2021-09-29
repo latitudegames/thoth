@@ -6,7 +6,7 @@
     "jsx": "react-jsx",
     "noImplicitAny": false,
     "strictNullChecks": true,
-    "outDir": "dist",
+    "outDir": "build",
     "strict": false,
     "composite": true,
     "sourceMap": true,
