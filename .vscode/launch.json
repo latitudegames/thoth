@@ -10,7 +10,22 @@
       "name": "Launch Chrome against localhost",
       "url": "http://localhost:3001",
       "sourceMap": true,
-      "webRoot": "${workspaceFolder}/client"
+      "webRoot": "${workspaceFolder}/client",
+      //   "trace": true,
+
+      // These overrides are mapping the location of the file in the browser (from webpack) to the local file
+      "sourceMapPathOverrides": {
+        "webpack://thothCore/./*": "${workspaceFolder}/core/*",
+        "webpack-internal:///../core/dist": "${workspaceFolder}/core/*",
+        "webpack-internal:///./": "${workspaceFolder}/client/*",
+        "webpack://@thoth/client/./*": "${workspaceFolder}/client/*"
+      }
     }
   ]
 }
+
+// "webpack://${workspaceFolderBasename}/*": "${workspaceFolder}/*"
+// webpack://@thoth/client/./src/App.js?be94
+// webpack://thothCore/./src/editor.ts?9392
+// "webpack-internal:///../core/dist/index.js"
+// webpack-internal:///./src/contexts/AppProviders.jsx
