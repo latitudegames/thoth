@@ -34,7 +34,7 @@ module.exports = () => {
   return {
     entry: ['regenerator-runtime/runtime.js', './src/index.js'],
     output: {
-      path: path.resolve(__dirname, 'dist'),
+      path: path.resolve(__dirname, 'build'),
       filename: '[name].bundle.js',
       clean: true,
     },
@@ -89,6 +89,7 @@ module.exports = () => {
               options: {
                 compilerOptions: {
                   noEmit: false,
+                  outDir: 'dist',
                 },
               },
             },
@@ -98,10 +99,9 @@ module.exports = () => {
     },
     plugins: [
       new HtmlWebPackPlugin({
-        template: './public/index.html',
+        template: './index.ejs',
         filename: './index.html',
         inject: true,
-        favicon: './public/favicon.ico',
       }),
       new webpack.DefinePlugin({
         ...envKeys,
@@ -109,7 +109,7 @@ module.exports = () => {
       }),
 
       new CopyPlugin({
-        patterns: [{ from: 'public', to: '' }],
+        patterns: [{ from: 'public', to: '.' }],
       }),
     ],
   }
