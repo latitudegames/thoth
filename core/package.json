@@ -5,9 +5,9 @@
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "scripts": {
-    "build": "webpack",
-    "build:analyze": "BUNDLE_ANALYZE=true webpack",
-    "start": "yarn clean && webpack --watch",
+    "build": "webpack --config webpack.prod.js",
+    "build:analyze": "BUNDLE_ANALYZE=true webpack --config webpack.prod.js",
+    "start": "yarn clean && webpack --watch --config webpack.dev.js",
     "clean": "rimraf dist",
     "lint": "eslint . --ignore-path ../.eslintignore --ext ts --ext tsx --ext js --ext jsx",
     "lint:fix": "eslint . --ignore-path ../.eslintignore --ext ts --ext tsx --ext js --ext jsx --fix",
