@@ -12,18 +12,18 @@
       "sourceMap": true,
       "webRoot": "${workspaceFolder}/client",
       "trace": true,
-      // These overrides are mapping the location of the file in the browser (from webpack) to the local file
       "sourceMapPathOverrides": {
-        "webpack://@thoth/client/thothCore/*": "${workspaceFolder}/core/*",
-        "webpack-internal:///../core/dist/*": "${workspaceFolder}/core/*",
         "webpack://thothCore/./*": "${workspaceFolder}/core/*",
-        "webpack://@thoth/client/./*": "${workspaceFolder}/client/*",
-        "webpack-internal:///*": "${workspaceFolder}/client/*",
-        "webpack-internal:///./*": "${workspaceFolder}/client/*"
+        "webpack://@thoth/client/./*": "${workspaceFolder}/client/*"
       }
     }
   ]
 }
+
+// "webpack://@thoth/client/thothCore/*": "${workspaceFolder}/core/*",
+// "webpack-internal:///../core/*": "${workspaceFolder}/core/*",
+// "webpack-internal:///*": "${workspaceFolder}/client/*",
+// "webpack-internal:///./*": "${workspaceFolder}/client/*"
 
 // webpack://@thoth/client/./src/App.js
 // webpack://@thoth/client/./src/contexts/EditorProvider.tsx?77dd
