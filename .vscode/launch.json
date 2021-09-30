@@ -16,6 +16,7 @@
       "sourceMapPathOverrides": {
         "webpack://@thoth/client/thothCore/*": "${workspaceFolder}/core/*",
         "webpack-internal:///../core/dist/*": "${workspaceFolder}/core/*",
+        "webpack://thothCore/./*": "${workspaceFolder}/core/*",
         "webpack://@thoth/client/./*": "${workspaceFolder}/client/*",
         "webpack-internal:///*": "${workspaceFolder}/client/*",
         "webpack-internal:///./*": "${workspaceFolder}/client/*"
@@ -25,6 +26,7 @@
 }
 
 // webpack://@thoth/client/./src/App.js
+// webpack://@thoth/client/./src/contexts/EditorProvider.tsx?77dd
 
 // "webpack://${workspaceFolderBasename}/*": "${workspaceFolder}/*"
 // webpack://@thoth/client/./src/App.js?be94
