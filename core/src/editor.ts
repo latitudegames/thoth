@@ -127,7 +127,6 @@ export const initEditor = async function ({
       // we only want to proceed if the incoming modules have changed.
       if (isEqual(modules, editor.moduleManager.modules)) return
       editor.moduleManager.setModules(modules)
-      editor.trigger('save')
     }
   )
 
