@@ -7,7 +7,7 @@ module.exports = () => {
 
   const devConfig = {
     mode: 'development',
-    devtool: 'eval-source-map',
+    devtool: 'source-map',
     devServer: {
       static: {
         directory: 'public',
