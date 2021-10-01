@@ -6,7 +6,7 @@ module.exports = () => {
 
   const devConfig = {
     mode: 'development',
-    devtool: 'eval-source-map',
+    devtool: 'source-map',
   }
 
   return merge(commonConfig, devConfig)
