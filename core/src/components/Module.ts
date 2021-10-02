@@ -1,6 +1,7 @@
-import isEqual from 'lodash/isEqual'
+// import isEqual from 'lodash/isEqual'
 
 import {
+  ModuleType,
   NodeData,
   ThothNode,
   ThothWorkerInputs,
@@ -17,7 +18,7 @@ export class ModuleComponent extends ThothComponent {
   updateModuleSockets: Function
   task
   info
-  subscriptionMap: Record<number, { unsubscribe: () => void }> = {}
+  subscriptionMap: Record<number, Function> = {}
   editor: any
   noBuildUpdate: boolean
   category: string
@@ -63,25 +64,25 @@ export class ModuleComponent extends ThothComponent {
   unsubscribe(node: ThothNode) {
     if (!this.subscriptionMap[node.id]) return
 
-    this.subscriptionMap[node.id].unsubscribe()
+    this.subscriptionMap[node.id]()
+
     delete this.subscriptionMap[node.id]
   }
 
   async subscribe(node: ThothNode) {
     if (!node.data.module) return
-
-    let cache: string
+    // let cache: string
 
     this.unsubscribe(node)
-    this.subscriptionMap[node.id] = await this.editor.thothV2.findOneModule(
-      { name: node.data.module },
-      (module: { toJSON: Function; name: string }) => {
-        if (cache && !isEqual(cache, module.toJSON())) {
-          // make sure that the module manager has the latest updated version of the module
-          this.editor.moduleManager.updateModule(module.toJSON())
-          this.updateSockets(node, module.name)
-        }
-        cache = module.toJSON()
+
+    this.subscriptionMap[node.id] = this.editor.thoth.onModuleUpdated(
+      node.data.name,
+      (module: ModuleType) => {
+        // if (!isEqual(cache, module)) {
+        this.editor.moduleManager.updateModule(module)
+        this.updateSockets(node, module.name)
+        // }
+        // cache = module.toJSON()
       }
     )
   }
