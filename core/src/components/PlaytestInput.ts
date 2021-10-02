@@ -38,7 +38,7 @@ export class PlaytestInput extends ThothComponent {
   unsubscribe?: () => void
 
   subscribeToPlaytest(node: ThothNode) {
-    const { onPlaytest } = this.editor?.thothV2 as EngineContext
+    const { onPlaytest } = this.editor?.thoth as EngineContext
 
     if (onPlaytest) {
       // store the unsubscribe function in our node map
