@@ -16,8 +16,7 @@ export type PubSubContext = {
 
 class ThothReteNodeEditor extends NodeEditor {
   pubSub: PubSubContext
-  thoth: unknown
-  thothV2: EngineContext
+  thoth: EngineContext
   tab: unknown
 }
 
