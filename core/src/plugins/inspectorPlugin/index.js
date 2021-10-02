@@ -4,7 +4,7 @@
 import { Inspector } from './Inspector'
 
 function install(editor) {
-  const { onInspector, sendToInspector, clearTextEditor } = editor.thothV2
+  const { onInspector, sendToInspector, clearTextEditor } = editor.thoth
 
   editor.on('componentregister', component => {
     const builder = component.builder
