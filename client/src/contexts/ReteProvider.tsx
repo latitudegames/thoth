@@ -15,6 +15,10 @@ const Context = createContext({
   onInspector: () => {},
   onPlayTest: () => {},
   onGameState: () => {},
+  onAddModule: () => {},
+  onUpdateModule: () => {},
+  onDeleteModule: () => {},
+  onModuleUpdated: () => {},
   sendToPlaytest: () => {},
   sendToInspector: () => {},
   clearTextEditor: () => {},
@@ -48,10 +52,37 @@ const ReteProvider = ({ children, tab }) => {
     $INSPECTOR_SET,
     $TEXT_EDITOR_CLEAR,
     $NODE_SET,
+    ADD_MODULE,
+    UPDATE_MODULE,
+    $MODULE_UPDATED,
   } = events
 
   const onInspector = (node, callback) => {
     return subscribe($NODE_SET(tab.id, node.id), (event, data) => {
+      callback(data)
+    })
+  }
+
+  const onAddModule = callback => {
+    return subscribe(ADD_MODULE, (event, data) => {
+      callback(data)
+    })
+  }
+
+  const onUpdateModule = callback => {
+    return subscribe(UPDATE_MODULE, (event, data) => {
+      callback(data)
+    })
+  }
+
+  const onModuleUpdated = (moduleName, callback) => {
+    return subscribe($MODULE_UPDATED(moduleName), (event, data) => {
+      callback(data)
+    })
+  }
+
+  const onDeleteModule = callback => {
+    return subscribe(UPDATE_MODULE, (event, data) => {
       callback(data)
     })
   }
@@ -91,6 +122,10 @@ const ReteProvider = ({ children, tab }) => {
 
   const publicInterface = {
     onInspector,
+    onAddModule,
+    onUpdateModule,
+    onDeleteModule,
+    onModuleUpdated,
     sendToInspector,
     sendToPlaytest,
     onPlaytest,
