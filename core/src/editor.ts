@@ -21,12 +21,10 @@ import TaskPlugin from './plugins/taskPlugin'
 import { PubSubContext } from './thoth-component'
 export class ThothEditor extends NodeEditor<EventsTypes> {
   pubSub: PubSubContext
-  thoth: unknown
-  thothV2: EngineContext
+  thoth: EngineContext
   tab: { type: string }
   abort: unknown
   loadGraph: (graph: Data) => Promise<void>
-  moduleSubscription: unknown
   moduleManager: ModuleManager
 }
 
@@ -41,19 +39,15 @@ export const initEditor = async function ({
   pubSub,
   thoth,
   tab,
-  thothV2,
   node,
 }: {
   container: any
   pubSub: any
   thoth: any
   tab: any
-  thothV2: any
   node: any
 }) {
   if (editorTabMap[tab.id]) editorTabMap[tab.id].clear()
-
-  let modules: Record<string, ModuleType> = {}
 
   // create the main edtor
   const editor = new ThothEditor('demo@0.1.0', container)
@@ -63,8 +57,14 @@ export const initEditor = async function ({
   // Set up the reactcontext pubsub on the editor so rete components can talk to react
   editor.pubSub = pubSub
   editor.thoth = thoth
-  editor.thothV2 = thothV2
   editor.tab = tab
+
+  // ██████╗ ██╗     ██╗   ██╗ ██████╗ ███████╗██╗███╗   ██╗███████╗
+  // ██╔══██╗██║     ██║   ██║██╔════╝ ██╔════╝██║████╗  ██║██╔════╝
+  // ██████╔╝██║     ██║   ██║██║  ███╗███████╗██║██╔██╗ ██║███████╗
+  // ██╔═══╝ ██║     ██║   ██║██║   ██║╚════██║██║██║╚██╗██║╚════██║
+  // ██║     ███████╗╚██████╔╝╚██████╔╝███████║██║██║ ╚████║███████║
+  // ╚═╝     ╚══════╝ ╚═════╝  ╚═════╝ ╚══════╝╚═╝╚═╝  ╚═══╝╚══════╝
 
   // History plugin for undo/redo
   editor.use(HistoryPlugin, { keyboard: false })
@@ -109,26 +109,50 @@ export const initEditor = async function ({
     scaleExtent: { min: 0.25, max: 2 },
   })
 
-  // handle modules
-  // NOTE watch this subscription as it may get intensive with lots of tabs open...
-  editor.moduleSubscription = await thothV2.getModules(
-    (moduleDocs: { toJSON: Function }[]) => {
-      if (!moduleDocs) return
+  const moduleDocs = await thoth.getModules()
 
-      modules = moduleDocs
-        .map((doc: { toJSON: Function }) => doc.toJSON())
-        .reduce((acc: Record<string, ModuleType>, module: ModuleType) => {
-          // todo handle better mapping
-          // see moduleSelect.tsx
-          acc[module.name] = module
-          return acc
-        }, {} as Record<string, ModuleType>)
+  // Parse modules into dictionary of all modules and JSON values
+  let modules: Record<string, ModuleType> = moduleDocs
+    .map((doc: { toJSON: Function }) => doc.toJSON())
+    .reduce((acc: Record<string, ModuleType>, module: ModuleType) => {
+      // todo handle better mapping
+      // see moduleSelect.tsx
+      acc[module.name] = module
+      return acc
+    }, {} as Record<string, ModuleType>)
 
-      // we only want to proceed if the incoming modules have changed.
-      if (isEqual(modules, editor.moduleManager.modules)) return
-      editor.moduleManager.setModules(modules)
-    }
+  // The engine is used to process/run the rete graph
+  const engine = initSharedEngine(
+    'demo@0.1.0',
+    Object.values(modules),
+    components
   )
+  // @seang TODO: update types for editor.use rather than casting as unknown here, we may want to bring our custom rete directly into the monorepo at this point
+  editor.use(ModulePlugin, { engine, modules } as unknown as void)
+
+  // ███╗   ███╗ ██████╗ ██████╗ ██╗   ██╗██╗     ███████╗███████╗
+  // ████╗ ████║██╔═══██╗██╔══██╗██║   ██║██║     ██╔════╝██╔════╝
+  // ██╔████╔██║██║   ██║██║  ██║██║   ██║██║     █████╗  ███████╗
+  // ██║╚██╔╝██║██║   ██║██║  ██║██║   ██║██║     ██╔══╝  ╚════██║
+  // ██║ ╚═╝ ██║╚██████╔╝██████╔╝╚██████╔╝███████╗███████╗███████║
+  // ╚═╝     ╚═╝ ╚═════╝ ╚═════╝  ╚═════╝ ╚══════╝╚══════╝╚══════╝
+
+  // add initial modules to the module manager
+  editor.moduleManager.setModules(modules)
+
+  // listen for pubsub onAddModule event to add modules
+  thoth.onAddModule((module: ModuleType) => {
+    editor.moduleManager.addModule(module)
+  })
+
+  // listen for update module event to update a module
+  thoth.onUpdateModule((module: ModuleType) => {
+    editor.moduleManager.updateModule(module)
+  })
+
+  thoth.onDeleteModule((module: ModuleType) => {
+    editor.moduleManager.deleteModule(module)
+  })
 
   // Register custom components with both the editor and the engine
   // We will need a way to share components between client and server (@seang: this should be covered by upcoming package)
@@ -140,14 +164,6 @@ export const initEditor = async function ({
     editor.register(c)
   })
 
-  // The engine is used to process/run the rete graph
-  const engine = initSharedEngine(
-    'demo@0.1.0',
-    Object.values(modules),
-    components
-  )
-  // @seang TODO: update types for editor.use rather than casting as unknown here, we may want to bring our custom rete directly into the monorepo at this point
-  editor.use(ModulePlugin, { engine, modules } as unknown as void)
   // @seang: moved these two functions to attempt to preserve loading order after the introduction of initSharedEngine
   editor.on('zoom', ({ source }) => {
     return source !== 'dblclick'
@@ -164,9 +180,16 @@ export const initEditor = async function ({
       // Alternative for now is for the client to call our own /openai endpoint.
       // NOTE need to consider authentication against Latitude API from a web client
       await engine.abort()
-      await engine.process(editor.toJSON(), null, { thoth: thothV2 })
+      await engine.process(editor.toJSON(), null, { thoth: thoth })
     }
   )
+
+  // ██████╗ ██╗   ██╗██████╗ ██╗     ██╗ ██████╗
+  // ██╔══██╗██║   ██║██╔══██╗██║     ██║██╔════╝
+  // ██████╔╝██║   ██║██████╔╝██║     ██║██║
+  // ██╔═══╝ ██║   ██║██╔══██╗██║     ██║██║
+  // ██║     ╚██████╔╝██████╔╝███████╗██║╚██████╗
+  // ╚═╝      ╚═════╝ ╚═════╝ ╚══════╝╚═╝ ╚═════╝
 
   editor.abort = async () => {
     await engine.abort()
