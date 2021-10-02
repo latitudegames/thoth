@@ -50,6 +50,10 @@ export class ModuleManager {
     this.modules[module.name as string] = module
   }
 
+  deleteModule(module: ModuleType) {
+    delete this.modules[module.name as string]
+  }
+
   getSockets(
     data: { nodes: Record<string, ThothNode> },
     typeMap: Map<string, Socket>,
