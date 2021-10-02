@@ -2,6 +2,7 @@ import { useSnackbar } from 'notistack'
 import { useContext, createContext, useState, useEffect } from 'react'
 
 import { useDB } from './DatabaseProvider'
+import { usePubSub } from './PubSubProvider'
 
 const Context = createContext({
   modules: [] as any[],
@@ -13,9 +14,21 @@ const Context = createContext({
 export const useModule = () => useContext(Context)
 
 const ModuleProvider = ({ children }) => {
-  const { enqueueSnackbar } = useSnackbar()
   const [modules, setModules] = useState([] as any[])
+
+  const { events, publish, subscribe } = usePubSub()
+  const { enqueueSnackbar } = useSnackbar()
   const { models } = useDB()
+
+  const { ADD_MODULE, UPDATE_MODULE, $MODULE_UPDATED } = events
+
+  // Subscribe to all general update module events
+  // and relay them to the individual module name subscribers
+  useEffect(() => {
+    return subscribe(UPDATE_MODULE, module => {
+      publish($MODULE_UPDATED(module.name), module)
+    })
+  }, [])
 
   // subscribe to all modules in the database
   useEffect(() => {
@@ -37,12 +50,20 @@ const ModuleProvider = ({ children }) => {
     try {
       const module = await models.modules.updateModule(moduleName, update)
       if (snack) enqueueSnackbar('Module saved')
+
+      publish(UPDATE_MODULE, module)
+
       return module
     } catch (err) {
       // eslint-disable-next-line no-console
       console.warn('error saving module', module)
       if (snack) enqueueSnackbar('Error saving module')
     }
+  }
+
+  const newModule = async moduleOptions => {
+    const module = models.modules.newModule(moduleOptions)
+    publish(ADD_MODULE, module)
   }
 
   const getModule = async moduleName => {
@@ -64,11 +85,12 @@ const ModuleProvider = ({ children }) => {
   }
 
   const publicInterface = {
+    ...models.modules,
     modules,
     saveModule,
     getModule,
     getSpellModules,
-    ...models.modules,
+    newModule,
   }
 
   return <Context.Provider value={publicInterface}>{children}</Context.Provider>
