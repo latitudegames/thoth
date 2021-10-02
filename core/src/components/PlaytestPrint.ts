@@ -49,7 +49,7 @@ export class PlaytestPrint extends ThothComponent {
     outputs: ThothWorkerOutputs,
     { silent }: { silent: boolean }
   ) {
-    const { sendToPlaytest } = this.editor?.thothV2 as EngineContext
+    const { sendToPlaytest } = this.editor?.thoth as EngineContext
     if (!inputs || !inputs.text) return {}
     const text = inputs.text[0]
 
