@@ -30,7 +30,7 @@ const DatabaseProvider = ({ children }) => {
     models,
   }
 
-  if (!db && !models) return <LoadingScreen />
+  if (!db || !models) return <LoadingScreen />
 
   return <Context.Provider value={publicInterface}>{children}</Context.Provider>
 }
