@@ -80,6 +80,7 @@ const TabManager = ({ children }) => {
 
     const newTabDoc = await db.tabs.insert(newTab)
     setActiveTab(newTabDoc.toJSON())
+    refreshTabs()
   }
 
   const closeTab = async tabId => {
