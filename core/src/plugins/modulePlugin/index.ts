@@ -127,7 +127,7 @@ function install(
         if (builder) {
           component.updateModuleSockets = (node: ThothNode) => {
             const modules = moduleManager.modules
-            const currentNodeModule = node.data.module as number
+            const currentNodeModule = node.data.module as string
             if (!node.data.module || !modules[currentNodeModule]) return
 
             if (!node.data.inputs) node.data.inputs = []
