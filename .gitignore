@@ -8,3 +8,6 @@ node_modules
 build
 .DS_Store
 .vscode/chrome
+
+# Generated Styles for AreaPlugin
+core/src/plugins/areaPlugin/style.css.d.ts
