@@ -73,10 +73,10 @@ export class ModuleComponent extends ThothComponent {
     if (!node.data.module) return
     // let cache: string
 
-    this.unsubscribe(node)
+    // this.unsubscribe(node)
 
     this.subscriptionMap[node.id] = this.editor.thoth.onModuleUpdated(
-      node.data.name,
+      node.data.module,
       (module: ModuleType) => {
         // if (!isEqual(cache, module)) {
         this.editor.moduleManager.updateModule(module)
@@ -90,7 +90,7 @@ export class ModuleComponent extends ThothComponent {
   updateSockets(node: ThothNode, moduleName: string) {
     node.data.module = moduleName
     this.updateModuleSockets(node)
-    this.editor.trigger('process')
+    this.editor.trigger('save')
     node.update()
   }
 
