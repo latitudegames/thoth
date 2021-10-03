@@ -29,12 +29,14 @@ const loadModuleModel = db => {
     // eslint-disable-next-line
     console.log('module', module)
 
-    return await module.atomicUpdate(oldData => {
+    const updatedModule = await module.atomicUpdate(oldData => {
       return {
         ...oldData,
         ...update,
       }
     })
+
+    return updatedModule
   }
 
   const updateOrCreate = async doc => {
