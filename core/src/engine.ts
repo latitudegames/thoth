@@ -62,6 +62,7 @@ export const initSharedEngine = (
   const engine = new Rete.Engine(name)
 
   if (server) {
+    // WARNING: ModulePlugin needs to be initialized before TaskPlugin during engine setup
     engine.use(ModulePlugin, { engine, modules } as any)
     engine.use(TaskPlugin)
   }
