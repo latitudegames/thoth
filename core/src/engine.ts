@@ -62,8 +62,8 @@ export const initSharedEngine = (
   const engine = new Rete.Engine(name)
 
   if (server) {
-    engine.use(TaskPlugin)
     engine.use(ModulePlugin, { engine, modules } as any)
+    engine.use(TaskPlugin)
   }
 
   engine.bind('run')
