@@ -51,7 +51,9 @@ const ModuleProvider = ({ children }) => {
       const module = await models.modules.updateModule(moduleName, update)
       if (snack) enqueueSnackbar('Module saved')
 
-      publish(UPDATE_MODULE, module.toJSON())
+      const json = module.toJSON()
+
+      publish(UPDATE_MODULE, json)
 
       return module
     } catch (err) {
@@ -62,8 +64,10 @@ const ModuleProvider = ({ children }) => {
   }
 
   const newModule = async moduleOptions => {
-    const module = models.modules.newModule(moduleOptions)
-    publish(ADD_MODULE, module)
+    const module = await models.modules.newModule(moduleOptions)
+    publish(ADD_MODULE, module.toJSON())
+
+    return module
   }
 
   const getModule = async moduleName => {
