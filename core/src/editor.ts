@@ -98,7 +98,6 @@ export const initEditor = async function ({
       return [component.category]
     },
   })
-  editor.use(TaskPlugin)
 
   // This should only be needed on client, not server
   editor.use(SocketGenerator)
@@ -123,7 +122,10 @@ export const initEditor = async function ({
   // The engine is used to process/run the rete graph
   const engine = initSharedEngine('demo@0.1.0', modules, components)
   // @seang TODO: update types for editor.use rather than casting as unknown here, we may want to bring our custom rete directly into the monorepo at this point
+
+  // WARNING module plugin has to be loaded FIRST before the task plugin.
   editor.use(ModulePlugin, { engine, modules } as unknown as void)
+  editor.use(TaskPlugin)
 
   // ███╗   ███╗ ██████╗ ██████╗ ██╗   ██╗██╗     ███████╗███████╗
   // ████╗ ████║██╔═══██╗██╔══██╗██║   ██║██║     ██╔════╝██╔════╝
