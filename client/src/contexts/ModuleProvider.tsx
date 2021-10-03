@@ -25,7 +25,7 @@ const ModuleProvider = ({ children }) => {
   // Subscribe to all general update module events
   // and relay them to the individual module name subscribers
   useEffect(() => {
-    return subscribe(UPDATE_MODULE, module => {
+    return subscribe(UPDATE_MODULE, (event, module) => {
       publish($MODULE_UPDATED(module.name), module)
     })
   }, [])
@@ -51,7 +51,7 @@ const ModuleProvider = ({ children }) => {
       const module = await models.modules.updateModule(moduleName, update)
       if (snack) enqueueSnackbar('Module saved')
 
-      publish(UPDATE_MODULE, module)
+      publish(UPDATE_MODULE, module.toJSON())
 
       return module
     } catch (err) {
