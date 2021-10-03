@@ -149,8 +149,6 @@ export const initEditor = async function ({
     editor.moduleManager.deleteModule(module)
   })
 
-  // Register custom components with both the editor and the engine
-  // We will need a way to share components between client and server (@seang: this should be covered by upcoming package)
   // WARNING all the plugins from the editor get installed onto the component and modify it.  This effects the components registered in the engine, which already have plugins installed.
   components.forEach(c => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
