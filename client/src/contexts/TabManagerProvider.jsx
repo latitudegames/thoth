@@ -32,7 +32,7 @@ const TabManager = ({ children }) => {
   const { events, publish } = usePubSub()
   // eslint-disable-next-line no-unused-vars
   const [, setLocation] = useLocation()
-  const [tabs, setTabs] = useState(null)
+  const [tabs, setTabs] = useState([])
   const [activeTab, setActiveTab] = useState(null)
 
   // Suscribe to changes in the database for active tab, and all tabs
