@@ -1,4 +1,4 @@
-// import isEqual from 'lodash/isEqual'
+import isEqual from 'lodash/isEqual'
 
 import {
   ModuleType,
@@ -71,18 +71,18 @@ export class ModuleComponent extends ThothComponent {
 
   async subscribe(node: ThothNode) {
     if (!node.data.module) return
-    // let cache: string
+    let cache: ModuleType
 
     // this.unsubscribe(node)
 
     this.subscriptionMap[node.id] = this.editor.thoth.onModuleUpdated(
       node.data.module,
       (module: ModuleType) => {
-        // if (!isEqual(cache, module)) {
-        this.editor.moduleManager.updateModule(module)
-        this.updateSockets(node, module.name)
-        // }
-        // cache = module.toJSON()
+        if (!isEqual(cache, module)) {
+          this.editor.moduleManager.updateModule(module)
+          this.updateSockets(node, module.name)
+        }
+        cache = module
       }
     )
   }
@@ -90,7 +90,7 @@ export class ModuleComponent extends ThothComponent {
   updateSockets(node: ThothNode, moduleName: string) {
     node.data.module = moduleName
     this.updateModuleSockets(node)
-    this.editor.trigger('save')
+    this.editor.trigger('process')
     node.update()
   }
 
