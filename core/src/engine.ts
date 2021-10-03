@@ -3,6 +3,7 @@ import { Node } from 'rete/types'
 
 import {
   ModelCompletionOpts,
+  ModuleType,
   NodeData,
   OpenAIResultChoice,
   Spell,
@@ -54,16 +55,15 @@ export type EngineContext = {
 
 export const initSharedEngine = (
   name: string,
-  modules: any[],
+  modules: Record<string, ModuleType>,
   components: any[],
   server = false
 ) => {
   const engine = new Rete.Engine(name)
 
-  engine.use(ModulePlugin, { engine, modules } as any)
-
   if (server) {
     engine.use(TaskPlugin)
+    engine.use(ModulePlugin, { engine, modules } as any)
   }
 
   engine.bind('run')
