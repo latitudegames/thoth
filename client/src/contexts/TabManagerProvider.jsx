@@ -35,32 +35,24 @@ const TabManager = ({ children }) => {
   const [tabs, setTabs] = useState(null)
   const [activeTab, setActiveTab] = useState(null)
 
-  // handle redirection when active tab changes
-  // useEffect(() => {
-  //   if (location !== "/thoth") setLocation("/thoth");
-  // }, [activeTab]);
-
   // Suscribe to changes in the database for active tab, and all tabs
   useEffect(() => {
     if (!db) return
     ;(async () => {
-      await db.tabs
+      const activeTab = await db.tabs
         .findOne({ selector: { active: true } })
-        .$.subscribe(result => {
-          if (!result) return
+        .exec()
+      const tabs = await db.tabs.find().exec()
 
-          setActiveTab(result.toJSON())
-        })
-
-      await db.tabs.find().$.subscribe(result => {
-        if (!result) return
-        // If there are no tabs, we route the person back to the home screen
-        // if (result.length === 0) setLocation("/home");
-
-        setTabs(result.map(tab => tab.toJSON()))
-      })
+      if (activeTab) setActiveTab(activeTab.toJSON())
+      if (tabs && tabs.length > 0) setTabs(tabs.map(tab => tab.toJSON()))
     })()
   }, [db])
+
+  const refreshTabs = async () => {
+    const tabs = await db.tabs.find().exec()
+    if (tabs && tabs.length > 0) setTabs(tabs.map(tab => tab.toJSON()))
+  }
 
   const openTab = async ({
     workspace = 'default',
@@ -86,7 +78,8 @@ const TabManager = ({ children }) => {
       active: true,
     }
 
-    await db.tabs.insert(newTab)
+    const newTabDoc = await db.tabs.insert(newTab)
+    setActiveTab(newTabDoc.toJSON())
   }
 
   const closeTab = async tabId => {
@@ -105,12 +98,14 @@ const TabManager = ({ children }) => {
   }
 
   const switchTab = async (tabId, query) => {
+    console.log('Switching tab')
     const selector = query ? query : { id: tabId }
     const tab = await db.tabs.findOne({ selector }).exec()
     if (!tab) return false
     await tab.atomicPatch({ active: true })
 
     setActiveTab(tab.toJSON())
+    await refreshTabs()
     return true
   }
 
