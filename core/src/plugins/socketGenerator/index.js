@@ -15,14 +15,15 @@ function install(editor) {
           outputMap[key] = value
         })
 
-        node.data.outputs.forEach(key => {
-          if (outputMap[key]) return
-          const output = new Rete.Output(
-            key.socketKey ? key.socketKey : key.name,
-            key.name,
-            sockets[key.socketType]
-          )
-          node.addOutput(output)
+        node.data.outputs.forEach(socket => {
+          if (!outputMap[socket.socketKey]) {
+            const output = new Rete.Output(
+              socket.socketKey ? socket.socketKey : socket.name,
+              socket.name,
+              sockets[socket.socketType]
+            )
+            node.addOutput(output)
+          }
         })
       }
 
@@ -43,13 +44,13 @@ function install(editor) {
           inputMap[key] = value
         })
 
-        node.data.inputs.forEach(key => {
+        node.data.inputs.forEach(socket => {
           // If the input key is already on the node, return
-          if (inputMap[key]) return
+          if (inputMap[socket.socketKey]) return
           const input = new Rete.Input(
-            key.socketKey ? key.socketKey : key.name,
-            key.name,
-            sockets[key.socketType]
+            socket.socketKey ? socket.socketKey : socket.name,
+            socket.name,
+            sockets[socket.socketType]
           )
           node.addInput(input)
         })
