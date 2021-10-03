@@ -56,7 +56,7 @@ function App() {
     return user ? <Redirect to="/home" /> : <Redirect to="/login" />
   }
 
-  if (!tabs || !checked) return <LoadingScreen />
+  if (!checked) return <LoadingScreen />
 
   return (
     <ThothPageWrapper tabs={tabs}>
