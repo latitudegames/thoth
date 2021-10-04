@@ -9,10 +9,11 @@ import {
 import { EngineContext } from '../engine'
 import { Task } from '../plugins/taskPlugin/task'
 import { triggerSocket, stringSocket } from '../sockets'
-import { ThothComponent } from '../thoth-component'
+import { ThothComponent, ThothTask } from '../thoth-component'
 const info = `The Playtest Input component is connected to the playtest window. It received anything which is type dinto the playtest areavia the input and will trigger the running of your spell chain.`
 export class PlaytestInput extends ThothComponent {
   initialTask?: Task
+  nodeTaskMap: Record<number, ThothTask> = {}
 
   constructor() {
     // Name of the component
@@ -23,8 +24,8 @@ export class PlaytestInput extends ThothComponent {
         text: 'output',
         trigger: 'option',
       },
-      init: (task = {} as Task) => {
-        this.initialTask = task
+      init: (task = {} as Task, node: ThothNode) => {
+        this.nodeTaskMap[node.id] = task
       },
     }
 
@@ -46,9 +47,11 @@ export class PlaytestInput extends ThothComponent {
         // attach the text to the nodes data for access in worker
         node.data.text = text
 
+        const task = this.nodeTaskMap[node.id]
+
         // will need to run this here with the stater rather than the text
-        this.initialTask?.run(text)
-        this.initialTask?.reset()
+        task?.run(text)
+        task?.reset()
         this.editor?.trigger('process')
       })
     }
