@@ -178,8 +178,8 @@ const MenuBar = () => {
   }
 
   //Menu bar rendering
-  const ListItem = ({ item, _label, topLevel, onClick }) => {
-    const label = _label ? _label.replace(/_/g, ' ') : _label
+  const ListItem = ({ item, label, topLevel, onClick }) => {
+    label = label ? label.replace(/_/g, ' ') : label
     let children = null
     if (item.items && Object.keys(item.items)) {
       children = (
@@ -219,6 +219,8 @@ const MenuBar = () => {
     // eslint-disable-next-line no-eval
     eval(func)
   }
+
+  console.log('MENU BAR')
 
   return (
     <ul className={css['menu-bar']}>
