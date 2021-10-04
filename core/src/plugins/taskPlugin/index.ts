@@ -14,6 +14,24 @@ function install(editor: NodeEditor) {
         'The "outputs" field must be an object whose keys correspond to the Output\'s keys'
       )
 
+    const addTaskOutputs = (node: NodeData) => {
+      const outputs = node.data.outputs as []
+      let taskOutputs = {}
+      if (node.data.outputs && outputs.length > 0) {
+        taskOutputs = outputs.reduce(
+          (acc: Record<string, unknown>, out: Record<string, unknown>) => {
+            acc[out.socketKey as string] = out.taskType || 'output'
+            return acc
+          },
+          { ...component.task.outputs }
+        )
+
+        component.task.outputs = taskOutputs
+      }
+
+      return taskOutputs
+    }
+
     const taskWorker = component.worker
     const taskOptions = component.task
 
@@ -49,7 +67,17 @@ function install(editor: NodeEditor) {
 
       if (taskOptions.init) taskOptions.init(task, node)
 
-      Object.keys(taskOptions.outputs).forEach(key => {
+      // Since some outputs are generated dynamically based on data stored in the node
+      // we need to add those as outputs to the taskOptions when we set up the allowed outputs of the task.
+      // We do this here because this worker is the one run on process to set up the task runflow
+      // And it pauses after this until the task run function is called.
+      const taskOutputs = addTaskOutputs(node)
+      const allOutputs = {
+        ...taskOutputs,
+        ...taskOptions.outputs,
+      }
+
+      Object.keys(allOutputs).forEach(key => {
         outputs[key] = { type: taskOptions.outputs[key], key, task }
       })
     }
