@@ -6,7 +6,6 @@ export const completion = async body => {
   try {
     const response = await fetch(url + '/ml/text/completions', {
       method: 'POST',
-      prompt,
       mode: 'cors',
       headers: {
         'Content-Type': 'application/json',
@@ -14,8 +13,7 @@ export const completion = async body => {
       },
       body: JSON.stringify({ ...body, prompt: body.prompt.trimEnd() }),
     })
-    const parsedResponse = await response.json()
-    const { result } = parsedResponse
+    const result = await response.text()
     return result
   } catch (err) {
     // eslint-disable-next-line no-console
