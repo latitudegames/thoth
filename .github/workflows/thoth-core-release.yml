@@ -34,7 +34,7 @@ jobs:
         run: yarn install
       - name: Prepare and Release
         working-directory: core
-        run: yarn preship && yarn auto release --prerelease
+        run: yarn release
       - name: Publish to GitHub Packages
         working-directory: core/dist
         run: npm publish
