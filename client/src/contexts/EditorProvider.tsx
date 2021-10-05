@@ -1,5 +1,5 @@
 import { initEditor, EngineContext } from '@latitudegames/thoth-core'
-import { useRef, useContext, createContext, useState } from 'react'
+import React, { useRef, useContext, createContext, useState } from 'react'
 
 import LoadingScreen from '../features/common/LoadingScreen/LoadingScreen'
 import { MyNode } from '../features/common/Node/Node'
@@ -92,6 +92,7 @@ const EditorProvider = ({ children }) => {
   const buildEditor = async (container, spell, tab, thoth) => {
     // console.log('init editor', initEditor)
     // eslint-disable-next-line no-console
+    console.log('building editor for tab', tab)
     const newEditor = await initEditor({
       container,
       pubSub,
@@ -167,7 +168,7 @@ const EditorProvider = ({ children }) => {
   return <Context.Provider value={publicInterface}>{children}</Context.Provider>
 }
 
-export const Editor = ({ tab, children }) => {
+const RawEditor = ({ tab, children }) => {
   const [loaded, setLoaded] = useState(false)
   const { buildEditor } = useEditor()
   const spell = useSpell()
@@ -210,5 +211,9 @@ export const Editor = ({ tab, children }) => {
     </>
   )
 }
+
+export const Editor = React.memo(RawEditor)
+
+Editor.whyDidYouRender = true
 
 export default EditorProvider
