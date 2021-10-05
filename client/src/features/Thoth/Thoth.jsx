@@ -1,37 +1,37 @@
-import { useHotkeys } from "react-hotkeys-hook";
+import { useHotkeys } from 'react-hotkeys-hook'
 
-import TabLayout from "../common/TabLayout/TabLayout";
-import { useTabManager } from "../../contexts/TabManagerProvider";
-import { usePubSub } from "../../contexts/PubSubProvider";
-import Workspace from "./components/Workspace";
-import LoadingScreen from "../common/LoadingScreen/LoadingScreen";
+import { usePubSub } from '../../contexts/PubSubProvider'
+import { useTabManager } from '../../contexts/TabManagerProvider'
+import LoadingScreen from '../common/LoadingScreen/LoadingScreen'
+import TabLayout from '../common/TabLayout/TabLayout'
+import Workspace from './components/Workspace'
 
-const Thoth = ({ empty, workspace = "default" }) => {
-  const { activeTab, tabs } = useTabManager();
-  const pubSub = usePubSub();
+const Thoth = ({ empty }) => {
+  const { activeTab, tabs } = useTabManager()
+  const pubSub = usePubSub()
 
-  const { events, publish } = pubSub;
-
-  useHotkeys(
-    "Control+z",
-    () => {
-      if (!pubSub || !activeTab) return;
-
-      publish(events.$UNDO(activeTab.id));
-    },
-    [pubSub, activeTab]
-  );
+  const { events, publish } = pubSub
 
   useHotkeys(
-    "Control+Shift+z",
+    'Control+z',
     () => {
-      if (!pubSub || !activeTab) return;
-      publish(events.$REDO(activeTab.id));
+      if (!pubSub || !activeTab) return
+
+      publish(events.$UNDO(activeTab.id))
     },
     [pubSub, activeTab]
-  );
+  )
 
-  if (!activeTab) return <LoadingScreen />;
+  useHotkeys(
+    'Control+Shift+z',
+    () => {
+      if (!pubSub || !activeTab) return
+      publish(events.$REDO(activeTab.id))
+    },
+    [pubSub, activeTab]
+  )
+
+  if (!activeTab) return <LoadingScreen />
 
   return (
     <TabLayout>
@@ -40,7 +40,7 @@ const Thoth = ({ empty, workspace = "default" }) => {
           <Workspace tab={tab} key={`${i}-${tab.name}`} appPubSub={pubSub} />
         ))}
     </TabLayout>
-  );
-};
+  )
+}
 
-export default Thoth;
+export default Thoth

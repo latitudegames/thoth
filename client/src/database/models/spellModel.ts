@@ -1,23 +1,23 @@
-const loadSpellModel = (db) => {
-  const getSpell = async (spellId) => {
-    return db.spells
+const loadSpellModel = db => {
+  const getSpell = async spellId => {
+    return await db.spells
       .findOne({
         selector: {
           name: spellId,
         },
       })
-      .exec();
+      .exec()
   }
 
   const updateSpell = async (spellId, update) => {
-    const spell = await getSpell(spellId);
+    const spell = await getSpell(spellId)
 
-    return spell.atomicUpdate((oldData) => {
+    return spell.atomicUpdate(oldData => {
       return {
         ...oldData,
         ...update,
-      };
-    });
+      }
+    })
   }
 
   const newSpell = async ({ graph, name, gameState = {} }) => {
@@ -25,9 +25,9 @@ const loadSpellModel = (db) => {
       name,
       graph,
       gameState,
-    };
+    }
 
-    return db.spells.insert(newSpell);
+    return await db.spells.insert(newSpell)
   }
 
   return {

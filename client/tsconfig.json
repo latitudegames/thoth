@@ -6,20 +6,17 @@
     "jsx": "react-jsx",
     "noImplicitAny": false,
     "strictNullChecks": true,
+    "outDir": "build",
     "strict": false,
     "composite": true,
-    "rootDir": ".",
+    "sourceMap": true,
     "noEmit": true
   },
-  "typeRoots": [
-    "@types/@thoth"
-  ],
+  "typeRoots": ["@types/@thoth"],
   "references": [
     {
       "path": "../core"
     }
   ],
-  "include": [
-    "src"
-  ]
+  "include": ["src", "src/contexts/layouts/defaultLayout.json"]
 }

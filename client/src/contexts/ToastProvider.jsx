@@ -1,27 +1,27 @@
-import { makeStyles } from "@material-ui/core/styles";
-import { SnackbarProvider } from "notistack";
+import { makeStyles } from '@material-ui/core/styles'
+import { SnackbarProvider } from 'notistack'
 
 const useStyles = makeStyles(() => ({
   success: {
-    border: "1px solid var(--green)",
-    background: "var(--dark-2)",
+    border: '1px solid var(--green)',
+    background: 'var(--dark-2)',
   },
   error: {
-    border: "1px solid var(--red)",
-    background: "var(--dark-2)",
+    border: '1px solid var(--red)',
+    background: 'var(--dark-2)',
   },
   warning: {
-    border: "1px solid var(--yellow)",
-    background: "var(--dark-2)",
+    border: '1px solid var(--yellow)',
+    background: 'var(--dark-2)',
   },
   info: {
-    border: "1px solid var(--blue)",
-    background: "var(--dark-2)",
+    border: '1px solid var(--blue)',
+    background: 'var(--dark-2)',
   },
-}));
+}))
 
 const ToastProvider = ({ children }) => {
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <SnackbarProvider
@@ -35,7 +35,7 @@ const ToastProvider = ({ children }) => {
     >
       {children}
     </SnackbarProvider>
-  );
-};
+  )
+}
 
-export default ToastProvider;
+export default ToastProvider

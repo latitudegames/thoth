@@ -1,13 +1,13 @@
-import css from "./TabLayout.module.css";
+import css from './TabLayout.module.css'
 
-const TabLayout = ({ children, options, toolbar }) => {
+const TabLayout = ({ children }) => {
   return (
     <>
-      <div className={css["view-container"]}>
-        <div style={{ position: "relative", height: "100%" }}>{children}</div>
+      <div className={css['view-container']}>
+        <div style={{ position: 'relative', height: '100%' }}>{children}</div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default TabLayout;
+export default TabLayout

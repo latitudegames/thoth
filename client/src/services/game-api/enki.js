@@ -1,64 +1,65 @@
-import { getAuthHeader } from "../../utils/authHelper";
+/* eslint-disable no-console */
+import { getAuthHeader } from '../../utils/authHelper'
 
-const url = process.env.REACT_APP_API_URL;
+const url = process.env.REACT_APP_API_URL
 
-export const getEnkiPrompt = async (taskName) => {
+export const getEnkiPrompt = async taskName => {
   try {
     const response = await fetch(url + `/tools/enki/${taskName}`, {
-      method: "GET",
+      method: 'GET',
       prompt,
-      mode: "cors",
+      mode: 'cors',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         ...getAuthHeader(),
       },
-    });
+    })
 
-    const parsed = await response.json();
+    const parsed = await response.json()
 
-    return parsed;
+    return parsed
   } catch (err) {
-    console.log("fetch error", err);
+    console.warn('fetch error', err)
   }
-};
+}
 
 export const getEnkis = async () => {
   try {
     const response = await fetch(url + `/tools/enki`, {
-      method: "GET",
+      method: 'GET',
       prompt,
-      mode: "cors",
+      mode: 'cors',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         ...getAuthHeader(),
       },
-    });
+    })
 
-    const parsed = await response.json();
+    const parsed = await response.json()
 
-    return parsed;
+    return parsed
   } catch (err) {
-    console.log("fetch error", err);
+    console.warn('fetch error', err)
   }
-};
+}
 
 export const postEnkiCompletion = async (taskName, inputs) => {
   try {
     const response = await fetch(url + `/tools/enki/${taskName}/completion`, {
-      method: "POST",
+      method: 'POST',
       prompt,
-      mode: "cors",
+      mode: 'cors',
       body: JSON.stringify({ inputs }),
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         ...getAuthHeader(),
       },
-    });
+    })
 
-    const parsed = await response.json();
+    const parsed = await response.json()
 
-    return parsed;
+    return parsed
   } catch (err) {
-    console.log("fetch error", err);
+    console.warn('fetch error', err)
   }
-};
+}

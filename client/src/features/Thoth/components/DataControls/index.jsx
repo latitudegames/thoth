@@ -1,3 +1,3 @@
-import DataControls from "./DataControls";
+import DataControls from './DataControls'
 
-export default DataControls;
+export default DataControls

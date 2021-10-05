@@ -1,6 +1,6 @@
 const loadSpellModel = db => {
   const getUserById = async id => {
-    return db.user
+    return await db.user
       .findOne({
         selector: {
           id,
@@ -16,7 +16,7 @@ const loadSpellModel = db => {
   }
 
   const createUser = async id => {
-    return db.user.insert({ id })
+    return await db.user.insert({ id })
   }
 
   const getOrCreate = async id => {
@@ -28,7 +28,8 @@ const loadSpellModel = db => {
 
       return user
     } catch (err) {
-      console.log('error creating user', err)
+      // eslint-disable-next-line no-console
+      console.warn('error creating user', err)
       return false
     }
   }
