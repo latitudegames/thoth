@@ -20,7 +20,7 @@ export interface Tab {
 
 const tabAdapater = createEntityAdapter<Tab>()
 
-const initialState = tabAdapater.getInitialState({ activeTab: {} })
+const initialState = tabAdapater.getInitialState({ active: {} })
 
 export const tabSlice = createSlice({
   name: 'tabs',
