@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "webpack serve --config webpack.dev.js",
+    "start": "NODE_ENV=development webpack serve --config webpack.dev.js",
     "clean": "rimraf dist",
     "lint": "eslint . --ignore-path ../.eslintignore --ext ts --ext tsx --ext js --ext jsx",
     "lint:fix": "eslint . --ignore-path ../.eslintignore --ext ts --ext tsx --ext js --ext jsx --fix",
@@ -65,6 +65,7 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
+    "@welldone-software/why-did-you-render": "^6.2.1",
     "babel-loader": "^8.2.2",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "compression-webpack-plugin": "^9.0.0",
