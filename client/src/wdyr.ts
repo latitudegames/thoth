@@ -5,6 +5,6 @@ if (process.env.NODE_ENV === 'development') {
   console.log('running WDYR!')
   const whyDidYouRender = require('@welldone-software/why-did-you-render')
   whyDidYouRender(React, {
-    trackAllPureComponents: true,
+    trackAllPureComponents: false,
   })
 }
