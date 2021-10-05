@@ -79,7 +79,7 @@ export class PlaytestInput extends ThothComponent {
   }
 
   // the worker contains the main business logic of the node.  It will pass those results
-  // to the outputs to be consumed by any connecte components
+  // to the outputs to be consumed by any connected components
   worker(
     node: NodeData,
     inputs: ThothWorkerInputs,
