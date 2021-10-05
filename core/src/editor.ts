@@ -117,7 +117,7 @@ export const initEditor = async function ({
     .reduce((acc: Record<string, ModuleType>, module: ModuleType) => {
       // todo handle better mapping
       // see moduleSelect.tsx
-      acc[module.name] = module
+      acc[module.id] = module
       return acc
     }, {} as Record<string, ModuleType>)
 

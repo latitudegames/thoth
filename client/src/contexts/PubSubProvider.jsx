@@ -18,7 +18,7 @@ export const events = {
   ADD_MODULE: 'addModule',
   UPDATE_MODULE: 'updateModule',
   DELETE_MODULE: 'deleteModule',
-  $MODULE_UPDATED: moduleName => `moduleUpdated:${moduleName}`,
+  $MODULE_UPDATED: moduleId => `moduleUpdated:${moduleId}`,
   $PLAYTEST_INPUT: tabId => `playtestInput:${tabId}`,
   $PLAYTEST_PRINT: tabId => `playtestPrint:${tabId}`,
   $INSPECTOR_SET: tabId => `inspectorSet:${tabId}`,

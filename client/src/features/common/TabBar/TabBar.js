@@ -11,7 +11,10 @@ import css from './tabBar.module.css'
 const Tab = props => {
   const { switchTab, closeTab } = useTabManager()
 
-  const title = `${props.type}- ${props.name}`
+  const title =
+    props.type === 'module'
+      ? `${props.type}- ${props.name}`
+      : `${props.type}- ${props.name}`
   const tabClass = classnames({
     [css['tabbar-tab']]: true,
     [css['active']]: props.active,

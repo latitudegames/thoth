@@ -6,10 +6,10 @@ const loadModuleModel = db => {
     return callback ? query.$.subscribe(callback) : await query.exec()
   }
 
-  const getModule = async (moduleName, callback = null) => {
+  const getModule = async (moduleId, callback = null) => {
     const query = db.modules.findOne({
       selector: {
-        name: moduleName,
+        id: moduleId,
       },
     })
     return callback ? query.$.subscribe(callback) : await query.exec()
@@ -23,8 +23,8 @@ const loadModuleModel = db => {
     return callback ? query.$.subscribe(callback) : query.exec()
   }
 
-  const updateModule = async (moduleName: string, update: object) => {
-    const module = await getModule(moduleName)
+  const updateModule = async (moduleId: string, update: object) => {
+    const module = await getModule(moduleId)
 
     // eslint-disable-next-line
     console.log('module', module)
@@ -40,15 +40,15 @@ const loadModuleModel = db => {
   }
 
   const updateOrCreate = async doc => {
-    let existing = await getModule(doc.name)
+    let existing = await getModule(doc.id)
 
     if (!existing) {
       existing = await insert(doc)
     } else {
-      const moduleName = doc.name
+      const moduleId = doc.id
       // avoid conflict
-      delete doc.name
-      existing = await updateModule(moduleName, doc)
+      delete doc.id
+      existing = await updateModule(moduleId, doc)
     }
 
     return existing

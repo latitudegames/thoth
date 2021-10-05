@@ -8,52 +8,52 @@ const ModuleSelect = ({ control, updateData, initialValue }) => {
   const { modules, newModule, findOneModule } = useModule()
   const { openTab } = useTabManager()
   const { enqueueSnackbar } = useSnackbar()
-  const { dataKey } = control
 
   const optionArray = () => {
     return modules.map((module, index) => ({
-      value: module.name,
+      value: module.id,
       label: module.name,
     }))
   }
 
   const onChange = async ({ value }) => {
-    const _module = await findOneModule({ name: value })
+    const _module = await findOneModule({ id: value })
     if (!_module) {
       enqueueSnackbar('No module found', {
         variant: 'error',
       })
       return
     }
-    update(value)
+    update(_module.id, value)
 
     const module = _module.toJSON()
 
     await openTab({
       name: value,
       type: 'module',
-      moduleName: module.name,
+      moduleId: module.id,
       openNew: false,
     })
   }
 
-  const update = update => {
-    updateData({ [dataKey]: update })
+  const update = (moduleKey, update) => {
+    updateData({ [moduleKey]: update })
   }
 
   const onCreateOption = async value => {
+    console.log('Creating Module:', value)
     try {
       const module = await newModule({ name: value })
       await openTab({
         name: value,
         type: 'module',
-        moduleName: module.name,
+        moduleId: module.id,
         openNew: false,
       })
 
       // todo better naming for rete modules.
       // Handle displaying name as using ID for internal mapping
-      update(value)
+      update(module.id, value)
 
       // add data to node
       //

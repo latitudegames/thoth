@@ -75,8 +75,8 @@ const ReteProvider = ({ children, tab }) => {
     })
   }
 
-  const onModuleUpdated = (moduleName, callback) => {
-    return subscribe($MODULE_UPDATED(moduleName), (event, data) => {
+  const onModuleUpdated = (moduleId, callback) => {
+    return subscribe($MODULE_UPDATED(moduleId), (event, data) => {
       callback(data)
     })
   }

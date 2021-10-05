@@ -39,7 +39,7 @@ export class ModuleManager {
   }
 
   addModule(module: ModuleType) {
-    this.modules[module.name] = module
+    this.modules[module.id] = module
   }
 
   setModules(modules: Record<string, ModuleType>) {
@@ -47,11 +47,11 @@ export class ModuleManager {
   }
 
   updateModule(module: ModuleType) {
-    this.modules[module.name as string] = module
+    this.modules[module.id as string] = module
   }
 
   deleteModule(module: ModuleType) {
-    delete this.modules[module.name as string]
+    delete this.modules[module.id as string]
   }
 
   getSockets(
@@ -135,8 +135,8 @@ export class ModuleManager {
   ) {
     if (!node.data.module) return
     if (!this.modules[node.data.module as number]) return
-    const moduleName = node.data.module as string
-    const data = this.modules[moduleName].data as any
+    const moduleId = node.data.module as string
+    const data = this.modules[moduleId].data as any
     const module = new Module()
     const engine = this.engine?.clone()
 

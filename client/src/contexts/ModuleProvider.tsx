@@ -26,7 +26,7 @@ const ModuleProvider = ({ children }) => {
   // and relay them to the individual module name subscribers
   useEffect(() => {
     return subscribe(UPDATE_MODULE, (event, module) => {
-      publish($MODULE_UPDATED(module.name), module)
+      publish($MODULE_UPDATED(module.id), module)
     })
   }, [])
 
@@ -46,9 +46,9 @@ const ModuleProvider = ({ children }) => {
     }
   }, [models])
 
-  const saveModule = async (moduleName, update, snack = true) => {
+  const saveModule = async (moduleId, update, snack = true) => {
     try {
-      const module = await models.modules.updateModule(moduleName, update)
+      const module = await models.modules.updateModule(moduleId, update)
       if (snack) enqueueSnackbar('Module saved')
 
       const json = module.toJSON()
@@ -70,19 +70,19 @@ const ModuleProvider = ({ children }) => {
     return module
   }
 
-  const getModule = async moduleName => {
-    const model = await models.modules.findOneModule({ name: moduleName })
+  const getModule = async moduleId => {
+    const model = await models.modules.findOneModule({ id: moduleId })
     return model
   }
 
   const getSpellModules = async spell => {
     // should actually look for spells that have a data.module key set to a string
-    const moduleNames = Object.values(spell.graph.nodes)
+    const moduleIds = Object.values(spell.graph.nodes)
       .filter((n: any) => n.name === 'Module')
-      .map((n: any) => n.data.name)
+      .map((n: any) => n.data.id)
 
     const moduleDocs = await Promise.all(
-      moduleNames.map(moduleName => getModule(moduleName))
+      moduleIds.map(moduleId => getModule(moduleId))
     )
 
     return moduleDocs.map(module => module.toJSON())

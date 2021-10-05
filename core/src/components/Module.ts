@@ -47,8 +47,8 @@ export class ModuleComponent extends ThothComponent {
       this.subscribe(node)
     }
 
-    moduleControl.onData = (moduleName: string) => {
-      this.updateSockets(node, moduleName)
+    moduleControl.onData = (moduleId: string) => {
+      this.updateSockets(node, moduleId)
       this.subscribe(node)
     }
 
@@ -80,15 +80,15 @@ export class ModuleComponent extends ThothComponent {
       (module: ModuleType) => {
         if (!isEqual(cache, module)) {
           this.editor.moduleManager.updateModule(module)
-          this.updateSockets(node, module.name)
+          this.updateSockets(node, module.id)
         }
         cache = module
       }
     )
   }
 
-  updateSockets(node: ThothNode, moduleName: string) {
-    node.data.module = moduleName
+  updateSockets(node: ThothNode, moduleId: string) {
+    node.data.module = moduleId
     this.updateModuleSockets(node)
     this.editor.trigger('process')
     node.update()
