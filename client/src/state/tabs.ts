@@ -4,7 +4,7 @@ import {
   createEntityAdapter,
 } from '@reduxjs/toolkit'
 
-import { RootState } from './store'
+// import { RootState } from './store'
 
 export interface Tab {
   id: string
@@ -20,23 +20,28 @@ export interface Tab {
 
 const tabAdapater = createEntityAdapter<Tab>()
 
-const initialState = tabAdapater.getInitialState({ active: {} })
+const initialState = tabAdapater.getInitialState()
 
 export const tabSlice = createSlice({
   name: 'tabs',
   initialState,
   reducers: {
-    openTab: () => {},
-    closeTab: () => {},
-    switchTab: () => {},
-    clearTabs: () => {},
-    saveTabLayout: () => {},
+    tabOpened: tabAdapater.addOne,
+    tabClosed: tabAdapater.removeOne,
+    tabSwitched: tabAdapater.updateOne,
+    tabsCleared: tabAdapater.removeAll,
+    tabLayoutSaved: () => {},
   },
 })
 
-export const { openTab, closeTab, switchTab, clearTabs, saveTabLayout } =
-  tabSlice.actions
+export const {
+  tabOpened,
+  tabClosed,
+  tabSwitched,
+  tabsCleared,
+  tabLayoutSaved,
+} = tabSlice.actions
 
-export const selectActiveTab = (state: RootState) => state.tabs.active
+// export const selectActiveTab = (state: RootState) => state.tabs.active
 
 export default tabSlice.reducer
