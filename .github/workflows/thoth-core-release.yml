@@ -36,7 +36,7 @@ jobs:
         working-directory: core
         run: yarn release
       - name: Publish to GitHub Packages
-        working-directory: core/dist
+        working-directory: core
         run: npm publish
       - name: Increment package for future prelease, commit and push
         working-directory: core
