@@ -1,16 +1,16 @@
-import { SimpleAccordion } from "../../../common/Accordion";
-import LongText from "./LongTextControl";
-import Input from "./Input";
-import Info from "./Info";
-import OutputGenerator from "./OutputGenerator";
-import InputGenerator from "./InputGenerator";
-import EnkiSelect from "./EnkiSelect";
-import css from "./datacontrols.module.css";
-import CodeControl from "./CodeControl";
-import SocketGenerator from "./SocketGenerator";
-import ModuleSelect from "./ModuleSelect";
+import { SimpleAccordion } from '../../../common/Accordion'
+import CodeControl from './CodeControl'
+import css from './datacontrols.module.css'
+import EnkiSelect from './EnkiSelect'
+import Info from './Info'
+import Input from './Input'
+import InputGenerator from './InputGenerator'
+import LongText from './LongTextControl'
+import ModuleSelect from './ModuleSelect'
+import OutputGenerator from './OutputGenerator'
+import SocketGenerator from './SocketGenerator'
 
-const StubComponent = (props) => <div>{props.name}</div>;
+const StubComponent = props => <div>{props.name}</div>
 
 const controlMap = {
   code: CodeControl,
@@ -24,7 +24,7 @@ const controlMap = {
   outputGenerator: OutputGenerator,
   slider: StubComponent,
   socketGenerator: SocketGenerator,
-};
+}
 
 const DataControls = ({
   dataControls,
@@ -34,16 +34,15 @@ const DataControls = ({
   data,
   inspectorData,
   nodeId,
-  ...props
 }) => {
   if (!dataControls)
-    return <p className={css["message"]}>No component selected</p>;
+    return <p className={css['message']}>No component selected</p>
   if (Object.keys(dataControls).length < 1)
     return (
-      <p className={css["message"]}>
+      <p className={css['message']}>
         Selected component has nothing to inspect
       </p>
-    );
+    )
 
   return (
     <>
@@ -54,18 +53,18 @@ const DataControls = ({
           width,
           control,
           name: inspectorData.name,
-          initialValue: data[control.dataKey] || "",
+          initialValue: data[control.dataKey] || '',
           updateData,
-        };
+        }
 
-        const Component = controlMap[control.component] || StubComponent;
+        const Component = controlMap[control.component] || StubComponent
 
-        const setExpanded = (state) => {
-          control.expanded = state;
-          updateControl({ [control.dataKey]: control });
-        };
+        const setExpanded = state => {
+          control.expanded = state
+          updateControl({ [control.dataKey]: control })
+        }
 
-        if (control.component === "info" && !control?.data?.info) return null;
+        if (control.component === 'info' && !control?.data?.info) return null
 
         return (
           <SimpleAccordion
@@ -78,10 +77,10 @@ const DataControls = ({
           >
             <Component {...controlProps} />
           </SimpleAccordion>
-        );
+        )
       })}
     </>
-  );
-};
+  )
+}
 
-export default DataControls;
+export default DataControls

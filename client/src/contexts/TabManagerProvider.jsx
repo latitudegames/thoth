@@ -1,79 +1,71 @@
-import { useContext, createContext, useEffect, useState } from "react";
-import { useLocation } from "wouter";
-import { v4 as uuidv4 } from "uuid";
-import { useDB } from "./DatabaseProvider";
-import { usePubSub } from "./PubSubProvider";
+import { useContext, createContext, useEffect, useState } from 'react'
+import { v4 as uuidv4 } from 'uuid'
+import { useLocation } from 'wouter'
 
-import defaultJson from "./layouts/defaultLayout.json";
-import LoadingScreen from "../features/common/LoadingScreen/LoadingScreen";
+import LoadingScreen from '../features/common/LoadingScreen/LoadingScreen'
+import { useDB } from './DatabaseProvider'
+import defaultJson from './layouts/defaultLayout.json'
+import { usePubSub } from './PubSubProvider'
 
 const Context = createContext({
   tabs: [],
   activeTab: {},
-  openTab: async (options) => {},
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  openTab: async options => {},
   switchTab: () => {},
   closeTab: () => {},
   saveTabLayout: () => {},
   clearTabs: () => {},
-});
+})
 
 // Map of workspaces
 const workspaceMap = {
   default: defaultJson,
-};
+}
 
-export const useTabManager = () => useContext(Context);
+export const useTabManager = () => useContext(Context)
 
 const TabManager = ({ children }) => {
-  const { db } = useDB();
+  const { db } = useDB()
 
   // eslint-disable-next-line no-unused-vars
-  const { events, publish } = usePubSub();
+  const { events, publish } = usePubSub()
   // eslint-disable-next-line no-unused-vars
-  const [location, setLocation] = useLocation();
-  const [tabs, setTabs] = useState(null);
-  const [activeTab, setActiveTab] = useState(null);
-
-  // handle redirection when active tab changes
-  // useEffect(() => {
-  //   if (location !== "/thoth") setLocation("/thoth");
-  // }, [activeTab]);
+  const [, setLocation] = useLocation()
+  const [tabs, setTabs] = useState([])
+  const [activeTab, setActiveTab] = useState(null)
 
   // Suscribe to changes in the database for active tab, and all tabs
   useEffect(() => {
-    if (!db) return;
-
-    (async () => {
-      await db.tabs
+    if (!db) return
+    ;(async () => {
+      const activeTab = await db.tabs
         .findOne({ selector: { active: true } })
-        .$.subscribe((result) => {
-          if (!result) return;
+        .exec()
+      const tabs = await db.tabs.find().exec()
 
-          setActiveTab(result.toJSON());
-        });
+      if (activeTab) setActiveTab(activeTab.toJSON())
+      if (tabs && tabs.length > 0) setTabs(tabs.map(tab => tab.toJSON()))
+    })()
+  }, [db])
 
-      await db.tabs.find().$.subscribe((result) => {
-        if (!result) return;
-        // If there are no tabs, we route the person back to the home screen
-        // if (result.length === 0) setLocation("/home");
-
-        setTabs(result.map((tab) => tab.toJSON()));
-      });
-    })();
-  }, [db]);
+  const refreshTabs = async () => {
+    const tabs = await db.tabs.find().exec()
+    if (tabs && tabs.length > 0) setTabs(tabs.map(tab => tab.toJSON()))
+  }
 
   const openTab = async ({
-    workspace = "default",
-    name = "Untitled",
-    type = "module",
+    workspace = 'default',
+    name = 'Untitled',
+    type = 'module',
     moduleName,
     spellId = null,
     openNew = true,
   }) => {
     // don't open a new tab if one is already open
     if (!openNew) {
-      const tabOpened = await switchTab(null, { module: { $eq: moduleName } });
-      if (tabOpened) return;
+      const tabOpened = await switchTab(null, { module: { $eq: moduleName } })
+      if (tabOpened) return
     }
 
     const newTab = {
@@ -84,44 +76,48 @@ const TabManager = ({ children }) => {
       module: moduleName,
       type: type,
       active: true,
-    };
+    }
 
-    await db.tabs.insert(newTab);
-  };
+    const newTabDoc = await db.tabs.insert(newTab)
+    setActiveTab(newTabDoc.toJSON())
+    refreshTabs()
+  }
 
-  const closeTab = async (tabId) => {
-    const tab = await db.tabs.findOne({ selector: { id: tabId } }).exec();
-    if (!tab) return;
-    publish(events.$CLOSE_EDITOR(tabId));
-    await tab.remove();
-    const tabs = await db.tabs.find().exec();
+  const closeTab = async tabId => {
+    const tab = await db.tabs.findOne({ selector: { id: tabId } }).exec()
+    if (!tab) return
+    publish(events.$CLOSE_EDITOR(tabId))
+    await tab.remove()
+    const tabs = await db.tabs.find().exec()
 
     // Switch to the last tab down.
     if (tabs.length === 0) {
-      setLocation("/home");
-      return;
+      setLocation('/home')
+      return
     }
-    switchTab(tabs[0].id);
-  };
+    switchTab(tabs[0].id)
+  }
 
   const switchTab = async (tabId, query) => {
-    const selector = query ? query : { id: tabId };
-    const tab = await db.tabs.findOne({ selector }).exec();
-    if (!tab) return false;
-    await tab.atomicPatch({ active: true });
+    console.log('Switching tab')
+    const selector = query ? query : { id: tabId }
+    const tab = await db.tabs.findOne({ selector }).exec()
+    if (!tab) return false
+    await tab.atomicPatch({ active: true })
 
-    setActiveTab(tab.toJSON());
-    return true;
-  };
+    setActiveTab(tab.toJSON())
+    await refreshTabs()
+    return true
+  }
 
   const clearTabs = async () => {
-    return db.tabs.find().remove();
-  };
+    await db.tabs.find().remove()
+  }
 
   const saveTabLayout = async (tabId, json) => {
-    const tab = await db.tabs.findOne({ selector: { id: tabId } }).exec();
-    await tab.atomicPatch({ layoutJson: json });
-  };
+    const tab = await db.tabs.findOne({ selector: { id: tabId } }).exec()
+    await tab.atomicPatch({ layoutJson: json })
+  }
 
   const publicInterface = {
     tabs,
@@ -131,13 +127,11 @@ const TabManager = ({ children }) => {
     closeTab,
     saveTabLayout,
     clearTabs,
-  };
+  }
 
-  if (!tabs) return <LoadingScreen />;
+  if (!tabs) return <LoadingScreen />
 
-  return (
-    <Context.Provider value={publicInterface}>{children}</Context.Provider>
-  );
-};
+  return <Context.Provider value={publicInterface}>{children}</Context.Provider>
+}
 
-export default TabManager;
+export default TabManager

@@ -1,25 +1,25 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useLocation } from "wouter";
-import { useHotkeys } from "react-hotkeys-hook";
+import React, { useState, useEffect, useRef } from 'react'
+import { useHotkeys } from 'react-hotkeys-hook'
+import { useLocation } from 'wouter'
 
-import { useTabManager } from "../../../contexts/TabManagerProvider";
-import { usePubSub } from "../../../contexts/PubSubProvider";
-import { useModal } from "../../../contexts/ModalProvider";
-import css from "./menuBar.module.css";
-import thothlogo from "./thoth.png";
+import { useModal } from '../../../contexts/ModalProvider'
+import { usePubSub } from '../../../contexts/PubSubProvider'
+import { useTabManager } from '../../../contexts/TabManagerProvider'
+import css from './menuBar.module.css'
+import thothlogo from './thoth.png'
 
-const MenuBar = (props) => {
+const MenuBar = () => {
   // eslint-disable-next-line no-unused-vars
-  const [location, setLocation] = useLocation();
-  const { publish, events } = usePubSub();
-  const { activeTab } = useTabManager();
-  const { openModal } = useModal();
+  const [, setLocation] = useLocation()
+  const { publish, events } = usePubSub()
+  const { activeTab } = useTabManager()
+  const { openModal } = useModal()
 
-  const activeTabRef = useRef(null);
+  const activeTabRef = useRef(null)
 
   useEffect(() => {
-    activeTabRef.current = activeTab;
-  }, [activeTab]);
+    activeTabRef.current = activeTab
+  }, [activeTab])
 
   // grab all events we need
   const {
@@ -30,76 +30,76 @@ const MenuBar = (props) => {
     $CREATE_TEXT_EDITOR,
     // $SERIALIZE,
     $EXPORT,
-  } = events;
+  } = events
 
   const useToggle = (initialValue = false) => {
-    const [value, setValue] = useState(initialValue);
+    const [value, setValue] = useState(initialValue)
     const toggle = React.useCallback(() => {
-      setValue((v) => !v);
-    }, []);
-    return [value, toggle];
-  };
-  const [menuVisibility, togglemenuVisibility] = useToggle();
+      setValue(v => !v)
+    }, [])
+    return [value, toggle]
+  }
+  const [menuVisibility, togglemenuVisibility] = useToggle()
 
   const onSave = () => {
-    publish($SAVE_SPELL(activeTabRef.current.id));
-  };
+    publish($SAVE_SPELL(activeTabRef.current.id))
+  }
 
   const onNew = () => {
-    setLocation("/home/create-new");
-  };
+    setLocation('/home/create-new')
+  }
   const onOpen = () => {
-    setLocation("/home/all-projects");
-  };
+    setLocation('/home/all-projects')
+  }
 
   // const onSerialize = () => {
   //   publish($SERIALIZE(activeTabRef.current.id));
   // };
 
-  const onStateManager = () => {
-    publish($CREATE_STATE_MANAGER(activeTabRef.current.id));
-  };
+  const onStateManagerCreate = () => {
+    publish($CREATE_STATE_MANAGER(activeTabRef.current.id))
+  }
 
-  const onPlaytest = () => {
-    publish($CREATE_PLAYTEST(activeTabRef.current.id));
-  };
+  const onPlaytestCreate = () => {
+    publish($CREATE_PLAYTEST(activeTabRef.current.id))
+  }
 
-  const onInspector = () => {
-    publish($CREATE_INSPECTOR(activeTabRef.current.id));
-  };
+  const onInspectorCreate = () => {
+    publish($CREATE_INSPECTOR(activeTabRef.current.id))
+  }
 
-  const onTextEditor = () => {
-    publish($CREATE_TEXT_EDITOR(activeTabRef.current.id));
-  };
+  const onTextEditorCreate = () => {
+    publish($CREATE_TEXT_EDITOR(activeTabRef.current.id))
+  }
 
   const onExport = () => {
-    publish($EXPORT(activeTabRef.current.id));
-  };
+    publish($EXPORT(activeTabRef.current.id))
+  }
 
   const onModal = () => {
-    openModal({modal: 'example', content: 'This is an example modal'})
+    openModal({ modal: 'example', content: 'This is an example modal' })
   }
 
   //Menu bar hotkeys
   useHotkeys(
-    "cmd+s, crtl+s",
-    (event) => {
-      event.preventDefault();
-      onSave();
+    'cmd+s, crtl+s',
+    event => {
+      event.preventDefault()
+      onSave()
     },
-    { enableOnTags: "INPUT" },
+    { enableOnTags: 'INPUT' },
     [onSave]
-  );
+  )
 
   useHotkeys(
-    "option+n, crtl+n",
-    (event) => {
-      event.preventDefault();
-      onNew();
+    'option+n, crtl+n',
+    event => {
+      event.preventDefault()
+      onNew()
     },
-    { enableOnTags: "INPUT" },
+    { enableOnTags: 'INPUT' },
     [onNew]
-  );
+  )
 
   //Menu bar entries
   const menuBarItems = {
@@ -139,16 +139,16 @@ const MenuBar = (props) => {
         tools: {
           items: {
             text_editor: {
-              onClick: onTextEditor,
+              onClick: onTextEditorCreate,
             },
             inspector: {
-              onClick: onInspector,
+              onClick: onInspectorCreate,
             },
             state_manager: {
-              onClick: onStateManager,
+              onClick: onStateManagerCreate,
             },
             playtest: {
-              onClick: onPlaytest,
+              onClick: onPlaytestCreate,
             },
             enki: {
               items: {
@@ -159,11 +159,11 @@ const MenuBar = (props) => {
             },
             test: {
               items: {
-                "open modal ...": {
-                  onClick: onModal
-                }
-              }
-            }
+                'open modal ...': {
+                  onClick: onModal,
+                },
+              },
+            },
           },
         },
         change_layout: {
@@ -175,15 +175,15 @@ const MenuBar = (props) => {
         },
       },
     },
-  };
+  }
 
   //Menu bar rendering
   const ListItem = ({ item, label, topLevel, onClick }) => {
-    label = label.replace(/_/g, " ");
-    let children = null;
+    label = label ? label.replace(/_/g, ' ') : label
+    let children = null
     if (item.items && Object.keys(item.items)) {
       children = (
-        <ul className={css["menu-panel"]}>
+        <ul className={css['menu-panel']}>
           {Object.keys(item.items).map((i, x) => {
             return (
               <ListItem
@@ -193,36 +193,38 @@ const MenuBar = (props) => {
                 key={x}
                 onClick={item?.items[i].onClick}
               />
-            );
+            )
           })}
         </ul>
-      );
+      )
     }
 
     return (
       <li
-        className={`${css[topLevel ? "menu-bar-item" : "list-item"]}`}
+        className={`${css[topLevel ? 'menu-bar-item' : 'list-item']}`}
         onClick={onClick}
       >
         {label}
-        {children && <div className={css["folder-arrow"]}> ❯ </div>}
+        {children && <div className={css['folder-arrow']}> ❯ </div>}
         {!topLevel && <br />}
         {children}
       </li>
-    );
-  };
+    )
+  }
 
-  const handleClick = (func) => {
+  const handleClick = func => {
     //Initially intended to control the visibility with a state, but this triggers a re-render and hides the menu anyway! :D
     //Keeping this intact just in case.
-    togglemenuVisibility(menuVisibility);
+    togglemenuVisibility(menuVisibility)
     // eslint-disable-next-line no-eval
-    eval(func);
-  };
+    eval(func)
+  }
+
+  console.log('MENU BAR')
 
   return (
-    <ul className={css["menu-bar"]}>
-      <img className={css["thoth-logo"]} alt="Thoth logo" src={thothlogo} />
+    <ul className={css['menu-bar']}>
+      <img className={css['thoth-logo']} alt="Thoth logo" src={thothlogo} />
       {Object.keys(menuBarItems).map((item, index) => (
         <ListItem
           item={menuBarItems[item]}
@@ -230,12 +232,12 @@ const MenuBar = (props) => {
           topLevel={true}
           key={index}
           onClick={() => {
-            handleClick(menuBarItems[item].onClick);
+            handleClick(menuBarItems[item].onClick)
           }}
         />
       ))}
     </ul>
-  );
-};
+  )
+}
 
-export default MenuBar;
+export default MenuBar

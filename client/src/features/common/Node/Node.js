@@ -1,28 +1,28 @@
-import React from "react";
-import { Node, Socket, Control } from "rete-react-render-plugin";
-import Icon, { componentCategories } from "../Icon/Icon";
+import React from 'react'
+import { Node, Socket, Control } from 'rete-react-render-plugin'
 
-import css from "./Node.module.css";
+import Icon, { componentCategories } from '../Icon/Icon'
+import css from './Node.module.css'
 
 export class MyNode extends Node {
   render() {
-    const { node, bindSocket, bindControl } = this.props;
-    const { outputs, controls, inputs, selected } = this.state;
+    const { node, bindSocket, bindControl } = this.props
+    const { outputs, controls, inputs, selected } = this.state
 
     return (
-      <div className={`${css["node"]} ${css[selected]}`}>
-        <div className={css["node-title"]}>
+      <div className={`${css['node']} ${css[selected]}`}>
+        <div className={css['node-title']}>
           <Icon
             name={componentCategories[node.category]}
-            style={{ marginRight: "var(--extraSmall)" }}
+            style={{ marginRight: 'var(--extraSmall)' }}
           />
           {node.data.name ? `${node.name} - ${node.data.name}` : node.name}
         </div>
-        <div className={css["connections-container"]}>
+        <div className={css['connections-container']}>
           {inputs.length > 0 && (
-            <div className={css["connection-container"]}>
-              {inputs.map((input) => (
-                <div className={css["input"]} key={input.key}>
+            <div className={css['connection-container']}>
+              {inputs.map(input => (
+                <div className={css['input']} key={input.key}>
                   <Socket
                     type="input"
                     socket={input.socket}
@@ -44,9 +44,9 @@ export class MyNode extends Node {
             </div>
           )}
           {outputs.length > 0 && (
-            <div className={`${css["connection-container"]} ${css["out"]}`}>
-              {outputs.map((output) => (
-                <div className={css["output"]} key={output.key}>
+            <div className={`${css['connection-container']} ${css['out']}`}>
+              {outputs.map(output => (
+                <div className={css['output']} key={output.key}>
                   <div className="output-title">{output.name}</div>
                   <Socket
                     type="output"
@@ -59,11 +59,11 @@ export class MyNode extends Node {
             </div>
           )}
         </div>
-        <div className={css["bottom-container"]}>
+        <div className={css['bottom-container']}>
           {/* Controls */}
-          {controls.map((control) => (
+          {controls.map(control => (
             <Control
-              className={css["control"]}
+              className={css['control']}
               key={control.key}
               control={control}
               innerRef={bindControl}
@@ -71,6 +71,6 @@ export class MyNode extends Node {
           ))}
         </div>
       </div>
-    );
+    )
   }
 }

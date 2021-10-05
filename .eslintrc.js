@@ -1,3 +1,5 @@
+const isProduction = process.env.NODE_ENV === 'production'
+
 module.exports = {
   parser: '@typescript-eslint/parser',
   extends: [
@@ -6,26 +8,28 @@ module.exports = {
     'prettier',
     // 'prettier/@typescript-eslint',
   ],
-  include: ['client', 'core'],
-  plugins: ['@typescript-eslint', 'prettier'],
+  plugins: ['@typescript-eslint', 'prettier', 'import'],
   parserOptions: {
     project: './tsconfig.json',
     ecmaVersion: 2018,
     sourceType: 'module',
     warnOnUnsupportedTypeScriptVersion: false,
   },
+  env: { browser: true },
   ignorePatterns: ['.eslintrc.js'],
   rules: {
     'prettier/prettier': 'error',
     // '@typescript-eslint/no-floating-promises': 'error',
     'require-await': 'error',
     'comma-spacing': ['error', { before: false, after: true }],
-    'import/no-namespace': 'error',
+    'import/no-namespace': 'off',
     // 'import/no-default-export': 'error',
     'no-invalid-this': 'error',
     // 'no-autofix/no-unreachable': 'error',
     'space-in-parens': 'error',
     'no-empty-function': 'off',
+    // temporary fix to allow Function
+    '@typescript-eslint/ban-types': ['off'],
     '@typescript-eslint/no-empty-function': ['off'],
     '@typescript-eslint/no-unused-vars': 'error',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
@@ -35,7 +39,7 @@ module.exports = {
     'operator-linebreak': 'off',
     'no-useless-escape': 'off',
     'no-var': 'error',
-    'no-console': 'error',
+    'no-console': isProduction ? 'error' : 'warn',
     'no-func-assign': 'error',
     'no-const-assign': 'error',
     'no-class-assign': 'error',

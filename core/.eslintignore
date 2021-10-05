@@ -1,0 +1,9 @@
+dist
+build
+node_modules
+test/
+scripts/
+.eslintrc.js
+jest.config.js
+src/libs
+@types

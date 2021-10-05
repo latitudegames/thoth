@@ -1,17 +1,20 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
+    "allowJs": true,
     "module": "commonjs",
-    "moduleResolution": "node",
     "jsx": "react-jsx",
     "noImplicitAny": true,
     "noUnusedLocals": true,
     "strictNullChecks": true,
     "strict": false,
-    "rootDir": ".",
     "outDir": "./dist/",
+    "rootDir": ".",
     "declaration": true,
-    "composite": true
+    "composite": true,
+    "noEmit": false,
+    "target": "es6",
+    "sourceMap": true
   },
   "include": ["./"],
   "exclude": ["./node_modules/", "./dist/"]

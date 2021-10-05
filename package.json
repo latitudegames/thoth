@@ -9,11 +9,14 @@
     ]
   },
   "scripts": {
-    "start": "lerna exec --scope @thoth/client -- yarn start",
+    "start:core": "lerna exec --scope @latitudegames/thoth-core -- yarn start",
+    "start:client": "lerna exec --scope @thoth/client -- yarn start",
+    "start": "concurrently \"yarn start:core\" \"sleep 10s && yarn start:client\"",
     "lint": "lerna run lint --parallel",
+    "lint:fix": "lerna run lint:fix --parallel",
     "build": "lerna exec --scope @thoth/client -- yarn build",
     "build:core": "lerna exec --scope @latitudegames/thoth-core -- yarn build",
-    "publish:canary": "lerna exec --scope @latitudegames/thoth-core -- yarn auto canary",
+    "publish:canary": "lerna exec --scope @latitudegames/thoth-core -- yarn canary",
     "install:canary": "lerna exec --scope @thoth/client -- yarn install:canary"
   },
   "engines": {
@@ -28,6 +31,7 @@
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^4.31.1",
     "@typescript-eslint/parser": "^4.31.1",
+    "concurrently": "^6.2.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-prettier": "^4.0.0",

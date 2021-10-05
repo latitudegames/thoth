@@ -1,23 +1,23 @@
-import EditorProvider from "./EditorProvider";
-import ReteProvider from "./ReteProvider";
-import LayoutProvider from "./LayoutProvider";
+import EditorProvider from './EditorProvider'
+import LayoutProvider from './LayoutProvider'
+import ReteProvider from './ReteProvider'
 
-const providers = [ReteProvider, EditorProvider, LayoutProvider];
+const providers = [ReteProvider, EditorProvider, LayoutProvider]
 
 function ComposeProviders({ providers, children, ...parentProps }) {
-  const _providers = [...providers].reverse();
+  const _providers = [...providers].reverse()
   return _providers.reduce((acc, current) => {
     const [Provider, props] = Array.isArray(current)
       ? [current[0], current[1]]
-      : [current, {}];
+      : [current, {}]
 
     const componentProps = {
       ...props,
       ...parentProps,
-    };
+    }
 
-    return <Provider {...componentProps}>{acc}</Provider>;
-  }, children);
+    return <Provider {...componentProps}>{acc}</Provider>
+  }, children)
 }
 
 // Centralize all our providers to avoid nesting hell.
@@ -25,6 +25,6 @@ const WorkspaceProviders = ({ children, ...props }) => (
   <ComposeProviders providers={providers} {...props}>
     {children}
   </ComposeProviders>
-);
+)
 
-export default WorkspaceProviders;
+export default WorkspaceProviders
