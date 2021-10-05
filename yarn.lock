@@ -1476,7 +1476,7 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
-"@latitudegames/thoth-core@0.0.37":
+"@latitudegames/thoth-core@^0.0.37":
   version "0.0.37"
   resolved "https://npm.pkg.github.com/download/@latitudegames/thoth-core/0.0.37/e74c83db7f8426ea5788ffd06039955bf7e1327f07f4a6283ecf286eac9d6b85#3dffd8446c27e33ff9a0d97029227779dc08165c"
   integrity sha512-OpW72BTc3bNBu4WXMQ+f9QWjNF1z5Th3ck6kfBviOCRSK8nnB39rHZpCSYmMjTw0lubqte+Ew4bYMuPl4zRkSg==
