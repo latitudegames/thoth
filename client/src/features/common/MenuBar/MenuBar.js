@@ -56,19 +56,19 @@ const MenuBar = () => {
   //   publish($SERIALIZE(activeTabRef.current.id));
   // };
 
-  const onStateManager = () => {
+  const onStateManagerCreate = () => {
     publish($CREATE_STATE_MANAGER(activeTabRef.current.id))
   }
 
-  const onPlaytest = () => {
+  const onPlaytestCreate = () => {
     publish($CREATE_PLAYTEST(activeTabRef.current.id))
   }
 
-  const onInspector = () => {
+  const onInspectorCreate = () => {
     publish($CREATE_INSPECTOR(activeTabRef.current.id))
   }
 
-  const onTextEditor = () => {
+  const onTextEditorCreate = () => {
     publish($CREATE_TEXT_EDITOR(activeTabRef.current.id))
   }
 
@@ -139,16 +139,16 @@ const MenuBar = () => {
         tools: {
           items: {
             text_editor: {
-              onClick: onTextEditor,
+              onClick: onTextEditorCreate,
             },
             inspector: {
-              onClick: onInspector,
+              onClick: onInspectorCreate,
             },
             state_manager: {
-              onClick: onStateManager,
+              onClick: onStateManagerCreate,
             },
             playtest: {
-              onClick: onPlaytest,
+              onClick: onPlaytestCreate,
             },
             enki: {
               items: {

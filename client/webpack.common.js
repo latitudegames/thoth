@@ -7,6 +7,8 @@ const webpack = require('webpack')
 
 const prod = process.env.NODE_ENV === 'production'
 
+console.log('WEBPACK ENV', process.env.NODE_ENV)
+
 const babelOptions = {
   presets: [
     '@babel/env',
@@ -14,6 +16,8 @@ const babelOptions = {
       '@babel/preset-react',
       {
         runtime: 'automatic',
+        development: process.env.NODE_ENV === 'development',
+        importSource: '@welldone-software/why-did-you-render',
       },
     ],
     '@babel/preset-typescript',
