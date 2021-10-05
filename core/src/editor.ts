@@ -6,7 +6,7 @@ import ReactRenderPlugin from 'rete-react-render-plugin'
 import { Data } from 'rete/types/core/data'
 
 import { EventsTypes, ModuleType } from '../types'
-import { components } from './components/components'
+import { getComponents } from './components/components'
 import { EngineContext, initSharedEngine } from './engine'
 import AreaPlugin from './plugins/areaPlugin'
 import DisplayPlugin from './plugins/displayPlugin'
@@ -47,6 +47,8 @@ export const initEditor = async function ({
   node: any
 }) {
   if (editorTabMap[tab.id]) editorTabMap[tab.id].clear()
+
+  const components = getComponents()
 
   // create the main edtor
   const editor = new ThothEditor('demo@0.1.0', container)
