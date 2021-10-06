@@ -44,8 +44,9 @@ jobs:
           cd ../client
           yarn add @latitudegames/thoth-core
           git add package.json
-          git add ../yarn.lock
-          cd ../core
+          cd ..
+          git add yarn.lock
+          cd core
           npm version patch 
           git add package.json
           git commit -m "[skip ci] Bump thoth-core to v$(node -pe "require('./package.json').version") and target latest release in thoth-client"
