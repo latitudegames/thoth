@@ -13,6 +13,7 @@ module.exports = () => {
         name: 'thothCore',
         type: 'umd',
       },
+      globalObject: 'this',
     },
     externals: {
       react: 'react',
