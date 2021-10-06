@@ -17,7 +17,6 @@
     "release": "yarn build && yarn ship"
   },
   "dependencies": {
-    "auto": "^10.32.0",
     "deep-equal": "^2.0.5",
     "handlebars": "^4.7.7",
     "path": "^0.12.7",
@@ -32,6 +31,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "auto": "^10.32.0",
     "@rollup/plugin-babel": "^5.3.0",
     "@types/jest": "^26.0.24",
     "@types/lodash": "^4.14.172",
