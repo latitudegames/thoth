@@ -5,10 +5,13 @@ const TerserPlugin = require('terser-webpack-plugin')
 
 module.exports = () => {
   const config = {
-    entry: './index.ts',
+    entry: {
+      index: './index.ts',
+      server: './server.ts',
+    },
     output: {
       path: path.join(__dirname, 'dist'),
-      filename: 'index.js',
+      filename: '[name].js',
       library: {
         name: 'thothCore',
         type: 'umd',
