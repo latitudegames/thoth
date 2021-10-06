@@ -1,6 +1,6 @@
 import { NodeEditor } from 'rete'
 import ConnectionPlugin from 'rete-connection-plugin'
-// import ConnectionReroutePlugin from 'rete-connection-reroute-plugin'
+import ConnectionReroutePlugin from 'rete-connection-reroute-plugin'
 import ContextMenuPlugin from 'rete-context-menu-plugin'
 import ReactRenderPlugin from 'rete-react-render-plugin'
 import { Data } from 'rete/types/core/data'
@@ -75,7 +75,7 @@ export const initEditor = async function ({
   // connection plugin is used to render conections between nodes
   editor.use(ConnectionPlugin)
   // @seang: temporarily disabling because dependencies of ConnectionReroutePlugin are failing validation on server import of thoth-core
-  // editor.use(ConnectionReroutePlugin)
+  editor.use(ConnectionReroutePlugin)
 
   // React rendering for the editor
   editor.use(ReactRenderPlugin, {
@@ -123,7 +123,7 @@ export const initEditor = async function ({
     }, {} as Record<string, ModuleType>)
 
   // The engine is used to process/run the rete graph
-  const engine = initSharedEngine('demo@0.1.0', modules, components)
+  const engine = initSharedEngine('demo@0.1.0', components, false, modules)
   // @seang TODO: update types for editor.use rather than casting as unknown here, we may want to bring our custom rete directly into the monorepo at this point
 
   // WARNING: ModulePlugin needs to be initialized before TaskPlugin during engine setup

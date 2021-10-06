@@ -52,12 +52,12 @@ export type EngineContext = {
   onUpdateModule?: Function
   sendToPlaytest?: Function
 }
-
+// @seang TODO: update this to not use positional arguments
 export const initSharedEngine = (
   name: string,
-  modules: Record<string, ModuleType>,
   components: any[],
-  server = false
+  server = false,
+  modules: Record<string, ModuleType> = {}
 ) => {
   const engine = new Rete.Engine(name)
 
