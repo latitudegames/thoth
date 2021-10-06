@@ -46,6 +46,7 @@
     "react-simple-code-editor": "^0.11.0",
     "rebass": "^4.0.7",
     "regenerator-runtime": "^0.13.9",
+    "rete-connection-reroute-plugin": "^0.4.0",
     "rete-context-menu-plugin": "^0.6.0-rc.1",
     "rete-react-render-plugin": "^0.2.1",
     "rxdb": "^9.21.0",
