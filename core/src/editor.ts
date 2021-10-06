@@ -60,12 +60,12 @@ export const initEditor = async function ({
   editor.thoth = thoth
   editor.tab = tab
 
-  // ██████╗ ██╗     ██╗   ██╗ ██████╗ ███████╗██╗███╗   ██╗███████╗
-  // ██╔══██╗██║     ██║   ██║██╔════╝ ██╔════╝██║████╗  ██║██╔════╝
-  // ██████╔╝██║     ██║   ██║██║  ███╗███████╗██║██╔██╗ ██║███████╗
-  // ██╔═══╝ ██║     ██║   ██║██║   ██║╚════██║██║██║╚██╗██║╚════██║
-  // ██║     ███████╗╚██████╔╝╚██████╔╝███████║██║██║ ╚████║███████║
-  // ╚═╝     ╚══════╝ ╚═════╝  ╚═════╝ ╚══════╝╚═╝╚═╝  ╚═══╝╚══════╝
+  // ██████╗ ██╗     ██╗   ██╗ ██████╗ ██╗███╗   ██╗███████╗
+  // ██╔══██╗██║     ██║   ██║██╔════╝ ██║████╗  ██║██╔════╝
+  // ██████╔╝██║     ██║   ██║██║  ███╗██║██╔██╗ ██║███████╗
+  // ██╔═══╝ ██║     ██║   ██║██║   ██║██║██║╚██╗██║╚════██║
+  // ██║     ███████╗╚██████╔╝╚██████╔╝██║██║ ╚████║███████║
+  // ╚═╝     ╚══════╝ ╚═════╝  ╚═════╝ ╚═╝╚═╝  ╚═══╝╚══════╝
 
   // History plugin for undo/redo
   editor.use(HistoryPlugin, { keyboard: false })
@@ -74,6 +74,7 @@ export const initEditor = async function ({
   // https://github.com/retejs/comment-plugin
   // connection plugin is used to render conections between nodes
   editor.use(ConnectionPlugin)
+  // @seang: temporarily disabling because dependencies of ConnectionReroutePlugin are failing validation on server import of thoth-core
   editor.use(ConnectionReroutePlugin)
 
   // React rendering for the editor
@@ -122,7 +123,7 @@ export const initEditor = async function ({
     }, {} as Record<string, ModuleType>)
 
   // The engine is used to process/run the rete graph
-  const engine = initSharedEngine('demo@0.1.0', modules, components)
+  const engine = initSharedEngine('demo@0.1.0', components, false, modules)
   // @seang TODO: update types for editor.use rather than casting as unknown here, we may want to bring our custom rete directly into the monorepo at this point
 
   // WARNING: ModulePlugin needs to be initialized before TaskPlugin during engine setup

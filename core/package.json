@@ -1,11 +1,13 @@
 {
   "name": "@latitudegames/thoth-core",
-  "version": "0.0.38",
+  "version": "0.0.49",
   "description": "core shared code for thoth",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "scripts": {
-    "build": "webpack --config webpack.prod.js",
+    "webpack-build": "webpack --config webpack.prod.js",
+    "tsc-build": "tsc --p tsconfig-release.json",
+    "build": "yarn webpack-build",
     "build:analyze": "BUNDLE_ANALYZE=true webpack --config webpack.prod.js",
     "start": "yarn clean && webpack --watch --config webpack.dev.js",
     "clean": "rimraf dist",
@@ -17,7 +19,6 @@
     "release": "yarn build && yarn ship"
   },
   "dependencies": {
-    "auto": "^10.32.0",
     "deep-equal": "^2.0.5",
     "handlebars": "^4.7.7",
     "path": "^0.12.7",
@@ -25,7 +26,6 @@
     "rete": "https://github.com/latitudegames/rete.git#master",
     "rete-area-plugin": "^0.2.1",
     "rete-connection-plugin": "^0.9.0",
-    "rete-connection-reroute-plugin": "^0.4.0",
     "rete-context-menu-plugin": "^0.6.0-rc.1",
     "rete-module-plugin": "^0.4.1",
     "rete-react-render-plugin": "^0.2.1",
@@ -39,6 +39,7 @@
     "@types/pubsub-js": "^1.8.2",
     "@types/react": "^17.0.15",
     "@types/uuid": "^8.3.1",
+    "auto": "^10.32.0",
     "babel-loader": "^8.2.2",
     "copyfiles": "^2.4.1",
     "rimraf": "^3.0.2",
