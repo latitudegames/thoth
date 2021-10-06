@@ -1,6 +1,6 @@
 import { NodeEditor } from 'rete'
 import ConnectionPlugin from 'rete-connection-plugin'
-import ConnectionReroutePlugin from 'rete-connection-reroute-plugin'
+// import ConnectionReroutePlugin from 'rete-connection-reroute-plugin'
 import ContextMenuPlugin from 'rete-context-menu-plugin'
 import ReactRenderPlugin from 'rete-react-render-plugin'
 import { Data } from 'rete/types/core/data'
@@ -60,12 +60,12 @@ export const initEditor = async function ({
   editor.thoth = thoth
   editor.tab = tab
 
-  // ██████╗ ██╗     ██╗   ██╗ ██████╗ ███████╗██╗███╗   ██╗███████╗
-  // ██╔══██╗██║     ██║   ██║██╔════╝ ██╔════╝██║████╗  ██║██╔════╝
-  // ██████╔╝██║     ██║   ██║██║  ███╗███████╗██║██╔██╗ ██║███████╗
-  // ██╔═══╝ ██║     ██║   ██║██║   ██║╚════██║██║██║╚██╗██║╚════██║
-  // ██║     ███████╗╚██████╔╝╚██████╔╝███████║██║██║ ╚████║███████║
-  // ╚═╝     ╚══════╝ ╚═════╝  ╚═════╝ ╚══════╝╚═╝╚═╝  ╚═══╝╚══════╝
+  // ██████╗ ██╗     ██╗   ██╗ ██████╗ ██╗███╗   ██╗███████╗
+  // ██╔══██╗██║     ██║   ██║██╔════╝ ██║████╗  ██║██╔════╝
+  // ██████╔╝██║     ██║   ██║██║  ███╗██║██╔██╗ ██║███████╗
+  // ██╔═══╝ ██║     ██║   ██║██║   ██║██║██║╚██╗██║╚════██║
+  // ██║     ███████╗╚██████╔╝╚██████╔╝██║██║ ╚████║███████║
+  // ╚═╝     ╚══════╝ ╚═════╝  ╚═════╝ ╚═╝╚═╝  ╚═══╝╚══════╝
 
   // History plugin for undo/redo
   editor.use(HistoryPlugin, { keyboard: false })
@@ -74,7 +74,8 @@ export const initEditor = async function ({
   // https://github.com/retejs/comment-plugin
   // connection plugin is used to render conections between nodes
   editor.use(ConnectionPlugin)
-  editor.use(ConnectionReroutePlugin)
+  // @seang: temporarily disabling because dependencies of ConnectionReroutePlugin are failing validation on server import of thoth-core
+  // editor.use(ConnectionReroutePlugin)
 
   // React rendering for the editor
   editor.use(ReactRenderPlugin, {
