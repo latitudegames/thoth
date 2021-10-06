@@ -1,4 +1,4 @@
-import { getComponents } from './src/components/components'
+import { getComponents, components } from './src/components/components'
 import { initEditor } from './src/editor'
 import { Task } from './src/plugins/taskPlugin/task'
 
@@ -8,6 +8,7 @@ export type { EngineContext } from './src/engine'
 export { Task } from './src/plugins/taskPlugin/task'
 
 export default {
+  components,
   getComponents,
   initEditor,
   Task,
