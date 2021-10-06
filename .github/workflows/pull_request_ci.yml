@@ -61,5 +61,5 @@ jobs:
         if: steps.core_diff.outcome != 'success' && (steps.no_thoth_core_label.outcome == 'success' || contains(github.event.pull_request.labels.*.name, 'thoth-core'))
 
       - name: Publish next canary release of @latitudegames/thoth-core
-        run: yarn publish:canary
+        run: git checkout yarn.lock && yarn publish:canary
         if: steps.core_diff.outcome != 'success' && (steps.no_thoth_core_label.outcome == 'success' || contains(github.event.pull_request.labels.*.name, 'thoth-core'))

@@ -5,7 +5,9 @@
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "scripts": {
-    "build": "tsc --p tsconfig-release.json",
+    "webpack-build": "webpack --config webpack.prod.js",
+    "tsc-build": "tsc --p tsconfig-release.json",
+    "build": "yarn webpack-build",
     "build:analyze": "BUNDLE_ANALYZE=true webpack --config webpack.prod.js",
     "start": "yarn clean && webpack --watch --config webpack.dev.js",
     "clean": "rimraf dist",
