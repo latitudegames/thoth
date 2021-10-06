@@ -13,7 +13,7 @@ export const completion = async body => {
       },
       body: JSON.stringify({ ...body, prompt: body.prompt.trimEnd() }),
     })
-    const result = await response.text()
+    const { result } = await response.json()
     return result
   } catch (err) {
     // eslint-disable-next-line no-console
