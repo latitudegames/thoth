@@ -1,6 +1,6 @@
 {
   "name": "@latitudegames/thoth-core",
-  "version": "0.0.41",
+  "version": "0.0.42",
   "description": "core shared code for thoth",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
