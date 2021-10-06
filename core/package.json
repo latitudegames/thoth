@@ -24,14 +24,12 @@
     "rete": "https://github.com/latitudegames/rete.git#master",
     "rete-area-plugin": "^0.2.1",
     "rete-connection-plugin": "^0.9.0",
-    "rete-connection-reroute-plugin": "^0.4.0",
     "rete-context-menu-plugin": "^0.6.0-rc.1",
     "rete-module-plugin": "^0.4.1",
     "rete-react-render-plugin": "^0.2.1",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "auto": "^10.32.0",
     "@rollup/plugin-babel": "^5.3.0",
     "@types/jest": "^26.0.24",
     "@types/lodash": "^4.14.172",
@@ -39,6 +37,7 @@
     "@types/pubsub-js": "^1.8.2",
     "@types/react": "^17.0.15",
     "@types/uuid": "^8.3.1",
+    "auto": "^10.32.0",
     "babel-loader": "^8.2.2",
     "copyfiles": "^2.4.1",
     "rimraf": "^3.0.2",
