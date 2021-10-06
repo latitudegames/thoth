@@ -123,7 +123,7 @@ export const initEditor = async function ({
     }, {} as Record<string, ModuleType>)
 
   // The engine is used to process/run the rete graph
-  const engine = initSharedEngine('demo@0.1.0', modules, components)
+  const engine = initSharedEngine('demo@0.1.0', components, false, modules)
   // @seang TODO: update types for editor.use rather than casting as unknown here, we may want to bring our custom rete directly into the monorepo at this point
 
   // WARNING: ModulePlugin needs to be initialized before TaskPlugin during engine setup
