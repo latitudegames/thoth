@@ -3,6 +3,22 @@ import { useContext, createContext, useState, useRef } from 'react'
 
 import { useDB } from './DatabaseProvider'
 
+export type SpellContext = {
+  currentSpell: {}
+  getCurrentSpell: () => void
+  updateCurrentSpell: {}
+  loadSpell: () => void
+  saveSpell: () => void
+  newSpell: () => void
+  saveCurrentSpell: () => void
+  stateHistory: never[]
+  currentGameState: {}
+  getCurrentGameState: () => Record<string, unknown>
+  rewriteCurrentGameState: () => Record<string, unknown>
+  updateCurrentGameState: () => void
+  getThothVersion: () => void
+}
+
 const Context = createContext({
   currentSpell: {},
   getCurrentSpell: () => {},
