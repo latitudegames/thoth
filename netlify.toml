@@ -8,5 +8,5 @@
   publish = "client/build/"
 
 
-[[plugins]]
+[[context.deploy-preview.plugins]]
 package = "/netlify/plugins/conditional-canary"
