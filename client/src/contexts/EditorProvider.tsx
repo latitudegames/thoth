@@ -7,7 +7,17 @@ import gridimg from '../grid.png'
 import { usePubSub } from './PubSubProvider'
 import { useRete, ReteContext } from './ReteProvider'
 import { useSpell, SpellContext } from './SpellProvider'
-import { ThothTab } from './TabManagerProvider'
+// import { ThothTab } from './TabManagerProvider'
+
+export type ThothTab = {
+  layoutJson: string
+  name: string
+  id: string
+  spell: string
+  module: string
+  type: string
+  active: boolean
+}
 
 const Context = createContext({
   run: () => {},
