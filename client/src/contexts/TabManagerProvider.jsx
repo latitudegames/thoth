@@ -7,16 +7,6 @@ import { useDB } from './DatabaseProvider'
 import defaultJson from './layouts/defaultLayout.json'
 import { usePubSub } from './PubSubProvider'
 
-export type ThothTab = {
-  layoutJson: string
-  name: string
-  id: string
-  spell: string
-  module: string
-  type: string
-  active: boolean
-}
-
 const Context = createContext({
   tabs: [],
   activeTab: {},
