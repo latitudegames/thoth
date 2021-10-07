@@ -1,52 +1,13 @@
-import { initEditor, EngineContext } from '@latitudegames/thoth-core'
+import { initEditor } from '@latitudegames/thoth-core'
 import React, { useRef, useContext, createContext, useState } from 'react'
 
 import LoadingScreen from '../features/common/LoadingScreen/LoadingScreen'
 import { MyNode } from '../features/common/Node/Node'
 import gridimg from '../grid.png'
 import { usePubSub } from './PubSubProvider'
-import { useRete } from './ReteProvider'
-import { useSpell } from './SpellProvider'
-
-export type SpellContext = {
-  currentSpell: {}
-  getCurrentSpell: () => void
-  updateCurrentSpell: {}
-  loadSpell: () => void
-  saveSpell: () => void
-  newSpell: () => void
-  saveCurrentSpell: () => void
-  stateHistory: never[]
-  currentGameState: {}
-  getCurrentGameState: () => Record<string, unknown>
-  rewriteCurrentGameState: () => Record<string, unknown>
-  updateCurrentGameState: () => void
-  getThothVersion: () => void
-}
-
-export interface ReteContext extends EngineContext {
-  onInspector: () => void
-  onPlayTest: () => void
-  onGameState: () => void
-  sendToPlaytest: () => void
-  sendToInspector: () => void
-  clearTextEditor: () => void
-  getSpell: () => void
-  getModule: () => void
-  getGameState: () => void
-  setGameState: () => void
-  getModules: () => void
-}
-
-export type ThothTab = {
-  layoutJson: string
-  name: string
-  id: string
-  spell: string
-  module: string
-  type: string
-  active: boolean
-}
+import { useRete, ReteContext } from './ReteProvider'
+import { useSpell, SpellContext } from './SpellProvider'
+import { ThothTab } from './TabManagerProvider'
 
 const Context = createContext({
   run: () => {},
