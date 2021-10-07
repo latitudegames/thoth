@@ -6,10 +6,8 @@ import { useDB } from './DatabaseProvider'
 export type SpellContext = {
   currentSpell: {}
   getCurrentSpell: () => void
-  updateCurrentSpell: {}
   loadSpell: () => void
   saveSpell: () => void
-  newSpell: () => void
   saveCurrentSpell: () => void
   stateHistory: never[]
   currentGameState: {}
@@ -22,10 +20,8 @@ export type SpellContext = {
 const Context = createContext({
   currentSpell: {},
   getCurrentSpell: () => {},
-  updateCurrentSpell: {},
   loadSpell: () => {},
   saveSpell: () => {},
-  newSpell: () => {},
   saveCurrentSpell: () => {},
   stateHistory: [],
   currentGameState: {},
