@@ -8,5 +8,10 @@
   publish = "client/build/"
 
 
+[[redirects]]
+from = "./*"
+to = "/index.html"
+status = 200
+
 [[context.deploy-preview.plugins]]
 package = "/netlify/plugins/conditional-canary"
