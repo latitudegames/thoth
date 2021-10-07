@@ -1,14 +1,13 @@
 import { useSnackbar } from 'notistack'
 
-import { useAppSelector, useAppDispatch } from '../../../../state/hooks'
-import { tabOpened, activeTabSelector } from '../../../../state/tabs'
+import { useAppDispatch } from '../../../../state/hooks'
+import { tabOpened } from '../../../../state/tabs'
 import { useModule } from '../../../../contexts/ModuleProvider'
 import { useTabManager } from '../../../../contexts/TabManagerProvider'
 import Select from '../../../common/Select/Select'
-import { useEffect } from 'react'
 
 const ModuleSelect = ({ control, updateData, initialValue }) => {
-  const activeTab = useAppSelector(activeTabSelector)
+  // const activeTab = useAppSelector(activeTabSelector)
   const dispatch = useAppDispatch()
 
   const { modules, newModule, findOneModule } = useModule()
