@@ -4,6 +4,7 @@ import { Editor, useEditor } from '../../../contexts/EditorProvider'
 import { Layout } from '../../../contexts/LayoutProvider'
 import { useModule } from '../../../contexts/ModuleProvider'
 import { useSpell } from '../../../contexts/SpellProvider'
+import { useLazyGetSpellQuery } from '../../../state/spells'
 import WorkspaceProvider from '../../../contexts/WorkspaceProvider'
 import { debounce } from '../../../utils/debounce'
 import EditorWindow from './EditorWindow'
@@ -14,7 +15,9 @@ import StateManager from './StateManagerWindow'
 import TextEditor from './TextEditorWindow'
 
 const Workspace = ({ tab, appPubSub }) => {
-  const { saveSpell, loadSpell } = useSpell()
+  const [loadSpell, { data: spellData }] = useLazyGetSpellQuery()
+
+  const { saveSpell } = useSpell()
   const { saveModule } = useModule()
   const { editor } = useEditor()
 
