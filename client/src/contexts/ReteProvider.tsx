@@ -149,6 +149,8 @@ const ReteProvider = ({ children, tab }) => {
     enkiCompletion,
     huggingface,
     ...modules,
+
+    // going to need to manuall create theses
     ...spells,
   }
 
