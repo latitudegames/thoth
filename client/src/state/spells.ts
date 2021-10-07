@@ -1,13 +1,13 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Spell as SpellType } from '@latitudegames/thoth-core/types'
 
-import { initDB } from '../database'
+// import { initDB } from '../database'
 
-const _spells = async () => {
-  const db = await initDB()
-  const { spells } = db.modules
-  return spells
-}
+// const _spells = async () => {
+//   const db = await initDB()
+//   const { spells } = db.modules
+//   return spells
+// }
 export interface Spell {
   user?: Record<string, unknown> | null | undefined
   name: string
@@ -36,6 +36,4 @@ export const spellApi = createApi({
   }),
 })
 
-console.log('Spell api', spellApi)
-
-export const { useGetSpellQuery } = spellApi
+export const { useGetSpellQuery, useLazyGetSpellQuery } = spellApi
