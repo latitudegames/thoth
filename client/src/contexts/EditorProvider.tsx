@@ -214,6 +214,6 @@ const RawEditor = ({ tab, children }) => {
 
 export const Editor = React.memo(RawEditor)
 
-Editor.whyDidYouRender = true
+Editor.whyDidYouRender = false
 
 export default EditorProvider
