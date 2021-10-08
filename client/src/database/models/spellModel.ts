@@ -24,6 +24,17 @@ const loadSpellModel = db => {
     })
   }
 
+  const saveSpell = async spellUpdate => {
+    const spell = await getSpell(spellUpdate.name)
+
+    return spell.atomicUpdate(oldData => {
+      return {
+        ...oldData,
+        ...spellUpdate,
+      }
+    })
+  }
+
   const newSpell = async ({ graph, name, gameState = {} }) => {
     const newSpell = {
       name,
@@ -38,6 +49,7 @@ const loadSpellModel = db => {
     getSpell,
     getSpells,
     updateSpell,
+    saveSpell,
     newSpell,
   }
 }
