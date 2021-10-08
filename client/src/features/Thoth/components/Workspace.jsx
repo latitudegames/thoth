@@ -3,8 +3,10 @@ import { useEffect } from 'react'
 import { Editor, useEditor } from '../../../contexts/EditorProvider'
 import { Layout } from '../../../contexts/LayoutProvider'
 import { useModule } from '../../../contexts/ModuleProvider'
-import { useSpell } from '../../../contexts/SpellProvider'
-import { useLazyGetSpellQuery } from '../../../state/spells'
+import {
+  useLazyGetSpellQuery,
+  useSaveSpellMutation,
+} from '../../../state/spells'
 import WorkspaceProvider from '../../../contexts/WorkspaceProvider'
 import { debounce } from '../../../utils/debounce'
 import EditorWindow from './EditorWindow'
@@ -16,8 +18,7 @@ import TextEditor from './TextEditorWindow'
 
 const Workspace = ({ tab, appPubSub }) => {
   const [loadSpell, { data: spellData }] = useLazyGetSpellQuery()
-
-  const { saveSpell } = useSpell()
+  const [saveSpell] = useSaveSpellMutation()
   const { saveModule } = useModule()
   const { editor } = useEditor()
 
@@ -27,8 +28,9 @@ const Workspace = ({ tab, appPubSub }) => {
     return editor.on(
       'save nodecreated noderemoved connectioncreated connectionremoved nodetranslated',
       debounce(() => {
-        if (tab.type === 'spell')
-          saveSpell(tab.spell, { graph: editor.toJSON() }, false)
+        if (tab.type === 'spell') {
+          saveSpell({ ...spellData, graph: editor.toJSON() }, false)
+        }
         if (tab.type === 'module') {
           saveModule(tab.module, { data: editor.toJSON() }, false)
         }
