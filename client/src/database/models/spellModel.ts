@@ -9,6 +9,10 @@ const loadSpellModel = db => {
       .exec()
   }
 
+  const getSpells = async spellId => {
+    return await db.spells.find().exec()
+  }
+
   const updateSpell = async (spellId, update) => {
     const spell = await getSpell(spellId)
 
@@ -32,6 +36,7 @@ const loadSpellModel = db => {
 
   return {
     getSpell,
+    getSpells,
     updateSpell,
     newSpell,
   }
