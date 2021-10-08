@@ -37,27 +37,21 @@ const CreateNew = () => {
   const [, setLocation] = useLocation()
   const [selectedTemplate, setSelectedTemplate] = useState(null)
 
-  const [newSpell, { data: spell }] = useNewSpellMutation()
+  const [newSpell] = useNewSpellMutation()
 
   // const { newSpell } = useSpell()
   const { openTab, clearTabs } = useTabManager()
 
-  useEffect(() => {
-    if (!spell) return
-    ;(async () => {
-      console.log('Spell created', spell)
-      await clearTabs()
-      await openTab({ name: spell.name, spellId: spell.name, type: 'spell' })
-      setLocation('/thoth')
-    })()
-  }, [spell])
-
   const onCreate = async () => {
     const placeholderName = uniqueNamesGenerator(customConfig)
-    const spell = await newSpell({
+    const { data: spell } = await newSpell({
       graph: defaultGraph,
       name: placeholderName,
     })
+
+    await clearTabs()
+    await openTab({ name: spell.name, spellId: spell.name, type: 'spell' })
+    setLocation('/thoth')
   }
 
   return (
