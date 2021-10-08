@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   uniqueNamesGenerator,
   adjectives,
@@ -6,6 +6,7 @@ import {
 } from 'unique-names-generator'
 import { useLocation } from 'wouter'
 
+import { useNewSpellMutation } from '../../../state/spells'
 import { useSpell } from '../../../contexts/SpellProvider'
 import { useTabManager } from '../../../contexts/TabManagerProvider'
 import Panel from '../../common/Panel/Panel'
@@ -35,8 +36,21 @@ const templates = [
 const CreateNew = () => {
   const [, setLocation] = useLocation()
   const [selectedTemplate, setSelectedTemplate] = useState(null)
-  const { newSpell } = useSpell()
+
+  const [newSpell, { data: spell }] = useNewSpellMutation()
+
+  // const { newSpell } = useSpell()
   const { openTab, clearTabs } = useTabManager()
+
+  useEffect(() => {
+    if (!spell) return
+    ;(async () => {
+      console.log('Spell created', spell)
+      await clearTabs()
+      await openTab({ name: spell.name, spellId: spell.name, type: 'spell' })
+      setLocation('/thoth')
+    })()
+  }, [spell])
 
   const onCreate = async () => {
     const placeholderName = uniqueNamesGenerator(customConfig)
@@ -44,10 +58,6 @@ const CreateNew = () => {
       graph: defaultGraph,
       name: placeholderName,
     })
-
-    await clearTabs()
-    await openTab({ name: spell.name, spellId: spell.name, type: 'spell' })
-    setLocation('/thoth')
   }
 
   return (
