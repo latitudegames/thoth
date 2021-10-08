@@ -69,9 +69,10 @@ const EditorProvider = ({ children }) => {
     return editorRef.current
   }
 
-  const buildEditor = async (container, spell, tab, thoth) => {
+  const buildEditor = async (container, _spell, tab, thoth) => {
+    // copy spell in case it is read only
+    const spell = JSON.parse(JSON.stringify(_spell))
     // eslint-disable-next-line no-console
-    console.log('building editor for tab', tab)
     const newEditor = await initEditor({
       container,
       pubSub,
