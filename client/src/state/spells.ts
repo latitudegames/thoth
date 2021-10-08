@@ -22,13 +22,18 @@ export const spellApi = createApi({
     baseUrl: process.env.REACT_APP_API_URL || 'localhost:8000/',
   }),
   endpoints: builder => ({
-    // getSpells: builder.query<Spell, true>({
-    //   queryFn: getSpells,
-    // }),
+    getSpells: builder.query<Spell, true>({
+      async queryFn() {
+        const spellModel = await _spells()
+        const spells = await spellModel.getSpells()
+
+        return { data: spells.map(spell => spell.toJSON()) }
+      },
+    }),
     getSpell: builder.query<Spell, string>({
       async queryFn(spellId) {
-        const spells = await _spells()
-        const spell = await spells.getSpell(spellId)
+        const spellModel = await _spells()
+        const spell = await spellModel.getSpell(spellId)
 
         return { data: spell.toJSON() as Spell }
       },
@@ -41,15 +46,20 @@ export const spellApi = createApi({
     newSpell: builder.mutation<Spell, Partial<Spell>>({
       async queryFn(spellData) {
         const newSpell = { gameState: {}, ...spellData }
-        const spells = await _spells()
+        const spellModel = await _spells()
 
-        const spell = await spells.newSpell(newSpell)
+        const spell = await spellModel.newSpell(newSpell)
 
         return { data: spell.toJSON() as Spell }
       },
     }),
   }),
 })
+
+const selectSpellResults = spellApi.endpoints.getSpells
+
+export const useGetSpellSubscription =
+  spellApi.endpoints.getSpell.useQuerySubscription
 
 export const { useGetSpellQuery, useLazyGetSpellQuery, useNewSpellMutation } =
   spellApi
