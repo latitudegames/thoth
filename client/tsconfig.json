@@ -10,7 +10,10 @@
     "strict": false,
     "composite": true,
     "sourceMap": true,
-    "noEmit": true
+    "noEmit": true,
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true
   },
   "typeRoots": ["@types/@thoth"],
   "references": [
