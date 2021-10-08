@@ -1,16 +1,33 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
+import {
+  useSaveSpellMutation,
+  useGetSpellsQuery,
+  selectSpellById,
+  selectAllSpells,
+} from '../../../state/spells'
 import { useEditor } from '../../../contexts/EditorProvider'
 import { useLayout } from '../../../contexts/LayoutProvider'
 import { useModule } from '../../../contexts/ModuleProvider'
 import { useSpell } from '../../../contexts/SpellProvider'
+import { useSelector } from 'react-redux'
 
 const EventHandler = ({ pubSub, tab }) => {
   // only using this to handle events, so not rendering anything with it.
   const { createOrFocus, windowTypes } = useLayout()
 
+  const [saveSpellMutation] = useSaveSpellMutation()
+  const { data: spellsData } = useGetSpellsQuery()
+  const spell = useSelector(state => selectSpellById(state, tab?.spell))
+
+  // Spell ref because callbacks cant hold values from state without them
+  const spellRef = useRef(null)
+  useEffect(() => {
+    if (!spell) return
+    spellRef.current = spell
+  }, [spell])
+
   const { serialize, getEditor, undo, redo } = useEditor()
-  const { saveCurrentSpell, getSpell, getCurrentSpell } = useSpell()
   const { getSpellModules } = useModule()
 
   const { events, subscribe } = pubSub
@@ -29,8 +46,10 @@ const EventHandler = ({ pubSub, tab }) => {
   } = events
 
   const saveSpell = async () => {
-    const graph = serialize()
-    await saveCurrentSpell({ graph })
+    const currentSpell = spellRef.current
+    const graph = serialize(currentSpell)
+
+    await saveSpellMutation({ ...currentSpell, graph })
   }
 
   const createStateManager = () => {
@@ -63,10 +82,9 @@ const EventHandler = ({ pubSub, tab }) => {
   }
 
   const onExport = async () => {
-    const currentSpell = getCurrentSpell()
+    // const currentSpell = getCurrentSpell()
     // refetch spell from local DB to ensure it is the most up to date
-    const spellDoc = await getSpell(currentSpell.name)
-    const spell = spellDoc.toJSON()
+    const spell = { ...spellRef.current }
     const modules = await getSpellModules(spell)
     // attach modules to spell to be exported
     spell.modules = modules
@@ -77,7 +95,7 @@ const EventHandler = ({ pubSub, tab }) => {
     const url = window.URL.createObjectURL(new Blob([blob]))
     const link = document.createElement('a')
     link.href = url
-    link.setAttribute('download', `${spellDoc.name}.thoth`)
+    link.setAttribute('download', `${spell.name}.thoth`)
 
     // Append to html link element page
     document.body.appendChild(link)
@@ -110,7 +128,7 @@ const EventHandler = ({ pubSub, tab }) => {
   }
 
   useEffect(() => {
-    if (!tab) return
+    if (!tab && !spell) return
 
     const subscriptions = Object.entries(handlerMap).map(([event, handler]) => {
       return subscribe(event, handler)
