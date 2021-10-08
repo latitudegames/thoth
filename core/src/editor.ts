@@ -94,10 +94,11 @@ export const initEditor = async function ({
       workspaceType: unknown
       category: string
     }) => {
-      const tabType = editor.tab.type
-      const { workspaceType } = component
+      //@seang: disabling component filtering in anticipation of needing to treat spells as "top level modules" in the publishing workflow
+      // const tabType = editor.tab.type
+      // const { workspaceType } = component
 
-      if (workspaceType && workspaceType !== tabType) return null
+      // if (workspaceType && workspaceType !== tabType) return null
       return [component.category]
     },
   })
