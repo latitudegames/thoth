@@ -21,6 +21,7 @@
   "dependencies": {
     "deep-equal": "^2.0.5",
     "handlebars": "^4.7.7",
+    "jsdom": "^17.0.0",
     "path": "^0.12.7",
     "react": "^17.0.2",
     "rete": "https://github.com/latitudegames/rete.git#master",
