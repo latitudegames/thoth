@@ -7,7 +7,6 @@ import {
 import { useLocation } from 'wouter'
 
 import { useNewSpellMutation } from '../../../state/spells'
-import { useSpell } from '../../../contexts/SpellProvider'
 import { useTabManager } from '../../../contexts/TabManagerProvider'
 import Panel from '../../common/Panel/Panel'
 import emptyImg from '../empty.png'
@@ -39,7 +38,6 @@ const CreateNew = () => {
 
   const [newSpell] = useNewSpellMutation()
 
-  // const { newSpell } = useSpell()
   const { openTab, clearTabs } = useTabManager()
 
   const onCreate = async () => {
