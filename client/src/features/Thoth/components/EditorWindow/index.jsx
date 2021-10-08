@@ -1,11 +1,15 @@
+import { useState } from 'react'
 import { createNode } from 'rete-context-menu-plugin/src/utils'
+import WindowToolbar from '../../../common/Window/WindowToolbar'
 
 import { Editor, useEditor } from '../../../../contexts/EditorProvider'
+import Deployment from './Deployment'
 import Select from '../../../common/Select/Select'
 import css from './editorwindow.module.css'
 
 const EditorWindow = ({ tab }) => {
   const { getNodes, getNodeMap, editor } = useEditor()
+  const [deployOpen, setDeployOpen] = useState(false)
 
   const nodeList = getNodes()
   const nodeMap = getNodeMap()
@@ -59,6 +63,7 @@ const EditorWindow = ({ tab }) => {
   const EditorToolbar = () => {
     return (
       <>
+        <button style={{ opacity: 0 }}>Deploy...</button>
         <Select
           searchable
           nested
@@ -71,16 +76,26 @@ const EditorWindow = ({ tab }) => {
           value={null}
           focusKey="cmd+p, ctl+p"
         />
+        <button
+          onClick={() => {
+            setDeployOpen(true)
+          }}
+        >
+          Deploy
+        </button>
       </>
     )
   }
 
   return (
-    <div className={css['editor-container']}>
-      <div className={css['editor-toolbar']}>
-        <EditorToolbar />
+    <div className={css['editor-deployments-wrapper']}>
+      <div className={css['editor-container']}>
+        <div className={css['editor-toolbar']}>
+          <EditorToolbar />
+        </div>
+        <Editor tab={tab} />
       </div>
-      <Editor tab={tab} />
+      <Deployment open={deployOpen} setOpen={setDeployOpen} />
     </div>
   )
 }

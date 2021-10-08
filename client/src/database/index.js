@@ -23,7 +23,7 @@ export const initDB = async () => {
 
   // Uncomment this for fast deletion of DB
   if (process.env.NODE_ENV !== 'production') {
-    // await removeRxDatabase(databaseName, adapter);
+    // await removeRxDatabase(databaseName, adapter)
   }
 
   database = await createRxDatabase({
