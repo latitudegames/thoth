@@ -25,10 +25,12 @@ export const spellApi = createApi({
     // getSpells: builder.query<Spell, true>({
     //   queryFn: getSpells,
     // }),
-    getSpell: builder.query<Spell, number>({
-      async queryFn(args) {
-        console.log('ARGS', args)
-        return { data: {} as Spell }
+    getSpell: builder.query<Spell, string>({
+      async queryFn(spellId) {
+        const spells = await _spells()
+        const spell = await spells.getSpell(spellId)
+
+        return { data: spell.toJSON() as Spell }
       },
     }),
     saveSpell: builder.mutation<Spell, Spell>({
