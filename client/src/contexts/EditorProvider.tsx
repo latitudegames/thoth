@@ -1,12 +1,20 @@
 import { initEditor } from '@latitudegames/thoth-core'
-import React, { useRef, useContext, createContext, useState } from 'react'
+import React, {
+  useRef,
+  useContext,
+  createContext,
+  useState,
+  useEffect,
+} from 'react'
+
+import { useLazyGetSpellQuery, Spell } from '../state/spells'
 
 import LoadingScreen from '../features/common/LoadingScreen/LoadingScreen'
 import { MyNode } from '../features/common/Node/Node'
 import gridimg from '../grid.png'
+import { useSpell } from './SpellProvider'
 import { usePubSub } from './PubSubProvider'
 import { useRete, ReteContext } from './ReteProvider'
-import { useSpell, SpellContext } from './SpellProvider'
 // import { ThothTab } from './TabManagerProvider'
 
 export type ThothTab = {
@@ -25,7 +33,8 @@ const Context = createContext({
   serialize: () => {},
   buildEditor: (
     el: HTMLDivElement,
-    spell: SpellContext,
+    // todo update this to use proper spell type
+    spell: Spell | undefined,
     tab: ThothTab,
     reteInterface: ReteContext
   ) => {},
@@ -61,7 +70,6 @@ const EditorProvider = ({ children }) => {
   }
 
   const buildEditor = async (container, spell, tab, thoth) => {
-    // console.log('init editor', initEditor)
     // eslint-disable-next-line no-console
     console.log('building editor for tab', tab)
     const newEditor = await initEditor({
@@ -77,10 +85,7 @@ const EditorProvider = ({ children }) => {
     // set editor to the map
     setEditor(newEditor)
 
-    if (tab.type === 'spell') {
-      const spellDoc = await thoth.getSpell(tab.spell)
-      newEditor.loadGraph(spellDoc.toJSON().graph)
-    }
+    if (tab.type === 'spell') newEditor.loadGraph(spell.graph)
 
     if (tab.type === 'module') {
       const moduleDoc = await thoth.getModule(tab.module)
@@ -140,14 +145,20 @@ const EditorProvider = ({ children }) => {
 }
 
 const RawEditor = ({ tab, children }) => {
+  const [getSpell, { data: spell, isLoading }] = useLazyGetSpellQuery()
   const [loaded, setLoaded] = useState(false)
   const { buildEditor } = useEditor()
-  const spell = useSpell()
-  const { getCurrentGameState, updateCurrentGameState } = spell
+  const { getCurrentGameState, updateCurrentGameState } = useSpell()
   // This will be the main interface between thoth and rete
   const reteInterface = useRete()
 
-  if (!tab) return <LoadingScreen />
+  useEffect(() => {
+    if (!tab) return
+
+    getSpell(tab.spell)
+  }, [tab])
+
+  if (isLoading || !tab || !spell) return <LoadingScreen />
 
   return (
     <>
