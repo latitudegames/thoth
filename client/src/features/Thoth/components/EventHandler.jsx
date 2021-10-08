@@ -4,12 +4,10 @@ import {
   useSaveSpellMutation,
   useGetSpellsQuery,
   selectSpellById,
-  selectAllSpells,
 } from '../../../state/spells'
 import { useEditor } from '../../../contexts/EditorProvider'
 import { useLayout } from '../../../contexts/LayoutProvider'
 import { useModule } from '../../../contexts/ModuleProvider'
-import { useSpell } from '../../../contexts/SpellProvider'
 import { useSelector } from 'react-redux'
 
 const EventHandler = ({ pubSub, tab }) => {
