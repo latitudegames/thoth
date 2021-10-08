@@ -24,8 +24,8 @@ const loadSpellModel = db => {
     })
   }
 
-  const saveSpell = async spellUpdate => {
-    const spell = await getSpell(spellUpdate.name)
+  const saveSpell = async (spellId, spellUpdate) => {
+    const spell = await getSpell(spellId)
 
     return spell.atomicUpdate(oldData => {
       return {
