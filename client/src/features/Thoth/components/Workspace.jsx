@@ -39,7 +39,7 @@ const Workspace = ({ tab, appPubSub }) => {
   }, [editor])
 
   useEffect(() => {
-    if (!tab) return
+    if (!tab || !tab.spell) return
     loadSpell(tab.spell)
   }, [tab])
 
