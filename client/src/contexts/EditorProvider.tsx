@@ -86,7 +86,7 @@ const EditorProvider = ({ children }) => {
     // set editor to the map
     setEditor(newEditor)
 
-    if (tab.type === 'spell') newEditor.loadGraph(spell.graph)
+    if (tab.type === 'spell') newEditor.loadGraph(spell.chain.graph)
 
     if (tab.type === 'module') {
       const moduleDoc = await thoth.getModule(tab.module)
