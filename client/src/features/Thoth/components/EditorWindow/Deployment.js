@@ -72,6 +72,10 @@ const DeploymentView = ({ open, setOpen, spellId }) => {
                 openModal({
                   modal: 'deployModal',
                   title: 'Deploy',
+                  options: {
+                    // todo find better way to get next version here
+                    version: '0.0.' + (deployements.length + 1),
+                  },
                   onClose: notes => {
                     closeModal()
                     deploy(notes)
@@ -114,7 +118,7 @@ const DeploymentView = ({ open, setOpen, spellId }) => {
                           width: '100%',
                         }}
                       >
-                        <Input style={{ flex: 1 }} />
+                        <Input style={{ flex: 1 }} value={deploy.url} />
                         <button>copy</button>
                       </div>
                       <p> Change notes </p>
