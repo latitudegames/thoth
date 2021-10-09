@@ -118,7 +118,11 @@ const DeploymentView = ({ open, setOpen, spellId }) => {
                           width: '100%',
                         }}
                       >
-                        <Input style={{ flex: 1 }} value={deploy.url} />
+                        <Input
+                          style={{ flex: 1 }}
+                          value={deploy.url}
+                          readOnly
+                        />
                         <button>copy</button>
                       </div>
                       <p> Change notes </p>
