@@ -29,7 +29,7 @@ const DeploymentView = ({ open, setOpen, spellId }) => {
   const deploy = message => {
     if (!spell) return
     deploySpell({ spellId: spell.name, message })
-    enqueueSnackbar('State saved', { variant: 'success' })
+    enqueueSnackbar('Spell deployed', { variant: 'success' })
   }
 
   const copy = url => {
