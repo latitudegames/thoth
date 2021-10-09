@@ -2,6 +2,7 @@ import { createSelector } from '@reduxjs/toolkit'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Spell as SpellType } from '@latitudegames/thoth-core/types'
 
+import { getAuthHeader } from '../utils/authHelper'
 import { initDB } from '../database'
 
 function camelize(str) {
@@ -45,18 +46,25 @@ const versions: Record<string, DeployedSpellVersion[]> = {}
 export const spellApi = createApi({
   reducerPath: 'spellApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.REACT_APP_API_URL || 'localhost:8000/',
+    baseUrl: `${process.env.REACT_APP_API_URL}/game` || 'localhost:8000/game',
+    prepareHeaders: headers => {
+      const authHeader = getAuthHeader()
+      if (authHeader?.Authorization)
+        headers.set('authorization', authHeader['Authorization'])
+      return headers
+    },
   }),
   tagTypes: ['Spell', 'Version'],
   endpoints: builder => ({
     getSpells: builder.query<Spell[], void>({
       providesTags: ['Spell'],
-      async queryFn() {
-        const spellModel = await _spellModel()
-        const spells = await spellModel.getSpells()
+      query: () => '/spells',
+      // async queryFn() {
+      //   const spellModel = await _spellModel()
+      //   const spells = await spellModel.getSpells()
 
-        return { data: spells.map(spell => spell.toJSON()) }
-      },
+      //   return { data: spells.map(spell => spell.toJSON()) }
+      // },
     }),
     getSpell: builder.query<Spell, string>({
       providesTags: ['Spell'],
