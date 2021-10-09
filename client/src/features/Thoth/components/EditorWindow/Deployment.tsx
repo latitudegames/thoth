@@ -11,7 +11,7 @@ import Panel from '../../../common/Panel/Panel'
 import { useModal } from '../../../../contexts/ModalProvider'
 
 import {
-  useGetVersionsQuery,
+  useGetDeploymentsQuery,
   selectSpellById,
   useDeploySpellMutation,
 } from '../../../../state/spells'
@@ -22,7 +22,7 @@ const DeploymentView = ({ open, setOpen, spellId }) => {
 
   const [deploySpell] = useDeploySpellMutation()
   const spell = useSelector(state => selectSpellById(state, spellId))
-  const { data: deployments, isLoading } = useGetVersionsQuery(
+  const { data: deployments, isLoading } = useGetDeploymentsQuery(
     spell?.name || ''
   )
 
