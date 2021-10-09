@@ -22,7 +22,7 @@ const DeploymentView = ({ open, setOpen, spellId }) => {
 
   const [deploySpell] = useDeploySpellMutation()
   const spell = useSelector(state => selectSpellById(state, spellId))
-  const { data: deployements, isLoading } = useGetVersionsQuery(
+  const { data: deployments, isLoading } = useGetVersionsQuery(
     spell?.name || ''
   )
 
@@ -81,7 +81,7 @@ const DeploymentView = ({ open, setOpen, spellId }) => {
                   options: {
                     // todo find better way to get next version here
                     version:
-                      '0.0.' + (deployements ? deployements?.length + 1 : 0),
+                      '0.0.' + (deployments ? deployments?.length + 1 : 0),
                   },
                   onClose: notes => {
                     closeModal()
@@ -95,14 +95,14 @@ const DeploymentView = ({ open, setOpen, spellId }) => {
           </WindowToolbar>
         </div>
         <Scrollbars>
-          {isLoading || !deployements || deployements.length === 0 ? (
+          {isLoading || !deployments || deployments.length === 0 ? (
             <p className={css['message']}>
               No previous deployments. <br /> Press "Deploy new" to create a new
               deployment.
             </p>
           ) : (
             <>
-              {deployements.map(deploy => {
+              {deployments.map(deploy => {
                 return (
                   <SimpleAccordion
                     key={deploy.version}
