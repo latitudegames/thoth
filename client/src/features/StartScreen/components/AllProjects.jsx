@@ -5,9 +5,10 @@ import FileInput from './FileInput'
 import ProjectRow from './ProjectRow'
 
 const AllProjects = ({
-  projects,
-  setSelectedProject,
-  selectedProject,
+  spells,
+  openSpell,
+  setSelectedSpell,
+  selectedSpell,
   loadFile,
 }) => {
   return (
@@ -18,7 +19,7 @@ const AllProjects = ({
           size={'var(--medium)'}
           style={{ marginRight: 'var(--extraSmall)', top: '3px' }}
         />
-        All Projects
+        All Spells
       </h1>
       <Panel
         style={{ width: 'var(--c62)', backgroundColor: 'var(--dark-1)' }}
@@ -27,14 +28,14 @@ const AllProjects = ({
         roundness="round"
         unpadded
       >
-        {projects.map((project, i) => (
+        {spells.map((spell, i) => (
           <ProjectRow
             key={i}
-            setSelectedProject={setSelectedProject}
-            selectedProject={selectedProject}
-            label={project.label}
+            setSelectedSpell={setSelectedSpell}
+            selectedSpell={selectedSpell}
+            label={spell.name}
             onClick={() => {
-              setSelectedProject(project.label)
+              setSelectedSpell(spell)
             }}
           />
         ))}
@@ -49,7 +50,12 @@ const AllProjects = ({
           back
         </button>
         <FileInput loadFile={loadFile} />
-        <button className={!selectedProject ? 'disabled' : 'primary'}>
+        <button
+          onClick={() => {
+            openSpell(selectedSpell)
+          }}
+          className={!selectedSpell ? 'disabled' : 'primary'}
+        >
           OPEN
         </button>
       </div>

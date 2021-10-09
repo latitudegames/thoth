@@ -3,17 +3,17 @@ import React from 'react'
 import css from './panel.module.css'
 
 const Panel = ({
-  style,
-  unpadded,
-  shade,
-  shadow,
-  bacgkroundImageURL,
-  hover,
-  roundness,
-  className,
-  flexRow,
-  flexColumn,
-  gap,
+  style = {},
+  unpadded = false,
+  shade = false,
+  shadow = false,
+  bacgkroundImageURL = '',
+  hover = false,
+  roundness = '',
+  className = '',
+  flexRow = false,
+  flexColumn = '',
+  gap = '',
   ...props
 }) => {
   return (
