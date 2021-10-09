@@ -123,6 +123,8 @@ export const {
   useLazyGetSpellQuery,
   useNewSpellMutation,
   useSaveSpellMutation,
+  useDeployMutation,
+  useGetVersionsQuery,
 } = spellApi
 
 export const useGetSpellSubscription =
