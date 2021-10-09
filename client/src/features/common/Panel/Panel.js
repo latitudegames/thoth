@@ -7,13 +7,13 @@ const Panel = ({
   unpadded = false,
   shade = false,
   shadow = false,
-  bacgkroundImageURL = false,
+  bacgkroundImageURL = '',
   hover = false,
-  roundness = false,
+  roundness = '',
   className = '',
   flexRow = false,
-  flexColumn = false,
-  gap = 1,
+  flexColumn = '',
+  gap = '',
   ...props
 }) => {
   return (
