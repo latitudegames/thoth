@@ -48,7 +48,11 @@ const CreateNew = () => {
     })
 
     await clearTabs()
-    await openTab({ name: spell.name, spellId: spell.name, type: 'spell' })
+    await openTab({
+      name: placeholderName,
+      spellId: placeholderName,
+      type: 'spell',
+    })
     setLocation('/thoth')
   }
 
