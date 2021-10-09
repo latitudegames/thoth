@@ -59,12 +59,6 @@ export const spellApi = createApi({
     getSpells: builder.query<Spell[], void>({
       providesTags: ['Spell'],
       query: () => '/spells',
-      // async queryFn() {
-      //   const spellModel = await _spellModel()
-      //   const spells = await spellModel.getSpells()
-
-      //   return { data: spells.map(spell => spell.toJSON()) }
-      // },
     }),
     getSpell: builder.query<Spell, string>({
       providesTags: ['Spell'],
@@ -85,13 +79,16 @@ export const spellApi = createApi({
     }),
     newSpell: builder.mutation<Spell, Partial<Spell>>({
       invalidatesTags: ['Spell'],
-      async queryFn(spellData) {
-        const newSpell = { gameState: {}, ...spellData }
-        const spellModel = await _spellModel()
-
-        const spell = await spellModel.newSpell(newSpell)
-
-        return { data: spell.toJSON() }
+      query: spellData => {
+        const spell = {
+          ...spellData,
+          gameState: {},
+        }
+        return {
+          url: '/spells/save',
+          method: 'POST',
+          body: spell,
+        }
       },
     }),
     deploySpell: builder.mutation<DeployedSpellVersion, DeployArgs>({
