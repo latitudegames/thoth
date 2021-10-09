@@ -30,6 +30,7 @@ export interface Spell {
 export interface DeployedSpellVersion {
   spellId: string
   version: string
+  messge: string
   url?: string
 }
 
