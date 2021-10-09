@@ -20,18 +20,18 @@ export interface Spell {
 }
 
 export interface DeployedSpellVersion {
-  spellId: Pick<Spell, 'id'>
+  spellId: string
   version: string
   url?: string
 }
 
 export interface DeployArgs {
-  spellId: Pick<Spell, 'id'>
+  spellId: string
   message: string
 }
 
 // stubbed temp data
-const versions: DeployedSpellVersion[] = []
+const versions: Record<string, DeployedSpellVersion[]> = {}
 
 export const spellApi = createApi({
   reducerPath: 'spellApi',
@@ -77,24 +77,30 @@ export const spellApi = createApi({
         return { data: spell.toJSON() }
       },
     }),
-    deploy: builder.mutation<DeployedSpellVersion, DeployArgs>({
+    deploySpell: builder.mutation<DeployedSpellVersion, DeployArgs>({
       invalidatesTags: ['Version'],
       async queryFn({ spellId, message }) {
-        const version = '0.0.' + versions.length + 1
+        if (!versions[spellId]) versions[spellId] = []
+
+        const _versions = versions[spellId]
+        const version = '0.0.' + (_versions.length + 1)
         const deployment = { version, message, spellId }
 
-        versions.push(deployment)
+        versions[spellId].push(deployment)
 
         return {
           data: deployment as DeployedSpellVersion,
         }
       },
     }),
-    getVersions: builder.query<DeployedSpellVersion[], void>({
+    getVersions: builder.query<DeployedSpellVersion[], string>({
       providesTags: ['Version'],
-      async queryFn() {
+      async queryFn(spellId) {
+        console.log('egtting versions!')
+        const result = versions[spellId] || []
+        console.log('results', result)
         return {
-          data: versions,
+          data: result.reverse(),
         }
       },
     }),
@@ -123,7 +129,7 @@ export const {
   useLazyGetSpellQuery,
   useNewSpellMutation,
   useSaveSpellMutation,
-  useDeployMutation,
+  useDeploySpellMutation,
   useGetVersionsQuery,
 } = spellApi
 
