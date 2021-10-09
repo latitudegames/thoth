@@ -1,5 +1,3 @@
-import { useLocation } from 'wouter'
-
 import Icon from '../../common/Icon/Icon'
 import Panel from '../../common/Panel/Panel'
 import css from '../startScreen.module.css'
