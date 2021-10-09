@@ -9,8 +9,17 @@ import Input from '../../../common/Input/Input'
 import Panel from '../../../common/Panel/Panel'
 
 const DeploymentView = ({ open, setOpen }) => {
-  const [list, setList] = useState({})
+  const [list, setList] = useState([])
   const { openModal, closeModal } = useModal()
+
+  const addVersionToList = message => {
+    const version = {
+      version: '0.0.' + list.length + 1,
+      message,
+    }
+
+    setList([...list, version])
+  }
   return (
     <div className={`${css['deploy-shield']} ${css[!open && 'inactive']}`}>
       <div className={`${css['deploy-window']} ${css[!open && 'inactive']}`}>
@@ -40,19 +49,14 @@ const DeploymentView = ({ open, setOpen }) => {
               Cancel
             </button>
             <button
-              class="primary"
+              className="primary"
               onClick={() => {
                 openModal({
                   modal: 'deployModal',
                   title: 'Deploy',
                   onClose: notes => {
                     closeModal()
-                    setList({
-                      ...{
-                        version: '0.0.' + Object.keys(list).length,
-                        message: notes,
-                      },
-                    })
+                    addVersionToList(notes)
                   },
                 })
               }}
@@ -62,17 +66,17 @@ const DeploymentView = ({ open, setOpen }) => {
           </WindowToolbar>
         </div>
         <Scrollbars>
-          {Object.keys(list).length === 0 ? (
+          {list.length === 0 ? (
             <p className={css['message']}>
               No previous deployments. <br /> Press "Deploy new" to create a new
               deployment.
             </p>
           ) : (
             <>
-              {Object.keys(list).map(key => {
+              {list.map(deploy => {
                 return (
                   <SimpleAccordion
-                    heading={list[key].version}
+                    heading={deploy.version}
                     defaultExpanded={true}
                   >
                     <div
@@ -97,11 +101,11 @@ const DeploymentView = ({ open, setOpen }) => {
                       <p> Change notes </p>
                       <Panel
                         style={{
-                          backgroundColor: 'var(--dark-1)',
+                          sbackgroundColor: 'var(--dark-1)',
                           border: '1px solid var(--dark-3)',
                         }}
                       >
-                        {list[key].message}
+                        {deploy.message}
                       </Panel>
                     </div>
                   </SimpleAccordion>
