@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createNode } from 'rete-context-menu-plugin/src/utils'
-import WindowToolbar from '../../../common/Window/WindowToolbar'
 
+import WindowToolbar from '../../../common/Window/WindowToolbar'
 import { Editor, useEditor } from '../../../../contexts/EditorProvider'
 import Deployment from './Deployment'
 import Select from '../../../common/Select/Select'
@@ -10,7 +10,6 @@ import css from './editorwindow.module.css'
 const EditorWindow = ({ tab }) => {
   const { getNodes, getNodeMap, editor } = useEditor()
   const [deployOpen, setDeployOpen] = useState(false)
-
   const nodeList = getNodes()
   const nodeMap = getNodeMap()
 
@@ -95,7 +94,11 @@ const EditorWindow = ({ tab }) => {
         </div>
         <Editor tab={tab} />
       </div>
-      <Deployment open={deployOpen} setOpen={setDeployOpen} />
+      <Deployment
+        open={deployOpen}
+        setOpen={setDeployOpen}
+        spellId={tab.spell}
+      />
     </div>
   )
 }
