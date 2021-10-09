@@ -1,16 +1,33 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { Scrollbars } from 'react-custom-scrollbars'
+import { useSelector } from 'react-redux'
+
+import css from './editorwindow.module.css'
+
 import WindowToolbar from '../../../common/Window/WindowToolbar'
 import { SimpleAccordion } from '../../../common/Accordion'
-import { Scrollbars } from 'react-custom-scrollbars'
-import Icon from '../../../common/Icon/Icon'
-import css from './editorwindow.module.css'
-import { useModal } from '../../../../contexts/ModalProvider'
 import Input from '../../../common/Input/Input'
 import Panel from '../../../common/Panel/Panel'
+import Icon from '../../../common/Icon/Icon'
+import { useModal } from '../../../../contexts/ModalProvider'
 
-const DeploymentView = ({ open, setOpen }) => {
+import {
+  useGetVersionsQuery,
+  selectSpellById,
+  useDeploySpellMutation,
+} from '../../../../state/spells'
+
+const DeploymentView = ({ open, setOpen, spellId }) => {
   const [list, setList] = useState([])
   const { openModal, closeModal } = useModal()
+
+  const [deploySpell] = useDeploySpellMutation()
+  const spell = useSelector(state => selectSpellById(state, spellId))
+  const { data: deployements, isLoading } = useGetVersionsQuery(spell?.name)
+
+  const deploy = message => {
+    deploySpell({ spellId: spell.name, message })
+  }
 
   const addVersionToList = message => {
     const version = {
@@ -20,6 +37,7 @@ const DeploymentView = ({ open, setOpen }) => {
 
     setList([...list, version])
   }
+
   return (
     <div className={`${css['deploy-shield']} ${css[!open && 'inactive']}`}>
       <div className={`${css['deploy-window']} ${css[!open && 'inactive']}`}>
@@ -56,7 +74,7 @@ const DeploymentView = ({ open, setOpen }) => {
                   title: 'Deploy',
                   onClose: notes => {
                     closeModal()
-                    addVersionToList(notes)
+                    deploy(notes)
                   },
                 })
               }}
@@ -66,16 +84,17 @@ const DeploymentView = ({ open, setOpen }) => {
           </WindowToolbar>
         </div>
         <Scrollbars>
-          {list.length === 0 ? (
+          {isLoading || deployements.length === 0 ? (
             <p className={css['message']}>
               No previous deployments. <br /> Press "Deploy new" to create a new
               deployment.
             </p>
           ) : (
             <>
-              {list.map(deploy => {
+              {deployements.map(deploy => {
                 return (
                   <SimpleAccordion
+                    key={deploy.version}
                     heading={deploy.version}
                     defaultExpanded={true}
                   >
