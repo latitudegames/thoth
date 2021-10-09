@@ -12,9 +12,6 @@ import { InputControl } from '../dataControls/InputControl'
 import { SocketGeneratorControl } from '../dataControls/SocketGenerator'
 import { EngineContext } from '../engine'
 import { triggerSocket, stringSocket } from '../sockets'
-// @seang todo: convert data controls to typescript to remove this
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//@ts-ignore
 import { ThothComponent } from '../thoth-component'
 const info = `The generator component is our general purpose completion component.  You can define any number of inputs, and utilise those inputs in a templating language known as Handlebars.  Any value which is wrapped like {{this}} in double braces will be replaced with the corresponding value coming in to the input with the same name.  This allows you to write almost any fewshot you might need, and input values from anywhere else in your chain.
 
