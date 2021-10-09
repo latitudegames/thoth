@@ -22,7 +22,7 @@ const DeployModal = ({ content, onClose, options: _options }) => {
   return (
     <Modal title="New Deployment" options={options} icon="add">
       <br />
-      <h4>VERSION</h4>
+      <h4>NEXT VERSION</h4>
       <p
         style={{
           backgroundColor: 'var(--dark-1)',
