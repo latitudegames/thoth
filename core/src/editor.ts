@@ -194,7 +194,8 @@ export const initEditor = async function ({
     await engine.abort()
   }
 
-  editor.loadGraph = async (graph: Data) => {
+  editor.loadGraph = async (_graph: Data) => {
+    const graph = JSON.parse(JSON.stringify(_graph))
     await engine.abort()
     editor.fromJSON(graph)
     editor.view.resize()

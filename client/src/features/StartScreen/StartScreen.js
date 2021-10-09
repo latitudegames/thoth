@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 
+import { useNewSpellMutation } from '../../state/spells'
 import { useDB } from '../../contexts/DatabaseProvider'
 import { useTabManager } from '../../contexts/TabManagerProvider'
 import AllProjects from './components/AllProjects'
@@ -15,6 +16,8 @@ const StartScreen = ({ createNew, allProjects }) => {
   } = useDB()
   const { openTab } = useTabManager()
 
+  const [newSpell] = useNewSpellMutation()
+
   const projects = [
     { label: 'Lorem ipsum' },
     { label: 'Dolor sit' },
@@ -27,9 +30,7 @@ const StartScreen = ({ createNew, allProjects }) => {
     // TODO check for proper values here and throw errors
 
     const existingSpell = await spells.getSpell(spellData.name)
-    const spell = existingSpell
-      ? existingSpell
-      : await spells.newSpell(spellData)
+    const spell = existingSpell ? existingSpell : await newSpell(spellData)
 
     // Load modules from the spell
     if (spellData?.modules && spellData.modules.length > 0)

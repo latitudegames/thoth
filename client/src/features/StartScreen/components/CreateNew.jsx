@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   uniqueNamesGenerator,
   adjectives,
@@ -6,7 +6,7 @@ import {
 } from 'unique-names-generator'
 import { useLocation } from 'wouter'
 
-import { useSpell } from '../../../contexts/SpellProvider'
+import { useNewSpellMutation } from '../../../state/spells'
 import { useTabManager } from '../../../contexts/TabManagerProvider'
 import Panel from '../../common/Panel/Panel'
 import emptyImg from '../empty.png'
@@ -35,12 +35,14 @@ const templates = [
 const CreateNew = () => {
   const [, setLocation] = useLocation()
   const [selectedTemplate, setSelectedTemplate] = useState(null)
-  const { newSpell } = useSpell()
+
+  const [newSpell] = useNewSpellMutation()
+
   const { openTab, clearTabs } = useTabManager()
 
   const onCreate = async () => {
     const placeholderName = uniqueNamesGenerator(customConfig)
-    const spell = await newSpell({
+    const { data: spell } = await newSpell({
       graph: defaultGraph,
       name: placeholderName,
     })
