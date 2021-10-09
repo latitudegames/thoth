@@ -4,6 +4,14 @@ import { Spell as SpellType } from '@latitudegames/thoth-core/types'
 
 import { initDB } from '../database'
 
+function camelize(str) {
+  return str
+    .replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
+      return index === 0 ? word.toLowerCase() : word.toUpperCase()
+    })
+    .replace(/\s+/g, '')
+}
+
 const _spellModel = async () => {
   const db = await initDB()
   const { spells } = db.models
@@ -84,7 +92,10 @@ export const spellApi = createApi({
 
         const _versions = versions[spellId]
         const version = '0.0.' + (_versions.length + 1)
-        const deployment = { version, message, spellId }
+        const url = `${process.env.REACT_APP_API_URL}/spells/${camelize(
+          spellId
+        )}/${version}`
+        const deployment = { version, message, spellId, url }
 
         versions[spellId].push(deployment)
 
