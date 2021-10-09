@@ -13,7 +13,7 @@ import { SocketGeneratorControl } from '../dataControls/SocketGenerator'
 import { EngineContext } from '../engine'
 import { triggerSocket, stringSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
-const info = `The huggingface component is used to access models on huggingface.co.  For now it is very simple.  You define a number of inputs with the input generator, and you can use those in forming the request to your huggingface inference model.  You input the name of the mode from hugginface into the model name field, and you run it.  It will call the model, and return the result.
+const info = `The huggingface component is used to access models on huggingface.co.  For now it is very simple.  You define a number of inputs with the input generator, and you can use those in forming the request to your huggingface inference model.  You input the name of the model from hugginface into the model name field, and you run it.  It will call the model, and return the result.
 
 NOTE:  Hugginface models are on demand, and sometimes require time to "boot up".  We have tried to trigger an initial request the cause the model to load in the background while you and working, but this will not always be done in time. If it is not done, we will notify you via the "error" trigger out.
 
