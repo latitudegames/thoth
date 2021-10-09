@@ -16,6 +16,7 @@ const OpenProject = ({
   loadFile,
 }) => {
   const { tabs } = useTabManager()
+  // TODO remove thoth version from spellprovider
   const { getThothVersion } = useSpell()
   // eslint-disable-next-line no-unused-vars
   const [, setLocation] = useLocation()

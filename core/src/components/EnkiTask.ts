@@ -68,9 +68,7 @@ export class EnkiTask extends ThothComponent {
       {} as { [output: string]: string }
     )
 
-    node.display(Object.values(enkiOutputs).join(' '))
-
-    if (!silent) node.display(completionResponse.outputs.join(' '))
+    if (!silent) node.display(Object.values(enkiOutputs).join(' '))
 
     return enkiOutputs
   }

@@ -2,16 +2,20 @@ import './wdyr'
 import 'regenerator-runtime/runtime'
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { Provider } from 'react-redux'
 
 import App from './App'
 import AppProviders from './contexts/AppProviders'
 import reportWebVitals from './reportWebVitals'
+import { store } from './state/store'
 
 ReactDOM.render(
   <React.StrictMode>
-    <AppProviders>
-      <App />
-    </AppProviders>
+    <Provider store={store}>
+      <AppProviders>
+        <App />
+      </AppProviders>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 )
