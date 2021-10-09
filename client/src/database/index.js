@@ -14,12 +14,13 @@ import userCollection from './schemas/user'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 addRxPlugin(require('pouchdb-adapter-idb'))
 
+let databaseReturn = null
 let database = null
 const databaseName = 'thoth_alpha'
 const adapter = 'idb'
 
 export const initDB = async () => {
-  if (database !== null) return database
+  if (databaseReturn !== null) return databaseReturn
 
   // Uncomment this for fast deletion of DB
   if (process.env.NODE_ENV !== 'production') {
@@ -107,8 +108,10 @@ export const initDB = async () => {
     user: userModel(database),
   }
 
-  return {
+  databaseReturn = {
     database,
     models,
   }
+
+  return databaseReturn
 }
