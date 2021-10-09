@@ -19,13 +19,6 @@ const StartScreen = ({ createNew, allProjects }) => {
   const [newSpell] = useNewSpellMutation()
   const { data: spells } = useGetSpellsQuery()
 
-  const projects = [
-    { label: 'Lorem ipsum' },
-    { label: 'Dolor sit' },
-    { label: 'Taco Bell ad ambulat' },
-    { label: 'Candor umlaut' },
-  ]
-
   const onReaderLoad = async event => {
     const spellData = JSON.parse(event.target.result)
     // TODO check for proper values here and throw errors
@@ -65,7 +58,6 @@ const StartScreen = ({ createNew, allProjects }) => {
           <AllProjects
             spells={spells}
             openSpell={openSpell}
-            projects={projects}
             selectedSpell={selectedSpell}
             setSelectedSpell={setSelectedSpell}
             loadFile={loadFile}
