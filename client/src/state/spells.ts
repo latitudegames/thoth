@@ -105,7 +105,7 @@ export const spellApi = createApi({
         }
       },
     }),
-    getVersions: builder.query<DeployedSpellVersion[], string>({
+    getDeployments: builder.query<DeployedSpellVersion[], string>({
       providesTags: ['Version'],
       async queryFn(spellId) {
         console.log('egtting versions!')
@@ -142,7 +142,7 @@ export const {
   useNewSpellMutation,
   useSaveSpellMutation,
   useDeploySpellMutation,
-  useGetVersionsQuery,
+  useGetDeploymentsQuery,
 } = spellApi
 
 export const useGetSpellSubscription =
