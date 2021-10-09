@@ -62,11 +62,10 @@ export const spellApi = createApi({
     }),
     getSpell: builder.query<Spell, string>({
       providesTags: ['Spell'],
-      async queryFn(spellId) {
-        const spellModel = await _spellModel()
-        const spell = await spellModel.getSpell(spellId)
-
-        return { data: spell.toJSON() }
+      query: spellId => {
+        return {
+          url: `spells/${spellId}`,
+        }
       },
     }),
     saveSpell: builder.mutation<Partial<Spell>, Partial<Spell>>({
