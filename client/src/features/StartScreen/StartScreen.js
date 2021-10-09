@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
+import { useLocation } from 'wouter'
 
-import { useNewSpellMutation } from '../../state/spells'
+import { useNewSpellMutation, useGetSpellsQuery } from '../../state/spells'
 import { useDB } from '../../contexts/DatabaseProvider'
 import { useTabManager } from '../../contexts/TabManagerProvider'
 import AllProjects from './components/AllProjects'
@@ -11,32 +12,25 @@ import css from './startScreen.module.css'
 //MAIN
 
 const StartScreen = ({ createNew, allProjects }) => {
-  const {
-    models: { spells, modules },
-  } = useDB()
+  const models = useDB()
   const { openTab } = useTabManager()
+  const [, setLocation] = useLocation()
 
   const [newSpell] = useNewSpellMutation()
-
-  const projects = [
-    { label: 'Lorem ipsum' },
-    { label: 'Dolor sit' },
-    { label: 'Taco Bell ad ambulat' },
-    { label: 'Candor umlaut' },
-  ]
+  const { data: spells } = useGetSpellsQuery()
 
   const onReaderLoad = async event => {
     const spellData = JSON.parse(event.target.result)
     // TODO check for proper values here and throw errors
 
-    const existingSpell = await spells.getSpell(spellData.name)
+    const existingSpell = await models.spells.getSpell(spellData.name)
     const spell = existingSpell ? existingSpell : await newSpell(spellData)
 
     // Load modules from the spell
     if (spellData?.modules && spellData.modules.length > 0)
       await Promise.all(
         spellData.modules.map(module => {
-          return modules.updateOrCreate(module)
+          return models.modules.updateOrCreate(module)
         })
       )
 
@@ -49,7 +43,12 @@ const StartScreen = ({ createNew, allProjects }) => {
     reader.readAsText(selectedFile)
   }
 
-  const [selectedProject, setSelectedProject] = useState(null)
+  const openSpell = async spell => {
+    await openTab({ name: spell.name, spellId: spell.name, type: 'spell' })
+    setLocation('/thoth')
+  }
+
+  const [selectedSpell, setSelectedSpell] = useState(null)
 
   return (
     <div className={css['overlay']}>
@@ -57,17 +56,19 @@ const StartScreen = ({ createNew, allProjects }) => {
         {createNew && <CreateNew />}
         {allProjects && (
           <AllProjects
-            projects={projects}
-            selectedProject={selectedProject}
-            setSelectedProject={setSelectedProject}
+            spells={spells}
+            openSpell={openSpell}
+            selectedSpell={selectedSpell}
+            setSelectedSpell={setSelectedSpell}
             loadFile={loadFile}
           />
         )}
         {!createNew && !allProjects && (
           <OpenProject
+            spells={spells}
             projects={projects}
-            selectedProject={selectedProject}
-            setSelectedProject={setSelectedProject}
+            selectedSpell={selectedSpell}
+            setSelectedSpell={setSelectedSpell}
             loadFile={loadFile}
           />
         )}

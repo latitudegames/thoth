@@ -1,5 +1,13 @@
-const Input = ({ value, onChange, style = {} }) => {
-  return <input style={style} value={value} type="text" onChange={onChange} />
+const Input = ({ value, onChange = () => {}, style = {}, ...props }) => {
+  return (
+    <input
+      style={style}
+      value={value}
+      type="text"
+      onChange={onChange}
+      {...props}
+    />
+  )
 }
 
 export default Input

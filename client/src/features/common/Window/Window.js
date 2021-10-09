@@ -1,10 +1,8 @@
 import { Scrollbars } from 'react-custom-scrollbars'
 
-import css from './window.module.css'
+import WindowToolbar from './WindowToolbar'
 
-const WindowToolbar = props => {
-  return <div className={css['window-toolbar']}>{props.children}</div>
-}
+import css from './window.module.css'
 
 const WindowLayout = props => {
   return (
