@@ -1,12 +1,12 @@
 import Icon from '../../common/Icon/Icon'
 import css from '../startScreen.module.css'
 
-const ProjectRow = ({ label, selectedProject, onClick, icon, style }) => {
+const ProjectRow = ({ label, selectedSpell, onClick, icon, style }) => {
   return (
     <div
       role="button"
       className={`${css['project-row']} ${
-        css[selectedProject === label ? 'selected' : '']
+        css[selectedSpell?.name === label ? 'selected' : '']
       }`}
       onClick={onClick}
       style={style}
