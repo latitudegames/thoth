@@ -72,6 +72,7 @@ export const spellApi = createApi({
       invalidatesTags: ['Spell'],
       async queryFn(spell) {
         const spellModel = await _spellModel()
+        // get modules here and add the, serialize spell into json blob, and send to sendpoint.
         const updatedSpell = await spellModel.saveSpell(spell.name, spell)
         return { data: updatedSpell.toJSON() }
       },
