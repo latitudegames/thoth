@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars'
 import { useSelector } from 'react-redux'
+import { useSnackbar } from 'notistack'
 
 import css from './editorwindow.module.css'
 
@@ -20,6 +21,7 @@ import {
 const DeploymentView = ({ open, setOpen, spellId }) => {
   const [list, setList] = useState([])
   const { openModal, closeModal } = useModal()
+  const { enqueueSnackbar } = useSnackbar()
 
   const [deploySpell] = useDeploySpellMutation()
   const spell = useSelector(state => selectSpellById(state, spellId))
@@ -29,13 +31,14 @@ const DeploymentView = ({ open, setOpen, spellId }) => {
     deploySpell({ spellId: spell.name, message })
   }
 
-  const addVersionToList = message => {
-    const version = {
-      version: '0.0.' + list.length + 1,
-      message,
-    }
-
-    setList([...list, version])
+  const copy = url => {
+    const el = document.createElement('textarea')
+    el.value = url
+    document.body.appendChild(el)
+    el.select()
+    document.execCommand('copy')
+    document.body.removeChild(el)
+    enqueueSnackbar('Url copied')
   }
 
   return (
@@ -123,7 +126,7 @@ const DeploymentView = ({ open, setOpen, spellId }) => {
                           value={deploy.url}
                           readOnly
                         />
-                        <button>copy</button>
+                        <button onClick={() => copy(deploy.url)}>copy</button>
                       </div>
                       <p> Change notes </p>
                       <Panel
