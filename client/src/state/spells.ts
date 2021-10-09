@@ -10,6 +10,7 @@ const _spellModel = async () => {
   return spells
 }
 export interface Spell {
+  id?: string
   user?: Record<string, unknown> | null | undefined
   name: string
   graph: SpellType
@@ -18,23 +19,38 @@ export interface Spell {
   updatedAt?: number
 }
 
+export interface DeployedSpellVersion {
+  spellId: Pick<Spell, 'id'>
+  version: string
+  url?: string
+}
+
+export interface DeployArgs {
+  spellId: Pick<Spell, 'id'>
+  message: string
+}
+
+// stubbed temp data
+const versions: DeployedSpellVersion[] = []
+
 export const spellApi = createApi({
   reducerPath: 'spellApi',
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.REACT_APP_API_URL || 'localhost:8000/',
   }),
-  tagTypes: ['Spell'],
+  tagTypes: ['Spell', 'Version'],
   endpoints: builder => ({
     getSpells: builder.query<Spell[], void>({
+      providesTags: ['Spell'],
       async queryFn() {
         const spellModel = await _spellModel()
         const spells = await spellModel.getSpells()
 
         return { data: spells.map(spell => spell.toJSON()) }
       },
-      providesTags: ['Spell'],
     }),
     getSpell: builder.query<Spell, string>({
+      providesTags: ['Spell'],
       async queryFn(spellId) {
         const spellModel = await _spellModel()
         const spell = await spellModel.getSpell(spellId)
@@ -43,14 +59,15 @@ export const spellApi = createApi({
       },
     }),
     saveSpell: builder.mutation<Partial<Spell>, Partial<Spell>>({
+      invalidatesTags: ['Spell'],
       async queryFn(spell) {
         const spellModel = await _spellModel()
         const updatedSpell = await spellModel.saveSpell(spell.name, spell)
         return { data: updatedSpell.toJSON() }
       },
-      invalidatesTags: ['Spell'],
     }),
     newSpell: builder.mutation<Spell, Partial<Spell>>({
+      invalidatesTags: ['Spell'],
       async queryFn(spellData) {
         const newSpell = { gameState: {}, ...spellData }
         const spellModel = await _spellModel()
@@ -59,7 +76,27 @@ export const spellApi = createApi({
 
         return { data: spell.toJSON() }
       },
-      invalidatesTags: ['Spell'],
+    }),
+    deploy: builder.mutation<DeployedSpellVersion, DeployArgs>({
+      invalidatesTags: ['Version'],
+      async queryFn({ spellId, message }) {
+        const version = '0.0.' + versions.length + 1
+        const deployment = { version, message, spellId }
+
+        versions.push(deployment)
+
+        return {
+          data: deployment as DeployedSpellVersion,
+        }
+      },
+    }),
+    getVersions: builder.query<DeployedSpellVersion[], void>({
+      providesTags: ['Version'],
+      async queryFn() {
+        return {
+          data: versions,
+        }
+      },
     }),
   }),
 })
