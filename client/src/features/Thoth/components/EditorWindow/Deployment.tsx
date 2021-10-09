@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars'
 import { useSelector } from 'react-redux'
 import { useSnackbar } from 'notistack'
@@ -9,7 +8,6 @@ import WindowToolbar from '../../../common/Window/WindowToolbar'
 import { SimpleAccordion } from '../../../common/Accordion'
 import Input from '../../../common/Input/Input'
 import Panel from '../../../common/Panel/Panel'
-import Icon from '../../../common/Icon/Icon'
 import { useModal } from '../../../../contexts/ModalProvider'
 
 import {
@@ -19,16 +17,19 @@ import {
 } from '../../../../state/spells'
 
 const DeploymentView = ({ open, setOpen, spellId }) => {
-  const [list, setList] = useState([])
   const { openModal, closeModal } = useModal()
   const { enqueueSnackbar } = useSnackbar()
 
   const [deploySpell] = useDeploySpellMutation()
   const spell = useSelector(state => selectSpellById(state, spellId))
-  const { data: deployements, isLoading } = useGetVersionsQuery(spell?.name)
+  const { data: deployements, isLoading } = useGetVersionsQuery(
+    spell?.name || ''
+  )
 
   const deploy = message => {
+    if (!spell) return
     deploySpell({ spellId: spell.name, message })
+    enqueueSnackbar('State saved', { variant: 'success' })
   }
 
   const copy = url => {
@@ -42,8 +43,10 @@ const DeploymentView = ({ open, setOpen, spellId }) => {
   }
 
   return (
-    <div className={`${css['deploy-shield']} ${css[!open && 'inactive']}`}>
-      <div className={`${css['deploy-window']} ${css[!open && 'inactive']}`}>
+    <div className={`${css['deploy-shield']} ${css[!open ? 'inactive' : '']}`}>
+      <div
+        className={`${css['deploy-window']} ${css[!open ? 'inactive' : '']}`}
+      >
         <div
           style={{
             backgroundColor: 'var(--dark-3)',
@@ -77,7 +80,8 @@ const DeploymentView = ({ open, setOpen, spellId }) => {
                   title: 'Deploy',
                   options: {
                     // todo find better way to get next version here
-                    version: '0.0.' + (deployements.length + 1),
+                    version:
+                      '0.0.' + (deployements ? deployements?.length + 1 : 0),
                   },
                   onClose: notes => {
                     closeModal()
@@ -91,7 +95,7 @@ const DeploymentView = ({ open, setOpen, spellId }) => {
           </WindowToolbar>
         </div>
         <Scrollbars>
-          {isLoading || deployements.length === 0 ? (
+          {isLoading || !deployements || deployements.length === 0 ? (
             <p className={css['message']}>
               No previous deployments. <br /> Press "Deploy new" to create a new
               deployment.
@@ -124,7 +128,7 @@ const DeploymentView = ({ open, setOpen, spellId }) => {
                         <Input
                           style={{ flex: 1 }}
                           value={deploy.url}
-                          readOnly
+                          readonly
                         />
                         <button onClick={() => copy(deploy.url)}>copy</button>
                       </div>
