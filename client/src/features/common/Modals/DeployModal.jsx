@@ -4,7 +4,7 @@ import { useModal } from '../../../contexts/ModalProvider'
 import Input from '../Input/Input'
 import Modal from '../Modal/Modal'
 
-const DeployModal = ({ content, onClose }) => {
+const DeployModal = ({ content, onClose, options: _options }) => {
   const { closeModal } = useModal()
   const [notes, setNotes] = useState('')
   const options = [
@@ -33,7 +33,7 @@ const DeployModal = ({ content, onClose }) => {
           margin: 0,
         }}
       >
-        0.0.X
+        {_options.version}
       </p>
       <h4>CHANGE NOTES</h4>
       <input type="text" style={{ width: '100%' }} onChange={updateNotes} />
