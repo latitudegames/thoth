@@ -68,6 +68,21 @@ const loadModuleModel = db => {
     return await db.modules.insert(newModule)
   }
 
+  const getSpellModules = async spell => {
+    // should actually look for spells that have a data.module key set to a string
+    const moduleNames = Object.values(spell.chain.graph.nodes)
+      .filter((n: any) => n.name === 'Module')
+      .map((n: any) => n.data.name)
+
+    const moduleDocs = await Promise.all(
+      moduleNames.map(moduleName => getModule(moduleName))
+    )
+
+    // todo need tobe recursive probably.  Or we add the modules used to the spell when created?
+
+    return moduleDocs.map(module => module.toJSON())
+  }
+
   return {
     insert,
     getModules,
@@ -76,6 +91,7 @@ const loadModuleModel = db => {
     updateModule,
     findOneModule,
     updateOrCreate,
+    getSpellModules,
   }
 }
 export default loadModuleModel
