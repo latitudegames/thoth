@@ -10,13 +10,13 @@ import { getAuthHeader } from '../utils/authHelper'
 import { initDB } from '../database'
 import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes'
 
-function camelize(str) {
-  return str
-    .replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
-      return index === 0 ? word.toLowerCase() : word.toUpperCase()
-    })
-    .replace(/\s+/g, '')
-}
+// function camelize(str) {
+//   return str
+//     .replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
+//       return index === 0 ? word.toLowerCase() : word.toUpperCase()
+//     })
+//     .replace(/\s+/g, '')
+// }
 
 // const _spellModel = async () => {
 //   const db = await initDB()
@@ -51,9 +51,6 @@ export interface DeployArgs {
   spellId: string
   message: string
 }
-
-// stubbed temp data
-const versions: Record<string, DeployedSpellVersion[]> = {}
 
 export const spellApi = createApi({
   reducerPath: 'spellApi',
@@ -120,33 +117,19 @@ export const spellApi = createApi({
     }),
     deploySpell: builder.mutation<DeployedSpellVersion, DeployArgs>({
       invalidatesTags: ['Version'],
-      async queryFn({ spellId, message }) {
-        if (!versions[spellId]) versions[spellId] = []
-
-        const _versions = versions[spellId]
-        const version = '0.0.' + (_versions.length + 1)
-        const url = `${process.env.REACT_APP_API_URL}/spells/${camelize(
-          spellId
-        )}/${version}`
-        const deployment = { version, message, spellId, url }
-
-        versions[spellId].push(deployment)
-
+      query({ spellId, message }) {
         return {
-          data: deployment as DeployedSpellVersion,
+          url: `/spells/${spellId}/deploy`,
+          body: {
+            message,
+          },
+          method: 'POST',
         }
       },
     }),
     getDeployments: builder.query<DeployedSpellVersion[], string>({
       providesTags: ['Version'],
-      async queryFn(spellId) {
-        console.log('egtting versions!')
-        const result = versions[spellId] || []
-        console.log('results', result)
-        return {
-          data: result.reverse(),
-        }
-      },
+      query: spellId => ({ url: `/spells/deployed/${spellId}` }),
     }),
   }),
 })
