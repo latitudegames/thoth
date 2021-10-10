@@ -135,7 +135,7 @@ const DeploymentView = ({ open, setOpen, spellId }) => {
                         <Input
                           style={{ flex: 1 }}
                           value={buildUrl(deploy.version)}
-                          readonly
+                          readOnly
                         />
                         <button onClick={() => copy(buildUrl(deploy.version))}>
                           copy
