@@ -22,9 +22,10 @@ const DeploymentView = ({ open, setOpen, spellId }) => {
 
   const [deploySpell] = useDeploySpellMutation()
   const spell = useSelector(state => selectSpellById(state, spellId))
-  const { data: deployments, isLoading } = useGetDeploymentsQuery(
-    spell?.name || ''
-  )
+  const name = spell?.name as string
+  const { data: deployments, isLoading } = useGetDeploymentsQuery(name, {
+    skip: !spell?.name,
+  })
 
   const deploy = message => {
     if (!spell) return
