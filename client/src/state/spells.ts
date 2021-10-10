@@ -1,9 +1,14 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import {
+  createApi,
+  fetchBaseQuery,
+  FetchBaseQueryError,
+} from '@reduxjs/toolkit/query/react'
 import { Spell as SpellType } from '@latitudegames/thoth-core/types'
 
 import { getAuthHeader } from '../utils/authHelper'
 import { initDB } from '../database'
+import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes'
 
 function camelize(str) {
   return str
@@ -13,16 +18,23 @@ function camelize(str) {
     .replace(/\s+/g, '')
 }
 
-const _spellModel = async () => {
+// const _spellModel = async () => {
+//   const db = await initDB()
+//   const { spells } = db.models
+//   return spells
+// }
+
+const _moduleModel = async () => {
   const db = await initDB()
-  const { spells } = db.models
-  return spells
+  const { modules } = db.models
+  return modules
 }
 export interface Spell {
   id?: string
   user?: Record<string, unknown> | null | undefined
   name: string
   graph: SpellType
+  modules: SpellType[]
   gameState: Record<string, unknown>
   createdAt?: number
   updatedAt?: number
@@ -70,11 +82,26 @@ export const spellApi = createApi({
     }),
     saveSpell: builder.mutation<Partial<Spell>, Partial<Spell>>({
       invalidatesTags: ['Spell'],
-      async queryFn(spell) {
-        const spellModel = await _spellModel()
-        // get modules here and add the, serialize spell into json blob, and send to sendpoint.
-        const updatedSpell = await spellModel.saveSpell(spell.name, spell)
-        return { data: updatedSpell.toJSON() }
+      // needed to use queryFn as query option didnt seem to allow async functions.
+      async queryFn(spell, api, extraOptions, baseQuery) {
+        const moduleModel = await _moduleModel()
+        const modules = await moduleModel.getSpellModules(spell)
+
+        spell.modules = modules
+
+        const baseQueryOptions = {
+          url: 'spells/save',
+          body: spell,
+          method: 'POST',
+        }
+
+        // cast into proper response shape expected by queryFn return
+        // probbably a way to directly pass in type args to baseQuery but couldnt find.
+        return baseQuery(baseQueryOptions) as QueryReturnValue<
+          Partial<Spell>,
+          FetchBaseQueryError,
+          unknown
+        >
       },
     }),
     newSpell: builder.mutation<Spell, Partial<Spell>>({
