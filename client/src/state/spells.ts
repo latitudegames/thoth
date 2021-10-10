@@ -78,7 +78,7 @@ export const spellApi = createApi({
       },
     }),
     saveSpell: builder.mutation<Partial<Spell>, Partial<Spell>>({
-      invalidatesTags: ['Spell'],
+      // invalidatesTags: ['Spell'],
       // needed to use queryFn as query option didnt seem to allow async functions.
       async queryFn(spell, api, extraOptions, baseQuery) {
         const moduleModel = await _moduleModel()
