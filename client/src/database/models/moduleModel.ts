@@ -81,7 +81,7 @@ const loadModuleModel = db => {
     // todo need tobe recursive probably.  Or we add the modules used to the spell when created?
 
     if (moduleDocs.length === 0) return []
-    return moduleDocs.map(module => module.toJSON())
+    return moduleDocs.filter(Boolean).map(module => module.toJSON())
   }
 
   return {
