@@ -33,6 +33,12 @@ const DeploymentView = ({ open, setOpen, spellId }) => {
     enqueueSnackbar('Spell deployed', { variant: 'success' })
   }
 
+  const buildUrl = version => {
+    return encodeURI(
+      `${process.env.REACT_APP_API_URL}/games/spells/${spellId}/${version}`
+    )
+  }
+
   const copy = url => {
     const el = document.createElement('textarea')
     el.value = url
@@ -128,10 +134,12 @@ const DeploymentView = ({ open, setOpen, spellId }) => {
                       >
                         <Input
                           style={{ flex: 1 }}
-                          value={deploy.url}
+                          value={buildUrl(deploy.version)}
                           readonly
                         />
-                        <button onClick={() => copy(deploy.url)}>copy</button>
+                        <button onClick={() => copy(buildUrl(deploy.version))}>
+                          copy
+                        </button>
                       </div>
                       <p> Change notes </p>
                       <Panel
