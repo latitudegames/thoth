@@ -70,8 +70,6 @@ const EditorProvider = ({ children }) => {
   }
 
   const buildEditor = async (container, _spell, tab, thoth) => {
-    // copy spell in case it is read only
-    const spell = JSON.parse(JSON.stringify(_spell))
     // eslint-disable-next-line no-console
     const newEditor = await initEditor({
       container,
@@ -86,7 +84,11 @@ const EditorProvider = ({ children }) => {
     // set editor to the map
     setEditor(newEditor)
 
-    if (tab.type === 'spell') newEditor.loadGraph(spell.chain.graph)
+    if (tab.type === 'spell') {
+      // copy spell in case it is read onl
+      const spell = JSON.parse(JSON.stringify(_spell))
+      newEditor.loadGraph(spell.chain.graph)
+    }
 
     if (tab.type === 'module') {
       const moduleDoc = await thoth.getModule(tab.module)
@@ -156,10 +158,11 @@ const RawEditor = ({ tab, children }) => {
   useEffect(() => {
     if (!tab) return
 
-    getSpell(tab.spell)
+    if (tab?.spell) getSpell(tab.spell)
   }, [tab])
 
-  if (isLoading || !tab || !spell) return <LoadingScreen />
+  if (!tab || (tab.type === 'spell' && (isLoading || !spell)))
+    return <LoadingScreen />
 
   return (
     <>
