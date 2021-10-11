@@ -45,9 +45,9 @@ const EventHandler = ({ pubSub, tab }) => {
 
   const saveSpell = async () => {
     const currentSpell = spellRef.current
-    const graph = serialize(currentSpell)
+    const chain = serialize(currentSpell)
 
-    await saveSpellMutation({ ...currentSpell, graph })
+    await saveSpellMutation({ ...currentSpell, chain })
   }
 
   const createStateManager = () => {
