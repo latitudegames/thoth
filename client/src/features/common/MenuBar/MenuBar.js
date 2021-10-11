@@ -220,8 +220,6 @@ const MenuBar = () => {
     eval(func)
   }
 
-  console.log('MENU BAR')
-
   return (
     <ul className={css['menu-bar']}>
       <img className={css['thoth-logo']} alt="Thoth logo" src={thothlogo} />
