@@ -26,9 +26,6 @@ const loadModuleModel = db => {
   const updateModule = async (moduleName: string, update: object) => {
     const module = await getModule(moduleName)
 
-    // eslint-disable-next-line
-    console.log('module', module)
-
     const updatedModule = await module.atomicUpdate(oldData => {
       return {
         ...oldData,
@@ -70,7 +67,7 @@ const loadModuleModel = db => {
 
   const getSpellModules = async spell => {
     // should actually look for spells that have a data.module key set to a string
-    const moduleNames = Object.values(spell.chain.graph.nodes)
+    const moduleNames = Object.values(spell.chain.nodes)
       .filter((n: any) => n.name === 'Module')
       .map((n: any) => n.data.name)
 
