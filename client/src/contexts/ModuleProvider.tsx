@@ -77,7 +77,7 @@ const ModuleProvider = ({ children }) => {
 
   const getSpellModules = async spell => {
     // should actually look for spells that have a data.module key set to a string
-    const moduleNames = Object.values(spell.chain.graph.nodes)
+    const moduleNames = Object.values(spell.chain.nodes)
       .filter((n: any) => n.name === 'Module')
       .map((n: any) => n.data.name)
 
