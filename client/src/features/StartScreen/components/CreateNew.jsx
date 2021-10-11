@@ -43,7 +43,7 @@ const CreateNew = () => {
   const onCreate = async () => {
     const placeholderName = uniqueNamesGenerator(customConfig)
     const { data: spell } = await newSpell({
-      graph: defaultGraph,
+      chain: defaultGraph,
       name: placeholderName,
     })
 
