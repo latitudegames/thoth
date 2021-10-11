@@ -41,7 +41,7 @@ const Context = createContext({
   setEditor: (editor: any) => {},
   getNodeMap: () => {},
   getNodes: () => {},
-  loadGraph: (graph: any) => {},
+  loadChain: (chain: any) => {},
   setContainer: () => {},
   undo: () => {},
   redo: () => {},
@@ -52,7 +52,7 @@ export const useEditor = () => useContext(Context)
 const EditorProvider = ({ children }) => {
   const [editor, setEditorState] = useState({
     components: [],
-    loadGraph: (graph: any) => {},
+    loadGraph: (chain: any) => {},
   })
   const editorRef = useRef({
     trigger: (event: string) => {},
@@ -87,7 +87,7 @@ const EditorProvider = ({ children }) => {
     if (tab.type === 'spell') {
       // copy spell in case it is read onl
       const spell = JSON.parse(JSON.stringify(_spell))
-      newEditor.loadGraph(spell.chain.graph)
+      newEditor.loadGraph(spell.chain)
     }
 
     if (tab.type === 'module') {
@@ -120,7 +120,7 @@ const EditorProvider = ({ children }) => {
     return editor && Object.fromEntries(editor.components)
   }
 
-  const loadGraph = graph => {
+  const loadChain = graph => {
     editor.loadGraph(graph)
   }
 
@@ -136,7 +136,7 @@ const EditorProvider = ({ children }) => {
     buildEditor,
     getNodeMap,
     getNodes,
-    loadGraph,
+    loadChain,
     setEditor,
     getEditor,
     undo,
