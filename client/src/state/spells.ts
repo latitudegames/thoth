@@ -33,7 +33,7 @@ export interface Spell {
   id?: string
   user?: Record<string, unknown> | null | undefined
   name: string
-  graph: SpellType
+  chain: SpellType
   modules: SpellType[]
   gameState: Record<string, unknown>
   createdAt?: number
