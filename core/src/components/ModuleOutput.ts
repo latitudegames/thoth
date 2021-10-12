@@ -16,7 +16,6 @@ export class ModuleOutput extends ThothComponent {
   module: object
   category: string
   info: string
-  workspaceType: 'module' | 'spell'
   contextMenuName: string
 
   constructor() {
@@ -37,7 +36,6 @@ export class ModuleOutput extends ThothComponent {
 
     this.category = 'Module'
     this.info = info
-    this.workspaceType = 'module'
   }
 
   // the builder is used to "assemble" the node component.
