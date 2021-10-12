@@ -27,9 +27,15 @@ const gameStateSlice = createSlice({
       if (!gameState) {
         gameStateAdapater.addOne(state, { id: uuidv4(), ...action.payload })
       } else {
+        const changes = {
+          state: {
+            ...gameState.state,
+            ...action.payload.state,
+          },
+        }
         gameStateAdapater.updateOne(state, {
           id: gameState.id,
-          changes: { state: action.payload.state },
+          changes: changes,
         })
       }
     },
