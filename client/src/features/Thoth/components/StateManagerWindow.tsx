@@ -13,6 +13,7 @@ import Window from '../../common/Window/Window'
 
 import '../thoth.module.css'
 import { RootState } from '../../../state/store'
+import WindowMessage from './WindowMessage'
 
 const StateManager = ({ tab, ...props }) => {
   // const dispatch = useDispatch()
@@ -111,6 +112,9 @@ const StateManager = ({ tab, ...props }) => {
       </button>
     </>
   )
+
+  if (tab.type === 'module')
+    return <WindowMessage content="Modules do not support game state" />
 
   return (
     <Window toolbar={toolbar}>
