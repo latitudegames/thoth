@@ -1,8 +1,11 @@
 import { EngineContext } from '@latitudegames/thoth-core'
 import { useContext, createContext } from 'react'
+import { useDispatch } from 'react-redux'
 
 import { postEnkiCompletion } from '../services/game-api/enki'
 import { completion as _completion } from '../services/game-api/text'
+import { selectGameStateBySpellId, updateGameState } from '../state/gameState'
+import { store } from '../state/store'
 import { invokeInference } from '../utils/huggingfaceHelper'
 import { useDB } from './DatabaseProvider'
 import { usePubSub } from './PubSubProvider'
@@ -42,6 +45,8 @@ const Context = createContext({
   getGameState: () => {},
   setGameState: () => {},
   getModules: async () => {},
+  getCurrentGameState: () => ({} as Record<string, unknown>),
+  updateCurrentGameState: () => new Promise(() => {}) as Promise<void>,
   completion: _completion,
   enkiCompletion: async (): Promise<{ outputs: string[] }> =>
     await new Promise(resolve => {
@@ -57,6 +62,7 @@ export const useRete = () => useContext(Context)
 
 const ReteProvider = ({ children, tab }) => {
   const { events, publish, subscribe } = usePubSub()
+  const dispatch = useDispatch()
   const {
     models: { spells, modules },
   } = useDB()
@@ -135,6 +141,22 @@ const ReteProvider = ({ children, tab }) => {
     publish($TEXT_EDITOR_CLEAR(tab.id))
   }
 
+  const getCurrentGameState = () => {
+    const currentGameState = selectGameStateBySpellId(
+      store.getState().gameState,
+      tab.spell
+    )
+    return currentGameState?.state
+  }
+
+  const updateCurrentGameState = update => {
+    const newState = {
+      spellId: tab.spell,
+      state: update,
+    }
+    dispatch(updateGameState(newState))
+  }
+
   const publicInterface = {
     onInspector,
     onAddModule,
@@ -148,6 +170,8 @@ const ReteProvider = ({ children, tab }) => {
     completion,
     enkiCompletion,
     huggingface,
+    getCurrentGameState,
+    updateCurrentGameState,
     ...modules,
 
     // going to need to manuall create theses
