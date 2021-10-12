@@ -22,10 +22,6 @@ const StateManager = ({ tab, ...props }) => {
   })
   const spell = useSelector(state => selectSpellById(state, tab.spell))
 
-  useEffect(() => {
-    console.log('game state', gameState)
-  }, [gameState])
-
   const { enqueueSnackbar } = useSnackbar()
   const [typing, setTyping] = useState<boolean>(false)
   const [code, setCode] = useState('{}')
@@ -77,9 +73,11 @@ const StateManager = ({ tab, ...props }) => {
     return () => clearTimeout(delayDebounceFn)
   }, [code])
 
+  // update code when game state changes
   useEffect(() => {
-    if (spell?.gameState) setCode(jsonFormat(spell.gameState))
-  }, [spell])
+    if (!gameState) return
+    setCode(jsonFormat(gameState.state))
+  }, [gameState])
 
   const onClear = () => {
     const reset = `{}`
@@ -99,9 +97,6 @@ const StateManager = ({ tab, ...props }) => {
       gameState: parsedState,
     }
     saveSpell(spellUpdate)
-    // dispatch(updateGameState({ id: gameState.id, state: parsed }))
-    // updateGameState()
-    // rewriteCurrentGameState(parsed)
     enqueueSnackbar('State saved', {
       preventDuplicate: true,
       variant: 'success',
