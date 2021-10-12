@@ -94,7 +94,8 @@ const loadModuleModel = db => {
       .filter((n: any) => n.data.module)
       .map((n: any) => n.data.module)
 
-    await getNestedModules(moduleNames)
+    const modules = await getNestedModules(moduleNames)
+    return modules
   }
 
   return {
