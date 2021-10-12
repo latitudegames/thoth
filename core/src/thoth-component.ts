@@ -36,6 +36,7 @@ export abstract class ThothComponent extends ThothEngineComponent {
   category: string
   info: string
   display: boolean
+  workspaceType: 'module' | 'spell' | null | undefined
 
   constructor(name: string) {
     super(name)
