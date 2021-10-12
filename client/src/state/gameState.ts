@@ -1,5 +1,6 @@
-import { createSelector } from '@reduxjs/toolkit'
+import { createDraftSafeSelector } from '@reduxjs/toolkit'
 import { v4 as uuidv4 } from 'uuid'
+
 import {
   createSlice,
   // createSelector,
@@ -9,7 +10,6 @@ import {
 export interface GameState {
   id: string
   state: Record<string, unknown>
-  history: Record<string, unknown>[]
   spellId: string
 }
 
@@ -18,22 +18,24 @@ const gameStateSelectors = gameStateAdapater.getSelectors()
 const initialState = gameStateAdapater.getInitialState()
 
 const gameStateSlice = createSlice({
-  name: 'gameStates',
+  name: 'gameState',
   initialState,
   reducers: {
     updateGameState: (state, action) => {
-      const gameState = gameStateSelectors.selectById(state, action.payload.id)
-      const newGameState = {
-        ...action.payload,
-        history: [...action.payload.history, gameState],
-      }
+      const gameState = selectGameStateBySpellId(state, action.payload.spellId)
 
-      gameStateAdapater.updateOne(state, newGameState)
+      if (!gameState) {
+        gameStateAdapater.addOne(state, { id: uuidv4(), ...action.payload })
+      } else {
+        gameStateAdapater.updateOne(state, {
+          id: gameState.id,
+          changes: { state: action.payload.state },
+        })
+      }
     },
     createGameState: (state, action) => {
       const newGameState = {
         ...action.payload,
-        id: uuidv4(),
         history: [],
       }
 
@@ -42,8 +44,8 @@ const gameStateSlice = createSlice({
   },
 })
 
-export const selectGameStateBySpellId = createSelector(
-  [gameStateSelectors.selectEntities, (_, spellId) => spellId],
+export const selectGameStateBySpellId = createDraftSafeSelector(
+  [gameStateSelectors.selectAll, (_, spellId) => spellId],
   (gameStates: GameState[], spellId) => {
     return gameStates.find(state => state.spellId === spellId)
   }
