@@ -59,7 +59,11 @@ export const tabSlice = createSlice({
   reducers: {
     tabOpened: (state, action) => {
       const activeTab = _activeTabSelector(state) as Tab
-      if (activeTab) activeTab.active = false
+      if (activeTab)
+        tabAdapater.updateOne(state, {
+          id: activeTab.id,
+          changes: { active: false },
+        })
 
       const tab = buildTab(action.payload, { active: true })
       tabAdapater.addOne(state, tab)
