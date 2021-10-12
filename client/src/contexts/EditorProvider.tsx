@@ -12,7 +12,6 @@ import { useLazyGetSpellQuery, Spell } from '../state/spells'
 import LoadingScreen from '../features/common/LoadingScreen/LoadingScreen'
 import { MyNode } from '../features/common/Node/Node'
 import gridimg from '../grid.png'
-import { useSpell } from './SpellProvider'
 import { usePubSub } from './PubSubProvider'
 import { useRete, ReteContext } from './ReteProvider'
 // import { ThothTab } from './TabManagerProvider'
@@ -151,7 +150,6 @@ const RawEditor = ({ tab, children }) => {
   const [getSpell, { data: spell, isLoading }] = useLazyGetSpellQuery()
   const [loaded, setLoaded] = useState(false)
   const { buildEditor } = useEditor()
-  const { getCurrentGameState, updateCurrentGameState } = useSpell()
   // This will be the main interface between thoth and rete
   const reteInterface = useRete()
 
@@ -183,11 +181,7 @@ const RawEditor = ({ tab, children }) => {
         <div
           ref={el => {
             if (el && !loaded) {
-              buildEditor(el, spell, tab, {
-                ...reteInterface,
-                getCurrentGameState,
-                updateCurrentGameState,
-              })
+              buildEditor(el, spell, tab, reteInterface)
               setLoaded(true)
             }
           }}
