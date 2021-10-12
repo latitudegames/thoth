@@ -17,6 +17,7 @@ export class StateWrite extends ThothComponent {
       outputs: {},
     }
 
+    this.workspaceType = 'spell'
     this.category = 'State'
     this.info = info
   }
