@@ -65,20 +65,36 @@ const loadModuleModel = db => {
     return await db.modules.insert(newModule)
   }
 
-  const getSpellModules = async spell => {
-    // should actually look for spells that have a data.module key set to a string
-    const moduleNames = Object.values(spell.chain.nodes)
-      .filter((n: any) => n.name === 'Module')
-      .map((n: any) => n.data.name)
-
+  const getNestedModules = async (moduleNames: string[]) => {
     const moduleDocs = await Promise.all(
       moduleNames.map(moduleName => getModule(moduleName))
     )
-
-    // todo need tobe recursive probably.  Or we add the modules used to the spell when created?
-
     if (moduleDocs.length === 0) return []
-    return moduleDocs.filter(Boolean).map(module => module.toJSON())
+    const modules = moduleDocs.filter(Boolean).map(module => module.toJSON())
+    const nestedModules = await Promise.all(
+      modules.map(async module => {
+        const nestedModuleNames = Object.values(module.data.nodes)
+          .filter((n: any) => n.data.module)
+          .map((n: any) => n.data.module)
+        if (nestedModuleNames.length === 0) {
+          return []
+        } else {
+          const nextModuleLayer = await getNestedModules(nestedModuleNames)
+          return nextModuleLayer.flat()
+        }
+      })
+    )
+    const allModules = modules.concat(nestedModules.flat())
+    console.log('all nested modules flattened', allModules)
+    return allModules
+  }
+
+  const getSpellModules = async spell => {
+    const moduleNames = Object.values(spell.chain.nodes)
+      .filter((n: any) => n.data.module)
+      .map((n: any) => n.data.module)
+
+    await getNestedModules(moduleNames)
   }
 
   return {
