@@ -3,7 +3,7 @@ import { useSnackbar } from 'notistack'
 import { useState, useEffect } from 'react'
 
 import { useLayout } from '../../../contexts/LayoutProvider'
-import Window from '../../common/Window/Window'
+import Window from '../../common/Window/Window.tsx'
 import WindowMessage from './WindowMessage'
 
 import '../thoth.module.css'
