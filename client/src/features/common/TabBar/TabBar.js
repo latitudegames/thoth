@@ -1,5 +1,5 @@
 import classnames from 'classnames'
-import React from 'react'
+import React, { useState, useRef } from 'react'
 import { VscClose } from 'react-icons/vsc'
 
 import { useTabManager } from '../../../contexts/TabManagerProvider'
@@ -9,9 +9,11 @@ import css from './tabBar.module.css'
 // import { useAuth } from "../../../contexts/AuthProvider";
 
 const Tab = props => {
+  const [editingTitle, setEditingTitle] = useState(false)
+  const inputRef = useRef(null)
   const { switchTab, closeTab } = useTabManager()
 
-  const title = `${props.type}- ${props.name}`
+  const title = `${props.name}`
   const tabClass = classnames({
     [css['tabbar-tab']]: true,
     [css['active']]: props.active,
@@ -28,12 +30,42 @@ const Tab = props => {
     closeTab(props.id)
   }
 
+  const beginChangeName = () => {
+    setEditingTitle(true)
+    inputRef.current.focus()
+  }
+
+  const completeChangeName = () => {
+    setEditingTitle(false)
+  }
+
   return (
-    <div className={tabClass} onClick={onClick}>
-      <p>{title}</p>
-      <span onClick={onClose}>
-        <VscClose />
-      </span>
+    <div
+      className={tabClass}
+      onClick={onClick}
+      onDoubleClick={props.type === 'spell' && beginChangeName}
+    >
+      <p
+        style={{
+          position: editingTitle ? 'absolute' : 'relative',
+          opacity: editingTitle ? 0 : 1,
+          pointerEvents: editingTitle ? 'none' : 'all',
+        }}
+      >
+        {title}
+      </p>
+      <input
+        style={{
+          position: !editingTitle ? 'absolute' : 'relative',
+          opacity: !editingTitle ? 0 : 1,
+          pointerEvents: !editingTitle ? 'none' : 'all',
+        }}
+        ref={inputRef}
+        type="text"
+        placeholder={props.name}
+        onBlur={props.type === 'spell' && completeChangeName}
+      />
+      <span onClick={onClose}>{!editingTitle && <VscClose />}</span>
     </div>
   )
 }
