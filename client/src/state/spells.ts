@@ -1,27 +1,35 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import {
+  createApi,
+  fetchBaseQuery,
+  FetchBaseQueryError,
+} from '@reduxjs/toolkit/query/react'
 import { Spell as SpellType } from '@latitudegames/thoth-core/types'
 
+import { getAuthHeader } from '../utils/authHelper'
 import { initDB } from '../database'
+import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes'
+import { updateGameState } from './gameState'
+import { Module } from '../database/schemas/module'
+// function camelize(str) {
+//   return str
+//     .replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
+//       return index === 0 ? word.toLowerCase() : word.toUpperCase()
+//     })
+//     .replace(/\s+/g, '')
+// }
 
-function camelize(str) {
-  return str
-    .replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
-      return index === 0 ? word.toLowerCase() : word.toUpperCase()
-    })
-    .replace(/\s+/g, '')
-}
-
-const _spellModel = async () => {
+const _moduleModel = async () => {
   const db = await initDB()
-  const { spells } = db.models
-  return spells
+  const { modules } = db.models
+  return modules
 }
 export interface Spell {
   id?: string
   user?: Record<string, unknown> | null | undefined
   name: string
-  graph: SpellType
+  chain: SpellType
+  modules: Module[]
   gameState: Record<string, unknown>
   createdAt?: number
   updatedAt?: number
@@ -39,82 +47,96 @@ export interface DeployArgs {
   message: string
 }
 
-// stubbed temp data
-const versions: Record<string, DeployedSpellVersion[]> = {}
-
 export const spellApi = createApi({
   reducerPath: 'spellApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.REACT_APP_API_URL || 'localhost:8000/',
+    baseUrl: `${process.env.REACT_APP_API_URL}/game` || 'localhost:8000/game',
+    prepareHeaders: headers => {
+      const authHeader = getAuthHeader()
+      if (authHeader?.Authorization)
+        headers.set('authorization', authHeader['Authorization'])
+      return headers
+    },
   }),
   tagTypes: ['Spell', 'Version'],
   endpoints: builder => ({
     getSpells: builder.query<Spell[], void>({
       providesTags: ['Spell'],
-      async queryFn() {
-        const spellModel = await _spellModel()
-        const spells = await spellModel.getSpells()
-
-        return { data: spells.map(spell => spell.toJSON()) }
-      },
+      query: () => '/spells',
     }),
     getSpell: builder.query<Spell, string>({
       providesTags: ['Spell'],
-      async queryFn(spellId) {
-        const spellModel = await _spellModel()
-        const spell = await spellModel.getSpell(spellId)
+      query: spellId => {
+        return {
+          url: `spells/${spellId}`,
+        }
+      },
+      async onQueryStarted(id, { dispatch, queryFulfilled }) {
+        const { data: spell } = await queryFulfilled
 
-        return { data: spell.toJSON() }
+        dispatch(
+          updateGameState({ state: spell.gameState, spellId: spell.name })
+        )
       },
     }),
     saveSpell: builder.mutation<Partial<Spell>, Partial<Spell>>({
       invalidatesTags: ['Spell'],
-      async queryFn(spell) {
-        const spellModel = await _spellModel()
-        const updatedSpell = await spellModel.saveSpell(spell.name, spell)
-        return { data: updatedSpell.toJSON() }
+      // needed to use queryFn as query option didnt seem to allow async functions.
+      async queryFn(spell, { dispatch }, extraOptions, baseQuery) {
+        const moduleModel = await _moduleModel()
+        const modules = await moduleModel.getSpellModules(spell)
+
+        if (spell.gameState)
+          dispatch(
+            updateGameState({ state: spell.gameState, spellId: spell.name })
+          )
+
+        spell.modules = modules
+
+        const baseQueryOptions = {
+          url: 'spells/save',
+          body: spell,
+          method: 'POST',
+        }
+
+        // cast into proper response shape expected by queryFn return
+        // probbably a way to directly pass in type args to baseQuery but couldnt find.
+        return baseQuery(baseQueryOptions) as QueryReturnValue<
+          Partial<Spell>,
+          FetchBaseQueryError,
+          unknown
+        >
       },
     }),
     newSpell: builder.mutation<Spell, Partial<Spell>>({
       invalidatesTags: ['Spell'],
-      async queryFn(spellData) {
-        const newSpell = { gameState: {}, ...spellData }
-        const spellModel = await _spellModel()
-
-        const spell = await spellModel.newSpell(newSpell)
-
-        return { data: spell.toJSON() }
+      query: spellData => {
+        const spell = {
+          ...spellData,
+          gameState: {},
+        }
+        return {
+          url: '/spells/save',
+          method: 'POST',
+          body: spell,
+        }
       },
     }),
     deploySpell: builder.mutation<DeployedSpellVersion, DeployArgs>({
       invalidatesTags: ['Version'],
-      async queryFn({ spellId, message }) {
-        if (!versions[spellId]) versions[spellId] = []
-
-        const _versions = versions[spellId]
-        const version = '0.0.' + (_versions.length + 1)
-        const url = `${process.env.REACT_APP_API_URL}/spells/${camelize(
-          spellId
-        )}/${version}`
-        const deployment = { version, message, spellId, url }
-
-        versions[spellId].push(deployment)
-
+      query({ spellId, message }) {
         return {
-          data: deployment as DeployedSpellVersion,
+          url: `/spells/${spellId}/deploy`,
+          body: {
+            message,
+          },
+          method: 'POST',
         }
       },
     }),
     getDeployments: builder.query<DeployedSpellVersion[], string>({
       providesTags: ['Version'],
-      async queryFn(spellId) {
-        console.log('egtting versions!')
-        const result = versions[spellId] || []
-        console.log('results', result)
-        return {
-          data: result.reverse(),
-        }
-      },
+      query: spellId => ({ url: `/spells/deployed/${spellId}` }),
     }),
   }),
 })
@@ -128,11 +150,26 @@ export const selectAllSpells = createSelector(
 )
 
 export const selectSpellById = createSelector(
-  [selectAllSpells, (state, spellId) => spellId],
+  [
+    selectAllSpells,
+    (state, spellId) => {
+      return spellId
+    },
+  ],
   (spells, spellId) =>
     spells.find(spell => {
       return spell.name === spellId
     })
+)
+
+export const selectSpellsByModuleName = createSelector(
+  [selectAllSpells, (state, moduleName) => moduleName],
+  (spells, moduleName) =>
+    spells.filter(
+      spell =>
+        spell.modules &&
+        spell?.modules.some(module => module.name === moduleName)
+    )
 )
 
 export const {

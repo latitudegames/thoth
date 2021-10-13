@@ -22,14 +22,21 @@ const DeploymentView = ({ open, setOpen, spellId }) => {
 
   const [deploySpell] = useDeploySpellMutation()
   const spell = useSelector(state => selectSpellById(state, spellId))
-  const { data: deployments, isLoading } = useGetDeploymentsQuery(
-    spell?.name || ''
-  )
+  const name = spell?.name as string
+  const { data: deployments, isLoading } = useGetDeploymentsQuery(name, {
+    skip: !spell?.name,
+  })
 
   const deploy = message => {
     if (!spell) return
     deploySpell({ spellId: spell.name, message })
     enqueueSnackbar('Spell deployed', { variant: 'success' })
+  }
+
+  const buildUrl = version => {
+    return encodeURI(
+      `${process.env.REACT_APP_API_URL}/games/spells/${spellId}/${version}`
+    )
   }
 
   const copy = url => {
@@ -127,10 +134,12 @@ const DeploymentView = ({ open, setOpen, spellId }) => {
                       >
                         <Input
                           style={{ flex: 1 }}
-                          value={deploy.url}
-                          readonly
+                          value={buildUrl(deploy.version)}
+                          readOnly
                         />
-                        <button onClick={() => copy(deploy.url)}>copy</button>
+                        <button onClick={() => copy(buildUrl(deploy.version))}>
+                          copy
+                        </button>
                       </div>
                       <p> Change notes </p>
                       <Panel

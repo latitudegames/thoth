@@ -37,7 +37,12 @@ const Thoth = ({ empty }) => {
     <TabLayout>
       {!empty &&
         tabs.map((tab, i) => (
-          <Workspace tab={tab} key={`${i}-${tab.name}`} appPubSub={pubSub} />
+          <Workspace
+            tab={tab}
+            tabs={tabs}
+            key={`${i}-${tab.name}`}
+            appPubSub={pubSub}
+          />
         ))}
     </TabLayout>
   )

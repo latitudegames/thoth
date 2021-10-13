@@ -2,18 +2,31 @@ import Editor from '@monaco-editor/react'
 import jsonFormat from 'json-format'
 import { useSnackbar } from 'notistack'
 import { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 
-import { useSpell } from '../../../contexts/SpellProvider'
+import { selectSpellById, useSaveSpellMutation } from '../../../state/spells'
+import {
+  selectGameStateBySpellId,
+  // updateGameState,
+} from '../../../state/gameState'
 import Window from '../../common/Window/Window'
 
 import '../thoth.module.css'
+import { RootState } from '../../../state/store'
+import WindowMessage from './WindowMessage'
 
-const StateManager = props => {
-  const { currentSpell, rewriteCurrentGameState } = useSpell()
+const StateManager = ({ tab, ...props }) => {
+  // const dispatch = useDispatch()
+  const [saveSpell] = useSaveSpellMutation()
+  const gameState = useSelector((state: RootState) => {
+    return selectGameStateBySpellId(state.gameState, tab.spell)
+  })
+  const spell = useSelector(state => selectSpellById(state, tab.spell))
+
   const { enqueueSnackbar } = useSnackbar()
-  const [typing, setTyping] = useState(null)
+  const [typing, setTyping] = useState<boolean>(false)
   const [code, setCode] = useState('{}')
-  const [height, setHeight] = useState()
+  const [height, setHeight] = useState<number>()
 
   const bottomHeight = 50
 
@@ -41,7 +54,7 @@ const StateManager = props => {
 
   useEffect(() => {
     if (props?.node?.rect?.height)
-      setHeight(props.node.rect.height - bottomHeight)
+      setHeight((props.node.rect.height - bottomHeight) as number)
 
     // this is to dynamically set the appriopriate height so that Monaco editor doesnt break flexbox when resizing
     props.node.setEventListener('resize', data => {
@@ -61,9 +74,11 @@ const StateManager = props => {
     return () => clearTimeout(delayDebounceFn)
   }, [code])
 
+  // update code when game state changes
   useEffect(() => {
-    if (currentSpell?.gameState) setCode(jsonFormat(currentSpell.gameState))
-  }, [currentSpell])
+    if (!gameState) return
+    setCode(jsonFormat(gameState.state))
+  }, [gameState])
 
   const onClear = () => {
     const reset = `{}`
@@ -76,7 +91,13 @@ const StateManager = props => {
   }
 
   const onSave = () => {
-    rewriteCurrentGameState(JSON.parse(code))
+    if (!gameState) return
+    const parsedState = JSON.parse(code)
+    const spellUpdate = {
+      ...spell,
+      gameState: parsedState,
+    }
+    saveSpell(spellUpdate)
     enqueueSnackbar('State saved', {
       preventDuplicate: true,
       variant: 'success',
@@ -91,6 +112,9 @@ const StateManager = props => {
       </button>
     </>
   )
+
+  if (tab.type === 'module')
+    return <WindowMessage content="Modules do not support game state" />
 
   return (
     <Window toolbar={toolbar}>
