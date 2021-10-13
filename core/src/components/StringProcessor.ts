@@ -2,7 +2,7 @@ import Rete from 'rete'
 
 import { NodeData, ThothNode, ThothWorkerInputs } from '../../types'
 import { CodeControl } from '../dataControls/CodeControl'
-import { OutputGeneratorControl } from '../dataControls/OutputGenerator'
+import { SocketGeneratorControl } from '../dataControls/SocketGenerator'
 import { stringSocket, triggerSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 const info = `The String Processor component take s astring as an input and allows you to write a function in the text editor to parse that string in whatever way you need.  You can define any number of outputs which you can pass the result of your parsing out through.
@@ -36,16 +36,11 @@ export class StringProcessor extends ThothComponent {
     const triggerOut = new Rete.Output('trigger', 'Trigger', triggerSocket)
 
     // Inspector controls
-    const outputGenerator = new OutputGeneratorControl({
+    const outputGenerator = new SocketGeneratorControl({
       socketType: 'stringSocket',
-      taskType: 'output',
-      ignored: [
-        {
-          name: 'trigger',
-          socketType: 'triggerSocket',
-          taskType: 'option',
-        },
-      ],
+      connectionType: 'output',
+      ignored: ['trigger'],
+      name: 'Output Sockets',
     })
 
     const codeControl = new CodeControl({
