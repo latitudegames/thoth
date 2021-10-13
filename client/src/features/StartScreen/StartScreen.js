@@ -22,10 +22,12 @@ const StartScreen = ({ createNew, allProjects }) => {
   const onReaderLoad = async event => {
     const spellData = JSON.parse(event.target.result)
     // TODO check for proper values here and throw errors
-
-    const existingSpell = await models.spells.getSpell(spellData.name)
-    const spell = existingSpell ? existingSpell : await newSpell(spellData)
-
+    let spell
+    try {
+      spell = await models.spells.getSpell(spellData.name)
+    } catch (error) {
+      spell = await newSpell(spellData)
+    }
     // Load modules from the spell
     if (spellData?.modules && spellData.modules.length > 0)
       await Promise.all(
@@ -34,7 +36,11 @@ const StartScreen = ({ createNew, allProjects }) => {
         })
       )
 
-    await openTab({ name: spell.name, spellId: spell.name, type: 'spell' })
+    await openTab({
+      name: spellData.name,
+      spellId: spellData.name,
+      type: 'spell',
+    })
   }
 
   const loadFile = selectedFile => {
