@@ -19,12 +19,6 @@ import { Module } from '../database/schemas/module'
 //     .replace(/\s+/g, '')
 // }
 
-// const _spellModel = async () => {
-//   const db = await initDB()
-//   const { spells } = db.models
-//   return spells
-// }
-
 const _moduleModel = async () => {
   const db = await initDB()
   const { modules } = db.models
@@ -156,7 +150,12 @@ export const selectAllSpells = createSelector(
 )
 
 export const selectSpellById = createSelector(
-  [selectAllSpells, (state, spellId) => spellId],
+  [
+    selectAllSpells,
+    (state, spellId) => {
+      return spellId
+    },
+  ],
   (spells, spellId) =>
     spells.find(spell => {
       return spell.name === spellId
