@@ -12,7 +12,6 @@ import { useLazyGetSpellQuery, Spell } from '../state/spells'
 import LoadingScreen from '../features/common/LoadingScreen/LoadingScreen'
 import { MyNode } from '../features/common/Node/Node'
 import gridimg from '../grid.png'
-import { useSpell } from './SpellProvider'
 import { usePubSub } from './PubSubProvider'
 import { useRete, ReteContext } from './ReteProvider'
 // import { ThothTab } from './TabManagerProvider'
@@ -41,7 +40,7 @@ const Context = createContext({
   setEditor: (editor: any) => {},
   getNodeMap: () => {},
   getNodes: () => {},
-  loadGraph: (graph: any) => {},
+  loadChain: (chain: any) => {},
   setContainer: () => {},
   undo: () => {},
   redo: () => {},
@@ -52,7 +51,7 @@ export const useEditor = () => useContext(Context)
 const EditorProvider = ({ children }) => {
   const [editor, setEditorState] = useState({
     components: [],
-    loadGraph: (graph: any) => {},
+    loadGraph: (chain: any) => {},
   })
   const editorRef = useRef({
     trigger: (event: string) => {},
@@ -70,8 +69,6 @@ const EditorProvider = ({ children }) => {
   }
 
   const buildEditor = async (container, _spell, tab, thoth) => {
-    // copy spell in case it is read only
-    const spell = JSON.parse(JSON.stringify(_spell))
     // eslint-disable-next-line no-console
     const newEditor = await initEditor({
       container,
@@ -86,7 +83,11 @@ const EditorProvider = ({ children }) => {
     // set editor to the map
     setEditor(newEditor)
 
-    if (tab.type === 'spell') newEditor.loadGraph(spell.graph)
+    if (tab.type === 'spell') {
+      // copy spell in case it is read onl
+      const spell = JSON.parse(JSON.stringify(_spell))
+      newEditor.loadGraph(spell.chain)
+    }
 
     if (tab.type === 'module') {
       const moduleDoc = await thoth.getModule(tab.module)
@@ -118,7 +119,7 @@ const EditorProvider = ({ children }) => {
     return editor && Object.fromEntries(editor.components)
   }
 
-  const loadGraph = graph => {
+  const loadChain = graph => {
     editor.loadGraph(graph)
   }
 
@@ -134,7 +135,7 @@ const EditorProvider = ({ children }) => {
     buildEditor,
     getNodeMap,
     getNodes,
-    loadGraph,
+    loadChain,
     setEditor,
     getEditor,
     undo,
@@ -149,17 +150,17 @@ const RawEditor = ({ tab, children }) => {
   const [getSpell, { data: spell, isLoading }] = useLazyGetSpellQuery()
   const [loaded, setLoaded] = useState(false)
   const { buildEditor } = useEditor()
-  const { getCurrentGameState, updateCurrentGameState } = useSpell()
   // This will be the main interface between thoth and rete
   const reteInterface = useRete()
 
   useEffect(() => {
     if (!tab) return
 
-    getSpell(tab.spell)
+    if (tab?.spell) getSpell(tab.spell)
   }, [tab])
 
-  if (isLoading || !tab || !spell) return <LoadingScreen />
+  if (!tab || (tab.type === 'spell' && (isLoading || !spell)))
+    return <LoadingScreen />
 
   return (
     <>
@@ -180,11 +181,7 @@ const RawEditor = ({ tab, children }) => {
         <div
           ref={el => {
             if (el && !loaded) {
-              buildEditor(el, spell, tab, {
-                ...reteInterface,
-                getCurrentGameState,
-                updateCurrentGameState,
-              })
+              buildEditor(el, spell, tab, reteInterface)
               setLoaded(true)
             }
           }}

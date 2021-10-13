@@ -26,9 +26,6 @@ const loadModuleModel = db => {
   const updateModule = async (moduleName: string, update: object) => {
     const module = await getModule(moduleName)
 
-    // eslint-disable-next-line
-    console.log('module', module)
-
     const updatedModule = await module.atomicUpdate(oldData => {
       return {
         ...oldData,
@@ -68,6 +65,37 @@ const loadModuleModel = db => {
     return await db.modules.insert(newModule)
   }
 
+  const getNestedModules = async (moduleNames: string[]) => {
+    const moduleDocs = await Promise.all(
+      moduleNames.map(moduleName => getModule(moduleName))
+    )
+    if (moduleDocs.length === 0) return []
+    const modules = moduleDocs.filter(Boolean).map(module => module.toJSON())
+    const nestedModules = await Promise.all(
+      modules.map(async module => {
+        const nestedModuleNames = Object.values(module.data.nodes)
+          .filter((n: any) => n.data.module)
+          .map((n: any) => n.data.module)
+        if (nestedModuleNames.length === 0) {
+          return []
+        } else {
+          const nextModuleLayer = await getNestedModules(nestedModuleNames)
+          return nextModuleLayer.flat()
+        }
+      })
+    )
+    return modules.concat(nestedModules.flat())
+  }
+
+  const getSpellModules = async spell => {
+    const moduleNames = Object.values(spell.chain.nodes)
+      .filter((n: any) => n.data.module)
+      .map((n: any) => n.data.module)
+
+    const modules = await getNestedModules(moduleNames)
+    return modules
+  }
+
   return {
     insert,
     getModules,
@@ -76,6 +104,7 @@ const loadModuleModel = db => {
     updateModule,
     findOneModule,
     updateOrCreate,
+    getSpellModules,
   }
 }
 export default loadModuleModel

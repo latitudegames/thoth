@@ -43,12 +43,16 @@ const CreateNew = () => {
   const onCreate = async () => {
     const placeholderName = uniqueNamesGenerator(customConfig)
     const { data: spell } = await newSpell({
-      graph: defaultGraph,
+      chain: defaultGraph,
       name: placeholderName,
     })
 
     await clearTabs()
-    await openTab({ name: spell.name, spellId: spell.name, type: 'spell' })
+    await openTab({
+      name: placeholderName,
+      spellId: placeholderName,
+      type: 'spell',
+    })
     setLocation('/thoth')
   }
 

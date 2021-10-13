@@ -17,6 +17,7 @@ export class StateRead extends ThothComponent {
       outputs: {},
     }
     this.category = 'State'
+    this.workspaceType = 'spell'
     this.info = info
   }
 

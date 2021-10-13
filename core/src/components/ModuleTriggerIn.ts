@@ -16,7 +16,6 @@ export class ModuleTriggerIn extends ThothComponent {
   module: object
   category: string
   info: string
-  workspaceType: 'module' | 'spell'
   contextMenuName: string
   nodeTaskMap: Record<number, ThothTask> = {}
 
@@ -43,7 +42,6 @@ export class ModuleTriggerIn extends ThothComponent {
 
     this.category = 'Module'
     this.info = info
-    this.workspaceType = 'module'
   }
 
   async run(node: ThothNode, data: NodeData) {
