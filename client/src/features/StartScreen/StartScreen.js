@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useLocation } from 'wouter'
 
-import { useNewSpellMutation, useGetSpellsQuery } from '../../state/spells'
+import { useSaveSpellMutation, useGetSpellsQuery } from '../../state/spells'
 import { useDB } from '../../contexts/DatabaseProvider'
 import { useTabManager } from '../../contexts/TabManagerProvider'
 import AllProjects from './components/AllProjects'
@@ -16,7 +16,7 @@ const StartScreen = ({ createNew, allProjects }) => {
   const { openTab } = useTabManager()
   const [, setLocation] = useLocation()
 
-  const [newSpell] = useNewSpellMutation()
+  const [saveSpell] = useSaveSpellMutation()
   const { data: spells } = useGetSpellsQuery()
 
   const onReaderLoad = async event => {
@@ -26,7 +26,7 @@ const StartScreen = ({ createNew, allProjects }) => {
     try {
       spell = await models.spells.getSpell(spellData.name)
     } catch (error) {
-      spell = await newSpell(spellData)
+      spell = await saveSpell(spellData)
     }
     // Load modules from the spell
     if (spellData?.modules && spellData.modules.length > 0)
