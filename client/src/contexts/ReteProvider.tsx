@@ -27,6 +27,8 @@ export interface ReteContext extends EngineContext {
   getGameState: () => void
   setGameState: () => void
   getModules: () => void
+  getCurrentGameState: () => Record<string, unknown>
+  updateCurrentGameState: () => Promise<Record<string, unknown>>
 }
 
 const Context = createContext({
@@ -46,7 +48,7 @@ const Context = createContext({
   setGameState: () => {},
   getModules: async () => {},
   getCurrentGameState: () => ({} as Record<string, unknown>),
-  updateCurrentGameState: () => {},
+  updateCurrentGameState: () => ({} as Promise<Record<string, unknown>>),
   completion: _completion,
   enkiCompletion: async (): Promise<{ outputs: string[] }> =>
     await new Promise(resolve => {
@@ -149,7 +151,7 @@ const ReteProvider = ({ children, tab }) => {
     return currentGameState?.state
   }
 
-  const updateCurrentGameState = update => {
+  const updateCurrentGameState = async update => {
     const newState = {
       spellId: tab.spell,
       state: update,
