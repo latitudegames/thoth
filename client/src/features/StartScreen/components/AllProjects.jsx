@@ -19,7 +19,7 @@ const AllProjects = ({
           size={'var(--medium)'}
           style={{ marginRight: 'var(--extraSmall)', top: '3px' }}
         />
-        All Spells
+        Spellbook
       </h1>
       <Panel
         style={{ width: 'var(--c62)', backgroundColor: 'var(--dark-1)' }}
