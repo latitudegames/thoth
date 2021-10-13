@@ -10,7 +10,7 @@ import { getAuthHeader } from '../utils/authHelper'
 import { initDB } from '../database'
 import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes'
 import { updateGameState } from './gameState'
-
+import { Module } from '../database/schemas/module'
 // function camelize(str) {
 //   return str
 //     .replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
@@ -35,7 +35,7 @@ export interface Spell {
   user?: Record<string, unknown> | null | undefined
   name: string
   chain: SpellType
-  modules: SpellType[]
+  modules: Module[]
   gameState: Record<string, unknown>
   createdAt?: number
   updatedAt?: number
