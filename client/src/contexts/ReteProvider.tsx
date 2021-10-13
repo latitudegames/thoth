@@ -46,7 +46,7 @@ const Context = createContext({
   setGameState: () => {},
   getModules: async () => {},
   getCurrentGameState: () => ({} as Record<string, unknown>),
-  updateCurrentGameState: () => new Promise(() => {}) as Promise<void>,
+  updateCurrentGameState: () => {},
   completion: _completion,
   enkiCompletion: async (): Promise<{ outputs: string[] }> =>
     await new Promise(resolve => {

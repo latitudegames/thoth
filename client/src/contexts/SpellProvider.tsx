@@ -13,7 +13,7 @@ export type SpellContext = {
   currentGameState: {}
   getCurrentGameState: () => Record<string, unknown>
   rewriteCurrentGameState: () => Record<string, unknown>
-  updateCurrentGameState: () => void
+  updateCurrentGameState: () => Promise<Record<string, unknown>>
   getThothVersion: () => void
 }
 
@@ -31,8 +31,8 @@ const Context = createContext({
   rewriteCurrentGameState: (): Record<string, unknown> => {
     return {}
   },
-  updateCurrentGameState: (): Record<string, unknown> => {
-    return {}
+  updateCurrentGameState: (): Promise<Record<string, unknown>> => {
+    return new Promise(resolve => resolve({}))
   },
   getThothVersion: () => {},
 })
