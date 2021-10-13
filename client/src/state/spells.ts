@@ -163,6 +163,16 @@ export const selectSpellById = createSelector(
     })
 )
 
+export const selectSpellsByModuleName = createSelector(
+  [selectAllSpells, (state, moduleName) => moduleName],
+  (spells, moduleName) =>
+    spells.filter(
+      spell =>
+        spell.modules &&
+        spell?.modules.some(module => module.name === moduleName)
+    )
+)
+
 export const {
   useGetSpellQuery,
   useGetSpellsQuery,
