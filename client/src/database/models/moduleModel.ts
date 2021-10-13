@@ -84,9 +84,7 @@ const loadModuleModel = db => {
         }
       })
     )
-    const allModules = modules.concat(nestedModules.flat())
-    console.log('all nested modules flattened', allModules)
-    return allModules
+    return modules.concat(nestedModules.flat())
   }
 
   const getSpellModules = async spell => {
