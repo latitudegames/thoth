@@ -8,8 +8,9 @@ const Input = ({ control, updateData, initialValue }) => {
 
   const onChange = e => {
     setValue(e.target.value)
+    const value = e.target.value === '\\n' ? '\n' : e.target.value
     updateData({
-      [dataKey]: e.target.value,
+      [dataKey]: value,
     })
   }
 
