@@ -5,7 +5,7 @@ const url = process.env.REACT_APP_API_URL
 
 export const getEnkiPrompt = async taskName => {
   try {
-    const response = await fetch(url + `/tools/enki/${taskName}`, {
+    const response = await fetch(url + `/enki/${taskName}`, {
       method: 'GET',
       prompt,
       mode: 'cors',
@@ -25,7 +25,7 @@ export const getEnkiPrompt = async taskName => {
 
 export const getEnkis = async () => {
   try {
-    const response = await fetch(url + `/tools/enki`, {
+    const response = await fetch(url + `/enki`, {
       method: 'GET',
       prompt,
       mode: 'cors',
@@ -45,7 +45,7 @@ export const getEnkis = async () => {
 
 export const postEnkiCompletion = async (taskName, inputs) => {
   try {
-    const response = await fetch(url + `/tools/enki/${taskName}/completion`, {
+    const response = await fetch(url + `/enki/${taskName}/completion`, {
       method: 'POST',
       prompt,
       mode: 'cors',
