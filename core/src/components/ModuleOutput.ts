@@ -64,7 +64,7 @@ export class ModuleOutput extends ThothComponent {
   }
 
   worker(node: NodeData, inputs: ThothWorkerInputs) {
-    const text = inputs.text.filter(Boolean)[0] as string
+    const text = inputs.input.filter(Boolean)[0] as string
 
     return {
       text,
