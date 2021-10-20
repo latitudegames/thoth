@@ -31,9 +31,14 @@ export class PlaytestPrint extends ThothComponent {
   // to generate the appropriate inputs and ouputs for the fewshot at build time
   builder(node: ThothNode) {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
-    const triggerInput = new Rete.Input('trigger', 'Trigger', triggerSocket)
+    const triggerInput = new Rete.Input(
+      'trigger',
+      'Trigger',
+      triggerSocket,
+      true
+    )
     const triggerOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
-    const textInput = new Rete.Input('text', 'Print', anySocket)
+    const textInput = new Rete.Input('text', 'Print', anySocket, true)
 
     return node
       .addInput(textInput)
@@ -51,7 +56,9 @@ export class PlaytestPrint extends ThothComponent {
   ) {
     const { sendToPlaytest } = this.editor?.thoth as EngineContext
     if (!inputs || !inputs.text) return {}
-    const text = inputs.text[0]
+    const text = inputs.text.filter(Boolean)[0]
+    console.log('RUNNING WORKER')
+    // const text = inputs.text[0]
 
     if (sendToPlaytest) {
       sendToPlaytest(text)
