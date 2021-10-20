@@ -1,18 +1,9 @@
 import { Input, NodeEditor, Output, Socket } from 'rete'
 
 import { IRunContextEditor } from '.'
-import { ThothNode } from '../../../types'
-import { socketNameMap, SocketNameType, SocketType } from '../../sockets'
+import { DataSocketType, ThothNode } from '../../../types'
+import { socketNameMap, SocketNameType } from '../../sockets'
 import { ModuleSocketType } from './module-manager'
-
-type DataSocketType = {
-  name: SocketNameType
-  taskType: 'output' | 'option'
-  socketKey: string
-  connectionType: 'input' | 'output'
-  socketType: SocketType
-}
-
 export type ThroughPutType = 'outputs' | 'inputs'
 
 export function extractNodes(
