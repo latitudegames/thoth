@@ -57,8 +57,6 @@ export class PlaytestPrint extends ThothComponent {
     const { sendToPlaytest } = this.editor?.thoth as EngineContext
     if (!inputs || !inputs.text) return {}
     const text = inputs.text.filter(Boolean)[0]
-    console.log('RUNNING WORKER')
-    // const text = inputs.text[0]
 
     if (sendToPlaytest) {
       sendToPlaytest(text)
