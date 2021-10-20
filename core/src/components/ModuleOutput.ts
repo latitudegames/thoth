@@ -43,8 +43,13 @@ export class ModuleOutput extends ThothComponent {
   // to generate the appropriate inputs and ouputs for the fewshot at build time
   builder(node: ThothNode) {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
-    const input = new Rete.Input('input', 'String', anySocket)
-    const socketInput = new Rete.Input('trigger', 'Trigger', triggerSocket)
+    const input = new Rete.Input('input', 'String', anySocket, true)
+    const socketInput = new Rete.Input(
+      'trigger',
+      'Trigger',
+      triggerSocket,
+      true
+    )
 
     // Handle default value if data is present
     const nameInput = new InputControl({
@@ -59,8 +64,10 @@ export class ModuleOutput extends ThothComponent {
   }
 
   worker(node: NodeData, inputs: ThothWorkerInputs) {
+    const text = inputs.text.filter(Boolean)[0] as string
+
     return {
-      text: inputs.input[0] as string,
+      text,
     }
   }
 }
