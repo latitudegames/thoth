@@ -13,6 +13,7 @@ import {
 import { Inspector } from './src/plugins/inspectorPlugin/Inspector'
 import { ModuleGraphData } from './src/plugins/modulePlugin/module-manager'
 import { TaskOutputTypes } from './src/plugins/taskPlugin/task'
+import { SocketNameType, SocketType } from './src/sockets'
 import { ThothTask } from './src/thoth-component'
 
 export type EventsTypes = {
@@ -28,6 +29,14 @@ export type EventsTypes = {
   connectiondrop: Input | Output
   connectionpick: Input | Output
   resetconnection: void
+}
+
+export type DataSocketType = {
+  name: SocketNameType
+  taskType: 'output' | 'option'
+  socketKey: string
+  connectionType: 'input' | 'output'
+  socketType: SocketType
 }
 
 export type ThothNode = Node & {
