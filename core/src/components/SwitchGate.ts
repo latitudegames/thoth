@@ -1,6 +1,11 @@
 import Rete from 'rete'
 
-import { NodeData, ThothNode, ThothWorkerInputs } from '../../types'
+import {
+  DataSocketType,
+  NodeData,
+  ThothNode,
+  ThothWorkerInputs,
+} from '../../types'
 import { SocketGeneratorControl } from '../dataControls/SocketGenerator'
 import { anySocket, triggerSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
@@ -48,9 +53,10 @@ export class SwitchGate extends ThothComponent {
   // to the outputs to be consumed by any connected components
   worker(node: NodeData, inputs: ThothWorkerInputs) {
     const input = inputs['input'][0] as string
+    const nodeOutputs = node.data.outputs as DataSocketType[]
 
     // close all outputs
-    // this._task.closed = node.data.outputs.map((out) => out.name);
+    this._task.closed = ['default', ...nodeOutputs.map(out => out.name)]
 
     if (this._task.closed.includes(input)) {
       // If the ouputs closed has the incoming text, filter closed outputs to not include it
