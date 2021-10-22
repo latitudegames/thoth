@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 import { NodeData, ThothNode, ThothWorkerInputs } from '../../types'
 import { InputControl } from '../dataControls/InputControl'
-import { Task } from '../plugins/taskPlugin/task'
+import { TaskOptions } from '../plugins/taskPlugin/task'
 // @seang todo: convert data controls to typescript to remove this
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore
@@ -12,18 +12,19 @@ import { ThothComponent } from '../thoth-component'
 const info = `The module output component adds an output socket to the parent module.  It can be given a name, which is displayed on the parent.`
 
 export class ModuleOutput extends ThothComponent {
-  task: Partial<Task> & { outputs: { text: string } }
+  task: TaskOptions
   module: object
   category: string
   info: string
   contextMenuName: string
 
   constructor() {
-    // Name of the componentw
+    // Name of the component
     super('Module Output')
     this.contextMenuName = 'Output'
 
     this.task = {
+      runOneInput: true,
       outputs: {
         text: 'output',
       },

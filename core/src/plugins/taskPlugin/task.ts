@@ -14,6 +14,7 @@ export type TaskOptions = {
   outputs: Record<string, unknown>
   init?: Function
   onRun?: Function
+  runOneInput?: boolean
 }
 
 type RunOptions = {
@@ -21,6 +22,7 @@ type RunOptions = {
   needReset?: boolean
   garbage?: Task[]
   fromSocket?: string
+  fromNode?: NodeData
 }
 
 export type TaskOutputTypes = 'option' | 'output'
@@ -85,47 +87,74 @@ export class Task {
       garbage = [] as Task[],
       propagate = true,
       fromSocket,
+      fromNode,
     } = options
 
+    // garbage means that the nodes output value will be reset after it is all done.
     if (needReset) garbage.push(this)
 
     // This would be a great place to run an animation showing the signal flow.
     // Just needto figure out how to change the folow of the connection attached to a socket on the fly.
     // And animations should follow the flow of the data, not the main IO paths
 
+    // Only run the worker if the outputData isnt already populated.
     if (!this.outputData) {
       const inputs = {} as Record<string, unknown[]>
-      // here we run through all INPUTS connected to other OUTPUTS for the node.
-      // We run eachinput back to whatever node it is connected to.
-      // We run that nodes task run, and then return its output data and
-      // associate it with This nodes input key
+
+      /*
+        This is where we are populating all the input values to be passed into the worker.
+        We are getting all the input connections that are connected as outputs (ie have values)
+        We filter out all connections which did not come from the previou node.  This is to hgelp support multiple
+        inputs properly, otherwise we actually back propagate along every input and run it, whichI think is unwanted behaviour.
+        After we have filtered these out, we need to run the task, which triggers that nodes worker.  After the worker runs,
+        the task has populated output data, which we take and we associate with the tasks input values, which are subsequently
+        passed to the nodes worker for processing.
+
+        We assume here that his nodes worker does not need to access ALL values simultaneously, but is only interested in one.
+        There is a task option which enables this functionality just in case we have use cases that don't want this behaviour.
+      */
       await Promise.all(
         this.getInputs('output').map(async key => {
-          const thothWorkerinputs = await Promise.all(
-            this.inputs[key].map(async (con: ThothReteInput) => {
+          const inputPromises = this.inputs[key]
+            .filter((con: ThothReteInput) => {
+              // only filter inputs to remove ones that are not the origin if a task option is true
+              if (!this.component.task.runOneInput || !fromNode) return true
+              return con.task.node.id === fromNode.id
+            })
+            .map(async (con: ThothReteInput) => {
               await con.task.run(data, {
                 needReset: false,
                 garbage,
                 propagate: false,
+                fromNode: this.node,
               })
               const outputData = con.task.outputData as Record<string, unknown>
+
               return outputData[con.key]
             })
-          )
+
+          const thothWorkerinputs = await Promise.all(inputPromises)
 
           inputs[key] = thothWorkerinputs
         })
       )
 
+      // socket info is used internally in the worker if we need to know about where signals come from.
+      // this is mainly used currently by the module plugin to know where the run signal should go to.
       const socketInfo = {
         target: fromSocket ? this.getInputFromConnection(fromSocket) : null,
       }
 
+      // the main output data of the task, which is gathered up when the next node gets this nodes value
       this.outputData = await this.worker(this, inputs, data, socketInfo)
 
+      // an onRun option in case a task whats to do something when the task is run.
       if (this.component.task.onRun)
         this.component.task.onRun(this.node, this, data, socketInfo)
 
+      // this is what propagates the the run command to the next nodes in the chain
+      // this makes use of the 'next' nodes.  It also will filter out any connectios which the task has closed.
+      // it is this functionality that lets us control which direction the run signal flows.
       if (propagate)
         await Promise.all(
           this.next
@@ -136,6 +165,7 @@ export class Task {
                 needReset: false,
                 garbage,
                 fromSocket: con.key,
+                fromNode: this.node,
               })
             })
         )
