@@ -16,6 +16,7 @@ export class PlaytestPrint extends ThothComponent {
     super('Playtest Print')
 
     this.task = {
+      runOneInput: true,
       outputs: {
         trigger: 'option',
       },
