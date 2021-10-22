@@ -14,6 +14,7 @@ export type TaskOptions = {
   outputs: Record<string, unknown>
   init?: Function
   onRun?: Function
+  runOneInput?: boolean
 }
 
 type RunOptions = {
@@ -21,6 +22,7 @@ type RunOptions = {
   needReset?: boolean
   garbage?: Task[]
   fromSocket?: string
+  fromNode?: NodeData
 }
 
 export type TaskOutputTypes = 'option' | 'output'
@@ -85,6 +87,7 @@ export class Task {
       garbage = [] as Task[],
       propagate = true,
       fromSocket,
+      fromNode,
     } = options
 
     if (needReset) garbage.push(this)
@@ -110,17 +113,25 @@ export class Task {
       */
       await Promise.all(
         this.getInputs('output').map(async key => {
-          const thothWorkerinputs = await Promise.all(
-            this.inputs[key].map(async (con: ThothReteInput) => {
+          const inputPromises = this.inputs[key]
+            .filter((con: ThothReteInput) => {
+              // only filter inputs to remove ones that are not the origin if a task option is true
+              if (!this.component.task.runOneInput || !fromNode) return true
+              return con.task.node.id === fromNode.id
+            })
+            .map(async (con: ThothReteInput) => {
               await con.task.run(data, {
                 needReset: false,
                 garbage,
                 propagate: false,
+                fromNode: this.node,
               })
               const outputData = con.task.outputData as Record<string, unknown>
+
               return outputData[con.key]
             })
-          )
+
+          const thothWorkerinputs = await Promise.all(inputPromises)
 
           inputs[key] = thothWorkerinputs
         })
@@ -145,6 +156,7 @@ export class Task {
                 needReset: false,
                 garbage,
                 fromSocket: con.key,
+                fromNode: this.node,
               })
             })
         )
