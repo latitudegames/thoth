@@ -90,12 +90,14 @@ export class Task {
       fromNode,
     } = options
 
+    // garbage means that the nodes output value will be reset after it is all done.
     if (needReset) garbage.push(this)
 
     // This would be a great place to run an animation showing the signal flow.
     // Just needto figure out how to change the folow of the connection attached to a socket on the fly.
     // And animations should follow the flow of the data, not the main IO paths
 
+    // Only run the worker if the outputData isnt already populated.
     if (!this.outputData) {
       const inputs = {} as Record<string, unknown[]>
 
@@ -137,15 +139,22 @@ export class Task {
         })
       )
 
+      // socket info is used internally in the worker if we need to know about where signals come from.
+      // this is mainly used currently by the module plugin to know where the run signal should go to.
       const socketInfo = {
         target: fromSocket ? this.getInputFromConnection(fromSocket) : null,
       }
 
+      // the main output data of the task, which is gathered up when the next node gets this nodes value
       this.outputData = await this.worker(this, inputs, data, socketInfo)
 
+      // an onRun option in case a task whats to do something when the task is run.
       if (this.component.task.onRun)
         this.component.task.onRun(this.node, this, data, socketInfo)
 
+      // this is what propagates the the run command to the next nodes in the chain
+      // this makes use of the 'next' nodes.  It also will filter out any connectios which the task has closed.
+      // it is this functionality that lets us control which direction the run signal flows.
       if (propagate)
         await Promise.all(
           this.next
