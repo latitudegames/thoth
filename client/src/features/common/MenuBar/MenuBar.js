@@ -45,6 +45,10 @@ const MenuBar = () => {
     publish($SAVE_SPELL(activeTabRef.current.id))
   }
 
+  const onEdit = () => {
+    console.log('EDIT SPELL')
+  }
+
   const onNew = () => {
     setLocation('/home/create-new')
   }
@@ -107,6 +111,9 @@ const MenuBar = () => {
       items: {
         new_project: {
           onClick: onNew,
+        },
+        edit: {
+          onClick: onEdit,
         },
         open_project: {
           onClick: onOpen,
