@@ -5,7 +5,7 @@ on:
 jobs:
   merge_job:
     # this job will only run if a PR has been merged
-    if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'thoth-core')
+    if: github.event.s
     runs-on: ubuntu-latest
     env:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -49,5 +49,5 @@ jobs:
           cd core
           npm version patch 
           git add package.json
-          git commit -m "[skip ci] Bump thoth-core to v$(node -pe "require('./package.json').version") and target latest release in thoth-client"
+          git commit -m "Bump thoth-core to v$(node -pe "require('./package.json').version") and target latest release in thoth-client"
           git push
