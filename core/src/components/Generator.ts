@@ -109,7 +109,6 @@ export class Generator extends ThothComponent {
 
     const fewshot = (node.data.fewshot as string) || ''
     const stopSequence = node.data.stop as string
-    const temp = node.data.temp as string
     const template = Handlebars.compile(fewshot)
     const prompt = template(inputs)
 
@@ -117,12 +116,13 @@ export class Generator extends ThothComponent {
       ? stopSequence.split(',').map(i => i.trim())
       : ['/n']
 
-    const temperature = node?.data?.temp ? parseFloat(temp) : 0.7
+    const tempData = node.data.temp as string
+    const temperature = tempData ? parseFloat(tempData) : 0.7
     const maxTokensData = node?.data?.maxTokens as string
     const maxTokens = maxTokensData ? parseInt(maxTokensData) : 50
     const frequencyPenaltyData = node?.data?.frequencyPenalty as string
     const frequencyPenalty = frequencyPenaltyData
-      ? parseInt(frequencyPenaltyData)
+      ? parseFloat(frequencyPenaltyData)
       : 0
 
     const body = {
