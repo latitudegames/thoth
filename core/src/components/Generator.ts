@@ -78,6 +78,11 @@ export class Generator extends ThothComponent {
       icon: 'moon',
     })
 
+    const frequencyPenalty = new InputControl({
+      dataKey: 'frequencyPenalty',
+      name: 'Frequency Penalty',
+    })
+
     node.inspector
       .add(nameControl)
       .add(inputGenerator)
@@ -85,6 +90,7 @@ export class Generator extends ThothComponent {
       .add(stopControl)
       .add(temperatureControl)
       .add(maxTokenControl)
+      .add(frequencyPenalty)
 
     return node
   }
@@ -105,6 +111,7 @@ export class Generator extends ThothComponent {
     const stopSequence = node.data.stop as string
     const temp = node.data.temp as string
     const maxTokensData = node?.data?.maxTokens as string
+    const frequencyPenaltyData = node?.data?.frequencyPenalty as string
     const template = Handlebars.compile(fewshot)
     const prompt = template(inputs)
 
@@ -114,12 +121,16 @@ export class Generator extends ThothComponent {
 
     const temperature = node?.data?.temp ? parseFloat(temp) : 0.7
     const maxTokens = maxTokensData ? parseInt(maxTokensData) : 50
+    const frequencyPenalty = frequencyPenaltyData
+      ? parseInt(frequencyPenaltyData)
+      : 0
 
     const body = {
       prompt,
       stop,
       maxTokens,
       temperature,
+      frequencyPenalty,
     }
     const raw = (await completion(body)) as string
     const result = raw?.trim()
