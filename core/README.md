@@ -1,1 +1,1 @@
-- release trigger.
+- release trigger
