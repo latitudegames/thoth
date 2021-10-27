@@ -5,7 +5,7 @@ on:
 jobs:
   merge_job:
     # this job will only run if a PR has been merged
-    if: github.event.s
+    if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'thoth-core')
     runs-on: ubuntu-latest
     env:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
