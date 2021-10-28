@@ -5,7 +5,7 @@ import { useLocation } from 'wouter'
 import { useAuth } from '../../../contexts/AuthProvider'
 import { useModal } from '../../../contexts/ModalProvider'
 import Modal from '../Modal/Modal'
-import css from './loginModal.module.css'
+import css from './modalForms.module.css'
 
 const LoginModal = ({ title, onClose }) => {
   const [, setLocation] = useLocation()
