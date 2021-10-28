@@ -1,10 +1,5 @@
 import { useEffect, useState } from 'react'
-import {
-  Route,
-  Switch,
-  Redirect,
-  BrowserRouter as Router,
-} from 'react-router-dom'
+import { Route, Switch, Redirect } from 'react-router-dom'
 
 import { useAuth } from './contexts/AuthProvider'
 import { useTabManager } from './contexts/TabManagerProvider'
@@ -65,19 +60,14 @@ function App() {
 
   return (
     <ThothPageWrapper tabs={tabs}>
-      <Router>
-        <Switch>
-          <Route path="/login" component={LoginScreen} />
-          <GuardedRoute path="/thoth" component={Thoth} />
-          <GuardedRoute path="/home" component={HomeScreen} />
-          <GuardedRoute path="/home/create-new" component={CreateNewScreen} />
-          <GuardedRoute
-            path="/home/all-projects"
-            component={AllProjectsScreen}
-          />
-          <Route path="/">{redirect()}</Route>
-        </Switch>
-      </Router>
+      <Switch>
+        <Route path="/login" component={LoginScreen} />
+        <GuardedRoute path="/thoth" component={Thoth} />
+        <GuardedRoute path="/home" component={HomeScreen} />
+        <GuardedRoute path="/home/create-new" component={CreateNewScreen} />
+        <GuardedRoute path="/home/all-projects" component={AllProjectsScreen} />
+        <Route path="/">{redirect()}</Route>
+      </Switch>
     </ThothPageWrapper>
   )
 }
