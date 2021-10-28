@@ -65,22 +65,22 @@ function App() {
 
   return (
     <ThothPageWrapper tabs={tabs}>
-      <Switch>
-        <Route path="/login" auth={authCheck} component={LoginScreen} />
-        <Route path="/thoth" auth={authCheck} component={Thoth} />
-        <GuardedRoute path="/home" auth={authCheck} component={HomeScreen} />
-        <Route
-          path="/home/create-new"
-          auth={authCheck}
-          component={CreateNewScreen}
-        />
-        <Route
-          path="/home/all-projects"
-          auth={user}
-          component={AllProjectsScreen}
-        />
-        <Route path="/">{redirect()}</Route>
-      </Switch>
+        <Switch>
+          <Route path="/login" auth={authCheck} component={LoginScreen} />
+          <GuardedRoute path="/thoth" auth={authCheck} component={Thoth} />
+          <GuardedRoute path="/home" auth={authCheck} component={HomeScreen} />
+          <GuardedRoute
+            path="/home/create-new"
+            auth={authCheck}
+            component={CreateNewScreen}
+          />
+          <GuardedRoute
+            path="/home/all-projects"
+            auth={user}
+            component={AllProjectsScreen}
+          />
+          <Route path="/">{redirect()}</Route>
+        </Switch>
     </ThothPageWrapper>
   )
 }
