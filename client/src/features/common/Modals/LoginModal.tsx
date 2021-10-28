@@ -5,10 +5,10 @@ import { useAuth } from '../../../contexts/AuthProvider'
 import { useModal } from '../../../contexts/ModalProvider'
 import Modal from '../Modal/Modal'
 import css from './modalForms.module.css'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 const LoginModal = ({ title, onClose }) => {
-  const history = useHistory()
+  const navigate = useNavigate()
   const [error, setError] = useState('')
   const { login } = useAuth()
   const { closeModal } = useModal()
@@ -28,7 +28,7 @@ const LoginModal = ({ title, onClose }) => {
 
     if (response.id) {
       closeModal()
-      history.push('/home')
+      navigate('/home')
     }
   })
 
