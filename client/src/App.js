@@ -65,6 +65,7 @@ function App() {
 
   return (
     <ThothPageWrapper tabs={tabs}>
+      <Router>
         <Switch>
           <Route path="/login" auth={authCheck} component={LoginScreen} />
           <GuardedRoute path="/thoth" auth={authCheck} component={Thoth} />
@@ -81,6 +82,7 @@ function App() {
           />
           <Route path="/">{redirect()}</Route>
         </Switch>
+      </Router>
     </ThothPageWrapper>
   )
 }
