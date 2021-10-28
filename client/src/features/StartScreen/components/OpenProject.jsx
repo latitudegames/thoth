@@ -1,4 +1,4 @@
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import { useSpell } from '../../../contexts/SpellProvider'
 import { useTabManager } from '../../../contexts/TabManagerProvider'
@@ -10,7 +10,7 @@ import FileInput from './FileInput'
 import ProjectRow from './ProjectRow'
 
 const OpenProject = ({
-  projects,
+  spells,
   setSelectedProject,
   selectedProject,
   loadFile,
@@ -18,7 +18,7 @@ const OpenProject = ({
   const { tabs } = useTabManager()
   // TODO remove thoth version from spellprovider
   const { getThothVersion } = useSpell()
-  const history = useHistory()
+  const navigate = useNavigate()
 
   return (
     <Panel shadow unpadded>
@@ -40,26 +40,27 @@ const OpenProject = ({
           roundness="round"
           unpadded
         >
-          {projects.map((project, i) => {
+          {spells.map((spell, i) => {
             if (i > 1) return <></>
             return (
               <ProjectRow
                 key={i}
                 setSelectedProject={setSelectedProject}
                 selectedProject={selectedProject}
-                label={project.label}
+                label={spell.name}
                 onClick={() => {
-                  setSelectedProject(project.label)
+                  setSelectedProject(spell.name)
                 }}
               />
             )
           })}
           <ProjectRow
+            key="more"
             label={'More...'}
             icon={'properties'}
             style={{ fontFamily: 'IBM Plex Mono', textTransform: 'uppercase' }}
             onClick={() => {
-              history.push('/home/all-projects')
+              navigate('/home/all-projects')
             }}
           />
         </Panel>
@@ -77,7 +78,7 @@ const OpenProject = ({
           {tabs?.length < 1 && (
             <button
               onClick={() => {
-                history.push('/home/create-new')
+                navigate('/home/create-new')
               }}
             >
               <Icon name="add" style={{ marginRight: 'var(--extraSmall)' }} />
