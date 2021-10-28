@@ -1,6 +1,6 @@
 import { useContext, createContext, useEffect, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import LoadingScreen from '../features/common/LoadingScreen/LoadingScreen'
 import { useDB } from './DatabaseProvider'
@@ -31,7 +31,7 @@ const TabManager = ({ children }) => {
 
   // eslint-disable-next-line no-unused-vars
   const { events, publish } = usePubSub()
-  const history = useHistory()
+  const navigate = useNavigate()
   const [tabs, setTabs] = useState([])
   const [activeTab, setActiveTab] = useState(null)
 
@@ -101,7 +101,7 @@ const TabManager = ({ children }) => {
 
     // Switch to the last tab down.
     if (tabs.length === 0) {
-      history.push('/home')
+      navigate('/home')
       return
     }
     switchTab(tabs[0].id)
