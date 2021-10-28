@@ -1,4 +1,4 @@
-import { useLocation } from 'wouter'
+import { useHistory } from 'react-router-dom'
 
 import { useSpell } from '../../../contexts/SpellProvider'
 import { useTabManager } from '../../../contexts/TabManagerProvider'
@@ -18,8 +18,7 @@ const OpenProject = ({
   const { tabs } = useTabManager()
   // TODO remove thoth version from spellprovider
   const { getThothVersion } = useSpell()
-  // eslint-disable-next-line no-unused-vars
-  const [, setLocation] = useLocation()
+  const history = useHistory()
 
   return (
     <Panel shadow unpadded>
@@ -60,7 +59,7 @@ const OpenProject = ({
             icon={'properties'}
             style={{ fontFamily: 'IBM Plex Mono', textTransform: 'uppercase' }}
             onClick={() => {
-              setLocation('/home/all-projects')
+              history.push('/home/all-projects')
             }}
           />
         </Panel>
@@ -78,7 +77,7 @@ const OpenProject = ({
           {tabs?.length < 1 && (
             <button
               onClick={() => {
-                setLocation('/home/create-new')
+                history.push('/home/create-new')
               }}
             >
               <Icon name="add" style={{ marginRight: 'var(--extraSmall)' }} />
