@@ -6,10 +6,10 @@ import { usePubSub } from '../../../contexts/PubSubProvider'
 import { useTabManager } from '../../../contexts/TabManagerProvider'
 import css from './menuBar.module.css'
 import thothlogo from './thoth.png'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 const MenuBar = () => {
-  const history = useHistory()
+  const navigate = useNavigate()
   const { publish, events } = usePubSub()
   const { activeTab } = useTabManager()
   const { openModal } = useModal()
@@ -59,10 +59,10 @@ const MenuBar = () => {
   }
 
   const onNew = () => {
-    history.push('/home/create-new')
+    navigate('/home/create-new')
   }
   const onOpen = () => {
-    history.push('/home/all-projects')
+    navigate('/home/all-projects')
   }
 
   // const onSerialize = () => {
