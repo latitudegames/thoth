@@ -1,5 +1,6 @@
 import { useContext, createContext, useEffect, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
+import { useHistory } from 'react-router-dom'
 import { useLocation } from 'wouter'
 
 import LoadingScreen from '../features/common/LoadingScreen/LoadingScreen'
@@ -31,8 +32,7 @@ const TabManager = ({ children }) => {
 
   // eslint-disable-next-line no-unused-vars
   const { events, publish } = usePubSub()
-  // eslint-disable-next-line no-unused-vars
-  const [, setLocation] = useLocation()
+  const history = useHistory()
   const [tabs, setTabs] = useState([])
   const [activeTab, setActiveTab] = useState(null)
 
@@ -98,10 +98,11 @@ const TabManager = ({ children }) => {
     publish(events.$CLOSE_EDITOR(tabId))
     await tab.remove()
     const tabs = await db.tabs.find().exec()
+    await refreshTabs()
 
     // Switch to the last tab down.
     if (tabs.length === 0) {
-      setLocation('/home')
+      history.push('/home')
       return
     }
     switchTab(tabs[0].id)
