@@ -12,7 +12,7 @@ import Panel from '../../common/Panel/Panel'
 import emptyImg from '../empty.png'
 import enkiImg from '../enki.png'
 import langImg from '../lang.png'
-import css from '../startScreen.module.css'
+import css from '../homeScreen.module.css'
 import TemplatePanel from './TemplatePanel'
 
 const customConfig = {

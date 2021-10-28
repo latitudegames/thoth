@@ -1,5 +1,5 @@
 import Icon from '../../common/Icon/Icon'
-import css from '../startScreen.module.css'
+import css from '../homeScreen.module.css'
 
 const ProjectRow = ({ label, selectedSpell, onClick, icon, style }) => {
   return (
