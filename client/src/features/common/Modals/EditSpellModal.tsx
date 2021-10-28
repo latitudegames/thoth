@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { useModal } from '../../../contexts/ModalProvider'
+import { usePatchSpellMutation } from '../../../state/spells'
 import { useForm } from 'react-hook-form'
 import Modal from '../Modal/Modal'
 
-const EditSpellModal = ({ content }) => {
+const EditSpellModal = ({ content, spellId, name }) => {
   const [error, setError] = useState('')
+  const [patchSpell] = usePatchSpellMutation()
 
   const { closeModal } = useModal()
   const {
@@ -14,7 +16,7 @@ const EditSpellModal = ({ content }) => {
   } = useForm()
 
   const onSubmit = handleSubmit(async data => {
-    const response: any = await login(data.email, data.password)
+    const response: any = await patchSpell({ spellId, update: data })
 
     if (response.error) {
       setError(response.error.message)
