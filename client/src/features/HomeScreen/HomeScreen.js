@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useHistory, Route, Switch, useNavigate } from 'react-router-dom'
+import { Route, Routes, useNavigate } from 'react-router-dom'
 
 import { useSaveSpellMutation, useGetSpellsQuery } from '../../state/spells'
 import { useDB } from '../../contexts/DatabaseProvider'
@@ -62,29 +62,32 @@ const StartScreen = ({ createNew, allProjects }) => {
   return (
     <div className={css['overlay']}>
       <div className={css['center-container']}>
-        {/* <Router>
-          <Switch path="" />
-          <Switch />
-          <Switch />
-        </Router> */}
-        {createNew && <CreateNew />}
-        {allProjects && (
-          <AllProjects
-            spells={spells}
-            openSpell={openSpell}
-            selectedSpell={selectedSpell}
-            setSelectedSpell={setSelectedSpell}
-            loadFile={loadFile}
+        <Routes>
+          <Route
+            path=""
+            element={
+              <OpenProject
+                spells={spells}
+                selectedSpell={selectedSpell}
+                setSelectedSpell={setSelectedSpell}
+                loadFile={loadFile}
+              />
+            }
           />
-        )}
-        {!createNew && !allProjects && (
-          <OpenProject
-            spells={spells}
-            selectedSpell={selectedSpell}
-            setSelectedSpell={setSelectedSpell}
-            loadFile={loadFile}
+          <Route
+            path="all-projects"
+            element={
+              <AllProjects
+                spells={spells}
+                openSpell={openSpell}
+                selectedSpell={selectedSpell}
+                setSelectedSpell={setSelectedSpell}
+                loadFile={loadFile}
+              />
+            }
           />
-        )}
+          <Route path="create-new" element={<CreateNew />} />
+        </Routes>
       </div>
     </div>
   )
