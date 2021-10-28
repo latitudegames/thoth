@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useLocation } from 'wouter'
+import { useHistory } from 'react-router-dom'
 
 import { useSaveSpellMutation, useGetSpellsQuery } from '../../state/spells'
 import { useDB } from '../../contexts/DatabaseProvider'
@@ -14,7 +14,7 @@ import css from './startScreen.module.css'
 const StartScreen = ({ createNew, allProjects }) => {
   const models = useDB()
   const { openTab } = useTabManager()
-  const [, setLocation] = useLocation()
+  const history = useHistory()
 
   const [saveSpell] = useSaveSpellMutation()
   const { data: spells } = useGetSpellsQuery()
@@ -51,7 +51,7 @@ const StartScreen = ({ createNew, allProjects }) => {
 
   const openSpell = async spell => {
     await openTab({ name: spell.name, spellId: spell.name, type: 'spell' })
-    setLocation('/thoth')
+    history.push('/thoth')
   }
 
   const [selectedSpell, setSelectedSpell] = useState(null)
