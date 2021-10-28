@@ -1,4 +1,4 @@
-import { Route, Redirect } from 'wouter'
+import { Route, Redirect } from 'react-router-dom'
 
 import { useAuth } from '../../../contexts/AuthProvider'
 
