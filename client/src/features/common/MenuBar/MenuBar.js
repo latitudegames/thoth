@@ -1,16 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
-import { useLocation } from 'wouter'
 
 import { useModal } from '../../../contexts/ModalProvider'
 import { usePubSub } from '../../../contexts/PubSubProvider'
 import { useTabManager } from '../../../contexts/TabManagerProvider'
 import css from './menuBar.module.css'
 import thothlogo from './thoth.png'
+import { useHistory } from 'react-router-dom'
 
 const MenuBar = () => {
-  // eslint-disable-next-line no-unused-vars
-  const [, setLocation] = useLocation()
+  const history = useHistory()
   const { publish, events } = usePubSub()
   const { activeTab } = useTabManager()
   const { openModal } = useModal()
@@ -60,10 +59,10 @@ const MenuBar = () => {
   }
 
   const onNew = () => {
-    setLocation('/home/create-new')
+    history.push('/home/create-new')
   }
   const onOpen = () => {
-    setLocation('/home/all-projects')
+    history.push('/home/all-projects')
   }
 
   // const onSerialize = () => {
