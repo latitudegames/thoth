@@ -4,7 +4,7 @@ import {
   adjectives,
   colors,
 } from 'unique-names-generator'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import { useNewSpellMutation } from '../../../state/spells'
 import { useTabManager } from '../../../contexts/TabManagerProvider'
@@ -33,7 +33,7 @@ const templates = [
 ]
 
 const CreateNew = () => {
-  const history = useHistory()
+  const navigate = useNavigate()
   const [selectedTemplate, setSelectedTemplate] = useState(null)
 
   const [newSpell] = useNewSpellMutation()
@@ -53,7 +53,7 @@ const CreateNew = () => {
       spellId: placeholderName,
       type: 'spell',
     })
-    history.pushs('/thoth')
+    navigates('/thoth')
   }
 
   return (
