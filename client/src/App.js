@@ -1,5 +1,10 @@
 import { useEffect, useState } from 'react'
-import { Route, Switch, Redirect } from 'wouter'
+import {
+  Route,
+  Switch,
+  Redirect,
+  BrowserRouter as Router,
+} from 'react-router-dom'
 
 import { useAuth } from './contexts/AuthProvider'
 import { useTabManager } from './contexts/TabManagerProvider'
