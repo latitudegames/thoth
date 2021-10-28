@@ -45,6 +45,10 @@ const MenuBar = () => {
     publish($SAVE_SPELL(activeTabRef.current.id))
   }
 
+  const onSaveAs = () => {
+    console.log('Save as')
+  }
+
   const onEdit = () => {
     console.log('EDIT SPELL')
   }
@@ -124,7 +128,7 @@ const MenuBar = () => {
               onClick: onSave,
             },
             save_project_as: {
-              onClick: onSave,
+              onClick: onSaveAs,
             },
             export_project: {
               onClick: onExport,
