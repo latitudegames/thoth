@@ -55,11 +55,7 @@ const MenuBar = () => {
   const onOpen = () => {
     setLocation('/home/all-projects')
   }
-
-  // const onSerialize = () => {
-  //   publish($SERIALIZE(activeTabRef.current.id));
-  // };
-
+  w
   const onStateManagerCreate = () => {
     publish($CREATE_STATE_MANAGER(activeTabRef.current.id))
   }
