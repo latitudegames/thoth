@@ -1,8 +1,8 @@
 import Icon from '../../common/Icon/Icon'
 import Panel from '../../common/Panel/Panel'
 import css from '../homeScreen.module.css'
-import FileInput from './FileInput'
-import ProjectRow from './ProjectRow'
+import FileInput from '../components/FileInput'
+import ProjectRow from '../components/ProjectRow'
 
 const AllProjects = ({
   spells,
