@@ -50,7 +50,13 @@ const MenuBar = () => {
   }
 
   const onEdit = () => {
-    console.log('EDIT SPELL')
+    openModal({
+      modal: 'editSpellModal',
+      content: 'This is an example modal',
+      tab: activeTab,
+      spellId: activeTab.spell,
+      name: activeTab.spell,
+    })
   }
 
   const onNew = () => {
@@ -116,11 +122,11 @@ const MenuBar = () => {
         new_project: {
           onClick: onNew,
         },
-        edit: {
-          onClick: onEdit,
-        },
         open_project: {
           onClick: onOpen,
+        },
+        edit_project: {
+          onClick: onEdit,
         },
         save: {
           items: {
