@@ -7,7 +7,7 @@ import GuardedRoute from './features/common/GuardedRoute/GuardedRoute'
 import LoadingScreen from './features/common/LoadingScreen/LoadingScreen'
 import ThothPageWrapper from './features/common/ThothPage/ThothPageWrapper'
 import LoginScreen from './features/Login/LoginScreen'
-import StartScreen from './features/StartScreen/StartScreen'
+import HomeScreen from './features/HomeScreen/HomeScreen'
 import Thoth from './features/Thoth/Thoth'
 
 import 'flexlayout-react/style/dark.css'
@@ -38,15 +38,15 @@ function App() {
   }, [])
 
   const CreateNewScreen = () => {
-    return <StartScreen createNew={true} />
+    return <HomeScreen createNew={true} />
   }
 
   const AllProjectsScreen = () => {
-    return <StartScreen allProjects={true} />
+    return <HomeScreen allProjects={true} />
   }
 
   const HomeScreen = () => {
-    return <StartScreen />
+    return <HomeScreen />
   }
 
   const redirect = () => {

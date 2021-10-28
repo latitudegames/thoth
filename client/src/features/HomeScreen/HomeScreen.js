@@ -7,7 +7,7 @@ import { useTabManager } from '../../contexts/TabManagerProvider'
 import AllProjects from './components/AllProjects'
 import CreateNew from './components/CreateNew'
 import OpenProject from './components/OpenProject'
-import css from './startScreen.module.css'
+import css from './homeScreen.module.css'
 import LoadingScreen from '../common/LoadingScreen/LoadingScreen'
 
 //MAIN
