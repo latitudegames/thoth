@@ -1,5 +1,5 @@
 import Panel from '../../common/Panel/Panel'
-import css from '../startScreen.module.css'
+import css from '../homeScreen.module.css'
 
 const TemplatePanel = ({
   label,
