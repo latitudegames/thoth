@@ -37,18 +37,6 @@ function App() {
     })()
   }, [])
 
-  const CreateNewScreen = () => {
-    return <HomeScreen createNew={true} />
-  }
-
-  const AllProjectsScreen = () => {
-    return <HomeScreen allProjects={true} />
-  }
-
-  const HomeScreen = () => {
-    return <HomeScreen />
-  }
-
   const redirect = () => {
     if (user && tabs.length > 0) {
       return <Navigate to="/thoth" />
@@ -64,12 +52,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<LoginScreen />} />
         <GuardedRoute path="/thoth" element={<Thoth />} />
-        <GuardedRoute path="/home" element={<HomeScreen />} />
-        <GuardedRoute path="/home/create-new" element={<CreateNewScreen />} />
-        <GuardedRoute
-          path="/home/all-projects"
-          element={<AllProjectsScreen />}
-        />
+        <GuardedRoute path="/home/*" element={<HomeScreen />} />
         <Route path="/" element={redirect()} />
       </Routes>
     </ThothPageWrapper>
