@@ -16,6 +16,7 @@ const Context = createContext({
   closeTab: () => {},
   saveTabLayout: () => {},
   clearTabs: () => {},
+  updateTab: (tabId, update) => Promise.resolve(),
 })
 
 // Map of workspaces
@@ -52,6 +53,14 @@ const TabManager = ({ children }) => {
   const refreshTabs = async () => {
     const tabs = await db.tabs.find().exec()
     if (tabs && tabs.length > 0) setTabs(tabs.map(tab => tab.toJSON()))
+  }
+
+  const updateTab = async (tabId, update) => {
+    const tab = await db.tabs.findOne({ selector: { id: tabId } }).exec()
+    if (!tab) return
+
+    await tab.atomicPatch(update)
+    await refreshTabs()
   }
 
   const openTab = async ({
@@ -99,7 +108,6 @@ const TabManager = ({ children }) => {
   }
 
   const switchTab = async (tabId, query) => {
-    console.log('Switching tab')
     const selector = query ? query : { id: tabId }
     const tab = await db.tabs.findOne({ selector }).exec()
     if (!tab) return false
@@ -127,6 +135,7 @@ const TabManager = ({ children }) => {
     closeTab,
     saveTabLayout,
     clearTabs,
+    updateTab,
   }
 
   if (!tabs) return <LoadingScreen />
