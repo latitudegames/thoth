@@ -6,8 +6,8 @@ import Icon from '../../common/Icon/Icon'
 import Panel from '../../common/Panel/Panel'
 import css from '../homeScreen.module.css'
 import thothBanner from '../version-banner-0.0.0beta.jpg'
-import FileInput from './FileInput'
-import ProjectRow from './ProjectRow'
+import FileInput from '../components/FileInput'
+import ProjectRow from '../components/ProjectRow'
 
 const OpenProject = ({
   spells,
