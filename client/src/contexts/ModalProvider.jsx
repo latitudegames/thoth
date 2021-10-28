@@ -15,8 +15,8 @@ const ModalContext = ({ children }) => {
   const modalList = getModals()
   const [activeModal, setActiveModal] = useState('')
 
-  const openModal = ({ modal, content, title, onClose, options }) => {
-    setActiveModal({ modal, content, title, onClose, options })
+  const openModal = modalOptions => {
+    setActiveModal(modalOptions)
   }
 
   const closeModal = () => {
@@ -31,15 +31,7 @@ const ModalContext = ({ children }) => {
         closeModal,
       }}
     >
-      {activeModal && (
-        <Modal
-          content={activeModal.content}
-          options={activeModal.options}
-          title={activeModal.title}
-          icon={activeModal.icon}
-          onClose={activeModal.onClose}
-        />
-      )}
+      {activeModal && <Modal {...activeModal} />}
       {children}
     </Context.Provider>
   )
