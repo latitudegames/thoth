@@ -127,8 +127,8 @@ export const spellApi = createApi({
         }
       },
     }),
-    patchSpell: builder.mutation<DeployedSpellVersion, PatchArgs>({
-      invalidatesTags: ['Version'],
+    patchSpell: builder.mutation<Spell, PatchArgs>({
+      invalidatesTags: ['Spell'],
       query({ spellId, update }) {
         return {
           url: `/spells/${spellId}`,
