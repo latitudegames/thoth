@@ -47,6 +47,11 @@ export interface DeployArgs {
   message: string
 }
 
+export interface PatchArgs {
+  spellId: string
+  update: Partial<Spell>
+}
+
 export const spellApi = createApi({
   reducerPath: 'spellApi',
   baseQuery: fetchBaseQuery({
@@ -122,6 +127,18 @@ export const spellApi = createApi({
         }
       },
     }),
+    patchSpell: builder.mutation<DeployedSpellVersion, PatchArgs>({
+      invalidatesTags: ['Version'],
+      query({ spellId, update }) {
+        return {
+          url: `/spells/${spellId}`,
+          body: {
+            ...update,
+          },
+          method: 'PATCH',
+        }
+      },
+    }),
     deploySpell: builder.mutation<DeployedSpellVersion, DeployArgs>({
       invalidatesTags: ['Version'],
       query({ spellId, message }) {
@@ -179,6 +196,7 @@ export const {
   useNewSpellMutation,
   useSaveSpellMutation,
   useDeploySpellMutation,
+  usePatchSpellMutation,
   useGetDeploymentsQuery,
 } = spellApi
 
