@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "NODE_ENV=development webpack serve --config webpack.dev.js",
-    "clean": "rimraf dist",
+    "clean": "rimraf ../build",
     "lint": "eslint . --ignore-path ../.eslintignore --ext ts --ext tsx --ext js --ext jsx",
     "lint:fix": "eslint . --ignore-path ../.eslintignore --ext ts --ext tsx --ext js --ext jsx --fix",
     "build": "yarn clean && webpack build --config webpack.prod.js",
