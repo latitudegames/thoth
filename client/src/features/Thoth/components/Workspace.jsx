@@ -57,7 +57,7 @@ const Workspace = ({ tab, tabs, appPubSub }) => {
 
   useEffect(() => {
     if (!tab || !tab.spell) return
-    loadSpell(tab.spell)
+    loadSpell(tab.spell, { refetchOnMountOrArgChange: true })
   }, [tab])
 
   const factory = tab => {
