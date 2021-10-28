@@ -45,7 +45,7 @@ function App() {
   }
 
   const HomeScreen = () => {
-    return <StartScreen createNew={true} />
+    return <StartScreen />
   }
 
   const redirect = () => {
@@ -61,11 +61,14 @@ function App() {
   return (
     <ThothPageWrapper tabs={tabs}>
       <Switch>
-        <Route path="/login" component={LoginScreen} />
-        <GuardedRoute path="/thoth" component={Thoth} />
-        <GuardedRoute path="/home" component={HomeScreen} />
-        <GuardedRoute path="/home/create-new" component={CreateNewScreen} />
-        <GuardedRoute path="/home/all-projects" component={AllProjectsScreen} />
+        <Route path="/login" children={<LoginScreen />} />
+        <GuardedRoute path="/thoth" children={<Thoth />} />
+        <GuardedRoute path="/home" children={<HomeScreen />} />
+        <GuardedRoute path="/home/create-new" children={<CreateNewScreen />} />
+        <GuardedRoute
+          path="/home/all-projects"
+          children={<AllProjectsScreen />}
+        />
         <Route path="/">{redirect()}</Route>
       </Switch>
     </ThothPageWrapper>
