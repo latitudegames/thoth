@@ -13,7 +13,7 @@ import emptyImg from '../empty.png'
 import enkiImg from '../enki.png'
 import langImg from '../lang.png'
 import css from '../homeScreen.module.css'
-import TemplatePanel from './TemplatePanel'
+import TemplatePanel from '../components/TemplatePanel'
 
 const customConfig = {
   dictionaries: [adjectives, colors],
