@@ -41,6 +41,12 @@ const DeployModal = ({ content, onClose, options: _options }) => {
       >
         {_options.version}
       </p>
+      <h4>VERSION NAME</h4>
+      <input
+        type="text"
+        style={{ width: '100%' }}
+        onChange={updateVersionName}
+      />
       <h4>CHANGE NOTES</h4>
       <input type="text" style={{ width: '100%' }} onChange={updateNotes} />
     </Modal>
