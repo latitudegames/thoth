@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useSnackbar } from 'notistack'
 import {
   useGetSpellQuery,
   useSaveSpellMutation,
@@ -7,12 +8,13 @@ import { useTabManager } from '../../../contexts/TabManagerProvider'
 import { useForm } from 'react-hook-form'
 import Modal from '../Modal/Modal'
 import css from './modalForms.module.css'
-import { useSnackbar } from 'notistack'
 
 const EditSpellModal = ({ tab, closeModal }) => {
   const [error, setError] = useState('')
-  const [saveSpell] = useSaveSpellMutation()
-  const { data: spell } = useGetSpellQuery(tab.spell, { skip: !tab.spell })
+  const [saveSpell, { isLoading }] = useSaveSpellMutation()
+  const { data: spell } = useGetSpellQuery(tab.spell, {
+    skip: !tab.spell,
+  })
   const { openTab } = useTabManager()
   const { enqueueSnackbar } = useSnackbar()
 
@@ -55,6 +57,7 @@ const EditSpellModal = ({ tab, closeModal }) => {
       className: `${css['loginButton']} primary`,
       label: 'Save spell as',
       onClick: onSubmit,
+      disabled: isLoading,
     },
   ]
 
