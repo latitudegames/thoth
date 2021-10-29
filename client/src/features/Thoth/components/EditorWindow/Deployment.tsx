@@ -118,6 +118,9 @@ const DeploymentView = ({ open, setOpen, spellId }) => {
                     }`}
                     defaultExpanded={true}
                   >
+                    <button className={css['load-button'] + ' extra-small'}>
+                      Load
+                    </button>
                     <div
                       style={{
                         display: 'flex',
