@@ -14,7 +14,7 @@ import {
   useGetDeploymentsQuery,
   selectSpellById,
   useDeploySpellMutation,
-} from '../../../../state/spells'
+} from '../../../../state/api/spells'
 
 const DeploymentView = ({ open, setOpen, spellId }) => {
   const { openModal, closeModal } = useModal()
