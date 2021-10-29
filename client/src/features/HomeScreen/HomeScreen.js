@@ -59,7 +59,7 @@ const StartScreen = ({ createNew, allProjects }) => {
     try {
       await deleteSpell(spellId)
     } catch (err) {
-      console.log('Error deleteing spell', err)
+      console.log('Error deleting spell', err)
     }
   }
 
@@ -81,6 +81,7 @@ const StartScreen = ({ createNew, allProjects }) => {
             element={
               <OpenProject
                 spells={spells}
+                openSpell={openSpell}
                 selectedSpell={selectedSpell}
                 setSelectedSpell={setSelectedSpell}
                 loadFile={loadFile}
