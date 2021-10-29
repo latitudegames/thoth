@@ -1,17 +1,15 @@
 import { useState } from 'react'
-// import { useModal } from '../../../contexts/ModalProvider'
 import { usePatchSpellMutation } from '../../../state/api/spells'
 import { useTabManager } from '../../../contexts/TabManagerProvider'
 import { useForm } from 'react-hook-form'
 import Modal from '../Modal/Modal'
 import css from './modalForms.module.css'
 
-const EditSpellModal = ({ content, spellId, name, tab }) => {
+const EditSpellModal = ({ closeModal, spellId, name, tab }) => {
   const [error, setError] = useState('')
   const [patchSpell] = usePatchSpellMutation()
   const { updateTab } = useTabManager()
 
-  // const { closeModal } = useModal()
   const {
     register,
     handleSubmit,
@@ -26,7 +24,9 @@ const EditSpellModal = ({ content, spellId, name, tab }) => {
       return
     }
 
-    if (data.name) updateTab(tab.id, { name: data.name, spell: data.name })
+    if (data.name)
+      await updateTab(tab.id, { name: data.name, spell: data.name })
+    closeModal()
   })
 
   // notes
