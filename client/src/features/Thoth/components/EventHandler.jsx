@@ -34,6 +34,7 @@ const EventHandler = ({ pubSub, tab }) => {
     $UNDO,
     $REDO,
     $SAVE_SPELL,
+    $SAVE_SPELL_AS,
     $CREATE_STATE_MANAGER,
     $CREATE_PLAYTEST,
     $CREATE_INSPECTOR,
@@ -48,6 +49,10 @@ const EventHandler = ({ pubSub, tab }) => {
     const chain = serialize(currentSpell)
 
     await saveSpellMutation({ ...currentSpell, chain })
+  }
+
+  const saveSpellAs = async () => {
+    console.log('Save spell as')
   }
 
   const createStateManager = () => {
@@ -114,6 +119,7 @@ const EventHandler = ({ pubSub, tab }) => {
 
   const handlerMap = {
     [$SAVE_SPELL(tab.id)]: saveSpell,
+    [$SAVE_SPELL_AS(tab.id)]: saveSpellAs,
     [$CREATE_STATE_MANAGER(tab.id)]: createStateManager,
     [$CREATE_PLAYTEST(tab.id)]: createPlaytest,
     [$CREATE_INSPECTOR(tab.id)]: createInspector,
