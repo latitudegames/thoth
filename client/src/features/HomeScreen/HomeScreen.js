@@ -1,7 +1,11 @@
 import React, { useState } from 'react'
 import { Route, Routes, useNavigate } from 'react-router-dom'
 
-import { useSaveSpellMutation, useGetSpellsQuery } from '../../state/spells'
+import {
+  useSaveSpellMutation,
+  useGetSpellsQuery,
+  useDeleteSpellMutation,
+} from '../../state/spells'
 import { useDB } from '../../contexts/DatabaseProvider'
 import { useTabManager } from '../../contexts/TabManagerProvider'
 import AllProjects from './screens/AllProjects'
@@ -18,6 +22,7 @@ const StartScreen = ({ createNew, allProjects }) => {
   const navigate = useNavigate()
 
   const [saveSpell] = useSaveSpellMutation()
+  const [deleteSpell] = useDeleteSpellMutation()
   const { data: spells } = useGetSpellsQuery()
 
   const onReaderLoad = async event => {
@@ -50,8 +55,12 @@ const StartScreen = ({ createNew, allProjects }) => {
     reader.readAsText(selectedFile)
   }
 
-  const deleteSpell = spellId => {
-    console.log('DELETE SPWELL', spellId)
+  const onDelete = async spellId => {
+    try {
+      await deleteSpell(spellId)
+    } catch (err) {
+      console.log('Error deleteing spell', err)
+    }
   }
 
   const openSpell = async spell => {
@@ -87,7 +96,7 @@ const StartScreen = ({ createNew, allProjects }) => {
                 selectedSpell={selectedSpell}
                 setSelectedSpell={setSelectedSpell}
                 loadFile={loadFile}
-                onDelete={deleteSpell}
+                onDelete={onDelete}
               />
             }
           />
