@@ -18,9 +18,11 @@ import {
   useLazyGetDeploymentQuery,
   useSaveSpellMutation,
 } from '../../../../state/api/spells'
+import { useEditor } from '../../../../contexts/EditorProvider'
 
 const DeploymentView = ({ open, setOpen, spellId, close }) => {
   const [loadingVersion, setLoadingVersion] = useState(false)
+  const { loadChain } = useEditor()
   const { openModal, closeModal } = useModal()
   const { enqueueSnackbar } = useSnackbar()
 
@@ -56,15 +58,14 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
   useEffect(() => {
     if (!deploymentData || !loadingVersion) return
     ;(async () => {
+      close()
       await saveSpell({ ...spell, chain: deploymentData.chain })
       enqueueSnackbar(`version ${deploymentData.version} loaded!`, {
         variant: 'success',
       })
       setLoadingVersion(false)
-      close()
+      loadChain(deploymentData.chain)
     })()
-
-    console.log('load the version', deploymentData)
   }, [deploymentData])
 
   const copy = url => {
