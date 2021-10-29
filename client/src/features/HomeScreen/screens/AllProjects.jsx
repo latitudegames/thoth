@@ -40,7 +40,6 @@ const AllProjects = ({
             <ProjectRow
               key={i}
               spell={spell}
-              setSelectedSpell={setSelectedSpell}
               selectedSpell={selectedSpell}
               label={spell.name}
               onDelete={onDelete}
