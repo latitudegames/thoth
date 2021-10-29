@@ -1,5 +1,4 @@
 import { useState } from 'react'
-// import { useModal } from '../../../contexts/ModalProvider'
 import {
   useGetSpellQuery,
   useSaveSpellMutation,
@@ -9,13 +8,12 @@ import { useForm } from 'react-hook-form'
 import Modal from '../Modal/Modal'
 import css from './modalForms.module.css'
 
-const EditSpellModal = ({ tab }) => {
+const EditSpellModal = ({ tab, closeModal }) => {
   const [error, setError] = useState('')
   const [saveSpell] = useSaveSpellMutation()
   const { data: spell } = useGetSpellQuery(tab.spell, { skip: !tab.spell })
   const { openTab } = useTabManager()
 
-  // const { closeModal } = useModal()
   const {
     register,
     handleSubmit,
@@ -42,11 +40,8 @@ const EditSpellModal = ({ tab }) => {
       type: 'spell',
     })
 
-    // if (data.name) updateTab(tab.id, { name: data.name, spell: data.name })
+    closeModal()
   })
-
-  // notes
-  // after you save the spell, you need to refetch it?a
 
   const options = [
     {
