@@ -13,7 +13,7 @@ const DeployModal = ({ content, onClose, options: _options }) => {
       label: 'Deploy',
       className: 'primary',
       onClick: () => {
-        onClose(notes)
+        onClose({ message, versionName })
       },
     },
   ]
