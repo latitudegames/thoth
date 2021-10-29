@@ -9,6 +9,7 @@ import ProjectRow from '../components/ProjectRow'
 const AllProjects = ({
   spells,
   openSpell,
+  onDelete,
   setSelectedSpell,
   selectedSpell,
   loadFile,
@@ -41,6 +42,7 @@ const AllProjects = ({
               setSelectedSpell={setSelectedSpell}
               selectedSpell={selectedSpell}
               label={spell.name}
+              onDelete={onDelete}
               onClick={() => {
                 setSelectedSpell(spell)
               }}
