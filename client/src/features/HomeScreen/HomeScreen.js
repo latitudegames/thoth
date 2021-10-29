@@ -50,6 +50,10 @@ const StartScreen = ({ createNew, allProjects }) => {
     reader.readAsText(selectedFile)
   }
 
+  const deleteSpell = spellId => {
+    console.log('DELETE SPWELL', spellId)
+  }
+
   const openSpell = async spell => {
     await openTab({ name: spell.name, spellId: spell.name, type: 'spell' })
     navigate('/thoth')
@@ -83,6 +87,7 @@ const StartScreen = ({ createNew, allProjects }) => {
                 selectedSpell={selectedSpell}
                 setSelectedSpell={setSelectedSpell}
                 loadFile={loadFile}
+                onDelete={deleteSpell}
               />
             }
           />
