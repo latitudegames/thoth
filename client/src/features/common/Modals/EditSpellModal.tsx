@@ -1,6 +1,6 @@
 import { useState } from 'react'
 // import { useModal } from '../../../contexts/ModalProvider'
-import { usePatchSpellMutation } from '../../../state/spells'
+import { usePatchSpellMutation } from '../../../state/api/spells'
 import { useTabManager } from '../../../contexts/TabManagerProvider'
 import { useForm } from 'react-hook-form'
 import Modal from '../Modal/Modal'
