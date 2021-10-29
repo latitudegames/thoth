@@ -113,7 +113,9 @@ const DeploymentView = ({ open, setOpen, spellId }) => {
                 return (
                   <SimpleAccordion
                     key={deploy.version}
-                    heading={deploy.version}
+                    heading={`${deploy.version}${
+                      deploy.versionName ? ' - ' + deploy.versionName : ''
+                    }`}
                     defaultExpanded={true}
                   >
                     <div
