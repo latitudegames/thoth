@@ -119,7 +119,6 @@ const EventHandler = ({ pubSub, tab }) => {
 
   const handlerMap = {
     [$SAVE_SPELL(tab.id)]: saveSpell,
-    [$SAVE_SPELL_AS(tab.id)]: saveSpellAs,
     [$CREATE_STATE_MANAGER(tab.id)]: createStateManager,
     [$CREATE_PLAYTEST(tab.id)]: createPlaytest,
     [$CREATE_INSPECTOR(tab.id)]: createInspector,
