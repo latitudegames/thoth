@@ -6,7 +6,7 @@ import {
 } from 'unique-names-generator'
 import { useNavigate } from 'react-router-dom'
 
-import { useNewSpellMutation } from '../../../state/spells'
+import { useNewSpellMutation } from '../../../state/api/spells'
 import { useTabManager } from '../../../contexts/TabManagerProvider'
 import Panel from '../../common/Panel/Panel'
 import emptyImg from '../empty.png'
