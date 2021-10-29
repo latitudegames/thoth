@@ -5,7 +5,7 @@ import {
   useSaveSpellMutation,
   useGetSpellsQuery,
   useDeleteSpellMutation,
-} from '../../state/spells'
+} from '../../state/api/spells'
 import { useDB } from '../../contexts/DatabaseProvider'
 import { useTabManager } from '../../contexts/TabManagerProvider'
 import AllProjects from './screens/AllProjects'
