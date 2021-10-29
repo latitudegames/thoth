@@ -18,7 +18,7 @@ import LoadingScreen from '../common/LoadingScreen/LoadingScreen'
 
 const StartScreen = ({ createNew, allProjects }) => {
   const models = useDB()
-  const { openTab } = useTabManager()
+  const { openTab, closeTabBySpellId } = useTabManager()
   const navigate = useNavigate()
 
   const [saveSpell] = useSaveSpellMutation()
@@ -58,6 +58,7 @@ const StartScreen = ({ createNew, allProjects }) => {
   const onDelete = async spellId => {
     try {
       await deleteSpell(spellId)
+      await closeTabBySpellId(spellId)
     } catch (err) {
       console.log('Error deleting spell', err)
     }
