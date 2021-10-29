@@ -39,6 +39,7 @@ const AllProjects = ({
           {spells.map((spell, i) => (
             <ProjectRow
               key={i}
+              spell={spell}
               setSelectedSpell={setSelectedSpell}
               selectedSpell={selectedSpell}
               label={spell.name}
