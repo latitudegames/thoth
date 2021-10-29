@@ -142,7 +142,7 @@ export const spellApi = createApi({
     deleteSpell: builder.mutation<string[], boolean>({
       invalidatesTags: ['Spell'],
       query: spellId => ({
-        url: `/spells/deployed/${spellId}`,
+        url: `/spells/${spellId}`,
         method: 'DELETE',
       }),
     }),
