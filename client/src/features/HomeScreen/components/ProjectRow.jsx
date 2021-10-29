@@ -6,6 +6,7 @@ const ProjectRow = ({
   selectedSpell,
   onClick,
   icon,
+  spell,
   style,
   onDelete = false,
 }) => {
@@ -26,8 +27,7 @@ const ProjectRow = ({
         <Icon
           name="minus"
           onClick={() => {
-            if (!selectedSpell.name) return
-            onDelete(selectedSpell.name)
+            onDelete(spell.name)
           }}
           style={{
             marginRight: 'var(--extraSmall)',
