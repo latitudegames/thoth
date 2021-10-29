@@ -20,9 +20,10 @@ export const dataControlCategories = {
   'Max Tokens': 'moon',
 }
 
-const Icon = ({ name = 'warn', size = 16, style }) => {
+const Icon = ({ name = 'warn', size = 16, style, onClick = () => {} }) => {
   return (
     <div
+      onClick={onClick}
       className={`${css['icon']} ${css[name]}`}
       style={{ height: size, width: size, ...style }}
     ></div>
