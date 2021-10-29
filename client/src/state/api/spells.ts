@@ -35,6 +35,7 @@ export interface DeployedSpellVersion {
   spellId: string
   version: string
   message?: string
+  versionName?: string
   url?: string
 }
 
