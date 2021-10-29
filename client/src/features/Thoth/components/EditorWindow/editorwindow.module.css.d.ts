@@ -9,6 +9,7 @@ interface CssExports {
   'folder-arrow': string;
   'inactive': string;
   'list-item': string;
+  'load-button': string;
   'message': string;
 }
 export const cssExports: CssExports;
