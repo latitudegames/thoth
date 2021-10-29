@@ -139,6 +139,13 @@ export const spellApi = createApi({
         }
       },
     }),
+    deleteSpell: builder.mutation<string[], boolean>({
+      invalidatesTags: ['Spell'],
+      query: spellId => ({
+        url: `/spells/deployed/${spellId}`,
+        method: 'DELETE',
+      }),
+    }),
     deploySpell: builder.mutation<DeployedSpellVersion, DeployArgs>({
       invalidatesTags: ['Version'],
       query({ spellId, message }) {
@@ -194,6 +201,7 @@ export const {
   useGetSpellsQuery,
   useLazyGetSpellQuery,
   useNewSpellMutation,
+  useDeleteSpellMutation,
   useSaveSpellMutation,
   useDeploySpellMutation,
   usePatchSpellMutation,
