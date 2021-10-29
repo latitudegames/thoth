@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useSnackbar } from 'notistack'
 import { usePatchSpellMutation } from '../../../state/api/spells'
 import { useTabManager } from '../../../contexts/TabManagerProvider'
 import { useForm } from 'react-hook-form'
@@ -7,7 +8,9 @@ import css from './modalForms.module.css'
 
 const EditSpellModal = ({ closeModal, spellId, name, tab }) => {
   const [error, setError] = useState('')
-  const [patchSpell] = usePatchSpellMutation()
+  const [patchSpell, { isLoading }] = usePatchSpellMutation()
+  const { enqueueSnackbar } = useSnackbar()
+
   const { updateTab } = useTabManager()
 
   const {
@@ -21,11 +24,17 @@ const EditSpellModal = ({ closeModal, spellId, name, tab }) => {
 
     if (response.error) {
       setError(response.error.message)
+      enqueueSnackbar('Error saving spell', {
+        variant: 'error',
+      })
       return
     }
 
+    enqueueSnackbar('Spell saved', { variant: 'success' })
+
     if (data.name)
       await updateTab(tab.id, { name: data.name, spell: data.name })
+
     closeModal()
   })
 
@@ -37,6 +46,7 @@ const EditSpellModal = ({ closeModal, spellId, name, tab }) => {
       className: `${css['loginButton']} primary`,
       label: 'save',
       onClick: onSubmit,
+      disabled: isLoading,
     },
   ]
 
