@@ -9,7 +9,7 @@ import {
   useSaveSpellMutation,
   selectSpellsByModuleName,
   selectSpellById,
-} from '../../../state/spells'
+} from '../../../state/api/spells'
 import WorkspaceProvider from '../../../contexts/WorkspaceProvider'
 import { debounce } from '../../../utils/debounce'
 import EditorWindow from './EditorWindow'
