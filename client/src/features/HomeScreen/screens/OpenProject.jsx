@@ -11,9 +11,10 @@ import ProjectRow from '../components/ProjectRow'
 
 const OpenProject = ({
   spells,
-  setSelectedProject,
-  selectedProject,
+  setSelectedSpell,
+  selectedSpell,
   loadFile,
+  openSpell,
 }) => {
   const { tabs } = useTabManager()
   // TODO remove thoth version from spellprovider
@@ -45,11 +46,10 @@ const OpenProject = ({
             return (
               <ProjectRow
                 key={i}
-                setSelectedProject={setSelectedProject}
-                selectedProject={selectedProject}
+                selectedSpell={selectedSpell}
                 label={spell.name}
                 onClick={() => {
-                  setSelectedProject(spell.name)
+                  setSelectedSpell(spell)
                 }}
               />
             )
@@ -86,7 +86,12 @@ const OpenProject = ({
             </button>
           )}
           <FileInput loadFile={loadFile} />
-          <button className={!selectedProject ? 'disabled' : 'primary'}>
+          <button
+            onClick={() => {
+              openSpell(selectedSpell)
+            }}
+            className={!selectedSpell ? 'disabled' : 'primary'}
+          >
             OPEN
           </button>
         </div>
