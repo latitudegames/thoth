@@ -27,9 +27,9 @@ const DeploymentView = ({ open, setOpen, spellId }) => {
     skip: !spell?.name,
   })
 
-  const deploy = message => {
+  const deploy = data => {
     if (!spell) return
-    deploySpell({ spellId: spell.name, message })
+    deploySpell({ spellId: spell.name, ...data })
     enqueueSnackbar('Spell deployed', { variant: 'success' })
   }
 
@@ -90,9 +90,9 @@ const DeploymentView = ({ open, setOpen, spellId }) => {
                     version:
                       '0.0.' + (deployments ? deployments?.length + 1 : 0),
                   },
-                  onClose: notes => {
+                  onClose: data => {
                     closeModal()
-                    deploy(notes)
+                    deploy(data)
                   },
                 })
               }}
