@@ -7,12 +7,14 @@ import { useTabManager } from '../../../contexts/TabManagerProvider'
 import { useForm } from 'react-hook-form'
 import Modal from '../Modal/Modal'
 import css from './modalForms.module.css'
+import { useSnackbar } from 'notistack'
 
 const EditSpellModal = ({ tab, closeModal }) => {
   const [error, setError] = useState('')
   const [saveSpell] = useSaveSpellMutation()
   const { data: spell } = useGetSpellQuery(tab.spell, { skip: !tab.spell })
   const { openTab } = useTabManager()
+  const { enqueueSnackbar } = useSnackbar()
 
   const {
     register,
@@ -28,9 +30,14 @@ const EditSpellModal = ({ tab, closeModal }) => {
 
     if (saveResponse.error) {
       // show snackbar
+      enqueueSnackbar('Error saving spell', {
+        variant: 'error',
+      })
       setError(saveResponse.error.message)
       return
     }
+
+    enqueueSnackbar('Spell saved', { variant: 'success' })
 
     // show snackbar
     // open a new tab to the new spell
