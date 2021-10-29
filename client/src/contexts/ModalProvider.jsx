@@ -16,7 +16,7 @@ const ModalContext = ({ children }) => {
   const [activeModal, setActiveModal] = useState('')
 
   const openModal = modalOptions => {
-    setActiveModal(modalOptions)
+    setActiveModal({ ...modalOptions, closeModal })
   }
 
   const closeModal = () => {
