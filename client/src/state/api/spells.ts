@@ -44,6 +44,11 @@ export interface DeployArgs {
   message: string
 }
 
+export interface GetDeployArgs {
+  spellId: string
+  version: string
+}
+
 export interface PatchArgs {
   spellId: string
   update: Partial<Spell>
@@ -146,6 +151,12 @@ export const spellApi = rootApi.injectEndpoints({
       providesTags: ['Version'],
       query: spellId => ({ url: `game/spells/deployed/${spellId}` }),
     }),
+    getDeployment: builder.query<DeployedSpellVersion[], GetDeployArgs>({
+      providesTags: ['Version'],
+      query: ({ spellId, version }) => ({
+        url: `game/spells/deployed/${spellId}/${version}`,
+      }),
+    }),
   }),
 })
 
@@ -190,6 +201,7 @@ export const {
   useDeploySpellMutation,
   usePatchSpellMutation,
   useGetDeploymentsQuery,
+  useGetDeploymentQuery,
 } = spellApi
 
 export const useGetSpellSubscription =
