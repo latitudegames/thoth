@@ -134,12 +134,10 @@ export const spellApi = rootApi.injectEndpoints({
     }),
     deploySpell: builder.mutation<DeployedSpellVersion, DeployArgs>({
       invalidatesTags: ['Version'],
-      query({ spellId, message }) {
+      query({ spellId, ...update }) {
         return {
           url: `game/spells/${spellId}/deploy`,
-          body: {
-            message,
-          },
+          body: update,
           method: 'POST',
         }
       },
