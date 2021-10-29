@@ -6,7 +6,7 @@ import Modal from '../Modal/Modal'
 
 const DeployModal = ({ content, onClose, options: _options }) => {
   const { closeModal } = useModal()
-  const [notes, setNotes] = useState('')
+  const [message, setMessage] = useState('')
   const options = [
     {
       label: 'Deploy',
@@ -17,7 +17,7 @@ const DeployModal = ({ content, onClose, options: _options }) => {
     },
   ]
   const updateNotes = e => {
-    setNotes(e.target.value)
+    setMessage(e.target.value)
   }
   return (
     <Modal title="New Deployment" options={options} icon="add">
