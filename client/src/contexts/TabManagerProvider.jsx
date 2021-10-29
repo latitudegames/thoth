@@ -16,6 +16,7 @@ const Context = createContext({
   closeTab: () => {},
   saveTabLayout: () => {},
   clearTabs: () => {},
+  closeTabBySpellId: spellId => {},
   updateTab: (tabId, update) => Promise.resolve(),
 })
 
@@ -122,6 +123,14 @@ const TabManager = ({ children }) => {
     await db.tabs.find().remove()
   }
 
+  const closeTabBySpellId = async spellId => {
+    const tab = await db.tabs.findOne({ selector: { spell: spellId } }).exec()
+    if (!tab) return false
+
+    await closeTab(tab.id)
+    return true
+  }
+
   const saveTabLayout = async (tabId, json) => {
     const tab = await db.tabs.findOne({ selector: { id: tabId } }).exec()
     await tab.atomicPatch({ layoutJson: json })
@@ -136,6 +145,7 @@ const TabManager = ({ children }) => {
     saveTabLayout,
     clearTabs,
     updateTab,
+    closeTabBySpellId,
   }
 
   if (!tabs) return <LoadingScreen />
