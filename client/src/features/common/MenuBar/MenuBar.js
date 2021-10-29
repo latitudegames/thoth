@@ -23,6 +23,7 @@ const MenuBar = () => {
   // grab all events we need
   const {
     $SAVE_SPELL,
+    $SAVE_SPELL_AS,
     $CREATE_STATE_MANAGER,
     $CREATE_PLAYTEST,
     $CREATE_INSPECTOR,
@@ -45,7 +46,7 @@ const MenuBar = () => {
   }
 
   const onSaveAs = () => {
-    console.log('Save as')
+    publish($SAVE_SPELL_AS(activeTabRef.current.id))
   }
 
   const onEdit = () => {
