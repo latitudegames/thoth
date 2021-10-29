@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars'
 import { useSelector } from 'react-redux'
 import { useSnackbar } from 'notistack'
@@ -14,13 +15,18 @@ import {
   useGetDeploymentsQuery,
   selectSpellById,
   useDeploySpellMutation,
+  useLazyGetDeploymentQuery,
+  useSaveSpellMutation,
 } from '../../../../state/api/spells'
 
-const DeploymentView = ({ open, setOpen, spellId }) => {
+const DeploymentView = ({ open, setOpen, spellId, close }) => {
+  const [loadingVersion, setLoadingVersion] = useState(false)
   const { openModal, closeModal } = useModal()
   const { enqueueSnackbar } = useSnackbar()
 
   const [deploySpell] = useDeploySpellMutation()
+  const [saveSpell] = useSaveSpellMutation()
+  const [getDeplopyment, { data: deploymentData }] = useLazyGetDeploymentQuery()
   const spell = useSelector(state => selectSpellById(state, spellId))
   const name = spell?.name as string
   const { data: deployments, isLoading } = useGetDeploymentsQuery(name, {
@@ -38,6 +44,28 @@ const DeploymentView = ({ open, setOpen, spellId }) => {
       `${process.env.REACT_APP_API_URL}/games/spells/${spellId}/${version}`
     )
   }
+
+  const loadVersion = async version => {
+    setLoadingVersion(true)
+    await getDeplopyment({
+      spellId: spell?.name as string,
+      version,
+    })
+  }
+
+  useEffect(() => {
+    if (!deploymentData || !loadingVersion) return
+    ;(async () => {
+      await saveSpell({ ...spell, chain: deploymentData.chain })
+      enqueueSnackbar(`version ${deploymentData.version} loaded!`, {
+        variant: 'success',
+      })
+      setLoadingVersion(false)
+      close()
+    })()
+
+    console.log('load the version', deploymentData)
+  }, [deploymentData])
 
   const copy = url => {
     const el = document.createElement('textarea')
@@ -118,7 +146,12 @@ const DeploymentView = ({ open, setOpen, spellId }) => {
                     }`}
                     defaultExpanded={true}
                   >
-                    <button className={css['load-button'] + ' extra-small'}>
+                    <button
+                      className={css['load-button'] + ' extra-small'}
+                      onClick={() => {
+                        loadVersion(deploy.version)
+                      }}
+                    >
                       Load
                     </button>
                     <div
