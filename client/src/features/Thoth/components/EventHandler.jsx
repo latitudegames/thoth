@@ -4,7 +4,7 @@ import {
   useSaveSpellMutation,
   useGetSpellsQuery,
   selectSpellById,
-} from '../../../state/spells'
+} from '../../../state/api/spells'
 import { useEditor } from '../../../contexts/EditorProvider'
 import { useLayout } from '../../../contexts/LayoutProvider'
 import { useModule } from '../../../contexts/ModuleProvider'
