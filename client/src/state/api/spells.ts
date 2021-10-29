@@ -37,6 +37,7 @@ export interface DeployedSpellVersion {
   message?: string
   versionName?: string
   url?: string
+  chain?: SpellType
 }
 
 export interface DeployArgs {
@@ -151,7 +152,7 @@ export const spellApi = rootApi.injectEndpoints({
       providesTags: ['Version'],
       query: spellId => ({ url: `game/spells/deployed/${spellId}` }),
     }),
-    getDeployment: builder.query<DeployedSpellVersion[], GetDeployArgs>({
+    getDeployment: builder.query<DeployedSpellVersion, GetDeployArgs>({
       providesTags: ['Version'],
       query: ({ spellId, version }) => ({
         url: `game/spells/deployed/${spellId}/${version}`,
@@ -201,7 +202,7 @@ export const {
   useDeploySpellMutation,
   usePatchSpellMutation,
   useGetDeploymentsQuery,
-  useGetDeploymentQuery,
+  useLazyGetDeploymentQuery,
 } = spellApi
 
 export const useGetSpellSubscription =
