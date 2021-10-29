@@ -1,7 +1,14 @@
 import Icon from '../../common/Icon/Icon'
 import css from '../homeScreen.module.css'
 
-const ProjectRow = ({ label, selectedSpell, onClick, icon, style }) => {
+const ProjectRow = ({
+  label,
+  selectedSpell,
+  onClick,
+  icon,
+  style,
+  onDelete = false,
+}) => {
   return (
     <div
       role="button"
@@ -15,6 +22,21 @@ const ProjectRow = ({ label, selectedSpell, onClick, icon, style }) => {
         <Icon name={icon} style={{ marginRight: 'var(--extraSmall)' }} />
       )}
       {label}
+      {onDelete && (
+        <Icon
+          name="minus"
+          onClick={() => {
+            if (!selectedSpell.name) return
+            onDelete(selectedSpell.name)
+          }}
+          style={{
+            marginRight: 'var(--extraSmall)',
+            position: 'absolute',
+            right: 'var(--extraSmall)',
+            zIndex: 10,
+          }}
+        />
+      )}
     </div>
   )
 }
