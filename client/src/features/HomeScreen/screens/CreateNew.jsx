@@ -4,16 +4,16 @@ import {
   adjectives,
   colors,
 } from 'unique-names-generator'
-import { useLocation } from 'wouter'
+import { useNavigate } from 'react-router-dom'
 
-import { useNewSpellMutation } from '../../../state/spells'
+import { useNewSpellMutation } from '../../../state/api/spells'
 import { useTabManager } from '../../../contexts/TabManagerProvider'
 import Panel from '../../common/Panel/Panel'
 import emptyImg from '../empty.png'
 import enkiImg from '../enki.png'
 import langImg from '../lang.png'
-import css from '../startScreen.module.css'
-import TemplatePanel from './TemplatePanel'
+import css from '../homeScreen.module.css'
+import TemplatePanel from '../components/TemplatePanel'
 
 const customConfig = {
   dictionaries: [adjectives, colors],
@@ -33,7 +33,7 @@ const templates = [
 ]
 
 const CreateNew = () => {
-  const [, setLocation] = useLocation()
+  const navigate = useNavigate()
   const [selectedTemplate, setSelectedTemplate] = useState(null)
 
   const [newSpell] = useNewSpellMutation()
@@ -53,7 +53,7 @@ const CreateNew = () => {
       spellId: placeholderName,
       type: 'spell',
     })
-    setLocation('/thoth')
+    navigates('/thoth')
   }
 
   return (

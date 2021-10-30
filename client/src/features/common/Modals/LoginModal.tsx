@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useLocation } from 'wouter'
 
 import { useAuth } from '../../../contexts/AuthProvider'
 import { useModal } from '../../../contexts/ModalProvider'
 import Modal from '../Modal/Modal'
-import css from './loginModal.module.css'
+import css from './modalForms.module.css'
+import { useNavigate } from 'react-router-dom'
 
 const LoginModal = ({ title, onClose }) => {
-  const [, setLocation] = useLocation()
+  const navigate = useNavigate()
   const [error, setError] = useState('')
   const { login } = useAuth()
   const { closeModal } = useModal()
@@ -28,7 +28,7 @@ const LoginModal = ({ title, onClose }) => {
 
     if (response.id) {
       closeModal()
-      setLocation('/home')
+      navigate('/home')
     }
   })
 

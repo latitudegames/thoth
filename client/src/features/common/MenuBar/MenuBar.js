@@ -1,16 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
-import { useLocation } from 'wouter'
 
 import { useModal } from '../../../contexts/ModalProvider'
 import { usePubSub } from '../../../contexts/PubSubProvider'
 import { useTabManager } from '../../../contexts/TabManagerProvider'
 import css from './menuBar.module.css'
 import thothlogo from './thoth.png'
+import { useNavigate } from 'react-router-dom'
 
 const MenuBar = () => {
-  // eslint-disable-next-line no-unused-vars
-  const [, setLocation] = useLocation()
+  const navigate = useNavigate()
   const { publish, events } = usePubSub()
   const { activeTab } = useTabManager()
   const { openModal } = useModal()
@@ -45,11 +44,28 @@ const MenuBar = () => {
     publish($SAVE_SPELL(activeTabRef.current.id))
   }
 
+  const onSaveAs = () => {
+    openModal({
+      modal: 'saveAsModal',
+      tab: activeTabRef.current,
+    })
+  }
+
+  const onEdit = () => {
+    openModal({
+      modal: 'editSpellModal',
+      content: 'This is an example modal',
+      tab: activeTabRef.current,
+      spellId: activeTabRef.current.spell,
+      name: activeTabRef.current.spell,
+    })
+  }
+
   const onNew = () => {
-    setLocation('/home/create-new')
+    navigate('/home/create-new')
   }
   const onOpen = () => {
-    setLocation('/home/all-projects')
+    navigate('/home/all-projects')
   }
 
   // const onSerialize = () => {
@@ -111,13 +127,16 @@ const MenuBar = () => {
         open_project: {
           onClick: onOpen,
         },
+        edit_project: {
+          onClick: onEdit,
+        },
         save: {
           items: {
             save_project: {
               onClick: onSave,
             },
             save_project_as: {
-              onClick: onSave,
+              onClick: onSaveAs,
             },
             export_project: {
               onClick: onExport,

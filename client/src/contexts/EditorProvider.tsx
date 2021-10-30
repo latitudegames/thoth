@@ -7,7 +7,7 @@ import React, {
   useEffect,
 } from 'react'
 
-import { useLazyGetSpellQuery, Spell } from '../state/spells'
+import { useLazyGetSpellQuery, Spell } from '../state/api/spells'
 
 import LoadingScreen from '../features/common/LoadingScreen/LoadingScreen'
 import { MyNode } from '../features/common/Node/Node'

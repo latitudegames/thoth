@@ -6,19 +6,25 @@ import Modal from '../Modal/Modal'
 
 const DeployModal = ({ content, onClose, options: _options }) => {
   const { closeModal } = useModal()
-  const [notes, setNotes] = useState('')
+  const [message, setMessage] = useState('')
+  const [versionName, setVersionName] = useState('')
   const options = [
     {
       label: 'Deploy',
       className: 'primary',
       onClick: () => {
-        onClose(notes)
+        onClose({ message, versionName })
       },
     },
   ]
   const updateNotes = e => {
-    setNotes(e.target.value)
+    setMessage(e.target.value)
   }
+
+  const updateVersionName = e => {
+    setVersionName(e.target.value)
+  }
+
   return (
     <Modal title="New Deployment" options={options} icon="add">
       <br />
@@ -35,6 +41,12 @@ const DeployModal = ({ content, onClose, options: _options }) => {
       >
         {_options.version}
       </p>
+      <h4>VERSION NAME</h4>
+      <input
+        type="text"
+        style={{ width: '100%' }}
+        onChange={updateVersionName}
+      />
       <h4>CHANGE NOTES</h4>
       <input type="text" style={{ width: '100%' }} onChange={updateNotes} />
     </Modal>

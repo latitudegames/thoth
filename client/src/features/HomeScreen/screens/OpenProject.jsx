@@ -1,25 +1,25 @@
-import { useLocation } from 'wouter'
+import { useNavigate } from 'react-router-dom'
 
 import { useSpell } from '../../../contexts/SpellProvider'
 import { useTabManager } from '../../../contexts/TabManagerProvider'
 import Icon from '../../common/Icon/Icon'
 import Panel from '../../common/Panel/Panel'
-import css from '../startScreen.module.css'
+import css from '../homeScreen.module.css'
 import thothBanner from '../version-banner-0.0.0beta.jpg'
-import FileInput from './FileInput'
-import ProjectRow from './ProjectRow'
+import FileInput from '../components/FileInput'
+import ProjectRow from '../components/ProjectRow'
 
 const OpenProject = ({
-  projects,
-  setSelectedProject,
-  selectedProject,
+  spells,
+  setSelectedSpell,
+  selectedSpell,
   loadFile,
+  openSpell,
 }) => {
   const { tabs } = useTabManager()
   // TODO remove thoth version from spellprovider
   const { getThothVersion } = useSpell()
-  // eslint-disable-next-line no-unused-vars
-  const [, setLocation] = useLocation()
+  const navigate = useNavigate()
 
   return (
     <Panel shadow unpadded>
@@ -41,26 +41,26 @@ const OpenProject = ({
           roundness="round"
           unpadded
         >
-          {projects.map((project, i) => {
+          {spells.map((spell, i) => {
             if (i > 1) return <></>
             return (
               <ProjectRow
                 key={i}
-                setSelectedProject={setSelectedProject}
-                selectedProject={selectedProject}
-                label={project.label}
+                selectedSpell={selectedSpell}
+                label={spell.name}
                 onClick={() => {
-                  setSelectedProject(project.label)
+                  setSelectedSpell(spell)
                 }}
               />
             )
           })}
           <ProjectRow
+            key="more"
             label={'More...'}
             icon={'properties'}
             style={{ fontFamily: 'IBM Plex Mono', textTransform: 'uppercase' }}
             onClick={() => {
-              setLocation('/home/all-projects')
+              navigate('/home/all-projects')
             }}
           />
         </Panel>
@@ -78,7 +78,7 @@ const OpenProject = ({
           {tabs?.length < 1 && (
             <button
               onClick={() => {
-                setLocation('/home/create-new')
+                navigate('/home/create-new')
               }}
             >
               <Icon name="add" style={{ marginRight: 'var(--extraSmall)' }} />
@@ -86,7 +86,12 @@ const OpenProject = ({
             </button>
           )}
           <FileInput loadFile={loadFile} />
-          <button className={!selectedProject ? 'disabled' : 'primary'}>
+          <button
+            onClick={() => {
+              openSpell(selectedSpell)
+            }}
+            className={!selectedSpell ? 'disabled' : 'primary'}
+          >
             OPEN
           </button>
         </div>

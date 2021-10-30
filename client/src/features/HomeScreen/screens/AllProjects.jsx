@@ -1,12 +1,15 @@
+import { Scrollbars } from 'react-custom-scrollbars'
+
 import Icon from '../../common/Icon/Icon'
 import Panel from '../../common/Panel/Panel'
-import css from '../startScreen.module.css'
-import FileInput from './FileInput'
-import ProjectRow from './ProjectRow'
+import css from '../homeScreen.module.css'
+import FileInput from '../components/FileInput'
+import ProjectRow from '../components/ProjectRow'
 
 const AllProjects = ({
   spells,
   openSpell,
+  onDelete,
   setSelectedSpell,
   selectedSpell,
   loadFile,
@@ -22,23 +25,30 @@ const AllProjects = ({
         Spellbook
       </h1>
       <Panel
-        style={{ width: 'var(--c62)', backgroundColor: 'var(--dark-1)' }}
+        style={{
+          width: 'var(--c62)',
+          height: 'var(--c40)',
+          backgroundColor: 'var(--dark-1)',
+        }}
         flexColumn
         gap={'var(--small)'}
         roundness="round"
         unpadded
       >
-        {spells.map((spell, i) => (
-          <ProjectRow
-            key={i}
-            setSelectedSpell={setSelectedSpell}
-            selectedSpell={selectedSpell}
-            label={spell.name}
-            onClick={() => {
-              setSelectedSpell(spell)
-            }}
-          />
-        ))}
+        <Scrollbars>
+          {spells.map((spell, i) => (
+            <ProjectRow
+              key={i}
+              spell={spell}
+              selectedSpell={selectedSpell}
+              label={spell.name}
+              onDelete={onDelete}
+              onClick={() => {
+                setSelectedSpell(spell)
+              }}
+            />
+          ))}
+        </Scrollbars>
       </Panel>
 
       <div className={css['button-row']}>

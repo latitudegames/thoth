@@ -1,10 +1,13 @@
-import { Route, Redirect } from 'wouter'
+import { Route, Navigate } from 'react-router-dom'
 
-const GuardedRoute = ({ component: Component, auth, ...rest }) => (
-  <Route
-    {...rest}
-    component={props => (auth ? <Component {...props} /> : <Redirect to="/" />)}
-  />
-)
+import { useAuth } from '../../../contexts/AuthProvider'
+
+const GuardedRoute = props => {
+  const { user } = useAuth()
+
+  const auth = user && user.accessToken
+
+  return auth ? <Route {...props} /> : <Navigate to="/login" replace />
+}
 
 export default GuardedRoute

@@ -4,7 +4,7 @@ import {
   useSaveSpellMutation,
   useGetSpellsQuery,
   selectSpellById,
-} from '../../../state/spells'
+} from '../../../state/api/spells'
 import { useEditor } from '../../../contexts/EditorProvider'
 import { useLayout } from '../../../contexts/LayoutProvider'
 import { useModule } from '../../../contexts/ModuleProvider'
@@ -34,6 +34,7 @@ const EventHandler = ({ pubSub, tab }) => {
     $UNDO,
     $REDO,
     $SAVE_SPELL,
+    $SAVE_SPELL_AS,
     $CREATE_STATE_MANAGER,
     $CREATE_PLAYTEST,
     $CREATE_INSPECTOR,
@@ -48,6 +49,10 @@ const EventHandler = ({ pubSub, tab }) => {
     const chain = serialize(currentSpell)
 
     await saveSpellMutation({ ...currentSpell, chain })
+  }
+
+  const saveSpellAs = async () => {
+    console.log('Save spell as')
   }
 
   const createStateManager = () => {
