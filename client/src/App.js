@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Route, Switch, Redirect } from 'wouter'
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 
 import { useAuth } from './contexts/AuthProvider'
 import { useTabManager } from './contexts/TabManagerProvider'
@@ -7,7 +7,7 @@ import GuardedRoute from './features/common/GuardedRoute/GuardedRoute'
 import LoadingScreen from './features/common/LoadingScreen/LoadingScreen'
 import ThothPageWrapper from './features/common/ThothPage/ThothPageWrapper'
 import LoginScreen from './features/Login/LoginScreen'
-import StartScreen from './features/StartScreen/StartScreen'
+import HomeScreen from './features/HomeScreen/HomeScreen'
 import Thoth from './features/Thoth/Thoth'
 
 import 'flexlayout-react/style/dark.css'
@@ -20,6 +20,7 @@ function App() {
   const [checked, setChecked] = useState(false)
   const { tabs } = useTabManager()
   const { user, getUser, checkIn } = useAuth()
+  const navigate = useNavigate()
 
   const authCheck = user && user.accessToken
 
@@ -36,46 +37,24 @@ function App() {
     })()
   }, [])
 
-  const CreateNewScreen = () => {
-    return <StartScreen createNew={true} />
-  }
-
-  const AllProjectsScreen = () => {
-    return <StartScreen allProjects={true} />
-  }
-
-  const HomeScreen = () => {
-    return <StartScreen createNew={true} />
-  }
-
   const redirect = () => {
     if (user && tabs.length > 0) {
-      return <Redirect to="/thoth" />
+      return <Navigate to="/thoth" />
     }
 
-    return user ? <Redirect to="/home" /> : <Redirect to="/login" />
+    return user ? <Navigate to="/home" /> : <Navigate to="/login" />
   }
 
   if (!checked) return <LoadingScreen />
 
   return (
     <ThothPageWrapper tabs={tabs}>
-      <Switch>
-        <Route path="/login" auth={authCheck} component={LoginScreen} />
-        <Route path="/thoth" auth={authCheck} component={Thoth} />
-        <GuardedRoute path="/home" auth={authCheck} component={HomeScreen} />
-        <Route
-          path="/home/create-new"
-          auth={authCheck}
-          component={CreateNewScreen}
-        />
-        <Route
-          path="/home/all-projects"
-          auth={user}
-          component={AllProjectsScreen}
-        />
-        <Route path="/">{redirect()}</Route>
-      </Switch>
+      <Routes>
+        <Route path="/login" element={<LoginScreen />} />
+        <GuardedRoute path="/thoth" element={<Thoth />} />
+        <GuardedRoute path="/home/*" element={<HomeScreen />} />
+        <Route path="/" element={redirect()} />
+      </Routes>
     </ThothPageWrapper>
   )
 }

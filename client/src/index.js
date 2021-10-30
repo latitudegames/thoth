@@ -3,6 +3,7 @@ import 'regenerator-runtime/runtime'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
+import { BrowserRouter as Router } from 'react-router-dom'
 
 import App from './App'
 import AppProviders from './contexts/AppProviders'
@@ -11,11 +12,13 @@ import { store } from './state/store'
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <AppProviders>
-        <App />
-      </AppProviders>
-    </Provider>
+    <Router>
+      <Provider store={store}>
+        <AppProviders>
+          <App />
+        </AppProviders>
+      </Provider>
+    </Router>
   </React.StrictMode>,
   document.getElementById('root')
 )

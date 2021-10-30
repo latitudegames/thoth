@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars'
 import { useSelector } from 'react-redux'
 import { useSnackbar } from 'notistack'
@@ -14,22 +15,29 @@ import {
   useGetDeploymentsQuery,
   selectSpellById,
   useDeploySpellMutation,
-} from '../../../../state/spells'
+  useLazyGetDeploymentQuery,
+  useSaveSpellMutation,
+} from '../../../../state/api/spells'
+import { useEditor } from '../../../../contexts/EditorProvider'
 
-const DeploymentView = ({ open, setOpen, spellId }) => {
+const DeploymentView = ({ open, setOpen, spellId, close }) => {
+  const [loadingVersion, setLoadingVersion] = useState(false)
+  const { loadChain } = useEditor()
   const { openModal, closeModal } = useModal()
   const { enqueueSnackbar } = useSnackbar()
 
   const [deploySpell] = useDeploySpellMutation()
+  const [saveSpell] = useSaveSpellMutation()
+  const [getDeplopyment, { data: deploymentData }] = useLazyGetDeploymentQuery()
   const spell = useSelector(state => selectSpellById(state, spellId))
   const name = spell?.name as string
   const { data: deployments, isLoading } = useGetDeploymentsQuery(name, {
     skip: !spell?.name,
   })
 
-  const deploy = message => {
+  const deploy = data => {
     if (!spell) return
-    deploySpell({ spellId: spell.name, message })
+    deploySpell({ spellId: spell.name, ...data })
     enqueueSnackbar('Spell deployed', { variant: 'success' })
   }
 
@@ -38,6 +46,34 @@ const DeploymentView = ({ open, setOpen, spellId }) => {
       `${process.env.REACT_APP_API_URL}/games/spells/${spellId}/${version}`
     )
   }
+
+  const loadVersion = async version => {
+    // todo better confirmation popup
+    if (
+      confirm(
+        'Are you sure you want to load this version? Any changes you have made since your most recent deploy will be lost.'
+      )
+    ) {
+      setLoadingVersion(true)
+      await getDeplopyment({
+        spellId: spell?.name as string,
+        version,
+      })
+    }
+  }
+
+  useEffect(() => {
+    if (!deploymentData || !loadingVersion) return
+    ;(async () => {
+      close()
+      await saveSpell({ ...spell, chain: deploymentData.chain })
+      enqueueSnackbar(`version ${deploymentData.version} loaded!`, {
+        variant: 'success',
+      })
+      setLoadingVersion(false)
+      loadChain(deploymentData.chain)
+    })()
+  }, [deploymentData, loadingVersion])
 
   const copy = url => {
     const el = document.createElement('textarea')
@@ -90,9 +126,9 @@ const DeploymentView = ({ open, setOpen, spellId }) => {
                     version:
                       '0.0.' + (deployments ? deployments?.length + 1 : 0),
                   },
-                  onClose: notes => {
+                  onClose: data => {
                     closeModal()
-                    deploy(notes)
+                    deploy(data)
                   },
                 })
               }}
@@ -113,9 +149,19 @@ const DeploymentView = ({ open, setOpen, spellId }) => {
                 return (
                   <SimpleAccordion
                     key={deploy.version}
-                    heading={deploy.version}
+                    heading={`${deploy.version}${
+                      deploy.versionName ? ' - ' + deploy.versionName : ''
+                    }`}
                     defaultExpanded={true}
                   >
+                    <button
+                      className={css['load-button'] + ' extra-small'}
+                      onClick={() => {
+                        loadVersion(deploy.version)
+                      }}
+                    >
+                      Load
+                    </button>
                     <div
                       style={{
                         display: 'flex',

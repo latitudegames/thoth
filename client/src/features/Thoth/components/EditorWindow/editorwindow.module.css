@@ -160,3 +160,9 @@
   top: 35%;
   transform: translateY(-50%);
 }
+
+.load-button {
+  position: absolute;
+  top: 50px;
+  right: 18px;
+}

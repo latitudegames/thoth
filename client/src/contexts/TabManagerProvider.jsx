@@ -1,6 +1,6 @@
 import { useContext, createContext, useEffect, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
-import { useLocation } from 'wouter'
+import { useNavigate } from 'react-router-dom'
 
 import LoadingScreen from '../features/common/LoadingScreen/LoadingScreen'
 import { useDB } from './DatabaseProvider'
@@ -16,6 +16,8 @@ const Context = createContext({
   closeTab: () => {},
   saveTabLayout: () => {},
   clearTabs: () => {},
+  closeTabBySpellId: spellId => {},
+  updateTab: (tabId, update) => Promise.resolve(),
 })
 
 // Map of workspaces
@@ -30,8 +32,7 @@ const TabManager = ({ children }) => {
 
   // eslint-disable-next-line no-unused-vars
   const { events, publish } = usePubSub()
-  // eslint-disable-next-line no-unused-vars
-  const [, setLocation] = useLocation()
+  const navigate = useNavigate()
   const [tabs, setTabs] = useState([])
   const [activeTab, setActiveTab] = useState(null)
 
@@ -52,6 +53,14 @@ const TabManager = ({ children }) => {
   const refreshTabs = async () => {
     const tabs = await db.tabs.find().exec()
     if (tabs && tabs.length > 0) setTabs(tabs.map(tab => tab.toJSON()))
+  }
+
+  const updateTab = async (tabId, update) => {
+    const tab = await db.tabs.findOne({ selector: { id: tabId } }).exec()
+    if (!tab) return
+
+    await tab.atomicPatch(update)
+    await refreshTabs()
   }
 
   const openTab = async ({
@@ -89,17 +98,17 @@ const TabManager = ({ children }) => {
     publish(events.$CLOSE_EDITOR(tabId))
     await tab.remove()
     const tabs = await db.tabs.find().exec()
+    await refreshTabs()
 
     // Switch to the last tab down.
     if (tabs.length === 0) {
-      setLocation('/home')
+      navigate('/home')
       return
     }
     switchTab(tabs[0].id)
   }
 
   const switchTab = async (tabId, query) => {
-    console.log('Switching tab')
     const selector = query ? query : { id: tabId }
     const tab = await db.tabs.findOne({ selector }).exec()
     if (!tab) return false
@@ -112,6 +121,14 @@ const TabManager = ({ children }) => {
 
   const clearTabs = async () => {
     await db.tabs.find().remove()
+  }
+
+  const closeTabBySpellId = async spellId => {
+    const tab = await db.tabs.findOne({ selector: { spell: spellId } }).exec()
+    if (!tab) return false
+
+    await closeTab(tab.id)
+    return true
   }
 
   const saveTabLayout = async (tabId, json) => {
@@ -127,6 +144,8 @@ const TabManager = ({ children }) => {
     closeTab,
     saveTabLayout,
     clearTabs,
+    updateTab,
+    closeTabBySpellId,
   }
 
   if (!tabs) return <LoadingScreen />

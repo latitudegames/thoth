@@ -59,7 +59,10 @@ const ModuleProvider = ({ children }) => {
     } catch (err) {
       // eslint-disable-next-line no-console
       console.warn('error saving module', module)
-      if (snack) enqueueSnackbar('Error saving module')
+      if (snack)
+        enqueueSnackbar('Error saving module', {
+          variant: 'error',
+        })
     }
   }
 

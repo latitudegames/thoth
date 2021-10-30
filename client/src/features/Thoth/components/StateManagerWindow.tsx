@@ -4,7 +4,10 @@ import { useSnackbar } from 'notistack'
 import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
-import { selectSpellById, useSaveSpellMutation } from '../../../state/spells'
+import {
+  selectSpellById,
+  useSaveSpellMutation,
+} from '../../../state/api/spells'
 import {
   selectGameStateBySpellId,
   // updateGameState,

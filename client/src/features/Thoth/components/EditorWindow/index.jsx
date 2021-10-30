@@ -59,6 +59,10 @@ const EditorWindow = ({ tab }) => {
     return arr
   }
 
+  const closeDeploy = () => {
+    setDeployOpen(false)
+  }
+
   const EditorToolbar = () => {
     return (
       <>
@@ -97,6 +101,7 @@ const EditorWindow = ({ tab }) => {
       <Deployment
         open={deployOpen}
         setOpen={setDeployOpen}
+        close={closeDeploy}
         spellId={tab.spell}
       />
     </div>

@@ -48,9 +48,10 @@ const Modal = ({ options = [], title, icon, onClose = () => {}, ...props }) => {
             options.map(item => {
               return (
                 <button
-                  key={item}
+                  key={item.label}
+                  disabled={item.disabled || false}
                   onClick={item.onClick}
-                  className={item.className}
+                  className={`${item.className} ${item.disabled && 'disabled'}`}
                 >
                   {item.label}
                 </button>

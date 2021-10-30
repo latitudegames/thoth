@@ -9,7 +9,7 @@ import {
   useSaveSpellMutation,
   selectSpellsByModuleName,
   selectSpellById,
-} from '../../../state/spells'
+} from '../../../state/api/spells'
 import WorkspaceProvider from '../../../contexts/WorkspaceProvider'
 import { debounce } from '../../../utils/debounce'
 import EditorWindow from './EditorWindow'
@@ -57,7 +57,7 @@ const Workspace = ({ tab, tabs, appPubSub }) => {
 
   useEffect(() => {
     if (!tab || !tab.spell) return
-    loadSpell(tab.spell)
+    loadSpell(tab.spell, { refetchOnMountOrArgChange: true })
   }, [tab])
 
   const factory = tab => {

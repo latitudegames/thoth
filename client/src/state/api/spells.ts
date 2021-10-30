@@ -1,16 +1,12 @@
 import { createSelector } from '@reduxjs/toolkit'
-import {
-  createApi,
-  fetchBaseQuery,
-  FetchBaseQueryError,
-} from '@reduxjs/toolkit/query/react'
+import { FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Spell as SpellType } from '@latitudegames/thoth-core/types'
 
-import { getAuthHeader } from '../utils/authHelper'
-import { initDB } from '../database'
+import { initDB } from '../../database'
 import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes'
-import { updateGameState } from './gameState'
-import { Module } from '../database/schemas/module'
+import { updateGameState } from '../gameState'
+import { Module } from '../../database/schemas/module'
+import { rootApi } from './api'
 // function camelize(str) {
 //   return str
 //     .replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
@@ -39,7 +35,9 @@ export interface DeployedSpellVersion {
   spellId: string
   version: string
   message?: string
+  versionName?: string
   url?: string
+  chain?: SpellType
 }
 
 export interface DeployArgs {
@@ -47,28 +45,27 @@ export interface DeployArgs {
   message: string
 }
 
-export const spellApi = createApi({
-  reducerPath: 'spellApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.REACT_APP_API_URL}/game` || 'localhost:8000/game',
-    prepareHeaders: headers => {
-      const authHeader = getAuthHeader()
-      if (authHeader?.Authorization)
-        headers.set('authorization', authHeader['Authorization'])
-      return headers
-    },
-  }),
-  tagTypes: ['Spell', 'Version'],
+export interface GetDeployArgs {
+  spellId: string
+  version: string
+}
+
+export interface PatchArgs {
+  spellId: string
+  update: Partial<Spell>
+}
+
+export const spellApi = rootApi.injectEndpoints({
   endpoints: builder => ({
     getSpells: builder.query<Spell[], void>({
       providesTags: ['Spell'],
-      query: () => '/spells',
+      query: () => 'game/spells',
     }),
     getSpell: builder.query<Spell, string>({
       providesTags: ['Spell'],
       query: spellId => {
         return {
-          url: `spells/${spellId}`,
+          url: `game/spells/${spellId}`,
         }
       },
       async onQueryStarted(id, { dispatch, queryFulfilled }) {
@@ -94,7 +91,7 @@ export const spellApi = createApi({
         spell.modules = modules
 
         const baseQueryOptions = {
-          url: 'spells/save',
+          url: 'game/spells/save',
           body: spell,
           method: 'POST',
         }
@@ -116,27 +113,50 @@ export const spellApi = createApi({
           gameState: {},
         }
         return {
-          url: '/spells/save',
+          url: 'game/spells/save',
           method: 'POST',
           body: spell,
         }
       },
     }),
+    patchSpell: builder.mutation<Spell, PatchArgs>({
+      invalidatesTags: ['Spell'],
+      query({ spellId, update }) {
+        return {
+          url: `game/spells/${spellId}`,
+          body: {
+            ...update,
+          },
+          method: 'PATCH',
+        }
+      },
+    }),
+    deleteSpell: builder.mutation<string[], boolean>({
+      invalidatesTags: ['Spell'],
+      query: spellId => ({
+        url: `game/spells/${spellId}`,
+        method: 'DELETE',
+      }),
+    }),
     deploySpell: builder.mutation<DeployedSpellVersion, DeployArgs>({
       invalidatesTags: ['Version'],
-      query({ spellId, message }) {
+      query({ spellId, ...update }) {
         return {
-          url: `/spells/${spellId}/deploy`,
-          body: {
-            message,
-          },
+          url: `game/spells/${spellId}/deploy`,
+          body: update,
           method: 'POST',
         }
       },
     }),
     getDeployments: builder.query<DeployedSpellVersion[], string>({
       providesTags: ['Version'],
-      query: spellId => ({ url: `/spells/deployed/${spellId}` }),
+      query: spellId => ({ url: `game/spells/deployed/${spellId}` }),
+    }),
+    getDeployment: builder.query<DeployedSpellVersion, GetDeployArgs>({
+      providesTags: ['Version'],
+      query: ({ spellId, version }) => ({
+        url: `game/spells/deployed/${spellId}/${version}`,
+      }),
     }),
   }),
 })
@@ -177,9 +197,12 @@ export const {
   useGetSpellsQuery,
   useLazyGetSpellQuery,
   useNewSpellMutation,
+  useDeleteSpellMutation,
   useSaveSpellMutation,
   useDeploySpellMutation,
+  usePatchSpellMutation,
   useGetDeploymentsQuery,
+  useLazyGetDeploymentQuery,
 } = spellApi
 
 export const useGetSpellSubscription =
