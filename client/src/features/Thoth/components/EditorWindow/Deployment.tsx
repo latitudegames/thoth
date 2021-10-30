@@ -48,6 +48,7 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
   }
 
   const loadVersion = async version => {
+    // todo better confirmation popup
     if (
       confirm(
         'Are you sure you want to load this version? Any changes you have made since your most recent deploy will be lost.'
