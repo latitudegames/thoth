@@ -48,11 +48,17 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
   }
 
   const loadVersion = async version => {
-    setLoadingVersion(true)
-    await getDeplopyment({
-      spellId: spell?.name as string,
-      version,
-    })
+    if (
+      confirm(
+        'Are you sure you want to load this version? Any changes you have made since your most recent deploy will be lost.'
+      )
+    ) {
+      setLoadingVersion(true)
+      await getDeplopyment({
+        spellId: spell?.name as string,
+        version,
+      })
+    }
   }
 
   useEffect(() => {
@@ -66,7 +72,7 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
       setLoadingVersion(false)
       loadChain(deploymentData.chain)
     })()
-  }, [deploymentData])
+  }, [deploymentData, loadingVersion])
 
   const copy = url => {
     const el = document.createElement('textarea')
