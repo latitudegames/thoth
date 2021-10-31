@@ -4,7 +4,7 @@ import { useLayout } from '../../../../contexts/LayoutProvider'
 import { useModal } from '../../../../contexts/ModalProvider'
 import Icon, { componentCategories } from '../../../common/Icon/Icon'
 import Window from '../../../common/Window/Window'
-import DataControls from '../../components/DataControls'
+import DataControls from './DataControls'
 import WindowMessage from '../../components/WindowMessage'
 
 const Inspector = props => {
