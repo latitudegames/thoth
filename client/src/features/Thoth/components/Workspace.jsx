@@ -12,7 +12,7 @@ import {
 } from '../../../state/api/spells'
 import WorkspaceProvider from '../../../contexts/WorkspaceProvider'
 import { debounce } from '../../../utils/debounce'
-import EditorWindow from './EditorWindow'
+import EditorWindow from '../windows/EditorWindow'
 import EventHandler from './EventHandler'
 import Inspector from '../windows/InspectorWindow'
 import Playtest from '../windows/PlaytestWindow'
