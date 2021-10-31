@@ -16,7 +16,7 @@ import EditorWindow from './EditorWindow'
 import EventHandler from './EventHandler'
 import Inspector from './InspectorWindow'
 import Playtest from './PlaytestWindow'
-import StateManager from './StateManagerWindow'
+import StateManager from '../windows/StateManagerWindow'
 import TextEditor from '../windows/TextEditorWindow'
 
 const Workspace = ({ tab, tabs, appPubSub }) => {
