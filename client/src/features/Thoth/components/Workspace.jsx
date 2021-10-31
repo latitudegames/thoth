@@ -17,7 +17,7 @@ import EventHandler from './EventHandler'
 import Inspector from './InspectorWindow'
 import Playtest from './PlaytestWindow'
 import StateManager from './StateManagerWindow'
-import TextEditor from './TextEditorWindow'
+import TextEditor from '../windows/TextEditorWindow'
 
 const Workspace = ({ tab, tabs, appPubSub }) => {
   const [loadSpell, { data: spellData }] = useLazyGetSpellQuery()
