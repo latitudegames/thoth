@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 
 import { useLayout } from '../../../contexts/LayoutProvider'
 import Window from '../../common/Window/Window.tsx'
-import WindowMessage from './WindowMessage'
+import WindowMessage from '../components/WindowMessage'
 
 import '../thoth.module.css'
 
