@@ -15,7 +15,7 @@ import { debounce } from '../../../utils/debounce'
 import EditorWindow from './EditorWindow'
 import EventHandler from './EventHandler'
 import Inspector from './InspectorWindow'
-import Playtest from './PlaytestWindow'
+import Playtest from '../windows/PlaytestWindow'
 import StateManager from '../windows/StateManagerWindow'
 import TextEditor from '../windows/TextEditorWindow'
 
