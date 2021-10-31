@@ -16,7 +16,7 @@ import Window from '../../common/Window/Window'
 
 import '../thoth.module.css'
 import { RootState } from '../../../state/store'
-import WindowMessage from './WindowMessage'
+import WindowMessage from '../components/WindowMessage'
 
 const StateManager = ({ tab, ...props }) => {
   // const dispatch = useDispatch()
