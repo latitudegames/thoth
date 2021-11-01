@@ -13,12 +13,19 @@ const Workspaces = ({ tabs, pubSub, activeTab }) => {
         const Workspace = workspaceMap[tab.type]
 
         return (
-          <Workspace
-            tabs={tabs}
-            appPubSub={pubSub}
-            activeTab={activeTab}
-            tab={tab}
-          />
+          <div
+            style={{
+              visibility: tab.id !== activeTab ? 'hidden' : undefined,
+              height: '100%',
+            }}
+          >
+            <Workspace
+              tabs={tabs}
+              appPubSub={pubSub}
+              activeTab={activeTab}
+              tab={tab}
+            />
+          </div>
         )
       })}
     </TabLayout>
