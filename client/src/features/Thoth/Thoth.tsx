@@ -50,6 +50,7 @@ const Thoth = ({ empty }) => {
             tab={tab}
             tabs={tabs}
             key={`${i}-${tab.name}`}
+            activeTab={activeTab}
             appPubSub={pubSub}
           />
         ))}
