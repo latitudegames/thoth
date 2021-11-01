@@ -6,7 +6,7 @@ import { usePubSub } from '../../contexts/PubSubProvider'
 import { useTabManager } from '../../contexts/TabManagerProvider'
 import LoadingScreen from '../common/LoadingScreen/LoadingScreen'
 import TabLayout from '../common/TabLayout/TabLayout'
-import Workspace from './components/Workspace'
+import Workspaces from './workspaces'
 
 const Thoth = ({ empty }) => {
   const navigate = useNavigate()
@@ -44,16 +44,9 @@ const Thoth = ({ empty }) => {
 
   return (
     <TabLayout>
-      {!empty &&
-        tabs.map((tab: any, i) => (
-          <Workspace
-            tab={tab}
-            tabs={tabs}
-            key={`${i}-${tab.name}`}
-            activeTab={activeTab}
-            appPubSub={pubSub}
-          />
-        ))}
+      {!empty && (
+        <Workspaces tabs={tabs} pubSub={pubSub} activeTab={activeTab} />
+      )}
     </TabLayout>
   )
 }
