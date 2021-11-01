@@ -33,7 +33,7 @@ const TabManager = ({ children }) => {
   // eslint-disable-next-line no-unused-vars
   const { events, publish } = usePubSub()
   const navigate = useNavigate()
-  const [tabs, setTabs] = useState([])
+  const [tabs, setTabs] = useState(null)
   const [activeTab, setActiveTab] = useState(null)
 
   // Suscribe to changes in the database for active tab, and all tabs
@@ -47,6 +47,7 @@ const TabManager = ({ children }) => {
 
       if (activeTab) setActiveTab(activeTab.toJSON())
       if (tabs && tabs.length > 0) setTabs(tabs.map(tab => tab.toJSON()))
+      if (!tabs || tabs.length === 0) setTabs([])
     })()
   }, [db])
 
