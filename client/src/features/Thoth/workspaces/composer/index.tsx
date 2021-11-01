@@ -31,7 +31,7 @@ const Workspace = ({ tab, tabs, appPubSub, activeTab }) => {
       'save nodecreated noderemoved connectioncreated connectionremoved nodetranslated',
       debounce(() => {
         if (tab.type === 'spell') {
-          saveSpell({ ...spellData, chain: editor.toJSON() }, false)
+          saveSpell({ ...spellData, chain: editor.toJSON() })
         }
         if (tab.type === 'module') {
           saveModule(tab.module, { data: editor.toJSON() }, false)
