@@ -29,6 +29,7 @@ export type ThothTab = {
 const Context = createContext({
   run: () => {},
   getEditor: () => {},
+  editor: {} as any,
   serialize: () => {},
   buildEditor: (
     el: HTMLDivElement,
