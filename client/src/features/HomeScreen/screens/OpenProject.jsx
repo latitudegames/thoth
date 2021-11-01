@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom'
 
-import { useSpell } from '../../../contexts/SpellProvider'
 import { useTabManager } from '../../../contexts/TabManagerProvider'
 import Icon from '../../common/Icon/Icon'
 import Panel from '../../common/Panel/Panel'
@@ -8,6 +7,8 @@ import css from '../homeScreen.module.css'
 import thothBanner from '../version-banner-0.0.0beta.jpg'
 import FileInput from '../components/FileInput'
 import ProjectRow from '../components/ProjectRow'
+
+const getThothVersion = () => '0.0.1'
 
 const OpenProject = ({
   spells,
@@ -17,8 +18,6 @@ const OpenProject = ({
   openSpell,
 }) => {
   const { tabs } = useTabManager()
-  // TODO remove thoth version from spellprovider
-  const { getThothVersion } = useSpell()
   const navigate = useNavigate()
 
   return (
@@ -41,8 +40,7 @@ const OpenProject = ({
           roundness="round"
           unpadded
         >
-          {spells.map((spell, i) => {
-            if (i > 1) return <></>
+          {spells.slice(0, 2).map((spell, i) => {
             return (
               <ProjectRow
                 key={i}
