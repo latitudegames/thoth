@@ -12,6 +12,12 @@ const Workspaces = ({ tabs, pubSub, activeTab }) => {
       {tabs.map(tab => {
         const Workspace = workspaceMap[tab.type]
 
+        const props = {
+          tabs,
+          pubSub,
+          tab,
+        }
+
         return (
           <div
             style={{
@@ -19,12 +25,7 @@ const Workspaces = ({ tabs, pubSub, activeTab }) => {
               height: '100%',
             }}
           >
-            <Workspace
-              tabs={tabs}
-              appPubSub={pubSub}
-              activeTab={activeTab}
-              tab={tab}
-            />
+            <Workspace {...props} />
           </div>
         )
       })}
