@@ -85,9 +85,9 @@ const EventHandler = ({ pubSub, tab }) => {
   }
 
   const onExport = async () => {
-    // const currentSpell = getCurrentSpell()
     // refetch spell from local DB to ensure it is the most up to date
     const spell = { ...spellRef.current }
+    spell.chain = serialize()
     const modules = await getSpellModules(spell)
     // attach modules to spell to be exported
     spell.modules = modules
