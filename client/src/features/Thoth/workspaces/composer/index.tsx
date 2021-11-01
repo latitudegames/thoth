@@ -18,7 +18,7 @@ import Playtest from '../../windows/PlaytestWindow'
 import StateManager from '../../windows/StateManagerWindow'
 import TextEditor from '../../windows/TextEditorWindow'
 
-const Workspace = ({ tab, tabs, appPubSub, activeTab }) => {
+const Workspace = ({ tab, tabs, pubSub }) => {
   const [loadSpell, { data: spellData }] = useLazyGetSpellQuery()
   const [saveSpell] = useSaveSpellMutation()
   const { saveModule } = useModule()
@@ -85,7 +85,7 @@ const Workspace = ({ tab, tabs, appPubSub, activeTab }) => {
 
   return (
     <>
-      <EventHandler tab={tab} pubSub={appPubSub} />
+      <EventHandler tab={tab} pubSub={pubSub} />
       <Layout json={tab.layoutJson} factory={factory(tab)} tab={tab} />
     </>
   )
