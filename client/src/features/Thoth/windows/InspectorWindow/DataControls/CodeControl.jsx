@@ -1,4 +1,4 @@
-import { useLayout } from '../../../../../contexts/LayoutProvider'
+import { useLayout } from '@thoth/contexts/LayoutProvider'
 
 const CodeControl = () => {
   const { createOrFocus, windowTypes } = useLayout()
