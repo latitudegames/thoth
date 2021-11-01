@@ -2,9 +2,9 @@ import Editor from '@monaco-editor/react'
 import { useSnackbar } from 'notistack'
 import { useState, useEffect } from 'react'
 
-import { useLayout } from '../../../contexts/LayoutProvider'
-import Window from '../../common/Window/Window.tsx'
-import WindowMessage from './WindowMessage'
+import { useLayout } from '@thoth/contexts/LayoutProvider'
+import Window from '@common/Window/Window.tsx'
+import WindowMessage from '@thoth/components/WindowMessage'
 
 import '../thoth.module.css'
 

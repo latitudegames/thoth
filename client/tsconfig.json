@@ -13,7 +13,13 @@
     "noEmit": true,
     "allowJs": true,
     "resolveJsonModule": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@common/*": ["src/features/common/*"],
+      "@thoth/*": ["src/features/Thoth/*"]
+    }
   },
   "typeRoots": ["@types/@thoth"],
   "references": [

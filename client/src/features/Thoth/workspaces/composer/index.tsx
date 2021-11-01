@@ -1,38 +1,36 @@
 import { useEffect } from 'react'
 
-import { store } from '../../../state/store'
-import { Editor, useEditor } from '../../../contexts/EditorProvider'
-import { Layout } from '../../../contexts/LayoutProvider'
-import { useModule } from '../../../contexts/ModuleProvider'
+import { store } from '@/state/store'
+import { useEditor } from '@thoth/contexts/EditorProvider'
+import { Layout } from '@thoth/contexts/LayoutProvider'
+import { useModule } from '@/contexts/ModuleProvider'
 import {
   useLazyGetSpellQuery,
   useSaveSpellMutation,
-  selectSpellsByModuleName,
   selectSpellById,
-} from '../../../state/api/spells'
-import WorkspaceProvider from '../contexts/WorkspaceProvider'
-import { debounce } from '../../../utils/debounce'
-import EditorWindow from '../windows/EditorWindow'
-import EventHandler from './EventHandler'
-import Inspector from '../windows/InspectorWindow'
-import Playtest from '../windows/PlaytestWindow'
-import StateManager from '../windows/StateManagerWindow'
-import TextEditor from '../windows/TextEditorWindow'
+} from '@/state/api/spells'
+import { debounce } from '@/utils/debounce'
+import EditorWindow from '@thoth/windows/EditorWindow'
+import EventHandler from '@thoth/components/EventHandler'
+import Inspector from '@thoth/windows/InspectorWindow'
+import Playtest from '@thoth/windows/PlaytestWindow'
+import StateManager from '@thoth/windows/StateManagerWindow'
+import TextEditor from '@thoth/windows/TextEditorWindow'
 
-const Workspace = ({ tab, tabs, appPubSub, activeTab }) => {
+const Workspace = ({ tab, tabs, pubSub }) => {
   const [loadSpell, { data: spellData }] = useLazyGetSpellQuery()
   const [saveSpell] = useSaveSpellMutation()
   const { saveModule } = useModule()
   const { editor } = useEditor()
 
-  // Set up autosave for the workspace
+  // Set up autosave for the workspaces
   useEffect(() => {
     if (!editor?.on) return
     return editor.on(
       'save nodecreated noderemoved connectioncreated connectionremoved nodetranslated',
       debounce(() => {
         if (tab.type === 'spell') {
-          saveSpell({ ...spellData, chain: editor.toJSON() }, false)
+          saveSpell({ ...spellData, chain: editor.toJSON() })
         }
         if (tab.type === 'module') {
           saveModule(tab.module, { data: editor.toJSON() }, false)
@@ -57,7 +55,7 @@ const Workspace = ({ tab, tabs, appPubSub, activeTab }) => {
 
   useEffect(() => {
     if (!tab || !tab.spell) return
-    loadSpell(tab.spell, { refetchOnMountOrArgChange: true })
+    loadSpell(tab.spell)
   }, [tab])
 
   const factory = tab => {
@@ -68,8 +66,6 @@ const Workspace = ({ tab, tabs, appPubSub, activeTab }) => {
       }
       const component = node.getComponent()
       switch (component) {
-        case 'editor':
-          return <Editor {...props} />
         case 'stateManager':
           return <StateManager {...props} />
         case 'playtest':
@@ -87,24 +83,15 @@ const Workspace = ({ tab, tabs, appPubSub, activeTab }) => {
   }
 
   return (
-    <div
-      style={{
-        visibility: tab.id !== activeTab ? 'hidden' : null,
-        height: '100%',
-      }}
-    >
-      <EventHandler tab={tab} pubSub={appPubSub} />
+    <>
+      <EventHandler tab={tab} pubSub={pubSub} />
       <Layout json={tab.layoutJson} factory={factory(tab)} tab={tab} />
-    </div>
+    </>
   )
 }
 
 const Wrapped = props => {
-  return (
-    <WorkspaceProvider {...props}>
-      <Workspace {...props} />
-    </WorkspaceProvider>
-  )
+  return <Workspace {...props} />
 }
 
 export default Wrapped

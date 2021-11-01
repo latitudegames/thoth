@@ -32,6 +32,11 @@ module.exports = () => {
       clean: true,
     },
     resolve: {
+      alias: {
+        '@': path.resolve(__dirname, 'src'),
+        '@thoth': path.resolve(__dirname, 'src/features/Thoth'),
+        '@common': path.resolve(__dirname, 'src/features/common'),
+      },
       extensions: ['.ts', '.tsx', '.js', '.jsx', '.json', '.css'],
       fallback: {
         crypto: require.resolve('crypto-browserify'),
