@@ -8,9 +8,9 @@ import {
 } from 'flexlayout-react'
 import { useContext, createContext, useEffect, useState, useRef } from 'react'
 
-import LoadingScreen from '../features/common/LoadingScreen/LoadingScreen'
-import { usePubSub } from './PubSubProvider'
-import { useTabManager } from './TabManagerProvider'
+import LoadingScreen from '@common/LoadingScreen/LoadingScreen'
+import { usePubSub } from '@/contexts/PubSubProvider'
+import { useTabManager } from '@/contexts/TabManagerProvider'
 
 // Component types are listed here which are used to load components from the data sent by rete
 const windowTypes = {
@@ -46,7 +46,7 @@ export const useLayout = () => useContext(Context)
 const LayoutProvider = ({ children, tab }) => {
   const { subscribe, publish, events } = usePubSub()
 
-  const currentModelRef = useRef(null)
+  const currentModelRef = useRef({})
 
   const [currentModel, setCurrentModel] = useState(null)
   const [currentRef, setCurrentRef] = useState(null)
