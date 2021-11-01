@@ -7,12 +7,12 @@ import React, {
   useEffect,
 } from 'react'
 
-import { useLazyGetSpellQuery, Spell } from '../state/api/spells'
+import { useLazyGetSpellQuery, Spell } from '../../../state/api/spells'
 
-import LoadingScreen from '../features/common/LoadingScreen/LoadingScreen'
-import { MyNode } from '../features/common/Node/Node'
-import gridimg from '../grid.png'
-import { usePubSub } from './PubSubProvider'
+import LoadingScreen from '../../common/LoadingScreen/LoadingScreen'
+import { MyNode } from '../../common/Node/Node'
+import gridimg from '@/grid.png'
+import { usePubSub } from '../../../contexts/PubSubProvider'
 import { useRete, ReteContext } from './ReteProvider'
 // import { ThothTab } from './TabManagerProvider'
 
@@ -29,6 +29,7 @@ export type ThothTab = {
 const Context = createContext({
   run: () => {},
   getEditor: () => {},
+  editor: {} as any,
   serialize: () => {},
   buildEditor: (
     el: HTMLDivElement,

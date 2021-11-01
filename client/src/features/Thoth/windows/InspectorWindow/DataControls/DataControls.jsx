@@ -1,4 +1,4 @@
-import { SimpleAccordion } from '../../../common/Accordion'
+import { SimpleAccordion } from '../../../../common/Accordion'
 import CodeControl from './CodeControl'
 import css from './datacontrols.module.css'
 import EnkiSelect from './EnkiSelect'

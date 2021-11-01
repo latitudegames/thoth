@@ -5,8 +5,8 @@ import {
   useGetSpellsQuery,
   selectSpellById,
 } from '../../../state/api/spells'
-import { useEditor } from '../../../contexts/EditorProvider'
-import { useLayout } from '../../../contexts/LayoutProvider'
+import { useEditor } from '../contexts/EditorProvider'
+import { useLayout } from '../contexts/LayoutProvider'
 import { useModule } from '../../../contexts/ModuleProvider'
 import { useSelector } from 'react-redux'
 

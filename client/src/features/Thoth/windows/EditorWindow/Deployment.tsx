@@ -5,11 +5,11 @@ import { useSnackbar } from 'notistack'
 
 import css from './editorwindow.module.css'
 
-import WindowToolbar from '../../../common/Window/WindowToolbar'
-import { SimpleAccordion } from '../../../common/Accordion'
-import Input from '../../../common/Input/Input'
-import Panel from '../../../common/Panel/Panel'
-import { useModal } from '../../../../contexts/ModalProvider'
+import WindowToolbar from '@common/Window/WindowToolbar'
+import { SimpleAccordion } from '@common/Accordion'
+import Input from '@common/Input/Input'
+import Panel from '@common/Panel/Panel'
+import { useModal } from '@/contexts/ModalProvider'
 
 import {
   useGetDeploymentsQuery,
@@ -17,8 +17,8 @@ import {
   useDeploySpellMutation,
   useLazyGetDeploymentQuery,
   useSaveSpellMutation,
-} from '../../../../state/api/spells'
-import { useEditor } from '../../../../contexts/EditorProvider'
+} from '@/state/api/spells'
+import { useEditor } from '@thoth/contexts/EditorProvider'
 
 const DeploymentView = ({ open, setOpen, spellId, close }) => {
   const [loadingVersion, setLoadingVersion] = useState(false)

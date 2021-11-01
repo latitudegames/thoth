@@ -1,16 +1,25 @@
+import { useEffect } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
+import { useNavigate } from 'react-router-dom'
 
 import { usePubSub } from '../../contexts/PubSubProvider'
 import { useTabManager } from '../../contexts/TabManagerProvider'
 import LoadingScreen from '../common/LoadingScreen/LoadingScreen'
 import TabLayout from '../common/TabLayout/TabLayout'
-import Workspace from './components/Workspace'
+import Workspaces from './workspaces'
 
 const Thoth = ({ empty }) => {
+  const navigate = useNavigate()
   const { activeTab, tabs } = useTabManager()
   const pubSub = usePubSub()
 
   const { events, publish } = pubSub
+
+  useEffect(() => {
+    if (!tabs) return
+
+    if (tabs.length === 0) navigate('/home')
+  }, [tabs])
 
   useHotkeys(
     'Control+z',
@@ -35,15 +44,9 @@ const Thoth = ({ empty }) => {
 
   return (
     <TabLayout>
-      {!empty &&
-        tabs.map((tab, i) => (
-          <Workspace
-            tab={tab}
-            tabs={tabs}
-            key={`${i}-${tab.name}`}
-            appPubSub={pubSub}
-          />
-        ))}
+      {!empty && (
+        <Workspaces tabs={tabs} pubSub={pubSub} activeTab={activeTab} />
+      )}
     </TabLayout>
   )
 }
