@@ -10,7 +10,7 @@ import {
   selectSpellsByModuleName,
   selectSpellById,
 } from '../../../state/api/spells'
-import WorkspaceProvider from '../../../contexts/WorkspaceProvider'
+import WorkspaceProvider from '../contexts/WorkspaceProvider'
 import { debounce } from '../../../utils/debounce'
 import EditorWindow from '../windows/EditorWindow'
 import EventHandler from './EventHandler'
