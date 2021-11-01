@@ -9,7 +9,6 @@ import {
   useSaveSpellMutation,
   selectSpellById,
 } from '../../../../state/api/spells'
-import WorkspaceProvider from '../../../../contexts/WorkspaceProvider'
 import { debounce } from '../../../../utils/debounce'
 import EditorWindow from '../../windows/EditorWindow'
 import EventHandler from '../../components/EventHandler'
@@ -92,11 +91,7 @@ const Workspace = ({ tab, tabs, pubSub }) => {
 }
 
 const Wrapped = props => {
-  return (
-    <WorkspaceProvider {...props}>
-      <Workspace {...props} />
-    </WorkspaceProvider>
-  )
+  return <Workspace {...props} />
 }
 
 export default Wrapped
