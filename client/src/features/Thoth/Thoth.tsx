@@ -1,4 +1,6 @@
+import { useEffect } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
+import { useNavigate } from 'react-router-dom'
 
 import { usePubSub } from '../../contexts/PubSubProvider'
 import { useTabManager } from '../../contexts/TabManagerProvider'
@@ -7,10 +9,17 @@ import TabLayout from '../common/TabLayout/TabLayout'
 import Workspace from './components/Workspace'
 
 const Thoth = ({ empty }) => {
+  const navigate = useNavigate()
   const { activeTab, tabs } = useTabManager()
   const pubSub = usePubSub()
 
   const { events, publish } = pubSub
+
+  useEffect(() => {
+    if (!tabs) return
+
+    if (tabs.length === 0) navigate('/home')
+  }, [tabs])
 
   useHotkeys(
     'Control+z',
@@ -36,7 +45,7 @@ const Thoth = ({ empty }) => {
   return (
     <TabLayout>
       {!empty &&
-        tabs.map((tab, i) => (
+        tabs.map((tab: any, i) => (
           <Workspace
             tab={tab}
             tabs={tabs}
