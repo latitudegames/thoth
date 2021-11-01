@@ -18,7 +18,7 @@ import './App.css'
 function App() {
   // Use our routes
   const [checked, setChecked] = useState(false)
-  const { tabs } = useTabManager()
+  const { tabs, activeTab } = useTabManager()
   const { user, getUser, checkIn } = useAuth()
   const navigate = useNavigate()
 
@@ -48,7 +48,7 @@ function App() {
   if (!checked) return <LoadingScreen />
 
   return (
-    <ThothPageWrapper tabs={tabs}>
+    <ThothPageWrapper tabs={tabs} activeTab={activeTab}>
       <Routes>
         <Route path="/login" element={<LoginScreen />} />
         <GuardedRoute path="/thoth" element={<Thoth />} />
