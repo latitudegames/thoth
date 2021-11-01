@@ -18,7 +18,7 @@
     "paths": {
       "@/*": ["src/*"],
       "@common/*": ["src/features/common/*"],
-      "@thoth/*": ["src/features/thoth/*"]
+      "@thoth/*": ["src/features/Thoth/*"]
     }
   },
   "typeRoots": ["@types/@thoth"],
