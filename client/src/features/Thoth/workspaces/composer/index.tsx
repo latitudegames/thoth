@@ -84,15 +84,10 @@ const Workspace = ({ tab, tabs, appPubSub, activeTab }) => {
   }
 
   return (
-    <div
-      style={{
-        visibility: tab.id !== activeTab ? 'hidden' : undefined,
-        height: '100%',
-      }}
-    >
+    <>
       <EventHandler tab={tab} pubSub={appPubSub} />
       <Layout json={tab.layoutJson} factory={factory(tab)} tab={tab} />
-    </div>
+    </>
   )
 }
 
