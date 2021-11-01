@@ -53,7 +53,8 @@ const CreateNew = () => {
       spellId: placeholderName,
       type: 'spell',
     })
-    navigates('/thoth')
+
+    navigate('/thoth')
   }
 
   return (
