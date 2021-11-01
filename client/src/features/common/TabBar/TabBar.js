@@ -8,24 +8,25 @@ import MenuBar from '../MenuBar/MenuBar'
 import css from './tabBar.module.css'
 // import { useAuth } from "../../../contexts/AuthProvider";
 
-const Tab = props => {
+const Tab = ({ tab, activeTab }) => {
   const { switchTab, closeTab } = useTabManager()
+  const active = tab.id === activeTab
 
-  const title = `${props.type}- ${props.name}`
+  const title = `${tab.type}- ${tab.name}`
   const tabClass = classnames({
     [css['tabbar-tab']]: true,
-    [css['active']]: props.active,
-    [css['inactive']]: !props.active,
+    [css['active']]: active,
+    [css['inactive']]: !active,
   })
 
   const onClick = () => {
-    switchTab(props.id)
+    switchTab(tab.id)
   }
 
   // Handle selecting the next tab down is none are active.
   const onClose = e => {
     e.stopPropagation()
-    closeTab(props.id)
+    closeTab(tab.id)
   }
 
   return (
@@ -38,7 +39,7 @@ const Tab = props => {
   )
 }
 
-const TabBar = ({ tabs }) => {
+const TabBar = ({ tabs, activeTab }) => {
   // const { user } = useAuth();
 
   return (
@@ -47,7 +48,8 @@ const TabBar = ({ tabs }) => {
         <MenuBar />
       </div>
       <div className={css['tabbar-section']}>
-        {tabs && tabs.map((tab, i) => <Tab {...tab} key={i} />)}
+        {tabs &&
+          tabs.map((tab, i) => <Tab tab={tab} activeTab={activeTab} key={i} />)}
       </div>
       <div className={css['tabbar-user']}>
         {<Icon name="account" size={24} />}
