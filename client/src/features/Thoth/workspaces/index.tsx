@@ -1,3 +1,4 @@
+import WorkspaceProvider from '../../../contexts/WorkspaceProvider'
 import TabLayout from '../../common/TabLayout/TabLayout'
 import Composer from './composer'
 
@@ -20,12 +21,15 @@ const Workspaces = ({ tabs, pubSub, activeTab }) => {
 
         return (
           <div
+            key={tab.name}
             style={{
               visibility: tab.id !== activeTab ? 'hidden' : undefined,
               height: '100%',
             }}
           >
-            <Workspace {...props} />
+            <WorkspaceProvider {...props}>
+              <Workspace {...props} />
+            </WorkspaceProvider>
           </div>
         )
       })}
