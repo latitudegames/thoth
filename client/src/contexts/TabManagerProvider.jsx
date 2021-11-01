@@ -43,17 +43,24 @@ const TabManager = ({ children }) => {
       const activeTab = await db.tabs
         .findOne({ selector: { active: true } })
         .exec()
-      const tabs = await db.tabs.find().exec()
+      if (activeTab) setActiveTab(activeTab.toJSON().id)
 
-      if (activeTab) setActiveTab(activeTab.toJSON())
-      if (tabs && tabs.length > 0) setTabs(tabs.map(tab => tab.toJSON()))
-      if (!tabs || tabs.length === 0) setTabs([])
+      refreshTabs()
     })()
   }, [db])
 
+  const filterTabs = tabDocs => {
+    return tabDocs
+      .map(tab => tab.toJSON())
+      .map(({ active, ...rest }) => ({ ...rest }))
+  }
+
   const refreshTabs = async () => {
-    const tabs = await db.tabs.find().exec()
-    if (tabs && tabs.length > 0) setTabs(tabs.map(tab => tab.toJSON()))
+    // We want to exclude the 'active' field soince this changes,which causes rerenders we dont want.
+    const tabDocs = await db.tabs.find().exec()
+    const tabs = filterTabs(tabDocs)
+    if (tabs && tabs.length > 0) setTabs(tabs)
+    if (!tabs || tabs.length === 0) setTabs([])
   }
 
   const updateTab = async (tabId, update) => {
@@ -89,7 +96,7 @@ const TabManager = ({ children }) => {
     }
 
     const newTabDoc = await db.tabs.insert(newTab)
-    setActiveTab(newTabDoc.toJSON())
+    setActiveTab(newTabDoc.toJSON().id)
     refreshTabs()
   }
 
@@ -115,7 +122,7 @@ const TabManager = ({ children }) => {
     if (!tab) return false
     await tab.atomicPatch({ active: true })
 
-    setActiveTab(tab.toJSON())
+    setActiveTab(tab.toJSON().id)
     await refreshTabs()
     return true
   }
