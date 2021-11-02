@@ -20,6 +20,7 @@
 
 .input {
   margin-top: var(--c1);
+  margin-bottom: var(--c1);
   width: 100%;
 }
 
