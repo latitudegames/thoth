@@ -23,7 +23,7 @@ const Workspaces = ({ tabs, pubSub, activeTab }) => {
           <div
             key={tab.name}
             style={{
-              visibility: tab.id !== activeTab ? 'hidden' : undefined,
+              visibility: tab.id !== activeTab.id ? 'hidden' : undefined,
               height: '100%',
             }}
           >
