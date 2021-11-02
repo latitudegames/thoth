@@ -22,11 +22,6 @@ const customConfig = {
   length: 2,
 }
 
-const defaultGraph = {
-  id: 'demo@0.1.0',
-  nodes: {},
-}
-
 const templates = [
   { label: 'Starter', bg: emptyImg, chain: defaultChain },
   { label: 'Language example', bg: langImg, chain: defaultChain },
