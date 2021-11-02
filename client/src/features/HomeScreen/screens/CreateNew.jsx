@@ -95,6 +95,7 @@ const CreateNew = () => {
         ))}
       </div>
       <div className={css['button-row']}>
+        {error && <span className={css['error-message']}>{error}</span>}
         <button
           onClick={() => {
             window.history.back()
