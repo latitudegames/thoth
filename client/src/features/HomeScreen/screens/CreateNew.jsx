@@ -6,9 +6,10 @@ import {
 } from 'unique-names-generator'
 import { useNavigate } from 'react-router-dom'
 
-import { useNewSpellMutation } from '../../../state/api/spells'
-import { useTabManager } from '../../../contexts/TabManagerProvider'
-import Panel from '../../common/Panel/Panel'
+import { useNewSpellMutation } from '@/state/api/spells'
+import { useTabManager } from '@/contexts/TabManagerProvider'
+import Panel from '@common/Panel/Panel'
+import Input from '@common/Input/Input'
 import emptyImg from '../empty.png'
 import enkiImg from '../enki.png'
 import langImg from '../lang.png'
