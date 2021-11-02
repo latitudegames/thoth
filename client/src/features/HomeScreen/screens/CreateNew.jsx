@@ -62,6 +62,19 @@ const CreateNew = () => {
   return (
     <Panel shadow flexColumn>
       <h1> Create New </h1>
+      <div className={css['spell-details']}>
+        <form>
+          <label className={css['label']} htmlFor="">
+            Spell name
+          </label>
+          <input
+            type="text"
+            className={css['input']}
+            defaultValue=""
+            {...register('name')}
+          />
+        </form>
+      </div>
       <div
         style={{
           width: 'var(--c62)',
