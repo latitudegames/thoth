@@ -43,7 +43,7 @@ const CreateNew = () => {
     // formState: { errors },
   } = useForm()
 
-  const onCreate = async () => {
+  const onCreate = handleSubmit(async data => {
     const placeholderName = uniqueNamesGenerator(customConfig)
     const { data: spell } = await newSpell({
       chain: selectedTemplate.chain,
@@ -57,7 +57,7 @@ const CreateNew = () => {
     })
 
     navigate('/thoth')
-  }
+  })
 
   return (
     <Panel shadow flexColumn>
