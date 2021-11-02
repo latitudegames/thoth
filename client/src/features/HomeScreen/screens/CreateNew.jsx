@@ -31,12 +31,17 @@ const templates = [
 ]
 
 const CreateNew = () => {
-  const navigate = useNavigate()
   const [selectedTemplate, setSelectedTemplate] = useState(null)
 
+  const navigate = useNavigate()
+  const { openTab, clearTabs } = useTabManager()
   const [newSpell] = useNewSpellMutation()
 
-  const { openTab, clearTabs } = useTabManager()
+  const {
+    register,
+    handleSubmit,
+    // formState: { errors },
+  } = useForm()
 
   const onCreate = async () => {
     const placeholderName = uniqueNamesGenerator(customConfig)
