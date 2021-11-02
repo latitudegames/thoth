@@ -55,8 +55,9 @@ const CreateNew = () => {
     })
 
     if (response.error) {
-      setError(response.error.message)
-      enqueueSnackbar('Error saving spell', {
+      const message = response.error.data.error.message
+      setError(message)
+      enqueueSnackbar(`Error saving spell. ${message}.`, {
         variant: 'error',
       })
       return
