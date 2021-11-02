@@ -46,14 +46,23 @@ const CreateNew = () => {
 
   const onCreate = handleSubmit(async data => {
     const placeholderName = uniqueNamesGenerator(customConfig)
-    const { data: spell } = await newSpell({
+    const name = data.name || placeholderName
+    const response = await newSpell({
       chain: selectedTemplate.chain,
-      name: placeholderName,
+      name,
     })
 
+    if (response.error) {
+      setError(response.error.message)
+      enqueueSnackbar('Error saving spell', {
+        variant: 'error',
+      })
+      return
+    }
+
     await openTab({
-      name: placeholderName,
-      spellId: placeholderName,
+      name: name,
+      spellId: name,
       type: 'spell',
     })
 
