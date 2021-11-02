@@ -1,3 +1,4 @@
+import { useSnackbar } from 'notistack'
 import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import {
@@ -34,6 +35,7 @@ const CreateNew = () => {
   const [selectedTemplate, setSelectedTemplate] = useState(null)
   const [error, setError] = useState(null)
 
+  const { enqueueSnackbar } = useSnackbar()
   const navigate = useNavigate()
   const { openTab, clearTabs } = useTabManager()
   const [newSpell] = useNewSpellMutation()
