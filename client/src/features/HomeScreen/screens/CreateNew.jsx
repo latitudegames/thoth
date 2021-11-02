@@ -14,6 +14,7 @@ import enkiImg from '../enki.png'
 import langImg from '../lang.png'
 import css from '../homeScreen.module.css'
 import TemplatePanel from '../components/TemplatePanel'
+import defaultChain from './chains/default'
 
 const customConfig = {
   dictionaries: [adjectives, colors],
