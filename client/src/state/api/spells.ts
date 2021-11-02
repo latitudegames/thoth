@@ -107,17 +107,11 @@ export const spellApi = rootApi.injectEndpoints({
     }),
     newSpell: builder.mutation<Spell, Partial<Spell>>({
       invalidatesTags: ['Spell'],
-      query: spellData => {
-        const spell = {
-          ...spellData,
-          gameState: {},
-        }
-        return {
-          url: 'game/spells/save',
-          method: 'POST',
-          body: spell,
-        }
-      },
+      query: spellData => ({
+        url: 'game/spells',
+        method: 'POST',
+        body: spellData,
+      }),
     }),
     patchSpell: builder.mutation<Spell, PatchArgs>({
       invalidatesTags: ['Spell'],
