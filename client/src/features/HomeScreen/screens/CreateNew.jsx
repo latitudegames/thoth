@@ -28,9 +28,9 @@ const defaultGraph = {
 }
 
 const templates = [
-  { label: 'Empty', bg: emptyImg },
-  { label: 'Language example', bg: langImg },
-  { label: 'Enki example', bg: enkiImg },
+  { label: 'Starter', bg: emptyImg, chain: defaultChain },
+  { label: 'Language example', bg: langImg, chain: defaultChain },
+  { label: 'Enki example', bg: enkiImg, chain: defaultChain },
 ]
 
 const CreateNew = () => {
