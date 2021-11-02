@@ -23,6 +23,12 @@
   width: 100%;
 }
 
+.error-message {
+  margin-top: var(--c1);
+  color: var(--red);
+  text-align: center;
+}
+
 .template-panel:hover {
   /* background-color: var(--dark-3); */
   border: 1px solid var(--primary);
