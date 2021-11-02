@@ -32,6 +32,7 @@ const templates = [
 
 const CreateNew = () => {
   const [selectedTemplate, setSelectedTemplate] = useState(null)
+  const [error, setError] = useState(null)
 
   const navigate = useNavigate()
   const { openTab, clearTabs } = useTabManager()
