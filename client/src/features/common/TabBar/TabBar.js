@@ -10,7 +10,7 @@ import css from './tabBar.module.css'
 
 const Tab = ({ tab, activeTab }) => {
   const { switchTab, closeTab } = useTabManager()
-  const active = tab.id === activeTab
+  const active = tab.id === activeTab.id
 
   const title = `${tab.type}- ${tab.name}`
   const tabClass = classnames({
