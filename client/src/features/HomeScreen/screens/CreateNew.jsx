@@ -83,6 +83,7 @@ const CreateNew = () => {
             defaultValue=""
             {...register('name')}
           />
+          {error && <span className={css['error-message']}>{error}</span>}
         </form>
       </div>
       <div
@@ -104,7 +105,6 @@ const CreateNew = () => {
         ))}
       </div>
       <div className={css['button-row']}>
-        {error && <span className={css['error-message']}>{error}</span>}
         <button
           onClick={() => {
             window.history.back()
