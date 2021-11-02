@@ -43,7 +43,6 @@ const CreateNew = () => {
       name: placeholderName,
     })
 
-    await clearTabs()
     await openTab({
       name: placeholderName,
       spellId: placeholderName,
