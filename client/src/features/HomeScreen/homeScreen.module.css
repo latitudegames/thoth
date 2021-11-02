@@ -10,6 +10,19 @@
   align-items: center;
   justify-content: center;
 }
+.spell-details {
+  margin-bottom: var(--c4);
+}
+
+.label {
+  font-size: 14px;
+}
+
+.input {
+  margin-top: var(--c1);
+  width: 100%;
+}
+
 .template-panel:hover {
   /* background-color: var(--dark-3); */
   border: 1px solid var(--primary);
