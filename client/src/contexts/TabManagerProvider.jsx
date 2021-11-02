@@ -40,11 +40,6 @@ const TabManager = ({ children }) => {
   useEffect(() => {
     if (!db) return
     ;(async () => {
-      const activeTab = await db.tabs
-        .findOne({ selector: { active: true } })
-        .exec()
-      if (activeTab) setActiveTab(activeTab.toJSON().id)
-
       refreshTabs()
     })()
   }, [db])
@@ -56,6 +51,11 @@ const TabManager = ({ children }) => {
   }
 
   const refreshTabs = async () => {
+    const activeTab = await db.tabs
+      .findOne({ selector: { active: true } })
+      .exec()
+    if (activeTab) setActiveTab(activeTab.toJSON())
+
     // We want to exclude the 'active' field soince this changes,which causes rerenders we dont want.
     const tabDocs = await db.tabs.find().exec()
     const tabs = filterTabs(tabDocs)
@@ -96,7 +96,6 @@ const TabManager = ({ children }) => {
     }
 
     const newTabDoc = await db.tabs.insert(newTab)
-    setActiveTab(newTabDoc.toJSON().id)
     refreshTabs()
   }
 
@@ -122,7 +121,6 @@ const TabManager = ({ children }) => {
     if (!tab) return false
     await tab.atomicPatch({ active: true })
 
-    setActiveTab(tab.toJSON().id)
     await refreshTabs()
     return true
   }
