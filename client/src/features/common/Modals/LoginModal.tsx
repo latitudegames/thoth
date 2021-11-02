@@ -64,7 +64,7 @@ const LoginModal = ({ title, onClose }) => {
               Password
             </label>
             <input
-              type="text"
+              type="password"
               className={css['input']}
               {...register('password', { required: true })}
             />
