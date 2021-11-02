@@ -23,7 +23,7 @@ const LoginModal = ({ title, onClose }) => {
     const response: any = await login(data.email, data.password)
 
     if (response.error) {
-      setError(response.error.message)
+      setError(response.error.data.error.message)
     }
 
     if (response.id) {
