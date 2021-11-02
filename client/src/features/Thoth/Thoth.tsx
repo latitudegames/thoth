@@ -18,7 +18,7 @@ const Thoth = ({ empty }) => {
   useEffect(() => {
     if (!tabs) return
 
-    if (tabs.length === 0) navigate('/home')
+    if (tabs.length === 0 && !activeTab) navigate('/home')
   }, [tabs])
 
   useHotkeys(
