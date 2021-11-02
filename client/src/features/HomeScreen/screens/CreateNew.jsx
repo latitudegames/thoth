@@ -68,8 +68,7 @@ const CreateNew = () => {
           <TemplatePanel
             setSelectedTemplate={setSelectedTemplate}
             selectedTemplate={selectedTemplate}
-            label={template.label}
-            bg={template.bg}
+            template={template}
             key={i}
           />
         ))}
