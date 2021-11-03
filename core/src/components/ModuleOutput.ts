@@ -13,7 +13,6 @@ const info = `The module output component adds an output socket to the parent mo
 
 export class ModuleOutput extends ThothComponent {
   task: TaskOptions
-  module: object
   category: string
   info: string
   contextMenuName: string
