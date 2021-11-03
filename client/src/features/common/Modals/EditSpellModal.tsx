@@ -23,7 +23,7 @@ const EditSpellModal = ({ closeModal, spellId, name, tab }) => {
     const response: any = await patchSpell({ spellId, update: data })
 
     if (response.error) {
-      setError(response.error.message)
+      setError(response.error.data.error.message)
       enqueueSnackbar('Error saving spell', {
         variant: 'error',
       })

@@ -3,10 +3,14 @@
 interface CssExports {
   'button-row': string;
   'center-container': string;
+  'error-message': string;
+  'input': string;
+  'label': string;
   'open-project-container': string;
   'overlay': string;
   'project-row': string;
   'selected': string;
+  'spell-details': string;
   'template-container': string;
   'template-panel': string;
   'version-banner': string;

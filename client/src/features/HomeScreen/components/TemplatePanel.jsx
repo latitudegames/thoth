@@ -1,19 +1,16 @@
 import Panel from '../../common/Panel/Panel'
 import css from '../homeScreen.module.css'
 
-const TemplatePanel = ({
-  label,
-  bg,
-  setSelectedTemplate,
-  selectedTemplate,
-}) => {
+const TemplatePanel = ({ template, setSelectedTemplate, selectedTemplate }) => {
+  const isSelected =
+    selectedTemplate?.label && selectedTemplate.label === template.label
   return (
     <div
       className={`${css['template-container']} ${
-        css[selectedTemplate === label && 'selected']
+        css[isSelected && 'selected']
       }`}
       onClick={() => {
-        setSelectedTemplate(label)
+        setSelectedTemplate(template)
       }}
     >
       <Panel
@@ -22,11 +19,11 @@ const TemplatePanel = ({
           width: 'var(--c20)',
           height: 'var(--c12)',
           backgroundColor: 'var(--dark-3)',
-          backgroundImage: `url(${bg})`,
+          backgroundImage: `url(${template.bg})`,
         }}
         className={css['template-panel']}
       ></Panel>
-      <p>{label}</p>
+      <p>{template.label}</p>
     </div>
   )
 }

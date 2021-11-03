@@ -1,4 +1,6 @@
+import { useSnackbar } from 'notistack'
 import { useState, useEffect } from 'react'
+import { useForm } from 'react-hook-form'
 import {
   uniqueNamesGenerator,
   adjectives,
@@ -6,14 +8,16 @@ import {
 } from 'unique-names-generator'
 import { useNavigate } from 'react-router-dom'
 
-import { useNewSpellMutation } from '../../../state/api/spells'
-import { useTabManager } from '../../../contexts/TabManagerProvider'
-import Panel from '../../common/Panel/Panel'
+import { useNewSpellMutation } from '@/state/api/spells'
+import { useTabManager } from '@/contexts/TabManagerProvider'
+import Panel from '@common/Panel/Panel'
+import Input from '@common/Input/Input'
 import emptyImg from '../empty.png'
 import enkiImg from '../enki.png'
 import langImg from '../lang.png'
 import css from '../homeScreen.module.css'
 import TemplatePanel from '../components/TemplatePanel'
+import defaultChain from './chains/default'
 
 const customConfig = {
   dictionaries: [adjectives, colors],
@@ -21,45 +25,70 @@ const customConfig = {
   length: 2,
 }
 
-const defaultGraph = {
-  id: 'demo@0.1.0',
-  nodes: {},
-}
-
 const templates = [
-  { label: 'Empty', bg: emptyImg },
-  { label: 'Language example', bg: langImg },
-  { label: 'Enki example', bg: enkiImg },
+  { label: 'Starter', bg: emptyImg, chain: defaultChain },
+  { label: 'Language example', bg: langImg, chain: defaultChain },
+  { label: 'Enki example', bg: enkiImg, chain: defaultChain },
 ]
 
 const CreateNew = () => {
-  const navigate = useNavigate()
   const [selectedTemplate, setSelectedTemplate] = useState(null)
+  const [error, setError] = useState(null)
 
+  const { enqueueSnackbar } = useSnackbar()
+  const navigate = useNavigate()
+  const { openTab, clearTabs } = useTabManager()
   const [newSpell] = useNewSpellMutation()
 
-  const { openTab, clearTabs } = useTabManager()
+  const {
+    register,
+    handleSubmit,
+    // formState: { errors },
+  } = useForm()
 
-  const onCreate = async () => {
+  const onCreate = handleSubmit(async data => {
     const placeholderName = uniqueNamesGenerator(customConfig)
-    const { data: spell } = await newSpell({
-      chain: defaultGraph,
-      name: placeholderName,
+    const name = data.name || placeholderName
+    const response = await newSpell({
+      chain: selectedTemplate.chain,
+      name,
     })
 
-    await clearTabs()
+    if (response.error) {
+      const message = response.error.data.error.message
+      setError(message)
+      enqueueSnackbar(`Error saving spell. ${message}.`, {
+        variant: 'error',
+      })
+      return
+    }
+
     await openTab({
-      name: placeholderName,
-      spellId: placeholderName,
+      name: name,
+      spellId: name,
       type: 'spell',
     })
 
-    navigate('/thoth')
-  }
+    setTimeout(() => navigate('/thoth'), 0)
+  })
 
   return (
     <Panel shadow flexColumn>
       <h1> Create New </h1>
+      <div className={css['spell-details']}>
+        <form>
+          <label className={css['label']} htmlFor="">
+            Spell name
+          </label>
+          <input
+            type="text"
+            className={css['input']}
+            defaultValue=""
+            {...register('name')}
+          />
+          {error && <span className={css['error-message']}>{error}</span>}
+        </form>
+      </div>
       <div
         style={{
           width: 'var(--c62)',
@@ -73,8 +102,7 @@ const CreateNew = () => {
           <TemplatePanel
             setSelectedTemplate={setSelectedTemplate}
             selectedTemplate={selectedTemplate}
-            label={template.label}
-            bg={template.bg}
+            template={template}
             key={i}
           />
         ))}

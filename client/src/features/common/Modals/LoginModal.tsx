@@ -23,7 +23,7 @@ const LoginModal = ({ title, onClose }) => {
     const response: any = await login(data.email, data.password)
 
     if (response.error) {
-      setError(response.error.message)
+      setError(response.error.data.error.message)
     }
 
     if (response.id) {
@@ -64,7 +64,7 @@ const LoginModal = ({ title, onClose }) => {
               Password
             </label>
             <input
-              type="text"
+              type="password"
               className={css['input']}
               {...register('password', { required: true })}
             />
