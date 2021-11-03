@@ -8,7 +8,7 @@ import { EntityDetector } from './EntityDetector'
 import { ForEach } from './ForEach'
 import { Generator } from './Generator'
 import { HuggingfaceComponent } from './Huggingface'
-import { InputComponent } from './Input'
+import { InputFieldComponent } from './InputField'
 import { ItemTypeComponent } from './ItemDetector'
 import { JoinListComponent } from './JoinList'
 import { ModuleComponent } from './Module'
@@ -42,7 +42,7 @@ export const components = {
   forEach: () => new ForEach(),
   generator: () => new Generator(),
   huggingfaceComponent: () => new HuggingfaceComponent(),
-  inputComponent: () => new InputComponent(),
+  inputComponent: () => new InputFieldComponent(),
   itemTypeComponent: () => new ItemTypeComponent(),
   joinListComponent: () => new JoinListComponent(),
   moduleComponent: () => new ModuleComponent(),
