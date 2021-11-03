@@ -13,7 +13,6 @@ const info = `The module trigger in adds a trigger input socket to the parent mo
 
 export class ModuleTriggerIn extends ThothComponent {
   task: TaskOptions
-  module: object
   category: string
   info: string
   contextMenuName: string
