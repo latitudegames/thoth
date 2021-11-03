@@ -13,7 +13,6 @@ const info = `The module trigger out component adds a trigger out socket to the 
 
 export class ModuleTriggerOut extends ThothComponent {
   task: TaskOptions
-  module: object
   category: string
   info: string
   contextMenuName: string
