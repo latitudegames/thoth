@@ -69,7 +69,7 @@ const CreateNew = () => {
       type: 'spell',
     })
 
-    navigate('/thoth')
+    setTimeout(() => navigate('/thoth'), 0)
   })
 
   return (
