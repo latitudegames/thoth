@@ -18,7 +18,6 @@ const info = `The module input component adds an input socket to the parent modu
 
 export class ModuleInput extends ThothComponent {
   task: TaskOptions
-  module: object
   category: string
   info: string
   contextMenuName: string
