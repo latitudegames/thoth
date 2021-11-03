@@ -6,10 +6,10 @@ import { stringSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 const info = `The info component has a single control, an input field.  Whatever value you put into this input field will be sent out along the compoonents output socket.`
 
-export class InputComponent extends ThothComponent {
+export class InputFieldComponent extends ThothComponent {
   constructor() {
     // Name of the component
-    super('Input')
+    super('Input Field')
 
     this.task = {
       outputs: {
