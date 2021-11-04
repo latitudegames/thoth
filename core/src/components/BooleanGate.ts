@@ -6,7 +6,7 @@ import { ThothComponent } from '../thoth-component'
 
 const info = `The boolean gate takes a boolean input, and depending on whether the value is true or false will only trigger one output or the other.`
 
-export class BooleanGate extends ThothComponent {
+export class BooleanGate extends ThothComponent<void> {
   constructor() {
     // Name of the component
     super('Boolean Gate')
