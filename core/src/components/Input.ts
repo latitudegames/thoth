@@ -117,6 +117,11 @@ export class InputComponent extends ThothComponent<InputReturn> {
       }
     }
 
+    // If there are outputs, we are running as a module input and we use that value
+    if (outputs.output) {
+      return outputs as { output: unknown }
+    }
+
     return {
       output: node.data.text as string,
     }
