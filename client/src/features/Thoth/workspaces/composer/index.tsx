@@ -44,7 +44,10 @@ const Workspace = ({ tab, tabs, pubSub }) => {
                   store.getState(),
                   filteredTab.spell
                 )
-                if (spell?.modules.some(module => module.name === tab.module))
+                if (
+                  spell?.modules &&
+                  spell?.modules.some(module => module.name === tab.module)
+                )
                   saveSpell({ ...spell })
               }
             })
