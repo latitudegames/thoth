@@ -38,7 +38,13 @@ seconds, minutes, hours, days, weeks, years.
 
 You can edit the fewshot in the text editor, but be aware that you must retain the fewshots data structure so processing will work.`
 
-export class TimeDetectorComponent extends ThothComponent {
+type WorkerReturn = {
+  detectedTime: string
+}
+
+export class TimeDetectorComponent extends ThothComponent<
+  Promise<WorkerReturn>
+> {
   constructor() {
     super('Time Detector')
 
