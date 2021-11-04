@@ -11,7 +11,11 @@ import { anySocket, triggerSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 const info = `The module output component adds an output socket to the parent module.  It can be given a name, which is displayed on the parent.`
 
-export class ModuleOutput extends ThothComponent {
+type WorkerReturn = {
+  text: string
+}
+
+export class ModuleOutput extends ThothComponent<WorkerReturn> {
   task: TaskOptions
   category: string
   info: string
