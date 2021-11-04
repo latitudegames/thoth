@@ -22,7 +22,11 @@ Action, Item: `
 
 const info = `The item detector attempts to recognize what item in a give text string is being mentioned or used.  The input is a text string the output is a string of the object`
 
-export class ItemTypeComponent extends ThothComponent {
+type WorkerReturn = {
+  detectedItem: string
+}
+
+export class ItemTypeComponent extends ThothComponent<Promise<WorkerReturn>> {
   constructor() {
     // Name of the component
     super('Item Detector')
