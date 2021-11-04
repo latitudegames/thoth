@@ -8,6 +8,7 @@ import {
 } from '../../types'
 import { TextInputControl } from '../controls/TextInputControl'
 import { InputControl } from '../dataControls/InputControl'
+import { Task } from '../plugins/taskPlugin/task'
 
 import { anySocket } from '../sockets'
 import { ThothComponent, ThothTask } from '../thoth-component'
@@ -26,6 +27,9 @@ export class InputComponent extends ThothComponent<InputReturn> {
     this.task = {
       outputs: {
         output: 'output',
+      },
+      init: (task = {} as Task, node: ThothNode) => {
+        this.nodeTaskMap[node.id] = task
       },
     }
 
