@@ -8,7 +8,7 @@ import { ThothComponent } from '../thoth-component'
 
 const info = `When the alert component is triggered, it will fire an alert with the message in the input box.`
 
-export class Alert extends ThothComponent {
+export class Alert extends ThothComponent<void> {
   constructor() {
     // Name of the component
     super('Alert')
