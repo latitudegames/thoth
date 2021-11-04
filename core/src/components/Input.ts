@@ -67,6 +67,8 @@ export class InputComponent extends ThothComponent<InputReturn> {
     if (this.subscriptionMap[node.id]) this.subscriptionMap[node.id]()
     delete this.subscriptionMap[node.id]
 
+    const out = new Rete.Output('output', 'output', anySocket)
+
     const nameInput = new InputControl({
       dataKey: 'name',
       name: 'Input name',
