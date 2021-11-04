@@ -6,7 +6,11 @@ import { stringSocket, arraySocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 const info = `The Join List component takes in an array, and will join each item in the array together with a seperator, defined in the components input field.`
 
-export class JoinListComponent extends ThothComponent {
+type WorkerReturn = {
+  text: string
+}
+
+export class JoinListComponent extends ThothComponent<WorkerReturn> {
   constructor() {
     // Name of the component
     super('Join List')
