@@ -10,14 +10,15 @@ import { TextInputControl } from '../controls/TextInputControl'
 import { InputControl } from '../dataControls/InputControl'
 
 import { anySocket } from '../sockets'
-import { ThothComponent } from '../thoth-component'
-const info = `The info component has a single control, an input field.  Whatever value you put into this input field will be sent out along the compoonents output socket.`
+import { ThothComponent, ThothTask } from '../thoth-component'
 
 type InputReturn = {
   output: string | undefined
 }
 
 export class InputComponent extends ThothComponent<InputReturn> {
+  nodeTaskMap: Record<number, ThothTask> = {}
+
   constructor() {
     // Name of the component
     super('Input')
