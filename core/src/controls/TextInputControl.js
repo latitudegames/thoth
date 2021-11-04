@@ -28,7 +28,7 @@ export class TextInputControl extends Control {
     this.render = 'react'
     this.component = ReactTextInputControl
 
-    const label = rest.label || nujh
+    const label = rest.label || null
 
     // we define the props that are passed into the rendered react component here
     this.props = {
