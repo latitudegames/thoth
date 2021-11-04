@@ -14,19 +14,27 @@ const ReactTextInputControl = props => {
     setValue(e.target.value)
   }
 
-  return <input type="text" value={value} onChange={onChange} />
+  return (
+    <>
+      {props.label && <label htmlFor="">{props.label}</label>}
+      <input type="text" value={value} onChange={onChange} />
+    </>
+  )
 }
 
 export class TextInputControl extends Control {
-  constructor({ emitter, key, value }) {
+  constructor({ emitter, key, value, ...rest }) {
     super(key)
     this.render = 'react'
     this.component = ReactTextInputControl
+
+    const label = rest.label || nujh
 
     // we define the props that are passed into the rendered react component here
     this.props = {
       emitter,
       name: key,
+      label,
       value,
       putData: (...args) => this.putData.apply(this, args),
     }
