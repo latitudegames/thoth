@@ -47,7 +47,14 @@ strength, dexterity, endurance, intelligence, charisma
 You can also view and edit the fewshot in the text editor.  Note however that you must keep the same data format for the component to properly format the completion response.
 `
 
-export class DifficultyDetectorComponent extends ThothComponent {
+type WorkerReturn = {
+  difficulty: string | undefined
+  category: string | undefined
+}
+
+export class DifficultyDetectorComponent extends ThothComponent<
+  Promise<WorkerReturn>
+> {
   constructor() {
     // Name of the component
     super('Difficulty Detector')
