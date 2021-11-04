@@ -1,4 +1,5 @@
 import Rete from 'rete'
+import { v4 as uuidv4 } from 'uuid'
 
 import {
   NodeData,
@@ -13,6 +14,7 @@ import { Task } from '../plugins/taskPlugin/task'
 
 import { anySocket } from '../sockets'
 import { ThothComponent, ThothTask } from '../thoth-component'
+const info = ``
 
 type InputReturn = {
   output: unknown
@@ -44,6 +46,9 @@ export class InputComponent extends ThothComponent<InputReturn> {
   }
 
   subscriptionMap: Record<string, Function> = {}
+
+  unsubscribe?: () => void
+
   subscribeToPlaytest(node: ThothNode) {
     const { onPlaytest } = this.editor?.thoth as EngineContext
 
@@ -80,11 +85,7 @@ export class InputComponent extends ThothComponent<InputReturn> {
       name: 'Input name',
     })
 
-    // Handle default value if data is present
     const value = node.data.text ? node.data.text : 'Input text here'
-
-    // controls are the internals of the node itself
-    // This default control sample has a text field.
     const input = new TextInputControl({
       emitter: this.editor,
       key: 'text',
@@ -101,8 +102,6 @@ export class InputComponent extends ThothComponent<InputReturn> {
     return node.addOutput(out).addControl(input)
   }
 
-  // the worker contains the main business logic of the node.  It will pass those results
-  // to the outputs to be consumed by any connected components
   worker(
     node: NodeData,
     inputs: ThothWorkerInputs,
