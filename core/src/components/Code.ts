@@ -29,8 +29,7 @@ const info = `The code component is your swiss army knife when other components 
 
 Please note that the return of your function must be an object whose keys are the same value as the names given to your output sockets.  The incoming inputs argument is an object whose keys are the names you defined, aand each is an array.
 `
-
-export class Code extends ThothComponent {
+export class Code extends ThothComponent<unknown> {
   constructor() {
     // Name of the component
     super('Code')
