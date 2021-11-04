@@ -10,7 +10,10 @@ import { ThothComponent } from '../thoth-component'
 const info = `Enki is a tool for building both fewshots, as well as entire data sets.  The enki component allows you to select an enki which you or someone else has made in the Enki tool and utilize it in your spell chains.
 
 Due to current limitations in data structure, the enki inputs and outputs are unnamed, so you will have to know the order of them and what to use them for by referencing their usage in Enki.`
-export class EnkiTask extends ThothComponent {
+
+export class EnkiTask extends ThothComponent<
+  Promise<Record<string, unknown> | null>
+> {
   constructor() {
     // Name of the component
     super('Enki Task')
