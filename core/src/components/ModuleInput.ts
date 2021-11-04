@@ -16,7 +16,7 @@ import { anySocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 const info = `The module input component adds an input socket to the parent module.  It can be given a name, which is displayed on the parent.`
 
-export class ModuleInput extends ThothComponent {
+export class ModuleInput extends ThothComponent<Record<string, unknown>> {
   task: TaskOptions
   category: string
   info: string
