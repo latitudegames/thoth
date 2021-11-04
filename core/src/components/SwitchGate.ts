@@ -15,7 +15,7 @@ import { ThothComponent } from '../thoth-component'
 
 const info = `The Switch Gate component takes a single input, and allows you to define any number of outputs.  Its works the same as the javascript switch.  The component will try to match the value of the input to one of the output socketnames you have created.  It will route the trigger signal through that socket.`
 
-export class SwitchGate extends ThothComponent {
+export class SwitchGate extends ThothComponent<void> {
   constructor() {
     // Name of the component
     super('Switch')
