@@ -8,6 +8,7 @@ import {
 } from '../../types'
 import { TextInputControl } from '../controls/TextInputControl'
 import { InputControl } from '../dataControls/InputControl'
+import { EngineContext } from '../engine'
 import { Task } from '../plugins/taskPlugin/task'
 
 import { anySocket } from '../sockets'
@@ -43,6 +44,25 @@ export class InputComponent extends ThothComponent<InputReturn> {
   }
 
   subscriptionMap: Record<string, Function> = {}
+  subscribeToPlaytest(node: ThothNode) {
+    const { onPlaytest } = this.editor?.thoth as EngineContext
+
+    // check node for the right data attribute
+    if (onPlaytest) {
+      // store the unsubscribe function in our node map
+      this.subscriptionMap[node.id] = onPlaytest((text: string) => {
+        // attach the text to the nodes data for access in worker
+        node.data.text = text
+
+        const task = this.nodeTaskMap[node.id]
+
+        // will need to run this here with the stater rather than the text
+        task?.run(text)
+        task?.reset()
+        this.editor?.trigger('process')
+      })
+    }
+  }
   builder(node: ThothNode) {
     const nameInput = new InputControl({
       dataKey: 'name',
