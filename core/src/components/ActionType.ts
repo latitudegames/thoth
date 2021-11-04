@@ -38,7 +38,7 @@ type WorkerReturn = {
   actionType: string
 }
 
-export class ActionTypeComponent extends ThothComponent<WorkerReturn> {
+export class ActionTypeComponent extends ThothComponent<Promise<WorkerReturn>> {
   constructor() {
     // Name of the component
     super('Action Type Classifier')
