@@ -34,7 +34,11 @@ const info = `The Action type component will take in an action as text, and atte
 
 look, get, use, craft, dialog, movement, travel, combat, consume, other.`
 
-export class ActionTypeComponent extends ThothComponent {
+type WorkerReturn = {
+  actionType: string
+}
+
+export class ActionTypeComponent extends ThothComponent<WorkerReturn> {
   constructor() {
     // Name of the component
     super('Action Type Classifier')
