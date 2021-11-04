@@ -10,7 +10,7 @@ import { EngineContext } from '../engine'
 import { triggerSocket, anySocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 const info = `The Playtest Print component will print whatever value is attached to its input and print that valyue back to the playtest window.`
-export class PlaytestPrint extends ThothComponent {
+export class PlaytestPrint extends ThothComponent<void> {
   constructor() {
     // Name of the component
     super('Playtest Print')
