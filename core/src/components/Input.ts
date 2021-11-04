@@ -15,7 +15,7 @@ import { anySocket } from '../sockets'
 import { ThothComponent, ThothTask } from '../thoth-component'
 
 type InputReturn = {
-  output: string | undefined
+  output: unknown
 }
 
 export class InputComponent extends ThothComponent<InputReturn> {
