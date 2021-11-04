@@ -121,7 +121,18 @@ const info = `The entity detector takes in an action as a string, and attempts t
 
 The fewshot can be edited in the text edior, though note that the data structure must remian the same for proper processing.`
 
-export class EntityDetector extends ThothComponent {
+type Entity = {
+  name: string
+  type: string
+}
+
+type WorkerReturn = {
+  entities: Entity[]
+}
+
+export class EntityDetector extends ThothComponent<
+  Promise<never[] | WorkerReturn>
+> {
   constructor() {
     // Name of the component
     super('Entity Detector')
