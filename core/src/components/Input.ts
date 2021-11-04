@@ -88,6 +88,10 @@ export class InputComponent extends ThothComponent<InputReturn> {
 
     node.inspector.add(nameInput)
 
+    // module components need to have a socket key.
+    // todo add this somewhere automated? Maybe wrap the modules builder in the plugin
+    node.data.socketKey = node?.data?.socketKey || uuidv4()
+
     return node.addOutput(out).addControl(input)
   }
 
