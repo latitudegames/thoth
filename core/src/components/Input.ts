@@ -7,6 +7,7 @@ import {
   ThothWorkerOutputs,
 } from '../../types'
 import { TextInputControl } from '../controls/TextInputControl'
+import { InputControl } from '../dataControls/InputControl'
 
 import { anySocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
@@ -40,8 +41,10 @@ export class InputComponent extends ThothComponent<InputReturn> {
   // when we have enki hooked up and have grabbed all few shots, we would use the builder
   // to generate the appropriate inputs and ouputs for the fewshot at build time
   builder(node: ThothNode) {
-    // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
-    const out = new Rete.Output('text', 'String', anySocket)
+    const nameInput = new InputControl({
+      dataKey: 'name',
+      name: 'Input name',
+    })
 
     // Handle default value if data is present
     const value = node.data.text ? node.data.text : 'Input text here'
