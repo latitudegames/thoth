@@ -8,7 +8,11 @@ import { stringSocket, triggerSocket } from '../sockets'
 import { ThothComponent, ThothTask } from '../thoth-component'
 const info = `The Input With Run component lets you input a value into the provided input field, and trigger off your spell chain to run with that value passed out its output. May be depricated in favor of using the playtest input component.`
 
-export class RunInputComponent extends ThothComponent {
+type WorkerReturn = {
+  text: string
+}
+
+export class RunInputComponent extends ThothComponent<WorkerReturn> {
   initialTask?: Task
   subscriptionMap: any
 
