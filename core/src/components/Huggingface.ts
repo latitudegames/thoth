@@ -19,7 +19,18 @@ NOTE:  Hugginface models are on demand, and sometimes require time to "boot up".
 
 Also note that you will likely need to parse the return from huggingface yourself inside a code component, or similar.`
 
-export class HuggingfaceComponent extends ThothComponent {
+type WorkerReturn = {
+  result?:
+    | {
+        [key: string]: unknown
+        error: unknown
+      }
+    | undefined
+}
+
+export class HuggingfaceComponent extends ThothComponent<
+  Promise<WorkerReturn>
+> {
   constructor() {
     super('Huggingface')
     this.task = {
