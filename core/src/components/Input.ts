@@ -63,6 +63,12 @@ export class InputComponent extends ThothComponent<InputReturn> {
       })
     }
   }
+
+  destroyed(node: ThothNode) {
+    if (this.subscriptionMap[node.id]) this.subscriptionMap[node.id]()
+    delete this.subscriptionMap[node.id]
+  }
+
   builder(node: ThothNode) {
     if (this.subscriptionMap[node.id]) this.subscriptionMap[node.id]()
     delete this.subscriptionMap[node.id]
