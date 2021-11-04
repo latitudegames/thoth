@@ -27,8 +27,8 @@ export interface ThothTask extends Task {
 }
 
 export interface ModuleOptions {
-  nodeType: 'input' | 'output' | 'triggerIn' | 'triggerOut'
-  socket: Socket
+  nodeType: 'input' | 'output' | 'triggerIn' | 'triggerOut' | 'module'
+  socket?: Socket
 }
 
 export abstract class ThothComponent<
