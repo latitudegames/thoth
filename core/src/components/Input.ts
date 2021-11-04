@@ -64,6 +64,9 @@ export class InputComponent extends ThothComponent<InputReturn> {
     }
   }
   builder(node: ThothNode) {
+    if (this.subscriptionMap[node.id]) this.subscriptionMap[node.id]()
+    delete this.subscriptionMap[node.id]
+
     const nameInput = new InputControl({
       dataKey: 'name',
       name: 'Input name',
