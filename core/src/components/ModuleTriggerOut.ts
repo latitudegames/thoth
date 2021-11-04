@@ -11,7 +11,11 @@ import { triggerSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 const info = `The module trigger out component adds a trigger out socket to the parent module.  It can be given a name, which is displayed on the parent.`
 
-export class ModuleTriggerOut extends ThothComponent {
+type WorkerReturn = {
+  trigger: boolean
+}
+
+export class ModuleTriggerOut extends ThothComponent<WorkerReturn> {
   task: TaskOptions
   category: string
   info: string
