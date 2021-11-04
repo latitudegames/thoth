@@ -19,7 +19,12 @@ Controls have also been added which give you control of some of the fundamental 
 
 The componet has two returns.  The composed will output your entire fewshot plus the completion, whereas the result output will only be the result of the completion. `
 
-export class Generator extends ThothComponent {
+type WorkerReturn = {
+  result: string
+  composed: string
+}
+
+export class Generator extends ThothComponent<WorkerReturn> {
   constructor() {
     super('Generator')
     this.task = {
