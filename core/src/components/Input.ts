@@ -84,6 +84,8 @@ export class InputComponent extends ThothComponent<InputReturn> {
       label: 'Default value',
     })
 
+    node.inspector.add(nameInput)
+
     return node.addOutput(out).addControl(input)
   }
 
