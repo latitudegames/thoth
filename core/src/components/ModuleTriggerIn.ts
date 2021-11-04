@@ -11,7 +11,7 @@ import { triggerSocket } from '../sockets'
 import { ThothComponent, ThothTask } from '../thoth-component'
 const info = `The module trigger in adds a trigger input socket to the parent module.  It can be given a name, which is displayed on the parent.`
 
-export class ModuleTriggerIn extends ThothComponent {
+export class ModuleTriggerIn extends ThothComponent<void> {
   task: TaskOptions
   category: string
   info: string
