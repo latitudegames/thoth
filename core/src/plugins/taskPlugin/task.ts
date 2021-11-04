@@ -30,7 +30,7 @@ export type TaskOutputTypes = 'option' | 'output'
 export class Task {
   node: NodeData
   inputs: ThothWorkerInputs
-  component: ThothComponent
+  component: ThothComponent<unknown>
   worker: Function
   next: TaskRef[]
   outputData: Record<string, unknown> | null
@@ -38,7 +38,7 @@ export class Task {
 
   constructor(
     inputs: ThothWorkerInputs,
-    component: ThothComponent,
+    component: ThothComponent<unknown>,
     node: NodeData,
     worker: Function
   ) {
