@@ -24,7 +24,7 @@ type WorkerReturn = {
   composed: string
 }
 
-export class Generator extends ThothComponent<WorkerReturn> {
+export class Generator extends ThothComponent<Promise<WorkerReturn>> {
   constructor() {
     super('Generator')
     this.task = {
