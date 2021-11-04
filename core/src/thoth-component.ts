@@ -31,7 +31,9 @@ export interface ModuleOptions {
   socket: Socket
 }
 
-export abstract class ThothComponent extends ThothEngineComponent {
+export abstract class ThothComponent<
+  WorkerReturnType
+> extends ThothEngineComponent<WorkerReturnType> {
   // Original interface for task and _task: IComponentWithTask from the Rete Task Plugin
   task: TaskOptions
   _task: ThothTask
