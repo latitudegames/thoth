@@ -8,7 +8,6 @@ import {
   OpenAIResultChoice,
   Spell,
   ThothWorkerInputs,
-  WorkerReturn,
 } from '../types'
 import ModulePlugin from './plugins/modulePlugin'
 import TaskPlugin from './plugins/taskPlugin'
@@ -31,7 +30,7 @@ export abstract class ThothEngineComponent<WorkerReturnType> {
     inputs: ThothWorkerInputs,
     outputs: WorkerOutputs,
     ...args: unknown[]
-  ): WorkerReturn | WorkerReturnType
+  ): WorkerReturnType
 }
 export type EngineContext = {
   completion: (
