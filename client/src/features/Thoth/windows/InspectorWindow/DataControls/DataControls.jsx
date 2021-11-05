@@ -9,6 +9,7 @@ import LongText from './LongTextControl'
 import ModuleSelect from './ModuleSelect'
 import OutputGenerator from './OutputGenerator'
 import SocketGenerator from './SocketGenerator'
+import Switch from './SwitchControl'
 
 const StubComponent = props => <div>{props.name}</div>
 
@@ -24,6 +25,7 @@ const controlMap = {
   outputGenerator: OutputGenerator,
   slider: StubComponent,
   socketGenerator: SocketGenerator,
+  switch: Switch,
 }
 
 const DataControls = ({
