@@ -1,6 +1,6 @@
 import { DataControl } from '../plugins/inspectorPlugin'
 
-export class SwitchControl extends DataControl {
+export class PlaytestControl extends DataControl {
   constructor({
     dataKey,
     name,
@@ -12,7 +12,7 @@ export class SwitchControl extends DataControl {
       dataKey: dataKey,
       defaultValue,
       name,
-      component: 'switch',
+      component: 'playtest',
       icon,
       data: {
         label,
