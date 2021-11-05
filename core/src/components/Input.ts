@@ -134,6 +134,7 @@ export class InputComponent extends ThothComponent<InputReturn> {
     // handle data subscription
     if (data && node.data.receivePlaytest) {
       this._task.closed = []
+
       if (!silent) node.display(data)
       return {
         output: data,
@@ -141,7 +142,7 @@ export class InputComponent extends ThothComponent<InputReturn> {
     }
 
     // If there are outputs, we are running as a module input and we use that value
-    if (outputs.output) {
+    if (outputs.output && !outputs?.output.task) {
       return outputs as { output: unknown }
     }
 
