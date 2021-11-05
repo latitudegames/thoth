@@ -15,7 +15,7 @@ import { Task } from '../plugins/taskPlugin/task'
 
 import { anySocket } from '../sockets'
 import { ThothComponent, ThothTask } from '../thoth-component'
-const info = ``
+const info = `The input component allows you to pass a single value to your chain.  You can set a default value to fall back to if no value is provided at runtim.  You can also turn the input on to receive data from the playtest input.`
 
 type InputReturn = {
   output: unknown
