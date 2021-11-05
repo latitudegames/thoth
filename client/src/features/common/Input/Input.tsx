@@ -1,4 +1,4 @@
-const Input = ({ value, onChange = () => {}, style = {}, ...props }) => {
+const Input = ({ value, onChange = e => {}, style = {}, ...props }) => {
   return (
     <input
       style={style}
