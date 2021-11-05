@@ -58,7 +58,7 @@ export class Inspector {
       existingSockets.push(out.key)
     })
 
-    const ignored = control.data.ignored || []
+    const ignored = (control && control?.data?.ignored) || []
 
     // outputs that are on the node but not in the incoming sockets is removed
     existingSockets
