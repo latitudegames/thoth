@@ -11,7 +11,7 @@ import { ThothComponent, ThothTask } from '../thoth-component'
 const info = `The forEach component takes in an array, and will iterate over each item in the array, firing a new trigger signal with the appropriate value,until all items in the array have beeb processed.`
 
 type WorkerReturn = {
-  element: string | string[]
+  element: string | string[] | unknown
 }
 export class ForEach extends ThothComponent<Promise<WorkerReturn | undefined>> {
   constructor() {
@@ -57,7 +57,7 @@ export class ForEach extends ThothComponent<Promise<WorkerReturn | undefined>> {
       this._task.closed = ['act']
     } else {
       this._task.closed = ['done']
-      return { element: outputs.element }
+      return { element }
     }
   }
 }
