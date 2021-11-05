@@ -31,6 +31,7 @@ export class InputComponent extends ThothComponent<InputReturn> {
     this.task = {
       outputs: {
         output: 'output',
+        trigger: 'option',
       },
       init: (task = {} as Task, node: ThothNode) => {
         this.nodeTaskMap[node.id] = task
@@ -86,6 +87,11 @@ export class InputComponent extends ThothComponent<InputReturn> {
     this.subscribeToPlaytest(node)
 
     const out = new Rete.Output('output', 'output', anySocket)
+    const triggerOut = new Rete.Output(
+      'trigger',
+      'playtest trigger',
+      triggerSocket
+    )
 
     const nameInput = new InputControl({
       dataKey: 'name',
@@ -111,7 +117,7 @@ export class InputComponent extends ThothComponent<InputReturn> {
     // todo add this somewhere automated? Maybe wrap the modules builder in the plugin
     node.data.socketKey = node?.data?.socketKey || uuidv4()
 
-    return node.addOutput(out).addControl(input)
+    return node.addOutput(out).addOutput(triggerOut).addControl(input)
   }
 
   worker(
