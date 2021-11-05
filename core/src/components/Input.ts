@@ -57,6 +57,9 @@ export class InputComponent extends ThothComponent<InputReturn> {
     if (onPlaytest) {
       // store the unsubscribe function in our node map
       this.subscriptionMap[node.id] = onPlaytest((text: string) => {
+        // if the node doesnt have playtest toggled on, do nothing
+        if (!node.data.receivePlaytest) return
+
         // attach the text to the nodes data for access in worker
         node.data.text = text
 
