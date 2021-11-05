@@ -2,10 +2,10 @@ import isEqual from 'lodash/isEqual'
 
 import {
   ModuleType,
+  ModuleWorkerOutput,
   NodeData,
   ThothNode,
   ThothWorkerInputs,
-  ThothWorkerOutputs,
 } from '../../types'
 import { ModuleControl } from '../dataControls/ModuleControl'
 import { Task } from '../plugins/taskPlugin/task'
@@ -13,7 +13,7 @@ import { ThothComponent } from '../thoth-component'
 
 const info = `The Module component allows you to add modules into your chain.  A module is a bundled self contained chain that defines inputs, outputs, and triggers using components.`
 
-export class ModuleComponent extends ThothComponent<ThothWorkerOutputs[]> {
+export class ModuleComponent extends ThothComponent<ModuleWorkerOutput[]> {
   _task: Task
   updateModuleSockets: Function
   task
@@ -98,13 +98,13 @@ export class ModuleComponent extends ThothComponent<ThothWorkerOutputs[]> {
     node: NodeData,
     inputs: ThothWorkerInputs,
     outputs: { [key: string]: string },
-    { module }: { module: { outputs: ThothWorkerOutputs[] } }
+    { module }: { module: { outputs: ModuleWorkerOutput[] } }
   ) {
     const open = Object.entries(module.outputs)
       .filter(([, value]) => typeof value === 'boolean' && value)
       .map(([key]) => key)
     // close all triggers first
-    const dataOutputs = node.data.outputs as ThothWorkerOutputs[]
+    const dataOutputs = node.data.outputs as ModuleWorkerOutput[]
     this._task.closed = dataOutputs
       .map((out: { name: string }) => out.name)
       .filter((out: string) => !open.includes(out))
