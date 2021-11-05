@@ -45,6 +45,7 @@ export class InputComponent extends ThothComponent<InputReturn> {
 
     this.category = 'I/O'
     this.info = info
+    this.display = true
   }
 
   subscriptionMap: Record<string, Function> = {}
