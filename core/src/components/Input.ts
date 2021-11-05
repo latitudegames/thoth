@@ -9,6 +9,7 @@ import {
 } from '../../types'
 import { TextInputControl } from '../controls/TextInputControl'
 import { InputControl } from '../dataControls/InputControl'
+import { SwitchControl } from '../dataControls/SwitchControl'
 import { EngineContext } from '../engine'
 import { Task } from '../plugins/taskPlugin/task'
 
@@ -85,6 +86,13 @@ export class InputComponent extends ThothComponent<InputReturn> {
       name: 'Input name',
     })
 
+    const togglePlaytest = new SwitchControl({
+      dataKey: 'receivePlaytest',
+      name: 'Receive from playtest input',
+    })
+
+    node.inspector.add(nameInput).add(togglePlaytest)
+
     const value = node.data.text ? node.data.text : 'Input text here'
     const input = new TextInputControl({
       emitter: this.editor,
@@ -92,8 +100,6 @@ export class InputComponent extends ThothComponent<InputReturn> {
       value,
       label: 'Default value',
     })
-
-    node.inspector.add(nameInput)
 
     // module components need to have a socket key.
     // todo add this somewhere automated? Maybe wrap the modules builder in the plugin
