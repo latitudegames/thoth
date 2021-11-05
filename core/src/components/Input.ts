@@ -102,6 +102,8 @@ export class InputComponent extends ThothComponent<InputReturn> {
     const togglePlaytest = new SwitchControl({
       dataKey: 'receivePlaytest',
       name: 'Receive from playtest input',
+      defaultValue: false,
+      label: 'Toggle playtest',
     })
 
     node.inspector.add(nameInput).add(togglePlaytest)
