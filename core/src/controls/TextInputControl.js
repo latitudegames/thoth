@@ -17,7 +17,12 @@ const ReactTextInputControl = props => {
   return (
     <>
       {props.label && <label htmlFor="">{props.label}</label>}
-      <input type="text" value={value} onChange={onChange} />
+      <input
+        type="text"
+        value={value}
+        style={{ marginTop: 'var((--c1)' }}
+        onChange={onChange}
+      />
     </>
   )
 }
