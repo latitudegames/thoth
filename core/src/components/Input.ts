@@ -8,12 +8,13 @@ import {
   ThothWorkerOutputs,
 } from '../../types'
 import { TextInputControl } from '../controls/TextInputControl'
+import { EmptyControl } from '../dataControls/EmptyControl'
 import { InputControl } from '../dataControls/InputControl'
-import { SwitchControl } from '../dataControls/SwitchControl'
+import { PlaytestControl } from '../dataControls/PlaytestControl'
 import { EngineContext } from '../engine'
 import { Task } from '../plugins/taskPlugin/task'
 
-import { anySocket, triggerSocket } from '../sockets'
+import { anySocket } from '../sockets'
 import { ThothComponent, ThothTask } from '../thoth-component'
 const info = `The input component allows you to pass a single value to your chain.  You can set a default value to fall back to if no value is provided at runtim.  You can also turn the input on to receive data from the playtest input.`
 
@@ -88,25 +89,28 @@ export class InputComponent extends ThothComponent<InputReturn> {
     this.subscribeToPlaytest(node)
 
     const out = new Rete.Output('output', 'output', anySocket)
-    const triggerOut = new Rete.Output(
-      'trigger',
-      'playtest trigger',
-      triggerSocket
-    )
 
     const nameInput = new InputControl({
       dataKey: 'name',
       name: 'Input name',
     })
 
-    const togglePlaytest = new SwitchControl({
+    const data = node.data as { receivePlaytest: boolean }
+
+    const togglePlaytest = new PlaytestControl({
       dataKey: 'receivePlaytest',
       name: 'Receive from playtest input',
-      defaultValue: false,
+      defaultValue: data.receivePlaytest || false,
       label: 'Toggle playtest',
     })
 
-    node.inspector.add(nameInput).add(togglePlaytest)
+    // this is hacky.  It is being used to handle an extra output data key from the toggle playtest.
+    const emptyControl = new EmptyControl({
+      dataKey: 'outputs',
+      ignored: ['output'],
+    })
+
+    node.inspector.add(nameInput).add(togglePlaytest).add(emptyControl)
 
     const value = node.data.text ? node.data.text : 'Input text here'
     const input = new TextInputControl({
@@ -120,7 +124,7 @@ export class InputComponent extends ThothComponent<InputReturn> {
     // todo add this somewhere automated? Maybe wrap the modules builder in the plugin
     node.data.socketKey = node?.data?.socketKey || uuidv4()
 
-    return node.addOutput(out).addOutput(triggerOut).addControl(input)
+    return node.addOutput(out).addControl(input)
   }
 
   worker(
