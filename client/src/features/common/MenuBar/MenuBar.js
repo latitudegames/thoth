@@ -27,7 +27,7 @@ const MenuBar = () => {
     $CREATE_PLAYTEST,
     $CREATE_INSPECTOR,
     $CREATE_TEXT_EDITOR,
-    // $SERIALIZE,
+    $SERIALIZE,
     $EXPORT,
   } = events
 
@@ -68,9 +68,9 @@ const MenuBar = () => {
     navigate('/home/all-projects')
   }
 
-  // const onSerialize = () => {
-  //   publish($SERIALIZE(activeTabRef.current.id));
-  // };
+  const onSerialize = () => {
+    publish($SERIALIZE(activeTabRef.current.id))
+  }
 
   const onStateManagerCreate = () => {
     publish($CREATE_STATE_MANAGER(activeTabRef.current.id))
@@ -151,6 +151,13 @@ const MenuBar = () => {
         redo: {},
         copy: {},
         paste: {},
+      },
+    },
+    dev: {
+      items: {
+        serialize: {
+          onClick: onSerialize,
+        },
       },
     },
     studio: {
