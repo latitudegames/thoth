@@ -129,8 +129,11 @@ export class InputComponent extends ThothComponent<InputReturn> {
     outputs: ThothWorkerOutputs,
     { silent, data }: { silent: boolean; data: string | undefined }
   ) {
+    this._task.closed = ['trigger']
+
     // handle data subscription
-    if (data) {
+    if (data && node.data.receivePlaytest) {
+      this._task.closed = []
       if (!silent) node.display(data)
       return {
         output: data,
