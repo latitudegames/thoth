@@ -33,6 +33,9 @@ export class Inspector {
     control.component = this.component
     control.id = uuidv4()
 
+    if (control.defaultValue)
+      this.node.data[control.dataKey] = control.defaultValue
+
     list.set(control.dataKey, control)
   }
 
