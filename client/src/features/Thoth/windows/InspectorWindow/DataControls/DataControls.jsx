@@ -59,7 +59,9 @@ const DataControls = ({
           updateData,
         }
 
-        const Component = controlMap[control.component] || StubComponent
+        const Component = controlMap[control.component]
+
+        if (!Component) return null
 
         const setExpanded = state => {
           control.expanded = state
