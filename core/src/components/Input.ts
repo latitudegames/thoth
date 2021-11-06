@@ -131,8 +131,8 @@ export class InputComponent extends ThothComponent<InputReturn> {
   ) {
     this._task.closed = ['trigger']
 
-    // handle data subscription
-    if (data && node.data.receivePlaytest) {
+    // handle data subscription.  If there is data, this is from playtest
+    if (data && !isEmpty(data)) {
       this._task.closed = []
 
       if (!silent) node.display(data)
