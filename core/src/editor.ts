@@ -17,7 +17,7 @@ import ModulePlugin from './plugins/modulePlugin'
 import { ModuleManager } from './plugins/modulePlugin/module-manager'
 import SocketGenerator from './plugins/socketGenerator'
 import TaskPlugin from './plugins/taskPlugin'
-import { PubSubContext } from './thoth-component'
+import { PubSubContext, ThothComponent } from './thoth-component'
 export class ThothEditor extends NodeEditor<EventsTypes> {
   pubSub: PubSubContext
   thoth: EngineContext
@@ -89,11 +89,7 @@ export const initEditor = async function ({
     rename(component: { contextMenuName: any; name: any }) {
       return component.contextMenuName || component.name
     },
-    allocate: (component: {
-      editor: ThothEditor
-      workspaceType: unknown
-      category: string
-    }) => {
+    allocate: (component: ThothComponent<unknown>) => {
       //@seang: disabling component filtering in anticipation of needing to treat spells as "top level modules" in the publishing workflow
       const tabType = editor.tab.type
       const { workspaceType } = component
