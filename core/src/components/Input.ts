@@ -8,7 +8,6 @@ import {
   ThothWorkerOutputs,
 } from '../../types'
 import { TextInputControl } from '../controls/TextInputControl'
-import { EmptyControl } from '../dataControls/EmptyControl'
 import { InputControl } from '../dataControls/InputControl'
 import { PlaytestControl } from '../dataControls/PlaytestControl'
 import { EngineContext } from '../engine'
@@ -104,13 +103,7 @@ export class InputComponent extends ThothComponent<InputReturn> {
       label: 'Toggle playtest',
     })
 
-    // this is hacky.  It is being used to handle an extra output data key from the toggle playtest.
-    const emptyControl = new EmptyControl({
-      dataKey: 'outputs',
-      ignored: ['output'],
-    })
-
-    node.inspector.add(nameInput).add(togglePlaytest).add(emptyControl)
+    node.inspector.add(nameInput).add(togglePlaytest)
 
     const value = node.data.text ? node.data.text : 'Input text here'
     const input = new TextInputControl({
