@@ -97,12 +97,20 @@ export class InputComponent extends ThothComponent<InputReturn> {
       name: 'Input name',
     })
 
-    const data = node.data as { receivePlaytest: boolean }
+    const data = node?.data?.playtestToggle as
+      | {
+          receivePlaytest: boolean
+          outputs: []
+        }
+      | undefined
 
     const togglePlaytest = new PlaytestControl({
-      dataKey: 'receivePlaytest',
+      dataKey: 'playtestToggle',
       name: 'Receive from playtest input',
-      defaultValue: data.receivePlaytest || false,
+      defaultValue: {
+        receivePlaytest: data?.receivePlaytest || false,
+        outputs: data?.outputs || [],
+      },
       label: 'Toggle playtest',
     })
 
