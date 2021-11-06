@@ -34,8 +34,10 @@ const SwitchControl = ({ control, updateData, initialValue }) => {
     }
 
     updateData({
-      [dataKey]: playtest,
-      outputs,
+      [dataKey]: {
+        receivePlaytest: playtest,
+        outputs,
+      },
     })
   }
 
