@@ -11,8 +11,11 @@ type SocketType = {
 
 const SwitchControl = ({ control, updateData, initialValue }) => {
   const { dataKey, data } = control
+  const { receivePlaytest } = initialValue
   const initial =
-    typeof initialValue === 'boolean' ? initialValue : initialValue === 'true'
+    typeof receivePlaytest === 'boolean'
+      ? receivePlaytest
+      : receivePlaytest === 'true'
   const [checked, setChecked] = useState(initial)
 
   const onChange = e => {
