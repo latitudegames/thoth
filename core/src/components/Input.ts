@@ -111,6 +111,7 @@ export class InputComponent extends ThothComponent<InputReturn> {
         receivePlaytest: data?.receivePlaytest || false,
         outputs: data?.outputs || [],
       },
+      ignored: ['output'],
       label: 'Toggle playtest',
     })
 
