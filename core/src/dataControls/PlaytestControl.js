@@ -6,7 +6,8 @@ export class PlaytestControl extends DataControl {
     name,
     icon = 'hand',
     label = 'Toggle',
-    defaultValue = false,
+    defaultValue = {},
+    ignored = [],
   }) {
     const options = {
       dataKey: dataKey,
@@ -16,13 +17,14 @@ export class PlaytestControl extends DataControl {
       icon,
       data: {
         label,
+        ignored,
       },
     }
 
     super(options)
   }
 
-  onData() {
+  onData(playtestToggle) {
     return
   }
 }
