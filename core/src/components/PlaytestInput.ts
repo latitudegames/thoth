@@ -36,6 +36,7 @@ export class PlaytestInput extends ThothComponent<WorkerReturn> {
 
     this.category = 'I/O'
     this.display = true
+    this.deprecated = true
     this.info = info
   }
 
