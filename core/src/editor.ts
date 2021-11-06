@@ -94,6 +94,7 @@ export const initEditor = async function ({
       const tabType = editor.tab.type
       const { workspaceType } = component
 
+      if (component.deprecated) return null
       if (workspaceType && workspaceType !== tabType) return null
       return [component.category]
     },
