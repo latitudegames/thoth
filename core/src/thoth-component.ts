@@ -48,6 +48,7 @@ export abstract class ThothComponent<
   module: ModuleOptions
   contextMenuName: string | undefined
   workspaceType: 'module' | 'spell' | null | undefined
+  displayName: string | undefined
 
   constructor(name: string) {
     super(name)
