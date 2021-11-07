@@ -15,7 +15,7 @@ type WorkerReturn = {
   trigger: boolean
 }
 
-export class ModuleTriggerOut extends ThothComponent<WorkerReturn> {
+export class TriggerOut extends ThothComponent<WorkerReturn> {
   task: TaskOptions
   category: string
   info: string
