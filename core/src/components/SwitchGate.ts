@@ -41,7 +41,7 @@ export class SwitchGate extends ThothComponent<void> {
     node.inspector.add(outputGenerator)
 
     const input = new Rete.Input('input', 'Input', anySocket)
-    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket)
+    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const defaultOutput = new Rete.Output('default', 'Default', triggerSocket)
 
     node.addInput(input).addInput(dataInput).addOutput(defaultOutput)

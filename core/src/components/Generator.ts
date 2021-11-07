@@ -39,7 +39,7 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
   }
 
   builder(node: ThothNode) {
-    const dataIn = new Rete.Input('trigger', 'Trigger', triggerSocket)
+    const dataIn = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOut = new Rete.Output('trigger', 'Trigger', triggerSocket)
     const resultOut = new Rete.Output('result', 'Result', stringSocket)
     const composedOut = new Rete.Output('composed', 'Composed', stringSocket)
