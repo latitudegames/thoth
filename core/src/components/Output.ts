@@ -77,7 +77,7 @@ export class Output extends ThothComponent<void> {
     const { sendToPlaytest } = this.editor?.thoth as EngineContext
     if (!inputs || !inputs.text) return {}
 
-    if (sendToPlaytest) {
+    if (node.data.sendToPlaytest && sendToPlaytest) {
       sendToPlaytest(text)
     }
     if (!silent) node.display(text as string)
