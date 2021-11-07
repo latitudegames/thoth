@@ -39,7 +39,8 @@ export class ModuleTriggerIn extends ThothComponent<void> {
       socket: triggerSocket,
     }
 
-    this.category = 'Module'
+    this.category = 'I/O'
+    this.displayName = 'Trigger In'
     this.info = info
   }
 
