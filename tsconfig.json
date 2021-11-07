@@ -21,14 +21,6 @@
     "rootDir": ".",
     "noEmit": true
   },
-  "references": [
-    {
-      "path": "core"
-    },
-    {
-      "path": "client"
-    }
-  ],
   "exclude": ["node_modules", "dist", "*.d.ts"],
   "typeRoots": ["@types/@thoth"]
 }
