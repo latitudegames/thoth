@@ -83,6 +83,11 @@ const Inspector = props => {
 
   return (
     <Window toolbar={toolbar} darker outline borderless>
+      {inspectorData.deprecated && (
+        <div>
+          <p>{inspectorData.deprecationMessage}</p>
+        </div>
+      )}
       <DataControls
         inspectorData={inspectorData}
         nodeId={inspectorData.nodeId}
