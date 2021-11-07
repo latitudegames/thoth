@@ -27,6 +27,8 @@ function install(editor) {
       // todo this should likely go somewhere better.  Maybe a thoth plugin for all general thoth related things?
       node.deprecated = component.deprecated
 
+      node.displayName = component.displayName
+
       node.info = component.info
 
       // here we attach the default info control to the component which will show up in the inspector
