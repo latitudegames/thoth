@@ -84,7 +84,8 @@ const Inspector = props => {
   return (
     <Window toolbar={toolbar} darker outline borderless>
       {inspectorData.deprecated && (
-        <div>
+        <div style={{ padding: 'var(--c1) var(--c2)' }}>
+          <h2 style={{ color: 'var(--red)' }}>WARNING</h2>
           <p>{inspectorData.deprecationMessage}</p>
         </div>
       )}
