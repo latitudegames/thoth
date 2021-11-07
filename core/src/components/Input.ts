@@ -48,6 +48,7 @@ export class InputComponent extends ThothComponent<InputReturn> {
     this.info = info
     this.display = true
     this.contextMenuName = 'Input'
+    this.displayName = 'Input'
   }
 
   subscriptionMap: Record<string, Function> = {}
