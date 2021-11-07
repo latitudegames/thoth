@@ -37,7 +37,8 @@ export class ModuleTriggerOut extends ThothComponent<WorkerReturn> {
       socket: triggerSocket,
     }
 
-    this.category = 'Module'
+    this.category = 'I/O'
+    this.displayName = 'Trigger Out'
     this.info = info
   }
 
