@@ -10,9 +10,9 @@ export class SwitchControl extends DataControl {
   }: {
     dataKey: string
     name: string
-    icon: string
+    icon?: string
     label: string
-    defaultValue: unknown
+    defaultValue?: unknown
   }) {
     super({
       dataKey: dataKey,
