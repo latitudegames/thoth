@@ -38,6 +38,9 @@ export class ModuleInput extends ThothComponent<Record<string, unknown>> {
     }
 
     this.category = 'Module'
+    this.deprecated = true
+    this.deprecationMessage =
+      'This component has been deprecated.  Please replace it in all of your spells with the new universal input component.  This can be found under the name "Input" in the IO category.  It will act as a module input for running your spells on the server and inside other component chains.'
     this.info = info
   }
 
