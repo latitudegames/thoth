@@ -24,6 +24,9 @@ function install(editor) {
       // Adding category to node for display on node`
       node.category = component.category
 
+      // todo this should likely go somewhere better.  Maybe a thoth plugin for all general thoth related things?
+      node.depricated = component.depricated
+
       node.info = component.info
 
       // here we attach the default info control to the component which will show up in the inspector
