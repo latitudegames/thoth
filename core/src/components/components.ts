@@ -53,8 +53,10 @@ export const components = {
   moduleOutput: () => new ModuleOutput(),
   moduleTriggerOut: () => new ModuleTriggerOut(),
   moduleTriggerIn: () => new ModuleTriggerIn(),
+  output: () => new Output(),
   playtestPrint: () => new PlaytestPrint(),
   playtestInput: () => new PlaytestInput(),
+  proseToScript: () => new ProseToScript(),
   runInputCompnent: () => new RunInputComponent(),
   safetyVerifier: () => new SafetyVerifier(),
   stateWrite: () => new StateWrite(),
@@ -63,8 +65,6 @@ export const components = {
   switchGate: () => new SwitchGate(),
   tenseTransformer: () => new TenseTransformer(),
   timeDetectorComponent: () => new TimeDetectorComponent(),
-  proseToScript: () => new ProseToScript(),
-  output: () => new Output(),
 }
 
 export const getComponents = () => {
