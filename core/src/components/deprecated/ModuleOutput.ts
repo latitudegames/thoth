@@ -1,14 +1,14 @@
 import Rete from 'rete'
 import { v4 as uuidv4 } from 'uuid'
 
-import { NodeData, ThothNode, ThothWorkerInputs } from '../../types'
-import { InputControl } from '../dataControls/InputControl'
-import { TaskOptions } from '../plugins/taskPlugin/task'
+import { NodeData, ThothNode, ThothWorkerInputs } from '../../../types'
+import { InputControl } from '../../dataControls/InputControl'
+import { TaskOptions } from '../../plugins/taskPlugin/task'
 // @seang todo: convert data controls to typescript to remove this
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore
-import { anySocket, triggerSocket } from '../sockets'
-import { ThothComponent } from '../thoth-component'
+import { anySocket, triggerSocket } from '../../sockets'
+import { ThothComponent } from '../../thoth-component'
 const info = `The module output component adds an output socket to the parent module.  It can be given a name, which is displayed on the parent.`
 
 type WorkerReturn = {
