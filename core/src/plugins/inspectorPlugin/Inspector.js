@@ -225,6 +225,7 @@ export class Inspector {
       data: this.node.data,
       category: this.node.category,
       info: this.node.info,
+      deprecated: this.node.deprecated,
     }
   }
 
