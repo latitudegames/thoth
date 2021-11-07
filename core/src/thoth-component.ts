@@ -44,6 +44,7 @@ export abstract class ThothComponent<
   info: string
   display: boolean
   deprecated: boolean = false
+  deprecationMessage: string | undefined
   module: ModuleOptions
   workspaceType: 'module' | 'spell' | null | undefined
 
