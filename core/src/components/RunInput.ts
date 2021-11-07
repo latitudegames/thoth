@@ -47,6 +47,9 @@ export class RunInputComponent extends ThothComponent<WorkerReturn> {
       },
     }
     this.category = 'I/O'
+    this.deprecated = true
+    this.deprecationMessage =
+      'This component has been deprecated.  Please remove it fromall spells.  It can be replaced generally with the universal input component found under the name "Input" in the IO category.  You can use the playtest toggle to receive a value from the playtest which will trigger a run command.'
     this.info = info
   }
 
