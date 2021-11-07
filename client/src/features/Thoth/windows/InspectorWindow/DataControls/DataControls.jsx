@@ -10,6 +10,7 @@ import ModuleSelect from './ModuleSelect'
 import OutputGenerator from './OutputGenerator'
 import SocketGenerator from './SocketGenerator'
 import PlaytestControl from './PlaytestControl'
+import SwitchControl from './SwitchControl'
 
 const StubComponent = props => <div>{props.name}</div>
 
@@ -26,6 +27,7 @@ const controlMap = {
   slider: StubComponent,
   socketGenerator: SocketGenerator,
   playtest: PlaytestControl,
+  switch: SwitchControl,
 }
 
 const DataControls = ({
