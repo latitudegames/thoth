@@ -16,7 +16,7 @@ import { ModuleComponent } from './Module'
 import { ModuleInput } from './ModuleInput'
 import { ModuleOutput } from './ModuleOutput'
 import { TriggerIn } from './TriggerIn'
-import { ModuleTriggerOut } from './ModuleTriggerOut'
+import { TriggerOut } from './TriggerOut'
 import { Output } from './Output'
 import { PlaytestInput } from './PlaytestInput'
 import { PlaytestPrint } from './PlaytestPrint'
@@ -51,7 +51,6 @@ export const components = {
   moduleComponent: () => new ModuleComponent(),
   moduleInput: () => new ModuleInput(),
   moduleOutput: () => new ModuleOutput(),
-  moduleTriggerIn: () => new TriggerIn(),
   output: () => new Output(),
   playtestPrint: () => new PlaytestPrint(),
   playtestInput: () => new PlaytestInput(),
@@ -64,7 +63,8 @@ export const components = {
   switchGate: () => new SwitchGate(),
   tenseTransformer: () => new TenseTransformer(),
   timeDetectorComponent: () => new TimeDetectorComponent(),
-  triggerOut: () => new ModuleTriggerOut(),
+  TriggerIn: () => new TriggerIn(),
+  triggerOut: () => new TriggerOut(),
 }
 
 export const getComponents = () => {
