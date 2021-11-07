@@ -225,7 +225,10 @@ export class Inspector {
       data: this.node.data,
       category: this.node.category,
       info: this.node.info,
-      deprecated: this.node.deprecated,
+      deprecated: this.component.deprecated,
+      deprecationMessage:
+        this.component.deprecationMessage ||
+        'This component has been deprecated.  Please use an alternative component, and remove any instances from your spells.',
     }
   }
 
