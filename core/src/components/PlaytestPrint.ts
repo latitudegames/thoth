@@ -24,6 +24,9 @@ export class PlaytestPrint extends ThothComponent<void> {
 
     this.category = 'I/O'
     this.display = true
+    this.deprecated = true
+    this.deprecationMessage =
+      'This component has been deprecated.  Please remove it from your spells.  You can replace it with the general "output" component, which has an opion in the inspector to send the outputs value to the playtest window.'
     this.info = info
   }
 
