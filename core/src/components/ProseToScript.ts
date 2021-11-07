@@ -89,7 +89,7 @@ export class ProseToScript extends ThothComponent<Promise<WorkerReturn>> {
     node.data.fewshot = fewshot
     const inp = new Rete.Input('string', 'Text', stringSocket)
     const out = new Rete.Output('script', 'Script', stringSocket)
-    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket)
+    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
 
     //const fewshotControl = new FewshotControl();

@@ -45,7 +45,7 @@ export class HuggingfaceComponent extends ThothComponent<
   }
 
   builder(node: ThothNode) {
-    const triggerIn = new Rete.Input('trigger', 'Trigger', triggerSocket)
+    const triggerIn = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const triggerOut = new Rete.Output('trigger', 'Trigger', triggerSocket)
     const errorOut = new Rete.Output('error', 'Error', triggerSocket)
     const resultOut = new Rete.Output('result', 'Result', stringSocket)

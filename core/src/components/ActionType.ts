@@ -58,7 +58,7 @@ export class ActionTypeComponent extends ThothComponent<Promise<WorkerReturn>> {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const inp = new Rete.Input('action', 'Action', stringSocket)
     const out = new Rete.Output('actionType', 'ActionType', stringSocket)
-    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket)
+    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
 
     const fewshotControl = new FewshotControl({})

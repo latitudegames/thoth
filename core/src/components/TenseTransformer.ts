@@ -104,7 +104,7 @@ export class TenseTransformer extends ThothComponent<Promise<WorkerReturn>> {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const textInput = new Rete.Input('text', 'Text', stringSocket)
     const nameInput = new Rete.Input('name', 'Name', stringSocket)
-    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket)
+    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
     const out = new Rete.Output('action', 'Action', stringSocket)
 

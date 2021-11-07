@@ -104,7 +104,7 @@ export class SafetyVerifier extends ThothComponent<Promise<WorkerReturn>> {
     node.data.fewshot = fewshot
 
     const inp = new Rete.Input('string', 'Text', stringSocket)
-    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket)
+    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
     const out = new Rete.Output('boolean', 'Boolean', booleanSocket)
 

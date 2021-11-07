@@ -32,7 +32,7 @@ export class StringProcessor extends ThothComponent<Record<string, string>> {
 
     // Rete controls
     const input = new Rete.Input('input', 'Input', stringSocket)
-    const triggerIn = new Rete.Input('trigger', 'Trigger', triggerSocket)
+    const triggerIn = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const triggerOut = new Rete.Output('trigger', 'Trigger', triggerSocket)
 
     // Inspector controls

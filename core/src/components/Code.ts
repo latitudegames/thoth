@@ -75,7 +75,7 @@ export class Code extends ThothComponent<unknown> {
       .add(outputGenerator)
       .add(codeControl)
 
-    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket)
+    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
 
     return node.addOutput(dataOutput).addInput(dataInput)

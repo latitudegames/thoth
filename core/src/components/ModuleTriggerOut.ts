@@ -46,7 +46,7 @@ export class ModuleTriggerOut extends ThothComponent<WorkerReturn> {
   // to generate the appropriate inputs and outputs for the fewshot at build time
   builder(node: ThothNode) {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
-    const input = new Rete.Input('trigger', 'Trigger', triggerSocket)
+    const input = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
 
     // Handle default value if data is present
     const nameInput = new InputControl({

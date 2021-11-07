@@ -80,7 +80,12 @@ export class DifficultyDetectorComponent extends ThothComponent<
 
     const categoryOut = new Rete.Output('category', 'Category', stringSocket)
 
-    const triggerInput = new Rete.Input('trigger', 'Trigger', triggerSocket)
+    const triggerInput = new Rete.Input(
+      'trigger',
+      'Trigger',
+      triggerSocket,
+      true
+    )
     const triggerOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
 
     const fewshotControl = new FewshotControl({})
