@@ -6,6 +6,7 @@ import {
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../types'
+import { SwitchControl } from '../dataControls/SwitchControl'
 import { EngineContext } from '../engine'
 import { triggerSocket, anySocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
@@ -53,6 +54,9 @@ export class Output extends ThothComponent<void> {
       label: 'Playtest',
       defaultValue: false,
     })
+
+    node.inspector.add(switchControl)
+
     return node
       .addInput(textInput)
       .addInput(triggerInput)
