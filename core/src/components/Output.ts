@@ -47,6 +47,12 @@ export class Output extends ThothComponent<void> {
     const triggerOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
     const textInput = new Rete.Input('text', 'Print', anySocket, true)
 
+    const switchControl = new SwitchControl({
+      dataKey: 'sendToPlaytest',
+      name: 'Send to Playtest',
+      label: 'Playtest',
+      defaultValue: false,
+    })
     return node
       .addInput(textInput)
       .addInput(triggerInput)
