@@ -4,7 +4,7 @@ import Switch from '../../../../common/Switch/Switch'
 
 const SwitchControl = ({ control, updateData, initialValue }) => {
   const { dataKey, data } = control
-  const [checked, setChecked] = useState(initialValue === 'true')
+  const [checked, setChecked] = useState(initialValue)
 
   const onChange = e => {
     setChecked(e.target.checked)
