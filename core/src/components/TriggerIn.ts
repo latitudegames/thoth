@@ -11,7 +11,7 @@ import { triggerSocket } from '../sockets'
 import { ThothComponent, ThothTask } from '../thoth-component'
 const info = `The trigger in allows you to pass values into your spell either from a higher level component or fromthe server.  Theremust be one single dtrigger in to a spell for now as the server does not support multiple triggers.  Yet.`
 
-export class ModuleTriggerIn extends ThothComponent<void> {
+export class TriggerIn extends ThothComponent<void> {
   task: TaskOptions
   category: string
   info: string
