@@ -220,7 +220,7 @@ export class Inspector {
     )
 
     return {
-      name: this.node.name,
+      name: this.node.displayName || this.node.name,
       nodeId: this.node.id,
       dataControls,
       data: this.node.data,
