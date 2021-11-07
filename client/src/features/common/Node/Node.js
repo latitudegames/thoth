@@ -17,7 +17,11 @@ export class MyNode extends Node {
             name={componentCategories[node.category]}
             style={{ marginRight: 'var(--extraSmall)' }}
           />
-          {node.data.name ? `${node.name} - ${node.data.name}` : node.name}
+          {node.displayName
+            ? node.displayName
+            : node.data.name
+            ? `${node.name} - ${node.data.name}`
+            : node.name}
           {node.deprecated && (
             <div className={css['node-depricated']}>DEPRECATED</div>
           )}
