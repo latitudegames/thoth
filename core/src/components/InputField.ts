@@ -13,7 +13,7 @@ type WorkerReturn = {
 export class InputFieldComponent extends ThothComponent<WorkerReturn> {
   constructor() {
     // Name of the component
-    super('Input Field')
+    super('Input')
 
     this.task = {
       outputs: {
@@ -23,6 +23,9 @@ export class InputFieldComponent extends ThothComponent<WorkerReturn> {
 
     this.category = 'I/O'
     this.info = info
+    this.deprecated = true
+    this.deprecationMessage =
+      'This component has been deprecated.  Please switch all your spells to use the new universal input component found under the name "Input" under the IO category.  It allows you to add a default value, which was the previous purpose of this component.'
   }
 
   // the builder is used to "assemble" the node component.
