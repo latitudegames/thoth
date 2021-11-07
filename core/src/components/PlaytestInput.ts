@@ -37,6 +37,8 @@ export class PlaytestInput extends ThothComponent<WorkerReturn> {
     this.category = 'I/O'
     this.display = true
     this.deprecated = true
+    this.deprecationMessage =
+      'This component has been deprecated in favor of a universal input component. You can find as under the name "Input" in the IO category.  It has a toggle which will allow you to receive signals from the playtest.'
     this.info = info
   }
 
