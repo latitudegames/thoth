@@ -24,6 +24,20 @@
 .node:hover {
   border: 1px solid var(--dark-4);
 }
+.node-depricated {
+  position: absolute;
+  right: 10px;
+  color: var(--red);
+}
+.deprecated-overlay {
+  background-color: var(--red);
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  opacity: 0.2;
+}
 .node-title {
   /* font-family: 'IBM Plex Mono', monospace !important; */
   /* text-transform: uppercase; */
