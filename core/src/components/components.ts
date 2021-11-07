@@ -17,6 +17,7 @@ import { ModuleInput } from './ModuleInput'
 import { ModuleOutput } from './ModuleOutput'
 import { ModuleTriggerIn } from './ModuleTriggerIn'
 import { ModuleTriggerOut } from './ModuleTriggerOut'
+import { Output } from './Output'
 import { PlaytestInput } from './PlaytestInput'
 import { PlaytestPrint } from './PlaytestPrint'
 import { ProseToScript } from './ProseToScript'
@@ -63,6 +64,7 @@ export const components = {
   tenseTransformer: () => new TenseTransformer(),
   timeDetectorComponent: () => new TimeDetectorComponent(),
   proseToScript: () => new ProseToScript(),
+  output: () => new Output(),
 }
 
 export const getComponents = () => {
