@@ -118,7 +118,8 @@ export class Inspector {
       const newSocket = new SocketConstructor(
         socket.socketKey || socket.name.toLowerCase(),
         socket.name,
-        socketMap[socket.socketType]
+        socketMap[socket.socketType],
+        socket.socketType === 'triggerSocket'
       )
 
       if (isOutput) {
