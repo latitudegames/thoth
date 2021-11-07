@@ -1,6 +1,6 @@
 import { DataControl } from '../plugins/inspectorPlugin'
 
-export class PlaytestControl extends DataControl {
+export class SwitchControl extends DataControl {
   constructor({
     dataKey,
     name,
