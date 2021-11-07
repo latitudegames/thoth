@@ -27,7 +27,7 @@ export class InputComponent extends ThothComponent<InputReturn> {
 
   constructor() {
     // Name of the component
-    super('Input')
+    super('Universal Input')
 
     this.task = {
       outputs: {
@@ -47,6 +47,7 @@ export class InputComponent extends ThothComponent<InputReturn> {
     this.category = 'I/O'
     this.info = info
     this.display = true
+    this.contextMenuName = 'Input'
   }
 
   subscriptionMap: Record<string, Function> = {}
