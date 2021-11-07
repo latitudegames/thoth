@@ -11,12 +11,16 @@ export class MyNode extends Node {
 
     return (
       <div className={`${css['node']} ${css[selected]}`}>
+        {node.deprecated && <div className={css['deprecated-overlay']}></div>}
         <div className={css['node-title']}>
           <Icon
             name={componentCategories[node.category]}
             style={{ marginRight: 'var(--extraSmall)' }}
           />
           {node.data.name ? `${node.name} - ${node.data.name}` : node.name}
+          {node.deprecated && (
+            <div className={css['node-depricated']}>DEPRECATED</div>
+          )}
         </div>
         <div className={css['connections-container']}>
           {inputs.length > 0 && (
