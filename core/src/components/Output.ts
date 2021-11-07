@@ -52,7 +52,7 @@ export class Output extends ThothComponent<void> {
       dataKey: 'sendToPlaytest',
       name: 'Send to Playtest',
       label: 'Playtest',
-      defaultValue: false,
+      defaultValue: node.data.sendToPlaytest || false,
     })
 
     node.inspector.add(switchControl)
