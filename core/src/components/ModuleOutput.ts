@@ -39,6 +39,9 @@ export class ModuleOutput extends ThothComponent<WorkerReturn> {
     }
 
     this.category = 'Module'
+    this.deprecated = true
+    this.deprecationMessage =
+      'This component has been deprecated.  Please remove it from your spells.  You can use in its place the general output component which act aas an output for both server deployments and running spells inside coother components.'
     this.info = info
   }
 
