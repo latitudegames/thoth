@@ -47,6 +47,8 @@ const StartScreen = ({ createNew, allProjects }) => {
       spellId: spellData.name,
       type: 'spell',
     })
+
+    navigate('/thoth')
   }
 
   const loadFile = selectedFile => {
