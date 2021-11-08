@@ -88,7 +88,10 @@ const loadModuleModel = db => {
   }
 
   const getSpellModules = async spell => {
-    const moduleNames = Object.values(spell.chain.nodes)
+    const nodes = spell?.chain?.nodes || spell?.graph?.nodes
+    if (!nodes) return
+
+    const moduleNames = Object.values(nodes)
       .filter((n: any) => n.data.module)
       .map((n: any) => n.data.module)
 
