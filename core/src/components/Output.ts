@@ -6,6 +6,7 @@ import {
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../types'
+import { InputControl } from '../dataControls/InputControl'
 import { SwitchControl } from '../dataControls/SwitchControl'
 import { EngineContext } from '../engine'
 import { triggerSocket, anySocket } from '../sockets'
@@ -43,6 +44,11 @@ export class Output extends ThothComponent<void> {
     const triggerOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
     const textInput = new Rete.Input('text', 'Print', anySocket, true)
 
+    const nameInput = new InputControl({
+      dataKey: 'name',
+      name: 'Output name',
+    })
+
     const switchControl = new SwitchControl({
       dataKey: 'sendToPlaytest',
       name: 'Send to Playtest',
@@ -50,7 +56,7 @@ export class Output extends ThothComponent<void> {
       defaultValue: node.data.sendToPlaytest || false,
     })
 
-    node.inspector.add(switchControl)
+    node.inspector.add(switchControl).add(nameInput)
 
     return node
       .addInput(textInput)
