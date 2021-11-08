@@ -27,6 +27,10 @@ const StartScreen = ({ createNew, allProjects }) => {
 
   const onReaderLoad = async event => {
     const spellData = JSON.parse(event.target.result)
+    if (spellData.graph) {
+      spellData.chain = spellData.graph
+      delete spellData.graph
+    }
     const spell = await saveSpell(spellData)
     // TODO check for proper values here and throw errors
 
