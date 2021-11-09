@@ -123,7 +123,7 @@ export class InputComponent extends ThothComponent<InputReturn> {
       dataKey: 'useDefault',
       name: 'Use Default',
       label: 'Use Default',
-      defaultValue: false
+      defaultValue: false,
     })
 
     node.inspector.add(nameInput).add(togglePlaytest).add(toggleDefault)
@@ -177,6 +177,7 @@ export class InputComponent extends ThothComponent<InputReturn> {
       return outputs as { output: unknown }
     }
 
+    // fallback to default value at the end
     return {
       output: node.data.text as string,
     }
