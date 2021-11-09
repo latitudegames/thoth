@@ -20,6 +20,7 @@ export class Output extends ThothComponent<void> {
     this.task = {
       runOneInput: true,
       outputs: {
+        text: 'output',
         trigger: 'option',
       },
     }
@@ -70,8 +71,6 @@ export class Output extends ThothComponent<void> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    if (!inputs || !inputs.input) return {}
-
     const text = inputs.input.filter(Boolean)[0]
 
     //just need a new check here for playtest send boolean
