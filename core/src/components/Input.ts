@@ -11,6 +11,7 @@ import {
 import { TextInputControl } from '../controls/TextInputControl'
 import { InputControl } from '../dataControls/InputControl'
 import { PlaytestControl } from '../dataControls/PlaytestControl'
+import { SwitchControl } from '../dataControls/SwitchControl'
 import { EngineContext } from '../engine'
 import { Task } from '../plugins/taskPlugin/task'
 
