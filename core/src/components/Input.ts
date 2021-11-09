@@ -165,6 +165,13 @@ export class InputComponent extends ThothComponent<InputReturn> {
       }
     }
 
+    // send default value if use default is explicity toggled on
+    if (node.data.useDefault) {
+      return {
+        output: node.data.text as string,
+      }
+    }
+
     // If there are outputs, we are running as a module input and we use that value
     if (outputs.output && !outputs?.output.task) {
       return outputs as { output: unknown }
