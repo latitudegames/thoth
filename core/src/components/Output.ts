@@ -59,6 +59,8 @@ export class Output extends ThothComponent<void> {
     })
 
     node.inspector.add(switchControl).add(nameInput)
+    // need to automate this part!  Wont workw without a socket key
+    node.data.socketKey = node?.data?.socketKey || uuidv4()
 
     return node
       .addInput(textInput)
