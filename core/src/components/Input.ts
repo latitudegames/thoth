@@ -156,7 +156,7 @@ export class InputComponent extends ThothComponent<InputReturn> {
     }
 
     // handle data subscription.  If there is data, this is from playtest
-    if (data && !isEmpty(data)) {
+    if (data && !isEmpty(data) && nodeData.playtestToggle.receivePlaytest) {
       this._task.closed = []
 
       if (!silent) node.display(data)
