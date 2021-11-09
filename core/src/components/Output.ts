@@ -42,7 +42,7 @@ export class Output extends ThothComponent<void> {
       true
     )
     const triggerOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
-    const textInput = new Rete.Input('text', 'Print', anySocket, true)
+    const textInput = new Rete.Input('input', 'Outputs', anySocket, true)
 
     const nameInput = new InputControl({
       dataKey: 'name',
