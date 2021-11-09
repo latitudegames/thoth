@@ -126,6 +126,8 @@ export class InputComponent extends ThothComponent<InputReturn> {
       defaultValue: false
     })
 
+    node.inspector.add(nameInput).add(togglePlaytest).add(toggleDefault)
+
     const value = node.data.text ? node.data.text : 'Input text here'
     const input = new TextInputControl({
       emitter: this.editor,
