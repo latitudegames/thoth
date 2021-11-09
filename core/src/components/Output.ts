@@ -68,7 +68,7 @@ export class Output extends ThothComponent<void> {
     node: NodeData,
     inputs: ThothWorkerInputs,
     outputs: ThothWorkerOutputs,
-    { silent }: { silent: boolean }
+    { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
     const text = inputs.text.filter(Boolean)[0]
 
