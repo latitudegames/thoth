@@ -70,12 +70,12 @@ export class Output extends ThothComponent<void> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
+    if (!inputs || !inputs.input) return {}
+
     const text = inputs.input.filter(Boolean)[0]
 
     //just need a new check here for playtest send boolean
     const { sendToPlaytest } = thoth
-
-    if (!inputs || !inputs.text) return {}
 
     if (node.data.sendToPlaytest && sendToPlaytest) {
       sendToPlaytest(text)
