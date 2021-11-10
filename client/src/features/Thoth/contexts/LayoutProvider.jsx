@@ -11,7 +11,7 @@ import { useContext, createContext, useEffect, useState, useRef } from 'react'
 import LoadingScreen from '@common/LoadingScreen/LoadingScreen'
 import { usePubSub } from '@/contexts/PubSubProvider'
 import { useTabManager } from '@/contexts/TabManagerProvider'
-
+import { useGetSpellQuery, useSaveSpellMutation } from '@/state/api/spells'
 // Component types are listed here which are used to load components from the data sent by rete
 const windowTypes = {
   TEXT_EDITOR: 'textEditor',
