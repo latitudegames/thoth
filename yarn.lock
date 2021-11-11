@@ -1476,25 +1476,6 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
-"@latitudegames/thoth-core@^0.0.56":
-  version "0.0.56"
-  resolved "https://npm.pkg.github.com/download/@latitudegames/thoth-core/0.0.56/8915222d885de595fe729d0b704f43a1ff73c45d5b5f48a8d99cd1850c36ba5b#5c5045049b2ba90e14a0b631c87f546b16952bc3"
-  integrity sha512-69ttIbdBNPGaqfO5hl3et9RppxjAUneZ3AnkDyiT+H9XYpuC6iTzYMbUYxi663/rCka1HnfgI1mKyci3JmeyPw==
-  dependencies:
-    deep-equal "^2.0.5"
-    handlebars "^4.7.7"
-    jsdom "^17.0.0"
-    path "^0.12.7"
-    react "^17.0.2"
-    regenerator-runtime "^0.13.9"
-    rete "https://github.com/latitudegames/rete.git#master"
-    rete-area-plugin "^0.2.1"
-    rete-connection-plugin "^0.9.0"
-    rete-context-menu-plugin "^0.6.0-rc.1"
-    rete-module-plugin "^0.4.1"
-    rete-react-render-plugin "^0.2.1"
-    uuid "^8.3.2"
-
 "@lerna/add@4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@lerna/add/-/add-4.0.0.tgz#c36f57d132502a57b9e7058d1548b7a565ef183f"
@@ -12393,6 +12374,14 @@ rete-react-render-plugin@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/rete-react-render-plugin/-/rete-react-render-plugin-0.2.1.tgz#71a6d73f18f850b85262563f678b40080a7b0e32"
   integrity sha512-2ZMXUP0v+EiejHVMqdrOmUwyDBHC2UDOJ/pFkElaZL1Kn/E40JZA5yzdBXi6ajYZI2DCzoW5ZBcA2Ihjtur8MQ==
+
+"rete@git+https://github.com/latitudegames/rete.git#master":
+  version "1.4.5"
+  uid "24565a81a2bbcdd4cd73b0a725977550cc8ff988"
+  resolved "git+https://github.com/latitudegames/rete.git#24565a81a2bbcdd4cd73b0a725977550cc8ff988"
+  dependencies:
+    lodash "^4.17.21"
+    watch "^1.0.2"
 
 "rete@https://github.com/latitudegames/rete.git#master":
   version "1.4.5"
