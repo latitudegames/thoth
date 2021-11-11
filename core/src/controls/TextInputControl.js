@@ -38,7 +38,7 @@ export class TextInputControl extends Control {
 
     // we define the props that are passed into the rendered react component here
     this.props = {
-      emitter,
+      editor,
       name: key,
       label,
       value,
