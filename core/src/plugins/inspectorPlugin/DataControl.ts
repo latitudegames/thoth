@@ -10,6 +10,7 @@ export abstract class DataControl {
   id: string | null = null
   dataKey: string
   name: string
+  defaultValue: unknown
   componentData: object
   componentKey: string
   options: object
@@ -24,6 +25,7 @@ export abstract class DataControl {
     options = {},
     write = true,
     icon = 'ankh',
+    defaultValue = null,
   }: {
     dataKey: string
     name: string
@@ -32,6 +34,7 @@ export abstract class DataControl {
     options?: Record<string, unknown>
     write?: boolean
     icon?: string
+    defaultValue?: unknown
   }) {
     if (!dataKey) throw new Error(`Data key is required`)
     if (!name) throw new Error(`Name is required`)
@@ -44,6 +47,7 @@ export abstract class DataControl {
     this.options = options
     this.icon = icon
     this.write = write
+    this.defaultValue = defaultValue
   }
 
   //Serializer to easily extract the data controls information for publishing

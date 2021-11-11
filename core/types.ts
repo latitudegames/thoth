@@ -136,11 +136,22 @@ export type ThothReteInput = {
   task: ThothTask
   key: string
 }
+
+export type TaskOutput = {
+  type: TaskOutputTypes
+  task: ThothTask
+  key: string
+}
+
+export type ModuleWorkerOutput = WorkerOutputs & {
+  [key: string]: string | string[]
+}
 export type ThothWorkerInput = string | unknown | unknown[]
 export type ThothWorkerInputs = { [key: string]: ThothWorkerInput[] }
 export type ThothWorkerOutputs = WorkerOutputs & {
-  [key: string]: string[] | string
+  [key: string]: TaskOutput
 }
+
 export type WorkerReturn =
   | Node
   | ThothWorkerOutputs

@@ -3,6 +3,7 @@ import { Socket as SocketType } from 'rete/types'
 
 import {
   ModuleType,
+  ModuleWorkerOutput,
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
@@ -175,7 +176,7 @@ export class ModuleManager {
   workerInputs(
     node: ThothNode,
     inputs: ThothWorkerInputs,
-    outputs: ThothWorkerOutputs,
+    outputs: ModuleWorkerOutput,
     { module }: { module: Module }
   ) {
     if (!module) return

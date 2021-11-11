@@ -6,7 +6,7 @@ import { ThothComponent } from '../thoth-component'
 
 const info = `The boolean gate takes a boolean input, and depending on whether the value is true or false will only trigger one output or the other.`
 
-export class BooleanGate extends ThothComponent {
+export class BooleanGate extends ThothComponent<void> {
   constructor() {
     // Name of the component
     super('Boolean Gate')
@@ -23,7 +23,7 @@ export class BooleanGate extends ThothComponent {
   // to generate the appropriate inputs and ouputs for the fewshot at build time
   builder(node: ThothNode) {
     const bool = new Rete.Input('boolean', 'Boolean', booleanSocket)
-    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket)
+    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const isTrue = new Rete.Output('true', 'True', triggerSocket)
     const isFalse = new Rete.Output('false', 'False', triggerSocket)
 

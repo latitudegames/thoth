@@ -9,17 +9,19 @@ import { ForEach } from './ForEach'
 import { Generator } from './Generator'
 import { HuggingfaceComponent } from './Huggingface'
 import { InputComponent } from './Input'
+import { InputFieldComponent } from './deprecated/InputField'
 import { ItemTypeComponent } from './ItemDetector'
 import { JoinListComponent } from './JoinList'
 import { ModuleComponent } from './Module'
-import { ModuleInput } from './ModuleInput'
-import { ModuleOutput } from './ModuleOutput'
-import { ModuleTriggerIn } from './ModuleTriggerIn'
-import { ModuleTriggerOut } from './ModuleTriggerOut'
-import { PlaytestInput } from './PlaytestInput'
-import { PlaytestPrint } from './PlaytestPrint'
+import { ModuleInput } from './deprecated/ModuleInput'
+import { ModuleOutput } from './deprecated/ModuleOutput'
+import { TriggerIn } from './TriggerIn'
+import { TriggerOut } from './TriggerOut'
+import { Output } from './Output'
+import { PlaytestInput } from './deprecated/PlaytestInput'
+import { PlaytestPrint } from './deprecated/PlaytestPrint'
 import { ProseToScript } from './ProseToScript'
-import { RunInputComponent } from './RunInput'
+import { RunInputComponent } from './deprecated/RunInput'
 import { SafetyVerifier } from './SafetyVerifier'
 import { StateRead } from './StateRead'
 import { StateWrite } from './StateWrite'
@@ -43,15 +45,16 @@ export const components = {
   generator: () => new Generator(),
   huggingfaceComponent: () => new HuggingfaceComponent(),
   inputComponent: () => new InputComponent(),
+  inputFieldComponent: () => new InputFieldComponent(),
   itemTypeComponent: () => new ItemTypeComponent(),
   joinListComponent: () => new JoinListComponent(),
   moduleComponent: () => new ModuleComponent(),
   moduleInput: () => new ModuleInput(),
   moduleOutput: () => new ModuleOutput(),
-  moduleTriggerOut: () => new ModuleTriggerOut(),
-  moduleTriggerIn: () => new ModuleTriggerIn(),
+  output: () => new Output(),
   playtestPrint: () => new PlaytestPrint(),
   playtestInput: () => new PlaytestInput(),
+  proseToScript: () => new ProseToScript(),
   runInputCompnent: () => new RunInputComponent(),
   safetyVerifier: () => new SafetyVerifier(),
   stateWrite: () => new StateWrite(),
@@ -60,7 +63,8 @@ export const components = {
   switchGate: () => new SwitchGate(),
   tenseTransformer: () => new TenseTransformer(),
   timeDetectorComponent: () => new TimeDetectorComponent(),
-  proseToScript: () => new ProseToScript(),
+  TriggerIn: () => new TriggerIn(),
+  triggerOut: () => new TriggerOut(),
 }
 
 export const getComponents = () => {

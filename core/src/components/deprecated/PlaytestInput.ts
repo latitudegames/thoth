@@ -5,13 +5,18 @@ import {
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
-} from '../../types'
-import { EngineContext } from '../engine'
-import { Task } from '../plugins/taskPlugin/task'
-import { triggerSocket, stringSocket } from '../sockets'
-import { ThothComponent, ThothTask } from '../thoth-component'
+} from '../../../types'
+import { EngineContext } from '../../engine'
+import { Task } from '../../plugins/taskPlugin/task'
+import { triggerSocket, stringSocket } from '../../sockets'
+import { ThothComponent, ThothTask } from '../../thoth-component'
 const info = `The Playtest Input component is connected to the playtest window. It received anything which is type dinto the playtest areavia the input and will trigger the running of your spell chain.`
-export class PlaytestInput extends ThothComponent {
+
+type WorkerReturn = {
+  text: string
+}
+
+export class PlaytestInput extends ThothComponent<WorkerReturn> {
   initialTask?: Task
   nodeTaskMap: Record<number, ThothTask> = {}
 
@@ -31,6 +36,9 @@ export class PlaytestInput extends ThothComponent {
 
     this.category = 'I/O'
     this.display = true
+    this.deprecated = true
+    this.deprecationMessage =
+      'This component has been deprecated in favor of a universal input component. You can find as under the name "Input" in the IO category.  It has a toggle which will allow you to receive signals from the playtest.'
     this.info = info
   }
 

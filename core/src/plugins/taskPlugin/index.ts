@@ -6,7 +6,7 @@ import { ThothComponent } from '../../thoth-component'
 import { Task } from './task'
 
 function install(editor: NodeEditor) {
-  editor.on('componentregister', (component: ThothComponent) => {
+  editor.on('componentregister', (component: ThothComponent<unknown>) => {
     if (!component.task)
       throw new Error('Task plugin requires a task property in component')
     if (component.task.outputs.constructor !== Object)

@@ -1,30 +1,31 @@
 import Rete from 'rete'
 
-import { NodeData, ThothNode, ThothWorkerInputs } from '../../types'
-import { TextInputControl } from '../controls/TextInputControl'
-import { stringSocket, arraySocket } from '../sockets'
-import { ThothComponent } from '../thoth-component'
-const info = `The Join List component takes in an array, and will join each item in the array together with a seperator, defined in the components input field.`
+import { NodeData, ThothNode } from '../../../types'
+import { TextInputControl } from '../../controls/TextInputControl'
+import { stringSocket } from '../../sockets'
+import { ThothComponent } from '../../thoth-component'
+const info = `The info component has a single control, an input field.  Whatever value you put into this input field will be sent out along the compoonents output socket.`
 
 type WorkerReturn = {
   text: string
 }
 
-export class JoinListComponent extends ThothComponent<WorkerReturn> {
+export class InputFieldComponent extends ThothComponent<WorkerReturn> {
   constructor() {
     // Name of the component
-    super('Join List')
+    super('Input')
 
     this.task = {
       outputs: {
         text: 'output',
-        trigger: 'option',
       },
-      init: () => {},
     }
 
-    this.category = 'Logic'
+    this.category = 'I/O'
     this.info = info
+    this.deprecated = true
+    this.deprecationMessage =
+      'This component has been deprecated.  Please switch all your spells to use the new universal input component found under the name "Input" under the IO category.  It allows you to add a default value, which was the previous purpose of this component.'
   }
 
   // the builder is used to "assemble" the node component.
@@ -34,29 +35,25 @@ export class JoinListComponent extends ThothComponent<WorkerReturn> {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const out = new Rete.Output('text', 'String', stringSocket)
 
-    const inputList = new Rete.Input('list', 'List', arraySocket)
-
     // Handle default value if data is present
-    const separator = node.data.separator
-      ? (node.data.separator as string)
-      : ' '
+    const value = node.data.text ? node.data.text : 'Input text here'
 
     // controls are the internals of the node itself
     // This default control sample has a text field.
     const input = new TextInputControl({
       editor: this.editor,
-      key: 'separator',
-      value: separator,
+      key: 'text',
+      value,
     })
 
-    return node.addOutput(out).addControl(input).addInput(inputList)
+    return node.addOutput(out).addControl(input)
   }
 
   // the worker contains the main business logic of the node.  It will pass those results
   // to the outputs to be consumed by any connected components
-  worker(node: NodeData, inputs: ThothWorkerInputs & { list: [string][] }) {
+  worker(node: NodeData) {
     return {
-      text: inputs.list[0].join(node.data.separator as string),
+      text: node.data.text as string,
     }
   }
 }

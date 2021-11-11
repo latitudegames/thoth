@@ -7,9 +7,12 @@
   # directory located at the absolute path "root/project/build-output"
 
 [[redirects]]
-from = "./*"
-to = "/index.html"
-status = 200
+    from = "./*"
+    to = "/index.html"
+    status = 200
 
 [[context.deploy-preview.plugins]]
-package = "/netlify/plugins/conditional-canary"
+    package = "/netlify/plugins/conditional-canary"
+
+[context.deploy-preview.environment]
+    REACT_APP_API_URL="https://latitude-api-staging.herokuapp.com"

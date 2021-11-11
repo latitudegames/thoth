@@ -5,8 +5,10 @@ interface CssExports {
   'connection-container': string;
   'connections-container': string;
   'control': string;
+  'deprecated-overlay': string;
   'input': string;
   'node': string;
+  'node-depricated': string;
   'node-title': string;
   'nodeGenesis': string;
   'out': string;

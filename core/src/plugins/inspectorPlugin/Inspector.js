@@ -33,6 +33,9 @@ export class Inspector {
     control.component = this.component
     control.id = uuidv4()
 
+    if (control.defaultValue)
+      this.node.data[control.dataKey] = control.defaultValue
+
     list.set(control.dataKey, control)
   }
 
@@ -55,7 +58,7 @@ export class Inspector {
       existingSockets.push(out.key)
     })
 
-    const ignored = control.data.ignored || []
+    const ignored = (control && control?.data?.ignored) || []
 
     // outputs that are on the node but not in the incoming sockets is removed
     existingSockets
@@ -115,7 +118,8 @@ export class Inspector {
       const newSocket = new SocketConstructor(
         socket.socketKey || socket.name.toLowerCase(),
         socket.name,
-        socketMap[socket.socketType]
+        socketMap[socket.socketType],
+        socket.socketType === 'triggerSocket'
       )
 
       if (isOutput) {
@@ -216,12 +220,16 @@ export class Inspector {
     )
 
     return {
-      name: this.node.name,
+      name: this.node.displayName || this.node.name,
       nodeId: this.node.id,
       dataControls,
       data: this.node.data,
       category: this.node.category,
       info: this.node.info,
+      deprecated: this.component.deprecated,
+      deprecationMessage:
+        this.component.deprecationMessage ||
+        'This component has been deprecated.  Please use an alternative component, and remove any instances from your spells.',
     }
   }
 

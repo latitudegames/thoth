@@ -66,7 +66,11 @@ Rewritten as a script:
 
 const info = `The prose to script converter transforms narrative prose into a screenplay-style script, attributing dialogue to characters in the scene, and discarding all text that is not speech. The input is a text string the output is a string of the script`
 
-export class ProseToScript extends ThothComponent {
+type WorkerReturn = {
+  detectedItem: string
+}
+
+export class ProseToScript extends ThothComponent<Promise<WorkerReturn>> {
   constructor() {
     // Name of the component
     super('Prose to Script')
@@ -85,7 +89,7 @@ export class ProseToScript extends ThothComponent {
     node.data.fewshot = fewshot
     const inp = new Rete.Input('string', 'Text', stringSocket)
     const out = new Rete.Output('script', 'Script', stringSocket)
-    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket)
+    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
 
     //const fewshotControl = new FewshotControl();

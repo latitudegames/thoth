@@ -1,4 +1,4 @@
-import { Node, NodeEditor } from 'rete'
+import { Node, NodeEditor, Socket } from 'rete'
 
 import { PubSubBase, ThothNode } from '../types'
 import { EngineContext, ThothEngineComponent } from './engine'
@@ -26,7 +26,14 @@ export interface ThothTask extends Task {
   onRun?: Function
 }
 
-export abstract class ThothComponent extends ThothEngineComponent {
+export interface ModuleOptions {
+  nodeType: 'input' | 'output' | 'triggerIn' | 'triggerOut' | 'module'
+  socket?: Socket
+}
+
+export abstract class ThothComponent<
+  WorkerReturnType
+> extends ThothEngineComponent<WorkerReturnType> {
   // Original interface for task and _task: IComponentWithTask from the Rete Task Plugin
   task: TaskOptions
   _task: ThothTask
@@ -36,7 +43,12 @@ export abstract class ThothComponent extends ThothEngineComponent {
   category: string
   info: string
   display: boolean
+  deprecated: boolean = false
+  deprecationMessage: string | undefined
+  module: ModuleOptions
+  contextMenuName: string | undefined
   workspaceType: 'module' | 'spell' | null | undefined
+  displayName: string | undefined
 
   constructor(name: string) {
     super(name)

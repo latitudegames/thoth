@@ -1,19 +1,22 @@
 import Rete from 'rete'
 import { v4 as uuidv4 } from 'uuid'
 
-import { NodeData, ThothNode, ThothWorkerInputs } from '../../types'
-import { InputControl } from '../dataControls/InputControl'
-import { TaskOptions } from '../plugins/taskPlugin/task'
+import { NodeData, ThothNode, ThothWorkerInputs } from '../../../types'
+import { InputControl } from '../../dataControls/InputControl'
+import { TaskOptions } from '../../plugins/taskPlugin/task'
 // @seang todo: convert data controls to typescript to remove this
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore
-import { anySocket, triggerSocket } from '../sockets'
-import { ThothComponent } from '../thoth-component'
+import { anySocket, triggerSocket } from '../../sockets'
+import { ThothComponent } from '../../thoth-component'
 const info = `The module output component adds an output socket to the parent module.  It can be given a name, which is displayed on the parent.`
 
-export class ModuleOutput extends ThothComponent {
+type WorkerReturn = {
+  text: string
+}
+
+export class ModuleOutput extends ThothComponent<WorkerReturn> {
   task: TaskOptions
-  module: object
   category: string
   info: string
   contextMenuName: string
@@ -36,6 +39,9 @@ export class ModuleOutput extends ThothComponent {
     }
 
     this.category = 'Module'
+    this.deprecated = true
+    this.deprecationMessage =
+      'This component has been deprecated.  Please remove it from your spells.  You can use in its place the general output component which act aas an output for both server deployments and running spells inside coother components.'
     this.info = info
   }
 

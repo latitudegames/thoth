@@ -19,7 +19,18 @@ NOTE:  Hugginface models are on demand, and sometimes require time to "boot up".
 
 Also note that you will likely need to parse the return from huggingface yourself inside a code component, or similar.`
 
-export class HuggingfaceComponent extends ThothComponent {
+type WorkerReturn = {
+  result?:
+    | {
+        [key: string]: unknown
+        error: unknown
+      }
+    | undefined
+}
+
+export class HuggingfaceComponent extends ThothComponent<
+  Promise<WorkerReturn>
+> {
   constructor() {
     super('Huggingface')
     this.task = {
@@ -34,7 +45,7 @@ export class HuggingfaceComponent extends ThothComponent {
   }
 
   builder(node: ThothNode) {
-    const triggerIn = new Rete.Input('trigger', 'Trigger', triggerSocket)
+    const triggerIn = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const triggerOut = new Rete.Output('trigger', 'Trigger', triggerSocket)
     const errorOut = new Rete.Output('error', 'Error', triggerSocket)
     const resultOut = new Rete.Output('result', 'Result', stringSocket)
