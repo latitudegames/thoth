@@ -121,6 +121,7 @@ const LayoutProvider = ({ children, tab }) => {
     if (inspectorData) {
       setInspectorData(update)
     }
+    saveSpell(spell)
   }
 
   const saveInspector = inspectorData => {
