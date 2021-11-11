@@ -47,6 +47,9 @@ const LayoutProvider = ({ children, tab }) => {
   const { subscribe, publish, events } = usePubSub()
 
   const [saveSpell] = useSaveSpellMutation()
+  const { data: spell } = useGetSpellQuery(tab.spell, {
+    skip: !tab.spell,
+  })
   const currentModelRef = useRef({})
 
   const [currentModel, setCurrentModel] = useState(null)
