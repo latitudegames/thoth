@@ -34,7 +34,11 @@ const info = `The Action type component will take in an action as text, and atte
 
 look, get, use, craft, dialog, movement, travel, combat, consume, other.`
 
-export class ActionTypeComponent extends ThothComponent {
+type WorkerReturn = {
+  actionType: string
+}
+
+export class ActionTypeComponent extends ThothComponent<Promise<WorkerReturn>> {
   constructor() {
     // Name of the component
     super('Action Type Classifier')
@@ -54,7 +58,7 @@ export class ActionTypeComponent extends ThothComponent {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const inp = new Rete.Input('action', 'Action', stringSocket)
     const out = new Rete.Output('actionType', 'ActionType', stringSocket)
-    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket)
+    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
 
     const fewshotControl = new FewshotControl({})

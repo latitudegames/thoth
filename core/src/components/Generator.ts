@@ -19,7 +19,12 @@ Controls have also been added which give you control of some of the fundamental 
 
 The componet has two returns.  The composed will output your entire fewshot plus the completion, whereas the result output will only be the result of the completion. `
 
-export class Generator extends ThothComponent {
+type WorkerReturn = {
+  result: string
+  composed: string
+}
+
+export class Generator extends ThothComponent<Promise<WorkerReturn>> {
   constructor() {
     super('Generator')
     this.task = {
@@ -34,7 +39,7 @@ export class Generator extends ThothComponent {
   }
 
   builder(node: ThothNode) {
-    const dataIn = new Rete.Input('trigger', 'Trigger', triggerSocket)
+    const dataIn = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOut = new Rete.Output('trigger', 'Trigger', triggerSocket)
     const resultOut = new Rete.Output('result', 'Result', stringSocket)
     const composedOut = new Rete.Output('composed', 'Composed', stringSocket)

@@ -9,7 +9,7 @@ const info = `The String Processor component take s astring as an input and allo
 
 Note that the return value of your function must be an objetc whose keys match the names of your generated output sockets.`
 
-export class StringProcessor extends ThothComponent {
+export class StringProcessor extends ThothComponent<Record<string, string>> {
   constructor() {
     // Name of the component
     super('String Processor')
@@ -32,7 +32,7 @@ export class StringProcessor extends ThothComponent {
 
     // Rete controls
     const input = new Rete.Input('input', 'Input', stringSocket)
-    const triggerIn = new Rete.Input('trigger', 'Trigger', triggerSocket)
+    const triggerIn = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const triggerOut = new Rete.Output('trigger', 'Trigger', triggerSocket)
 
     // Inspector controls

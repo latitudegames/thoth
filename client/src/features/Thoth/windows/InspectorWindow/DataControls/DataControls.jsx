@@ -9,6 +9,8 @@ import LongText from './LongTextControl'
 import ModuleSelect from './ModuleSelect'
 import OutputGenerator from './OutputGenerator'
 import SocketGenerator from './SocketGenerator'
+import PlaytestControl from './PlaytestControl'
+import SwitchControl from './SwitchControl'
 
 const StubComponent = props => <div>{props.name}</div>
 
@@ -24,6 +26,8 @@ const controlMap = {
   outputGenerator: OutputGenerator,
   slider: StubComponent,
   socketGenerator: SocketGenerator,
+  playtest: PlaytestControl,
+  switch: SwitchControl,
 }
 
 const DataControls = ({
@@ -57,7 +61,9 @@ const DataControls = ({
           updateData,
         }
 
-        const Component = controlMap[control.component] || StubComponent
+        const Component = controlMap[control.component]
+
+        if (!Component) return null
 
         const setExpanded = state => {
           control.expanded = state

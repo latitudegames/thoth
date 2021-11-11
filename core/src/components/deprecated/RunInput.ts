@@ -1,14 +1,18 @@
 import Rete, { Control } from 'rete'
 
-import { NodeData, ThothNode } from '../../types'
-import { RunButtonControl } from '../controls/RunButtonControl'
-import { TextInputControl } from '../controls/TextInputControl'
-import { Task } from '../plugins/taskPlugin/task'
-import { stringSocket, triggerSocket } from '../sockets'
-import { ThothComponent, ThothTask } from '../thoth-component'
+import { NodeData, ThothNode } from '../../../types'
+import { RunButtonControl } from '../../controls/RunButtonControl'
+import { TextInputControl } from '../../controls/TextInputControl'
+import { Task } from '../../plugins/taskPlugin/task'
+import { stringSocket, triggerSocket } from '../../sockets'
+import { ThothComponent, ThothTask } from '../../thoth-component'
 const info = `The Input With Run component lets you input a value into the provided input field, and trigger off your spell chain to run with that value passed out its output. May be depricated in favor of using the playtest input component.`
 
-export class RunInputComponent extends ThothComponent {
+type WorkerReturn = {
+  text: string
+}
+
+export class RunInputComponent extends ThothComponent<WorkerReturn> {
   initialTask?: Task
   subscriptionMap: any
 
@@ -43,6 +47,9 @@ export class RunInputComponent extends ThothComponent {
       },
     }
     this.category = 'I/O'
+    this.deprecated = true
+    this.deprecationMessage =
+      'This component has been deprecated.  Please remove it fromall spells.  It can be replaced generally with the universal input component found under the name "Input" in the IO category.  You can use the playtest toggle to receive a value from the playtest which will trigger a run command.'
     this.info = info
   }
 
@@ -66,7 +73,7 @@ export class RunInputComponent extends ThothComponent {
     // controls are the internals of the node itself
     // This default control sample has a text field.
     const input = new TextInputControl({
-      emitter: this.editor,
+      editor: this.editor,
       key: 'text',
       value: node.data.text || 'Input text',
     })

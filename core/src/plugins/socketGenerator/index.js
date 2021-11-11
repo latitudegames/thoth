@@ -50,7 +50,8 @@ function install(editor) {
           const input = new Rete.Input(
             socket.socketKey ? socket.socketKey : socket.name,
             socket.name,
-            sockets[socket.socketType]
+            sockets[socket.socketType],
+            socket.socketType === 'triggerSocket'
           )
           node.addInput(input)
         })

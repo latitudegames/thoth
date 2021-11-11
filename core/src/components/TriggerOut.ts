@@ -4,70 +4,66 @@ import Rete from 'rete'
 //@ts-ignore
 import { v4 as uuidv4 } from 'uuid'
 
-import {
-  NodeData,
-  ThothNode,
-  ThothWorkerInputs,
-  ThothWorkerOutputs,
-} from '../../types'
+import { ThothNode } from '../../types'
 import { InputControl } from '../dataControls/InputControl'
 import { TaskOptions } from '../plugins/taskPlugin/task'
-import { anySocket } from '../sockets'
+import { triggerSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
-const info = `The module input component adds an input socket to the parent module.  It can be given a name, which is displayed on the parent.`
+const info = `The trigger out component is mainly used to add an output to a spell when it is being run as a module, ie inside a component of another spell.  It will pass the trigger signal out of the spell to the higher level spell.`
 
-export class ModuleInput extends ThothComponent {
+type WorkerReturn = {
+  trigger: boolean
+}
+
+export class TriggerOut extends ThothComponent<WorkerReturn> {
   task: TaskOptions
-  module: object
   category: string
   info: string
   contextMenuName: string
 
   constructor() {
     // Name of the component
-    super('Module Input')
-    this.contextMenuName = 'Input'
+    super('Module Trigger Out')
+    this.contextMenuName = 'Trigger Out'
+
     this.task = {
       outputs: {
-        output: 'output',
+        trigger: 'output',
       },
     }
 
     this.module = {
-      nodeType: 'input',
-      socket: anySocket,
+      nodeType: 'triggerOut',
+      socket: triggerSocket,
     }
 
-    this.category = 'Module'
+    this.category = 'I/O'
+    this.displayName = 'Trigger Out'
     this.info = info
   }
 
   // the builder is used to "assemble" the node component.
   // when we have enki hooked up and have grabbed all few shots, we would use the builder
-  // to generate the appropriate inputs and ouputs for the fewshot at build time
-  builder(node: ThothNode): ThothNode {
+  // to generate the appropriate inputs and outputs for the fewshot at build time
+  builder(node: ThothNode) {
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
-    const out = new Rete.Output('output', 'output', anySocket)
+    const input = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
 
     // Handle default value if data is present
     const nameInput = new InputControl({
       dataKey: 'name',
-      name: 'Input name',
+      name: 'Trigger name',
     })
 
     node.inspector.add(nameInput)
     node.data.socketKey = node?.data?.socketKey || uuidv4()
 
-    return node.addOutput(out)
+    return node.addInput(input)
   }
 
-  worker(
-    node: NodeData,
-    inputs: ThothWorkerInputs,
-    outputs: ThothWorkerOutputs
-  ) {
-    // outputs in this case is a key value object of outputs.
-    // perfect for task return
-    return outputs
+  worker() {
+    return {
+      trigger: true,
+    }
   }
 }

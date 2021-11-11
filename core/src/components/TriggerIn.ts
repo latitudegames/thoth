@@ -9,11 +9,10 @@ import { InputControl } from '../dataControls/InputControl'
 import { TaskOptions } from '../plugins/taskPlugin/task'
 import { triggerSocket } from '../sockets'
 import { ThothComponent, ThothTask } from '../thoth-component'
-const info = `The module trigger in adds a trigger input socket to the parent module.  It can be given a name, which is displayed on the parent.`
+const info = `The trigger in allows you to pass values into your spell either from a higher level component or fromthe server.  Theremust be one single dtrigger in to a spell for now as the server does not support multiple triggers.  Yet.`
 
-export class ModuleTriggerIn extends ThothComponent {
+export class TriggerIn extends ThothComponent<void> {
   task: TaskOptions
-  module: object
   category: string
   info: string
   contextMenuName: string
@@ -23,6 +22,7 @@ export class ModuleTriggerIn extends ThothComponent {
     // Name of the component
     // If name of component changes please update module-manager workerModule code
     super('Module Trigger In')
+    this.displayName = 'Trigger In'
     this.contextMenuName = 'Trigger In'
 
     this.task = {
@@ -40,7 +40,8 @@ export class ModuleTriggerIn extends ThothComponent {
       socket: triggerSocket,
     }
 
-    this.category = 'Module'
+    this.category = 'I/O'
+
     this.info = info
   }
 

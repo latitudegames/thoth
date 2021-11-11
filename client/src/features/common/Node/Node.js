@@ -9,14 +9,21 @@ export class MyNode extends Node {
     const { node, bindSocket, bindControl } = this.props
     const { outputs, controls, inputs, selected } = this.state
 
+    const name = node.displayName ? node.displayName : node.name
+    const fullName = node.data.name ? `${name} - ${node.data.name}` : name
+
     return (
       <div className={`${css['node']} ${css[selected]}`}>
+        {node.deprecated && <div className={css['deprecated-overlay']}></div>}
         <div className={css['node-title']}>
           <Icon
             name={componentCategories[node.category]}
             style={{ marginRight: 'var(--extraSmall)' }}
           />
-          {node.data.name ? `${node.name} - ${node.data.name}` : node.name}
+          {fullName}
+          {node.deprecated && (
+            <div className={css['node-depricated']}>DEPRECATED</div>
+          )}
         </div>
         <div className={css['connections-container']}>
           {inputs.length > 0 && (

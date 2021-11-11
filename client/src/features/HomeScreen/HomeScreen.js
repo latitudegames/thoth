@@ -27,13 +27,13 @@ const StartScreen = ({ createNew, allProjects }) => {
 
   const onReaderLoad = async event => {
     const spellData = JSON.parse(event.target.result)
-    // TODO check for proper values here and throw errors
-    let spell
-    try {
-      spell = await models.spells.getSpell(spellData.name)
-    } catch (error) {
-      spell = await saveSpell(spellData)
+    if (spellData.graph) {
+      spellData.chain = spellData.graph
+      delete spellData.graph
     }
+    const spell = await saveSpell(spellData)
+    // TODO check for proper values here and throw errors
+
     // Load modules from the spell
     if (spellData?.modules && spellData.modules.length > 0)
       await Promise.all(
@@ -47,6 +47,8 @@ const StartScreen = ({ createNew, allProjects }) => {
       spellId: spellData.name,
       type: 'spell',
     })
+
+    navigate('/thoth')
   }
 
   const loadFile = selectedFile => {

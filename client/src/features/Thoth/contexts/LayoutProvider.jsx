@@ -11,7 +11,7 @@ import { useContext, createContext, useEffect, useState, useRef } from 'react'
 import LoadingScreen from '@common/LoadingScreen/LoadingScreen'
 import { usePubSub } from '@/contexts/PubSubProvider'
 import { useTabManager } from '@/contexts/TabManagerProvider'
-
+import { useGetSpellQuery, useSaveSpellMutation } from '@/state/api/spells'
 // Component types are listed here which are used to load components from the data sent by rete
 const windowTypes = {
   TEXT_EDITOR: 'textEditor',
@@ -46,6 +46,10 @@ export const useLayout = () => useContext(Context)
 const LayoutProvider = ({ children, tab }) => {
   const { subscribe, publish, events } = usePubSub()
 
+  const [saveSpell] = useSaveSpellMutation()
+  const { data: spell } = useGetSpellQuery(tab.spell, {
+    skip: !tab.spell,
+  })
   const currentModelRef = useRef({})
 
   const [currentModel, setCurrentModel] = useState(null)
@@ -120,11 +124,13 @@ const LayoutProvider = ({ children, tab }) => {
     if (inspectorData) {
       setInspectorData(update)
     }
+    saveSpell(spell)
   }
 
   const saveInspector = inspectorData => {
     setInspectorData(inspectorData)
     publish(events.$NODE_SET(tab.id, inspectorData.nodeId), inspectorData)
+    saveSpell(spell)
   }
 
   const createModel = json => {

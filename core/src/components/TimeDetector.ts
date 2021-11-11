@@ -38,7 +38,13 @@ seconds, minutes, hours, days, weeks, years.
 
 You can edit the fewshot in the text editor, but be aware that you must retain the fewshots data structure so processing will work.`
 
-export class TimeDetectorComponent extends ThothComponent {
+type WorkerReturn = {
+  detectedTime: string
+}
+
+export class TimeDetectorComponent extends ThothComponent<
+  Promise<WorkerReturn>
+> {
   constructor() {
     super('Time Detector')
 
@@ -55,7 +61,7 @@ export class TimeDetectorComponent extends ThothComponent {
     node.data.fewshot = fewshot
     const inp = new Rete.Input('string', 'Text', stringSocket)
     const out = new Rete.Output('detectedTime', 'Time Detected', stringSocket)
-    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket)
+    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
 
     const fewshotControl = new FewshotControl({})
