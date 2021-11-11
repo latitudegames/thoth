@@ -73,7 +73,7 @@ export class RunInputComponent extends ThothComponent<WorkerReturn> {
     // controls are the internals of the node itself
     // This default control sample has a text field.
     const input = new TextInputControl({
-      emitter: this.editor,
+      editor: this.editor,
       key: 'text',
       value: node.data.text || 'Input text',
     })
