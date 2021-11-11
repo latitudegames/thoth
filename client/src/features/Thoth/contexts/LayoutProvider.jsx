@@ -46,6 +46,7 @@ export const useLayout = () => useContext(Context)
 const LayoutProvider = ({ children, tab }) => {
   const { subscribe, publish, events } = usePubSub()
 
+  const [saveSpell] = useSaveSpellMutation()
   const currentModelRef = useRef({})
 
   const [currentModel, setCurrentModel] = useState(null)
