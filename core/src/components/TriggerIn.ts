@@ -41,7 +41,7 @@ export class TriggerIn extends ThothComponent<void> {
     }
 
     this.category = 'I/O'
-    this.displayName = 'Trigger In'
+
     this.info = info
   }
 
