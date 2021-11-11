@@ -130,7 +130,7 @@ export class InputComponent extends ThothComponent<InputReturn> {
 
     const value = node.data.text ? node.data.text : 'Input text here'
     const input = new TextInputControl({
-      emitter: this.editor,
+      editor: this.editor,
       key: 'text',
       value,
       label: 'Default value',
