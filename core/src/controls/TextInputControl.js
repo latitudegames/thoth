@@ -29,7 +29,7 @@ const ReactTextInputControl = props => {
 }
 
 export class TextInputControl extends Control {
-  constructor({ emitter, key, value, ...rest }) {
+  constructor({ editor, key, value, ...rest }) {
     super(key)
     this.render = 'react'
     this.component = ReactTextInputControl
