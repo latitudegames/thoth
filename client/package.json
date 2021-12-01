@@ -56,7 +56,7 @@
     "rete-connection-reroute-plugin": "^0.4.0",
     "rete-context-menu-plugin": "^0.6.0-rc.1",
     "rete-react-render-plugin": "^0.2.1",
-    "rxdb": "^9.21.0",
+    "rxdb": "^10.5.4",
     "rxjs": "^7.2.0",
     "unique-names-generator": "^4.5.0",
     "uuid": "^8.3.2",
