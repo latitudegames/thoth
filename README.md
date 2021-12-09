@@ -2,7 +2,7 @@
 
 Thoth is a multishot system builder. It leverages a visual coding style interface to allows game designers and developers to rapidly create powerful natural language systems and prototype games.
 
-## Setup
+## Client Setup
 
 1. Generate a [Personal Access Token](https://github.com/settings/tokens) on Github which will allow you to install private latitude packages. Make sure you check the `write:packages` option. (`read:packages` will suffice as well if you aren't planning on publishing new versions of @latitudegames/thoth-core)
 1. In your `~/.bashrc`, append the line `export NPM_TOKEN=YourTokenGoesHere`, and restart your terminal (you can run `source ~/.bashrc` to do so)
@@ -10,6 +10,11 @@ Thoth is a multishot system builder. It leverages a visual coding style interfac
 1. Navigate to the project root by running `cd thoth`
 1. Run `yarn install` to install project dependencies
 1. Run `yarn start` to start the @thoth/client app
+
+## Core Local Setup
+
+1. Core the contents of `core/.env.example` to `core/.env`
+1. Step 2 in Monorepo Development Setup
 
 ## Monorepo Development
 
