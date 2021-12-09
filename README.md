@@ -25,6 +25,8 @@ You can either:
 1. Target a published version of [@latitudegames/thoth-core](https://github.com/latitudegames/thoth/packages/983711) in client/package.json
 2. Or actively develop against the current state of the repository. (By ensuring that client/package.json is targetting the same version of @latitudegames/thoth-core that is currently listed in core/package.json)
 
+If you are testing with the Latitude API you can point the latitude api to your local thoth package by making the dependance `"@latitudegames/thoth-core": "../thoth/core",`
+
 ## @latitudegames/thoth-core CI
 
 ### Testing
