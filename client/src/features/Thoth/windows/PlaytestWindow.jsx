@@ -57,12 +57,14 @@ const Playtest = ({ tab }) => {
     return unsubscribe
   }, [subscribe, printToConsole, $PLAYTEST_PRINT])
 
-  const printItem = (text, key) => <li key={key}>{text}</li>
+  const printItem = (text, key) => (
+    <li key={key}>{typeof text === 'string' ? text : JSON.stringify(text)}</li>
+  )
 
   const onSend = () => {
     const newHistory = [...history, `You: ${value}`]
     setHistory(newHistory)
-    publish($PLAYTEST_INPUT(tab.id), value)
+    publish($PLAYTEST_INPUT(tab.id), value || ' ')
     setValue('')
   }
 

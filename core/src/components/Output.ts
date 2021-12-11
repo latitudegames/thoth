@@ -76,18 +76,17 @@ export class Output extends ThothComponent<void> {
   ) {
     if (!inputs.input) throw new Error('No input provided to output component')
 
-    const text = inputs.input.filter(Boolean)[0]
+    const output = inputs.input.filter(Boolean)[0]
 
     //just need a new check here for playtest send boolean
     const { sendToPlaytest } = thoth
 
     if (node.data.sendToPlaytest && sendToPlaytest) {
-      sendToPlaytest(text)
+      sendToPlaytest(output)
     }
-    if (!silent) node.display(text as string)
 
-    return {
-      text,
-    }
+    if (!silent) node.display(output as string)
+
+    return { text: output }
   }
 }
