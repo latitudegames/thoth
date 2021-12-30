@@ -119,7 +119,7 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
 
     const stop = node?.data?.stop
       ? stopSequence.split(',').map(i => i.trim())
-      : ['/n']
+      : ['\n']
 
     const tempData = node.data.temp as string
     const temperature = tempData ? parseFloat(tempData) : 0.7
@@ -139,7 +139,6 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
     }
     const raw = (await completion(body)) as string
     const result = raw?.trim()
-
     const composed = `${prompt} ${result}`
 
     return {
