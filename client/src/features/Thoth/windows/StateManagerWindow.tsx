@@ -1,3 +1,4 @@
+// @ts-nocheck
 import Editor from '@monaco-editor/react'
 import jsonFormat from 'json-format'
 import { useSnackbar } from 'notistack'

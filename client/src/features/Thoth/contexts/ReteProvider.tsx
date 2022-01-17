@@ -1,3 +1,6 @@
+// @ts-nocheck
+// @ts-nocheck
+
 import { EngineContext } from '@latitudegames/thoth-core'
 import { useContext, createContext } from 'react'
 import { useDispatch } from 'react-redux'
@@ -35,21 +38,21 @@ export interface ReteContext extends EngineContext {
 }
 
 const Context = createContext({
-  onInspector: () => {},
-  onPlayTest: () => {},
-  onGameState: () => {},
-  onAddModule: () => {},
-  onUpdateModule: () => {},
-  onDeleteModule: () => {},
-  onModuleUpdated: () => {},
-  sendToPlaytest: () => {},
-  sendToInspector: () => {},
-  clearTextEditor: () => {},
-  getSpell: () => {},
-  getModule: () => {},
-  getGameState: () => {},
-  setGameState: () => {},
-  getModules: async () => {},
+  onInspector: () => { },
+  onPlayTest: () => { },
+  onGameState: () => { },
+  onAddModule: () => { },
+  onUpdateModule: () => { },
+  onDeleteModule: () => { },
+  onModuleUpdated: () => { },
+  sendToPlaytest: () => { },
+  sendToInspector: () => { },
+  clearTextEditor: () => { },
+  getSpell: () => { },
+  getModule: () => { },
+  getGameState: () => { },
+  setGameState: () => { },
+  getModules: async () => { },
   getCurrentGameState: () => ({} as Record<string, unknown>),
   updateCurrentGameState: () => ({} as Promise<Record<string, unknown>>),
   completion: _completion,
