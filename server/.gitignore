@@ -1,0 +1,18 @@
+node_modules
+build
+yarn-error.log
+.env
+dist
+.eslintcache
+
+# macOS file system
+.DS_Store
+
+# Coverage Directory
+coverage
+
+#eslint
+.eslintcache
+
+# Snyk
+.dccache

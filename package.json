@@ -5,12 +5,14 @@
   "workspaces": {
     "packages": [
       "client",
-      "core"
+      "core",
+      "server"
     ]
   },
   "scripts": {
     "start:core": "lerna exec --scope @latitudegames/thoth-core -- yarn start",
     "start:client": "lerna exec --scope @thoth/client -- yarn start",
+    "dev:server": "lerna exec --scope @latitudegames/thoth-server -- yarn run dev",
     "start": "concurrently \"yarn start:core\" \"sleep 10s && yarn start:client\"",
     "lint": "lerna run lint --parallel",
     "lint:fix": "lerna run lint:fix --parallel",
