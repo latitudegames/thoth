@@ -25,7 +25,7 @@ function App() {
   const authCheck = user && user.accessToken
 
   useEffect(() => {
-    ;(async () => {
+    ; (async () => {
       const currentUser = await getUser()
 
       if (currentUser) {
@@ -50,9 +50,13 @@ function App() {
   return (
     <ThothPageWrapper tabs={tabs} activeTab={activeTab}>
       <Routes>
+        <Route path="/thoth" element={<GuardedRoute />}>
+          <Route path="/thoth" element={<Thoth />} />
+        </Route>
+        <Route path="/home/*" element={<GuardedRoute />} >
+          <Route path="/home/*" element={<HomeScreen />} />
+        </Route>
         <Route path="/login" element={<LoginScreen />} />
-        <GuardedRoute path="/thoth" element={<Thoth />} />
-        <GuardedRoute path="/home/*" element={<HomeScreen />} />
         <Route path="/" element={redirect()} />
       </Routes>
     </ThothPageWrapper>

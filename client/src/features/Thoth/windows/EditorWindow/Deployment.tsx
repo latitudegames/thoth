@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { useEffect, useState } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars'
 import { useSelector } from 'react-redux'
@@ -64,15 +66,15 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
 
   useEffect(() => {
     if (!deploymentData || !loadingVersion) return
-    ;(async () => {
-      close()
-      await saveSpell({ ...spell, chain: deploymentData.chain })
-      enqueueSnackbar(`version ${deploymentData.version} loaded!`, {
-        variant: 'success',
-      })
-      setLoadingVersion(false)
-      loadChain(deploymentData.chain)
-    })()
+      ; (async () => {
+        close()
+        await saveSpell({ ...spell, chain: deploymentData.chain })
+        enqueueSnackbar(`version ${deploymentData.version} loaded!`, {
+          variant: 'success',
+        })
+        setLoadingVersion(false)
+        loadChain(deploymentData.chain)
+      })()
   }, [deploymentData, loadingVersion])
 
   const copy = url => {
@@ -149,9 +151,8 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
                 return (
                   <SimpleAccordion
                     key={deploy.version}
-                    heading={`${deploy.version}${
-                      deploy.versionName ? ' - ' + deploy.versionName : ''
-                    }`}
+                    heading={`${deploy.version}${deploy.versionName ? ' - ' + deploy.versionName : ''
+                      }`}
                     defaultExpanded={true}
                   >
                     <button
