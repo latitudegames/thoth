@@ -1,0 +1,172 @@
+import thothCore from '@latitudegames/thoth-core/dist/server';
+import Koa from 'koa';
+
+import { CustomError } from '../../utils/CustomError';
+// TODO: Solve Enki
+// import { getEnkiOutputs } from '../../enki/enki'
+// TODO: Solve huggingface
+// import { huggingface } from '../../vendor/huggingface/huggingface';
+import { Module } from './module';
+import { Graph, Module as ModuleType, ModuleComponent, Node } from './types';
+
+type CompletionRequest = {
+  context: any
+  modelSource: any
+  getFullResponse: boolean
+  universalFormat: boolean
+}
+
+const completionsParser = async (
+  completionRequest: CompletionRequest
+) => {
+  // TODO: Remove me
+  await null;
+  const {
+    context,
+    getFullResponse,
+    modelSource,
+    universalFormat = false,
+    ...options
+  } = completionRequest
+  if (!options) throw new CustomError('input-failed', 'No parameters provided')
+    // TODO: Make request
+    // Then return the appropriate response
+    return { context, getFullResponse, modelSource, universalFormat, options }
+}
+
+const { initSharedEngine, getComponents } = thothCore
+const thothComponents = getComponents()
+
+export const buildThothInterface = (
+  ctx: Koa.Context,
+  initialGameState: Record<string, unknown>
+) => {
+  // eslint-disable-next-line functional/no-let
+  let gameState = { ...initialGameState }
+
+  return {
+    completion: async (request: any) => {
+      const response = await completionsParser({
+        ...request,
+        prompt: request.prompt?.trim(),
+        // TODO @seang: remove this once the default stop is fixed in thoth-core 0.61
+        stop: request.stop?.includes('/n') ? '\n' : request.stop,
+      }) as any
+      return response?.result || ''
+    },
+    // enkiCompletion: async (taskName: string, inputs: string) => {
+    //   const outputs = await getEnkiOutputs(ctx, taskName, inputs)
+    //   return { outputs }
+    // },
+    // huggingface: async (model: string, options: any) => {
+    //   const outputs = await huggingface({ context: ctx, model, options })
+    //   return { outputs }
+    // },
+    getCurrentGameState: () => {
+      return gameState
+    },
+    updateCurrentGameState: (update: Record<string, unknown>) => {
+      const newState = {
+        ...gameState,
+        ...update,
+      }
+
+      gameState = newState
+    },
+  }
+}
+
+export const extractModuleInputKeys = (data: Graph) => {
+  return Object.values(data.nodes).reduce((inputKeys, node: Node) => {
+    if (node.name !== 'Universal Input') return inputKeys
+    if (node.data.name && !node.data.useDefault) inputKeys.push(node.data.name)
+
+    return inputKeys
+  }, [] as string[])
+}
+
+export function extractNodes(nodes: Record<string, Node>, map: Set<unknown>) {
+  const names = Array.from(map.keys())
+  return Object.keys(nodes)
+    .filter(k => names.includes(nodes[k].name))
+    .map(k => nodes[k])
+    .sort((n1, n2) => n1.position[1] - n2.position[1])
+}
+
+// TODO: create a proper engine interface with the proper methods types on it.
+const engine = initSharedEngine('demo@0.1.0', thothComponents, true) as any
+
+export const runChain = async (
+  graph: Graph,
+  inputs: Record<string, unknown>,
+  thoth: Record<string, unknown>,
+  modules?: ModuleType[]
+) => {
+  // The module is an interface that the module system uses to write data to
+  // used internally by the module plugin, and we make use of it here too.
+  // TODO: Test runing nested modules and watch out for unexpected behaviour
+  // when child modules overwrite this with their own.
+
+  const module = new Module()
+  // Parse array of modules into a map of modules by module name
+  const moduleMap = modules?.reduce((modules, module) => {
+    modules[module.name] = module
+    return modules
+  }, {} as Record<string, ModuleType>)
+  // Update the modules available in the module manager during the graph run time
+  engine.moduleManager.setModules(moduleMap)
+
+  // Eventual outputs of running the Spell
+  const rawOutputs = {} as Record<string, unknown>
+
+  // Attaching inputs to the module, which are passed in when the engine runs.
+  // you can see this at work in the 'workerInputs' function of module-manager
+  // work inputs worker reads from the module inputs via the key in node.data.name
+  // important to note: even single string values are wrapped in arrays due to match the client editor format
+  module.read(inputs)
+
+  // ThothContext: map of services expected by Thoth components,
+  // allowing client and server provide different sets of helpers that match the common interface
+
+  // EngineContext passed down into the engine and is used by workers.
+  const context = {
+    module,
+    thoth,
+    silent: true,
+  }
+  // Engine process to set up the tasks and prime the system for the first 'run' command.
+  await engine?.process(graph, null, context)
+
+  // Collect all the "trigger ins" that the module manager has gathered
+  const triggerIns = engine.moduleManager.triggerIns
+
+  function getFirstNodeTrigger(data: Graph) {
+    const extractedNodes = extractNodes(data.nodes, triggerIns)
+    return extractedNodes[0]
+  }
+
+  // Standard default component to start the serverside run sequence from, which has the run function on it.
+  const component = engine?.components.get(
+    'Module Trigger In'
+  ) as ModuleComponent
+
+  // Defaulting to the first node trigger to start our "run"
+  const triggeredNode = getFirstNodeTrigger(graph)
+  await component?.run(triggeredNode)
+  // Write all the raw data that was output by the module run to an object
+  module.write(rawOutputs)
+
+  const formattedOutputs: Record<string, unknown> = {}
+
+  // Format raw outputs based on the names assigned to Module Outputs node data in the graph
+  Object.values(graph.nodes)
+    .filter(node => {
+      return node.name === 'Module Output' || node.name === 'Output'
+    })
+    .forEach((node: Node) => {
+      formattedOutputs[node.data.name as string] =
+        rawOutputs[node.data.socketKey as string]
+    })
+
+  return formattedOutputs
+}
