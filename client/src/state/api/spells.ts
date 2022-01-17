@@ -88,11 +88,9 @@ export const spellApi = rootApi.injectEndpoints({
             updateGameState({ state: spell.gameState, spellId: spell.name })
           )
 
-        spell.modules = modules
-
         const baseQueryOptions = {
           url: 'game/spells/save',
-          body: spell,
+          body: { ...spell, modules },
           method: 'POST',
         }
 
