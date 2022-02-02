@@ -45,7 +45,7 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
 
   const buildUrl = version => {
     return encodeURI(
-      `${process.env.REACT_APP_API_URL}/games/spells/${spellId}/${version}`
+      `${process.env.REACT_APP_API_URL}/game/spells/deployed/${spellId}/${version}`
     )
   }
 

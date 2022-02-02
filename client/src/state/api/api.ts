@@ -5,7 +5,7 @@ import { getAuthHeader } from '../../utils/authHelper'
 export const rootApi = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.REACT_APP_API_URL}/` || 'localhost:8000/',
+    baseUrl: `${process.env.REACT_APP_API_URL}/`,
     prepareHeaders: headers => {
       const authHeader = getAuthHeader()
       if (authHeader?.Authorization)
