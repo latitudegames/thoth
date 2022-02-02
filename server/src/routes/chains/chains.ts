@@ -2,7 +2,7 @@ import axios from 'axios';
 import Koa from 'koa';
 
 import 'regenerator-runtime/runtime.js';
-import { sessionOrApiKeyAuth } from '../../middleware/auth';
+import { noAuth } from '../../middleware/auth';
 import { Route } from '../../types';
 import { CustomError } from '../../utils/CustomError';
 import {
@@ -10,7 +10,7 @@ import {
 } from './runChain';
 import { getTestSpell } from './testSpells';
 import { Graph, Module } from './types';
-
+import { creatorToolsDatabase } from '../../databases/creatorTools';
 
 export const modules: Record<string, unknown> = {}
 
@@ -18,20 +18,24 @@ const chainsHandler = async (ctx: Koa.Context) => {
   const { spell, version } = ctx.params
   const { isTest, userGameState = {} } = ctx.request.body
 
-  // eslint-disable-next-line no-console
-  console.log("spell is", spell);
+  let rootSpell
 
+  if (process.env.USE_LATITUDE) {
     const response = await axios({
       method: 'GET',
       url: process.env.API_URL + '/game/spells/' + spell,
       headers: ctx.headers,
       data: ctx.request.body
     });
+    rootSpell = response.data;
+  }
 
-  const rootSpell = response.data
+  else {
+    rootSpell = await creatorToolsDatabase.chains.findOne({
+      where: { name: spell },
+    })
+  }
 
-  // eslint-disable-next-line no-console
-  console.log("rootSpell is", rootSpell);
 
   // eslint-disable-next-line functional/no-let
   let activeSpell
@@ -41,18 +45,19 @@ const chainsHandler = async (ctx: Koa.Context) => {
   } else if (version === 'latest') {
     activeSpell = rootSpell
   } else {
-      // TODO:
-
-
+    if (process.env.USE_LATITUDE) {
       const response = await axios({
         method: 'GET',
         url: process.env.API_URL + `/game/spells/deployed/${spell}/${version}`,
         headers: ctx.headers,
         data: ctx.request.body
       });
-    activeSpell = response.data
-      // eslint-disable-next-line no-console
-      console.log("active spell is", activeSpell);
+      activeSpell = response.data
+    } else {
+      activeSpell = await creatorToolsDatabase.deployedSpells.findOne({
+        where: { name: spell, version },
+      })
+    }
   }
 
   //todo validate spell has an input trigger?
@@ -66,7 +71,7 @@ const chainsHandler = async (ctx: Koa.Context) => {
 
   // TODO use test spells if body option is given
   // const activeSpell = getTestSpell(spell)
-  const chain = activeSpell.chain as Graph | any
+  const chain = activeSpell.chain as Graph
   const modules = activeSpell.modules as Module[]
 
   const gameState = {
@@ -95,6 +100,7 @@ const chainsHandler = async (ctx: Koa.Context) => {
   }, {} as Record<string, unknown>)
 
   const outputs = await runChain(chain, inputs, thoth, modules)
+  console.log("Outputs of running chain are: ", outputs);
   const newGameState = thoth.getCurrentGameState()
 
   ctx.body = { spell: activeSpell.name, outputs, gameState: newGameState }
@@ -102,8 +108,8 @@ const chainsHandler = async (ctx: Koa.Context) => {
 
 export const chains: Route[] = [
   {
-    path: '/chains/:spell/:version',
-    access: sessionOrApiKeyAuth,
+    path: '/game/chains/:spell/:version',
+    access: noAuth,
     post: chainsHandler,
   },
 ]

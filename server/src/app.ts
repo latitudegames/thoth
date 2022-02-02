@@ -4,6 +4,7 @@ import HttpStatus from 'http-status-codes'
 import Koa from 'koa'
 import koaBody from 'koa-body'
 import compose from 'koa-compose'
+import { creatorToolsDatabase } from './databases/creatorTools'
 
 import { routes } from './routes'
 import { Handler, Method, Middleware } from './types'
@@ -110,8 +111,9 @@ app.use(async (ctx: Koa.Context, next: () => Promise<any>) => {
     ctx.body = { error }
     ctx.app.emit('error', error, ctx)
   }
-})
+});
 
-// Error handling here for any errors emited in the system
-// eslint-disable-next-line no-console
-app.on('error', console.error)
+(async function () {
+  await creatorToolsDatabase.sequelize.sync();
+  console.log("Synced");
+})()

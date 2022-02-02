@@ -18,6 +18,7 @@ const MenuBar = () => {
 
   useEffect(() => {
     activeTabRef.current = activeTab
+    console.log("changing current to ", activeTabRef.current)
   }, [activeTab])
 
   // grab all events we need

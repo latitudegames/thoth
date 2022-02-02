@@ -72,7 +72,7 @@ export const spellApi = rootApi.injectEndpoints({
         const { data: spell } = await queryFulfilled
 
         dispatch(
-          updateGameState({ state: spell.gameState, spellId: spell.name })
+          updateGameState({ state: spell?.gameState, spellId: spell?.name })
         )
       },
     }),
