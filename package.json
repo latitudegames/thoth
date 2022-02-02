@@ -19,8 +19,10 @@
   "scripts": {
     "start:core": "lerna exec --scope @latitudegames/thoth-core -- yarn start",
     "start:client": "lerna exec --scope @thoth/client -- yarn start",
-    "dev:server": "lerna exec --scope @latitudegames/thoth-server -- yarn run dev",
     "start": "concurrently \"yarn start:core\" \"sleep 10s && yarn start:client\"",
+    "dev": "concurrently \"cd server && docker-compose up\" \"yarn run dev:server\" \"yarn start:core\" \"sleep 10s && yarn start:client\"",
+    "schema:refresh": "rm -rf sequelize/generated/* && node sequelize/creatorTools.js",
+    "dev:server": "lerna exec --scope @latitudegames/thoth-server -- yarn run dev",
     "lint": "lerna run lint --parallel",
     "lint:fix": "lerna run lint:fix --parallel",
     "build": "copyfiles LICENSE.txt client && lerna exec --scope @thoth/client -- yarn build",
@@ -45,6 +47,9 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-prettier": "^4.0.0",
-    "prettier": "^2.4.1"
+    "prettier": "^2.4.1",
+    "sequelize": "^6.14.0",
+    "sqlite": "^4.0.23",
+    "sqlite3": "^5.0.2"
   }
 }

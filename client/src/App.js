@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 
 import { useAuth } from './contexts/AuthProvider'
@@ -14,6 +14,8 @@ import 'flexlayout-react/style/dark.css'
 import './design-globals/design-globals.css'
 import './App.css'
 //These need to be imported last to override styles.
+
+const useLatitude = false; // process.env.REACT_APP_USE_LATITUDE
 
 function App() {
   // Use our routes
@@ -56,8 +58,16 @@ function App() {
         <Route path="/home/*" element={<GuardedRoute />} >
           <Route path="/home/*" element={<HomeScreen />} />
         </Route>
-        <Route path="/login" element={<LoginScreen />} />
-        <Route path="/" element={redirect()} />
+        <Route path="/" element={<GuardedRoute />}>
+          <Route path="/" element={<Thoth />} />
+          <Route path="/login" element={<LoginScreen />} />
+        </Route>
+        {
+          useLatitude &&
+          <React.Fragment>
+            <Route path="/" element={redirect()} />
+          </React.Fragment>
+        }
       </Routes>
     </ThothPageWrapper>
   )

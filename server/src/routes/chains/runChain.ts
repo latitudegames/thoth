@@ -29,9 +29,9 @@ const completionsParser = async (
     ...options
   } = completionRequest
   if (!options) throw new CustomError('input-failed', 'No parameters provided')
-    // TODO: Make request
-    // Then return the appropriate response
-    return { context, getFullResponse, modelSource, universalFormat, options }
+  // TODO: Make request
+  // Then return the appropriate response
+  return { context, getFullResponse, modelSource, universalFormat, options }
 }
 
 const { initSharedEngine, getComponents } = thothCore
@@ -149,9 +149,11 @@ export const runChain = async (
   const component = engine?.components.get(
     'Module Trigger In'
   ) as ModuleComponent
+  console.log("component is", component);
 
   // Defaulting to the first node trigger to start our "run"
   const triggeredNode = getFirstNodeTrigger(graph)
+  console.log("triggeredNode is", triggeredNode);
   await component?.run(triggeredNode)
   // Write all the raw data that was output by the module run to an object
   module.write(rawOutputs)
