@@ -20,13 +20,13 @@
     "start:core": "lerna exec --scope @latitudegames/thoth-core -- yarn start",
     "start:client": "lerna exec --scope @thoth/client -- yarn start",
     "start": "concurrently \"yarn start:core\" \"sleep 10s && yarn start:client\"",
-    "dev": "concurrently \"cd server && docker-compose up\" \"yarn run dev:server\" \"yarn start:core\" \"sleep 10s && yarn start:client\"",
-    "schema:refresh": "rm -rf sequelize/generated/* && node sequelize/creatorTools.js",
+    "dev": "REFRESH_DB=true && concurrently \"cd server && docker-compose up\" \"sleep 1s && yarn run dev:server\" \"yarn start:core\" \"sleep 1s && yarn start:client\"",
     "dev:server": "lerna exec --scope @latitudegames/thoth-server -- yarn run dev",
     "lint": "lerna run lint --parallel",
     "lint:fix": "lerna run lint:fix --parallel",
     "build": "copyfiles LICENSE.txt client && lerna exec --scope @thoth/client -- yarn build",
     "build:core": "copyfiles LICENSE.txt core && lerna exec --scope @latitudegames/thoth-core -- yarn build",
+    "install:core": "lerna exec --scope @latitudegames/thoth-core -- yarn install",
     "publish:canary": "lerna exec --scope @latitudegames/thoth-core -- yarn canary",
     "install:canary": "lerna exec --scope @thoth/client -- yarn install:canary"
   },
@@ -37,9 +37,7 @@
   },
   "devDependencies": {
     "craco": "^0.0.3",
-    "lerna": "^4.0.0"
-  },
-  "dependencies": {
+    "lerna": "^4.0.0",
     "@typescript-eslint/eslint-plugin": "^4.31.1",
     "@typescript-eslint/parser": "^4.31.1",
     "concurrently": "^6.2.1",
@@ -47,9 +45,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-prettier": "^4.0.0",
-    "prettier": "^2.4.1",
-    "sequelize": "^6.14.0",
-    "sqlite": "^4.0.23",
-    "sqlite3": "^5.0.2"
-  }
+    "prettier": "^2.4.1"
+  },
+  "dependencies": {}
 }
