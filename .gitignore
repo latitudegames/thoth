@@ -10,3 +10,4 @@ build
 
 # Generated Styles for AreaPlugin
 core/src/plugins/areaPlugin/style.css.d.ts
+yarn-error.log
