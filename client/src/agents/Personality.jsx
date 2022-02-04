@@ -24,7 +24,7 @@ const Personality = ({ data, handleClick }) => {
             <form>
                 <h2>Agent: {data.agentName}</h2>
                 <div className="form-item">
-                    <span className="form-item-label">Actions:</span>
+                    <span className="form-item-label">Personalities:</span>
                     <textarea className="form-text-area" onChange={(e) => { setDataUpdated(true); data.actions = e.target.value }} defaultValue={data.actions}></textarea>
                 </div>
 
