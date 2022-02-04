@@ -2,7 +2,6 @@
 import axios from 'axios';
 import { config } from 'dotenv';
 import Koa from 'koa';
-import semver from 'semver';
 import { creatorToolsDatabase } from '../databases/creatorTools';
 import { noAuth } from '../middleware/auth';
 import { Route } from '../types';
@@ -224,11 +223,7 @@ const deploySpellHandler = async (ctx: Koa.Context) => {
   })
 
   const newVersion: string = lastDeployedSpell
-    ? (semver.inc(
-      lastDeployedSpell.version,
-      body.releaseType || 'patch'
-    ) as string)
-    : '0.0.1'
+    ? (parseInt(lastDeployedSpell.version) + 1).toString() : '1'
 
   const newDeployedSpell = await creatorToolsDatabase.deployedSpells.create({
     name: spell.name,

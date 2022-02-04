@@ -126,8 +126,7 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
                   title: 'Deploy',
                   options: {
                     // todo find better way to get next version here
-                    version:
-                      '0.0.' + (deployments ? deployments?.length + 1 : 0),
+                    version: (deployments ? deployments?.length + 1 : 0),
                   },
                   onClose: data => {
                     closeModal()
