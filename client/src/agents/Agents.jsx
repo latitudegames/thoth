@@ -1,20 +1,15 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import Agent from "./Agent";
 
 const Agents = () => {
     const [data, setData] = useState([]);
-    const navigate = useNavigate();
+    const [currentInc, setInc] = useState(0);
 
     const createNew = () => {
         axios.post(`${process.env.REACT_APP_API_URL}/agentInstance`, { data: {} }).then(res => {
-            if (res.data === 'ok') {
-                navigate('/');
-            } else {
-                console.log(res.data);
-            }
+            setInc(currentInc + 1)
         });
     }
 
@@ -23,19 +18,22 @@ const Agents = () => {
             console.log("res is", res);
             setData(res.data);
         });
-    }, [])
+    }, [currentInc])
 
     return (
-
         <div className="agent-editor">
-            Agents
-            <div>
-                {data && data.map((value, idx) => {
-                    return (
-                        <Agent id={value.id} key={idx} />
-                    )
-                })}
-            </div>
+            {currentInc &&
+                <React.Fragment>
+                    Agents
+                    <div>
+                        {data && data.map((value, idx) => {
+                            return (
+                                <Agent id={value.id} key={idx} updateCallback={() => setInc(currentInc + 1)} />
+                            )
+                        })}
+                    </div>
+                </React.Fragment>
+            }
 
 
             <button onClick={() => createNew()}>Create New</button>
