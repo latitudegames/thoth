@@ -281,3 +281,38 @@ input[type='text'] {
   margin: 2em;
   display: block;
 }
+
+.flex-container {
+  margin: 0.5em;
+  width: calc(100% - 2em);
+  justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.flex-item {
+  display: flex;
+  margin: 0.5em;
+}
+
+.form-item {
+  margin: 2em;
+  width: 50%;
+}
+
+.form-item-label {
+  display: block;
+  margin-bottom: 0.5em;
+}
+
+.form-text-area {
+  width: 100%;
+}
+.admin-container {
+  margin-left: 11em;
+  margin-top: 1em;
+}
+
+.agent-select {
+  margin: 1em;
+}

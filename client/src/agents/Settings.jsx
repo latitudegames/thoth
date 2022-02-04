@@ -70,13 +70,13 @@ const ConfigEditor = () => {
             <h1>Config:</h1>
             <label>Add new Config Variable:<br />
               <label>Key:
-                <input type="text" name="new_config_variable_key" onChange={(e) => {
+                <input className="form-item" type="text" name="new_config_variable_key" onChange={(e) => {
                   newConfig.key = e.target.value;
                 }} defaultValue='' />
               </label>
               <br />
               <label>Value:
-                <input type="text" name="new_config_variable_value" onChange={(e) => {
+                <input className="form-item" type="text" name="new_config_variable_value" onChange={(e) => {
                   newConfig.value = e.target.value;
                 }} defaultValue='' />
               </label>

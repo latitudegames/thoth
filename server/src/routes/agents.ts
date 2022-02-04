@@ -133,13 +133,13 @@ const getProfanityHandler = async (ctx: Koa.Context) => {
   const editorId = ctx.query.editor_id;
 
   if (editorId === "1") {
-    ctx.body = { data: (await database.instance.getBadWords()).toString().split("\n") };
+    return ctx.body = { data: (await database.instance.getBadWords()).toString().split("\n") };
   } else if (editorId === "2") {
-    ctx.body = { data: (await database.instance.getSensitiveWords()).toString().split("\r\n") };
+    return ctx.body = { data: (await database.instance.getSensitiveWords()).toString().split("\r\n") };
   } else if (editorId === "3") {
-    ctx.body = { data: (await database.instance.getSensitivePhrases()).toString().split("\n") };
+    return ctx.body = { data: (await database.instance.getSensitivePhrases()).toString().split("\n") };
   } else if (editorId === "4") {
-    ctx.body = { data: (await database.instance.getLeadingStatements()).toString().split("\n") };
+    return ctx.body = { data: (await database.instance.getLeadingStatements()).toString().split("\n") };
   }
   ctx.body = 'invalid editor id';
 }
