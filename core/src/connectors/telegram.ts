@@ -7,7 +7,6 @@ import { customConfig } from '../superreality/customConfig'
 import roomManager from "../superreality/roomManager"
 import { classifyText } from "../superreality/textClassifier"
 import { getRandomEmptyResponse, startsWithCapital } from "./utils"
-import { defaultAgent } from "../index"
 
 async function handleMessage(chat_id, response, message_id, addPing, args, bot) {
     let senderId = ''
@@ -214,7 +213,7 @@ export async function onMessage(bot, msg, botName, username_regex) {
             sentMessage(_sender)
         }
         else {
-            const oldChat = database.instance.getConversation(defaultAgent, _sender, 'telegram', msg.chat.id, false);
+            const oldChat = database.instance.getConversation("testAgent", _sender, 'telegram', msg.chat.id, false);
             if (oldChat !== undefined && oldChat.length > 0) {
                 const context = await classifyText(values);
                 const ncontext = await classifyText(content);

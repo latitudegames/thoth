@@ -13,7 +13,7 @@
     "start:core": "lerna exec --scope @latitudegames/thoth-core -- yarn start",
     "start:client": "lerna exec --scope @latitudegames/thoth-client -- yarn start",
     "start": "concurrently \"yarn start:core\" \"sleep 10s && yarn start:client\"",
-    "dev": "REFRESH_DB=true && concurrently \"cd server && docker-compose up\" \"sleep 2s && yarn run dev:server\" \"yarn start:core\"  \"sleep 1s && yarn run db:seed\" \"sleep 1s && yarn start:client\"",
+    "dev": "REFRESH_DB=true && concurrently \"cd server && docker-compose up\" \"sleep 2s && yarn run dev:server\" \"yarn start:core\" \"sleep 1s && yarn start:client\"  \"sleep 5s && yarn run db:seed\" ",
     "dev:server": "lerna exec --scope @latitudegames/thoth-server -- yarn run dev",
     "db:seed": "npx sequelize-cli db:seed:all --url 'postgres://thoth:thoth_default_pw@localhost:5432/thoth'",
     "lint": "lerna run lint --parallel",

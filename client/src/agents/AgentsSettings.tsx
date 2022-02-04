@@ -1,10 +1,27 @@
+//@ts-nocheck
+
 import axios from "axios";
 import React, { useState } from 'react';
-import { Link, useNavigate } from "react-router-dom";
+
+const confDefaults = {
+    useProfanityFilter: 'false',
+    contentRating: 'false',
+    filterSensitive: 'false',
+    factsUpdateInterval: '2',
+    agentFactsWindowSize: '4',
+    conversationWindowSize: '10',
+    activeConversationSize: '10',
+    speakerFactsWindowSize: '4',
+    dialogFrequencyPenality: '.3',
+    dialogPresencePenality: '.3',
+    summarizationModel: 'davinci',
+    conversationModel: 'davinci',
+    opinionModel: 'davinci'
+}
 
 const AgentsSettings = () => {
     const [firstLoad, setFirstLoad] = useState(true);
-    const [config, setConfig] = useState({});
+    const [config, setConfig] = useState(confDefaults);
     const [dataUpdated, setDataUpdated] = useState(false);
 
     if (firstLoad) {
@@ -22,11 +39,7 @@ const AgentsSettings = () => {
 
         const body = { data: config };
         axios.post(`${process.env.REACT_APP_API_URL}/agentConfig`, body).then(res => {
-            if (res.data === 'ok') {
-                navigate('/');
-            } else {
-                console.log(res.data);
-            }
+            console.log(res.data);
         });
     }
 
@@ -40,12 +53,8 @@ const AgentsSettings = () => {
                         <h1>Config:</h1>
                         <form>
                             <div className="form-item">
-                                <span className="form-item-label">Default Agent:</span>
-                                <input type='text' onChange={(e) => { setDataUpdated(true); config.defaultAgent = e.target.value }} defaultValue={config.defaultAgent}></input>
-                            </div>
-                            <div className="form-item">
                                 <span className="form-item-label">Use Profanity Filter:</span>
-                                <input type='checkbox' defaultChecked={config.useProfanityFilter == 'true' ? true : false} onChange={(e) => { setDataUpdated(true); config.useProfanityFilter = e.target.checked.toString() }}></input>
+                                <input type='checkbox' defaultChecked={config.useProfanityFilter === 'true' ? true : false} onChange={(e) => { setDataUpdated(true); config.useProfanityFilter = e.target.checked.toString() }}></input>
                             </div>
                             <div className="form-item">
                                 <span className="form-item-label">Content Rating:</span>
@@ -53,7 +62,7 @@ const AgentsSettings = () => {
                             </div>
                             <div className="form-item">
                                 <span className="form-item-label">Filter Sensititive:</span>
-                                <input type='checkbox' defaultChecked={config.filterSensitive == 'true' ? true : false} onChange={(e) => { setDataUpdated(true); config.filterSensitive = e.target.checked.toString() }}></input>
+                                <input type='checkbox' defaultChecked={config.filterSensitive === 'true' ? true : false} onChange={(e) => { setDataUpdated(true); config.filterSensitive = e.target.checked.toString() }}></input>
                             </div>
                             <div className="form-item">
                                 <span className="form-item-label">Facts Update Interval:</span>

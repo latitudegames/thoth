@@ -1,25 +1,23 @@
 import axios from "axios";
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from 'react';
 
 const ProfanitySelectedEditor = ({ editorId }) => {
   const [firstLoad, setFirstLoad] = useState(true);
   const [data, setData] = useState([]);
   const [addNewWord, setAddNewWord] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
-  const navigate = useNavigate();
 
   useEffect(() => {
 
     axios.get(`${process.env.REACT_APP_API_URL}/profanity?editor_id=${editorId}`).then(res => {
       console.log("res", res)
       let count = 0;
-      let _data = [];
+      let _data: any = [];
       for (let i = 0; i < res.data.data.length; i++) {
         _data.push(res.data.data[i]);
         count++;
         if (count >= 20) {
-          data.push(_data);
+          setData(_data);
           count = 0;
           _data = [];
         }
@@ -31,14 +29,14 @@ const ProfanitySelectedEditor = ({ editorId }) => {
   const addWord = async (word) => {
     if (!word || word.length <= 0) return;
     axios.post(`${process.env.REACT_APP_API_URL}/add_profanity_word`, { word: word, editorId: editorId }).then(res => {
-      window.location.reload(false);
+      window.location.reload();
     });
     setAddNewWord('');
   }
   const removeWord = async (word) => {
     if (!word || word.length <= 0) return;
     await axios.post(`${process.env.REACT_APP_API_URL}/remove_profanity_word`, { word: word, editorId: editorId }).then(res => {
-      window.location.reload(false);
+      window.location.reload();
     });
   }
 
@@ -63,7 +61,7 @@ const ProfanitySelectedEditor = ({ editorId }) => {
             </label>
             <br /><br />
             Page: {currentPage + 1}:
-            {data && data[currentPage] && data[currentPage].map((value, idx) => {
+            {data && data[currentPage] && (data[currentPage] as any).map((value, idx) => {
               return (
                 <div
                   key={idx}
