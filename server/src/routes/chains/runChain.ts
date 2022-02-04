@@ -1,4 +1,4 @@
-import thothCore from '@latitudegames/thoth-core/dist/server';
+import thothCore from '@latitudegames/thoth-core/server';
 import Koa from 'koa';
 
 import { CustomError } from '../../utils/CustomError';
