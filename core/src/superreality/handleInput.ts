@@ -1,9 +1,12 @@
-import { database } from '@latitudegames/thoth-core/src/superreality/database'
-import { formOpinionAboutSpeaker } from '@latitudegames/thoth-core/src/superreality/formOpinionAboutSpeaker.js'
-import { makeCompletionRequest } from '@latitudegames/thoth-core/src/superreality/makeCompletionRequest.js'
-import { evaluateTextAndRespondIfToxic } from '@latitudegames/thoth-core/src/superreality/profanityFilter.js'
-import { summarizeAndStoreFactsAboutAgent } from '@latitudegames/thoth-core/src/superreality/summarizeAndStoreFactsAboutAgent.js'
-import { summarizeAndStoreFactsAboutSpeaker } from '@latitudegames/thoth-core/src/superreality/summarizeAndStoreFactsAboutSpeaker.js'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-nocheck
+
+import { database } from '@latitudegames/../core/src/superreality/formOpinionAboutSpeaker'
+import { formOpinionAboutSpeaker } from '@latitudegames/thoth-core/src/superreality/formOpinionAboutSpeaker'
+import { makeCompletionRequest } from '@latitudegames/thoth-core/src/superreality/makeCompletionRequest'
+import { evaluateTextAndRespondIfToxic } from './profanityFilter'
+import { summarizeAndStoreFactsAboutAgent } from './summarizeAndStoreFactsAboutAgent'
+import { summarizeAndStoreFactsAboutSpeaker } from './summarizeAndStoreFactsAboutSpeaker'
 
 async function archiveConversation(
         speaker,

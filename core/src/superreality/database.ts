@@ -1,21 +1,24 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-nocheck
+
 import { customConfig } from '@latitudegames/thoth-core/src/superreality/customConfig'
 import fs from 'fs'
 import path from 'path'
 import pg from 'pg'
 
-import { initProfanityFilter } from './profanityFilter.js'
+import { initProfanityFilter } from './profanityFilter'
 
-const getRandomNumber = (min, max) =>
+const getRandomNumber = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1)) + min
 
 const { Client } = pg
 const rootDir = path.resolve(path.dirname(''))
 
 export class database {
-  static instance
+  static instance: database
 
-  pool
-  client
+  pool: any
+  client: pg.Client
 
   constructor() {
     database.instance = this
@@ -30,8 +33,8 @@ export class database {
       host: process.env.PGHOST,
       ssl: process.env.PGSSL
         ? {
-            rejectUnauthorized: false,
-          }
+          rejectUnauthorized: false,
+        }
         : false,
     })
     this.client.connect()
@@ -60,7 +63,7 @@ export class database {
     new customConfig(configs)
   }
   //updates a config value
-  async setConfig(key, value) {
+  async setConfig(key: any, value: any) {
     const check = 'SELECT * FROM config WHERE _key=$1'
     const cvalue = [key]
 
@@ -77,14 +80,14 @@ export class database {
       await this.client.query(query, values)
     }
   }
-  async deleteConfig(key) {
+  async deleteConfig(key: any) {
     const query = 'DELETE FROM config WHERE _key=$1'
     const values = [key]
 
     await this.client.query(query, values)
   }
 
-  async addMessageInHistory(client_name, chat_id, message_id, sender, content) {
+  async addMessageInHistory(client_name: string, chat_id: string, message_id: string, sender: any, content: any) {
     const date = new Date()
     const utc = new Date(
       date.getUTCFullYear(),
@@ -119,19 +122,19 @@ export class database {
       utcStr,
     ]
 
-    this.client.query(query, values, (err, res) => {
+    this.client.query(query, values, (err: { stack: any }, res: any) => {
       if (err) {
         console.error(`${err} ${err.stack}`)
       }
     })
   }
   async addMessageInHistoryWithDate(
-    client_name,
-    chat_id,
-    message_id,
-    sender,
-    content,
-    date
+    client_name: string,
+    chat_id: string,
+    message_id: string,
+    sender: any,
+    content: any,
+    date: any
   ) {
     const global_message_id = client_name + '.' + chat_id + '.' + message_id
     const query =
@@ -146,18 +149,18 @@ export class database {
       date,
     ]
 
-    this.client.query(query, values, (err, res) => {
+    this.client.query(query, values, (err: { stack: any }, res: any) => {
       if (err) {
         console.error(`${err} ${err.stack}`)
       }
     })
   }
 
-  async getHistory(length, client_name, chat_id) {
+  async getHistory(length: number, client_name: any, chat_id: any) {
     const query =
       'SELECT * FROM chat_history WHERE client_name=$1 AND chat_id=$2'
     const values = [client_name, chat_id]
-    return await this.client.query(query, values, (err, res) => {
+    return await this.client.query(query, values, (err: { stack: any }, res: { rows: string | any[] | undefined } | null | undefined) => {
       if (err) {
         return console.error(`${err} ${err.stack}`)
       }
@@ -176,12 +179,12 @@ export class database {
     })
   }
 
-  async deleteMessage(client_name, chat_id, message_id) {
+  async deleteMessage(client_name: any, chat_id: any, message_id: any) {
     const query =
       'DELETE FROM chat_history WHERE client_name=$1 AND chat_id=$2 AND message_id=$3'
     const values = [client_name, chat_id, message_id]
 
-    await this.client.query(query, values, (err, res) => {
+    await this.client.query(query, values, (err: { stack: any }, res: any) => {
       if (err) {
         console.error(`${err} ${err.stack}`)
       }
@@ -189,11 +192,11 @@ export class database {
   }
 
   async updateMessage(
-    client_name,
-    chat_id,
-    message_id,
-    newContent,
-    updateTime
+    client_name: any,
+    chat_id: any,
+    message_id: any,
+    newContent: any,
+    updateTime: boolean
   ) {
     if (updateTime) {
       const date = new Date()
@@ -221,7 +224,7 @@ export class database {
         'UPDATE chat_history SET content=$1, createdAt=$2 WHERE client_name=$3 AND chat_id=$4 AND message_id=$5'
       const values = [newContent, utcStr, client_name, chat_id, message_id]
 
-      await this.client.query(query, values, (err, res) => {
+      await this.client.query(query, values, (err: { stack: any }, res: any) => {
         if (err) {
           console.error(`${err} ${err.stack}`)
         }
@@ -231,7 +234,7 @@ export class database {
         'UPDATE chat_history SET content=$1 WHERE client_name=$2 AND chat_id=$3 AND message_id=$4'
       const values = [newContent, client_name, chat_id, message_id]
 
-      await this.client.query(query, values, (err, res) => {
+      await this.client.query(query, values, (err: { stack: any }, res: any) => {
         if (err) {
           console.error(`${err} ${err.stack}`)
         }
@@ -240,18 +243,18 @@ export class database {
   }
 
   async messageExists(
-    client_name,
-    chat_id,
-    message_id,
-    sender,
-    content,
-    timestamp
+    client_name: string,
+    chat_id: string,
+    message_id: string,
+    sender: any,
+    content: any,
+    timestamp: string | number | Date
   ) {
     const query =
       'SELECT * FROM chat_history WHERE client_name=$1 AND chat_id=$2 AND message_id=$3'
     const values = [client_name, chat_id, message_id]
 
-    return await this.client.query(query, values, (err, res) => {
+    return await this.client.query(query, values, (err: { stack: any }, res: { rows: string | any[] }) => {
       if (err) {
         console.error(`${err} ${err.stack}`)
       } else {
@@ -293,7 +296,7 @@ export class database {
             utcStr,
           ]
 
-          this.client.query(query2, values2, (err, res) => {
+          this.client.query(query2, values2, (err: { stack: any }, res: any) => {
             if (err) {
               console.error(`${err} ${err.stack}`)
             }
@@ -306,18 +309,18 @@ export class database {
     })
   }
   async messageExistsAsync(
-    client_name,
-    chat_id,
-    message_id,
-    sender,
-    content,
-    timestamp
+    client_name: string,
+    chat_id: string,
+    message_id: string,
+    sender: any,
+    content: any,
+    timestamp: string | number | Date
   ) {
     const query =
       'SELECT * FROM chat_history WHERE client_name=$1 AND chat_id=$2 AND message_id=$3'
     const values = [client_name, chat_id, message_id]
 
-    return await this.client.query(query, values, async (err, res) => {
+    return await this.client.query(query, values, async (err: { stack: any }, res: { rows: string | any[] }) => {
       if (err) {
         console.error(`${err} ${err.stack}`)
       } else {
@@ -359,7 +362,7 @@ export class database {
             utcStr,
           ]
 
-          await this.client.query(query2, values2, (err, res) => {
+          await this.client.query(query2, values2, (err: { stack: any }, res: any) => {
             if (err) {
               console.error(`${err} ${err.stack}`)
             }
@@ -371,19 +374,19 @@ export class database {
     })
   }
   async messageExistsAsyncWitHCallback(
-    client_name,
-    chat_id,
-    message_id,
-    sender,
-    content,
-    timestamp,
-    callback
+    client_name: string,
+    chat_id: string,
+    message_id: string,
+    sender: any,
+    content: any,
+    timestamp: string | number | Date,
+    callback: () => void
   ) {
     const query =
       'SELECT * FROM chat_history WHERE client_name=$1 AND chat_id=$2 AND message_id=$3'
     const values = [client_name, chat_id, message_id]
 
-    return await this.client.query(query, values, async (err, res) => {
+    return await this.client.query(query, values, async (err: { stack: any }, res: { rows: string | any[] }) => {
       if (err) {
         console.error(`${err} ${err.stack}`)
       } else {
@@ -425,7 +428,7 @@ export class database {
             utcStr,
           ]
 
-          await this.client.query(query2, values2, (err, res) => {
+          await this.client.query(query2, values2, (err: { stack: any }, res: any) => {
             if (err) {
               console.error(`${err} ${err.stack}`)
             }
@@ -436,19 +439,19 @@ export class database {
     })
   }
   async messageExistsAsyncWitHCallback2(
-    client_name,
-    chat_id,
-    message_id,
-    sender,
-    content,
-    timestamp,
-    callback
+    client_name: any,
+    chat_id: any,
+    message_id: any,
+    sender: any,
+    content: any,
+    timestamp: any,
+    callback: () => void
   ) {
     const query =
       'SELECT * FROM chat_history WHERE client_name=$1 AND chat_id=$2 AND message_id=$3'
     const values = [client_name, chat_id, message_id]
 
-    return await this.client.query(query, values, async (err, res) => {
+    return await this.client.query(query, values, async (err: { stack: any }, res: { rows: string | any[] }) => {
       if (err) {
         console.error(`${err} ${err.stack}`)
       } else {
@@ -460,17 +463,17 @@ export class database {
     })
   }
   async messageExists2(
-    client_name,
-    chat_id,
-    message_id,
-    foundCallback,
-    notFoundCallback
+    client_name: any,
+    chat_id: any,
+    message_id: any,
+    foundCallback: () => void,
+    notFoundCallback: () => void
   ) {
     const query =
       'SELECT * FROM chat_history WHERE client_name=$1 AND chat_id=$2 AND message_id=$3'
     const values = [client_name, chat_id, message_id]
 
-    return await this.client.query(query, values, (err, res) => {
+    return await this.client.query(query, values, (err: { stack: any }, res: { rows: string | any[] }) => {
       if (err) {
         console.error(`${err} ${err.stack}`)
         notFoundCallback()
@@ -481,12 +484,12 @@ export class database {
     })
   }
 
-  async getNewMessageId(client_name, chat_id, callback) {
+  async getNewMessageId(client_name: any, chat_id: any, callback: (arg0: number) => void) {
     const query =
       'SELECT * FROM chat_history WHERE client_name=$1 AND chat_id=$2'
     const values = [client_name, chat_id]
 
-    return await this.client.query(query, values, (err, res) => {
+    return await this.client.query(query, values, (err: { stack: any }, res: { rows: string | any[] | undefined } | null | undefined) => {
       if (err) {
         console.error(`${err} ${err.stack}`)
       }
@@ -499,7 +502,7 @@ export class database {
     })
   }
 
-  async setConversation(agent, client, channel, sender, text, archive) {
+  async setConversation(agent: any, client: any, channel: any, sender: any, text: string | any[], archive: any) {
     if (!text || text.length <= 0) return
     const query =
       'INSERT INTO conversation(agent, client, channel, sender, text, archive, date) VALUES($1, $2, $3, $4, $5, $6, $7)'
@@ -515,14 +518,14 @@ export class database {
 
     await this.client.query(query, values)
   }
-  async getConversation(agent, sender, client, channel, archive) {
+  async getConversation(agent: any, sender: any, client: any, channel: any, archive: any) {
     const query =
       'SELECT * FROM conversation WHERE agent=$1 AND client=$2 AND channel=$3 AND archive=$4'
     const values = [agent, client, channel, archive]
 
     const row = await this.client.query(query, values)
     if (row && row.rows && row.rows.length > 0) {
-      row.rows.sort(function (a, b) {
+      row.rows.sort(function (a: { date: string | number | Date }, b: { date: string | number | Date }) {
         return new Date(b.date) - new Date(a.date)
       })
       const now = new Date()
@@ -555,7 +558,7 @@ export class database {
     const query = 'DELETE FROM conversation'
     await this.client.query(query, values)
   }
-  async setSpeakersModel(agent, speaker, model) {
+  async setSpeakersModel(agent: any, speaker: any, model: any) {
     const test = 'SELECT * FROM speakers_model WHERE agent=$1 AND speaker=$2'
     const ctest = [agent, speaker]
 
@@ -575,7 +578,7 @@ export class database {
 
     await this.client.query(query, values)
   }
-  async getSpeakersModel(agent, speaker) {
+  async getSpeakersModel(agent: any, speaker: any) {
     const query = 'SELECT * FROM speakers_model WHERE agent=$1 AND speaker=$2'
     const values = [agent, speaker]
 
@@ -586,7 +589,7 @@ export class database {
       return ''
     }
   }
-  async setSpeakersFacts(agent, speaker, facts) {
+  async setSpeakersFacts(agent: any, speaker: any, facts: any) {
     const check = 'SELECT FROM speakers_facts WHERE agent=$1 AND speaker=$2'
     const cvalues = [agent, speaker]
 
@@ -606,7 +609,7 @@ export class database {
 
     await this.client.query(query, values)
   }
-  async getSpeakersFacts(agent, speaker) {
+  async getSpeakersFacts(agent: any, speaker: any) {
     const query = 'SELECT * FROM speakers_facts WHERE agent=$1 AND speaker=$2'
     const values = [agent, speaker]
 
@@ -617,7 +620,7 @@ export class database {
       return ''
     }
   }
-  async updateSpeakersFactsArchive(agent, speaker, facts) {
+  async updateSpeakersFactsArchive(agent: any, speaker: any, facts: string) {
     const archive = await this.getSpeakersFactsArchive(agent, speaker)
     if (archive && archive.length > 0) {
       const query =
@@ -633,7 +636,7 @@ export class database {
       await this.client.query(query, values)
     }
   }
-  async getSpeakersFactsArchive(agent, speaker) {
+  async getSpeakersFactsArchive(agent: any, speaker: any) {
     const query =
       'SELECT * FROM speakers_facts_archive WHERE agent=$1 AND speaker=$2'
     const values = [agent, speaker]
@@ -644,7 +647,7 @@ export class database {
     }
     return ''
   }
-  async setAgentFacts(agent, facts, reset) {
+  async setAgentFacts(agent: any, facts: string, reset: any) {
     const check = 'SELECT * FROM agent_facts WHERE agent=$1'
     const cvalues = [agent]
     const res = await this.client.query(check, cvalues)
@@ -664,7 +667,7 @@ export class database {
 
     await this.client.query(query, values)
   }
-  async getAgentFacts(agent) {
+  async getAgentFacts(agent: any) {
     const query = 'SELECT * FROM agent_facts WHERE agent=$1'
     const values = [agent]
 
@@ -675,7 +678,7 @@ export class database {
       return await ''
     }
   }
-  async updateAgentFactsArchive(agent, facts) {
+  async updateAgentFactsArchive(agent: any, facts: string) {
     const archive = await this.getAgentFactsArchive(agent)
     if (archive && archive.length > 0) {
       const query = 'UPDATE agent_facts_archive SET facts=$1 WHERE agent=$2'
@@ -690,7 +693,7 @@ export class database {
       await this.client.query(query, values)
     }
   }
-  async getAgentFactsArchive(agent) {
+  async getAgentFactsArchive(agent: any) {
     const query = 'SELECT * FROM agent_facts_archive WHERE agent=$1'
     const values = [agent]
 
@@ -700,7 +703,7 @@ export class database {
     }
     return ''
   }
-  async setMeta(agent, speaker, meta) {
+  async setMeta(agent: any, speaker: any, meta: any) {
     const check = 'SELECT * FROM meta WHERE agent=$1 AND speaker=$2'
     const cvalues = [agent, speaker]
 
@@ -718,7 +721,7 @@ export class database {
 
     await this.client.query(query, values)
   }
-  async getMeta(agent, speaker) {
+  async getMeta(agent: any, speaker: any) {
     const query = 'SELECT * FROM meta WHERE agent=$1 AND speaker=$2'
     const values = [agent, speaker]
 
@@ -729,7 +732,7 @@ export class database {
       return ''
     }
   }
-  async setRelationshipMatrix(speaker, agent, matrix) {
+  async setRelationshipMatrix(speaker: any, agent: any, matrix: any) {
     const check =
       'SELECT * FROM relationship_matrix WHERE speaker=$1 AND agent=$2'
     const cvalues = [speaker, agent]
@@ -750,7 +753,7 @@ export class database {
 
     await this.client.query(query, values)
   }
-  async getRelationshipMatrix(speaker, agent) {
+  async getRelationshipMatrix(speaker: any, agent: any) {
     const query =
       'SELECT * FROM relationship_matrix WHERE speaker=$1 AND agent=$2'
     const values = [speaker, agent]
@@ -759,14 +762,14 @@ export class database {
     return row && row.rows[0] ? JSON.parse(row.rows[0].matrix) : null
   }
 
-  async setSpeakerProfaneResponses(agent, responses) {
+  async setSpeakerProfaneResponses(agent: any, responses: any) {
     const query =
       'INSERT INTO speaker_profane_responses(agent, response) VALUES($1, $2)'
     const values = [agent, responses]
 
     await this.client.query(query, values)
   }
-  async getSpeakerProfaneResponses(agent) {
+  async getSpeakerProfaneResponses(agent: any) {
     const query = 'SELECT * FROM speaker_profane_responses WHERE agent=$1'
     const values = [agent]
 
@@ -781,14 +784,14 @@ export class database {
       return ''
     }
   }
-  async setSensitiveResponses(agent, responses) {
+  async setSensitiveResponses(agent: any, responses: any) {
     const query =
       'INSERT INTO sensitive_responses(agent, response) VALUES($1, $2)'
     const values = [agent, responses]
 
     await this.client.query(query, values)
   }
-  async getSensitiveResponses(agent) {
+  async getSensitiveResponses(agent: any) {
     const query = 'SELECT * FROM sensitive_responses WHERE agent=$1'
     const values = [agent]
 
@@ -803,14 +806,14 @@ export class database {
       return ''
     }
   }
-  async setProfanceResponses(agent, responses) {
+  async setProfanceResponses(agent: any, responses: any) {
     const query =
       'INSERT INTO profane_responses(agent, response) VALUES($1, $2)'
     const values = [agent, responses]
 
     await this.client.query(query, values)
   }
-  async getProfaneResponses(agent) {
+  async getProfaneResponses(agent: any) {
     const query = 'SELECT * FROM profane_responses WHERE agent=$1'
     const values = [agent]
 
@@ -821,7 +824,7 @@ export class database {
       return ''
     }
   }
-  async setRating(agent, rating) {
+  async setRating(agent: any, rating: any) {
     const check = 'SELECT * FROM rating WHERE agent=$1'
     const cvalues = [agent]
 
@@ -839,7 +842,7 @@ export class database {
 
     await this.client.query(query, values)
   }
-  async getRating(agent) {
+  async getRating(agent: any) {
     const query = 'SELECT * FROM rating WHERE agent=$1'
     const values = [agent]
 
@@ -850,7 +853,7 @@ export class database {
       return ''
     }
   }
-  async setAgentsFactsSummarization(facts) {
+  async setAgentsFactsSummarization(facts: any) {
     const check = 'SELECT * FROM agent_fact_summarization WHERE agent=$1'
     const cvalues = ['common']
 
@@ -878,7 +881,7 @@ export class database {
       return ''
     }
   }
-  async getAgentsConfig(agent) {
+  async getAgentsConfig(agent: string) {
     const query = 'SELECT * FROM agent_config WHERE agent=$1'
     const values = [agent]
 
@@ -893,7 +896,7 @@ export class database {
       return this.getAgentsConfig('common')
     }
   }
-  async setAgentsConfig(agent, config) {
+  async setAgentsConfig(agent: any, config: any) {
     const check = 'SELECT * FROM agent_config WHERE agent=$1'
     const cvalues = [agent]
 
@@ -912,7 +915,7 @@ export class database {
     }
   }
 
-  async getAgentExists(agent) {
+  async getAgentExists(agent: any) {
     const query = 'SELECT * FROM agents WHERE agent=$1'
     const values = [agent]
 
@@ -923,7 +926,7 @@ export class database {
       return false
     }
   }
-  async setAgentExists(agent) {
+  async setAgentExists(agent: any) {
     if (await this.getAgentExists(agent)) {
       return
     }
@@ -948,7 +951,7 @@ export class database {
     }
   }
 
-  async getActions(agent) {
+  async getActions(agent: any) {
     const query = 'SELECT * FROM actions WHERE agent=$1'
     const values = [agent]
 
@@ -959,7 +962,7 @@ export class database {
       return ''
     }
   }
-  async setActions(agent, actions) {
+  async setActions(agent: any, actions: any) {
     const check = 'SELECT * FROM actions WHERE agent=$1'
     const cvalues = [agent]
 
@@ -990,7 +993,7 @@ export class database {
     }
   }
 
-  async setRoom(agent, room) {
+  async setRoom(agent: any, room: any) {
     const check = 'SELECT * FROM room WHERE agent=$1'
     const cvalues = [agent]
 
@@ -1008,7 +1011,7 @@ export class database {
       await this.client.query(query, values)
     }
   }
-  async getRoom(agent) {
+  async getRoom(agent: any) {
     const query = 'SELECT * FROM room WHERE agent=$1'
     const values = [agent]
 
@@ -1032,7 +1035,7 @@ export class database {
     }
   }
 
-  async setEthics(agent, ethics) {
+  async setEthics(agent: any, ethics: any) {
     const check = 'SELECT * FROM ethics WHERE agent=$1'
     const cvalues = [agent]
 
@@ -1050,7 +1053,7 @@ export class database {
       await this.client.query(query, values)
     }
   }
-  async getEthics(agent) {
+  async getEthics(agent: any) {
     const query = 'SELECT * FROM ethics WHERE agent=$1'
     const values = [agent]
 
@@ -1061,13 +1064,13 @@ export class database {
       return ''
     }
   }
-  async setDefaultEthics(agent) {
+  async setDefaultEthics(agent: any) {
     const query = 'INSERT INTO ethics(agent, ethics) VALUES($1, $2)'
     const values = [agent, '']
 
     await this.client.query(query, values)
   }
-  async setDefaultNeedsAndMotivations(agent) {
+  async setDefaultNeedsAndMotivations(agent: any) {
     const query =
       'INSERT INTO needs_motivations(agent, needs_motivations) VALUES($1, $2)'
     const values = [
@@ -1078,13 +1081,13 @@ export class database {
     await this.client.query(query, values)
   }
 
-  async setPersonality(agent, personality) {
+  async setPersonality(agent: any, personality: any) {
     const query = 'INSERT INTO personality(agent, personality) VALUES($1, $2)'
     const values = [agent, personality]
 
     await this.client.query(query, values)
   }
-  async getPersonality(agent) {
+  async getPersonality(agent: any) {
     const query = 'SELECT * FROM personality WHERE agent=$1'
     const values = [agent]
 
@@ -1096,7 +1099,7 @@ export class database {
     }
   }
 
-  async setNeedsAndMotivations(agent, needs_motivations) {
+  async setNeedsAndMotivations(agent: any, needsAndMotivations: any) {
     const check = 'SELECT * FROM needs_motivations WHERE agent=$1'
     const cvalues = [agent]
 
@@ -1105,19 +1108,19 @@ export class database {
     if (test && test.rows && test.rows.length > 0) {
       const query =
         'UPDATE needs_motivations SET needs_motivations=$1 WHERE agent=$2'
-      const values = [needs_motivations, agent]
+      const values = [needsAndMotivations, agent]
 
       await this.client.query(query, values)
     } else {
       const query =
         'INSERT INTO needs_motivations(agent, needs_motivations) VALUES($1, $2)'
-      const values = [agent, needs_motivations]
+      const values = [agent, needsAndMotivations]
 
       await this.client.query(query, values)
     }
   }
 
-  async getNeedsAndMotivations(agent) {
+  async getNeedsAndMotivations(agent: any) {
     const query = 'SELECT * FROM needs_motivations WHERE agent=$1'
     const values = [agent]
 
@@ -1129,7 +1132,7 @@ export class database {
     }
   }
 
-  async getDialogue(agent) {
+  async getDialogue(agent: any) {
     const query = 'SELECT * FROM dialogue WHERE agent=$1'
     const values = [agent]
 
@@ -1140,7 +1143,7 @@ export class database {
       return ''
     }
   }
-  async setDialogue(agent, dialogue) {
+  async setDialogue(agent: any, dialogue: any) {
     const check = 'SELECT * FROM dialogue WHERE agent=$1'
     const cvalues = [agent]
 
@@ -1159,7 +1162,7 @@ export class database {
     }
   }
 
-  async setMonologue(agent, monologue) {
+  async setMonologue(agent: any, monologue: any) {
     const check = 'SELECT * FROM monologue WHERE agent=$1'
     const cvalues = [agent]
 
@@ -1177,7 +1180,7 @@ export class database {
       await this.client.query(query, values)
     }
   }
-  async getMonologue(agent) {
+  async getMonologue(agent: any) {
     const query = 'SELECT * FROM monologue WHERE agent=$1'
     const values = [agent]
 
@@ -1189,20 +1192,20 @@ export class database {
     }
   }
 
-  async addBadWord(word) {
+  async addBadWord(word: string) {
     const query = 'INSERT INTO bad_words(word) VALUES($1)'
     const values = [word]
 
     await this.client.query(query, values)
   }
-  async badWordExists(word) {
+  async badWordExists(word: any) {
     const query = 'SELECT * FROM bad_words WHERE word=$1'
     const values = [word]
 
     const rows = await this.client.query(query, values)
     return rows && rows.rows && rows.rows.length > 0
   }
-  async removeBadWord(word) {
+  async removeBadWord(word: any) {
     const query = 'DELETE FROM bad_words WHERE word=$1'
     const values = [word]
 
@@ -1221,20 +1224,20 @@ export class database {
     return res
   }
 
-  async addSensitiveWord(word) {
+  async addSensitiveWord(word: string) {
     const query = 'INSERT INTO sensitive_words(word) VALUES($1)'
     const values = [word]
 
     await this.client.query(query, values)
   }
-  async sensitiveWordExists(word) {
+  async sensitiveWordExists(word: any) {
     const query = 'SELECT * FROM sensitive_words WHERE word=$1'
     const values = [word]
 
     const rows = await this.client.query(query, values)
     return rows && rows.rows && rows.rows.length > 0
   }
-  async removeSensitiveWord(word) {
+  async removeSensitiveWord(word: any) {
     const query = 'DELETE FROM sensitive_words WHERE word=$1'
     const values = [word]
 
@@ -1253,20 +1256,20 @@ export class database {
     return res
   }
 
-  async addSensitivePhrase(phrase) {
+  async addSensitivePhrase(phrase: string) {
     const query = 'INSERT INTO sensitive_phrases(phrase) VALUES($1)'
     const values = [phrase]
 
     await this.client.query(query, values)
   }
-  async sensitivePhraseExists(phrase) {
+  async sensitivePhraseExists(phrase: any) {
     const query = 'SELECT * FROM sensitive_phrases WHERE phrase=$1'
     const values = [phrase]
 
     const rows = await this.client.query(query, values)
     return rows && rows.rows && rows.rows.length > 0
   }
-  async removeSensitivePhrase(phrase) {
+  async removeSensitivePhrase(phrase: any) {
     const query = 'DELETE FROM sensitive_phrases WHERE phrase=$1'
     const values = [phrase]
 
@@ -1285,20 +1288,20 @@ export class database {
     return res
   }
 
-  async addLeadingStatement(phrase) {
+  async addLeadingStatement(phrase: string) {
     const query = 'INSERT INTO leading_statements(statement) VALUES($1)'
     const values = [phrase]
 
     await this.client.query(query, values)
   }
-  async leadingStatementExists(phrase) {
+  async leadingStatementExists(phrase: any) {
     const query = 'SELECT * FROM leading_statements WHERE statement=$1'
     const values = [phrase]
 
     const rows = await this.client.query(query, values)
     return rows && rows.rows && rows.rows.length > 0
   }
-  async removeLeadingStatement(phrase) {
+  async removeLeadingStatement(phrase: any) {
     const query = 'DELETE FROM leading_statements WHERE statement=$1'
     const values = [phrase]
 
@@ -1368,7 +1371,7 @@ export class database {
     }
   }
 
-  async getFacts(agent) {
+  async getFacts(agent: any) {
     const query = 'SELECT * FROM facts WHERE agent=$1'
     const values = [agent]
 
@@ -1380,7 +1383,7 @@ export class database {
     }
   }
 
-  async getRandomStartingMessage(agent) {
+  async getRandomStartingMessage(agent: string) {
     const query = 'SELECT * FROM starting_message WHERE agent=$1'
     const values = [agent]
 
@@ -1395,7 +1398,7 @@ export class database {
       return this.getRandomStartingMessage('common')
     }
   }
-  async getStartingPhrases(agent) {
+  async getStartingPhrases(agent: any) {
     const query = 'SELECT * FROM starting_message WHERE agent=$1'
     const values = [agent]
 
@@ -1412,7 +1415,7 @@ export class database {
     return ''
   }
 
-  async setStartingPhrases(agent, data) {
+  async setStartingPhrases(agent: string | any[], data: string) {
     if (!agent || agent.length <= 0) return
     const query = 'DELETE FROM starting_message WHERE agent=$1'
     const values = [agent]
@@ -1430,7 +1433,7 @@ export class database {
     }
   }
 
-  async getIgnoredKeywords(agent) {
+  async getIgnoredKeywords(agent: any) {
     const query = 'SELECT * FROM ignored_keywords WHERE agent=$1 OR agent=$2'
     const values = [agent, 'common']
 
@@ -1445,7 +1448,7 @@ export class database {
     return res
   }
 
-  async getIgnoredKeywordsData(agent) {
+  async getIgnoredKeywordsData(agent: any) {
     const query = 'SELECT * FROM ignored_keywords WHERE agent=$1'
     const values = [agent]
 
@@ -1462,7 +1465,7 @@ export class database {
     return ''
   }
 
-  async setIgnoredKeywords(agent, data) {
+  async setIgnoredKeywords(agent: string | any[], data: string) {
     if (!agent || agent.length <= 0) return
     const query = 'DELETE FROM ignored_keywords WHERE agent=$1'
     const values = [agent]
@@ -1480,7 +1483,7 @@ export class database {
     }
   }
 
-  async deleteAgent(agent) {
+  async deleteAgent(agent: any) {
     let query = 'DELETE FROM agents WHERE agent=$1'
     const values = [agent]
 
@@ -1520,7 +1523,7 @@ export class database {
     await this.client.query(query, values)
   }
 
-  async createAgentSQL(sql) {
+  async createAgentSQL(sql: string | any[]) {
     if (!sql || sql.length <= 0) {
       return false
     }
@@ -1529,13 +1532,13 @@ export class database {
     return true
   }
 
-  async addWikipediaData(agent, data) {
+  async addWikipediaData(agent: any, data: any) {
     const query = 'INSERT INTO wikipedia(agent, _data) VALUES($1, $2)'
     const values = [agent, data]
 
     await this.client.query(query, values)
   }
-  async getWikipediaData(agent) {
+  async getWikipediaData(agent: any) {
     const query = 'SELECT * FROM wikipedia WHERE agent=$1'
     const values = [agent]
 
@@ -1546,7 +1549,7 @@ export class database {
       return ''
     }
   }
-  async wikipediaDataExists(agent) {
+  async wikipediaDataExists(agent: any) {
     const query = 'SELECT * FROM wikipedia WHERE agent=$1'
     const values = [agent]
 
@@ -1554,7 +1557,7 @@ export class database {
     return rows && rows.rows && rows.rows.length > 0
   }
 
-  async set3dWorldUnderstandingPrompt(prompt) {
+  async set3dWorldUnderstandingPrompt(prompt: any) {
     const query = 'SELECT * FROM xr_world_understanding_prompt'
 
     const rows = await this.client.query(query)
@@ -1582,7 +1585,7 @@ export class database {
     }
   }
 
-  async setFactSummarizationPrompt(prompt) {
+  async setFactSummarizationPrompt(prompt: any) {
     const query = 'SELECT * FROM fact_summarization_prompt'
 
     const rows = await this.client.query(query)
@@ -1609,7 +1612,7 @@ export class database {
     }
   }
 
-  async setOpinionFormPrompt(prompt) {
+  async setOpinionFormPrompt(prompt: any) {
     const query = 'SELECT * FROM opinion_form_prompt'
 
     const rows = await this.client.query(query)
@@ -1636,7 +1639,7 @@ export class database {
     }
   }
 
-  async setXrEngineRoomPrompt(prompt) {
+  async setXrEngineRoomPrompt(prompt: any) {
     const query = 'SELECT * FROM xr_engine_room_prompt'
 
     const rows = await this.client.query(query)
@@ -1673,7 +1676,7 @@ export class database {
       return []
     }
   }
-  async getAgentInstance(id) {
+  async getAgentInstance(id: any) {
     const query = 'SELECT * FROM agent_instance WHERE id=$1'
     const values = [id]
 
@@ -1684,20 +1687,20 @@ export class database {
       return undefined
     }
   }
-  async instanceIdExists(id) {
+  async instanceIdExists(id: any) {
     const query = 'SELECT * FROM agent_instance WHERE id=$1'
     const values = [id]
 
     const rows = await this.client.query(query, values)
     return rows && rows.rows && rows.rows.length > 0
   }
-  async deleteAgentInstance(id) {
+  async deleteAgentInstance(id: any) {
     const query = 'DELETE FROM agent_instance WHERE id=$1'
     const values = [id]
 
     await this.client.query(query, values)
   }
-  async updateAgentInstances(id, personality, clients, enabled) {
+  async updateAgentInstances(id: any, personality: any, clients: any, enabled: any) {
     console.log('clients are', clients)
     const _clients = clients ? JSON.stringify(clients).replaceAll('\\', '') : ''
     const check = 'SELECT * FROM agent_instance WHERE id=$1'
@@ -1726,7 +1729,7 @@ export class database {
     await this.client.query(query, values)
   }
 
-  async getClientSettings(client) {
+  async getClientSettings(client: any) {
     const query = 'SELECT * FROM client_settings WHERE client=$1'
     const values = [client]
 

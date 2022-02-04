@@ -1,11 +1,14 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-nocheck
+
 import { profanity } from '@2toad/profanity'
 import { customConfig } from '@latitudegames/thoth-core/src/superreality/customConfig'
 import grawlix from 'grawlix'
 import grawlixRacism from 'grawlix-racism'
 
-import { makeCompletionRequest } from './makeCompletionRequest.js'
-import { makeModelRequest } from './makeModelRequest.js'
-import { classifyProfanityText } from './textClassifier.js'
+import { makeCompletionRequest } from './makeCompletionRequest'
+import { makeModelRequest } from './makeModelRequest'
+import { classifyProfanityText } from './textClassifier'
 import { database } from './database'
 
 //check if a text contains the n* word

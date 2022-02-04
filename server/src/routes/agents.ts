@@ -1,9 +1,9 @@
-import { createWikipediaAgent } from '@latitudegames/thoth-core/src/connectors/wikipedia.js';
+import { createWikipediaAgent } from '@latitudegames/thoth-core/src/connectors/wikipedia';
 import customConfig from "@latitudegames/thoth-core/src/superreality/customConfig";
 import { database } from '@latitudegames/thoth-core/src/superreality/database';
 import { handleInput } from '@latitudegames/thoth-core/src/superreality/handleInput';
 import Koa from 'koa';
-import 'regenerator-runtime/runtime.js';
+import 'regenerator-runtime/runtime';
 import { noAuth } from '../middleware/auth';
 import { Route } from '../types';
 

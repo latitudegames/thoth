@@ -1,6 +1,6 @@
-import { randomInt } from "@latitudegames/thoth-core/src/superreality/utils.js";
-import time from "./time.js";
-import world from "./world.js";
+import { randomInt } from "@latitudegames/thoth-core/src/superreality/utils";
+import time from "./time";
+import world from "./world";
 
 export class worldManager {
     static instance;
