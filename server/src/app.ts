@@ -1,11 +1,11 @@
 //@ts-ignore
-import cors from "@koa/cors"
+import cors from '@koa/cors'
 import Router from '@koa/router'
-import cors_server from "@latitudegames/thoth-core/src/superreality/cors-server"
-import { database } from "@latitudegames/thoth-core/src/superreality/database"
-import roomManager from "@latitudegames/thoth-core/src/superreality/roomManager"
-import { runClients } from "@latitudegames/thoth-core/src/superreality/runClients"
-import { config } from "dotenv"
+import cors_server from '@latitudegames/thoth-core/src/superreality/cors-server'
+import { database } from '@latitudegames/thoth-core/src/superreality/database'
+import roomManager from '@latitudegames/thoth-core/src/superreality/roomManager'
+import { runClients } from '@latitudegames/thoth-core/src/superreality/runClients'
+import { config } from 'dotenv'
 import HttpStatus from 'http-status-codes'
 import Koa from 'koa'
 import koaBody from 'koa-body'
@@ -26,46 +26,44 @@ const options = {
 }
 app.use(cors(options))
 
-new cors_server(process.env.CORS_PORT, '0.0.0.0');
+new cors_server(process.env.CORS_PORT, '0.0.0.0')
 
-const db = new database();
+const db = new database()
 
 async function initLoop() {
   // new worldManager(1, customConfig.instance.getInt('fps'));
-  new roomManager();
-  const expectedServerDelta = 1000 / 60;
-  let lastTime = 0;
+  new roomManager()
+  const expectedServerDelta = 1000 / 60
+  let lastTime = 0
 
   // @ts-ignore
-  globalThis.requestAnimationFrame = (f) => {
+  globalThis.requestAnimationFrame = f => {
     const serverLoop = () => {
-      const now = Date.now();
+      const now = Date.now()
       if (now - lastTime >= expectedServerDelta) {
-        lastTime = now;
-        f(now);
+        lastTime = now
+        f(now)
       } else {
-        setImmediate(serverLoop);
+        setImmediate(serverLoop)
       }
     }
     serverLoop()
   }
 
-  await runClients();
-};
+  await runClients()
+}
 
-(async function () {
-  await creatorToolsDatabase.sequelize.sync({ force: !!process.env.REFRESH_DB });
-  console.log("Database synced, starting loop");
-
-
+;(async function () {
+  await database.instance.connect()
+  await creatorToolsDatabase.sequelize.sync({ force: !!process.env.REFRESH_DB })
+  await database.instance.initData()
+  console.log('Database synced, starting loop')
 
   process.on('unhandledRejection', (err: Error) => {
-    console.error('Unhandled Rejection:' + err + ' - ' + err.stack);
-  });
-
+    console.error('Unhandled Rejection:' + err + ' - ' + err.stack)
+  })
 
   // end of super reality app
-
 
   // Middleware used by every request. For route-specific middleware, add it to you route middleware specification
   app.use(koaBody({ multipart: true }))
@@ -108,12 +106,8 @@ async function initLoop() {
 
   const routeMiddleware = ({ access, middleware = [] }: MiddlewareParams) => {
     if (!access) return [...middleware]
-    if (typeof access === 'function')
-      return [access, ...middleware]
-    if (typeof access === 'string')
-      return [
-        ...middleware,
-      ]
+    if (typeof access === 'function') return [access, ...middleware]
+    if (typeof access === 'string') return [...middleware]
     return [...middleware]
   }
 
@@ -157,7 +151,7 @@ async function initLoop() {
       ctx.body = { error }
       ctx.app.emit('error', error, ctx)
     }
-  });
+  })
 
-  await initLoop();
+  await initLoop()
 })()

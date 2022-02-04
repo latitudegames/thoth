@@ -19,7 +19,6 @@ export class database {
 
   constructor() {
     database.instance = this
-    database.instance.connect();
   }
 
   async connect() {
@@ -31,13 +30,15 @@ export class database {
       host: process.env.PGHOST,
       ssl: process.env.PGSSL
         ? {
-          rejectUnauthorized: false,
-        }
+            rejectUnauthorized: false,
+          }
         : false,
     })
     this.client.connect()
     await this.client.query('SELECT NOW()')
+  }
 
+  async initData() {
     await this.readConfig()
     await this.onInit()
     await initProfanityFilter()
@@ -1697,7 +1698,7 @@ export class database {
     await this.client.query(query, values)
   }
   async updateAgentInstances(id, personality, clients, enabled) {
-    console.log("clients are", clients)
+    console.log('clients are', clients)
     const _clients = clients ? JSON.stringify(clients).replaceAll('\\', '') : ''
     const check = 'SELECT * FROM agent_instance WHERE id=$1'
     const cvalues = [id]
