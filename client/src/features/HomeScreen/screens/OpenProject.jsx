@@ -8,7 +8,7 @@ import thothBanner from '../version-banner-0.0.0beta.jpg'
 import FileInput from '../components/FileInput'
 import ProjectRow from '../components/ProjectRow'
 
-const getThothVersion = () => '0.0.1'
+const getThothVersion = () => '1'
 
 const OpenProject = ({
   spells,
