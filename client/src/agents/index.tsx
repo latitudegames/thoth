@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import { default as React, useState } from 'react';
 import Agents from './Agents';
 import Personalities from "./Personalities";

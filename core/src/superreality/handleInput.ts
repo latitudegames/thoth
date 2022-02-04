@@ -1,9 +1,10 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-nocheck
 
-import { database } from '@latitudegames/../core/src/superreality/formOpinionAboutSpeaker'
+import { database } from '@latitudegames/thoth-core/src/superreality/database'
 import { formOpinionAboutSpeaker } from '@latitudegames/thoth-core/src/superreality/formOpinionAboutSpeaker'
 import { makeCompletionRequest } from '@latitudegames/thoth-core/src/superreality/makeCompletionRequest'
+
 import { evaluateTextAndRespondIfToxic } from './profanityFilter'
 import { summarizeAndStoreFactsAboutAgent } from './summarizeAndStoreFactsAboutAgent'
 import { summarizeAndStoreFactsAboutSpeaker } from './summarizeAndStoreFactsAboutSpeaker'
@@ -51,8 +52,8 @@ async function archiveConversation(
                         )
                 }
                 /*for(let i = 0; i < newConversationLines.length; i++) {
-                                                await database.instance.setConversation(agent, client, channel, speaker, newConversationLines[i], false);
-                                        }*/
+                                                            await database.instance.setConversation(agent, client, channel, speaker, newConversationLines[i], false);
+                                                    }*/
         }
 }
 
@@ -242,7 +243,6 @@ export async function handleInput(
         channelId
 ) {
         let start = Date.now()
-        agent = agent ?? defaultAgent
 
         //if the input is a command, it handles the command and doesn't respond according to the agent
         if (

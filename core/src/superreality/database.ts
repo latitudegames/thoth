@@ -87,7 +87,7 @@ export class database {
     await this.client.query(query, values)
   }
 
-  async addMessageInHistory(client_name: string, chat_id: string, message_id: string, sender: any, content: any) {
+  addMessageInHistory(client_name: string, chat_id: string, message_id: string, sender: any, content: any) {
     const date = new Date()
     const utc = new Date(
       date.getUTCFullYear(),
@@ -128,7 +128,8 @@ export class database {
       }
     })
   }
-  async addMessageInHistoryWithDate(
+
+  addMessageInHistoryWithDate(
     client_name: string,
     chat_id: string,
     message_id: string,
@@ -647,7 +648,7 @@ export class database {
     }
     return ''
   }
-  async setAgentFacts(agent: any, facts: string, reset: any) {
+  async setAgentFacts(agent: any, facts: string, reset: any = false) {
     const check = 'SELECT * FROM agent_facts WHERE agent=$1'
     const cvalues = [agent]
     const res = await this.client.query(check, cvalues)
@@ -1715,8 +1716,8 @@ export class database {
       await this.client.query(query, values)
     } else {
       const query =
-        'INSERT INTO agent_instance(id, personality, clients, enabled) VALUES($1, $2, $3, $4)'
-      const values = [id, personality, clients, enabled]
+        'INSERT INTO agent_instance(personality, clients, enabled) VALUES($1, $2, $3)'
+      const values = [personality, clients, enabled]
 
       await this.client.query(query, values)
     }

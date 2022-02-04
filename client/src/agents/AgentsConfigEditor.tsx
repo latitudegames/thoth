@@ -1,19 +1,37 @@
+//@ts-nocheck
+
 import axios from "axios";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
+
+const confDefaults = {
+  useProfanityFilter: 'false',
+  contentRating: 'false',
+  filterSensitive: 'false',
+  factsUpdateInterval: '2',
+  agentFactsWindowSize: '4',
+  conversationWindowSize: '10',
+  activeConversationSize: '10',
+  speakerFactsWindowSize: '4',
+  dialogFrequencyPenality: '.3',
+  dialogPresencePenality: '.3',
+  summarizationModel: 'davinci',
+  conversationModel: 'davinci',
+  opinionModel: 'davinci'
+}
 
 const AgentsConfigEditor = () => {
   const [firstLoad, setFirstLoad] = useState(true);
-  const [config, setConfig] = useState({});
+  const [config, setConfig] = useState(confDefaults);
   const [dataUpdated, setDataUpdated] = useState(false);
   const navigate = useNavigate();
 
-  if (firstLoad) {
+  useEffect(() => {
     axios.get(`${process.env.REACT_APP_API_URL}/agentConfig`).then(res => {
       setConfig(res.data ?? {});
       setFirstLoad(false);
     });
-  }
+  }, []);
 
   const update = async () => {
     if (!dataUpdated) {
@@ -40,10 +58,6 @@ const AgentsConfigEditor = () => {
           <div>
             <h1>Config:</h1>
             <form>
-              <div className="form-item">
-                <span className="form-item-label">Default Agent:</span>
-                <input type='text' onChange={(e) => { setDataUpdated(true); config.defaultAgent = e.target.value }} defaultValue={config.defaultAgent}></input>
-              </div>
               <div className="form-item">
                 <span className="form-item-label">Use Profanity Filter:</span>
                 <input type='checkbox' defaultChecked={config.useProfanityFilter == 'true' ? true : false} onChange={(e) => { setDataUpdated(true); config.useProfanityFilter = e.target.checked.toString() }}></input>
