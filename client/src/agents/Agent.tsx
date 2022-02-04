@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -25,10 +27,9 @@ const Agent = ({ id, updateCallback }) => {
     useEffect(async () => {
         setEnabled(false);
         const res = await axios.get(`${process.env.REACT_APP_API_URL}/agentInstance?instanceId=` + id);
-
-        const d = isJson(res.data.clients) ? JSON.parse(res.data.clients) : res.data.clients;
+        console.log("res.data.clients", res.data.clients);
+        const d = res.data.clients ?? [];
         const _data = []
-        _data.splice(0, _data.length);
         for (let i = 0; i < d.length; i++) {
             _data.push(d[i]);
         }
@@ -63,7 +64,9 @@ const Agent = ({ id, updateCallback }) => {
         return (
             <div key={idx} >
                 <input type='checkbox' defaultChecked={value.enabled == 'true'} onChange={(e) => {
-                    data[idx].enabled = e.target.checked.toString()
+                    const d = { ...data } as any
+                    d[idx]['enabled'] = e.target.checked.toString()
+                    setData(d);
                 }}></input>
 
                 <span className="form-item-label">{capitalizeFirstLetter(value.client)}</span>
@@ -73,7 +76,7 @@ const Agent = ({ id, updateCallback }) => {
                         return (
                             <div key={idx2} >
                                 <span className="form-item-label">{v2.name}</span>
-                                <textarea defaultValue={v2.value} onChange={(e) => { data[idx].settings[idx2] = { name: v2.name, value: e.target.value } }} />
+                                <textarea defaultValue={v2.value} onChange={(e) => { (data[idx] as any).settings[idx2] = { name: v2.name, value: e.target.value } }} />
                             </div>
                         )
                     }
@@ -109,7 +112,7 @@ const Agent = ({ id, updateCallback }) => {
 
 
             {enabled && data.map((value, idx) => {
-                return <FormItem key={idx} value={value} />
+                return <FormItem key={idx} value={value} idx={idx} />
             })}
         </div>
     )

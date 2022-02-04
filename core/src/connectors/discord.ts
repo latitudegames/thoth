@@ -3,7 +3,7 @@
 
 // required for message.lineReply
 import { customConfig } from '@latitudegames/thoth-core/src/superreality/customConfig'
-import Discord, { Intents } from 'discord'
+import Discord, { Intents } from 'discord.js'
 import emoji from 'emoji-dictionary'
 import emojiRegex from 'emoji-regex'
 import { EventEmitter } from 'events'
@@ -26,7 +26,7 @@ const config = {
 }
 
 //Event that is triggered when a new user is added to the server
-export function handleGuildMemberAdd(user: { user: { id: any; username: any } }) {
+export function handleGuildMemberAdd(user: any) {
   const userId = user.user.id
   const username = user.user.username
 
@@ -57,7 +57,9 @@ export function handleGuildMemberAdd(user: { user: { id: any; username: any } })
 }
 
 //Event that is triggered when a user is removed from the server
-export async function handleGuildMemberRemove(user: { user: { id: any; username: any } }) {
+export async function handleGuildMemberRemove(user: {
+  user: { id: any; username: any }
+}) {
   const userId = user.user.id
   const username = user.user.username
 
@@ -87,7 +89,10 @@ export async function handleGuildMemberRemove(user: { user: { id: any; username:
 }
 
 //Event that is triggered when a user reacts to a message
-export async function handleMessageReactionAdd(reaction: { emoji?: any; message?: any }, user: any) {
+export async function handleMessageReactionAdd(
+  reaction: { emoji?: any; message?: any },
+  user: any
+) {
   const { message } = reaction
   const emojiName = emoji.getName(reaction.emoji)
 
@@ -117,7 +122,14 @@ export async function handleMessageReactionAdd(reaction: { emoji?: any; message?
   // MessageClient.instance.sendMessageReactionAdd('Discord', message.channel.id, message.id, message.content, user.username, emojiName, utcStr)
 }
 
-export async function agents(client: any, message: any, args: any, author: any, addPing: any, channel: any) {
+export async function agents(
+  client: any,
+  message: any,
+  args: any,
+  author: any,
+  addPing: any,
+  channel: any
+) {
   // TODO: Replace me with direct message handler
   // MessageClient.instance.sendGetAgents('Discord', message.channel.id)
 }
@@ -125,7 +137,9 @@ export async function agents(client: any, message: any, args: any, author: any, 
 //returns all the current commands for the bot
 export async function commands(
   client: { helpFields: { commands: any[] }[]; embed: { description: string } },
-  message: { channel: { send: (arg0: string) => void; stopTyping: () => void } },
+  message: {
+    channel: { send: (arg0: string) => void; stopTyping: () => void }
+  },
   args: any,
   author: any,
   addPing: any,
@@ -143,7 +157,14 @@ export async function commands(
 }
 
 //ping is used to send a message directly to the agent
-export async function ping(client: { embed: { description: string; desscription: string } }, message: { channel: { send: (arg0: any) => void; stopTyping: () => void } }, args: { grpc_args: { [x: string]: string; message: string | undefined } }, author: any, addPing: any, channel: any) {
+export async function ping(
+  client: { embed: { description: string; desscription: string } },
+  message: { channel: { send: (arg0: any) => void; stopTyping: () => void } },
+  args: { grpc_args: { [x: string]: string; message: string | undefined } },
+  author: any,
+  addPing: any,
+  channel: any
+) {
   if (
     args.grpc_args.message === undefined ||
     args.grpc_args.message === '' ||
@@ -195,7 +216,9 @@ export async function ping(client: { embed: { description: string; desscription:
 export async function pingagent(
   client: { embed: { description: string; desscription: string } },
   message: { channel: { send: (arg0: any) => void; stopTyping: () => void } },
-  args: { grpc_args: { message: string | undefined; agent: string | undefined } },
+  args: {
+    grpc_args: { message: string | undefined; agent: string | undefined }
+  },
   author: any,
   addPing: any,
   channel: any
@@ -257,7 +280,16 @@ export async function setagent(
 }
 
 //sets the name for an agent to respond for it
-export async function setname(client: { bot_name: any; name_regex: RegExp }, message: { channel: { send: (arg0: string) => void; stopTyping: () => void } }, args: { parsed_words: string | any[] | undefined }, author: any, addPing: any, channel: any) {
+export async function setname(
+  client: { bot_name: any; name_regex: RegExp },
+  message: {
+    channel: { send: (arg0: string) => void; stopTyping: () => void }
+  },
+  args: { parsed_words: string | any[] | undefined },
+  author: any,
+  addPing: any,
+  channel: any
+) {
   if (args.parsed_words === undefined || args.parsed_words.length !== 1) {
     message.channel.send('Invalid format, !setname name')
     message.channel.stopTyping()
@@ -280,7 +312,24 @@ export const channelTypes = {
 }
 
 //Event that is trigger when a new message is created (sent)
-export const messageCreate = async (client: { users: { cache: any[] }; user: { id: any }; bot_name: string; username_regex: any; name_regex: any; config: { prefixOptionalWhenMentionOrDM: any; prefix: any } }, message: { content: any; guild?: any; author: any; id: any; channel?: any; mentions?: any }) => {
+export const messageCreate = async (
+  client: {
+    users: { cache: any[] }
+    user: { id: any }
+    bot_name: string
+    username_regex: any
+    name_regex: any
+    config: { prefixOptionalWhenMentionOrDM: any; prefix: any }
+  },
+  message: {
+    content: any
+    guild?: any
+    author: any
+    id: any
+    channel?: any
+    mentions?: any
+  }
+) => {
   //gets the emojis from the text and replaces to unix specific type
   const reg = emojiRegex()
   let match
@@ -311,7 +360,9 @@ export const messageCreate = async (client: { users: { cache: any[] }; user: { i
       ) {
         try {
           const x = data[i].replace('<@!', '').replace('>', '')
-          const user = await client.users.cache.find((user: { id: any }) => user.id == x)
+          const user = await client.users.cache.find(
+            (user: { id: any }) => user.id == x
+          )
           if (user !== undefined) {
             //const u = '@' + user.username + '#' + user.discriminator
             const u =
@@ -382,7 +433,9 @@ export const messageCreate = async (client: { users: { cache: any[] }; user: { i
   //if it is a mention to another user, then the conversation with the bot is ended
   if (otherMention) {
     exitConversation(author.id)
-    mentions.members.forEach((pinged: { id: any }) => exitConversation(pinged.id))
+    mentions.members.forEach((pinged: { id: any }) =>
+      exitConversation(pinged.id)
+    )
   }
   if (!startConv && !isMention) {
     if (startConvName.length > 0) {
@@ -466,31 +519,38 @@ export const messageCreate = async (client: { users: { cache: any[] }; user: { i
       const index = d.indexOf('join') + 1
       if (d.length > index) {
         const channelName = d[index]
-        await message.guild.channels.cache.forEach(async (channel: { type: string; name: any; join: () => any; leave: () => void }) => {
-          if (
-            channel.type === channelTypes['voice'] &&
-            channel.name === channelName
-          ) {
-            const connection = await channel.join()
-            const receiver = connection.receiver
-            const userStream = receiver.createStream(author, {
-              mode: 'pcm',
-              end: 'silence',
-            })
-            const writeStream = fs.createWriteStream('recording.pcm', {})
+        await message.guild.channels.cache.forEach(
+          async (channel: {
+            type: string
+            name: any
+            join: () => any
+            leave: () => void
+          }) => {
+            if (
+              channel.type === channelTypes['voice'] &&
+              channel.name === channelName
+            ) {
+              const connection = await channel.join()
+              const receiver = connection.receiver
+              const userStream = receiver.createStream(author, {
+                mode: 'pcm',
+                end: 'silence',
+              })
+              const writeStream = fs.createWriteStream('recording.pcm', {})
 
-            const buffer = []
-            userStream.on('data', (chunk: any) => {
-              buffer.push(chunk)
-              userStream.pipe(writeStream)
-            })
-            writeStream.on('pipe', log)
-            userStream.on('finish', () => {
-              channel.leave()
-            })
-            return false
+              const buffer = []
+              userStream.on('data', (chunk: any) => {
+                buffer.push(chunk)
+                userStream.pipe(writeStream)
+              })
+              writeStream.on('pipe', log)
+              userStream.on('finish', () => {
+                channel.leave()
+              })
+              return false
+            }
           }
-        })
+        )
         return
       }
     }
@@ -535,7 +595,10 @@ export const messageCreate = async (client: { users: { cache: any[] }; user: { i
 }
 
 //Event that is triggered when a message is deleted
-export const messageDelete = async (client: { user: { id: any }; edit_messages_max_count: any }, message: { author: any; channel: any; id: any }) => {
+export const messageDelete = async (
+  client: { user: { id: any }; edit_messages_max_count: any },
+  message: { author: any; channel: any; id: any }
+) => {
   const { author, channel, id } = message
   await deleteMessageFromHistory(channel.id, id)
   if (!author) return
@@ -561,7 +624,10 @@ export const messageDelete = async (client: { user: { id: any }; edit_messages_m
 }
 
 //Event that is triggered when a message is updated (changed)
-export const messageUpdate = async (client: { user: { id: any }; edit_messages_max_count: any }, message: { author: any; channel: any; id: any }) => {
+export const messageUpdate = async (
+  client: { user: { id: any }; edit_messages_max_count: any },
+  message: { author: any; channel: any; id: any }
+) => {
   const { author, channel, id } = message
   if (author === null || channel === null || id === null) return
   if (author.id === client.user.id) {
@@ -624,7 +690,11 @@ export const messageUpdate = async (client: { user: { id: any }; edit_messages_m
 }
 
 //Event that is trigger when a user's presence is changed (offline, idle, online)
-export const presenceUpdate = async (client: { users: { fetch: (arg0: any) => Promise<any> } }, oldMember: { status: any }, newMember: { status: string; userId: any }) => {
+export const presenceUpdate = async (
+  client: { users: { fetch: (arg0: any) => Promise<any> } },
+  oldMember: { status: any },
+  newMember: { status: string; userId: any }
+) => {
   if (!oldMember || !newMember) {
   } else if (oldMember.status !== newMember.status) {
     const date = new Date()
@@ -650,7 +720,47 @@ export const presenceUpdate = async (client: { users: { fetch: (arg0: any) => Pr
 }
 
 //Event that is triggered when the discord client fully loaded
-export const ready = async (client: { users: { fetch: (arg0: any) => Promise<any> }; log_user: any; guilds: { cache: any[] }; api: { applications: (arg0: any) => { (): any; new(): any; guilds: { (arg0: any): { (): any; new(): any; commands: { (): any; new(): any; post: { (arg0: { data: { name: string; description: string } | { name: string; description: string } | { name: string; description: string; options: { name: string; description: string; type: number; required: boolean }[] } }): void; new(): any } } }; new(): any } } }; user: { id: any } }) => {
+export const ready = async (client: {
+  users: { fetch: (arg0: any) => Promise<any> }
+  log_user: any
+  guilds: { cache: any[] }
+  api: {
+    applications: (arg0: any) => {
+      (): any
+      new(): any
+      guilds: {
+        (arg0: any): {
+          (): any
+          new(): any
+          commands: {
+            (): any
+            new(): any
+            post: {
+              (arg0: {
+                data:
+                | { name: string; description: string }
+                | { name: string; description: string }
+                | {
+                  name: string
+                  description: string
+                  options: {
+                    name: string
+                    description: string
+                    type: number
+                    required: boolean
+                  }[]
+                }
+              }): void
+              new(): any
+            }
+          }
+        }
+        new(): any
+      }
+    }
+  }
+  user: { id: any }
+}) => {
   await client.users
     .fetch(customConfig.instance.get('logDMUserID'))
     .then((user: any) => {
@@ -661,73 +771,104 @@ export const ready = async (client: { users: { fetch: (arg0: any) => Promise<any
     })
 
   //rgisters the slash commands to each server
-  await client.guilds.cache.forEach((server: { deleted: any; id: any; channels: { cache: any[] } }) => {
-    if (!server.deleted) {
-      client.api
-        .applications(client.user.id)
-        .guilds(server.id)
-        .commands.post({
-          data: {
-            name: 'continue',
-            description: 'makes the agent continue',
-          },
-        })
-      client.api
-        .applications(client.user.id)
-        .guilds(server.id)
-        .commands.post({
-          data: {
-            name: 'single_continue',
-            description: 'test',
-          },
-        })
-      client.api
-        .applications(client.user.id)
-        .guilds(server.id)
-        .commands.post({
-          data: {
-            name: 'say',
-            description: 'makes the agent say something',
-            options: [
-              {
-                name: 'text',
-                description: 'text',
-                type: 3,
-                required: true,
-              },
-            ],
-          },
-        })
-
-      //adds unread message to the chat history from each channel
-      server.channels.cache.forEach(async (channel: { type: string; deleted: boolean; permissionsFor: (arg0: any) => { (): any; new(): any; has: { (arg0: string[]): any; new(): any } }; messages: { fetch: (arg0: { limit: number }) => Promise<any> }; id: any }) => {
-        if (
-          channel.type === channelTypes['text'] &&
-          channel.deleted === false &&
-          channel
-            .permissionsFor(client.user.id)
-            .has(['SEND_MESSAGES', 'VIEW_CHANNEL'])
-        ) {
-          // TODO: Replace message with direct message handler
-          // MessageClient.instance.sendMetadata(channel.name, 'Discord', channel.id, channel.topic || 'none')
-          channel.messages.fetch({ limit: 100 }).then(async (messages: any[]) => {
-            messages.forEach(async function (msg: { author: { username: string; isBot: any }; deleted: boolean; id: any; content: any; createdTimestamp: any }) {
-              let _author = msg.author.username
-              if (
-                msg.author.isBot ||
-                msg.author.username.toLowerCase().includes('digital being')
-              )
-                _author = customConfig.instance.get('botName')
-
-              if (msg.deleted === true) {
-                await deleteMessageFromHistory(channel.id, msg.id)
-              } else await wasHandled(channel.id, msg.id, _author, msg.content, msg.createdTimestamp)
-            })
+  await client.guilds.cache.forEach(
+    (server: { deleted: any; id: any; channels: { cache: any[] } }) => {
+      if (!server.deleted) {
+        client.api
+          .applications(client.user.id)
+          .guilds(server.id)
+          .commands.post({
+            data: {
+              name: 'continue',
+              description: 'makes the agent continue',
+            },
           })
-        }
-      })
+        client.api
+          .applications(client.user.id)
+          .guilds(server.id)
+          .commands.post({
+            data: {
+              name: 'single_continue',
+              description: 'test',
+            },
+          })
+        client.api
+          .applications(client.user.id)
+          .guilds(server.id)
+          .commands.post({
+            data: {
+              name: 'say',
+              description: 'makes the agent say something',
+              options: [
+                {
+                  name: 'text',
+                  description: 'text',
+                  type: 3,
+                  required: true,
+                },
+              ],
+            },
+          })
+
+        //adds unread message to the chat history from each channel
+        server.channels.cache.forEach(
+          async (channel: {
+            type: string
+            deleted: boolean
+            permissionsFor: (arg0: any) => {
+              (): any
+              new(): any
+              has: { (arg0: string[]): any; new(): any }
+            }
+            messages: { fetch: (arg0: { limit: number }) => Promise<any> }
+            id: any
+          }) => {
+            if (
+              channel.type === channelTypes['text'] &&
+              channel.deleted === false &&
+              channel
+                .permissionsFor(client.user.id)
+                .has(['SEND_MESSAGES', 'VIEW_CHANNEL'])
+            ) {
+              // TODO: Replace message with direct message handler
+              // MessageClient.instance.sendMetadata(channel.name, 'Discord', channel.id, channel.topic || 'none')
+              channel.messages
+                .fetch({ limit: 100 })
+                .then(async (messages: any[]) => {
+                  messages.forEach(async function (msg: {
+                    author: { username: string; isBot: any }
+                    deleted: boolean
+                    id: any
+                    content: any
+                    createdTimestamp: any
+                  }) {
+                    let _author = msg.author.username
+                    if (
+                      msg.author.isBot ||
+                      msg.author.username
+                        .toLowerCase()
+                        .includes('digital being')
+                    )
+                      _author = customConfig.instance.get('botName')
+
+                    if (msg.deleted === true) {
+                      await deleteMessageFromHistory(channel.id, msg.id)
+                    } else
+                      await wasHandled(
+                        channel.id,
+                        msg.id,
+                        _author,
+                        msg.content,
+                        msg.createdTimestamp
+                      )
+                  })
+                })
+            }
+          }
+        )
+      }
     }
-  })
+  )
 }
 
 export const embedColor = '#000000'
@@ -737,7 +878,9 @@ export const _commandToDescription = ([name, args, description]) =>
   '```css\n' + ['.' + name, args.join(' '), '-', description].join(' ') + '```'
 export const _commandsToValue = (commands: any[]) =>
   '```css\n' +
-  commands.map((command: [any, any, any]) => _commandToValue(command)).join('\n') +
+  commands
+    .map((command: [any, any, any]) => _commandToValue(command))
+    .join('\n') +
   '```'
 
 export const helpFields = [
@@ -826,9 +969,9 @@ export const _parseWords = (s: string) => {
   return words
 }
 
-export function replacePlaceholders(text: string | undefined) {
-  if (text === undefined || text === '') return ''
-
+export function replacePlaceholders(_text: string | undefined) {
+  if (_text === undefined || _text === '') return ''
+  let text = _text;
   if (text.includes('{time_now}')) {
     const now = new Date()
     const time =
@@ -858,7 +1001,27 @@ export function replacePlaceholders(text: string | undefined) {
 }
 
 export async function sendSlashCommandResponse(
-  client: { api: { interactions: (arg0: any, arg1: any) => { (): any; new(): any; callback: { (): any; new(): any; post: { (arg0: { data: { type: number; data: { content: any } } }): Promise<any>; new(): any } } } } },
+  client: {
+    api: {
+      interactions: (
+        arg0: any,
+        arg1: any
+      ) => {
+        (): any
+        new(): any
+        callback: {
+          (): any
+          new(): any
+          post: {
+            (arg0: {
+              data: { type: number; data: { content: any } }
+            }): Promise<any>
+            new(): any
+          }
+        }
+      }
+    }
+  },
   interaction: { id: any; token: any },
   chat_id: any,
   text: any
@@ -884,7 +1047,14 @@ export async function sendSlashCommandResponse(
     .catch(console.error)
 }
 
-export async function handleSlashCommand(client: any, interaction: { data: { name: string }; member: { user: { username: string } }; channel_id: string }) {
+export async function handleSlashCommand(
+  client: any,
+  interaction: {
+    data: { name: string }
+    member: { user: { username: string } }
+    channel_id: string
+  }
+) {
   const command = interaction.data.name.toLowerCase()
   const sender = interaction.member.user.username + ''
   const chatId = interaction.channel_id + ''
@@ -914,129 +1084,152 @@ export async function handleSlashCommand(client: any, interaction: { data: { nam
   // MessageClient.instance.sendSlashCommand(sender, command, command === 'say' ? interaction.data.options[0].value : 'none', 'Discord', chatId, utcStr)
 }
 
-async function handlePing(message_id: any, chat_id: any, responses: string | any[] | undefined, addPing: any) {
-  client.channels.fetch(chat_id).then((channel: { messages: { fetch: (arg0: any) => Promise<any> }; id: any }) => {
-    channel.messages
-      .fetch(message_id)
-      .then((message: { reply: (arg0: string) => Promise<any>; id: any; channel: { send: (arg0: string, arg1: { split: boolean } | undefined) => Promise<any> } }) => {
-        if (
-          responses !== undefined &&
-          responses.length <= 2000 &&
-          responses.length > 0
-        ) {
-          let text = replacePlaceholders(responses)
-          if (addPing) {
-            message
-              .reply(text)
-              .then(async function (msg: { id: any }) {
-                onMessageResponseUpdated(channel.id, message.id, msg.id)
-                addMessageToHistory(
-                  channel.id,
-                  msg.id,
-                  customConfig.instance.get('botName'),
-                  text
-                )
-              })
-              .catch(console.error)
-          } else {
-            while (
-              text === undefined ||
-              text === '' ||
-              text.replace(/\s/g, '').length === 0
-            )
-              text = getRandomEmptyResponse()
-            message.channel
-              .send(text)
-              .then(async function (msg: { id: any }) {
-                onMessageResponseUpdated(channel.id, message.id, msg.id)
-                addMessageToHistory(
-                  channel.id,
-                  msg.id,
-                  customConfig.instance.get('botName'),
-                  text
-                )
-              })
-              .catch(console.error)
-          }
-        } else if (responses && responses.length >= 2000) {
-          let text = replacePlaceholders(responses)
-          if (addPing) {
-            message.reply(text).then(async function (msg: { id: any }) {
-              onMessageResponseUpdated(channel.id, message.id, msg.id)
-              addMessageToHistory(
-                channel.id,
-                msg.id,
-                customConfig.instance.get('botName'),
-                text
-              )
-            })
-          } else {
-            while (
-              text === undefined ||
-              text === '' ||
-              text.replace(/\s/g, '').length === 0
-            )
-              text = getRandomEmptyResponse()
-          }
-          if (text.length > 0) {
-            message.channel
-              .send(text, { split: true })
-              .then(async function (msg: { id: any }) {
-                onMessageResponseUpdated(channel.id, message.id, msg.id)
-                addMessageToHistory(
-                  channel.id,
-                  msg.id,
-                  customConfig.instance.get('botName'),
-                  text
-                )
-              })
-          }
-        } else {
-          const emptyResponse = getRandomEmptyResponse()
-          if (
-            emptyResponse !== undefined &&
-            emptyResponse !== '' &&
-            emptyResponse.replace(/\s/g, '').length !== 0
-          ) {
-            let text = emptyResponse
-            if (addPing) {
-              message
-                .reply(text)
-                .then(async function (msg: { id: any }) {
-                  onMessageResponseUpdated(channel.id, message.id, msg.id)
-                  addMessageToHistory(
-                    channel.id,
-                    msg.id,
-                    customConfig.instance.get('botName'),
-                    text
+async function handlePing(
+  message_id: any,
+  chat_id: any,
+  responses: string | any[] | undefined,
+  addPing: any
+) {
+  client.channels
+    .fetch(chat_id)
+    .then(
+      (channel: {
+        messages: { fetch: (arg0: any) => Promise<any> }
+        id: any
+      }) => {
+        channel.messages
+          .fetch(message_id)
+          .then(
+            (message: {
+              reply: (arg0: string) => Promise<any>
+              id: any
+              channel: {
+                send: (
+                  arg0: string,
+                  arg1: { split: boolean } | undefined
+                ) => Promise<any>
+              }
+            }) => {
+              if (
+                responses !== undefined &&
+                responses.length <= 2000 &&
+                responses.length > 0
+              ) {
+                let text = replacePlaceholders(responses)
+                if (addPing) {
+                  message
+                    .reply(text)
+                    .then(async function (msg: { id: any }) {
+                      onMessageResponseUpdated(channel.id, message.id, msg.id)
+                      addMessageToHistory(
+                        channel.id,
+                        msg.id,
+                        customConfig.instance.get('botName'),
+                        text
+                      )
+                    })
+                    .catch(console.error)
+                } else {
+                  while (
+                    text === undefined ||
+                    text === '' ||
+                    text.replace(/\s/g, '').length === 0
                   )
-                })
-                .catch(console.error)
-            } else {
-              while (
-                text === undefined ||
-                text === '' ||
-                text.replace(/\s/g, '').length === 0
-              )
-                text = getRandomEmptyResponse()
-              message.channel
-                .send(text)
-                .then(async function (msg: { id: any }) {
-                  onMessageResponseUpdated(channel.id, message.id, msg.id)
-                  addMessageToHistory(
-                    channel.id,
-                    msg.id,
-                    customConfig.instance.get('botName'),
-                    text
+                    text = getRandomEmptyResponse()
+                  message.channel
+                    .send(text)
+                    .then(async function (msg: { id: any }) {
+                      onMessageResponseUpdated(channel.id, message.id, msg.id)
+                      addMessageToHistory(
+                        channel.id,
+                        msg.id,
+                        customConfig.instance.get('botName'),
+                        text
+                      )
+                    })
+                    .catch(console.error)
+                }
+              } else if (responses && responses.length >= 2000) {
+                let text = replacePlaceholders(responses)
+                if (addPing) {
+                  message.reply(text).then(async function (msg: { id: any }) {
+                    onMessageResponseUpdated(channel.id, message.id, msg.id)
+                    addMessageToHistory(
+                      channel.id,
+                      msg.id,
+                      customConfig.instance.get('botName'),
+                      text
+                    )
+                  })
+                } else {
+                  while (
+                    text === undefined ||
+                    text === '' ||
+                    text.replace(/\s/g, '').length === 0
                   )
-                })
-                .catch(console.error)
+                    text = getRandomEmptyResponse()
+                }
+                if (text.length > 0) {
+                  message.channel
+                    .send(text, { split: true })
+                    .then(async function (msg: { id: any }) {
+                      onMessageResponseUpdated(channel.id, message.id, msg.id)
+                      addMessageToHistory(
+                        channel.id,
+                        msg.id,
+                        customConfig.instance.get('botName'),
+                        text
+                      )
+                    })
+                }
+              } else {
+                const emptyResponse = getRandomEmptyResponse()
+                if (
+                  emptyResponse !== undefined &&
+                  emptyResponse !== '' &&
+                  emptyResponse.replace(/\s/g, '').length !== 0
+                ) {
+                  let text = emptyResponse
+                  if (addPing) {
+                    message
+                      .reply(text)
+                      .then(async function (msg: { id: any }) {
+                        onMessageResponseUpdated(channel.id, message.id, msg.id)
+                        addMessageToHistory(
+                          channel.id,
+                          msg.id,
+                          customConfig.instance.get('botName'),
+                          text
+                        )
+                      })
+                      .catch(console.error)
+                  } else {
+                    while (
+                      text === undefined ||
+                      text === '' ||
+                      text.replace(/\s/g, '').length === 0
+                    )
+                      text = getRandomEmptyResponse()
+                    message.channel
+                      .send(text)
+                      .then(async function (msg: { id: any }) {
+                        onMessageResponseUpdated(channel.id, message.id, msg.id)
+                        addMessageToHistory(
+                          channel.id,
+                          msg.id,
+                          customConfig.instance.get('botName'),
+                          text
+                        )
+                      })
+                      .catch(console.error)
+                  }
+                }
+              }
             }
-          }
-        }
-      })
-      .catch((err: any) => console.error(err))
-  })
+          )
+          .catch((err: any) => console.error(err))
+      }
+    )
 }
 
 export async function handleSlashCommandResponse(chat_id: any, response: any) {
@@ -1079,93 +1272,66 @@ export async function handlePingSoloAgent(
 ) {
   client.channels
     .fetch(chat_id)
-    .then((channel: { messages: { fetch: (arg0: any) => Promise<any> }; id: any }) => {
-      channel.messages.fetch(message_id).then((message: { reply: (arg0: string) => Promise<any>; id: any; channel: { send: (arg0: string, arg1: { split: boolean } | undefined) => Promise<any> } }) => {
-        Object.keys(responses).map(function (key, index) {
-          if (
-            responses !== undefined &&
-            responses.length <= 2000 &&
-            responses.length > 0
-          ) {
-            let text = replacePlaceholders(responses)
-            if (addPing) {
-              message
-                .reply(text)
-                .then(async function (msg: { id: any }) {
-                  onMessageResponseUpdated(channel.id, message.id, msg.id)
-                  addMessageToHistory(
-                    channel.id,
-                    msg.id,
-                    customConfig.instance.get('botName'),
-                    text
-                  )
-                })
-                .catch(console.error)
-            } else {
-              while (
-                text === undefined ||
-                text === '' ||
-                text.replace(/\s/g, '').length === 0
-              )
-                text = getRandomEmptyResponse()
-              message.channel
-                .send(text)
-                .then(async function (msg: { id: any }) {
-                  onMessageResponseUpdated(channel.id, message.id, msg.id)
-                  addMessageToHistory(
-                    channel.id,
-                    msg.id,
-                    customConfig.instance.get('botName'),
-                    text
-                  )
-                })
-                .catch(console.error)
+    .then(
+      (channel: {
+        messages: { fetch: (arg0: any) => Promise<any> }
+        id: any
+      }) => {
+        channel.messages.fetch(message_id).then(
+          (message: {
+            reply: (arg0: string) => Promise<any>
+            id: any
+            channel: {
+              send: (
+                arg0: string,
+                arg1: { split: boolean } | undefined
+              ) => Promise<any>
             }
-          } else if (responses.length >= 2000) {
-            let text = replacePlaceholders(responses)
-            if (addPing) {
-              message.reply(text).then(async function (msg: { id: any }) {
-                onMessageResponseUpdated(channel.id, message.id, msg.id)
-                addMessageToHistory(
-                  channel.id,
-                  msg.id,
-                  customConfig.instance.get('botName'),
-                  text
-                )
-              })
-            } else {
-              while (
-                text === undefined ||
-                text === '' ||
-                text.replace(/\s/g, '').length === 0
-              )
-                text = getRandomEmptyResponse()
-            }
-            if (text.length > 0) {
-              message.channel
-                .send(text, { split: true })
-                .then(async function (msg: { id: any }) {
-                  onMessageResponseUpdated(channel.id, message.id, msg.id)
-                  addMessageToHistory(
-                    channel.id,
-                    msg.id,
-                    customConfig.instance.get('botName'),
-                    text
+          }) => {
+            Object.keys(responses).map(function (key, index) {
+              if (
+                responses !== undefined &&
+                responses.length <= 2000 &&
+                responses.length > 0
+              ) {
+                let text = replacePlaceholders(responses)
+                if (addPing) {
+                  message
+                    .reply(text)
+                    .then(async function (msg: { id: any }) {
+                      onMessageResponseUpdated(channel.id, message.id, msg.id)
+                      addMessageToHistory(
+                        channel.id,
+                        msg.id,
+                        customConfig.instance.get('botName'),
+                        text
+                      )
+                    })
+                    .catch(console.error)
+                } else {
+                  while (
+                    text === undefined ||
+                    text === '' ||
+                    text.replace(/\s/g, '').length === 0
                   )
-                })
-            }
-          } else {
-            const emptyResponse = getRandomEmptyResponse()
-            if (
-              emptyResponse !== undefined &&
-              emptyResponse !== '' &&
-              emptyResponse.replace(/\s/g, '').length !== 0
-            ) {
-              let text = emptyResponse
-              if (addPing) {
-                message
-                  .reply(text)
-                  .then(async function (msg: { id: any }) {
+                    text = getRandomEmptyResponse()
+                  message.channel
+                    .send(text)
+                    .then(async function (msg: { id: any }) {
+                      onMessageResponseUpdated(channel.id, message.id, msg.id)
+                      addMessageToHistory(
+                        channel.id,
+                        msg.id,
+                        customConfig.instance.get('botName'),
+                        text
+                      )
+                    })
+                    .catch(console.error)
+                }
+              } else if (responses.length >= 2000) {
+                let text = replacePlaceholders(responses)
+                if (addPing) {
+                  message.reply(text).then(async function (msg: { id: any }) {
                     onMessageResponseUpdated(channel.id, message.id, msg.id)
                     addMessageToHistory(
                       channel.id,
@@ -1174,86 +1340,40 @@ export async function handlePingSoloAgent(
                       text
                     )
                   })
-                  .catch(console.error)
+                } else {
+                  while (
+                    text === undefined ||
+                    text === '' ||
+                    text.replace(/\s/g, '').length === 0
+                  )
+                    text = getRandomEmptyResponse()
+                }
+                if (text.length > 0) {
+                  message.channel
+                    .send(text, { split: true })
+                    .then(async function (msg: { id: any }) {
+                      onMessageResponseUpdated(channel.id, message.id, msg.id)
+                      addMessageToHistory(
+                        channel.id,
+                        msg.id,
+                        customConfig.instance.get('botName'),
+                        text
+                      )
+                    })
+                }
               } else {
-                while (
-                  text === undefined ||
-                  text === '' ||
-                  text.replace(/\s/g, '').length === 0
-                )
-                  text = getRandomEmptyResponse()
-                message.channel
-                  .send(text)
-                  .then(async function (msg: { id: any }) {
-                    onMessageResponseUpdated(channel.id, message.id, msg.id)
-                    addMessageToHistory(
-                      channel.id,
-                      msg.id,
-                      customConfig.instance.get('botName'),
-                      text
-                    )
-                  })
-                  .catch(console.error)
-              }
-            }
-          }
-        })
-      })
-    })
-    .catch((err: any) => console.error(err))
-}
-
-async function handleMessageEdit(message_id: any, chat_id: any, responses: string | any[] | undefined, addPing: any) {
-  client.channels.fetch(chat_id).then(async (channel: { id: any; messages: { fetch: (arg0: { limit: any }) => Promise<any> } }) => {
-    const oldResponse = getResponse(channel.id, message_id)
-    if (oldResponse === undefined) {
-      return
-    }
-
-    channel.messages.fetch(oldResponse).then(async (msg: { edit: (arg0: string) => void; id: any; content: any }) => {
-      channel.messages
-        .fetch({ limit: client.edit_messages_max_count })
-        .then(async (messages: any[]) => {
-          messages.forEach(async function (edited: { id: any; author: { send: (arg0: string) => void }; content: any; channel: { send: (arg0: any, arg1: { split: boolean }) => Promise<any>; stopTyping: () => void } }) {
-            if (edited.id === message_id) {
-              // Warn an offending user about their actions
-              const warn_offender = function (_user: any, ratings: any) {
-                edited.author.send(
-                  `You've got ${ratings} warnings and you will get blocked at 10!`
-                )
-              }
-
-              await updateMessage(channel.id, edited.id, edited.content)
-
-              Object.keys(responses).map(async function (key, index) {
+                const emptyResponse = getRandomEmptyResponse()
                 if (
-                  responses !== undefined &&
-                  responses.length <= 2000 &&
-                  responses.length > 0
+                  emptyResponse !== undefined &&
+                  emptyResponse !== '' &&
+                  emptyResponse.replace(/\s/g, '').length !== 0
                 ) {
-                  let text = replacePlaceholders(responses)
-                  while (
-                    text === undefined ||
-                    text === '' ||
-                    text.replace(/\s/g, '').length === 0
-                  )
-                    text = getRandomEmptyResponse()
-                  msg.edit(text)
-                  onMessageResponseUpdated(channel.id, edited.id, msg.id)
-                  await updateMessage(channel.id, msg.id, msg.content)
-                } else if (responses.length >= 2000) {
-                  let text = replacePlaceholders(responses)
-                  while (
-                    text === undefined ||
-                    text === '' ||
-                    text.replace(/\s/g, '').length === 0
-                  )
-                    text = getRandomEmptyResponse()
-                  if (text.length > 0) {
-                    edited.channel
-                      .send(text, { split: true })
+                  let text = emptyResponse
+                  if (addPing) {
+                    message
+                      .reply(text)
                       .then(async function (msg: { id: any }) {
-                        onMessageResponseUpdated(channel.id, edited.id, msg.id)
+                        onMessageResponseUpdated(channel.id, message.id, msg.id)
                         addMessageToHistory(
                           channel.id,
                           msg.id,
@@ -1261,34 +1381,169 @@ async function handleMessageEdit(message_id: any, chat_id: any, responses: strin
                           text
                         )
                       })
-                  }
-                } else {
-                  const emptyResponse = getRandomEmptyResponse()
-                  if (
-                    emptyResponse !== undefined &&
-                    emptyResponse !== '' &&
-                    emptyResponse.replace(/\s/g, '').length !== 0
-                  ) {
-                    let text = emptyResponse
+                      .catch(console.error)
+                  } else {
                     while (
                       text === undefined ||
                       text === '' ||
                       text.replace(/\s/g, '').length === 0
                     )
                       text = getRandomEmptyResponse()
-                    msg.edit(text)
-                    onMessageResponseUpdated(channel.id, edited.id, msg.id)
-                    await updateMessage(channel.id, msg.id, msg.content)
+                    message.channel
+                      .send(text)
+                      .then(async function (msg: { id: any }) {
+                        onMessageResponseUpdated(channel.id, message.id, msg.id)
+                        addMessageToHistory(
+                          channel.id,
+                          msg.id,
+                          customConfig.instance.get('botName'),
+                          text
+                        )
+                      })
+                      .catch(console.error)
                   }
                 }
-              })
-              edited.channel.stopTyping()
+              }
+            })
+          }
+        )
+      }
+    )
+    .catch((err: any) => console.error(err))
+}
+
+async function handleMessageEdit(
+  message_id: any,
+  chat_id: any,
+  responses: string | any[] | undefined,
+  addPing: any
+) {
+  client.channels
+    .fetch(chat_id)
+    .then(
+      async (channel: {
+        id: any
+        messages: { fetch: (arg0: { limit: any }) => Promise<any> }
+      }) => {
+        const oldResponse = getResponse(channel.id, message_id)
+        if (oldResponse === undefined) {
+          return
+        }
+
+        channel.messages
+          .fetch(oldResponse)
+          .then(
+            async (msg: {
+              edit: (arg0: string) => void
+              id: any
+              content: any
+            }) => {
+              channel.messages
+                .fetch({ limit: client.edit_messages_max_count })
+                .then(async (messages: any[]) => {
+                  messages.forEach(async function (edited: {
+                    id: any
+                    author: { send: (arg0: string) => void }
+                    content: any
+                    channel: {
+                      send: (
+                        arg0: any,
+                        arg1: { split: boolean }
+                      ) => Promise<any>
+                      stopTyping: () => void
+                    }
+                  }) {
+                    if (edited.id === message_id) {
+                      // Warn an offending user about their actions
+                      const warn_offender = function (
+                        _user: any,
+                        ratings: any
+                      ) {
+                        edited.author.send(
+                          `You've got ${ratings} warnings and you will get blocked at 10!`
+                        )
+                      }
+
+                      await updateMessage(channel.id, edited.id, edited.content)
+
+                      Object.keys(responses).map(async function (key, index) {
+                        if (
+                          responses !== undefined &&
+                          responses.length <= 2000 &&
+                          responses.length > 0
+                        ) {
+                          let text = replacePlaceholders(responses)
+                          while (
+                            text === undefined ||
+                            text === '' ||
+                            text.replace(/\s/g, '').length === 0
+                          )
+                            text = getRandomEmptyResponse()
+                          msg.edit(text)
+                          onMessageResponseUpdated(
+                            channel.id,
+                            edited.id,
+                            msg.id
+                          )
+                          await updateMessage(channel.id, msg.id, msg.content)
+                        } else if (responses.length >= 2000) {
+                          let text = replacePlaceholders(responses)
+                          while (
+                            text === undefined ||
+                            text === '' ||
+                            text.replace(/\s/g, '').length === 0
+                          )
+                            text = getRandomEmptyResponse()
+                          if (text.length > 0) {
+                            edited.channel
+                              .send(text, { split: true })
+                              .then(async function (msg: { id: any }) {
+                                onMessageResponseUpdated(
+                                  channel.id,
+                                  edited.id,
+                                  msg.id
+                                )
+                                addMessageToHistory(
+                                  channel.id,
+                                  msg.id,
+                                  customConfig.instance.get('botName'),
+                                  text
+                                )
+                              })
+                          }
+                        } else {
+                          const emptyResponse = getRandomEmptyResponse()
+                          if (
+                            emptyResponse !== undefined &&
+                            emptyResponse !== '' &&
+                            emptyResponse.replace(/\s/g, '').length !== 0
+                          ) {
+                            let text = emptyResponse
+                            while (
+                              text === undefined ||
+                              text === '' ||
+                              text.replace(/\s/g, '').length === 0
+                            )
+                              text = getRandomEmptyResponse()
+                            msg.edit(text)
+                            onMessageResponseUpdated(
+                              channel.id,
+                              edited.id,
+                              msg.id
+                            )
+                            await updateMessage(channel.id, msg.id, msg.content)
+                          }
+                        }
+                      })
+                      edited.channel.stopTyping()
+                    }
+                  })
+                })
+                .catch((err: any) => console.error(err))
             }
-          })
-        })
-        .catch((err: any) => console.error(err))
-    })
-  })
+          )
+      }
+    )
 }
 
 export const prevMessage: any = {}
@@ -1296,7 +1551,10 @@ export const prevMessageTimers: any = {}
 export const messageResponses: any = {}
 export const conversation: any = {}
 
-export function onMessageDeleted(channel: string | number, messageId: string | number) {
+export function onMessageDeleted(
+  channel: string | number,
+  messageId: string | number
+) {
   if (
     messageResponses[channel] !== undefined &&
     messageResponses[channel][messageId] !== undefined
@@ -1304,12 +1562,19 @@ export function onMessageDeleted(channel: string | number, messageId: string | n
     delete messageResponses[channel][messageId]
   }
 }
-export function onMessageResponseUpdated(channel: string | number, messageId: string | number, newResponse: any) {
+export function onMessageResponseUpdated(
+  channel: string | number,
+  messageId: string | number,
+  newResponse: any
+) {
   if (messageResponses[channel] === undefined) messageResponses[channel] = {}
   messageResponses[channel][messageId] = newResponse
 }
 
-export function getMessage(channel: { messages: { fetchMessage: (arg0: any) => any } }, messageId: any) {
+export function getMessage(
+  channel: { messages: { fetchMessage: (arg0: any) => any } },
+  messageId: any
+) {
   return channel.messages.fetchMessage(messageId)
 }
 
@@ -1367,12 +1632,20 @@ export function exitConversation(user: string) {
   }
 }
 
-export function getResponse(channel: string | number, message: string | number) {
+export function getResponse(
+  channel: string | number,
+  message: string | number
+) {
   if (messageResponses[channel] === undefined) return undefined
   return messageResponses[channel][message]
 }
 
-export function addMessageToHistory(chatId: any, messageId: any, senderName: any, content: string) {
+export function addMessageToHistory(
+  chatId: any,
+  messageId: any,
+  senderName: any,
+  content: string
+) {
   database.instance.addMessageInHistory(
     'discord',
     chatId,
@@ -1403,7 +1676,11 @@ export async function deleteMessageFromHistory(chatId: any, messageId: any) {
   await database.instance.deleteMessage('discord', chatId, messageId)
 }
 
-export async function updateMessage(chatId: any, messageId: any, newContent: any) {
+export async function updateMessage(
+  chatId: any,
+  messageId: any,
+  newContent: any
+) {
   await database.instance.updateMessage(
     'discord',
     chatId,
@@ -1495,7 +1772,12 @@ export const createDiscordClient = () => {
   messageEvent = new EventEmitter()
   messageEvent.on(
     'new_message',
-    async function (messageId: any, channelId: any, response: any, addPing: any) {
+    async function (
+      messageId: any,
+      channelId: any,
+      response: any,
+      addPing: any
+    ) {
       handlePing(messageId, channelId, response, addPing)
     }
   )
@@ -1525,36 +1807,49 @@ export const createDiscordClient = () => {
   setInterval(() => {
     const channelIds: any[] = []
 
-    client.channels.cache.forEach(async (channel: { topic: string | undefined; id: string | number; send: (arg0: any) => void } | undefined) => {
-      if (!channel || !channel.topic) return
-      if (channel === undefined || channel.topic === undefined) return
-      if (
-        channel.topic.length < 0 ||
-        channel.topic.toLowerCase() !== 'daily discussion'
-      )
-        return
-      if (channelIds.includes(channel.id)) return
-
-      console.log('sending to channel with topic: ' + channel.topic)
-      channelIds.push(channel.id)
-      if (discussionChannels[channel.id] === undefined || !discussionChannels) {
-        discussionChannels[channel.id] = {
-          timeout: setTimeout(() => {
-            delete discussionChannels[channel.id]
-          }, 1000 * 3600 * 4),
-          responded: false,
-        }
-        const resp = await handleInput(
-          'Tell me about ' + getRandomTopic(),
-          'bot',
-          customConfig.instance.get('agent') ?? 'Agent',
-          null,
-          'discord',
-          channel.id
+    client.channels.cache.forEach(
+      async (
+        channel:
+          | {
+            topic: string | undefined
+            id: string | number
+            send: (arg0: any) => void
+          }
+          | undefined
+      ) => {
+        if (!channel || !channel.topic) return
+        if (channel === undefined || channel.topic === undefined) return
+        if (
+          channel.topic.length < 0 ||
+          channel.topic.toLowerCase() !== 'daily discussion'
         )
-        channel.send(resp)
+          return
+        if (channelIds.includes(channel.id)) return
+
+        console.log('sending to channel with topic: ' + channel.topic)
+        channelIds.push(channel.id)
+        if (
+          discussionChannels[channel.id] === undefined ||
+          !discussionChannels
+        ) {
+          discussionChannels[channel.id] = {
+            timeout: setTimeout(() => {
+              delete discussionChannels[channel.id]
+            }, 1000 * 3600 * 4),
+            responded: false,
+          }
+          const resp = await handleInput(
+            'Tell me about ' + getRandomTopic(),
+            'bot',
+            customConfig.instance.get('agent') ?? 'Agent',
+            null,
+            'discord',
+            channel.id
+          )
+          channel.send(resp)
+        }
       }
-    })
+    )
   }, 1000 * 3600)
 
   client.login(token)
