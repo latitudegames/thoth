@@ -69,6 +69,10 @@ const MenuBar = () => {
     navigate('/home/all-projects')
   }
 
+  const onAgents = () => {
+    navigate('/agents')
+  }
+
   const onSerialize = () => {
     publish($SERIALIZE(activeTabRef.current.id))
   }
@@ -200,6 +204,13 @@ const MenuBar = () => {
             node_editing: {},
           },
         },
+      },
+    },
+    agents: {
+      items: {
+        edit: {
+          onClick: onAgents
+        }
       },
     },
   }
