@@ -77,7 +77,7 @@ export class ProseToScript extends ThothComponent<Promise<WorkerReturn>> {
 
     this.task = {
       outputs: { detectedItem: 'output', trigger: 'option' },
-      init: () => {},
+      init: () => { },
     }
 
     this.category = 'AI/ML'

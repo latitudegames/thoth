@@ -2,37 +2,13 @@ import thothCore from '@latitudegames/thoth-core/dist/server';
 import Koa from 'koa';
 
 import { CustomError } from '../../utils/CustomError';
+import { CompletionRequest, completionsParser } from '../completions';
 // TODO: Solve Enki
 // import { getEnkiOutputs } from '../../enki/enki'
 // TODO: Solve huggingface
 // import { huggingface } from '../../vendor/huggingface/huggingface';
 import { Module } from './module';
 import { Graph, Module as ModuleType, ModuleComponent, Node } from './types';
-
-type CompletionRequest = {
-  context: any
-  modelSource: any
-  getFullResponse: boolean
-  universalFormat: boolean
-}
-
-const completionsParser = async (
-  completionRequest: CompletionRequest
-) => {
-  // TODO: Remove me
-  await null;
-  const {
-    context,
-    getFullResponse,
-    modelSource,
-    universalFormat = false,
-    ...options
-  } = completionRequest
-  if (!options) throw new CustomError('input-failed', 'No parameters provided')
-  // TODO: Make request
-  // Then return the appropriate response
-  return { context, getFullResponse, modelSource, universalFormat, options }
-}
 
 const { initSharedEngine, getComponents } = thothCore
 const thothComponents = getComponents()
@@ -45,13 +21,12 @@ export const buildThothInterface = (
   let gameState = { ...initialGameState }
 
   return {
-    completion: async (request: any) => {
+    completion: async (request: CompletionRequest) => {
       const response = await completionsParser({
         ...request,
         prompt: request.prompt?.trim(),
-        // TODO @seang: remove this once the default stop is fixed in thoth-core 0.61
-        stop: request.stop?.includes('/n') ? '\n' : request.stop,
-      }) as any
+        stop: request.stop,
+      })
       return response?.result || ''
     },
     // enkiCompletion: async (taskName: string, inputs: string) => {
@@ -149,11 +124,9 @@ export const runChain = async (
   const component = engine?.components.get(
     'Module Trigger In'
   ) as ModuleComponent
-  console.log("component is", component);
 
   // Defaulting to the first node trigger to start our "run"
   const triggeredNode = getFirstNodeTrigger(graph)
-  console.log("triggeredNode is", triggeredNode);
   await component?.run(triggeredNode)
   // Write all the raw data that was output by the module run to an object
   module.write(rawOutputs)

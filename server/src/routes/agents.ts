@@ -39,14 +39,12 @@ function clientSettingsToInstance(settings: any) {
 }
 
 const getAgentsHandler = async (ctx: Koa.Context) => {
-  if (!database.instance) return ctx.body = []
   const agents = await database.instance.getAgents();
   ctx.body = agents
 }
 
 const getAgentHandler = async (ctx: Koa.Context) => {
   const agent = ctx.query.agent;
-  if (!database.instance) return ctx.body = {}
   ctx.body = {
     actions: (await database.instance.getActions(agent)).trim(),
     dialogue: (await database.instance.getDialogue(agent)).trim(),
@@ -214,7 +212,6 @@ const addConfigHandler = async (ctx: Koa.Context) => {
 
   try {
     await customConfig.instance.set(data.key, data.value);
-    ctx.body = 'ok';
     ctx.body = 'ok';
     console.log("TODO: Not exiting process here, we need to make sure we set config properly in this process")
   } catch (e) {
