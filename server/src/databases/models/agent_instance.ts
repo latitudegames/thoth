@@ -22,28 +22,29 @@ export class agent_instance extends Model<agent_instanceAttributes, agent_instan
 
   static initModel(sequelize: Sequelize.Sequelize): typeof agent_instance {
     return agent_instance.init({
-    id: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      primaryKey: true
-    },
-    personality: {
-      type: DataTypes.TEXT,
-      allowNull: true
-    },
-    clients: {
-      type: DataTypes.TEXT,
-      allowNull: true
-    },
-    enabled: {
-      type: DataTypes.BOOLEAN,
-      allowNull: true
-    }
-  }, {
-    sequelize,
-    tableName: 'agent_instance',
-    schema: 'public',
-    timestamps: false
-  });
+      id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        autoIncrement: true,
+        primaryKey: true
+      },
+      personality: {
+        type: DataTypes.TEXT,
+        allowNull: true
+      },
+      clients: {
+        type: DataTypes.TEXT,
+        allowNull: true
+      },
+      enabled: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true
+      }
+    }, {
+      sequelize,
+      tableName: 'agent_instance',
+      schema: 'public',
+      timestamps: false
+    });
   }
 }

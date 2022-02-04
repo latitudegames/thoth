@@ -163,8 +163,21 @@ const getSpellHandler = async (ctx: Koa.Context) => {
     const spell = await creatorToolsDatabase.chains.findOne({
       where: { name, userId: ctx.state.user?.id ?? 0 },
     })
-    if (!spell) throw new CustomError('input-failed', 'spell not found')
-    ctx.body = spell
+
+    if (!spell) {
+
+      const newSpell = await creatorToolsDatabase.chains.create({
+        name: "default",
+        chain: body.chain,
+        gameState: body.gameState || {},
+        modules: body.modules || [],
+      })
+      userId: ctx.state.user?.id ?? 0,
+        ctx.body = newSpell
+    } else {
+      ctx.body = spell
+    }
+
   } catch (e) {
     console.error(e);
   }
