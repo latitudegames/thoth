@@ -1,5 +1,5 @@
 {
-  "name": "@thoth/client",
+  "name": "@latitudegames/thoth-client",
   "version": "0.1.0",
   "license": "Apache-2.0",
   "author": "Michael Sharpe <m.sharpe@project89.org> (https://www.project89.org)",
@@ -20,8 +20,11 @@
     "install:canary": "yarn add @latitudegames/thoth-core@canary"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@callstack/async-storage": "^2.0.3",
     "@latitudegames/thoth-core": "0.0.63",
+=======
+>>>>>>> fix packages to operate like monorepo with local core code
     "@material-ui/core": "^4.12.1",
     "@material-ui/icons": "^4.11.2",
     "@monaco-editor/react": "^4.2.1",

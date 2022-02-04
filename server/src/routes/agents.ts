@@ -269,7 +269,6 @@ const executeHandler = async (ctx: Koa.Context) => {
 }
 
 const getAgentConfigHandler = async (ctx: Koa.Context) => {
-  console.log("getAgentConfigHandler");
   try {
     const body = await database.instance.getAgentsConfig(ctx.request.body.agent ?? 'common') ?? {};
     return ctx.body = body;
@@ -351,7 +350,6 @@ const getAgentInstanceHandler = async (ctx: Koa.Context) => {
         enabled: true
       }
     }
-    console.log(data);
     return ctx.body = data;
   } catch (e) {
     console.error(e);
@@ -380,6 +378,14 @@ const addAgentInstanceHandler = async (ctx: Koa.Context) => {
     console.error(e);
     return ctx.body = { error: 'internal error' };
   }
+}
+
+const deleteAgentInstanceHandler = async (ctx: Koa.Context) => {
+  const { agentName } = ctx.request.body;
+
+  await database.instance.deleteAgentInstance(agentName);
+
+  return ctx.body = 'ok';
 }
 
 export const agents: Route[] = [
@@ -442,6 +448,8 @@ export const agents: Route[] = [
     path: '/agentInstance', // remove me
     access: noAuth,
     get: getAgentInstanceHandler,
-    post: addAgentInstanceHandler
-  }
+    post: addAgentInstanceHandler,
+    delete: deleteAgentInstanceHandler
+
+  },
 ]

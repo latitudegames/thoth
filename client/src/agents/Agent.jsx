@@ -16,12 +16,11 @@ function capitalizeFirstLetter(word) {
     return word.charAt(0).toUpperCase() + word.slice(1);
 }
 
-const Agent = ({ id }) => {
+const Agent = ({ id, updateCallback }) => {
     const [data, setData] = useState([]);
     const [personality, setPersonality] = useState('');
     const [instanceId, setInstanceId] = useState('1');
     const [enabled, setEnabled] = useState(false);
-    const navigate = useNavigate();
 
     useEffect(async () => {
         setEnabled(false);
@@ -40,12 +39,11 @@ const Agent = ({ id }) => {
     }, [])
 
     const _delete = () => {
-        axios.get(`${process.env.REACT_APP_API_URL}/delete_agent_instance?instanceId=` + instanceId).then(res => {
-            if (res.data === 'ok') {
-                navigate('/');
-            } else {
-                console.log(res.data);
-            }
+        console.log("deleting")
+        axios.delete(`${process.env.REACT_APP_API_URL}/agentInstance`, {
+            instanceId
+        }).then(res => {
+            updateCallback();
         });
     }
 
@@ -57,11 +55,7 @@ const Agent = ({ id }) => {
             enabled: enabled
         };
         axios.post(`${process.env.REACT_APP_API_URL}/agentInstance`, { data: _data }).then(res => {
-            if (res.data === 'ok') {
-                navigate('/');
-            } else {
-                console.log(res.data);
-            }
+            updateCallback();
         });
     }
 
