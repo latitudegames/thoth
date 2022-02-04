@@ -70,6 +70,9 @@ const newHandler = async (ctx: Koa.Context) => {
     ctx.body = response.data
     return
   }
+
+  console.log("ctx.request is", ctx.request)
+
   const body = ctx.request.body
   if (!body) throw new CustomError('input-failed', 'No parameters provided')
 
@@ -165,12 +168,12 @@ const getSpellHandler = async (ctx: Koa.Context) => {
     })
 
     if (!spell) {
-
       const newSpell = await creatorToolsDatabase.chains.create({
-        name: "default",
-        chain: body.chain,
-        gameState: body.gameState || {},
-        modules: body.modules || [],
+        userId: ctx.state.user?.id ?? 0,
+        name,
+        chain: { "id": "demo@0.1.0", "nodes": {} },
+        gameState: {},
+        modules: [],
       })
       userId: ctx.state.user?.id ?? 0,
         ctx.body = newSpell
