@@ -1,4 +1,4 @@
-import { randomInt } from "@latitudegames/thoth-core/src/superreality/utils.js";
+import { randomInt } from "@latitudegames/thoth-core/src/superreality/utils";
 
 export class gameObject {
     id = -1;

@@ -1,8 +1,11 @@
-import { makeModelRequest } from './makeModelRequest.js'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-nocheck
+
+import { makeModelRequest } from './makeModelRequest'
 import {
     readRelationshipMatrix,
     writeRelationshipMatrix,
-} from './relationshipMatrix.js'
+} from './relationshipMatrix'
 
 export function sigmoid(x) {
     return 1 / (1 + Math.exp(-x))

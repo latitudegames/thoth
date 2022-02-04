@@ -1,7 +1,7 @@
-import { randomInt } from "@latitudegames/thoth-core/src/superreality/utils.js";
+import { randomInt } from "@latitudegames/thoth-core/src/superreality/utils";
 import { database } from "@latitudegames/thoth-core/src/superreality/database";
-import agent from "./agent.js";
-import gameObject from "./gameObject.js";
+import agent from "./agent";
+import gameObject from "./gameObject";
 
 export class world extends gameObject {
     id = -1;

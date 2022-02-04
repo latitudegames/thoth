@@ -1,20 +1,18 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import { customConfig } from '@latitudegames/thoth-core/src/superreality/customConfig'
 import request from 'request'
 
-import { handleInput } from '../superreality/handleInput.js'
 import { database } from '../superreality/database'
-import { getRandomEmptyResponse } from '../superreality/utils.js'
+import { handleInput } from '../superreality/handleInput'
+import { getRandomEmptyResponse } from '../superreality/utils'
 
 export async function getChatHistory(chatId, length) {
   return await database.instance.getHistory(length, 'facebook', chatId)
 }
 
-export async function addMessageToHistory(
-  chatId,
-  senderName,
-  content,
-  messageId
-) {
+export function addMessageToHistory(chatId, senderName, content, messageId) {
   database.instance.addMessageInHistory(
     'facebook',
     chatId,

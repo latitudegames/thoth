@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-nocheck
+
 import { customConfig } from '@latitudegames/thoth-core/src/superreality/customConfig'
 import { existsSync } from 'fs'
 
@@ -80,7 +83,7 @@ export function convertLocalToUtcTimezone(date) {
   )
 }
 
-export async function wait(ms) {
+export function wait(ms) {
   return new Promise(resolve => {
     setTimeout(resolve, ms)
   })

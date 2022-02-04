@@ -1,19 +1,22 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-nocheck
+
 import fs from 'fs'
 import natural from 'natural'
 import path from 'path'
 
-let classifier
-let profanityClassifier
+let classifier: any
+let profanityClassifier: any
 
 const rootDir = path.resolve(path.dirname(''))
-export async function classifyText(input) {
+export async function classifyText(input: any) {
   if (!classifier || classifier === undefined) {
     return ''
   }
 
   return await classifier.classify(input)
 }
-export async function classifyProfanityText(input) {
+export async function classifyProfanityText(input: any) {
   if (!profanityClassifier || profanityClassifier === undefined) {
     return ''
   }
@@ -36,7 +39,7 @@ export function trainClassifier() {
   }
 
   classifier.train()
-  classifier.save(rootDir + '/data/classifier/classifier.json', function (err) {
+  classifier.save(rootDir + '/data/classifier/classifier.json', function (err: any) {
     if (err) {
       return console.error(err)
     }
@@ -54,7 +57,7 @@ export function trainProfanityClassifier() {
   profanityClassifier.train()
   profanityClassifier.save(
     rootDir + '/data/classifier/profanity_classifier.json',
-    err => {
+    (err: any) => {
       if (err) {
         console.error(err)
         return
@@ -68,7 +71,7 @@ export async function initClassifier() {
     await natural.BayesClassifier.load(
       rootDir + '/data/classifier/classifier.json',
       null,
-      async function (err, _classifier) {
+      async function (err: any, _classifier: any) {
         if (err) {
           console.error(err)
           classifier = new natural.BayesClassifier()
@@ -88,7 +91,7 @@ export async function initProfanityClassifier() {
     await natural.BayesClassifier.load(
       rootDir + '/data/classifier/profanity_classifier.json',
       null,
-      async function (err, _classifier) {
+      async function (err: any, _classifier: any) {
         if (err) {
           console.error(err)
           profanityClassifier = new natural.BayesClassifier()

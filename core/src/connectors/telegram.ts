@@ -1,10 +1,13 @@
-import { handleInput } from "../superreality/handleInput.js"
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
+import { handleInput } from "../superreality/handleInput"
 import { database } from "../superreality/database"
 import { customConfig } from '../superreality/customConfig'
 import roomManager from "../superreality/roomManager"
-import { classifyText } from "../superreality/textClassifier.js"
-import { getRandomEmptyResponse, startsWithCapital } from "./utils.js"
-import { defaultAgent } from "../index.js"
+import { classifyText } from "../superreality/textClassifier"
+import { getRandomEmptyResponse, startsWithCapital } from "./utils"
+import { defaultAgent } from "../index"
 
 async function handleMessage(chat_id, response, message_id, addPing, args, bot) {
     let senderId = ''
@@ -94,9 +97,9 @@ export async function onMessageEdit(bot, msg, botName) {
     const date = Date.now() / 1000
     const msgDate = msg.date
     const diff = date - msgDate
-    const hours_diff = Math.ceil(diff / 3600)
-    const mins_diff = Math.ceil((diff - hours_diff) / 60)
-    if (mins_diff > 12 || (mins_diff <= 12 && hours_diff > 1)) return
+    const hoursDiff = Math.ceil(diff / 3600)
+    const mins_diff = Math.ceil((diff - hoursDiff) / 60)
+    if (mins_diff > 12 || (mins_diff <= 12 && hoursDiff > 1)) return
     const _sender = msg.from.username === undefined ? msg.from.first_name : msg.from.username
 
     updateMessage(msg.chat.id, msg.message_id, msg.text)
@@ -118,9 +121,9 @@ export async function onMessage(bot, msg, botName, username_regex) {
     const date = Date.now() / 1000
     const msgDate = msg.date
     const diff = date - msgDate
-    const hours_diff = Math.ceil(diff / 3600)
-    const mins_diff = Math.ceil((diff - hours_diff) / 60)
-    if (mins_diff > 12 || (mins_diff <= 12 && hours_diff > 1)) return
+    const hoursDiff = Math.ceil(diff / 3600)
+    const mins_diff = Math.ceil((diff - hoursDiff) / 60)
+    if (mins_diff > 12 || (mins_diff <= 12 && hoursDiff > 1)) return
 
     let content = msg.text
     const _sender = msg.from.username === undefined ? msg.from.first_name : msg.from.username
