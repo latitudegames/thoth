@@ -1,25 +1,65 @@
+//@ts-ignore
+import cors from "@koa/cors"
 import Router from '@koa/router'
-import { config } from 'dotenv'
+import cors_server from "@latitudegames/thoth-core/src/superreality/cors-server"
+import { database } from "@latitudegames/thoth-core/src/superreality/database"
+import roomManager from "@latitudegames/thoth-core/src/superreality/roomManager"
+import { runClients } from "@latitudegames/thoth-core/src/superreality/runClients"
+import { config } from "dotenv"
 import HttpStatus from 'http-status-codes'
 import Koa from 'koa'
 import koaBody from 'koa-body'
 import compose from 'koa-compose'
 import { creatorToolsDatabase } from './databases/creatorTools'
-
 import { routes } from './routes'
 import { Handler, Method, Middleware } from './types'
 
 config({ path: '.env' })
+
 export const app: Koa = new Koa()
 const router: Router = new Router()
 
 // required for some current consumers (i.e Thoth)
 // to-do: standardize an allowed origin list based on env values or another source of truth?
-const cors = require('@koa/cors')
 const options = {
   origin: '*',
 }
 app.use(cors(options))
+
+new cors_server(process.env.CORS_PORT, '0.0.0.0');
+
+const db = new database();
+
+async function initLoop() {
+  // new worldManager(1, customConfig.instance.getInt('fps'));
+  new roomManager();
+  const expectedServerDelta = 1000 / 60;
+  let lastTime = 0;
+
+  // @ts-ignore
+  globalThis.requestAnimationFrame = (f) => {
+    const serverLoop = () => {
+      const now = Date.now();
+      if (now - lastTime >= expectedServerDelta) {
+        lastTime = now;
+        f(now);
+      } else {
+        setImmediate(serverLoop);
+      }
+    }
+    serverLoop()
+  }
+
+  await runClients();
+};
+
+process.on('unhandledRejection', (err: Error) => {
+  console.error('Unhandled Rejection:' + err + ' - ' + err.stack);
+});
+
+
+// end of super reality app
+
 
 // Middleware used by every request. For route-specific middleware, add it to you route middleware specification
 app.use(koaBody({ multipart: true }))
@@ -114,6 +154,9 @@ app.use(async (ctx: Koa.Context, next: () => Promise<any>) => {
 });
 
 (async function () {
-  await creatorToolsDatabase.sequelize.sync();
-  console.log("Synced");
+  if (process.env.REFRESH_DB) {
+    await creatorToolsDatabase.sequelize.sync();
+    console.log("Database synced, starting loop");
+  }
+  await initLoop();
 })()

@@ -20,7 +20,7 @@ export type deployedSpellsId = deployedSpells[deployedSpellsPk];
 export type deployedSpellsOptionalAttributes = "id" | "chain" | "createdAt" | "updatedAt" | "deletedAt" | "version" | "message" | "modules" | "versionName";
 export type deployedSpellsCreationAttributes = Optional<deployedSpellsAttributes, deployedSpellsOptionalAttributes>;
 
-export default class deployedSpells extends Model<deployedSpellsAttributes, deployedSpellsCreationAttributes> implements deployedSpellsAttributes {
+export class deployedSpells extends Model<deployedSpellsAttributes, deployedSpellsCreationAttributes> implements deployedSpellsAttributes {
   id!: string;
   name!: string;
   chain?: object;

@@ -48,12 +48,16 @@ export type DataSocketType = {
 export type ThothNode = Node & {
   inspector: Inspector
   display: (content: string) => void
+<<<<<<< HEAD
   outputs: { name: string; [key: string]: unknown }[]
   category?: string
   deprecated?: boolean
   displayName?: string
   info: string
   subscription: Function
+=======
+  outputs: { name: string;[key: string]: unknown }[]
+>>>>>>> Initialize with agents and all models
 }
 
 export type ModuleType = {
@@ -175,9 +179,9 @@ export type WorkerReturn =
   | Promise<never[] | { entities: { name: string; type: string }[] }>
   | Promise<{ element: unknown } | undefined>
   | Promise<
-      | { result: { error: unknown; [key: string]: unknown } }
-      | { result?: undefined }
-    >
+    | { result: { error: unknown;[key: string]: unknown } }
+    | { result?: undefined }
+  >
   | Promise<{ text: unknown }>
   | Promise<{ boolean: boolean }>
   | Promise<null | undefined>
@@ -198,11 +202,11 @@ export type ThothWorker = (
 
 export interface PubSubBase
   extends CountSubscriptions,
-    ClearAllSubscriptions,
-    GetSubscriptions,
-    Publish,
-    Subscribe,
-    Unsubscribe {
+  ClearAllSubscriptions,
+  GetSubscriptions,
+  Publish,
+  Subscribe,
+  Unsubscribe {
   name: string
   version: string
 }
