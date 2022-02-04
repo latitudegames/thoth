@@ -1,17 +1,17 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import { customConfig } from '@latitudegames/thoth-core/src/superreality/customConfig'
+
+import { database } from '../superreality/database'
+import { handleInput } from '../superreality/handleInput'
+import roomManager from '../superreality/roomManager'
+import { classifyText } from '../superreality/textClassifier'
 import {
     detectOsOption,
     getRandomEmptyResponse,
     startsWithCapital,
-} from '@latitudegames/thoth-core/src/superreality/utils.js'
-
-import { database } from '../superreality/database'
-import { handleInput } from '../superreality/handleInput.js'
-import roomManager from '../superreality/roomManager'
-import { classifyText } from '../superreality/textClassifier.js'
-import { browserWindow, PageUtils } from './browser.js'
+} from '../superreality/utils'
+import { browserWindow, PageUtils } from './browser'
 
 export const UsersInRange = {}
 export const UsersInHarassmentRange = {}
@@ -939,9 +939,9 @@ class XREngineBot {
         await this.page.goto(parsedUrl, { waitUntil: 'domcontentloaded' })
 
         /* const granted = await this.page.evaluate(async () => {
-                 return (await navigator.permissions.query({ name: 'camera' })).state;
-             });
-            console.log('Granted:', granted);*/
+                     return (await navigator.permissions.query({ name: 'camera' })).state;
+                 });
+                console.log('Granted:', granted);*/
     }
 
     /** Enters the room specified, enabling the first microphone and speaker found

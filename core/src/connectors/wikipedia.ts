@@ -6,7 +6,7 @@ import weaviate from 'weaviate-client'
 import wiki from 'wikipedia'
 
 import { database } from '../superreality/database'
-import { makeCompletionRequest } from '../superreality/makeCompletionRequest.js'
+import { makeCompletionRequest } from '../superreality/makeCompletionRequest'
 
 const client = weaviate.client({
   scheme: 'http',

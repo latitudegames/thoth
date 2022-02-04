@@ -1,4 +1,4 @@
-import { makeModelRequest } from "./makeModelRequest.js";
+import { makeModelRequest } from "./makeModelRequest";
 
 //Named Entity Recognition (NER) is used to detect the entity type of an object
 export async function namedEntityRecognition(data) {
