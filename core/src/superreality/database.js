@@ -1697,6 +1697,7 @@ export class database {
         await this.client.query(query, values)
     }
     async updateAgentInstances(id, personality, clients, enabled) {
+        console.log("clients are", clients)
         clients = JSON.stringify(clients).replaceAll('\\', '')
         const check = 'SELECT * FROM agent_instance WHERE id=$1'
         const cvalues = [id]
