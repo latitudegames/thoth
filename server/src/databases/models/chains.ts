@@ -18,7 +18,7 @@ export type chainsId = chains[chainsPk];
 export type chainsOptionalAttributes = "id" | "chain" | "createdAt" | "updatedAt" | "deletedAt" | "modules" | "gameState";
 export type chainsCreationAttributes = Optional<chainsAttributes, chainsOptionalAttributes>;
 
-export default class chains extends Model<chainsAttributes, chainsCreationAttributes> implements chainsAttributes {
+export class chains extends Model<chainsAttributes, chainsCreationAttributes> implements chainsAttributes {
   id!: string;
   name!: string;
   chain?: object;

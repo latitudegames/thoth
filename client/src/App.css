@@ -270,3 +270,14 @@ input[type='text'] {
   font-size: 11px;
   height: var(--c4);
 }
+
+.nav {
+  float: left;
+  height: 100vh;
+}
+
+.nav-item,
+.nav-item-active {
+  margin: 2em;
+  display: block;
+}

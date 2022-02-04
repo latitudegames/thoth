@@ -14,7 +14,6 @@ import { PlaytestControl } from '../dataControls/PlaytestControl'
 import { SwitchControl } from '../dataControls/SwitchControl'
 import { EngineContext } from '../engine'
 import { Task } from '../plugins/taskPlugin/task'
-
 import { anySocket } from '../sockets'
 import { ThothComponent, ThothTask } from '../thoth-component'
 const info = `The input component allows you to pass a single value to your chain.  You can set a default value to fall back to if no value is provided at runtime.  You can also turn the input on to receive data from the playtest input.`
@@ -103,9 +102,9 @@ export class InputComponent extends ThothComponent<InputReturn> {
 
     const data = node?.data?.playtestToggle as
       | {
-          receivePlaytest: boolean
-          outputs: []
-        }
+        receivePlaytest: boolean
+        outputs: []
+      }
       | undefined
 
     const togglePlaytest = new PlaytestControl({
