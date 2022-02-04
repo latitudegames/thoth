@@ -1,14 +1,17 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import { customConfig } from '@latitudegames/thoth-core/src/superreality/customConfig'
 import fs from 'fs'
-import { google } from 'googleapis'
+import { calendar_v3, google } from 'googleapis'
 import path from 'path'
 
-import { sendMessageToChannel } from './discord.js'
+import { sendMessageToChannel } from './discord'
 
 const rootDir = path.resolve(path.dirname(''))
 //to generate a google token you can use https://developers.google.com/oauthplayground/
 const TOKEN_PATH = rootDir + '/credentials/token.json'
-let calendar
+let calendar: calendar_v3.Calendar
 
 export function initCalendar() {
   if (!fs.existsSync(rootDir + '/credentials')) {
@@ -21,7 +24,9 @@ export function initCalendar() {
   })
 }
 
-function authorize(credentials) {
+function authorize(credentials: {
+  installed: { client_secret: any; client_id: any; redirect_uris: any }
+}) {
   const { client_secret, client_id, redirect_uris } = credentials.installed
   const oAuth2Client = new google.auth.OAuth2(
     client_id,
@@ -29,7 +34,7 @@ function authorize(credentials) {
     redirect_uris[0]
   )
 
-  fs.readFile(TOKEN_PATH, (err, token) => {
+  fs.readFile(TOKEN_PATH, (err, token: any) => {
     oAuth2Client.setCredentials(JSON.parse(token))
     calendar = google.calendar({ version: 'v3', auth: oAuth2Client })
     setInterval(() => {

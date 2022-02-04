@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 // required for message.lineReply
 import { customConfig } from '@latitudegames/thoth-core/src/superreality/customConfig'
 import Discord, { Intents } from 'discord.js'
@@ -23,7 +26,7 @@ const config = {
 }
 
 //Event that is triggered when a new user is added to the server
-export async function handleGuildMemberAdd(user) {
+export function handleGuildMemberAdd(user: { user: { id: any; username: any } }) {
   const userId = user.user.id
   const username = user.user.username
 
@@ -54,7 +57,7 @@ export async function handleGuildMemberAdd(user) {
 }
 
 //Event that is triggered when a user is removed from the server
-export async function handleGuildMemberRemove(user) {
+export async function handleGuildMemberRemove(user: { user: { id: any; username: any } }) {
   const userId = user.user.id
   const username = user.user.username
 
@@ -84,7 +87,7 @@ export async function handleGuildMemberRemove(user) {
 }
 
 //Event that is triggered when a user reacts to a message
-export async function handleMessageReactionAdd(reaction, user) {
+export async function handleMessageReactionAdd(reaction: { emoji?: any; message?: any }, user: any) {
   const { message } = reaction
   const emojiName = emoji.getName(reaction.emoji)
 
@@ -114,22 +117,22 @@ export async function handleMessageReactionAdd(reaction, user) {
   // MessageClient.instance.sendMessageReactionAdd('Discord', message.channel.id, message.id, message.content, user.username, emojiName, utcStr)
 }
 
-export async function agents(client, message, args, author, addPing, channel) {
+export async function agents(client: any, message: any, args: any, author: any, addPing: any, channel: any) {
   // TODO: Replace me with direct message handler
   // MessageClient.instance.sendGetAgents('Discord', message.channel.id)
 }
 
 //returns all the current commands for the bot
 export async function commands(
-  client,
-  message,
-  args,
-  author,
-  addPing,
-  channel
+  client: { helpFields: { commands: any[] }[]; embed: { description: string } },
+  message: { channel: { send: (arg0: string) => void; stopTyping: () => void } },
+  args: any,
+  author: any,
+  addPing: any,
+  channel: any
 ) {
   let str = ''
-  client.helpFields[0].commands.forEach(function (item, index) {
+  client.helpFields[0].commands.forEach(function (item: string[], index: any) {
     if (item[3].length <= 2000 && item[3].length > 0) {
       str += '!' + item[0] + ' - ' + item[3] + '\n'
     }
@@ -140,7 +143,7 @@ export async function commands(
 }
 
 //ping is used to send a message directly to the agent
-export async function ping(client, message, args, author, addPing, channel) {
+export async function ping(client: { embed: { description: string; desscription: string } }, message: { channel: { send: (arg0: any) => void; stopTyping: () => void } }, args: { grpc_args: { [x: string]: string; message: string | undefined } }, author: any, addPing: any, channel: any) {
   if (
     args.grpc_args.message === undefined ||
     args.grpc_args.message === '' ||
@@ -190,12 +193,12 @@ export async function ping(client, message, args, author, addPing, channel) {
 
 //ping agent is used to ping a specific agent directly
 export async function pingagent(
-  client,
-  message,
-  args,
-  author,
-  addPing,
-  channel
+  client: { embed: { description: string; desscription: string } },
+  message: { channel: { send: (arg0: any) => void; stopTyping: () => void } },
+  args: { grpc_args: { message: string | undefined; agent: string | undefined } },
+  author: any,
+  addPing: any,
+  channel: any
 ) {
   if (
     args.grpc_args.message === undefined ||
@@ -220,12 +223,12 @@ export async function pingagent(
 
 //setagent is used to update an agent
 export async function setagent(
-  client,
-  message,
-  args,
-  author,
-  addPing,
-  channel
+  client: { embed: { description: string; desscription: string } },
+  message: { channel: { send: (arg0: any) => void; stopTyping: () => void } },
+  args: { grpc_args: { [x: string]: string; message: string | undefined } },
+  author: any,
+  addPing: any,
+  channel: any
 ) {
   if (args.grpc_args.message === undefined || args.grpc_args.message === '') {
     client.embed.description =
@@ -254,7 +257,7 @@ export async function setagent(
 }
 
 //sets the name for an agent to respond for it
-export async function setname(client, message, args, author, addPing, channel) {
+export async function setname(client: { bot_name: any; name_regex: RegExp }, message: { channel: { send: (arg0: string) => void; stopTyping: () => void } }, args: { parsed_words: string | any[] | undefined }, author: any, addPing: any, channel: any) {
   if (args.parsed_words === undefined || args.parsed_words.length !== 1) {
     message.channel.send('Invalid format, !setname name')
     message.channel.stopTyping()
@@ -277,7 +280,7 @@ export const channelTypes = {
 }
 
 //Event that is trigger when a new message is created (sent)
-export const messageCreate = async (client, message) => {
+export const messageCreate = async (client: { users: { cache: any[] }; user: { id: any }; bot_name: string; username_regex: any; name_regex: any; config: { prefixOptionalWhenMentionOrDM: any; prefix: any } }, message: { content: any; guild?: any; author: any; id: any; channel?: any; mentions?: any }) => {
   //gets the emojis from the text and replaces to unix specific type
   const reg = emojiRegex()
   let match
@@ -308,7 +311,7 @@ export const messageCreate = async (client, message) => {
       ) {
         try {
           const x = data[i].replace('<@!', '').replace('>', '')
-          const user = await client.users.cache.find(user => user.id == x)
+          const user = await client.users.cache.find((user: { id: any }) => user.id == x)
           if (user !== undefined) {
             //const u = '@' + user.username + '#' + user.discriminator
             const u =
@@ -379,7 +382,7 @@ export const messageCreate = async (client, message) => {
   //if it is a mention to another user, then the conversation with the bot is ended
   if (otherMention) {
     exitConversation(author.id)
-    mentions.members.forEach(pinged => exitConversation(pinged.id))
+    mentions.members.forEach((pinged: { id: any }) => exitConversation(pinged.id))
   }
   if (!startConv && !isMention) {
     if (startConvName.length > 0) {
@@ -463,7 +466,7 @@ export const messageCreate = async (client, message) => {
       const index = d.indexOf('join') + 1
       if (d.length > index) {
         const channelName = d[index]
-        await message.guild.channels.cache.forEach(async channel => {
+        await message.guild.channels.cache.forEach(async (channel: { type: string; name: any; join: () => any; leave: () => void }) => {
           if (
             channel.type === channelTypes['voice'] &&
             channel.name === channelName
@@ -477,7 +480,7 @@ export const messageCreate = async (client, message) => {
             const writeStream = fs.createWriteStream('recording.pcm', {})
 
             const buffer = []
-            userStream.on('data', chunk => {
+            userStream.on('data', (chunk: any) => {
               buffer.push(chunk)
               userStream.pipe(writeStream)
             })
@@ -532,7 +535,7 @@ export const messageCreate = async (client, message) => {
 }
 
 //Event that is triggered when a message is deleted
-export const messageDelete = async (client, message) => {
+export const messageDelete = async (client: { user: { id: any }; edit_messages_max_count: any }, message: { author: any; channel: any; id: any }) => {
   const { author, channel, id } = message
   await deleteMessageFromHistory(channel.id, id)
   if (!author) return
@@ -545,24 +548,24 @@ export const messageDelete = async (client, message) => {
 
   await channel.messages
     .fetch({ limit: client.edit_messages_max_count })
-    .then(async messages => {
-      messages.forEach(function (resp) {
+    .then(async (messages: any[]) => {
+      messages.forEach(function (resp: { id: any; delete: () => void }) {
         if (resp.id === oldResponse) {
           resp.delete()
         }
       })
     })
-    .catch(err => console.error(err))
+    .catch((err: any) => console.error(err))
 
   onMessageDeleted(channel.id, id)
 }
 
 //Event that is triggered when a message is updated (changed)
-export const messageUpdate = async (client, message) => {
+export const messageUpdate = async (client: { user: { id: any }; edit_messages_max_count: any }, message: { author: any; channel: any; id: any }) => {
   const { author, channel, id } = message
   if (author === null || channel === null || id === null) return
   if (author.id === client.user.id) {
-    await channel.messages.fetch(id).then(async msg => {
+    await channel.messages.fetch(id).then(async (msg: { content: any }) => {
       await updateMessage(channel.id, id, msg.content)
     })
     return
@@ -570,7 +573,7 @@ export const messageUpdate = async (client, message) => {
 
   const oldResponse = getResponse(channel.id, id)
   if (oldResponse === undefined) {
-    await channel.messages.fetch(id).then(async msg => {
+    await channel.messages.fetch(id).then(async (msg: { content: any }) => {
       await updateMessage(channel.id, id, msg.content)
     })
     return
@@ -578,11 +581,11 @@ export const messageUpdate = async (client, message) => {
 
   channel.messages
     .fetch(oldResponse)
-    .then(async msg => {
+    .then(async (msg: any) => {
       channel.messages
         .fetch({ limit: client.edit_messages_max_count })
-        .then(async messages => {
-          messages.forEach(async function (edited) {
+        .then(async (messages: any[]) => {
+          messages.forEach(async function (edited: { id: any }) {
             if (edited.id === id) {
               const date = new Date()
               const utc = new Date(
@@ -617,11 +620,11 @@ export const messageUpdate = async (client, message) => {
           })
         })
     })
-    .catch(err => console.error(err + ' - ' + err.stack))
+    .catch((err: string) => console.error(err + ' - ' + err.stack))
 }
 
 //Event that is trigger when a user's presence is changed (offline, idle, online)
-export const presenceUpdate = async (client, oldMember, newMember) => {
+export const presenceUpdate = async (client: { users: { fetch: (arg0: any) => Promise<any> } }, oldMember: { status: any }, newMember: { status: string; userId: any }) => {
   if (!oldMember || !newMember) {
   } else if (oldMember.status !== newMember.status) {
     const date = new Date()
@@ -633,20 +636,8 @@ export const presenceUpdate = async (client, oldMember, newMember) => {
       date.getUTCMinutes(),
       date.getUTCSeconds()
     )
-    const utcStr =
-      date.getDate() +
-      '/' +
-      (date.getMonth() + 1) +
-      '/' +
-      date.getFullYear() +
-      ' ' +
-      utc.getHours() +
-      ':' +
-      utc.getMinutes() +
-      ':' +
-      utc.getSeconds()
 
-    client.users.fetch(newMember.userId).then(user => {
+    client.users.fetch(newMember.userId).then((user: { id: any }) => {
       if (newMember.status === 'online') {
         roomManager.instance.addUser(user.id, 'discord')
       } else {
@@ -659,18 +650,18 @@ export const presenceUpdate = async (client, oldMember, newMember) => {
 }
 
 //Event that is triggered when the discord client fully loaded
-export const ready = async client => {
+export const ready = async (client: { users: { fetch: (arg0: any) => Promise<any> }; log_user: any; guilds: { cache: any[] }; api: { applications: (arg0: any) => { (): any; new(): any; guilds: { (arg0: any): { (): any; new(): any; commands: { (): any; new(): any; post: { (arg0: { data: { name: string; description: string } | { name: string; description: string } | { name: string; description: string; options: { name: string; description: string; type: number; required: boolean }[] } }): void; new(): any } } }; new(): any } } }; user: { id: any } }) => {
   await client.users
     .fetch(customConfig.instance.get('logDMUserID'))
-    .then(user => {
+    .then((user: any) => {
       client.log_user = user
     })
-    .catch(error => {
+    .catch((error: any) => {
       console.error(error)
     })
 
   //rgisters the slash commands to each server
-  await client.guilds.cache.forEach(server => {
+  await client.guilds.cache.forEach((server: { deleted: any; id: any; channels: { cache: any[] } }) => {
     if (!server.deleted) {
       client.api
         .applications(client.user.id)
@@ -709,7 +700,7 @@ export const ready = async client => {
         })
 
       //adds unread message to the chat history from each channel
-      server.channels.cache.forEach(async channel => {
+      server.channels.cache.forEach(async (channel: { type: string; deleted: boolean; permissionsFor: (arg0: any) => { (): any; new(): any; has: { (arg0: string[]): any; new(): any } }; messages: { fetch: (arg0: { limit: number }) => Promise<any> }; id: any }) => {
         if (
           channel.type === channelTypes['text'] &&
           channel.deleted === false &&
@@ -719,8 +710,8 @@ export const ready = async client => {
         ) {
           // TODO: Replace message with direct message handler
           // MessageClient.instance.sendMetadata(channel.name, 'Discord', channel.id, channel.topic || 'none')
-          channel.messages.fetch({ limit: 100 }).then(async messages => {
-            messages.forEach(async function (msg) {
+          channel.messages.fetch({ limit: 100 }).then(async (messages: any[]) => {
+            messages.forEach(async function (msg: { author: { username: string; isBot: any }; deleted: boolean; id: any; content: any; createdTimestamp: any }) {
               let _author = msg.author.username
               if (
                 msg.author.isBot ||
@@ -744,9 +735,9 @@ export const _commandToValue = ([name, args, description]) =>
   ['.' + name, args.join(' '), '-', description].join(' ')
 export const _commandToDescription = ([name, args, description]) =>
   '```css\n' + ['.' + name, args.join(' '), '-', description].join(' ') + '```'
-export const _commandsToValue = commands =>
+export const _commandsToValue = (commands: any[]) =>
   '```css\n' +
-  commands.map(command => _commandToValue(command)).join('\n') +
+  commands.map((command: [any, any, any]) => _commandToValue(command)).join('\n') +
   '```'
 
 export const helpFields = [
@@ -808,7 +799,7 @@ export const helpFields = [
   return o
 })
 
-export const _findCommand = commandName => {
+export const _findCommand = (commandName: string | string[]) => {
   let command = null
   for (const helpField of helpFields) {
     for (const c of helpField.commands) {
@@ -825,7 +816,7 @@ export const _findCommand = commandName => {
   return command
 }
 
-export const _parseWords = s => {
+export const _parseWords = (s: string) => {
   const words = []
   const r = /\S+/g
   let match
@@ -835,7 +826,7 @@ export const _parseWords = s => {
   return words
 }
 
-export function replacePlaceholders(text) {
+export function replacePlaceholders(text: string | undefined) {
   if (text === undefined || text === '') return ''
 
   if (text.includes('{time_now}')) {
@@ -867,10 +858,10 @@ export function replacePlaceholders(text) {
 }
 
 export async function sendSlashCommandResponse(
-  client,
-  interaction,
-  chat_id,
-  text
+  client: { api: { interactions: (arg0: any, arg1: any) => { (): any; new(): any; callback: { (): any; new(): any; post: { (arg0: { data: { type: number; data: { content: any } } }): Promise<any>; new(): any } } } } },
+  interaction: { id: any; token: any },
+  chat_id: any,
+  text: any
 ) {
   client.api
     .interactions(interaction.id, interaction.token)
@@ -893,7 +884,7 @@ export async function sendSlashCommandResponse(
     .catch(console.error)
 }
 
-export async function handleSlashCommand(client, interaction) {
+export async function handleSlashCommand(client: any, interaction: { data: { name: string }; member: { user: { username: string } }; channel_id: string }) {
   const command = interaction.data.name.toLowerCase()
   const sender = interaction.member.user.username + ''
   const chatId = interaction.channel_id + ''
@@ -923,11 +914,11 @@ export async function handleSlashCommand(client, interaction) {
   // MessageClient.instance.sendSlashCommand(sender, command, command === 'say' ? interaction.data.options[0].value : 'none', 'Discord', chatId, utcStr)
 }
 
-async function handlePing(message_id, chat_id, responses, addPing) {
-  client.channels.fetch(chat_id).then(channel => {
+async function handlePing(message_id: any, chat_id: any, responses: string | any[] | undefined, addPing: any) {
+  client.channels.fetch(chat_id).then((channel: { messages: { fetch: (arg0: any) => Promise<any> }; id: any }) => {
     channel.messages
       .fetch(message_id)
-      .then(message => {
+      .then((message: { reply: (arg0: string) => Promise<any>; id: any; channel: { send: (arg0: string, arg1: { split: boolean } | undefined) => Promise<any> } }) => {
         if (
           responses !== undefined &&
           responses.length <= 2000 &&
@@ -937,7 +928,7 @@ async function handlePing(message_id, chat_id, responses, addPing) {
           if (addPing) {
             message
               .reply(text)
-              .then(async function (msg) {
+              .then(async function (msg: { id: any }) {
                 onMessageResponseUpdated(channel.id, message.id, msg.id)
                 addMessageToHistory(
                   channel.id,
@@ -956,7 +947,7 @@ async function handlePing(message_id, chat_id, responses, addPing) {
               text = getRandomEmptyResponse()
             message.channel
               .send(text)
-              .then(async function (msg) {
+              .then(async function (msg: { id: any }) {
                 onMessageResponseUpdated(channel.id, message.id, msg.id)
                 addMessageToHistory(
                   channel.id,
@@ -970,7 +961,7 @@ async function handlePing(message_id, chat_id, responses, addPing) {
         } else if (responses && responses.length >= 2000) {
           let text = replacePlaceholders(responses)
           if (addPing) {
-            message.reply(text).then(async function (msg) {
+            message.reply(text).then(async function (msg: { id: any }) {
               onMessageResponseUpdated(channel.id, message.id, msg.id)
               addMessageToHistory(
                 channel.id,
@@ -990,7 +981,7 @@ async function handlePing(message_id, chat_id, responses, addPing) {
           if (text.length > 0) {
             message.channel
               .send(text, { split: true })
-              .then(async function (msg) {
+              .then(async function (msg: { id: any }) {
                 onMessageResponseUpdated(channel.id, message.id, msg.id)
                 addMessageToHistory(
                   channel.id,
@@ -1011,7 +1002,7 @@ async function handlePing(message_id, chat_id, responses, addPing) {
             if (addPing) {
               message
                 .reply(text)
-                .then(async function (msg) {
+                .then(async function (msg: { id: any }) {
                   onMessageResponseUpdated(channel.id, message.id, msg.id)
                   addMessageToHistory(
                     channel.id,
@@ -1030,7 +1021,7 @@ async function handlePing(message_id, chat_id, responses, addPing) {
                 text = getRandomEmptyResponse()
               message.channel
                 .send(text)
-                .then(async function (msg) {
+                .then(async function (msg: { id: any }) {
                   onMessageResponseUpdated(channel.id, message.id, msg.id)
                   addMessageToHistory(
                     channel.id,
@@ -1044,52 +1035,52 @@ async function handlePing(message_id, chat_id, responses, addPing) {
           }
         }
       })
-      .catch(err => console.error(err))
+      .catch((err: any) => console.error(err))
   })
 }
 
-export async function handleSlashCommandResponse(chat_id, response) {
+export async function handleSlashCommandResponse(chat_id: any, response: any) {
   client.channels
     .fetch(chat_id)
-    .then(channel => {
+    .then((channel: { send: (arg0: any) => void; stopTyping: () => void }) => {
       channel.send(response)
       channel.stopTyping()
     })
-    .catch(err => console.error(err))
+    .catch((err: any) => console.error(err))
 }
 
-export async function handleUserUpdateEvent(response) { }
+export async function handleUserUpdateEvent(response: any) { }
 
-export async function handleGetAgents(chat_id, response) {
+export async function handleGetAgents(chat_id: any, response: any) {
   client.channels
     .fetch(chat_id)
-    .then(channel => {
+    .then((channel: { send: (arg0: any) => void; stopTyping: () => void }) => {
       channel.send(response)
       channel.stopTyping()
     })
-    .catch(err => console.error(err))
+    .catch((err: any) => console.error(err))
 }
 
-export async function handleSetAgentsFields(chat_id, response) {
+export async function handleSetAgentsFields(chat_id: any, response: any) {
   client.channels
     .fetch(chat_id)
-    .then(channel => {
+    .then((channel: { send: (arg0: any) => void; stopTyping: () => void }) => {
       channel.send(response)
       channel.stopTyping()
     })
-    .catch(err => console.error(err))
+    .catch((err: any) => console.error(err))
 }
 
 export async function handlePingSoloAgent(
-  chat_id,
-  message_id,
-  responses,
-  addPing
+  chat_id: any,
+  message_id: any,
+  responses: string | any[] | undefined,
+  addPing: any
 ) {
   client.channels
     .fetch(chat_id)
-    .then(channel => {
-      channel.messages.fetch(message_id).then(message => {
+    .then((channel: { messages: { fetch: (arg0: any) => Promise<any> }; id: any }) => {
+      channel.messages.fetch(message_id).then((message: { reply: (arg0: string) => Promise<any>; id: any; channel: { send: (arg0: string, arg1: { split: boolean } | undefined) => Promise<any> } }) => {
         Object.keys(responses).map(function (key, index) {
           if (
             responses !== undefined &&
@@ -1100,7 +1091,7 @@ export async function handlePingSoloAgent(
             if (addPing) {
               message
                 .reply(text)
-                .then(async function (msg) {
+                .then(async function (msg: { id: any }) {
                   onMessageResponseUpdated(channel.id, message.id, msg.id)
                   addMessageToHistory(
                     channel.id,
@@ -1119,7 +1110,7 @@ export async function handlePingSoloAgent(
                 text = getRandomEmptyResponse()
               message.channel
                 .send(text)
-                .then(async function (msg) {
+                .then(async function (msg: { id: any }) {
                   onMessageResponseUpdated(channel.id, message.id, msg.id)
                   addMessageToHistory(
                     channel.id,
@@ -1133,7 +1124,7 @@ export async function handlePingSoloAgent(
           } else if (responses.length >= 2000) {
             let text = replacePlaceholders(responses)
             if (addPing) {
-              message.reply(text).then(async function (msg) {
+              message.reply(text).then(async function (msg: { id: any }) {
                 onMessageResponseUpdated(channel.id, message.id, msg.id)
                 addMessageToHistory(
                   channel.id,
@@ -1153,7 +1144,7 @@ export async function handlePingSoloAgent(
             if (text.length > 0) {
               message.channel
                 .send(text, { split: true })
-                .then(async function (msg) {
+                .then(async function (msg: { id: any }) {
                   onMessageResponseUpdated(channel.id, message.id, msg.id)
                   addMessageToHistory(
                     channel.id,
@@ -1174,7 +1165,7 @@ export async function handlePingSoloAgent(
               if (addPing) {
                 message
                   .reply(text)
-                  .then(async function (msg) {
+                  .then(async function (msg: { id: any }) {
                     onMessageResponseUpdated(channel.id, message.id, msg.id)
                     addMessageToHistory(
                       channel.id,
@@ -1193,7 +1184,7 @@ export async function handlePingSoloAgent(
                   text = getRandomEmptyResponse()
                 message.channel
                   .send(text)
-                  .then(async function (msg) {
+                  .then(async function (msg: { id: any }) {
                     onMessageResponseUpdated(channel.id, message.id, msg.id)
                     addMessageToHistory(
                       channel.id,
@@ -1209,24 +1200,24 @@ export async function handlePingSoloAgent(
         })
       })
     })
-    .catch(err => console.error(err))
+    .catch((err: any) => console.error(err))
 }
 
-async function handleMessageEdit(message_id, chat_id, responses, addPing) {
-  client.channels.fetch(chat_id).then(async channel => {
+async function handleMessageEdit(message_id: any, chat_id: any, responses: string | any[] | undefined, addPing: any) {
+  client.channels.fetch(chat_id).then(async (channel: { id: any; messages: { fetch: (arg0: { limit: any }) => Promise<any> } }) => {
     const oldResponse = getResponse(channel.id, message_id)
     if (oldResponse === undefined) {
       return
     }
 
-    channel.messages.fetch(oldResponse).then(async msg => {
+    channel.messages.fetch(oldResponse).then(async (msg: { edit: (arg0: string) => void; id: any; content: any }) => {
       channel.messages
         .fetch({ limit: client.edit_messages_max_count })
-        .then(async messages => {
-          messages.forEach(async function (edited) {
+        .then(async (messages: any[]) => {
+          messages.forEach(async function (edited: { id: any; author: { send: (arg0: string) => void }; content: any; channel: { send: (arg0: any, arg1: { split: boolean }) => Promise<any>; stopTyping: () => void } }) {
             if (edited.id === message_id) {
               // Warn an offending user about their actions
-              const warn_offender = function (_user, ratings) {
+              const warn_offender = function (_user: any, ratings: any) {
                 edited.author.send(
                   `You've got ${ratings} warnings and you will get blocked at 10!`
                 )
@@ -1261,7 +1252,7 @@ async function handleMessageEdit(message_id, chat_id, responses, addPing) {
                   if (text.length > 0) {
                     edited.channel
                       .send(text, { split: true })
-                      .then(async function (msg) {
+                      .then(async function (msg: { id: any }) {
                         onMessageResponseUpdated(channel.id, edited.id, msg.id)
                         addMessageToHistory(
                           channel.id,
@@ -1295,17 +1286,17 @@ async function handleMessageEdit(message_id, chat_id, responses, addPing) {
             }
           })
         })
-        .catch(err => console.error(err))
+        .catch((err: any) => console.error(err))
     })
   })
 }
 
-export const prevMessage = {}
-export const prevMessageTimers = {}
-export const messageResponses = {}
-export const conversation = {}
+export const prevMessage: any = {}
+export const prevMessageTimers: any = {}
+export const messageResponses: any = {}
+export const conversation: any = {}
 
-export function onMessageDeleted(channel, messageId) {
+export function onMessageDeleted(channel: string | number, messageId: string | number) {
   if (
     messageResponses[channel] !== undefined &&
     messageResponses[channel][messageId] !== undefined
@@ -1313,23 +1304,23 @@ export function onMessageDeleted(channel, messageId) {
     delete messageResponses[channel][messageId]
   }
 }
-export function onMessageResponseUpdated(channel, messageId, newResponse) {
+export function onMessageResponseUpdated(channel: string | number, messageId: string | number, newResponse: any) {
   if (messageResponses[channel] === undefined) messageResponses[channel] = {}
   messageResponses[channel][messageId] = newResponse
 }
 
-export function getMessage(channel, messageId) {
+export function getMessage(channel: { messages: { fetchMessage: (arg0: any) => any } }, messageId: any) {
   return channel.messages.fetchMessage(messageId)
 }
 
-export function isInConversation(user) {
+export function isInConversation(user: string | number) {
   return (
     conversation[user] !== undefined &&
     conversation[user].isInConversation === true
   )
 }
 
-export function sentMessage(user) {
+export function sentMessage(user: string) {
   for (const c in conversation) {
     if (c === user) continue
     if (
@@ -1364,7 +1355,7 @@ export function sentMessage(user) {
   }
 }
 
-export function exitConversation(user) {
+export function exitConversation(user: string) {
   if (conversation[user] !== undefined) {
     if (conversation[user].timeoutId !== undefined)
       clearTimeout(conversation[user].timeoutId)
@@ -1376,12 +1367,12 @@ export function exitConversation(user) {
   }
 }
 
-export function getResponse(channel, message) {
+export function getResponse(channel: string | number, message: string | number) {
   if (messageResponses[channel] === undefined) return undefined
   return messageResponses[channel][message]
 }
 
-export function addMessageToHistory(chatId, messageId, senderName, content) {
+export function addMessageToHistory(chatId: any, messageId: any, senderName: any, content: string) {
   database.instance.addMessageInHistory(
     'discord',
     chatId,
@@ -1392,11 +1383,11 @@ export function addMessageToHistory(chatId, messageId, senderName, content) {
 }
 
 export async function addMessageInHistoryWithDate(
-  chatId,
-  messageId,
-  senderName,
-  content,
-  timestamp
+  chatId: any,
+  messageId: any,
+  senderName: any,
+  content: any,
+  timestamp: any
 ) {
   await database.instance.addMessageInHistoryWithDate(
     'discord',
@@ -1408,11 +1399,11 @@ export async function addMessageInHistoryWithDate(
   )
 }
 
-export async function deleteMessageFromHistory(chatId, messageId) {
+export async function deleteMessageFromHistory(chatId: any, messageId: any) {
   await database.instance.deleteMessage('discord', chatId, messageId)
 }
 
-export async function updateMessage(chatId, messageId, newContent) {
+export async function updateMessage(chatId: any, messageId: any, newContent: any) {
   await database.instance.updateMessage(
     'discord',
     chatId,
@@ -1423,11 +1414,11 @@ export async function updateMessage(chatId, messageId, newContent) {
 }
 
 export async function wasHandled(
-  chatId,
-  messageId,
-  sender,
-  content,
-  timestamp
+  chatId: any,
+  messageId: any,
+  sender: any,
+  content: any,
+  timestamp: any
 ) {
   return await database.instance.messageExists(
     'discord',
@@ -1454,15 +1445,15 @@ export function moreThanOneInConversation() {
   return count > 1
 }
 
-export let client = undefined
-export let messageEvent = undefined
+export let client: any = undefined
+export let messageEvent: any = undefined
 
 export const createDiscordClient = () => {
-  let t = null;
+  let t = null
   try {
     t = customConfig.instance.get('discord_api_token')
   } catch {
-    return console.error("no discord token found")
+    return console.error('no discord token found')
   }
   const token = t != null && t != '' ? t : process.env.DISCORD_API_TOKEN
   if (!token) return console.warn('No API token for Discord bot, skipping')
@@ -1504,21 +1495,21 @@ export const createDiscordClient = () => {
   messageEvent = new EventEmitter()
   messageEvent.on(
     'new_message',
-    async function (messageId, channelId, response, addPing) {
+    async function (messageId: any, channelId: any, response: any, addPing: any) {
       handlePing(messageId, channelId, response, addPing)
     }
   )
 
-  client.on('interactionCreate', async interaction => {
+  client.on('interactionCreate', async (interaction: any) => {
     handleSlashCommand(client, interaction)
   })
-  client.on('guildMemberAdd', async user => {
+  client.on('guildMemberAdd', async (user: any) => {
     handleGuildMemberAdd(user)
   })
-  client.on('guildMemberRemove', async user => {
+  client.on('guildMemberRemove', async (user: any) => {
     handleGuildMemberRemove(user)
   })
-  client.on('messageReactionAdd', async (reaction, user) => {
+  client.on('messageReactionAdd', async (reaction: any, user: any) => {
     handleMessageReactionAdd(reaction, user)
   })
 
@@ -1532,9 +1523,9 @@ export const createDiscordClient = () => {
   client.commands.set('setname', setname)
 
   setInterval(() => {
-    const channelIds = []
+    const channelIds: any[] = []
 
-    client.channels.cache.forEach(async channel => {
+    client.channels.cache.forEach(async (channel: { topic: string | undefined; id: string | number; send: (arg0: any) => void } | undefined) => {
       if (!channel || !channel.topic) return
       if (channel === undefined || channel.topic === undefined) return
       if (
@@ -1571,7 +1562,7 @@ export const createDiscordClient = () => {
 
 const discussionChannels = {}
 
-export async function sendMessageToChannel(channelId, msg) {
+export async function sendMessageToChannel(channelId: any, msg: string) {
   const channel = await client.channels.fetch(channelId)
   if (channel && channel !== undefined) {
     channel.send(msg)
