@@ -21,11 +21,11 @@ Also note that you will likely need to parse the return from huggingface yoursel
 
 type WorkerReturn = {
   result?:
-    | {
-        [key: string]: unknown
-        error: unknown
-      }
-    | undefined
+  | {
+    [key: string]: unknown
+    error: unknown
+  }
+  | undefined
 }
 
 export class HuggingfaceComponent extends ThothComponent<

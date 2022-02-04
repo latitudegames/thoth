@@ -100,7 +100,6 @@ const chainsHandler = async (ctx: Koa.Context) => {
   }, {} as Record<string, unknown>)
 
   const outputs = await runChain(chain, inputs, thoth, modules)
-  console.log("Outputs of running chain are: ", outputs);
   const newGameState = thoth.getCurrentGameState()
 
   ctx.body = { spell: activeSpell.name, outputs, gameState: newGameState }
@@ -108,7 +107,7 @@ const chainsHandler = async (ctx: Koa.Context) => {
 
 export const chains: Route[] = [
   {
-    path: '/game/chains/:spell/:version',
+    path: '/chains/:spell/:version',
     access: noAuth,
     post: chainsHandler,
   },
