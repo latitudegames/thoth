@@ -1,5 +1,8 @@
-import { makeCompletionRequest } from './makeCompletionRequest.js'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-nocheck
+
 import { database } from './database'
+import { makeCompletionRequest } from './makeCompletionRequest'
 
 export async function summarizeAndStoreFactsAboutSpeaker(
     speaker,

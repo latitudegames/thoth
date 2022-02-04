@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-nocheck
+
 import { database } from './database'
 
 //The config of the server, which gets the data from the database, it replaces most of .env variables for easier use

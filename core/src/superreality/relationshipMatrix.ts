@@ -1,14 +1,19 @@
-import { database } from "./database";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-nocheck
+import { database } from './database'
 
 export async function writeRelationshipMatrix(speaker, agent, updateMatrix) {
-    database.instance.setRelationshipMatrix(speaker, agent, updateMatrix);
+    database.instance.setRelationshipMatrix(speaker, agent, updateMatrix)
 }
 
 export async function readRelationshipMatrix(speaker, agent) {
     // Check if we have an opinion yet
     // If not, form one and save the file
     // Read personality
-    let relationshipMatrix = await database.instance.getRelationshipMatrix(speaker, agent);
+    const relationshipMatrix = await database.instance.getRelationshipMatrix(
+        speaker,
+        agent
+    )
 
     if (!relationshipMatrix)
         return {
@@ -26,7 +31,7 @@ export async function readRelationshipMatrix(speaker, agent) {
             StudentLimit: 1,
             TeacherLimit: 1,
             RepulsedLimit: 1,
-            AttractedLimit: 1
+            AttractedLimit: 1,
         }
 
     return relationshipMatrix

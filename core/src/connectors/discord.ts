@@ -3,20 +3,20 @@
 
 // required for message.lineReply
 import { customConfig } from '@latitudegames/thoth-core/src/superreality/customConfig'
-import Discord, { Intents } from 'discord.js'
+import Discord, { Intents } from 'discord'
 import emoji from 'emoji-dictionary'
 import emojiRegex from 'emoji-regex'
 import { EventEmitter } from 'events'
 
 import { database } from '../superreality/database'
-import { handleInput } from '../superreality/handleInput.js'
+import { handleInput } from '../superreality/handleInput'
 import roomManager from '../superreality/roomManager'
-import { classifyText } from '../superreality/textClassifier.js'
+import { classifyText } from '../superreality/textClassifier'
 import {
   getRandomEmptyResponse,
   getRandomTopic,
   startsWithCapital,
-} from '../superreality/utils.js'
+} from '../superreality/utils'
 
 // TODO: Remove this
 const config = {

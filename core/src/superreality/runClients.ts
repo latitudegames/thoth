@@ -2,8 +2,8 @@
 // @ts-nocheck
 import customConfig from '@latitudegames/thoth-core/src/superreality/customConfig'
 
-import { initCalendar } from '../connectors/calendar.js'
-import { handleInput } from './handleInput.js'
+import { initCalendar } from '../connectors/calendar'
+import { handleInput } from './handleInput'
 
 export async function runClients() {
    //reads the enabled services from the config and puts them in an array
@@ -37,29 +37,29 @@ export async function runClients() {
    }
    //  // Reddit support
    //  if (enabledServices.includes('reddit')) {
-   //    import('../connectors/reddit.js').then(module => module.default())
+   //    import('../connectors/reddit').then(module => module.default())
    // }
    // // Facebook Page Messenger
    // if (enabledServices.includes('messenger')) {
-   //    import('../connectors/messenger.js').then(module => module.default())
+   //    import('../connectors/messenger').then(module => module.default())
    // }
    // // Instagram support
    // if (enabledServices.includes('instagram')) {
-   //    import('../connectors/instagram.js').then(module => module.default())
+   //    import('../connectors/instagram').then(module => module.default())
    // }
    // // Telegram support
    // if (enabledServices.includes('telegram')) {
-   //    import('../connectors/telegram.js').then(module => module.default())
+   //    import('../connectors/telegram').then(module => module.default())
    // }
    // // Twilio support for SMS
    // if (enabledServices.includes('twilio')) {
-   //    import('../connectors/twilio.js').then(module =>
+   //    import('../connectors/twilio').then(module =>
    //       module.default(app, router)
    //    )
    // }
    // // Whatsapp support
    // if (enabledServices.includes('whatsapp')) {
-   //    import('../connectors/whatsapp.js').then(module => module.default())
+   //    import('../connectors/whatsapp').then(module => module.default())
    // }
    // // Zoom support
    // if (enabledServices.includes('zoom')) {

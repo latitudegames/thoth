@@ -4,7 +4,7 @@ import { customConfig } from '@latitudegames/thoth-core/src/superreality/customC
 import { TwitterApi } from 'twitter-api-v2'
 
 import { database } from '../superreality/database'
-import { handleInput } from '../superreality/handleInput.js'
+import { handleInput } from '../superreality/handleInput'
 
 async function handleMessage(
     response,
@@ -163,41 +163,41 @@ export const createTwitterClient = async () => {
         } else {
             if (/*!twit.data.text.match(regex) && */
     /*   log('regex doesnt match')
-    } else {
-    let authorName = 'unknown'
-    const author = await twitter.v2.user(twit.data.author_id)
-    if (author) authorName = author.data.username
+        } else {
+        let authorName = 'unknown'
+        const author = await twitter.v2.user(twit.data.author_id)
+        if (author) authorName = author.data.username
   
-    let date = new Date();
-    if (twit.data.created_at) date = new Date(twit.data.created_at)
-    const utc = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
-    const utcStr = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' ' + utc.getHours() + ':' + utc.getMinutes() + ':' + utc.getSeconds()
-    var ts = Math.floor(utc.getTime() / 1000);
+        let date = new Date();
+        if (twit.data.created_at) date = new Date(twit.data.created_at)
+        const utc = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
+        const utcStr = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' ' + utc.getHours() + ':' + utc.getMinutes() + ':' + utc.getSeconds()
+        var ts = Math.floor(utc.getTime() / 1000);
   
-    await database.instance.messageExistsAsyncWitHCallback2('reddit', twit.data.id, twit.data.id, authorName, twit.data.text, ts, () => {
-    MessageClient.instance.sendMessage(twit.data.text,
-    twit.data.id,
-    'twitter',
-    twit.data.in_reply_to_user_id ? twit.data.in_reply_to_user_id : twit.data.id,
-    ts + '',
-    false,
-    authorName,
-    'Twit')
-    log('sending twit: ' + JSON.stringify(twit))
+        await database.instance.messageExistsAsyncWitHCallback2('reddit', twit.data.id, twit.data.id, authorName, twit.data.text, ts, () => {
+        MessageClient.instance.sendMessage(twit.data.text,
+        twit.data.id,
+        'twitter',
+        twit.data.in_reply_to_user_id ? twit.data.in_reply_to_user_id : twit.data.id,
+        ts + '',
+        false,
+        authorName,
+        'Twit')
+        log('sending twit: ' + JSON.stringify(twit))
   
   
   
-    database.instance.addMessageInHistoryWithDate(
-    'twitter',
-    twit.data.id,
-    twit.data.id,
-    authorName,
-    twit.data.text,
-    utcStr)
-    })
-    }
-    }
-    })*/
+        database.instance.addMessageInHistoryWithDate(
+        'twitter',
+        twit.data.id,
+        twit.data.id,
+        authorName,
+        twit.data.text,
+        utcStr)
+        })
+        }
+        }
+        })*/
 }
 
 export default createTwitterClient

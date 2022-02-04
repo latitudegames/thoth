@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Koa from 'koa';
 
-import 'regenerator-runtime/runtime.js';
+import 'regenerator-runtime/runtime';
 import { noAuth } from '../../middleware/auth';
 import { Route } from '../../types';
 import { CustomError } from '../../utils/CustomError';
