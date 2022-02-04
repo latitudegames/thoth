@@ -1,45 +1,37 @@
 {
-    "compileOnSave": true,
-    "compilerOptions": {
-        "experimentalDecorators": true,
-        "allowJs": true,
-        "allowUnreachableCode": false,
-        "allowSyntheticDefaultImports": true,
-        "esModuleInterop": true,
-        "forceConsistentCasingInFileNames": true,
-        "moduleResolution": "node",
-        "module": "commonjs",
-        "outDir": "dist",
-        "removeComments": true,
-        "skipLibCheck": true,
-        "sourceMap": true,
-        "target": "ES2020",
-        "typeRoots": [
-            "./@types",
-            "node_modules/@types"
-        ],
-        "types": [
-            "node",
-            "jest"
-        ],
-        "baseUrl": ".",
-        "paths": {
-            "gpt-3-encoder": [
-                "@types/gpt-3-encoder.d.ts"
-            ],
-            "@latitudegames/thoth-core": [
-                "@types/thoth-core.d.ts"
-            ]
-        },
-        "noImplicitAny": true,
-        "strictNullChecks": true
+  "compileOnSave": true,
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "allowJs": true,
+    "jsx": "react-jsx",
+
+    "allowUnreachableCode": false,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "module": "commonjs",
+    "outDir": "dist",
+    "removeComments": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "target": "ES2020",
+    "typeRoots": ["./@types", "node_modules/@types"],
+    "types": ["node", "jest"],
+    "baseUrl": ".",
+    "paths": {
+      "gpt-3-encoder": ["@types/gpt-3-encoder.d.ts"],
+      "@latitudegames/thoth-core": ["@types/thoth-core.d.ts"]
     },
-    "include": [
-        "hocs/**/*.ts",
-        "jobs/**/*.ts",
-        "src/**/*.ts",
-        "@types/**/*.d.ts",
-        "__tests__/**/*.ts",
-        "index.ts",
-    ]
+    "noImplicitAny": true,
+    "strictNullChecks": true
+  },
+  "include": [
+    "hocs/**/*.ts",
+    "jobs/**/*.ts",
+    "src/**/*.ts",
+    "@types/**/*.d.ts",
+    "__tests__/**/*.ts",
+    "index.ts"
+  ]
 }
