@@ -24,7 +24,7 @@ const chainsHandler = async (ctx: Koa.Context) => {
     const response = await axios({
       method: 'GET',
       url: process.env.API_URL + '/game/spells/' + spell,
-      headers: ctx.headers,
+      headers: ctx.headers as any,
       data: ctx.request.body
     });
     rootSpell = response.data;
@@ -49,7 +49,7 @@ const chainsHandler = async (ctx: Koa.Context) => {
       const response = await axios({
         method: 'GET',
         url: process.env.API_URL + `/game/spells/deployed/${spell}/${version}`,
-        headers: ctx.headers,
+        headers: ctx.headers as any,
         data: ctx.request.body
       });
       activeSpell = response.data

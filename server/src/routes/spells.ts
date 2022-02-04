@@ -24,7 +24,7 @@ const saveHandler = async (ctx: Koa.Context) => {
     const response = await axios({
       method: 'POST',
       url: process.env.API_URL + '/game/spells/save',
-      headers: ctx.headers,
+      headers: ctx.headers as any,
       data: ctx.request.body
     });
 
@@ -64,7 +64,7 @@ const newHandler = async (ctx: Koa.Context) => {
     const response = await axios({
       method: 'POST',
       url: process.env.API_URL + '/game/spells/save',
-      headers: ctx.headers,
+      headers: ctx.headers as any,
       data: ctx.request.body
     });
 
@@ -103,7 +103,7 @@ const patchHandler = async (ctx: Koa.Context) => {
     const response = await axios({
       method: 'POST',
       url: process.env.API_URL + '/game/spells/save',
-      headers: ctx.headers,
+      headers: ctx.headers as any,
       data: ctx.request.body
     });
 
@@ -132,7 +132,7 @@ const getSpellsHandler = async (ctx: Koa.Context) => {
     const response = await axios({
       method: 'GET',
       url: process.env.API_URL + '/game/spells',
-      headers: ctx.headers,
+      headers: ctx.headers as any,
       data: ctx.request.body
     });
 
@@ -154,7 +154,7 @@ const getSpellHandler = async (ctx: Koa.Context) => {
     const response = await axios({
       method: 'GET',
       url: process.env.API_URL + '/game/spells/' + name,
-      headers: ctx.headers,
+      headers: ctx.headers as any,
       data: ctx.request.body
     });
 
@@ -177,7 +177,7 @@ const deleteHandler = async (ctx: Koa.Context) => {
     const response = await axios({
       method: 'DELETE',
       url: process.env.API_URL + '/game/spells/' + name,
-      headers: ctx.headers,
+      headers: ctx.headers as any,
       data: ctx.request.body
     });
 
@@ -204,7 +204,7 @@ const deploySpellHandler = async (ctx: Koa.Context) => {
     const response = await axios({
       method: 'POST',
       url: process.env.API_URL + '/game/spells/' + name + "/deploy",
-      headers: ctx.headers,
+      headers: ctx.headers as any,
       data: ctx.request.body
     });
 
@@ -244,14 +244,14 @@ const deploySpellHandler = async (ctx: Koa.Context) => {
 
 }
 
-const getDeployedSpellsHandler = async (ctx: Koa.Context) => {
+const getdeployedSpellsHandler = async (ctx: Koa.Context) => {
   const name = ctx.params.name
   if (useLatitude) {
 
     const response = await axios({
       method: 'GET',
       url: process.env.API_URL + '/game/spells/deployed/' + name,
-      headers: ctx.headers,
+      headers: ctx.headers as any,
       data: ctx.request.body
     });
 
@@ -274,7 +274,7 @@ const getDeployedSpellHandler = async (ctx: Koa.Context) => {
     const response = await axios({
       method: 'GET',
       url: process.env.API_URL + `/game/spells/deployed/${name}/${version}`,
-      headers: ctx.headers,
+      headers: ctx.headers as any,
       data: ctx.request.body
     });
 
@@ -325,7 +325,7 @@ export const spells: Route[] = [
   {
     path: '/game/spells/deployed/:name',
     access: noAuth,
-    get: getDeployedSpellsHandler,
+    get: getdeployedSpellsHandler,
   },
   {
     path: '/game/spells/deployed/:name/:version',
