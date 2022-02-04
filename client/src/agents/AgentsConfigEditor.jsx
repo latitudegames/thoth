@@ -10,7 +10,7 @@ const AgentsConfigEditor = () => {
 
   if (firstLoad) {
     axios.get(`${process.env.REACT_APP_API_URL}/agentConfig`).then(res => {
-      setConfig(res.data);
+      setConfig(res.data ?? {});
       setFirstLoad(false);
     });
   }

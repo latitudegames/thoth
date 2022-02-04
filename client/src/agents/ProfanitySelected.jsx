@@ -10,7 +10,7 @@ const ProfanitySelectedEditor = ({ editorId }) => {
   const navigate = useNavigate();
 
   if (firstLoad) {
-    axios.get(`${process.env.REACT_APP_API_URL}/get_profanity_data?editor_id=${editorId}`).then(res => {
+    axios.get(`${process.env.REACT_APP_API_URL}/profanity?editor_id=${editorId}`).then(res => {
       if (res.data === 'invalid editor id') {
         navigate('/test');
       } else {

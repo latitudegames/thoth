@@ -98,8 +98,6 @@ const AgentsSettings = () => {
 
                             <input type='button' value='Update' onClick={update} />
                         </form>
-                        <br /><br />
-                        <div><pre><b>{JSON.stringify(config, null, 2)}</b></pre></div>
                     </div>
                 )}
             </div>
