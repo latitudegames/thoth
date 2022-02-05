@@ -50,9 +50,10 @@ async function initLoop() {
   }
 }
 
-; (async function () {
+;(async function () {
   await database.instance.connect()
   await creatorToolsDatabase.sequelize.sync({ force: !!process.env.REFRESH_DB })
+
   await database.instance.initData()
   console.log('Database synced, starting loop')
 

@@ -5,17 +5,234 @@ module.exports = {
     const chains = await queryInterface.rawSelect(
       'chains',
       {
-        where: {
-          name: 'default',
-        },
+        where: {},
+        plain: false,
+      },
+      ['id']
+    )
+    const configs = await queryInterface.rawSelect(
+      'config',
+      {
+        where: {},
+        plain: false,
+      },
+      ['id']
+    )
+    // eslint-disable-next-line camelcase
+    const client_settings = await queryInterface.rawSelect(
+      'client_settings',
+      {
+        where: {},
         plain: false,
       },
       ['id']
     )
 
-    if (chains.length > 0) {
-      console.log('Seeder found default chain, skipping re-seed')
-    } else {
+    if (configs.length <= 0) {
+      await queryInterface.bulkInsert(
+        'config',
+        [
+          { key: 'agent', value: 'Thales' },
+          { key: 'openai_api_key', value: '' },
+          { key: 'google_project_id', value: '' },
+          { key: 'hf_api_token', value: '' },
+          { key: 'use_gptj', value: '' },
+          { key: 'editMessageMaxCount', value: '10' },
+          { key: 'botNameRegex', value: '((?:digital|being)(?: |$))' },
+          { key: 'chatHistoryMessagesCount', value: '20' },
+          { key: 'botName', value: 'thoth' },
+          { key: 'botNameHandler', value: 'thoth' },
+          { key: 'digitalBeingsOnly', value: 'false' },
+          { key: 'fastMode', value: 'false' },
+          { key: 'discord_calendar_channel', value: '' },
+          { key: 'initCalendar', value: 'false' },
+          { key: 'discussion_channel_topics', value: '' },
+          { key: 'use_logtail', value: 'false' },
+          { key: 'logtail_key', value: '' },
+          { key: 'fps', value: '60' },
+        ],
+        {}
+      )
+    }
+
+    if (client_settings.length <= 0) {
+      await queryInterface.bulkInsert(
+        'client_settings',
+        [
+          {
+            client: 'discord',
+            name: 'discord_api_token',
+            type: 'string',
+            defaultvalue: '',
+          },
+          {
+            client: 'twitter',
+            name: 'twitterConsumerKey',
+            type: 'string',
+            defaultvalue: '',
+          },
+          {
+            client: 'twitter',
+            name: 'twitterConsumerSecret',
+            type: 'string',
+            defaultvalue: '',
+          },
+          {
+            client: 'twitter',
+            name: 'twitterAccessToken',
+            type: 'string',
+            defaultvalue: '',
+          },
+          {
+            client: 'twitter',
+            name: 'twitterAccessTokenSecret',
+            type: 'string',
+            defaultvalue: '',
+          },
+          {
+            client: 'twitter',
+            name: 'ngrokToken',
+            type: 'string',
+            defaultvalue: '',
+          },
+          {
+            client: 'twitter',
+            name: 'twitterWebhookPort',
+            type: 'string',
+            defaultvalue: '3002',
+          },
+          {
+            client: 'twitter',
+            name: 'twitterID',
+            type: 'string',
+            defaultvalue: '',
+          },
+          {
+            client: 'twitter',
+            name: 'twitterBearerToken',
+            type: 'string',
+            defaultvalue: '',
+          },
+          {
+            client: 'twitter',
+            name: 'twitterTweetRules',
+            type: 'string',
+            defaultvalue: 'digital,being,digital being',
+          },
+          {
+            client: 'twilio',
+            name: 'twilioAccountSID',
+            type: 'string',
+            defaultvalue: '',
+          },
+          {
+            client: 'twilio',
+            name: 'twiolioPhoneNumber',
+            type: 'string',
+            defaultvalue: '',
+          },
+          {
+            client: 'twilio',
+            name: 'twiolioAuthToken',
+            type: 'string',
+            defaultvalue: '',
+          },
+          {
+            client: 'telegram',
+            name: 'telegramBotToken',
+            type: 'string',
+            defaultvalue: '',
+          },
+          {
+            client: 'xrengine',
+            name: 'xrEngineURL',
+            type: 'string',
+            defaultvalue: 'https://dev.theoverlay.io/location/bot',
+          },
+          {
+            client: 'whatsapp',
+            name: 'whatsappBotName',
+            type: 'string',
+            defaultvalue: '',
+          },
+          {
+            client: 'harmony',
+            name: 'harmonyURL',
+            type: 'string',
+            defaultvalue: 'https://dev.theoverlay.io/harmony',
+          },
+          {
+            client: 'zoom',
+            name: 'zoomInvitationLink',
+            type: 'string',
+            defaultvalue: '',
+          },
+          {
+            client: 'zoom',
+            name: 'zoomPassword',
+            type: 'string',
+            defaultvalue: '',
+          },
+          {
+            client: 'messenger',
+            name: 'messengerToken',
+            type: 'string',
+            defaultvalue: '',
+          },
+          {
+            client: 'messenger',
+            name: 'messengerVerifyToken',
+            type: 'string',
+            defaultvalue: '',
+          },
+          {
+            client: 'reddit',
+            name: 'redditAppID',
+            type: 'string',
+            defaultvalue: '',
+          },
+          {
+            client: 'reddit',
+            name: 'redditAppSecretID',
+            type: 'string',
+            defaultvalue: '',
+          },
+          {
+            client: 'reddit',
+            name: 'redditUsername',
+            type: 'string',
+            defaultvalue: '',
+          },
+          {
+            client: 'reddit',
+            name: 'redditPassword',
+            type: 'string',
+            defaultvalue: '',
+          },
+          {
+            client: 'reddit',
+            name: 'redditOAthToken',
+            type: 'string',
+            defaultvalue: '',
+          },
+          {
+            client: 'instagram',
+            name: 'instagramUsername',
+            type: 'string',
+            defaultvalue: '',
+          },
+          {
+            client: 'instagram',
+            name: 'instagramPassword',
+            type: 'string',
+            defaultvalue: '',
+          },
+        ],
+        {}
+      )
+    }
+
+    if (chains.length <= 0) {
       await queryInterface.bulkInsert(
         'chains',
         [
