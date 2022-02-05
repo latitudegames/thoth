@@ -11,23 +11,16 @@ export async function handleInput(
         clientName,
         channelId
 ) {
-        console.log(
-                'handleInput',
-                message,
-                speaker,
-                agent,
-        )
         const response = await axios.post(
                 'http://localhost:8001/chains/default/latest',
                 {
-                        "TestInput": {
+                        "Input": {
                                 message,
                                 speaker,
                                 agent
                         },
                 }
         )
-        console.log("Response is", response)
         // Outputs are broken right now, so we are writing gamestate just in case
-        return response.data.outputs ?? response.data.gameState.outputs
+        return response.data.gameState.outputs ?? response.data.outputs
 }

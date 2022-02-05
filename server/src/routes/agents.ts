@@ -266,7 +266,6 @@ const executeHandler = async (ctx: Koa.Context) => {
 
   }
   ctx.body = await handleInput(message, speaker, agent, null, 'web', id)
-  console.log("Set context body")
 }
 
 const getAgentConfigHandler = async (ctx: Koa.Context) => {
