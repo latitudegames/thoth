@@ -2,12 +2,12 @@
 //@ts-nocheck
 
 import { database } from '@latitudegames/thoth-core/src/superreality/database'
-import { formOpinionAboutSpeaker } from '@latitudegames/thoth-core/src/superreality/formOpinionAboutSpeaker'
-import { makeCompletionRequest } from '@latitudegames/thoth-core/src/superreality/makeCompletionRequest'
+import { formOpinionAboutSpeaker } from '@latitudegames/thoth-core/src/components/formOpinionAboutSpeaker'
+import { makeCompletionRequest } from '@latitudegames/thoth-core/src/components/makeCompletionRequest'
 
-import { evaluateTextAndRespondIfToxic } from './profanityFilter'
-import { summarizeAndStoreFactsAboutAgent } from './summarizeAndStoreFactsAboutAgent'
-import { summarizeAndStoreFactsAboutSpeaker } from './summarizeAndStoreFactsAboutSpeaker'
+import { evaluateTextAndRespondIfToxic } from '@latitudegames/thoth-core/src/components/profanityFilter'
+import { summarizeAndStoreFactsAboutAgent } from '@latitudegames/thoth-core/src/components/summarizeAndStoreFactsAboutAgent'
+import { summarizeAndStoreFactsAboutSpeaker } from '@latitudegames/thoth-core/src/components/summarizeAndStoreFactsAboutSpeaker'
 
 async function archiveConversation(
         speaker,

@@ -5,7 +5,7 @@ import { customConfig } from '@latitudegames/thoth-core/src/superreality/customC
 import { IgApiClient } from 'instagram-private-api'
 
 import { database } from '../superreality/database'
-import { handleInput } from '../superreality/handleInput'
+import { handleInput } from './handleInput'
 
 export const createInstagramClient = async () => {
     const username = customConfig.instance.get('instagramUsername')

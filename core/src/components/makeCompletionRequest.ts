@@ -5,7 +5,7 @@ import { customConfig } from '@latitudegames/thoth-core/src/superreality/customC
 import axios from 'axios'
 import { config } from 'dotenv'
 
-import { database } from './database'
+import { database } from '../superreality/database'
 import { makeModelRequest } from './makeModelRequest'
 config()
 

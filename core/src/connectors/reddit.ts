@@ -6,7 +6,7 @@ import SnooStream from 'snoostream'
 import * as snoowrap from 'snoowrap'
 
 import { database } from '../superreality/database'
-import { handleInput } from '../superreality/handleInput'
+import { handleInput } from './handleInput'
 
 export let reddit
 

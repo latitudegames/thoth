@@ -9,7 +9,7 @@ import grawlixRacism from 'grawlix-racism'
 import { makeCompletionRequest } from './makeCompletionRequest'
 import { makeModelRequest } from './makeModelRequest'
 import { classifyProfanityText } from './textClassifier'
-import { database } from './database'
+import { database } from '../superreality/database'
 
 //check if a text contains the n* word
 function nWord(text) {

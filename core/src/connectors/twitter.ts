@@ -4,7 +4,7 @@ import { customConfig } from '@latitudegames/thoth-core/src/superreality/customC
 import { TwitterApi } from 'twitter-api-v2'
 
 import { database } from '../superreality/database'
-import { handleInput } from '../superreality/handleInput'
+import { handleInput } from './handleInput'
 
 async function handleMessage(
     response,

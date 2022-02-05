@@ -1,7 +1,5 @@
 import thothCore from '@latitudegames/thoth-core/server';
 import Koa from 'koa';
-
-import { CustomError } from '../../utils/CustomError';
 import { CompletionRequest, completionsParser } from '../completions';
 // TODO: Solve Enki
 // import { getEnkiOutputs } from '../../enki/enki'
@@ -9,6 +7,7 @@ import { CompletionRequest, completionsParser } from '../completions';
 // import { huggingface } from '../../vendor/huggingface/huggingface';
 import { Module } from './module';
 import { Graph, Module as ModuleType, ModuleComponent, Node } from './types';
+
 
 const { initSharedEngine, getComponents } = thothCore
 const thothComponents = getComponents()
@@ -110,7 +109,7 @@ export const runChain = async (
     silent: true,
   }
   // Engine process to set up the tasks and prime the system for the first 'run' command.
-  await engine?.process(graph, null, context)
+  await engine.process(graph, null, context)
 
   // Collect all the "trigger ins" that the module manager has gathered
   const triggerIns = engine.moduleManager.triggerIns
@@ -121,13 +120,13 @@ export const runChain = async (
   }
 
   // Standard default component to start the serverside run sequence from, which has the run function on it.
-  const component = engine?.components.get(
+  const component = engine.components.get(
     'Module Trigger In'
   ) as ModuleComponent
 
   // Defaulting to the first node trigger to start our "run"
   const triggeredNode = getFirstNodeTrigger(graph)
-  await component?.run(triggeredNode)
+  await component.run(triggeredNode)
   // Write all the raw data that was output by the module run to an object
   module.write(rawOutputs)
 
@@ -136,7 +135,7 @@ export const runChain = async (
   // Format raw outputs based on the names assigned to Module Outputs node data in the graph
   Object.values(graph.nodes)
     .filter(node => {
-      return node.name === 'Module Output' || node.name === 'Output'
+      return node.name.includes('Output')
     })
     .forEach((node: Node) => {
       formattedOutputs[node.data.name as string] =

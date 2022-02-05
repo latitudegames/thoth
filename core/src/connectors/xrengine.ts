@@ -2,16 +2,16 @@
 // @ts-nocheck
 import { customConfig } from '@latitudegames/thoth-core/src/superreality/customConfig'
 
+import roomManager from '../components/roomManager'
+import { classifyText } from '../components/textClassifier'
 import { database } from '../superreality/database'
-import { handleInput } from '../superreality/handleInput'
-import roomManager from '../superreality/roomManager'
-import { classifyText } from '../superreality/textClassifier'
 import {
     detectOsOption,
     getRandomEmptyResponse,
     startsWithCapital,
 } from '../superreality/utils'
 import { browserWindow, PageUtils } from './browser'
+import { handleInput } from './handleInput'
 
 export const UsersInRange = {}
 export const UsersInHarassmentRange = {}
@@ -939,9 +939,9 @@ class XREngineBot {
         await this.page.goto(parsedUrl, { waitUntil: 'domcontentloaded' })
 
         /* const granted = await this.page.evaluate(async () => {
-                     return (await navigator.permissions.query({ name: 'camera' })).state;
-                 });
-                console.log('Granted:', granted);*/
+                             return (await navigator.permissions.query({ name: 'camera' })).state;
+                         });
+                        console.log('Granted:', granted);*/
     }
 
     /** Enters the room specified, enabling the first microphone and speaker found
