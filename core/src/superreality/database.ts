@@ -7,6 +7,8 @@ import path from 'path'
 import pg from 'pg'
 import internal from 'stream'
 
+import { idGenerator } from './utils'
+
 // import { initProfanityFilter } from '../components/profanityFilter'
 
 const getRandomNumber = (min: number, max: number) =>
@@ -50,6 +52,219 @@ export class database {
 
   async _initProfanityFilter() {
     //await initProfanityFilter()
+  }
+
+  async firstInit() {
+    const id = new idGenerator()
+
+    const query1 =
+      'INSERT INTO config\n' +
+      'select t.*\n' +
+      'from ((SELECT ' +
+      id.getId() +
+      " as id, 'agent' as _key, 'Thales' as _value  \n" +
+      '      ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'openai_api_key' as _key, '' as _value \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'google_project_id' as _key, '' as _value \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'hf_api_token' as _key, '' as _value \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'use_gptj' as _key, '' as _value \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'editMessageMaxCount' as _key, '5' as _value \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'botNameRegex' as _key, '((?:digital|being)(?: |$))' as _value \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'chatHistoryMessagesCount' as _key, '20' as _value \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'botName' as _key, 'digital being' as _value \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'botNameHandler' as _key, 'digital.being' as _value \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'digitalBeingsOnly' as _key, 'false' as _value \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'fastMode' as _key, 'false' as _value \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'discord_calendar_channel' as _key, '' as _value \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'discussion_channel_topics' as _key, 'Apples|Trees|Space|Universe' as _value \n" +
+      '  ) union all\n' +
+      '	(SELECT ' +
+      id.getId() +
+      " as id, 'use_logtail' as _key, 'false' as _value \n" +
+      '  ) union all\n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'logtail_key' as _key, '' as _value \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'initCalendar' as _key, 'false' as _value \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'fps' as _key, '60' as _value \n" +
+      '  )\n' +
+      '     ) t\n' +
+      'WHERE NOT EXISTS (SELECT * FROM config);'
+
+    await this.client.query(query1)
+    id.reset()
+
+    const query2 =
+      'INSERT INTO client_settings\n' +
+      'select t.*\n' +
+      'from ((SELECT ' +
+      id.getId() +
+      " as id, 'discord' as client, 'discord_api_token' as _name, 'string' as  _type, '' as _defaultValue \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'twitter' as client, 'twitterConsumerKey' as _name, 'string' as  _type, '' as _defaultValue \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'twitter' as client, 'twitterConsumerSecret' as _name, 'string' as  _type, '' as _defaultValue \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'twitter' as client, 'twitterAccessToken' as _name, 'string' as  _type, '' as _defaultValue \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'twitter' as client, 'twitterAccessTokenSecret' as _name, 'string' as  _type, '' as _defaultValue \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'twitter' as client, 'ngrokToken' as _name, 'string' as  _type, '' as _defaultValue \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'twitter' as client, 'twitterWebhookPort' as _name, 'string' as  _type, '3002' as _defaultValue \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'twitter' as client, 'twitterID' as _name, 'string' as  _type, '' as _defaultValue \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'twitter' as client, 'twitterBearerToken' as _name, 'string' as  _type, '' as _defaultValue \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'twitter' as client, 'twitterBearerToken' as _name, 'string' as  _type, '' as _defaultValue \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'twitter' as client, 'twitterTweetRules' as _name, 'string' as  _type, 'digital,being,digital being' as _defaultValue \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'discord' as client, 'loadDiscordLogger' as _name, 'string' as  _type, 'false' as _defaultValue \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'twilio' as client,  'twilioAccountSID' as _name, 'string' as  _type, '' as _defaultValue \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'twilio' as client, 'twiolioPhoneNumber' as _name, 'string' as  _type, '' as _defaultValue \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'twilio' as client, 'twiolioAuthToken' as _name, 'string' as  _type, '' as _defaultValue \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'telegram' as client, 'telegramBotToken' as _name, 'string' as  _type, '' as _defaultValue \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'xrengine' as client, 'xrEngineURL' as _name, 'string' as  _type, 'https://dev.theoverlay.io/location/bot' as _defaultValue \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'whatsapp' as client, 'whatsappBotName' as _name, 'string' as  _type, '' as _defaultValue \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'harmony' as client, 'harmonyURL' as _name, 'string' as  _type, '' as _defaultValue \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'zoom' as client, 'zoomInvitationLink' as _name, 'string' as  _type, '' as _defaultValue \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'zoom' as client, 'zoomPassword' as _name, 'string' as  _type, '' as _defaultValue \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'messenger' as client, 'messengerToken' as _name, 'string' as  _type, '' as _defaultValue \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'messenger' as client, 'messengerVerifyToken' as _name, 'string' as  _type, '' as _defaultValue \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'reddit' as client, 'redditAppID' as _name, 'string' as  _type, '' as _defaultValue \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'reddit' as client, 'redditAppSecretID' as _name, 'string' as  _type, '' as _defaultValue \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'reddit' as client, 'redditUsername' as _name, 'string' as  _type, '' as _defaultValue \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'reddit' as client, 'redditPassword' as _name, 'string' as  _type, '' as _defaultValue \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'reddit' as client, 'redditOAthToken' as _name, 'string' as  _type, '' as _defaultValue \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'instagram' as client, 'instagramUsername' as _name, 'string' as  _type, '' as _defaultValue \n" +
+      '  ) union all \n' +
+      ' (SELECT ' +
+      id.getId() +
+      " as id, 'instagram' as client, 'instagramPassword' as _name, 'string' as  _type, '' as _defaultValue \n" +
+      '  )\n' +
+      '     ) t\n' +
+      'WHERE NOT EXISTS (SELECT * FROM client_settings);'
+
+    await this.client.query(query2)
   }
 
   //reads the config table from the database
