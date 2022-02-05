@@ -5,8 +5,8 @@ import { customConfig } from '@latitudegames/thoth-core/src/superreality/customC
 import request from 'request'
 
 import { database } from '../superreality/database'
-import { handleInput } from '../superreality/handleInput'
 import { getRandomEmptyResponse } from '../superreality/utils'
+import { handleInput } from './handleInput'
 
 export async function getChatHistory(chatId, length) {
   return await database.instance.getHistory(length, 'facebook', chatId)

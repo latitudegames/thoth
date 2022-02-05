@@ -5,8 +5,8 @@ import glob from 'glob'
 import weaviate from 'weaviate-client'
 import wiki from 'wikipedia'
 
+import { makeCompletionRequest } from '../components/makeCompletionRequest'
 import { database } from '../superreality/database'
-import { makeCompletionRequest } from '../superreality/makeCompletionRequest'
 
 const client = weaviate.client({
   scheme: 'http',

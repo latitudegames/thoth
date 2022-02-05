@@ -3,7 +3,7 @@
 import keyword_extractor from 'keyword-extractor'
 
 import { makeWeaviateRequest } from '../connectors/wikipedia'
-import { database } from './database'
+import { database } from '../superreality/database'
 import { makeModelRequest } from './makeModelRequest'
 
 //Keyword extractor is used to extract keywords (nouns) from a sentence and get more data based on wikepedia for each of them to feed it to the agent

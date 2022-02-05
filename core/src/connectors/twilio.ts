@@ -5,8 +5,8 @@ import { customConfig } from '@latitudegames/thoth-core/src/superreality/customC
 import Twilio from 'twilio'
 
 import { database } from '../superreality/database'
-import { handleInput } from '../superreality/handleInput'
 import { getRandomEmptyResponse } from '../superreality/utils'
+import { handleInput } from './handleInput'
 
 export async function message(req, res) {
     await database.instance.getNewMessageId(
