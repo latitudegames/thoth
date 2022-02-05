@@ -51,7 +51,7 @@ module.exports = {
           { key: 'logtail_key', value: '' },
           { key: 'fps', value: '60' },
         ],
-        {}
+        { fields: 'Array of all fields except id' }
       )
     }
 

@@ -102,3 +102,15 @@ export function randomInt(min, max) {
 export function randomFloat(min, max) {
   return Math.random() * (max - min + 1) + min
 }
+
+export class idGenerator {
+  id = 0
+
+  getId() {
+    return this.id++
+  }
+
+  reset() {
+    this.id = 0
+  }
+}
