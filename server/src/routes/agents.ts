@@ -1,7 +1,7 @@
 import { createWikipediaAgent } from '@latitudegames/thoth-core/src/connectors/wikipedia';
 import customConfig from "@latitudegames/thoth-core/src/superreality/customConfig";
 import { database } from '@latitudegames/thoth-core/src/superreality/database';
-import { handleInput } from '@latitudegames/thoth-core/src/superreality/handleInput';
+import { handleInput } from '@latitudegames/thoth-core/src/connectors/handleInput';
 import Koa from 'koa';
 import 'regenerator-runtime/runtime';
 import { noAuth } from '../middleware/auth';
@@ -266,6 +266,7 @@ const executeHandler = async (ctx: Koa.Context) => {
 
   }
   ctx.body = await handleInput(message, speaker, agent, null, 'web', id)
+  console.log("Set context body")
 }
 
 const getAgentConfigHandler = async (ctx: Koa.Context) => {
@@ -435,17 +436,17 @@ export const agents: Route[] = [
     post: addPromptsHandler
   },
   {
-    path: '/execute', // remove me
+    path: '/execute',
     access: noAuth,
     post: executeHandler,
   },
   {
-    path: '/agentInstances', // remove me
+    path: '/agentInstances',
     access: noAuth,
     get: getAgentInstancesHandler,
   },
   {
-    path: '/agentInstance', // remove me
+    path: '/agentInstance',
     access: noAuth,
     get: getAgentInstanceHandler,
     post: addAgentInstanceHandler,

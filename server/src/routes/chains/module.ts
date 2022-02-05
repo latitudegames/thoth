@@ -1,8 +1,8 @@
 /* eslint-disable functional/no-class */
 /* eslint-disable functional/no-this-expression */
 export class Module {
-  inputs: Record<string, unknown>
-  outputs: Record<string, unknown>
+  inputs: Record<string, unknown> = {}
+  outputs: Record<string, unknown> = {}
   constructor() {
     this.inputs = {}
     this.outputs = {}
@@ -13,6 +13,8 @@ export class Module {
   }
 
   write(outputs: Record<string, unknown>) {
+    console.log("outputs are", outputs);
+    console.log("this.outputs is", this.outputs);
     Object.keys(this.outputs).forEach(key => {
       outputs[key] = this.outputs[key]
     })
@@ -23,6 +25,7 @@ export class Module {
   }
 
   setOutput(key: string, value: unknown) {
+    console.log("key, value", key, value)
     this.outputs[key] = value
   }
 }

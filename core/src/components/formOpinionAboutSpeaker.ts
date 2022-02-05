@@ -2,10 +2,8 @@
 //@ts-nocheck
 
 import { makeModelRequest } from './makeModelRequest'
-import {
-    readRelationshipMatrix,
-    writeRelationshipMatrix,
-} from './relationshipMatrix'
+import { readRelationshipMatrix } from './readRelationshipMatrix'
+import { writeRelationshipMatrix } from './writeRelationshipMatrix'
 
 export function sigmoid(x) {
     return 1 / (1 + Math.exp(-x))

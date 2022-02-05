@@ -6,7 +6,7 @@ import fs from 'fs'
 import path from 'path'
 import pg from 'pg'
 
-import { initProfanityFilter } from './profanityFilter'
+// import { initProfanityFilter } from '../components/profanityFilter'
 
 const getRandomNumber = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1)) + min
@@ -44,7 +44,7 @@ export class database {
   async initData() {
     await this.readConfig()
     await this.onInit()
-    await initProfanityFilter()
+    // await initProfanityFilter()
   }
 
   //reads the config table from the database

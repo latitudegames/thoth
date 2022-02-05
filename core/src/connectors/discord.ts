@@ -8,15 +8,15 @@ import emoji from 'emoji-dictionary'
 import emojiRegex from 'emoji-regex'
 import { EventEmitter } from 'events'
 
+import roomManager from '../components/roomManager'
 import { database } from '../superreality/database'
-import { handleInput } from '../superreality/handleInput'
-import roomManager from '../superreality/roomManager'
-import { classifyText } from '../superreality/textClassifier'
+import { classifyText } from '../components/textClassifier'
 import {
   getRandomEmptyResponse,
   getRandomTopic,
   startsWithCapital,
 } from '../superreality/utils'
+import { handleInput } from './handleInput'
 
 // TODO: Remove this
 const config = {
@@ -971,7 +971,7 @@ export const _parseWords = (s: string) => {
 
 export function replacePlaceholders(_text: string | undefined) {
   if (_text === undefined || _text === '') return ''
-  let text = _text;
+  let text = _text
   if (text.includes('{time_now}')) {
     const now = new Date()
     const time =

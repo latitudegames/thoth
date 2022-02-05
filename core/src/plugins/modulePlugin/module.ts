@@ -21,6 +21,7 @@ export class Module {
   }
 
   setOutput(key: string, value: unknown) {
+    console.log('key, value', key, value)
     this.outputs[key] = value
   }
 }

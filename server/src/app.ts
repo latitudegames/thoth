@@ -1,10 +1,9 @@
 //@ts-ignore
 import cors from '@koa/cors'
 import Router from '@koa/router'
-import cors_server from '@latitudegames/thoth-core/src/superreality/cors-server'
+import cors_server from './cors-server'
 import { database } from '@latitudegames/thoth-core/src/superreality/database'
-import roomManager from '@latitudegames/thoth-core/src/superreality/roomManager'
-import { runClients } from '@latitudegames/thoth-core/src/superreality/runClients'
+import roomManager from '@latitudegames/thoth-core/src/components/roomManager'
 import { config } from 'dotenv'
 import HttpStatus from 'http-status-codes'
 import Koa from 'koa'
@@ -49,11 +48,9 @@ async function initLoop() {
     }
     serverLoop()
   }
-
-  await runClients()
 }
 
-;(async function () {
+; (async function () {
   await database.instance.connect()
   await creatorToolsDatabase.sequelize.sync({ force: !!process.env.REFRESH_DB })
   await database.instance.initData()
