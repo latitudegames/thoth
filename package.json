@@ -37,16 +37,19 @@
     "yarn": "^1.22.10"
   },
   "devDependencies": {
-    "craco": "^0.0.3",
-    "lerna": "^4.0.0",
     "@typescript-eslint/eslint-plugin": "^4.31.1",
     "@typescript-eslint/parser": "^4.31.1",
     "concurrently": "^6.2.1",
     "copyfiles": "^2.4.1",
+    "craco": "^0.0.3",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-prettier": "^4.0.0",
+    "lerna": "^4.0.0",
     "prettier": "^2.4.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "compromise": "^13.11.4",
+    "compromise-sentences": "^0.3.0"
+  }
 }

@@ -114,3 +114,13 @@ export class idGenerator {
     this.id = 0
   }
 }
+
+export function getSetting(settings: any[], key: string) {
+  for (let i = 0; i < settings.length; i++) {
+    if (settings[i].name === key) {
+      return settings[i].value
+    }
+  }
+
+  return undefined
+}
