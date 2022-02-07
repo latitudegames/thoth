@@ -12,11 +12,12 @@ import compose from 'koa-compose'
 import { creatorToolsDatabase } from './databases/creatorTools'
 import { routes } from './routes'
 import { Handler, Method, Middleware } from './types'
+import { world } from './world/world'
 
 config({ path: '.env' })
 
 export const app: Koa = new Koa()
-const router: Router = new Router()
+export const router: Router = new Router()
 
 // required for some current consumers (i.e Thoth)
 // to-do: standardize an allowed origin list based on env values or another source of truth?
@@ -27,7 +28,7 @@ app.use(cors(options))
 
 new cors_server(process.env.CORS_PORT, '0.0.0.0')
 
-const db = new database()
+new database()
 
 async function initLoop() {
   // new worldManager(1, customConfig.instance.getInt('fps'));
@@ -55,6 +56,7 @@ async function initLoop() {
   await creatorToolsDatabase.sequelize.sync({ force: !!process.env.REFRESH_DB })
   await database.instance.firstInit()
   await database.instance.initData()
+  new world()
   console.log('Database synced, starting loop')
 
   process.on('unhandledRejection', (err: Error) => {

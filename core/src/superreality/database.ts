@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-nocheck
 
@@ -2001,28 +2002,45 @@ export class database {
 
     await this.client.query(query, values)
   }
-  async updateAgentInstances(
-    id: number,
-    personality: string,
-    clients: string,
-    enabled: string | boolean
-  ) {
-    console.log('clients are', clients)
-    const _clients = clients ? JSON.stringify(clients).replaceAll('\\', '') : ''
+  async getLastUpdatedInstances() {
+    const query = 'SELECT * FROM agent_instance'
+
+    const rows = await this.client.query(query)
+    if (rows && rows.rows && rows.rows.length > 0) {
+      const res = []
+      for (let i = 0; i < rows.rows.length; i++) {
+        res.push({
+          id: rows.rows[i].id,
+          lastUpdated: rows.rows[i].lastupdated ? rows.rows[i].lastUpdated : 0,
+        })
+      }
+      return res
+    } else {
+      return []
+    }
+  }
+  async setInstanceUpdated(id) {
+    const query = 'UPDATE agent_instance SET lastUpdated=$1 WHERE id=$2'
+    const values = [new Date(), id]
+
+    await this.client.query(query, values)
+  }
+  async updateAgentInstances(id, personality, clients, enabled) {
+    clients = JSON.stringify(clients).replaceAll('\\', '')
     const check = 'SELECT * FROM agent_instance WHERE id=$1'
     const cvalues = [id]
 
     const rows = await this.client.query(check, cvalues)
     if (rows && rows.rows && rows.rows.length > 0) {
       const query =
-        'UPDATE agent_instance SET personality=$1, clients=$2, enabled=$3 WHERE id=$4'
-      const values = [personality, _clients, enabled, id]
+        'UPDATE agent_instance SET personality=$1, clients=$2, _enabled=$3, lastUpdated=$4 WHERE id=$5'
+      const values = [personality, clients, enabled, new Date(), id]
 
       await this.client.query(query, values)
     } else {
       const query =
-        'INSERT INTO agent_instance(personality, clients, enabled) VALUES($1, $2, $3)'
-      const values = [personality, clients, enabled]
+        'INSERT INTO agent_instance(id, personality, clients, _enabled, lastUpdated) VALUES($1, $2, $3, $4, $5)'
+      const values = [id, personality, clients, enabled, new Date()]
 
       await this.client.query(query, values)
     }

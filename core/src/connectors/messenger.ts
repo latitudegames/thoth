@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable require-await */
+/* eslint-disable camelcase */
+/* eslint-disable no-invalid-this */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
@@ -5,202 +9,196 @@ import { customConfig } from '@latitudegames/thoth-core/src/superreality/customC
 import request from 'request'
 
 import { database } from '../superreality/database'
-import { getRandomEmptyResponse } from '../superreality/utils'
+import { getRandomEmptyResponse, getSetting } from '../superreality/utils'
 import { handleInput } from './handleInput'
 
-export async function getChatHistory(chatId, length) {
-  return await database.instance.getHistory(length, 'facebook', chatId)
-}
+export class messenger_client {
+  async getChatHistory(chatId, length) {
+    return await database.instance.getHistory(length, 'facebook', chatId)
+  }
 
-export function addMessageToHistory(chatId, senderName, content, messageId) {
-  database.instance.addMessageInHistory(
-    'facebook',
-    chatId,
-    messageId + '',
-    senderName,
-    content
-  )
-}
+  async addMessageToHistory(chatId, senderName, content, messageId) {
+    database.instance.addMessageInHistory(
+      'facebook',
+      chatId,
+      messageId + '',
+      senderName,
+      content
+    )
+  }
 
-export async function handleMessage(senderPsid, receivedMessage) {
-  if (receivedMessage.text) {
+  async handleMessage(senderPsid, receivedMessage) {
+    if (await database.instance.isUserBanned(senderPsid, 'messenger')) return
+
+    log('receivedMessage: ' + receivedMessage.text + ' from: ' + senderPsid)
+
+    if (receivedMessage.text) {
+      await database.instance.getNewMessageId(
+        'messenger',
+        senderPsid,
+        async msgId => {
+          this.addMessageToHistory(
+            senderPsid,
+            senderPsid,
+            receivedMessage.text,
+            msgId
+          )
+          const message = receivedMessage.text
+          const resp = await handleInput(
+            message,
+            senderPsid,
+            this.agent.name ?? 'Agent',
+            null,
+            'messenger',
+            senderPsid
+          )
+          this.handlePacketSend(senderPsid, resp)
+        }
+      )
+    }
+  }
+
+  async handlePacketSend(senderPsid, response) {
+    log('response: ' + response)
+    if (
+      response !== undefined &&
+      response.length <= 2000 &&
+      response.length > 0
+    ) {
+      let text = response
+      while (
+        text === undefined ||
+        text === '' ||
+        text.replace(/\s/g, '').length === 0
+      )
+        text = getRandomEmptyResponse()
+      this.callSendAPI(senderPsid, { text: text }, text)
+    } else if (response.length > 20000) {
+      const lines = []
+      let line = ''
+      for (let i = 0; i < response.length; i++) {
+        line += response
+        if (i >= 1980 && (line[i] === ' ' || line[i] === '')) {
+          lines.push(line)
+          line = ''
+        }
+      }
+
+      for (let i = 0; i < lines.length; i++) {
+        if (
+          lines[i] !== undefined &&
+          lines[i] !== '' &&
+          lines[i].replace(/\s/g, '').length !== 0
+        ) {
+          if (i === 0) {
+            let text = lines[1]
+            while (
+              text === undefined ||
+              text === '' ||
+              text.replace(/\s/g, '').length === 0
+            )
+              text = getRandomEmptyResponse()
+            this.callSendAPI(senderPsid, { text: text }, text)
+          }
+        }
+      }
+    } else {
+      let emptyResponse = getRandomEmptyResponse()
+      while (
+        emptyResponse === undefined ||
+        emptyResponse === '' ||
+        emptyResponse.replace(/\s/g, '').length === 0
+      )
+        emptyResponse = getRandomEmptyResponse()
+      this.callSendAPI(senderPsid, { text: emptyResponse }, emptyResponse)
+    }
+  }
+
+  async callSendAPI(senderPsid, response, text) {
     await database.instance.getNewMessageId(
       'messenger',
       senderPsid,
       async msgId => {
-        addMessageToHistory(senderPsid, senderPsid, receivedMessage.text, msgId)
-        const message = receivedMessage.text
+        this.addMessageToHistory(senderPsid, this.agent.name, text, msgId)
+        // The page access token we have generated in your app settings
+        const PAGE_ACCESS_TOKEN = getSetting(this.settings, 'messengerToken')
 
-        const date = new Date()
-        const utc = new Date(
-          date.getUTCFullYear(),
-          date.getUTCMonth(),
-          date.getUTCDate(),
-          date.getUTCHours(),
-          date.getUTCMinutes(),
-          date.getUTCSeconds()
-        )
-        const utcStr =
-          date.getDate() +
-          '/' +
-          (date.getMonth() + 1) +
-          '/' +
-          date.getFullYear() +
-          ' ' +
-          utc.getHours() +
-          ':' +
-          utc.getMinutes() +
-          ':' +
-          utc.getSeconds()
-
-        const resp = await handleInput(
-          message,
-          senderPsid,
-          customConfig.instance.get('agent') ?? 'Agent',
-          null,
-          'messenger',
-          senderPsid
-        )
-        handlePacketSend(senderPsid, resp)
-      }
-    )
-  }
-}
-
-export async function handlePacketSend(senderPsid, response) {
-  if (
-    response !== undefined &&
-    response.length <= 2000 &&
-    response.length > 0
-  ) {
-    let text = response
-    while (
-      text === undefined ||
-      text === '' ||
-      text.replace(/\s/g, '').length === 0
-    )
-      text = getRandomEmptyResponse()
-    callSendAPI(senderPsid, { text: text }, text)
-  } else if (response.length > 20000) {
-    const lines = []
-    let line = ''
-    for (let i = 0; i < response.length; i++) {
-      line += response
-      if (i >= 1980 && (line[i] === ' ' || line[i] === '')) {
-        lines.push(line)
-        line = ''
-      }
-    }
-
-    for (let i = 0; i < lines.length; i++) {
-      if (
-        lines[i] !== undefined &&
-        lines[i] !== '' &&
-        lines[i].replace(/\s/g, '').length !== 0
-      ) {
-        if (i === 0) {
-          let text = lines[1]
-          while (
-            text === undefined ||
-            text === '' ||
-            text.replace(/\s/g, '').length === 0
-          )
-            text = getRandomEmptyResponse()
-          callSendAPI(senderPsid, { text: text }, text)
+        // Construct the message body
+        const requestBody = {
+          recipient: {
+            id: senderPsid,
+          },
+          message: response,
         }
-      }
-    }
-  } else {
-    let emptyResponse = getRandomEmptyResponse()
-    while (
-      emptyResponse === undefined ||
-      emptyResponse === '' ||
-      emptyResponse.replace(/\s/g, '').length === 0
-    )
-      emptyResponse = getRandomEmptyResponse()
-    callSendAPI(senderPsid, { text: emptyResponse }, emptyResponse)
-  }
-}
 
-export async function callSendAPI(senderPsid, response, text) {
-  await database.instance.getNewMessageId(
-    'messenger',
-    senderPsid,
-    async msgId => {
-      addMessageToHistory(
-        senderPsid,
-        customConfig.instance.get('botName'),
-        text,
-        msgId
-      )
-      // The page access token we have generated in your app settings
-      const PAGE_ACCESS_TOKEN = customConfig.instance.get('messengerToken')
-
-      // Construct the message body
-      const requestBody = {
-        recipient: {
-          id: senderPsid,
-        },
-        message: response,
-      }
-
-      // Send the HTTP request to the Messenger Platform
-      request(
-        {
-          uri: 'https://graph.facebook.com/v2.6/me/messages',
-          qs: { access_token: PAGE_ACCESS_TOKEN },
-          method: 'POST',
-          json: requestBody,
-        },
-        (err, _res, _body) => {
-          if (err) {
-            console.error('Unable to send message:' + err)
+        // Send the HTTP request to the Messenger Platform
+        request(
+          {
+            uri: 'https://graph.facebook.com/v2.6/me/messages',
+            qs: { access_token: PAGE_ACCESS_TOKEN },
+            method: 'POST',
+            json: requestBody,
+          },
+          (err, _res, _body) => {
+            if (!err) {
+              log('Message sent!')
+            } else {
+              error('Unable to send message:' + err)
+            }
           }
-        }
-      )
-    }
-  )
-}
-
-export const createMessengerClient = async app => {
-  const token = customConfig.instance.get('messengerToken')
-  const verify_token = customConfig.instance.get('messengerVerifyToken')
-
-  if (!token || !verify_token)
-    return console.warn('No API tokens for Messenger bot, skipping')
-
-  app.get('/webhook', async function (req, res) {
-    const VERIFY_TOKEN = verify_token
-
-    const mode = req.query['hub.mode']
-    const token = req.query['hub.verify_token']
-    const challenge = req.query['hub.challenge']
-
-    if (mode && token) {
-      if (mode === 'subscribe' && token === VERIFY_TOKEN) {
-        res.status(200).send(challenge)
-      } else {
-        res.sendStatus(403)
+        )
       }
-    }
-  })
-  app.post('/webhook', async function (req, res) {
-    const body = req.body
+    )
+  }
 
-    if (body.object === 'page') {
-      await body.entry.forEach(async function (entry) {
-        const webhookEvent = entry.messaging[0]
+  agent
+  settings
 
-        const senderPsid = webhookEvent.sender.id
+  createMessengerClient = async (app, agent, settings) => {
+    this.agent = agent
+    this.settings = settings
 
-        if (webhookEvent.message) {
-          await handleMessage(senderPsid, webhookEvent.message)
+    const token = getSetting(settings, 'messengerToken')
+    const verify_token = getSetting(settings, 'messengerVerifyToken')
+
+    if (!token || !verify_token)
+      return console.warn('No API tokens for Messenger bot, skipping')
+
+    app.get('/webhook', async function (req, res) {
+      const VERIFY_TOKEN = verify_token
+
+      const mode = req.query['hub.mode']
+      const token = req.query['hub.verify_token']
+      const challenge = req.query['hub.challenge']
+
+      if (mode && token) {
+        if (mode === 'subscribe' && token === VERIFY_TOKEN) {
+          log('WEBHOOK_VERIFIED')
+          res.status(200).send(challenge)
+        } else {
+          log('WEBHOOK_FORBIDDEN')
+          res.sendStatus(403)
         }
-      })
+      }
+    })
+    app.post('/webhook', async function (req, res) {
+      const body = req.body
 
-      res.status(200).send('EVENT_RECEIVED')
-    } else {
-      res.sendStatus(404)
-    }
-  })
+      if (body.object === 'page') {
+        await body.entry.forEach(async function (entry) {
+          const webhookEvent = entry.messaging[0]
+          const senderPsid = webhookEvent.sender.id
+
+          if (webhookEvent.message) {
+            await this.handleMessage(senderPsid, webhookEvent.message)
+          }
+        })
+
+        res.status(200).send('EVENT_RECEIVED')
+      } else {
+        res.sendStatus(404)
+      }
+    })
+    log('facebook client created')
+  }
 }

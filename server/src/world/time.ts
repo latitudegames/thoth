@@ -1,20 +1,20 @@
 export class time {
-    static instance;
+  static instance: time
 
-    start;
-    now;
+  start: Date
+  now: Date
 
-    constructor() {
-        time.instance = this;
+  constructor() {
+    time.instance = this
 
-        this.start = new Date();
-    }
+    this.start = new Date()
+  }
 
-    //time since the start of the being in ms
-    time() {
-        this.now = new Date();
-        return (this.now - this.start)/1000;
-    }
+  //time since the start of the being in ms
+  time() {
+    this.now = new Date()
+    return (this.now.valueOf() - this.start.valueOf()) / 1000
+  }
 }
 
-export default time;
+export default time
