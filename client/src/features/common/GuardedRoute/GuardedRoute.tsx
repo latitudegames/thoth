@@ -6,7 +6,7 @@ const GuardedRoute = props => {
   const { user } = useAuth()
 
   const auth = user && user.accessToken
-  if (!process.env.USE_LATITUDE)
+  if (process.env.USE_LATITUDE !== "true")
     return <Outlet />
   return auth ? <Outlet /> : <Navigate to="/login" replace />
 }
