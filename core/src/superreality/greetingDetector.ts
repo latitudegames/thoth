@@ -30,7 +30,7 @@ const fastGreetings = [
 
 const maxLength = 10
 
-export default async function detectFastGreeting(input: string) {
+export default function detectFastGreeting(input: string) {
   input = input.toLowerCase().trim()
 
   if (input.length > maxLength) {
