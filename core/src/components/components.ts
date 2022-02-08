@@ -12,6 +12,8 @@ import { PlaytestPrint } from './deprecated/PlaytestPrint'
 import { RunInputComponent } from './deprecated/RunInput'
 import { DifficultyDetectorComponent } from './DifficultyDetector'
 import { EntityDetector } from './EntityDetector'
+import { FastGreetingDetector } from './FastGreetingDetector'
+import { FastQuestionDetector } from './FastQuestionDetector'
 import { ForEach } from './ForEach'
 import { Generator } from './Generator'
 import { InputComponent } from './Input'
@@ -42,6 +44,8 @@ export const components = {
   difficultyDetectorComponent: () => new DifficultyDetectorComponent(),
   // enkiTask: () => new EnkiTask(),
   entityDetector: () => new EntityDetector(),
+  fastQuestionDetector: () => new FastQuestionDetector(),
+  fastGreetingDetector: () => new FastGreetingDetector(),
   forEach: () => new ForEach(),
   generator: () => new Generator(),
   // huggingfaceComponent: () => new HuggingfaceComponent(),
