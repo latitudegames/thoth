@@ -1,27 +1,15 @@
 /* eslint-disable no-param-reassign */
-
-const questionStarters = [
-  'why',
-  'who',
-  'whose',
-  'whom',
-  'where',
-  'what',
-  "what's",
-  'are you',
-  'is he',
-  'is she',
-  'is it',
-  'am i',
-  'how',
-]
-
-export function isQuestion(input: string) {
+export function isQuestion(input: string, data: string) {
   input = input.toLowerCase().trim()
 
   if (input.endsWith('?')) {
     return true
   }
+
+  let questionStarters = data.split('\n')
+  questionStarters = questionStarters.filter(element => {
+    return element !== ''
+  })
 
   for (let i = 0; i < questionStarters.length; i++) {
     if (input.startsWith(questionStarters[i])) {
