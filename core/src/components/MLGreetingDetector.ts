@@ -11,6 +11,7 @@ import {
 } from '../../types'
 import { InputControl } from '../dataControls/InputControl'
 import { EngineContext } from '../engine'
+import { getValue } from '../hfUtils'
 import { triggerSocket, stringSocket, anySocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 
@@ -78,10 +79,11 @@ export class MLGreetingDetector extends ThothComponent<Promise<InputReturn>> {
         options: undefined,
       })
     )
-    const scores = result.scores as number[]
+    const greeting = getValue(result.labels, result.scores, 'Greeting')
+    const notGreeting = getValue(result.labels, result.scores, 'Not Greeting')
     const diff =
-      scores[1] > scores[0] ? scores[1] - scores[0] : scores[0] - scores[1]
-    const is = diff > minDiff && scores[0] > scores[1]
+      notGreeting > greeting ? notGreeting - greeting : greeting - notGreeting
+    const is = diff > minDiff && greeting > notGreeting
 
     this._task.closed = is ? ['false'] : ['true']
     return {
