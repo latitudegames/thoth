@@ -1,6 +1,5 @@
 {
   "name": "@latitudegames/thoth-core",
-<<<<<<< HEAD
   "version": "0.0.64",
   "license": "Apache-2.0",
   "author": "Michael Sharpe <m.sharpe@project89.org> (https://www.project89.org)",
@@ -9,10 +8,6 @@
     "Jakob Grant <j.grant@project89.org>",
     "Preston Gull <gull.preston@gmail.com>"
   ],
-=======
-  "version": "0.0.61",
-  "private": true,
->>>>>>> fix packages to operate like monorepo with local core code
   "description": "core shared code for thoth",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",

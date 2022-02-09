@@ -9,6 +9,8 @@ import {
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../types'
+import { FewshotControl } from '../dataControls/FewshotControl'
+import { InputControl } from '../dataControls/InputControl'
 import { EngineContext } from '../engine'
 import { triggerSocket, stringSocket } from '../sockets'
 import detectFastGreeting from '../superreality/greetingDetector'
@@ -16,6 +18,43 @@ import { ThothComponent } from '../thoth-component'
 
 const info =
   'Fast Greeting Detector can detect whether or not a phrase is a greeting'
+
+const fewshot = `hi
+hey
+supp
+sup
+hello
+how are you
+hey man
+hey dude
+hows it going
+how's it going
+whats up
+what's up
+whats going on
+what's going on
+hows everything
+how's everything
+how are things
+hows life
+how's life
+hows your day
+how's your day
+long time now see
+its been a while
+it's been a while
+good morning
+good afternoon
+its nice to meet you
+it's nice to meet you
+its nice to meet you
+it's nice to meet you
+its nice to be here
+it's nice to be here
+its nice to be here
+it's nice to be here
+yo
+howdy`
 
 type WorkerReturn = {
   output: string
@@ -37,11 +76,23 @@ export class FastGreetingDetector extends ThothComponent<
   }
 
   builder(node: ThothNode) {
+    node.data.fewshot = fewshot
+
     const inp = new Rete.Input('string', 'String', stringSocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const isTrue = new Rete.Output('true', 'True', triggerSocket)
     const isFalse = new Rete.Output('false', 'False', triggerSocket)
     const outp = new Rete.Output('output', 'String', stringSocket)
+
+    const maxLength = new InputControl({
+      dataKey: 'maxLength',
+      name: 'Max Length',
+      icon: 'moon',
+    })
+
+    const fewshotControl = new FewshotControl({})
+
+    node.inspector.add(fewshotControl).add(maxLength)
 
     return node
       .addInput(inp)
@@ -58,8 +109,15 @@ export class FastGreetingDetector extends ThothComponent<
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
     const action = inputs['string'][0]
+    const fewshot = node.data.fewshot
+    const maxLengthData = node?.data?.maxLength as string
+    const maxLength = maxLengthData ? parseInt(maxLengthData) : 10
 
-    const is = detectFastGreeting(action as string)
+    const is = detectFastGreeting(
+      action as string,
+      maxLength,
+      fewshot as string
+    )
 
     this._task.closed = is ? ['false'] : ['true']
     return {
