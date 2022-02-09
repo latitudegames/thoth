@@ -1,16 +1,16 @@
 /* eslint-disable no-console */
-import axios from 'axios';
-import { config } from 'dotenv';
-import Koa from 'koa';
-import { creatorToolsDatabase } from '../databases/creatorTools';
-import { noAuth } from '../middleware/auth';
-import { Route } from '../types';
-import { CustomError } from '../utils/CustomError';
+import axios from 'axios'
+import { config } from 'dotenv'
+import Koa from 'koa'
+import { creatorToolsDatabase } from '../databases/creatorTools'
+import { noAuth } from '../middleware/auth'
+import { Route } from '../types'
+import { CustomError } from '../utils/CustomError'
 
 config({ path: '.env' })
 
 // Should we use the Latitude API or run independently?
-const useLatitude = process.env.USE_LATITUDE;
+const useLatitude = process.env.USE_LATITUDE === 'true'
 
 const saveHandler = async (ctx: Koa.Context) => {
   const body =
@@ -24,8 +24,8 @@ const saveHandler = async (ctx: Koa.Context) => {
       method: 'POST',
       url: process.env.API_URL + '/game/spells/save',
       headers: ctx.headers as any,
-      data: ctx.request.body
-    });
+      data: ctx.request.body,
+    })
 
     ctx.body = response.data
     return
@@ -35,7 +35,10 @@ const saveHandler = async (ctx: Koa.Context) => {
     where: { name: body.name },
   })
 
-  if (spell && (spell.userId.toString() !== (ctx.state.user?.id ?? 0).toString())) {
+  if (
+    spell &&
+    spell.userId.toString() !== (ctx.state.user?.id ?? 0).toString()
+  ) {
     throw new CustomError(
       'input-failed',
       'A spell with that name already exists.'
@@ -64,14 +67,14 @@ const newHandler = async (ctx: Koa.Context) => {
       method: 'POST',
       url: process.env.API_URL + '/game/spells/save',
       headers: ctx.headers as any,
-      data: ctx.request.body
-    });
+      data: ctx.request.body,
+    })
 
     ctx.body = response.data
     return
   }
 
-  console.log("ctx.request is", ctx.request)
+  console.log('ctx.request is', ctx.request)
 
   const body = ctx.request.body
   if (!body) throw new CustomError('input-failed', 'No parameters provided')
@@ -106,9 +109,8 @@ const patchHandler = async (ctx: Koa.Context) => {
       method: 'POST',
       url: process.env.API_URL + '/game/spells/save',
       headers: ctx.headers as any,
-      data: ctx.request.body
-    });
-
+      data: ctx.request.body,
+    })
 
     return (ctx.body = response.data)
   }
@@ -135,8 +137,8 @@ const getSpellsHandler = async (ctx: Koa.Context) => {
       method: 'GET',
       url: process.env.API_URL + '/game/spells',
       headers: ctx.headers as any,
-      data: ctx.request.body
-    });
+      data: ctx.request.body,
+    })
 
     return (ctx.body = response.data)
   }
@@ -147,7 +149,6 @@ const getSpellsHandler = async (ctx: Koa.Context) => {
     },
   })
   ctx.body = spells
-
 }
 
 const getSpellHandler = async (ctx: Koa.Context) => {
@@ -157,8 +158,8 @@ const getSpellHandler = async (ctx: Koa.Context) => {
       method: 'GET',
       url: process.env.API_URL + '/game/spells/' + name,
       headers: ctx.headers as any,
-      data: ctx.request.body
-    });
+      data: ctx.request.body,
+    })
 
     return (ctx.body = response.data)
   }
@@ -171,18 +172,16 @@ const getSpellHandler = async (ctx: Koa.Context) => {
       const newSpell = await creatorToolsDatabase.chains.create({
         userId: ctx.state.user?.id ?? 0,
         name,
-        chain: { "id": "demo@0.1.0", "nodes": {} },
+        chain: { id: 'demo@0.1.0', nodes: {} },
         gameState: {},
         modules: [],
       })
-      userId: ctx.state.user?.id ?? 0,
-        ctx.body = newSpell
+      userId: ctx.state.user?.id ?? 0, (ctx.body = newSpell)
     } else {
       ctx.body = spell
     }
-
   } catch (e) {
-    console.error(e);
+    console.error(e)
   }
 }
 
@@ -193,8 +192,8 @@ const deleteHandler = async (ctx: Koa.Context) => {
       method: 'DELETE',
       url: process.env.API_URL + '/game/spells/' + name,
       headers: ctx.headers as any,
-      data: ctx.request.body
-    });
+      data: ctx.request.body,
+    })
 
     return (ctx.body = response.data)
   }
@@ -210,7 +209,6 @@ const deleteHandler = async (ctx: Koa.Context) => {
   } catch (err) {
     throw new CustomError('server-error', 'error deleting spell')
   }
-
 }
 
 const deploySpellHandler = async (ctx: Koa.Context) => {
@@ -218,10 +216,10 @@ const deploySpellHandler = async (ctx: Koa.Context) => {
   if (useLatitude) {
     const response = await axios({
       method: 'POST',
-      url: process.env.API_URL + '/game/spells/' + name + "/deploy",
+      url: process.env.API_URL + '/game/spells/' + name + '/deploy',
       headers: ctx.headers as any,
-      data: ctx.request.body
-    });
+      data: ctx.request.body,
+    })
 
     return (ctx.body = response.data)
   }
@@ -239,7 +237,8 @@ const deploySpellHandler = async (ctx: Koa.Context) => {
   })
 
   const newVersion: string = lastDeployedSpell
-    ? (parseInt(lastDeployedSpell.version) + 1).toString() : '1'
+    ? (parseInt(lastDeployedSpell.version) + 1).toString()
+    : '1'
 
   const newDeployedSpell = await creatorToolsDatabase.deployedSpells.create({
     name: spell.name,
@@ -252,19 +251,17 @@ const deploySpellHandler = async (ctx: Koa.Context) => {
   })
 
   return (ctx.body = newDeployedSpell.id)
-
 }
 
 const getdeployedSpellsHandler = async (ctx: Koa.Context) => {
   const name = ctx.params.name
   if (useLatitude) {
-
     const response = await axios({
       method: 'GET',
       url: process.env.API_URL + '/game/spells/deployed/' + name,
       headers: ctx.headers as any,
-      data: ctx.request.body
-    });
+      data: ctx.request.body,
+    })
 
     return (ctx.body = response.data)
   }
@@ -278,7 +275,7 @@ const getdeployedSpellsHandler = async (ctx: Koa.Context) => {
 }
 
 const getDeployedSpellHandler = async (ctx: Koa.Context) => {
-  console.log("handling");
+  console.log('handling')
   const name = ctx.params.name
   const version = ctx.params.version
   if (useLatitude) {
@@ -286,8 +283,8 @@ const getDeployedSpellHandler = async (ctx: Koa.Context) => {
       method: 'GET',
       url: process.env.API_URL + `/game/spells/deployed/${name}/${version}`,
       headers: ctx.headers as any,
-      data: ctx.request.body
-    });
+      data: ctx.request.body,
+    })
 
     return (ctx.body = response.data)
   }
