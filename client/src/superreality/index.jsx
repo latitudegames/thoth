@@ -1,99 +1,113 @@
-import axios from "axios";
-import React, { useState } from "react";
-import ReactPlayer from "react-player";
-import { Link } from "react-router-dom";
-import Chat from "./Chat";
-import { v4 as uuidv4 } from 'uuid';
+import axios from 'axios'
+import React, { useState } from 'react'
+import ReactPlayer from 'react-player'
+import { Link } from 'react-router-dom'
+import Chat from './Chat'
+import { v4 as uuidv4 } from 'uuid'
 
-export const id = uuidv4();
-export const senderName = "Guest_" + id;
+export const id = uuidv4()
+export const senderName = 'Guest_' + id
 
 function isJson(str) {
   try {
-    JSON.parse(str);
+    JSON.parse(str)
   } catch (e) {
-    return false;
+    return false
   }
-  return true;
+  return true
 }
 
 const App = () => {
-  const [formInputs, setFormInputs] = useState({ agentName: "" });
-  const [pageState, setPageState] = useState(0);
-  const [agentImage, setAgentImage] = useState(null);
-  const [startingMessage, setStartingMessage] = useState("");
+  const [formInputs, setFormInputs] = useState({ agentName: '' })
+  const [pageState, setPageState] = useState(0)
+  const [agentImage, setAgentImage] = useState(null)
+  const [startingMessage, setStartingMessage] = useState('')
 
-  const sendMessage = async (agentName) => {
-    const body = { agent: agentName, command: "/become " + agentName, speaker: senderName, id: id };
-    const res = await axios.post(`${process.env.REACT_APP_API_URL}/execute`, body);
-    setStartingMessage(res.data.startingMessage);
-    var x = new XMLHttpRequest();
+  const sendMessage = async agentName => {
+    const body = {
+      agent: agentName,
+      command: '/become ' + agentName,
+      speaker: senderName,
+      id: id,
+    }
+    const res = await axios.post(
+      `${process.env.REACT_APP_API_URL}/execute`,
+      body
+    )
+    setStartingMessage(res.data.startingMessage)
+    var x = new XMLHttpRequest()
     x.open(
-      "GET",
-      (process.env.REACT_APP_CORS_URL.endsWith("/")
+      'GET',
+      (process.env.REACT_APP_CORS_URL.endsWith('/')
         ? process.env.REACT_APP_CORS_URL
-        : process.env.REACT_APP_CORS_URL + "/") +
-      `https://en.wikipedia.org/w/api.php?action=query&format=json&formatversion=2&prop=pageimages&piprop=original&titles=${res.data?.result?.title ? res.data.result.title : body.agent
-      }`
-    );
+        : process.env.REACT_APP_CORS_URL + '/') +
+        `https://en.wikipedia.org/w/api.php?action=query&format=json&formatversion=2&prop=pageimages&piprop=original&titles=${
+          res.data?.result?.title ? res.data.result.title : body.agent
+        }`
+    )
     x.onload = x.onerror = function () {
-      let res = "";
+      let res = ''
       if (
         x &&
         x.responseText &&
         x.responseText.length > 0 &&
         isJson(x.responseText)
       ) {
-        const json = JSON.parse(x.responseText).query;
+        const json = JSON.parse(x.responseText).query
         if (json) {
-          const pages = json.pages;
+          const pages = json.pages
           if (pages && pages.length > 0) {
-            const original = pages[0].original;
+            const original = pages[0].original
             if (original) {
-              res = original.source;
+              res = original.source
             }
           }
         }
       }
 
       if (!res || res.length <= 0) {
-        res = "/Logo.png";
+        res = '/Logo.png'
       }
 
-      setFormInputs({ agentName: agentName });
-      setAgentImage(res);
-    };
-    x.send();
-  };
+      setFormInputs({ agentName: agentName })
+      setAgentImage(res)
+    }
+    x.send()
+  }
 
-  const onChange = (e) =>
-    setFormInputs({ ...formInputs, [e.target.name]: e.target.value });
+  const onChange = e =>
+    setFormInputs({ ...formInputs, [e.target.name]: e.target.value })
 
   const startConversation = async () => {
-    if (formInputs.agentName !== null && formInputs.agentName !== "") {
-      setPageState(1);
-      await sendMessage(formInputs.agentName);
-      setPageState(2);
-      setFormInputs({ agentName: "" });
+    if (formInputs.agentName !== null && formInputs.agentName !== '') {
+      setPageState(1)
+      await sendMessage(formInputs.agentName)
+      setPageState(2)
+      setFormInputs({ agentName: '' })
     }
-  };
+  }
 
-  const startConversationFromImage = async (ai_name) => {
-    setPageState(1);
-    await sendMessage(ai_name);
-    setPageState(2);
-  };
+  const startConversationFromImage = async ai_name => {
+    setPageState(1)
+    await sendMessage(ai_name)
+    setPageState(2)
+  }
 
   return (
     <div className="App">
-      <img src='SuperReality_Background.svg' style={{ position: "absolute" }} width="100%" alt='background' />
+      <img
+        src="SuperReality_Background.svg"
+        style={{ position: 'absolute' }}
+        width="100%"
+        alt="background"
+      />
       {pageState > 0 && (
         <div className="ChatWrapper">
           <Chat
             agentImage={agentImage}
             handleClick={() => {
-              window.location.reload(false);
-              setPageState(0);
+              window.location.reload(false)
+              setPageState(0)
             }}
             agentName={formInputs.agentName}
             startingMessage={startingMessage}
@@ -109,14 +123,14 @@ const App = () => {
               placeholder="Who or what do you want to talk to?"
               name="agentName"
               value={formInputs.agentName}
-              onKeyPress={(event) => {
-                event.key === "Enter" && startConversation();
+              onKeyPress={event => {
+                event.key === 'Enter' && startConversation()
               }}
               onChange={onChange}
             />
             <button onClick={startConversation} />
           </div>
-          <div style={{ marginTop: "2em" }}>
+          <div style={{ marginTop: '2em' }}>
             <b>Try talking to these AIs</b>
           </div>
           <div className="flex-container">
@@ -126,7 +140,7 @@ const App = () => {
                 alt="ai"
                 className="ai-img"
                 onClick={async () => {
-                  await startConversationFromImage("tree");
+                  await startConversationFromImage('tree')
                 }}
               />
             </span>
@@ -136,7 +150,7 @@ const App = () => {
                 alt="ai"
                 className="ai-img"
                 onClick={async () => {
-                  await startConversationFromImage("sunflower");
+                  await startConversationFromImage('sunflower')
                 }}
               />
             </span>
@@ -146,7 +160,7 @@ const App = () => {
                 alt="ai"
                 className="ai-img"
                 onClick={async () => {
-                  await startConversationFromImage("rabbit");
+                  await startConversationFromImage('rabbit')
                 }}
               />
             </span>
@@ -156,7 +170,7 @@ const App = () => {
                 alt="ai"
                 className="ai-img"
                 onClick={async () => {
-                  await startConversationFromImage("ant");
+                  await startConversationFromImage('ant')
                 }}
               />
             </span>
@@ -166,7 +180,7 @@ const App = () => {
                 alt="ai"
                 className="ai-img"
                 onClick={async () => {
-                  await startConversationFromImage("rainbow");
+                  await startConversationFromImage('rainbow')
                 }}
               />
             </span>
@@ -177,7 +191,7 @@ const App = () => {
                 alt="ai"
                 className="ai-img"
                 onClick={async () => {
-                  await startConversationFromImage("earth");
+                  await startConversationFromImage('earth')
                 }}
               />
             </span>
@@ -187,7 +201,7 @@ const App = () => {
                 alt="ai"
                 className="ai-img"
                 onClick={async () => {
-                  await startConversationFromImage("socrates");
+                  await startConversationFromImage('socrates')
                 }}
               />
             </span>
@@ -197,7 +211,7 @@ const App = () => {
                 alt="ai"
                 className="ai-img"
                 onClick={async () => {
-                  await startConversationFromImage("Galileo");
+                  await startConversationFromImage('Galileo')
                 }}
               />
             </span>
@@ -207,7 +221,7 @@ const App = () => {
                 alt="ai"
                 className="ai-img"
                 onClick={async () => {
-                  await startConversationFromImage("Nikola Tesla");
+                  await startConversationFromImage('Nikola Tesla')
                 }}
               />
             </span>
@@ -217,7 +231,7 @@ const App = () => {
                 alt="ai"
                 className="ai-img"
                 onClick={async () => {
-                  await startConversationFromImage("Isaac Newton");
+                  await startConversationFromImage('Isaac Newton')
                 }}
               />
             </span>
@@ -228,7 +242,7 @@ const App = () => {
                 alt="ai"
                 className="ai-img"
                 onClick={async () => {
-                  await startConversationFromImage("Ada Lovelace");
+                  await startConversationFromImage('Ada Lovelace')
                 }}
               />
             </span>
@@ -238,7 +252,7 @@ const App = () => {
                 alt="ai"
                 className="ai-img"
                 onClick={async () => {
-                  await startConversationFromImage("Rosalind Franklin");
+                  await startConversationFromImage('Rosalind Franklin')
                 }}
               />
             </span>
@@ -248,7 +262,7 @@ const App = () => {
                 alt="ai"
                 className="ai-img"
                 onClick={async () => {
-                  await startConversationFromImage("Mass–energy equivalence");
+                  await startConversationFromImage('Mass–energy equivalence')
                 }}
               />
             </span>
@@ -258,7 +272,7 @@ const App = () => {
                 alt="ai"
                 className="ai-img"
                 onClick={async () => {
-                  await startConversationFromImage("atom");
+                  await startConversationFromImage('atom')
                 }}
               />
             </span>
@@ -268,7 +282,7 @@ const App = () => {
                 alt="ai"
                 className="ai-img"
                 onClick={async () => {
-                  await startConversationFromImage("caffeine");
+                  await startConversationFromImage('caffeine')
                 }}
               />
             </span>
@@ -278,7 +292,7 @@ const App = () => {
                 alt="ai"
                 className="ai-img"
                 onClick={async () => {
-                  await startConversationFromImage("cell (biology)");
+                  await startConversationFromImage('cell (biology)')
                 }}
               />
             </span>
@@ -288,7 +302,7 @@ const App = () => {
                 alt="ai"
                 className="ai-img"
                 onClick={async () => {
-                  await startConversationFromImage("sun");
+                  await startConversationFromImage('sun')
                 }}
               />
             </span>
@@ -298,16 +312,16 @@ const App = () => {
                 alt="ai"
                 className="ai-img"
                 onClick={async () => {
-                  await startConversationFromImage("shakespeare");
+                  await startConversationFromImage('shakespeare')
                 }}
               />
             </span>
           </div>
           <ReactPlayer
             style={{
-              margin: "3em auto",
-              maxWidth: "100%",
-              width: "100%",
+              margin: '3em auto',
+              maxWidth: '100%',
+              width: '100%',
             }}
             url="https://www.youtube.com/watch?v=Ar54k0sMWe0"
           />
@@ -321,7 +335,7 @@ const App = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App
