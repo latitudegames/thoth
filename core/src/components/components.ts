@@ -3,7 +3,6 @@ import { Alert } from './AlertMessage'
 import { BooleanGate } from './BooleanGate'
 import { Code } from './Code'
 // import { EnkiTask } from './EnkiTask'
-// import { HuggingfaceComponent } from './Huggingface'
 import { InputFieldComponent } from './deprecated/InputField'
 import { ModuleInput } from './deprecated/ModuleInput'
 import { ModuleOutput } from './deprecated/ModuleOutput'
@@ -13,12 +12,15 @@ import { RunInputComponent } from './deprecated/RunInput'
 import { DifficultyDetectorComponent } from './DifficultyDetector'
 import { EntityDetector } from './EntityDetector'
 import { FastGreetingDetector } from './FastGreetingDetector'
+import { FastProfanityDetector } from './FastProfanityDetector'
 import { FastQuestionDetector } from './FastQuestionDetector'
 import { ForEach } from './ForEach'
 import { Generator } from './Generator'
+import { HuggingfaceComponent } from './Huggingface'
 import { InputComponent } from './Input'
 import { ItemTypeComponent } from './ItemDetector'
 import { JoinListComponent } from './JoinList'
+import { MLGreetingDetector } from './MLGreetingDetector'
 import { ModuleComponent } from './Module'
 import { Output } from './Output'
 import { ProseToScript } from './ProseToScript'
@@ -45,9 +47,11 @@ export const components = {
   entityDetector: () => new EntityDetector(),
   fastQuestionDetector: () => new FastQuestionDetector(),
   fastGreetingDetector: () => new FastGreetingDetector(),
+  fastProfanityDetector: () => new FastProfanityDetector(),
+  mlGreetingDetector: () => new MLGreetingDetector(),
   forEach: () => new ForEach(),
   generator: () => new Generator(),
-  // huggingfaceComponent: () => new HuggingfaceComponent(),
+  huggingfaceComponent: () => new HuggingfaceComponent(),
   inputComponent: () => new InputComponent(),
   inputFieldComponent: () => new InputFieldComponent(),
   itemTypeComponent: () => new ItemTypeComponent(),

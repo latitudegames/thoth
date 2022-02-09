@@ -9,37 +9,21 @@ import {
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../types'
-import { FewshotControl } from '../dataControls/FewshotControl'
+import { InputControl } from '../dataControls/InputControl'
 import { EngineContext } from '../engine'
 import { triggerSocket, stringSocket, anySocket } from '../sockets'
-import { isQuestion } from '../superreality/fastQuestionDetector'
 import { ThothComponent } from '../thoth-component'
 
 const info =
-  'Fast Question Detector can detect whether or not a phrase is a question'
-
-const fewshot = `why
-who
-whose
-whom
-where
-what
-whats
-what's
-are you
-is he
-is she
-is it
-am i
-how`
+  'ML Greeting Detector can detect whether or not a phrase is a greeting, using Hugging Face'
 
 type InputReturn = {
   output: unknown
 }
 
-export class FastQuestionDetector extends ThothComponent<Promise<InputReturn>> {
+export class MLGreetingDetector extends ThothComponent<Promise<InputReturn>> {
   constructor() {
-    super('Fast Question Detector')
+    super('ML Greeting Detector')
 
     this.task = {
       outputs: { true: 'option', false: 'option', output: 'output' },
@@ -51,17 +35,19 @@ export class FastQuestionDetector extends ThothComponent<Promise<InputReturn>> {
   }
 
   builder(node: ThothNode) {
-    node.data.fewshot = fewshot
-
     const inp = new Rete.Input('string', 'String', stringSocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const isTrue = new Rete.Output('true', 'True', triggerSocket)
     const isFalse = new Rete.Output('false', 'False', triggerSocket)
     const out = new Rete.Output('output', 'output', anySocket)
 
-    const fewshotControl = new FewshotControl({})
+    const minDiff = new InputControl({
+      dataKey: 'minDiff',
+      name: 'Min Difference',
+      icon: 'moon',
+    })
 
-    node.inspector.add(fewshotControl)
+    node.inspector.add(minDiff)
 
     return node
       .addInput(inp)
@@ -78,9 +64,24 @@ export class FastQuestionDetector extends ThothComponent<Promise<InputReturn>> {
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
     const action = inputs['string'][0]
-    const fewshot = node.data.fewshot as string
+    const minDiffData = node?.data?.minDiff as string
+    const minDiff = minDiffData ? parseFloat(minDiffData) : 0.4
+    const parameters = {
+      candidate_labels: ['Greeting', 'Not Greeting'],
+    }
 
-    const is = isQuestion(action as string, fewshot)
+    const result = await thoth.huggingface(
+      'facebook/bart-large-mnli',
+      JSON.stringify({
+        inputs: action as string,
+        parameters: parameters,
+        options: undefined,
+      })
+    )
+    const scores = result.scores as number[]
+    const diff =
+      scores[1] > scores[0] ? scores[1] - scores[0] : scores[0] - scores[1]
+    const is = diff > minDiff && scores[0] > scores[1]
 
     this._task.closed = is ? ['false'] : ['true']
     return {
