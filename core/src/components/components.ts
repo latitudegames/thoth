@@ -21,6 +21,7 @@ import { InputComponent } from './Input'
 import { ItemTypeComponent } from './ItemDetector'
 import { JoinListComponent } from './JoinList'
 import { MLGreetingDetector } from './MLGreetingDetector'
+import { MLProfanityDetector } from './MLProfanityDetector'
 import { ModuleComponent } from './Module'
 import { Output } from './Output'
 import { ProseToScript } from './ProseToScript'
@@ -50,6 +51,7 @@ export const components = {
   fastGreetingDetector: () => new FastGreetingDetector(),
   fastProfanityDetector: () => new FastProfanityDetector(),
   mlGreetingDetector: () => new MLGreetingDetector(),
+  mlProfanityDetector: () => new MLProfanityDetector(),
   forEach: () => new ForEach(),
   generator: () => new Generator(),
   huggingfaceComponent: () => new HuggingfaceComponent(),
