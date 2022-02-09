@@ -20,11 +20,8 @@
     "install:canary": "yarn add @latitudegames/thoth-core@canary"
   },
   "dependencies": {
-<<<<<<< HEAD
     "@callstack/async-storage": "^2.0.3",
     "@latitudegames/thoth-core": "0.0.63",
-=======
->>>>>>> fix packages to operate like monorepo with local core code
     "@material-ui/core": "^4.12.1",
     "@material-ui/icons": "^4.11.2",
     "@monaco-editor/react": "^4.2.1",
@@ -60,13 +57,9 @@
     "react-player": "^2.9.0",
     "react-pouchdb": "^2.1.0",
     "react-redux": "^7.2.5",
-    "react-router": "^6.0.0-beta.8",
-<<<<<<< HEAD
-    "react-router-dom": "6",
-=======
-    "react-router-dom": "^6.0.0-beta.8",
+    "react-router": "^6.0.0",
+    "react-router-dom": "^6.0.0",
     "react-scroll-to-bottom": "^4.2.0",
->>>>>>> Initialize with agents and all models
     "react-select": "^4.3.1",
     "react-simple-code-editor": "^0.11.0",
     "rebass": "^4.0.7",

@@ -48,16 +48,12 @@ export type DataSocketType = {
 export type ThothNode = Node & {
   inspector: Inspector
   display: (content: string) => void
-<<<<<<< HEAD
-  outputs: { name: string; [key: string]: unknown }[]
+  outputs: { name: string;[key: string]: unknown }[]
   category?: string
   deprecated?: boolean
   displayName?: string
   info: string
   subscription: Function
-=======
-  outputs: { name: string;[key: string]: unknown }[]
->>>>>>> Initialize with agents and all models
 }
 
 export type ModuleType = {

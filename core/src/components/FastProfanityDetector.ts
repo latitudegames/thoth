@@ -12,37 +12,43 @@ import {
 import { FewshotControl } from '../dataControls/FewshotControl'
 import { EngineContext } from '../engine'
 import { triggerSocket, stringSocket, anySocket } from '../sockets'
-import { isQuestion } from '../superreality/fastQuestionDetector'
+import { fastProfanityDetector } from '../superreality/fastProfanityDetector'
 import { ThothComponent } from '../thoth-component'
 
 const info =
-  'Fast Question Detector can detect whether or not a phrase is a question'
-
-const fewshot = `why
-who
-whose
-whom
-where
-what
-whats
-what's
-are you
-is he
-is she
-is it
-am i
-how`
+  'Fast Profaniuty Detector can detect whether or not a phrase is a prophane'
 
 type InputReturn = {
   output: unknown
+  type: string
 }
 
-export class FastQuestionDetector extends ThothComponent<Promise<InputReturn>> {
+const fewshot = `Nigga,offensive
+Niga,offensive
+fuck you, sexual
+fuck off, hate
+fuck, hate
+hurt myself, questionable
+kill you, violent
+destroy you, violent
+nigger, offensive
+suck, hate
+cock, sexual
+pussy, sexual`
+
+export class FastProfanityDetector extends ThothComponent<
+  Promise<InputReturn>
+> {
   constructor() {
-    super('Fast Question Detector')
+    super('Fast Profanity Detector')
 
     this.task = {
-      outputs: { true: 'option', false: 'option', output: 'output' },
+      outputs: {
+        true: 'option',
+        false: 'option',
+        output: 'output',
+        type: 'output',
+      },
     }
 
     this.category = 'AI/ML'
@@ -58,6 +64,7 @@ export class FastQuestionDetector extends ThothComponent<Promise<InputReturn>> {
     const isTrue = new Rete.Output('true', 'True', triggerSocket)
     const isFalse = new Rete.Output('false', 'False', triggerSocket)
     const out = new Rete.Output('output', 'output', anySocket)
+    const typeOut = new Rete.Output('type', 'type', stringSocket)
 
     const fewshotControl = new FewshotControl({})
 
@@ -69,6 +76,7 @@ export class FastQuestionDetector extends ThothComponent<Promise<InputReturn>> {
       .addOutput(isTrue)
       .addOutput(isFalse)
       .addOutput(out)
+      .addOutput(typeOut)
   }
 
   async worker(
@@ -80,11 +88,12 @@ export class FastQuestionDetector extends ThothComponent<Promise<InputReturn>> {
     const action = inputs['string'][0]
     const fewshot = node.data.fewshot as string
 
-    const is = isQuestion(action as string, fewshot)
+    const is = fastProfanityDetector(action as string, fewshot)
 
-    this._task.closed = is ? ['false'] : ['true']
+    this._task.closed = is.res ? ['false'] : ['true']
     return {
       output: action as string,
+      type: is.res ? is.type : '',
     }
   }
 }
