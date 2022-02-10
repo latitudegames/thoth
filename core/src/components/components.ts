@@ -3,23 +3,28 @@ import { Alert } from './AlertMessage'
 import { BooleanGate } from './BooleanGate'
 import { Code } from './Code'
 // import { EnkiTask } from './EnkiTask'
-// import { HuggingfaceComponent } from './Huggingface'
 import { InputFieldComponent } from './deprecated/InputField'
 import { ModuleInput } from './deprecated/ModuleInput'
 import { ModuleOutput } from './deprecated/ModuleOutput'
 import { PlaytestInput } from './deprecated/PlaytestInput'
 import { PlaytestPrint } from './deprecated/PlaytestPrint'
-import { ProseToScript } from './ProseToScript'
 import { RunInputComponent } from './deprecated/RunInput'
 import { DifficultyDetectorComponent } from './DifficultyDetector'
 import { EntityDetector } from './EntityDetector'
+import { FastGreetingDetector } from './FastGreetingDetector'
+import { FastProfanityDetector } from './FastProfanityDetector'
+import { FastQuestionDetector } from './FastQuestionDetector'
 import { ForEach } from './ForEach'
 import { Generator } from './Generator'
+import { HuggingfaceComponent } from './Huggingface'
 import { InputComponent } from './Input'
 import { ItemTypeComponent } from './ItemDetector'
 import { JoinListComponent } from './JoinList'
+import { MLGreetingDetector } from './MLGreetingDetector'
+import { MLProfanityDetector } from './MLProfanityDetector'
 import { ModuleComponent } from './Module'
 import { Output } from './Output'
+import { ProseToScript } from './ProseToScript'
 import { SafetyVerifier } from './SafetyVerifier'
 import { StateRead } from './StateRead'
 import { StateWrite } from './StateWrite'
@@ -41,9 +46,14 @@ export const components = {
   difficultyDetectorComponent: () => new DifficultyDetectorComponent(),
   // enkiTask: () => new EnkiTask(),
   entityDetector: () => new EntityDetector(),
+  fastQuestionDetector: () => new FastQuestionDetector(),
+  fastGreetingDetector: () => new FastGreetingDetector(),
+  fastProfanityDetector: () => new FastProfanityDetector(),
+  mlGreetingDetector: () => new MLGreetingDetector(),
+  mlProfanityDetector: () => new MLProfanityDetector(),
   forEach: () => new ForEach(),
   generator: () => new Generator(),
-  // huggingfaceComponent: () => new HuggingfaceComponent(),
+  huggingfaceComponent: () => new HuggingfaceComponent(),
   inputComponent: () => new InputComponent(),
   inputFieldComponent: () => new InputFieldComponent(),
   itemTypeComponent: () => new ItemTypeComponent(),

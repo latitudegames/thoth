@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Koa from 'koa';
 
-import 'regenerator-runtime/runtime.js';
+import 'regenerator-runtime/runtime';
 import { noAuth } from '../../middleware/auth';
 import { Route } from '../../types';
 import { CustomError } from '../../utils/CustomError';
@@ -83,6 +83,8 @@ const chainsHandler = async (ctx: Koa.Context) => {
 
   const inputKeys = extractModuleInputKeys(chain) as string[]
 
+  let error = null
+
   // Validates the body of the request against all expected values to ensure they are all present
   const inputs = inputKeys.reduce((inputs, expectedInput: string) => {
     const requestInput = ctx.request.body[expectedInput]
@@ -92,14 +94,17 @@ const chainsHandler = async (ctx: Koa.Context) => {
 
       return inputs
     } else {
-      throw new CustomError(
-        'input-failed',
-        `Spell expects a value for ${expectedInput} to be provided `
-      )
+      error = `Spell expects a value for ${expectedInput} to be provided `
+      // throw new CustomError(
+      //   'input-failed',
+      //   error
+      // )
     }
   }, {} as Record<string, unknown>)
-
-  const outputs = await runChain(chain, inputs, thoth, modules)
+  if (error) {
+    return ctx.body = { error }
+  }
+  const outputs = await runChain(chain, inputs as any ?? [], thoth, modules)
   const newGameState = thoth.getCurrentGameState()
 
   ctx.body = { spell: activeSpell.name, outputs, gameState: newGameState }
