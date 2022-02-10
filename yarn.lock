@@ -1921,7 +1921,7 @@
     "reddit" "1.2.1"
     "redis" "4.0.1"
     "regenerator-runtime" "^0.13.9"
-    "rete" "https://github.com/latitudegames/rete.git#master"
+    "rete" "github:latitudegames/rete.git"
     "rete-area-plugin" "^0.2.1"
     "rete-connection-plugin" "^0.9.0"
     "rete-context-menu-plugin" "^0.6.0-rc.1"
@@ -18957,7 +18957,7 @@ react-router-dom@^6.0.0-beta.8:
   "resolved" "https://registry.npmjs.org/rete-react-render-plugin/-/rete-react-render-plugin-0.2.1.tgz"
   "version" "0.2.1"
 
-"rete@https://github.com/latitudegames/rete.git#master":
+"rete@github:latitudegames/rete.git":
   "resolved" "git+ssh://git@github.com/latitudegames/rete.git#24565a81a2bbcdd4cd73b0a725977550cc8ff988"
   "version" "1.4.5"
   dependencies:
