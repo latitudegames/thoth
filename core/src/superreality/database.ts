@@ -41,8 +41,8 @@ export class database {
       host: process.env.PGHOST,
       ssl: process.env.PGSSL
         ? {
-            rejectUnauthorized: false,
-          }
+          rejectUnauthorized: false,
+        }
         : false,
     })
     this.client.connect()
@@ -2024,7 +2024,7 @@ export class database {
       for (let i = 0; i < rows.rows.length; i++) {
         res.push({
           id: rows.rows[i].id,
-          lastUpdated: rows.rows[i].lastupdated ? rows.rows[i].lastUpdated : 0,
+          lastUpdated: rows.rows[i].updated_at ? rows.rows[i].updated_at : 0,
         })
       }
       return res
@@ -2033,7 +2033,7 @@ export class database {
     }
   }
   async setInstanceUpdated(id) {
-    const query = 'UPDATE agent_instance SET lastUpdated=$1 WHERE id=$2'
+    const query = 'UPDATE agent_instance SET updated_at=$1 WHERE id=$2'
     const values = [new Date(), id]
 
     await this.client.query(query, values)
@@ -2046,14 +2046,14 @@ export class database {
     const rows = await this.client.query(check, cvalues)
     if (rows && rows.rows && rows.rows.length > 0) {
       const query =
-        'UPDATE agent_instance SET personality=$1, clients=$2, _enabled=$3, lastUpdated=$4 WHERE id=$5'
+        'UPDATE agent_instance SET personality=$1, clients=$2, enabled=$3, updated_at=$4 WHERE id=$5'
       const values = [personality, clients, enabled, new Date(), id]
 
       await this.client.query(query, values)
     } else {
       const query =
-        'INSERT INTO agent_instance(id, personality, clients, _enabled, lastUpdated) VALUES($1, $2, $3, $4, $5)'
-      const values = [id, personality, clients, enabled, new Date()]
+        'INSERT INTO agent_instance(personality, clients, enabled, updated_at) VALUES($1, $2, $3, $4)'
+      const values = [personality, clients, enabled, new Date()]
 
       await this.client.query(query, values)
     }

@@ -23,7 +23,7 @@ export class world extends gameObject {
     const agents = await database.instance.getAgentInstances()
 
     for (let i = 0; i < agents.length; i++) {
-      if (agents[i]._enabled) {
+      if (agents[i].enabled) {
         const _agent = new agent(
           agents[i].id,
           agents[i].personality,

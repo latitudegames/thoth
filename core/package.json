@@ -29,7 +29,7 @@
     "path": "^0.12.7",
     "react": "^17.0.2",
     "regenerator-runtime": "^0.13.9",
-    "rete": "github:latitudegames/rete.git",
+    "rete": "github:latitudegames/rete",
     "rete-area-plugin": "^0.2.1",
     "rete-connection-plugin": "^0.9.0",
     "rete-context-menu-plugin": "^0.6.0-rc.1",

@@ -30,6 +30,7 @@ export async function agentsLoop(update: Function, lateUpdate: Function) {
     const lastUpdate = new Date(agents[i].lastUpdated ?? 0)
     if (now.valueOf() - lastUpdate.valueOf() > maxMSDiff) {
       update(id)
+
       updated.push(id)
       database.instance.setInstanceUpdated(id)
     }
