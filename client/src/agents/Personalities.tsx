@@ -14,7 +14,7 @@ const AIEditor = () => {
       return;
     }
 
-    const body = { agentName: currentAgentData.agentName, data: data };
+    const body = { agentName: currentAgentData.agentName, data: currentAgentData };
     axios.post(`${process.env.REACT_APP_API_URL}/agent`, body).then(res => {
       if (res.data === 'ok') {
         handleClick();
@@ -31,11 +31,14 @@ const AIEditor = () => {
         for (let i = 0; i < res.data.length; i++) {
           newAgents.push(res.data[i]);
         }
+        console.log("newAgents", newAgents);
         setAgents(newAgents);
 
         axios.get(`${process.env.REACT_APP_API_URL}/agent?agent=${newAgents[0]}`).then(res => {
           res.data.agentName = newAgents[0];
           setCurrentAgentData(res.data);
+          console.log("currentAgentData: ", currentAgentData)
+          console.log("agents", agents);
         });
       });
     }
@@ -71,18 +74,13 @@ const AIEditor = () => {
         {currentAgentData &&
           <form>
             <div className="form-item">
-              <span className="form-item-label">Actions:</span>
-              <textarea className="form-text-area" onChange={(e) => { setDataUpdated(true); currentAgentData.actions = e.target.value }} defaultValue={currentAgentData.actions}></textarea>
-            </div>
-
-            <div className="form-item">
               <span className="form-item-label">Dialogue:</span>
               <textarea className="form-text-area" onChange={(e) => { setDataUpdated(true); currentAgentData.dialogue = e.target.value }} defaultValue={currentAgentData.dialogue}></textarea>
             </div>
 
             <div className="form-item">
-              <span className="form-item-label">Ethics:</span>
-              <textarea className="form-text-area" onChange={(e) => { setDataUpdated(true); currentAgentData.ethics = e.target.value }} defaultValue={currentAgentData.ethics}></textarea>
+              <span className="form-item-label">Morals:</span>
+              <textarea className="form-text-area" onChange={(e) => { setDataUpdated(true); currentAgentData.morals = e.target.value }} defaultValue={currentAgentData.morals}></textarea>
             </div>
 
             <div className="form-item">
@@ -112,12 +110,7 @@ const AIEditor = () => {
             </div>
 
             <div className="form-item">
-              <span className="form-item-label">Room:</span>
-              <textarea className="form-text-area" onChange={(e) => { setDataUpdated(true); currentAgentData.room = e.target.value }} defaultValue={currentAgentData.room}></textarea>
-            </div>
-
-            <div className="form-item">
-              <span className="form-item-label">Starting Phrases:</span>
+              <span className="form-item-label">Greetings:</span>
               <textarea className="form-text-area" onChange={(e) => { setDataUpdated(true); currentAgentData.startingPhrases = e.target.value }} defaultValue={currentAgentData.startingPhrases}></textarea>
             </div>
 
@@ -126,9 +119,10 @@ const AIEditor = () => {
               <textarea className="form-text-area" onChange={(e) => { setDataUpdated(true); currentAgentData.ignoredKeywords = e.target.value }} defaultValue={currentAgentData.ignoredKeywords}></textarea>
             </div>
 
+
             <input type='button' value='Update' onClick={update} />
             <input type='button' value='Delete' onClick={() => {
-              axios.post(`${process.env.REACT_APP_API_URL}/delete_agent`, { agentName: currentAgentData.agentName }).then(res => {
+              axios.delete(`${process.env.REACT_APP_API_URL}/agent`, { agentName: currentAgentData.agentName }).then(res => {
                 handleClick();
               });
             }} />
