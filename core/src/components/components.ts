@@ -3,6 +3,9 @@ import { Alert } from './AlertMessage'
 import { ArchiveConversation } from './ArchiveConversation'
 import { BooleanGate } from './BooleanGate'
 import { Code } from './Code'
+import { ConversationCount } from './ConversationCount'
+import { ConversationRecall } from './ConversationRecall'
+import { ConversationStore } from './ConversationStore'
 // import { EnkiTask } from './EnkiTask'
 import { InputFieldComponent } from './deprecated/InputField'
 import { ModuleInput } from './deprecated/ModuleInput'
@@ -61,6 +64,9 @@ export const components = {
   factsStore: () => new FactsStore(),
   factsRecall: () => new FactsRecall(),
   factsCount: () => new FactsCount(),
+  conversationStore: () => new ConversationStore(),
+  conversationRecall: () => new ConversationRecall(),
+  conversationCount: () => new ConversationCount(),
   forEach: () => new ForEach(),
   stringEvaluator: () => new StringEvaluator(),
   stringCombiner: () => new StringCombiner(),

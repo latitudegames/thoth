@@ -411,11 +411,12 @@ const getAgentInstanceHandler = async (ctx: Koa.Context) => {
 const addAgentInstanceHandler = async (ctx: Koa.Context) => {
   const data = ctx.request.body.data
   let instanceId = data.id
-  const personality = data.personality?.trim()
+  const personality = data.personality?.trim() ?? 'common'
   let clients = data.clients
   const enabled = data.enabled
 
   if (!instanceId || instanceId === undefined || instanceId <= 0) {
+    instanceId = 0
     while (
       (await database.instance.instanceIdExists(instanceId)) ||
       instanceId <= 0
@@ -427,17 +428,6 @@ const addAgentInstanceHandler = async (ctx: Koa.Context) => {
     clients = clientSettingsToInstance(
       await database.instance.getAllClientSettings()
     )
-  }
-
-  if (!instanceId) {
-    await database.instance.updateAgentInstances(
-      instanceId,
-      personality,
-      clients,
-      enabled
-    )
-    ctx.body = 'ok'
-    reloadAgentInstances()
   }
 
   try {
@@ -465,26 +455,76 @@ const deleteAgentInstanceHandler = async (ctx: Koa.Context) => {
 }
 
 const setFacts = async (ctx: Koa.Context) => {
-  const { agentName, facts } = ctx.request.body
+  const { agent, speaker, facts } = ctx.request.body
 
-  await database.instance.setAgentFacts(agentName, facts)
-  reloadAgentInstances()
+  await database.instance.setSpeakersFacts(agent, speaker, facts)
 
   return (ctx.body = 'ok')
 }
 const getFacts = async (ctx: Koa.Context) => {
-  const { agentName } = ctx.request.body
+  const agent = ctx.request.query.agent
+  const speaker = ctx.request.query.speaker
 
-  const facts = await database.instance.getAgentFacts(agentName)
+  const facts = await database.instance.getSpeakersFacts(agent, speaker, false)
 
   return (ctx.body = facts)
 }
 const getFactsCount = async (ctx: Koa.Context) => {
-  const { agentName } = ctx.request.body
+  const agent = ctx.request.query.agent
+  const speaker = ctx.request.query.speaker
 
-  const facts = await database.instance.getAgentFacts(agentName)
+  const facts = await database.instance.getSpeakersFacts(agent, speaker, false)
 
   return (ctx.body = facts.length)
+}
+
+const getConversation = async (ctx: Koa.Context) => {
+  const agent = ctx.request.query.agent
+  const speaker = ctx.request.query.speaker
+  const client = ctx.request.query.client
+  const channel = ctx.request.query.channel
+
+  const conversation = await database.instance.getConversation(
+    agent,
+    speaker,
+    client,
+    channel,
+    false
+  )
+
+  return (ctx.body = conversation)
+}
+const setConversation = async (ctx: Koa.Context) => {
+  const agent = ctx.request.body.agent
+  const speaker = ctx.request.body.speaker
+  const client = ctx.request.body.client
+  const channel = ctx.request.body.channel
+  const conversation = ctx.request.body.conve
+
+  await database.instance.setConversation(
+    agent,
+    client,
+    channel,
+    speaker,
+    conversation,
+    false
+  )
+}
+const getConversationCount = async (ctx: Koa.Context) => {
+  const agent = ctx.request.query.agent
+  const speaker = ctx.request.query.speaker
+  const client = ctx.request.query.client
+  const channel = ctx.request.query.channel
+
+  const conversation = await database.instance.getConversation(
+    agent,
+    speaker,
+    client,
+    channel,
+    false
+  )
+
+  return (ctx.body = conversation.length)
 }
 
 export const agents: Route[] = [
@@ -560,5 +600,16 @@ export const agents: Route[] = [
     path: '/facts_count',
     access: noAuth,
     get: getFactsCount,
+  },
+  {
+    path: '/conversation',
+    access: noAuth,
+    get: getConversation,
+    post: setConversation,
+  },
+  {
+    path: '/conversation_count',
+    access: noAuth,
+    get: getConversationCount,
   },
 ]
