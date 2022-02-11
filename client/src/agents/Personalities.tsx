@@ -95,11 +95,6 @@ const AIEditor = () => {
             </div>
 
             <div className="form-item">
-              <span className="form-item-label">Needs and Motivations:</span>
-              <textarea className="form-text-area" onChange={(e) => { setDataUpdated(true); currentAgentData.needsAndMotivation = e.target.value }} defaultValue={currentAgentData.needsAndMotivation}></textarea>
-            </div>
-
-            <div className="form-item">
               <span className="form-item-label">Personality:</span>
               <textarea className="form-text-area" onChange={(e) => { setDataUpdated(true); currentAgentData.personality = e.target.value }} defaultValue={currentAgentData.personality}></textarea>
             </div>

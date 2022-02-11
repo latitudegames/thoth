@@ -1,7 +1,11 @@
 import { ActionTypeComponent } from './ActionType'
 import { Alert } from './AlertMessage'
+import { ArchiveConversation } from './ArchiveConversation'
 import { BooleanGate } from './BooleanGate'
 import { Code } from './Code'
+import { ConversationCount } from './ConversationCount'
+import { ConversationRecall } from './ConversationRecall'
+import { ConversationStore } from './ConversationStore'
 // import { EnkiTask } from './EnkiTask'
 import { InputFieldComponent } from './deprecated/InputField'
 import { ModuleInput } from './deprecated/ModuleInput'
@@ -11,6 +15,9 @@ import { PlaytestPrint } from './deprecated/PlaytestPrint'
 import { RunInputComponent } from './deprecated/RunInput'
 import { DifficultyDetectorComponent } from './DifficultyDetector'
 import { EntityDetector } from './EntityDetector'
+import { FactsCount } from './FactsCount'
+import { FactsRecall } from './FactsRecall'
+import { FactsStore } from './FactsStore'
 import { FastGreetingDetector } from './FastGreetingDetector'
 import { FastProfanityDetector } from './FastProfanityDetector'
 import { FastQuestionDetector } from './FastQuestionDetector'
@@ -28,6 +35,8 @@ import { ProseToScript } from './ProseToScript'
 import { SafetyVerifier } from './SafetyVerifier'
 import { StateRead } from './StateRead'
 import { StateWrite } from './StateWrite'
+import { StringCombiner } from './StringCombiner'
+import { StringEvaluator } from './StringEvaluator'
 import { StringProcessor } from './StringProcessor'
 import { SwitchGate } from './SwitchGate'
 import { TenseTransformer } from './TenseTransformer'
@@ -51,7 +60,16 @@ export const components = {
   fastProfanityDetector: () => new FastProfanityDetector(),
   mlGreetingDetector: () => new MLGreetingDetector(),
   mlProfanityDetector: () => new MLProfanityDetector(),
+  factsStore: () => new FactsStore(),
+  factsRecall: () => new FactsRecall(),
+  factsCount: () => new FactsCount(),
+  conversationStore: () => new ConversationStore(),
+  conversationRecall: () => new ConversationRecall(),
+  conversationCount: () => new ConversationCount(),
   forEach: () => new ForEach(),
+  stringEvaluator: () => new StringEvaluator(),
+  stringCombiner: () => new StringCombiner(),
+  archiveConversation: () => new ArchiveConversation(),
   generator: () => new Generator(),
   huggingfaceComponent: () => new HuggingfaceComponent(),
   inputComponent: () => new InputComponent(),
