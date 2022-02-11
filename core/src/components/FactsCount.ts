@@ -9,6 +9,7 @@ import {
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../types'
+import { getFactsCount } from '../axiosUtils'
 import { EngineContext } from '../engine'
 import { triggerSocket, stringSocket, anySocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
@@ -16,7 +17,7 @@ import { ThothComponent } from '../thoth-component'
 const info = 'Facts Count is used to count of facts for an agent and user'
 
 type InputReturn = {
-  output: unknown
+  output: string
   count: number
 }
 
@@ -42,7 +43,7 @@ export class FactsCount extends ThothComponent<Promise<InputReturn>> {
     const speakerInput = new Rete.Input('speaker', 'Speaker', stringSocket)
     const out = new Rete.Output('output', 'Output', anySocket)
     const inp = new Rete.Input('string', 'Input String', stringSocket)
-    const countOut = new Rete.Output('count', 'Output', anySocket)
+    const countOut = new Rete.Output('count', 'Count', anySocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
 
@@ -62,15 +63,16 @@ export class FactsCount extends ThothComponent<Promise<InputReturn>> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    const speaker = inputs['speaker'][0]
-    const agent = inputs['agent'][0]
+    const speaker = inputs['speaker'][0] as string
+    const agent = inputs['agent'][0] as string
     const action = inputs['string'][0]
 
     console.log('post facts get count', action, speaker, agent)
-    const count = 0
+    const count = await getFactsCount(agent, speaker)
 
+    console.log('count returned: ' + count)
     return {
-      output: action,
+      output: action as string,
       count: count,
     }
   }
