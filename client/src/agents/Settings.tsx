@@ -93,7 +93,7 @@ const ConfigEditor = () => {
                   key={idx}
                 >
                   <label>{value.key}:
-                    {(value.value.length > 0 && (value.value.toLowerCase() === 'true' || value.value.toLowerCase() === 'false')) ? (
+                    {(value.value && value.value.length > 0 && (value.value.toLowerCase() === 'true' || value.value.toLowerCase() === 'false')) ? (
                       <input type='checkbox' id={idx} name={idx} defaultChecked={value.value.toLowerCase().trim() == 'true' ? true : false} onChange={(e) => {
                         setDataUpdated(true); config[idx] = { key: value.key, value: (e.target.checked.toString()) }
                       }} />
