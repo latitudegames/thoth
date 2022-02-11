@@ -6,7 +6,7 @@ export interface agent_instanceAttributes {
   personality?: string
   clients?: string
   enabled?: boolean
-  updatedAt?: string
+  updatedat?: string
 }
 
 export type agent_instancePk = 'id'
@@ -16,7 +16,7 @@ export type agent_instanceOptionalAttributes =
   | 'personality'
   | 'clients'
   | 'enabled'
-  | 'updatedAt'
+  | 'updatedat'
 export type agent_instanceCreationAttributes = Optional<
   agent_instanceAttributes,
   agent_instanceOptionalAttributes
@@ -30,7 +30,7 @@ export class agent_instance
   personality?: string
   clients?: string
   enabled?: boolean
-  updatedAt?: string
+  updatedat?: string
 
   static initModel(sequelize: Sequelize.Sequelize): typeof agent_instance {
     return agent_instance.init(
@@ -53,8 +53,8 @@ export class agent_instance
           type: DataTypes.BOOLEAN,
           allowNull: true,
         },
-        updatedAt: {
-          type: DataTypes.BOOLEAN,
+        updatedat: {
+          type: DataTypes.TEXT,
           allowNull: true,
         },
       },
