@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 /* eslint-disable require-await */
 /* eslint-disable no-empty */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -829,7 +830,8 @@ export class database {
     sender: any,
     client: any,
     channel: any,
-    archive: any
+    archive: any,
+    asString: boolean = true
   ) {
     const query =
       'SELECT * FROM conversation WHERE agent=$1 AND client=$2 AND channel=$3 AND archive=$4'
@@ -864,9 +866,11 @@ export class database {
           break
         }
       }
-      return data.split('\n').reverse().join('\n')
+      return asString
+        ? data.split('\n').reverse().join('\n')
+        : data.split('\n').reverse()
     } else {
-      return ''
+      return asString ? '' : []
     }
   }
   async clearConversations() {
@@ -905,34 +909,25 @@ export class database {
     }
   }
   async setSpeakersFacts(agent: any, speaker: any, facts: any) {
-    const check = 'SELECT FROM speakers_facts WHERE agent=$1 AND speaker=$2'
-    const cvalues = [agent, speaker]
-
-    const test = await this.client.query(check, cvalues)
-
-    let query = ''
-    let values = []
-
-    if (test && test.rows && test.rows.length > 0) {
-      query = 'UPDATE speakers_facts SET facts=$1 WHERE agent=$2 AND speaker=$3'
-      values = [facts, agent, speaker]
-    } else {
-      query =
-        'INSERT INTO speakers_facts(agent, speaker, facts) VALUES($1, $2, $3)'
-      values = [agent, speaker, facts]
-    }
+    const query =
+      'INSERT INTO speakers_facts(agent, speaker, facts) VALUES($1, $2, $3)'
+    const values = [agent, speaker, facts]
 
     await this.client.query(query, values)
   }
-  async getSpeakersFacts(agent: any, speaker: any) {
+  async getSpeakersFacts(agent: any, speaker: any, toString: boolean) {
     const query = 'SELECT * FROM speakers_facts WHERE agent=$1 AND speaker=$2'
     const values = [agent, speaker]
 
     const row = await this.client.query(query, values)
     if (row && row.rows && row.rows.length > 0) {
-      return row.rows[0].facts
+      const res = []
+      for (let i = 0; i < row.rows.length; i++) {
+        res.push(row.rows[i].facts)
+      }
+      return toString ? res.join(',') : res
     } else {
-      return ''
+      return toString ? '' : []
     }
   }
   async updateSpeakersFactsArchive(agent: any, speaker: any, facts: string) {
@@ -1289,16 +1284,6 @@ export class database {
       return ''
     }
   }
-  async setDefaultNeedsAndMotivations(agent: any) {
-    const query =
-      'INSERT INTO needs_motivations(agent, needs_motivations) VALUES($1, $2)'
-    const values = [
-      agent,
-      '$speaker: What would you say your needs are?\n$agent: I need to make friends with others who can house me and take care of me.',
-    ]
-
-    await this.client.query(query, values)
-  }
 
   async setPersonality(agent: any, personality: any) {
     const query = 'INSERT INTO personality(agent, personality) VALUES($1, $2)'
@@ -1313,39 +1298,6 @@ export class database {
     const rows = await this.client.query(query, values)
     if (rows && rows.rows && rows.rows.length > 0) {
       return rows.rows[0].personality
-    } else {
-      return ''
-    }
-  }
-
-  async setNeedsAndMotivations(agent: any, needsAndMotivations: any) {
-    const check = 'SELECT * FROM needs_motivations WHERE agent=$1'
-    const cvalues = [agent]
-
-    const test = await this.client.query(check, cvalues)
-
-    if (test && test.rows && test.rows.length > 0) {
-      const query =
-        'UPDATE needs_motivations SET needs_motivations=$1 WHERE agent=$2'
-      const values = [needsAndMotivations, agent]
-
-      await this.client.query(query, values)
-    } else {
-      const query =
-        'INSERT INTO needs_motivations(agent, needs_motivations) VALUES($1, $2)'
-      const values = [agent, needsAndMotivations]
-
-      await this.client.query(query, values)
-    }
-  }
-
-  async getNeedsAndMotivations(agent: any) {
-    const query = 'SELECT * FROM needs_motivations WHERE agent=$1'
-    const values = [agent]
-
-    const rows = await this.client.query(query, values)
-    if (rows && rows.rows && rows.rows.length > 0) {
-      return rows.rows[0].needs_motivations
     } else {
       return ''
     }
@@ -1617,6 +1569,7 @@ export class database {
       return this.getRandomStartingMessage('common')
     }
   }
+
   async getGreetings(agent: any) {
     const query = 'SELECT * FROM starting_message WHERE agent=$1'
     const values = [agent]
@@ -1711,16 +1664,13 @@ export class database {
     query = 'DELETE FROM dialogue WHERE agent=$1'
     await this.client.query(query, values)
 
-    query = 'DELETE FROM ethics WHERE agent=$1'
+    query = 'DELETE FROM morals WHERE agent=$1'
     await this.client.query(query, values)
 
     query = 'DELETE FROM agent_facts WHERE agent=$1'
     await this.client.query(query, values)
 
     query = 'DELETE FROM monologue WHERE agent=$1'
-    await this.client.query(query, values)
-
-    query = 'DELETE FROM needs_motivations WHERE agent=$1'
     await this.client.query(query, values)
 
     query = 'DELETE FROM personality WHERE agent=$1'
@@ -1734,15 +1684,6 @@ export class database {
 
     query = 'DELETE FROM ignored_keywords WHERE agent=$1'
     await this.client.query(query, values)
-  }
-
-  async createAgentSQL(sql: string | any[]) {
-    if (!sql || sql.length <= 0) {
-      return false
-    }
-
-    await this.client.query(sql)
-    return true
   }
 
   async addWikipediaData(agent: any, data: any) {
@@ -1967,9 +1908,9 @@ export class database {
       const res = []
       for (let i = 0; i < rows.rows.length; i++) {
         res.push({
-          name: rows.rows[i]._name,
-          type: rows.roes[i]._type,
-          defaultValue: rows.rows[i]._defaultValue,
+          name: rows.rows[i].name,
+          type: rows.roes[i].type,
+          defaultValue: rows.rows[i].defaultValue,
         }) //type is string or bool
       }
       return res
@@ -1986,9 +1927,9 @@ export class database {
       for (let i = 0; i < rows.rows.length; i++) {
         res.push({
           client: rows.rows[i].client,
-          name: rows.rows[i]._name,
-          type: rows.rows[i]._type, //string or bool
-          defaultValue: rows.rows[i]._defaultvalue,
+          name: rows.rows[i].name,
+          type: rows.rows[i].type, //string or bool
+          defaultValue: rows.rows[i].defaultvalue,
         })
       }
       return res

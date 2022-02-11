@@ -45,8 +45,6 @@ import { monologue as _monologue } from "./monologue";
 import type { monologueAttributes, monologueCreationAttributes } from "./monologue";
 import { morals as _morals } from "./morals";
 import type { moralsAttributes, moralsCreationAttributes } from "./morals";
-import { needs_motivations as _needs_motivations } from "./needs_motivations";
-import type { needs_motivationsAttributes, needs_motivationsCreationAttributes } from "./needs_motivations";
 import { opinion_form_prompt as _opinion_form_prompt } from "./opinion_form_prompt";
 import type { opinion_form_promptAttributes, opinion_form_promptCreationAttributes } from "./opinion_form_prompt";
 import { personality as _personality } from "./personality";
@@ -106,7 +104,6 @@ export {
   _meta as meta,
   _monologue as monologue,
   _morals as morals,
-  _needs_motivations as needs_motivations,
   _opinion_form_prompt as opinion_form_prompt,
   _personality as personality,
   _personality_questions as personality_questions,
@@ -173,8 +170,6 @@ export type {
   monologueCreationAttributes,
   moralsAttributes,
   moralsCreationAttributes,
-  needs_motivationsAttributes,
-  needs_motivationsCreationAttributes,
   opinion_form_promptAttributes,
   opinion_form_promptCreationAttributes,
   personalityAttributes,
@@ -235,7 +230,6 @@ export function initModels(sequelize: Sequelize) {
   const meta = _meta.initModel(sequelize);
   const monologue = _monologue.initModel(sequelize);
   const morals = _morals.initModel(sequelize);
-  const needs_motivations = _needs_motivations.initModel(sequelize);
   const opinion_form_prompt = _opinion_form_prompt.initModel(sequelize);
   const personality = _personality.initModel(sequelize);
   const personality_questions = _personality_questions.initModel(sequelize);
@@ -279,7 +273,6 @@ export function initModels(sequelize: Sequelize) {
     meta: meta,
     monologue: monologue,
     morals: morals,
-    needs_motivations: needs_motivations,
     opinion_form_prompt: opinion_form_prompt,
     personality: personality,
     personality_questions: personality_questions,

@@ -49,8 +49,6 @@ export async function createWikipediaAgent(speaker, name, personality, facts) {
 
     const personalitySourcePrompt = `Based on the above facts, the following is a description of the personality of an anthropomorphized ${name}:`
 
-    database.instance.setDefaultNeedsAndMotivations(name)
-
     stop = Date.now()
     console.log(
       `Time Taken to execute save data = ${(stop - start) / 1000} seconds`
