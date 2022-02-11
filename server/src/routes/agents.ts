@@ -51,17 +51,14 @@ const getAgentsHandler = async (ctx: Koa.Context) => {
 const getAgentHandler = async (ctx: Koa.Context) => {
   const agent = ctx.query.agent
   ctx.body = {
-    actions: (await database.instance.getActions(agent)).trim(),
     dialogue: (await database.instance.getDialogue(agent)).trim(),
-    ethics: (await database.instance.getEthics(agent)).trim(),
     facts: (await database.instance.getAgentFacts(agent)).trim(),
     monologue: (await database.instance.getMonologue(agent)).trim(),
     needsAndMotivation: (
       await database.instance.getNeedsAndMotivations(agent)
     ).trim(),
     personality: (await database.instance.getPersonality(agent)).trim(),
-    room: (await database.instance.getRoom(agent)).trim(),
-    startingPhrases: (await database.instance.getStartingPhrases(agent)).trim(),
+    greetings: (await database.instance.getGreetings(agent)).trim(),
     ignoredKeywords: (
       await database.instance.getIgnoredKeywordsData(agent)
     ).trim(),
@@ -78,9 +75,7 @@ const createOrUpdateAgentHandler = async (ctx: Koa.Context) => {
   if (!agentExists) {
     // TODO: Combine all of these!
     try {
-      await database.instance.setActions(agentName, data.actions)
       await database.instance.setDialogue(agentName, data.dialogue)
-      await database.instance.setEthics(agentName, data.ethics)
       await database.instance.setAgentFacts(agentName, data.facts, true)
       await database.instance.setMonologue(agentName, data.monologue)
       await database.instance.setNeedsAndMotivations(
@@ -88,10 +83,9 @@ const createOrUpdateAgentHandler = async (ctx: Koa.Context) => {
         data.needsAndMotivation
       )
       await database.instance.setPersonality(agentName, data.personality)
-      await database.instance.setRoom(agentName, data.room)
-      await database.instance.setStartingPhrases(
+      await database.instance.setGreetings(
         agentName,
-        data.startingPhrases
+        data.greetings
       )
       await database.instance.setIgnoredKeywords(
         agentName,
@@ -106,12 +100,8 @@ const createOrUpdateAgentHandler = async (ctx: Koa.Context) => {
     // TODO: Combine all of these!
 
     await database.instance.setAgentExists(agentName)
-    if (!data.actions || data.actions === undefined) data.actions = ''
-    await database.instance.setActions(agentName, data.actions)
     if (!data.dialogue || data.dialogue === undefined) data.dialogue = ''
     await database.instance.setDialogue(agentName, data.dialogue)
-    if (!data.ethics || data.ethics === undefined) data.ethics = ''
-    await database.instance.setEthics(agentName, data.ethics)
     if (!data.facts || data.facts === undefined) data.facts = ''
     await database.instance.setAgentFacts(agentName, data.facts)
     if (!data.monologue || data.monologue === undefined) data.monologue = ''
@@ -125,11 +115,9 @@ const createOrUpdateAgentHandler = async (ctx: Koa.Context) => {
     if (!data.personality || data.personality === undefined)
       data.personality = ''
     await database.instance.setPersonality(agentName, data.personality)
-    if (!data.room || data.room === undefined) data.room = ''
-    await database.instance.setRoom(agentName, data.room)
-    if (!data.startingPhrases || data.startingPhrases === undefined)
-      data.startingPhrases = ''
-    await database.instance.setStartingPhrases(agentName, data.startingPhrases)
+    if (!data.greetings || data.greetings === undefined)
+      data.greetings = ''
+    await database.instance.setGreetings(agentName, data.greetings)
     if (!data.ignoredKeywords || data.ignoredKeywords === undefined)
       data.ignoredKeywords = ''
     await database.instance.setIgnoredKeywords(agentName, data.ignoredKeywords)

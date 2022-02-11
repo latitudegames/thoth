@@ -36,7 +36,7 @@ export class agent_instance
       {
         id: {
           type: DataTypes.INTEGER,
-          allowNull: true,
+          allowNull: false,
           autoIncrement: true,
           primaryKey: true,
         },
