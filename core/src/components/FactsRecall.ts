@@ -33,7 +33,7 @@ export class FactsRecall extends ThothComponent<Promise<InputReturn>> {
       },
     }
 
-    this.category = 'AI/ML'
+    this.category = 'Database'
     this.display = true
     this.info = info
   }
@@ -67,7 +67,6 @@ export class FactsRecall extends ThothComponent<Promise<InputReturn>> {
     const agent = inputs['agent'][0] as string
     const action = inputs['string'][0]
 
-    console.log('post facts get', action, speaker, agent)
     const facts = await getFacts(agent, speaker)
 
     return {
