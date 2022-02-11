@@ -476,6 +476,29 @@ const deleteAgentInstanceHandler = async (ctx: Koa.Context) => {
   return (ctx.body = 'ok')
 }
 
+const setFacts = async (ctx: Koa.Context) => {
+  const { agentName, facts } = ctx.request.body
+
+  await database.instance.setAgentFacts(agentName, facts)
+  reloadAgentInstances()
+
+  return (ctx.body = 'ok')
+}
+const getFacts = async (ctx: Koa.Context) => {
+  const { agentName } = ctx.request.body
+
+  const facts = await database.instance.getAgentFacts(agentName)
+
+  return (ctx.body = facts)
+}
+const getFactsCount = async (ctx: Koa.Context) => {
+  const { agentName } = ctx.request.body
+
+  const facts = await database.instance.getAgentFacts(agentName)
+
+  return (ctx.body = facts.length)
+}
+
 export const agents: Route[] = [
   {
     path: '/agents',
@@ -538,5 +561,16 @@ export const agents: Route[] = [
     get: getAgentInstanceHandler,
     post: addAgentInstanceHandler,
     delete: deleteAgentInstanceHandler,
+  },
+  {
+    path: '/facts',
+    access: noAuth,
+    get: getFacts,
+    post: setFacts,
+  },
+  {
+    path: '/facts_count',
+    access: noAuth,
+    get: getFactsCount,
   },
 ]

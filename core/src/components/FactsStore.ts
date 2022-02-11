@@ -9,6 +9,7 @@ import {
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../types'
+import { storeFacts } from '../axiosUtils'
 import { EngineContext } from '../engine'
 import { triggerSocket, stringSocket, anySocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
@@ -38,13 +39,15 @@ export class FactsStore extends ThothComponent<Promise<InputReturn>> {
   builder(node: ThothNode) {
     const agentInput = new Rete.Input('agent', 'Agent', stringSocket)
     const speakerInput = new Rete.Input('speaker', 'Speaker', stringSocket)
-    const inp = new Rete.Input('string', 'Fact', stringSocket)
+    const factInp = new Rete.Input('string', 'Fact', stringSocket)
+    const inp = new Rete.Input('fact', 'Input', stringSocket)
     const out = new Rete.Output('output', 'Output', anySocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
 
     return node
       .addInput(inp)
+      .addInput(factInp)
       .addInput(agentInput)
       .addInput(speakerInput)
       .addInput(dataInput)
@@ -58,11 +61,14 @@ export class FactsStore extends ThothComponent<Promise<InputReturn>> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    const speaker = inputs['speaker'][0]
-    const agent = inputs['agent'][0]
+    const speaker = inputs['speaker'][0] as string
+    const agent = inputs['agent'][0] as string
     const action = inputs['string'][0]
+    const facts = inputs['fact'][0] as string
 
     console.log('post facts store', action, speaker, agent)
+    const resp = await storeFacts(agent, speaker, facts)
+    console.log(resp)
 
     return {
       output: action as string,
