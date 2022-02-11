@@ -9,6 +9,7 @@ import {
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../types'
+import { getFacts } from '../axiosUtils'
 import { EngineContext } from '../engine'
 import { triggerSocket, stringSocket, anySocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
@@ -62,12 +63,12 @@ export class FactsRecall extends ThothComponent<Promise<InputReturn>> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    const speaker = inputs['speaker'][0]
-    const agent = inputs['agent'][0]
+    const speaker = inputs['speaker'][0] as string
+    const agent = inputs['agent'][0] as string
     const action = inputs['string'][0]
 
     console.log('post facts get', action, speaker, agent)
-    const facts = ''
+    const facts = await getFacts(agent, speaker)
 
     return {
       output: action as string,
