@@ -9,26 +9,27 @@ import {
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../types'
-import { getFactsCount } from '../axiosUtils'
+import { getConversation } from '../axiosUtils'
 import { EngineContext } from '../engine'
 import { triggerSocket, stringSocket, anySocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 
-const info = 'Facts Count is used to count of facts for an agent and user'
+const info =
+  'Conversation Recall is used to get conversation for an agent and user'
 
 type InputReturn = {
-  output: string
-  count: number
+  output: unknown
+  conv: unknown
 }
 
-export class FactsCount extends ThothComponent<Promise<InputReturn>> {
+export class ConversationRecall extends ThothComponent<Promise<InputReturn>> {
   constructor() {
-    super('Facts Count')
+    super('Conversation Recall')
 
     this.task = {
       outputs: {
         output: 'output',
-        count: 'output',
+        conv: 'output',
         trigger: 'option',
       },
     }
@@ -41,9 +42,11 @@ export class FactsCount extends ThothComponent<Promise<InputReturn>> {
   builder(node: ThothNode) {
     const agentInput = new Rete.Input('agent', 'Agent', stringSocket)
     const speakerInput = new Rete.Input('speaker', 'Speaker', stringSocket)
-    const out = new Rete.Output('output', 'Output', anySocket)
+    const clientInput = new Rete.Input('client', 'Client', stringSocket)
+    const channelInput = new Rete.Input('channel', 'Channel', stringSocket)
+    const out = new Rete.Output('output', 'Input String', anySocket)
     const inp = new Rete.Input('string', 'Input String', stringSocket)
-    const countOut = new Rete.Output('count', 'Count', anySocket)
+    const factsOut = new Rete.Output('facts', 'Output', stringSocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
 
@@ -52,9 +55,11 @@ export class FactsCount extends ThothComponent<Promise<InputReturn>> {
       .addInput(dataInput)
       .addInput(agentInput)
       .addInput(speakerInput)
+      .addInput(clientInput)
+      .addInput(channelInput)
       .addOutput(dataOutput)
       .addOutput(out)
-      .addOutput(countOut)
+      .addOutput(factsOut)
   }
 
   async worker(
@@ -66,13 +71,14 @@ export class FactsCount extends ThothComponent<Promise<InputReturn>> {
     const speaker = inputs['speaker'][0] as string
     const agent = inputs['agent'][0] as string
     const action = inputs['string'][0]
+    const client = inputs['client'][0] as string
+    const channel = inputs['channel'][0] as string
 
-    const count = await getFactsCount(agent, speaker)
+    const conv = await getConversation(agent, speaker, client, channel)
 
-    console.log('count returned: ' + count)
     return {
       output: action as string,
-      count: count,
+      conv: conv,
     }
   }
 }
