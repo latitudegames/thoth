@@ -1266,36 +1266,6 @@ export class database {
     }
   }
 
-  async getActions(agent: any) {
-    const query = 'SELECT * FROM actions WHERE agent=$1'
-    const values = [agent]
-
-    const rows = await this.client.query(query, values)
-    if (rows && rows.rows && rows.rows.length > 0) {
-      return rows.rows[0].actions
-    } else {
-      return ''
-    }
-  }
-  async setActions(agent: any, actions: any) {
-    const check = 'SELECT * FROM actions WHERE agent=$1'
-    const cvalues = [agent]
-
-    const test = await this.client.query(check, cvalues)
-
-    if (test && test.rows && test.rows.length > 0) {
-      const query = 'UPDATE actions SET actions=$1 WHERE agent=$2'
-      const values = [actions, agent]
-
-      await this.client.query(query, values)
-    } else {
-      const query = 'INSERT INTO actions(agent, actions) VALUES($1, $2)'
-      const values = [agent, actions]
-
-      await this.client.query(query, values)
-    }
-  }
-
   async getContext(agent = 'common') {
     const query = 'SELECT * FROM context WHERE agent=$1'
     const values = [agent]
@@ -1303,36 +1273,6 @@ export class database {
     const rows = await this.client.query(query, values)
     if (rows && rows.rows && rows.rows.length > 0) {
       return rows.rows[0].context
-    } else {
-      return ''
-    }
-  }
-
-  async setRoom(agent: any, room: any) {
-    const check = 'SELECT * FROM room WHERE agent=$1'
-    const cvalues = [agent]
-
-    const test = await this.client.query(check, cvalues)
-
-    if (test && test.rows && test.rows.length > 0) {
-      const query = 'UPDATE room SET room=$1 WHERE agent=$2'
-      const values = [room, agent]
-
-      await this.client.query(query, values)
-    } else {
-      const query = 'INSERT INTO room(agent, room) VALUES($1, $2)'
-      const values = [agent, room]
-
-      await this.client.query(query, values)
-    }
-  }
-  async getRoom(agent: any) {
-    const query = 'SELECT * FROM room WHERE agent=$1'
-    const values = [agent]
-
-    const rows = await this.client.query(query, values)
-    if (rows && rows.rows && rows.rows.length > 0) {
-      return rows.rows[0].room
     } else {
       return ''
     }
@@ -1348,42 +1288,6 @@ export class database {
     } else {
       return ''
     }
-  }
-
-  async setEthics(agent: any, ethics: any) {
-    const check = 'SELECT * FROM ethics WHERE agent=$1'
-    const cvalues = [agent]
-
-    const test = await this.client.query(check, cvalues)
-
-    if (test && test.rows && test.rows.length > 0) {
-      const query = 'UPDATE ethics SET ethics=$1 WHERE agent=$2'
-      const values = [ethics, agent]
-
-      await this.client.query(query, values)
-    } else {
-      const query = 'INSERT INTO ethics(agent, ethics) VALUES($1, $2)'
-      const values = [agent, ethics]
-
-      await this.client.query(query, values)
-    }
-  }
-  async getEthics(agent: any) {
-    const query = 'SELECT * FROM ethics WHERE agent=$1'
-    const values = [agent]
-
-    const rows = await this.client.query(query, values)
-    if (rows && rows.rows && rows.rows.length > 0) {
-      return rows.rows[0].ethics
-    } else {
-      return ''
-    }
-  }
-  async setDefaultEthics(agent: any) {
-    const query = 'INSERT INTO ethics(agent, ethics) VALUES($1, $2)'
-    const values = [agent, '']
-
-    await this.client.query(query, values)
   }
   async setDefaultNeedsAndMotivations(agent: any) {
     const query =
@@ -1708,12 +1612,12 @@ export class database {
       if (rows.rows[index] === undefined || !rows.rows) {
         return 'Hello there!'
       }
-      return rows.rows[index]._message
+      return rows.rows[index].message
     } else {
       return this.getRandomStartingMessage('common')
     }
   }
-  async getStartingPhrases(agent: any) {
+  async getGreetings(agent: any) {
     const query = 'SELECT * FROM starting_message WHERE agent=$1'
     const values = [agent]
 
@@ -1721,8 +1625,8 @@ export class database {
     if (rows && rows.rows && rows.rows.length > 0) {
       let res = ''
       for (let i = 0; i < rows.rows.length; i++) {
-        if (rows.rows[i]._message.length <= 0) continue
-        res += rows.rows[i]._message + '|'
+        if (rows.rows[i].message.length <= 0) continue
+        res += rows.rows[i].message + '|'
       }
       return res
     }
@@ -1730,7 +1634,7 @@ export class database {
     return ''
   }
 
-  async setStartingPhrases(agent: string | any[], data: string) {
+  async setGreetings(agent: string | any[], data: string) {
     if (!agent || agent.length <= 0) return
     const query = 'DELETE FROM starting_message WHERE agent=$1'
     const values = [agent]
@@ -1741,7 +1645,7 @@ export class database {
     for (let i = 0; i < messages.length; i++) {
       if (messages.length <= 0) continue
       const query2 =
-        'INSERT INTO starting_message(agent, _message) VALUES($1, $2)'
+        'INSERT INTO starting_message(agent, message) VALUES($1, $2)'
       const values2 = [agent, messages[i]]
 
       await this.client.query(query2, values2)
@@ -1804,9 +1708,6 @@ export class database {
 
     await this.client.query(query, values)
 
-    query = 'DELETE FROM actions WHERE agent=$1'
-    await this.client.query(query, values)
-
     query = 'DELETE FROM dialogue WHERE agent=$1'
     await this.client.query(query, values)
 
@@ -1826,9 +1727,6 @@ export class database {
     await this.client.query(query, values)
 
     query = 'DELETE FROM relationship_matrix WHERE agent=$1'
-    await this.client.query(query, values)
-
-    query = 'DELETE FROM room WHERE agent=$1'
     await this.client.query(query, values)
 
     query = 'DELETE FROM starting_message WHERE agent=$1'
@@ -2051,6 +1949,7 @@ export class database {
 
       await this.client.query(query, values)
     } else {
+      console.log('id is', id)
       const query =
         'INSERT INTO agent_instance(personality, clients, enabled, updated_at) VALUES($1, $2, $3, $4)'
       const values = [personality, clients, enabled, new Date()]

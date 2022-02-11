@@ -1,8 +1,6 @@
 import type { Sequelize } from "sequelize";
 import { xr_world_understanding_prompt as _xr_world_understanding_prompt } from "./xr_world_understanding_prompt"
 import type { xr_world_understanding_promptAttributes, xr_world_understanding_promptCreationAttributes } from "./xr_world_understanding_prompt"
-import { actions as _actions } from "./actions";
-import type { actionsAttributes, actionsCreationAttributes } from "./actions";
 import { agent_config as _agent_config } from "./agent_config";
 import type { agent_configAttributes, agent_configCreationAttributes } from "./agent_config";
 import { agent_fact_summarization as _agent_fact_summarization } from "./agent_fact_summarization";
@@ -33,8 +31,6 @@ import { deployedSpells as _deployedSpells } from "./deployedSpells";
 import type { deployedSpellsAttributes, deployedSpellsCreationAttributes } from "./deployedSpells";
 import { dialogue as _dialogue } from "./dialogue";
 import type { dialogueAttributes, dialogueCreationAttributes } from "./dialogue";
-import { ethics as _ethics } from "./ethics";
-import type { ethicsAttributes, ethicsCreationAttributes } from "./ethics";
 import { facts as _facts } from "./facts";
 import type { factsAttributes, factsCreationAttributes } from "./facts";
 import { ignored_keywords as _ignored_keywords } from "./ignored_keywords";
@@ -63,8 +59,6 @@ import { rating as _rating } from "./rating";
 import type { ratingAttributes, ratingCreationAttributes } from "./rating";
 import { relationship_matrix as _relationship_matrix } from "./relationship_matrix";
 import type { relationship_matrixAttributes, relationship_matrixCreationAttributes } from "./relationship_matrix";
-import { room as _room } from "./room";
-import type { roomAttributes, roomCreationAttributes } from "./room";
 import { sensitive_phrases as _sensitive_phrases } from "./sensitive_phrases";
 import type { sensitive_phrasesAttributes, sensitive_phrasesCreationAttributes } from "./sensitive_phrases";
 import { sensitive_responses as _sensitive_responses } from "./sensitive_responses";
@@ -90,7 +84,6 @@ import type { xr_engine_room_promptAttributes, xr_engine_room_promptCreationAttr
 
 export {
   _xr_world_understanding_prompt as xr_world_understanding_prompt,
-  _actions as actions,
   _agent_config as agent_config,
   _agent_fact_summarization as agent_fact_summarization,
   _agent_facts as agent_facts,
@@ -106,7 +99,6 @@ export {
   _conversation as conversation,
   _deployedSpells as deployedSpells,
   _dialogue as dialogue,
-  _ethics as ethics,
   _facts as facts,
   _ignored_keywords as ignored_keywords,
   _keywords as keywords,
@@ -121,7 +113,6 @@ export {
   _profane_responses as profane_responses,
   _rating as rating,
   _relationship_matrix as relationship_matrix,
-  _room as room,
   _sensitive_phrases as sensitive_phrases,
   _sensitive_responses as sensitive_responses,
   _sensitive_words as sensitive_words,
@@ -138,8 +129,6 @@ export {
 export type {
   xr_world_understanding_promptAttributes,
   xr_world_understanding_promptCreationAttributes,
-  actionsAttributes,
-  actionsCreationAttributes,
   agent_configAttributes,
   agent_configCreationAttributes,
   agent_fact_summarizationAttributes,
@@ -170,8 +159,6 @@ export type {
   deployedSpellsCreationAttributes,
   dialogueAttributes,
   dialogueCreationAttributes,
-  ethicsAttributes,
-  ethicsCreationAttributes,
   factsAttributes,
   factsCreationAttributes,
   ignored_keywordsAttributes,
@@ -200,8 +187,6 @@ export type {
   ratingCreationAttributes,
   relationship_matrixAttributes,
   relationship_matrixCreationAttributes,
-  roomAttributes,
-  roomCreationAttributes,
   sensitive_phrasesAttributes,
   sensitive_phrasesCreationAttributes,
   sensitive_responsesAttributes,
@@ -228,7 +213,6 @@ export type {
 
 export function initModels(sequelize: Sequelize) {
   const xr_world_understanding_prompt = _xr_world_understanding_prompt.initModel(sequelize);
-  const actions = _actions.initModel(sequelize);
   const agent_config = _agent_config.initModel(sequelize);
   const agent_fact_summarization = _agent_fact_summarization.initModel(sequelize);
   const agent_facts = _agent_facts.initModel(sequelize);
@@ -244,7 +228,6 @@ export function initModels(sequelize: Sequelize) {
   const conversation = _conversation.initModel(sequelize);
   const deployedSpells = _deployedSpells.initModel(sequelize);
   const dialogue = _dialogue.initModel(sequelize);
-  const ethics = _ethics.initModel(sequelize);
   const facts = _facts.initModel(sequelize);
   const ignored_keywords = _ignored_keywords.initModel(sequelize);
   const keywords = _keywords.initModel(sequelize);
@@ -259,7 +242,6 @@ export function initModels(sequelize: Sequelize) {
   const profane_responses = _profane_responses.initModel(sequelize);
   const rating = _rating.initModel(sequelize);
   const relationship_matrix = _relationship_matrix.initModel(sequelize);
-  const room = _room.initModel(sequelize);
   const sensitive_phrases = _sensitive_phrases.initModel(sequelize);
   const sensitive_responses = _sensitive_responses.initModel(sequelize);
   const sensitive_words = _sensitive_words.initModel(sequelize);
@@ -275,7 +257,6 @@ export function initModels(sequelize: Sequelize) {
 
   return {
     xr_world_understanding_prompt: xr_world_understanding_prompt,
-    actions: actions,
     agent_config: agent_config,
     agent_fact_summarization: agent_fact_summarization,
     agent_facts: agent_facts,
@@ -291,7 +272,6 @@ export function initModels(sequelize: Sequelize) {
     conversation: conversation,
     deployedSpells: deployedSpells,
     dialogue: dialogue,
-    ethics: ethics,
     facts: facts,
     ignored_keywords: ignored_keywords,
     keywords: keywords,
@@ -306,7 +286,6 @@ export function initModels(sequelize: Sequelize) {
     profane_responses: profane_responses,
     rating: rating,
     relationship_matrix: relationship_matrix,
-    room: room,
     sensitive_phrases: sensitive_phrases,
     sensitive_responses: sensitive_responses,
     sensitive_words: sensitive_words,
