@@ -89,7 +89,7 @@ const Agent = ({ id, updateCallback }) => {
               <textarea
                 defaultValue={v2.value}
                 onChange={e => {
-                  ;(data[idx] as any).settings[idx2] = {
+                  ; (data[idx] as any).settings[idx2] = {
                     name: v2.name,
                     value: e.target.value,
                   }

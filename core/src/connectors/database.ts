@@ -6,7 +6,6 @@
 /* eslint-disable no-param-reassign */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-nocheck
-
 import { agentConfig } from '@latitudegames/thoth-core/src/connectors/agentConfig'
 import fs from 'fs'
 import path from 'path'
@@ -789,7 +788,7 @@ export class database {
     return ''
   }
   async setAgentFacts(agent: any, facts: string, reset: any = false) {
-    const check = 'SELECT * FROM agent_facts WHERE agent=$1'
+    const check = 'SELECT * FROM agents WHERE agent=$1'
     const cvalues = [agent]
     const res = await this.client.query(check, cvalues)
     const test = res
@@ -799,10 +798,10 @@ export class database {
     if (test && test.rows && test.rows.length > 0) {
       const newFacts = test.rows[0].facts + !reset ? '\n' + facts : ''
 
-      query = 'UPDATE agent_facts SET facts=$1 WHERE agent=$2'
+      query = 'UPDATE agents SET facts=$1 WHERE agent=$2'
       values = [newFacts, agent]
     } else {
-      query = 'INSERT INTO agent_facts(agent, facts) VALUES($1, $2)'
+      query = 'INSERT INTO agent(agent, facts) VALUES($1, $2)'
       values = [agent, facts]
     }
 
@@ -945,9 +944,9 @@ export class database {
     }
   }
   async createAgent(agent: any) {
-    if (await this.getAgentExists(agent)) {
-      return
-    }
+    // if (await this.getAgentExists(agent)) {
+    //   return
+    // }
 
     const query = 'INSERT INTO agents(agent) VALUES($1)'
     const values = [agent]
@@ -957,16 +956,7 @@ export class database {
   async getAgents() {
     const query = 'SELECT * FROM agents'
 
-    const rows = await this.client.query(query)
-    if (rows && rows.rows && rows.rows.length > 0) {
-      const res = []
-      for (let i = 0; i < rows.rows.length; i++) {
-        res.push(rows.rows[i].agent)
-      }
-      return res
-    } else {
-      return []
-    }
+    return (await this.client.query(query)).rows
   }
 
   // TODO: Move to single table with other prompts
@@ -982,102 +972,26 @@ export class database {
     }
   }
 
-<<<<<<< HEAD
-  async getMorals(agent = 'common') {
-    const query = 'SELECT * FROM morals WHERE agent=$1'
-    const values = [agent]
-
-    const rows = await this.client.query(query, values)
-    if (rows && rows.rows && rows.rows.length > 0) {
-      return rows.rows[0].morals
-    } else {
-      return ''
-    }
-  }
-  async setDefaultNeedsAndMotivations(agent: any) {
-    const query =
-      'INSERT INTO needs_motivations(agent, needs_motivations) VALUES($1, $2)'
-    const values = [
-      agent,
-      '$speaker: What would you say your needs are?\n$agent: I need to make friends with others who can house me and take care of me.',
-    ]
-
-    await this.client.query(query, values)
-  }
-
-=======
->>>>>>> Consolidate configs
   async setPersonality(agent: any, personality: any) {
     const query = 'INSERT INTO personality(agent, personality) VALUES($1, $2)'
     const values = [agent, personality]
 
     await this.client.query(query, values)
   }
-<<<<<<< HEAD
-  async getPersonality(agent: any) {
-    const query = 'SELECT * FROM personality WHERE agent=$1'
-    const values = [agent]
 
-    const rows = await this.client.query(query, values)
-    if (rows && rows.rows && rows.rows.length > 0) {
-      return rows.rows[0].personality
-    } else {
-      return ''
-    }
-  }
-
-  async setNeedsAndMotivations(agent: any, needsAndMotivations: any) {
-    const check = 'SELECT * FROM needs_motivations WHERE agent=$1'
-    const cvalues = [agent]
-
-    const test = await this.client.query(check, cvalues)
-
-    if (test && test.rows && test.rows.length > 0) {
-      const query =
-        'UPDATE needs_motivations SET needs_motivations=$1 WHERE agent=$2'
-      const values = [needsAndMotivations, agent]
-
-      await this.client.query(query, values)
-    } else {
-      const query =
-        'INSERT INTO needs_motivations(agent, needs_motivations) VALUES($1, $2)'
-      const values = [agent, needsAndMotivations]
-
-      await this.client.query(query, values)
-    }
-  }
-
-  async getNeedsAndMotivations(agent: any) {
-    const query = 'SELECT * FROM needs_motivations WHERE agent=$1'
-    const values = [agent]
-
-    const rows = await this.client.query(query, values)
-    if (rows && rows.rows && rows.rows.length > 0) {
-      return rows.rows[0].needs_motivations
-    } else {
-      return ''
-    }
-  }
-
-  async getDialogue(agent: any) {
-    const query = 'SELECT * FROM dialogue WHERE agent=$1'
-    const values = [agent]
-=======
->>>>>>> Consolidate configs
-
-  async setDialogue(agent: any, dialogue: any) {
+  async setDialogue(agent: any, dialog: any) {
     const check = 'SELECT * FROM agents WHERE agent=$1'
     const cvalues = [agent]
 
     const test = await this.client.query(check, cvalues)
 
     if (test && test.rows && test.rows.length > 0) {
-      const query = 'UPDATE agent SET dialogue=$1 WHERE agent=$2'
-      const values = [dialogue, agent]
+      const query = 'UPDATE agents SET dialog=$1 WHERE agent=$2'
+      const values = [dialog, agent]
 
       await this.client.query(query, values)
     } else {
-      throw new Error('Unable to set dialogue for agent')
+      throw new Error('Unable to set dialog for agent')
     }
   }
 
@@ -1088,7 +1002,7 @@ export class database {
     const test = await this.client.query(check, cvalues)
 
     if (test && test.rows && test.rows.length > 0) {
-      const query = 'UPDATE agent SET monologue=$1 WHERE agent=$2'
+      const query = 'UPDATE agents SET monologue=$1 WHERE agent=$2'
       const values = [monologue, agent]
 
       await this.client.query(query, values)
@@ -1124,7 +1038,7 @@ export class database {
   async getRandomGreeting(agent: string) {
     return 'Hello'
     // TODO: Refactor to get starting message from agent db
-    // const query = 'SELECT * FROM greeting WHERE agent=$1'
+    // const query = 'SELECT * FROM greetings WHERE agent=$1'
     // const values = [agent]
     // const rows = await this.client.query(query, values)
     // if (rows && rows.rows && rows.rows.length > 0) {
@@ -1140,7 +1054,7 @@ export class database {
   async getGreetings(agent: any) {
     return 'Hello'
     // TODO: Refactor to get starting message from agent db
-    // const query = 'SELECT * FROM greeting WHERE agent=$1'
+    // const query = 'SELECT * FROM greetings WHERE agent=$1'
     // const values = [agent]
 
     // const rows = await this.client.query(query, values)
@@ -1158,18 +1072,13 @@ export class database {
 
   async setGreetings(agent: string | any[], data: string) {
     if (!agent || agent.length <= 0) return
-    const query = 'DELETE FROM greeting WHERE agent=$1'
-    const values = [agent]
-
-    await this.client.query(query, values)
-
     const messages = data.split('|')
     for (let i = 0; i < messages.length; i++) {
       if (messages.length <= 0) continue
-      const query2 = 'UPDATE agent SET greeting=$2 WHERE agent=$1)'
-      const values2 = [agent, messages[i]]
+      const query = 'UPDATE agents SET greetings=$2 WHERE agent=$1'
+      const values = [agent, messages[i]]
 
-      await this.client.query(query2, values2)
+      await this.client.query(query, values)
     }
   }
 
@@ -1224,36 +1133,9 @@ export class database {
   }
 
   async deleteAgent(agent: any) {
-    let query = 'DELETE FROM agents WHERE agent=$1'
+    const query = 'DELETE FROM agents WHERE agent=$1'
     const values = [agent]
 
-    await this.client.query(query, values)
-
-    query = 'DELETE FROM dialogue WHERE agent=$1'
-    await this.client.query(query, values)
-
-    query = 'DELETE FROM ethics WHERE agent=$1'
-    await this.client.query(query, values)
-
-    query = 'DELETE FROM agent_facts WHERE agent=$1'
-    await this.client.query(query, values)
-
-    query = 'DELETE FROM monologue WHERE agent=$1'
-    await this.client.query(query, values)
-
-    query = 'DELETE FROM needs_motivations WHERE agent=$1'
-    await this.client.query(query, values)
-
-    query = 'DELETE FROM personality WHERE agent=$1'
-    await this.client.query(query, values)
-
-    query = 'DELETE FROM relationship_matrix WHERE agent=$1'
-    await this.client.query(query, values)
-
-    query = 'DELETE FROM greeting WHERE agent=$1'
-    await this.client.query(query, values)
-
-    query = 'DELETE FROM ignored_keywords WHERE agent=$1'
     await this.client.query(query, values)
   }
 

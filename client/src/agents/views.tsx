@@ -1,6 +1,6 @@
 export const views = {
   Dashboard: "dashboard",
-  Personalities: "personalities",
+  AgentInstances: "agentInstances",
   Config: "config",
   Agents: 'agents',
   Prompts: 'prompts'

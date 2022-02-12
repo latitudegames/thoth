@@ -13,7 +13,6 @@ const ConfigEditor = () => {
 
   if (firstLoad) {
     axios.get(`${process.env.REACT_APP_API_URL}/config`).then(res => {
-      console.log("res.data is ", res.data);
       setConfig(res.data.config);
       setFirstLoad(false);
     });
