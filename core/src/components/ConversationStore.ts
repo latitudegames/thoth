@@ -1,6 +1,8 @@
 /* eslint-disable no-console */
 /* eslint-disable require-await */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-console */
+import axios from 'axios'
 import Rete from 'rete'
 
 import {
@@ -9,7 +11,6 @@ import {
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../types'
-import { setConversation } from '../axiosUtils'
 import { EngineContext } from '../engine'
 import { triggerSocket, stringSocket, anySocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
@@ -19,6 +20,26 @@ const info =
 
 type InputReturn = {
   output: unknown
+}
+
+export async function setConversation(
+  agent: string,
+  speaker: string,
+  conv: string,
+  client: string,
+  channel: string
+) {
+  const response = await axios.post(
+    `${process.env.REACT_APP_API_URL}/conversation`,
+    {
+      agent: agent,
+      speaker: speaker,
+      conversation: conv,
+      client: client,
+      channel: channel,
+    }
+  )
+  return response.data
 }
 
 export class ConversationStore extends ThothComponent<Promise<InputReturn>> {

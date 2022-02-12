@@ -8,14 +8,10 @@
 
 import roomManager from '../components/roomManager'
 import { classifyText } from '../components/textClassifier'
-import { customConfig } from '../superreality/customConfig'
-import { database } from '../superreality/database'
-import {
-  getRandomEmptyResponse,
-  startsWithCapital,
-  getSetting,
-} from '../superreality/utils'
+import { customConfig } from './customConfig'
+import { database } from './database'
 import { handleInput } from './handleInput'
+import { getRandomEmptyResponse, startsWithCapital, getSetting } from './utils'
 
 export class telegram_client {
   async handleMessage(chat_id, response, message_id, addPing, args, bot) {

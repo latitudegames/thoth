@@ -9,13 +9,13 @@ export interface starting_messageAttributes {
 export type starting_messageOptionalAttributes = "agent" | "message";
 export type starting_messageCreationAttributes = Optional<starting_messageAttributes, starting_messageOptionalAttributes>;
 
-export class starting_message extends Model<starting_messageAttributes, starting_messageCreationAttributes> implements starting_messageAttributes {
+export class default_starting_message extends Model<starting_messageAttributes, starting_messageCreationAttributes> implements starting_messageAttributes {
   agent?: string;
   message?: string;
 
 
-  static initModel(sequelize: Sequelize.Sequelize): typeof starting_message {
-    return starting_message.init({
+  static initModel(sequelize: Sequelize.Sequelize): typeof default_starting_message {
+    return default_starting_message.init({
       agent: {
         type: DataTypes.TEXT,
         allowNull: true
@@ -26,7 +26,7 @@ export class starting_message extends Model<starting_messageAttributes, starting
       }
     }, {
       sequelize,
-      tableName: 'starting_message',
+      tableName: 'default_starting_message',
       schema: 'public',
       timestamps: false
     });

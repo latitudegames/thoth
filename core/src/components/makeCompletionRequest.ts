@@ -1,11 +1,11 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-nocheck
 
-import { customConfig } from '@latitudegames/thoth-core/src/superreality/customConfig'
+import { customConfig } from '@latitudegames/thoth-core/src/connectors/customConfig'
 import axios from 'axios'
 import { config } from 'dotenv'
 
-import { database } from '../superreality/database'
+import { database } from '../connectors/database'
 import { makeModelRequest } from './makeModelRequest'
 config()
 

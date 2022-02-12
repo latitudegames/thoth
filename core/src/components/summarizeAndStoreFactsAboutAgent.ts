@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-nocheck
 
-import { database } from '../superreality/database'
+import { database } from '../connectors/database'
 import { makeCompletionRequest } from './makeCompletionRequest'
 
 export async function summarizeAndStoreFactsAboutAgent(speaker, agent, input) {

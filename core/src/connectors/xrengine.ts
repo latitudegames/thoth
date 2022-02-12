@@ -9,17 +9,17 @@
 /* eslint-disable camelcase */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { customConfig } from '@latitudegames/thoth-core/src/superreality/customConfig'
+import { customConfig } from '@latitudegames/thoth-core/src/connectors/customConfig'
 
 import roomManager from '../components/roomManager'
 import { classifyText } from '../components/textClassifier'
-import { database } from '../superreality/database'
+import { database } from './database'
 import {
   detectOsOption,
   getRandomEmptyResponse,
   getSetting,
   startsWithCapital,
-} from '../superreality/utils'
+} from './utils'
 import { browserWindow, PageUtils } from './browser'
 import { handleInput } from './handleInput'
 
@@ -762,7 +762,7 @@ class XREngineBot {
     await this.waitForTimeout(timeout)
   }
 
-  async interactObject() {}
+  async interactObject() { }
 
   /** Return screenshot
    * @param {Function} fn Function to execut _in the node context._

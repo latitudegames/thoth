@@ -7,15 +7,14 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-nocheck
 
-import { customConfig } from '@latitudegames/thoth-core/src/superreality/customConfig'
+import { customConfig } from '@latitudegames/thoth-core/src/connectors/customConfig'
 import fs from 'fs'
 import path from 'path'
 import pg from 'pg'
 import internal from 'stream'
 
+import { initProfanityFilter } from '../components/profanityFilter'
 import { idGenerator } from './utils'
-
-// import { initProfanityFilter } from '../components/profanityFilter'
 
 const getRandomNumber = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1)) + min
@@ -53,16 +52,17 @@ export class database {
   async initData() {
     await this.readConfig()
     await this.onInit()
-    // await initProfanityFilter()
+    await initProfanityFilter()
   }
 
   async _initProfanityFilter() {
-    //await initProfanityFilter()
+    await initProfanityFilter()
   }
 
   async firstInit() {
     const id = new idGenerator()
 
+    // TODO: Simplify this, some cruft from adding our old code in
     const query1 =
       'INSERT INTO config\n' +
       'select t.*\n' +
@@ -144,6 +144,7 @@ export class database {
     await this.client.query(query1)
     id.reset()
 
+    // TODO: Simplify this, some cruft from adding our old code in
     const query2 =
       'INSERT INTO client_settings\n' +
       'select t.*\n' +
@@ -1096,13 +1097,13 @@ export class database {
   }
   async setSensitiveResponses(agent: any, responses: any) {
     const query =
-      'INSERT INTO sensitive_responses(agent, response) VALUES($1, $2)'
+      'INSERT INTO default_sensitive_responses(agent, response) VALUES($1, $2)'
     const values = [agent, responses]
 
     await this.client.query(query, values)
   }
   async getSensitiveResponses(agent: any) {
-    const query = 'SELECT * FROM sensitive_responses WHERE agent=$1'
+    const query = 'SELECT * FROM default_sensitive_responses WHERE agent=$1'
     const values = [agent]
 
     const row = await this.client.query(query, values)
@@ -1407,26 +1408,26 @@ export class database {
   }
 
   async addBadWord(word: string) {
-    const query = 'INSERT INTO bad_words(word) VALUES($1)'
+    const query = 'INSERT INTO default_bad_words(word) VALUES($1)'
     const values = [word]
 
     await this.client.query(query, values)
   }
   async badWordExists(word: any) {
-    const query = 'SELECT * FROM bad_words WHERE word=$1'
+    const query = 'SELECT * FROM default_bad_words WHERE word=$1'
     const values = [word]
 
     const rows = await this.client.query(query, values)
     return rows && rows.rows && rows.rows.length > 0
   }
   async removeBadWord(word: any) {
-    const query = 'DELETE FROM bad_words WHERE word=$1'
+    const query = 'DELETE FROM default_bad_words WHERE word=$1'
     const values = [word]
 
     await this.client.query(query, values)
   }
   async getBadWords() {
-    const query = 'SELECT * FROM bad_words'
+    const query = 'SELECT * FROM default_bad_words'
 
     const rows = await this.client.query(query)
     let res = ''
@@ -1439,26 +1440,26 @@ export class database {
   }
 
   async addSensitiveWord(word: string) {
-    const query = 'INSERT INTO sensitive_words(word) VALUES($1)'
+    const query = 'INSERT INTO default_sensitive_words(word) VALUES($1)'
     const values = [word]
 
     await this.client.query(query, values)
   }
   async sensitiveWordExists(word: any) {
-    const query = 'SELECT * FROM sensitive_words WHERE word=$1'
+    const query = 'SELECT * FROM default_sensitive_words WHERE word=$1'
     const values = [word]
 
     const rows = await this.client.query(query, values)
     return rows && rows.rows && rows.rows.length > 0
   }
   async removeSensitiveWord(word: any) {
-    const query = 'DELETE FROM sensitive_words WHERE word=$1'
+    const query = 'DELETE FROM default_sensitive_words WHERE word=$1'
     const values = [word]
 
     await this.client.query(query, values)
   }
   async getSensitiveWords() {
-    const query = 'SELECT * FROM sensitive_words'
+    const query = 'SELECT * FROM default_sensitive_words'
 
     const rows = await this.client.query(query)
     let res = ''
@@ -1471,26 +1472,26 @@ export class database {
   }
 
   async addSensitivePhrase(phrase: string) {
-    const query = 'INSERT INTO sensitive_phrases(phrase) VALUES($1)'
+    const query = 'INSERT INTO default_sensitive_phrases(phrase) VALUES($1)'
     const values = [phrase]
 
     await this.client.query(query, values)
   }
   async sensitivePhraseExists(phrase: any) {
-    const query = 'SELECT * FROM sensitive_phrases WHERE phrase=$1'
+    const query = 'SELECT * FROM default_sensitive_phrases WHERE phrase=$1'
     const values = [phrase]
 
     const rows = await this.client.query(query, values)
     return rows && rows.rows && rows.rows.length > 0
   }
   async removeSensitivePhrase(phrase: any) {
-    const query = 'DELETE FROM sensitive_phrases WHERE phrase=$1'
+    const query = 'DELETE FROM default_sensitive_phrases WHERE phrase=$1'
     const values = [phrase]
 
     await this.client.query(query, values)
   }
   async getSensitivePhrases() {
-    const query = 'SELECT * FROM sensitive_phrases'
+    const query = 'SELECT * FROM default_sensitive_phrases'
 
     const rows = await this.client.query(query)
     let res = ''
@@ -1537,7 +1538,7 @@ export class database {
   async onInit() {
     if ((await this.getBadWords()).length <= 0) {
       const data = fs
-        .readFileSync(rootDir + '/filters/bad_words.txt')
+        .readFileSync(rootDir + '/filters/default_bad_words.txt')
         .toString()
         .split('\n')
       for (let i = 0; i < data.length; i++) {
@@ -1546,7 +1547,7 @@ export class database {
     }
     if ((await this.getSensitiveWords()).length <= 0) {
       const data = fs
-        .readFileSync(rootDir + '/filters/sensitive_words.txt')
+        .readFileSync(rootDir + '/filters/default_sensitive_words.txt')
         .toString()
         .split('\n')
       for (let i = 0; i < data.length; i++) {
@@ -1555,7 +1556,7 @@ export class database {
     }
     if ((await this.getSensitivePhrases()).length <= 0) {
       const data = fs
-        .readFileSync(rootDir + '/filters/sensitive_phrases.txt')
+        .readFileSync(rootDir + '/filters/default_sensitive_phrases.txt')
         .toString()
         .split('\n')
       for (let i = 0; i < data.length; i++) {
@@ -1598,7 +1599,7 @@ export class database {
   }
 
   async getRandomStartingMessage(agent: string) {
-    const query = 'SELECT * FROM starting_message WHERE agent=$1'
+    const query = 'SELECT * FROM default_starting_message WHERE agent=$1'
     const values = [agent]
 
     const rows = await this.client.query(query, values)
@@ -1613,7 +1614,7 @@ export class database {
     }
   }
   async getGreetings(agent: any) {
-    const query = 'SELECT * FROM starting_message WHERE agent=$1'
+    const query = 'SELECT * FROM default_starting_message WHERE agent=$1'
     const values = [agent]
 
     const rows = await this.client.query(query, values)
@@ -1631,7 +1632,7 @@ export class database {
 
   async setGreetings(agent: string | any[], data: string) {
     if (!agent || agent.length <= 0) return
-    const query = 'DELETE FROM starting_message WHERE agent=$1'
+    const query = 'DELETE FROM default_starting_message WHERE agent=$1'
     const values = [agent]
 
     await this.client.query(query, values)
@@ -1640,7 +1641,7 @@ export class database {
     for (let i = 0; i < messages.length; i++) {
       if (messages.length <= 0) continue
       const query2 =
-        'INSERT INTO starting_message(agent, message) VALUES($1, $2)'
+        'INSERT INTO default_starting_message(agent, message) VALUES($1, $2)'
       const values2 = [agent, messages[i]]
 
       await this.client.query(query2, values2)
@@ -1724,7 +1725,7 @@ export class database {
     query = 'DELETE FROM relationship_matrix WHERE agent=$1'
     await this.client.query(query, values)
 
-    query = 'DELETE FROM starting_message WHERE agent=$1'
+    query = 'DELETE FROM default_starting_message WHERE agent=$1'
     await this.client.query(query, values)
 
     query = 'DELETE FROM ignored_keywords WHERE agent=$1'
