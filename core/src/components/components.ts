@@ -25,13 +25,16 @@ import { ForEach } from './ForEach'
 import { Generator } from './Generator'
 import { HuggingfaceComponent } from './Huggingface'
 import { InputComponent } from './Input'
+import { InputsToJSON } from './InputsToJSON'
 import { ItemTypeComponent } from './ItemDetector'
 import { JoinListComponent } from './JoinList'
+import { LogicalOperator } from './LogicalOperator'
 import { MLGreetingDetector } from './MLGreetingDetector'
 import { MLProfanityDetector } from './MLProfanityDetector'
 import { ModuleComponent } from './Module'
 import { Output } from './Output'
 import { ProseToScript } from './ProseToScript'
+import { RandomStringFromList } from './RandomStringFromList'
 import { SafetyVerifier } from './SafetyVerifier'
 import { StateRead } from './StateRead'
 import { StateWrite } from './StateWrite'
@@ -69,11 +72,14 @@ export const components = {
   forEach: () => new ForEach(),
   stringEvaluator: () => new StringEvaluator(),
   stringCombiner: () => new StringCombiner(),
+  randomStringFromList: () => new RandomStringFromList(),
+  logicalOperator: () => new LogicalOperator(),
   archiveConversation: () => new ArchiveConversation(),
   generator: () => new Generator(),
   huggingfaceComponent: () => new HuggingfaceComponent(),
   inputComponent: () => new InputComponent(),
   inputFieldComponent: () => new InputFieldComponent(),
+  inputsToJson: () => new InputsToJSON(),
   itemTypeComponent: () => new ItemTypeComponent(),
   joinListComponent: () => new JoinListComponent(),
   moduleComponent: () => new ModuleComponent(),
