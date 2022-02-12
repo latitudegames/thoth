@@ -64,7 +64,7 @@ Rewritten as a script:
   return prompt
 }
 
-const info = `The prose to script converter transforms narrative prose into a screenplay-style script, attributing dialogue to characters in the scene, and discarding all text that is not speech. The input is a text string the output is a string of the script`
+const info = `The prose to script converter transforms narrative prose into a screenplay-style script, attributing dialog to characters in the scene, and discarding all text that is not speech. The input is a text string the output is a string of the script`
 
 type WorkerReturn = {
   detectedItem: string

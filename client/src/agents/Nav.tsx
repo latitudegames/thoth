@@ -6,12 +6,12 @@ import { views } from './views';
 export default function Nav({ currentView, changeView }) {
   return (
     <div className="nav">
-      <span onClick={() => changeView(views.Personalities)} className={currentView === views.Personalities ? "nav-item-active" : "nav-item"} >
-        Personalities
-      </span>
-
       <span onClick={() => changeView(views.Agents)} className={currentView === views.Agents ? "nav-item-active" : "nav-item"} >
         Agents
+      </span>
+
+      <span onClick={() => changeView(views.AgentInstances)} className={currentView === views.AgentInstances ? "nav-item-active" : "nav-item"} >
+        Instances
       </span>
 
       <span onClick={() => changeView(views.Config)} className={currentView === views.Config ? "nav-item-active" : "nav-item"} >

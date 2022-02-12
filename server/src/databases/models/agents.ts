@@ -5,6 +5,7 @@ export interface agentsAttributes {
   agent?: string;
   dialog?: string;
   facts?: string;
+  greetings?: string;
   monologue?: string;
   morals?: string;
   profanity_responses?: string;
@@ -24,6 +25,10 @@ export class agents extends Model<agentsAttributes, agentsCreationAttributes> im
   static initModel(sequelize: Sequelize.Sequelize): typeof agents {
     return agents.init({
       agent: {
+        type: DataTypes.TEXT,
+        allowNull: true
+      },
+      greetings: {
         type: DataTypes.TEXT,
         allowNull: true
       },
