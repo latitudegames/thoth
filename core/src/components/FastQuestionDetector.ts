@@ -12,8 +12,30 @@ import {
 import { FewshotControl } from '../dataControls/FewshotControl'
 import { EngineContext } from '../engine'
 import { triggerSocket, stringSocket, anySocket } from '../sockets'
-import { isQuestion } from '../superreality/fastQuestionDetector'
 import { ThothComponent } from '../thoth-component'
+
+/* eslint-disable no-param-reassign */
+function isQuestion(input: string, data: string) {
+  input = input.toLowerCase().trim()
+
+  if (input.endsWith('?')) {
+    return true
+  }
+
+  let questionStarters = data.split('\n')
+  questionStarters = questionStarters.filter(element => {
+    return element !== ''
+  })
+
+  for (let i = 0; i < questionStarters.length; i++) {
+    if (input.startsWith(questionStarters[i])) {
+      return true
+    }
+  }
+
+  return false
+}
+
 
 const info =
   'Fast Question Detector can detect whether or not a phrase is a question'

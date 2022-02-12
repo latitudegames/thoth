@@ -13,8 +13,28 @@ import { FewshotControl } from '../dataControls/FewshotControl'
 import { InputControl } from '../dataControls/InputControl'
 import { EngineContext } from '../engine'
 import { triggerSocket, stringSocket } from '../sockets'
-import detectFastGreeting from '../superreality/greetingDetector'
 import { ThothComponent } from '../thoth-component'
+
+/* eslint-disable no-param-reassign */
+function detectFastGreeting(input: string, maxLength: number, data: string) {
+  input = input.toLowerCase().trim()
+  if (input.length > maxLength) {
+    return false
+  }
+
+  let fastGreetings = data.split('\n')
+  fastGreetings = fastGreetings.filter(element => {
+    return element !== ''
+  })
+
+  for (let i = 0; i < fastGreetings.length; i++) {
+    if (input.includes(fastGreetings[i])) {
+      return true
+    }
+  }
+
+  return false
+}
 
 const info =
   'Fast Greeting Detector can detect whether or not a phrase is a greeting'

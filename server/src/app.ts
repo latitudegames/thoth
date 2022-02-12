@@ -2,7 +2,7 @@
 import cors from '@koa/cors'
 import Router from '@koa/router'
 import cors_server from './cors-server'
-import { database } from '@latitudegames/thoth-core/src/superreality/database'
+import { database } from '@latitudegames/thoth-core/src/connectors/database'
 import roomManager from '@latitudegames/thoth-core/src/components/roomManager'
 import { config } from 'dotenv'
 import HttpStatus from 'http-status-codes'
@@ -51,7 +51,7 @@ export async function init() {
     }
   }
 
-  ;(async function () {
+  ; (async function () {
     await database.instance.connect()
     await creatorToolsDatabase.sequelize.sync({
       force: !!process.env.REFRESH_DB,

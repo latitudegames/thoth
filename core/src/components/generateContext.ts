@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-nocheck
 
-import { database } from '../superreality/database'
+import { database } from '../connectors/database'
 import keywordExtractor from './keywordExtractor'
 
 function capitalizeFirstLetter(word) {
@@ -12,32 +12,16 @@ function capitalizeFirstLetter(word) {
 export async function generateContext(speaker, agent, conversation, message) {
   const keywords = keywordExtractor(message, agent)
 
-<<<<<<< HEAD
-    const pr = await Promise.all([
-        keywords,
-        database.instance.getSpeakersFacts(agent, speaker),
-        database.instance.getAgentFacts(agent),
-        database.instance.getPersonality(agent),
-        database.instance.getNeedsAndMotivations(agent),
-        database.instance.getDialogue(agent),
-        database.instance.getMonologue(agent),
-        database.instance.getFacts(agent),
-    ])
-=======
   const pr = await Promise.all([
     keywords,
-    database.instance.getSpeakersFacts(agent, speaker, true),
+    database.instance.getSpeakersFacts(agent, speaker),
     database.instance.getAgentFacts(agent),
-    database.instance.getRoom(agent),
-    database.instance.getMorals(),
-    database.instance.getEthics(agent),
     database.instance.getPersonality(agent),
     database.instance.getNeedsAndMotivations(agent),
     database.instance.getDialogue(agent),
     database.instance.getMonologue(agent),
     database.instance.getFacts(agent),
   ])
->>>>>>> implemented the conversation nodes, fixed some issues with the agent instances,
 
   pr[1] = pr[1].toString().trim().replaceAll('\n\n', '\n')
   pr[2] = pr[2].toString().trim().replaceAll('\n\n', '\n')

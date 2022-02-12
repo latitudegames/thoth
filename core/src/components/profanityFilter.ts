@@ -2,11 +2,11 @@
 //@ts-nocheck
 
 import { profanity } from '@2toad/profanity'
-import { customConfig } from '@latitudegames/thoth-core/src/superreality/customConfig'
+import { customConfig } from '@latitudegames/thoth-core/src/connectors/customConfig'
 import grawlix from 'grawlix'
 import grawlixRacism from 'grawlix-racism'
 
-import { database } from '../superreality/database'
+import { database } from '../connectors/database'
 import { makeCompletionRequest } from './makeCompletionRequest'
 import { makeModelRequest } from './makeModelRequest'
 import { classifyProfanityText } from './textClassifier'
@@ -27,39 +27,41 @@ const wordSensitivity = 0.1 // percentage of text that is sensitive
 const toxicityThreshold = 0.4
 const leadingToxicityThreshold = 0.2
 
-let badWords
-let sensitiveWords
-let sensitivePhrases
+let defaultBadWords
+let defaultSensitiveWords
+let defaultSensitivePhrases
 let leadingStatements
 
 //loads all the predefined words and phrases for the profanity system
 export async function initProfanityFilter() {
   // TODO: remove punctuation from phrases and words before testing
-  badWords = (await database.instance.getBadWords()).toString().split('\n')
-  sensitiveWords = (await database.instance.getSensitiveWords())
+  defaultBadWords = (await database.instance.getBadWords())
+    .toString()
+    .split('\n')
+  defaultSensitiveWords = (await database.instance.getSensitiveWords())
     .toString()
     .trim()
     .split('\r\n')
-  sensitivePhrases = (await database.instance.getSensitivePhrases())
+  defaultSensitivePhrases = (await database.instance.getSensitivePhrases())
     .toString()
     .split('\n')
   leadingStatements = (await database.instance.getLeadingStatements())
     .toString()
     .split('\n')
 
-  profanity.addWords(badWords)
+  profanity.addWords(defaultBadWords)
 }
 
 function testIfContainsSensitiveWords(text) {
   // return true if text contains any of the filter words
-  return sensitiveWords.filter(word => {
+  return defaultSensitiveWords.filter(word => {
     return text.toLowerCase().includes(word.toLowerCase())
   }).length
 }
 
 function testIfContainsSensitivePhrases(text) {
   // return number of matches
-  return sensitivePhrases.filter(phrase => {
+  return defaultSensitivePhrases.filter(phrase => {
     return text.toLowerCase().includes(phrase.toLowerCase())
   }).length
 }
@@ -107,7 +109,7 @@ export async function evaluateTextAndRespondIfToxic(
     .replaceAll('\n\n', '\n')
     .replace("'", '')
     .split('\n')
-  const sensitiveResponses = (
+  const defaultSensitiveResponses = (
     await database.instance.getSensitiveResponses(agent)
   )
     .toString()
@@ -151,14 +153,18 @@ export async function evaluateTextAndRespondIfToxic(
 
   if (isSensitive) {
     const response =
-      sensitiveResponses[Math.floor(Math.random() * sensitiveResponses.length)]
+      defaultSensitiveResponses[
+      Math.floor(Math.random() * defaultSensitiveResponses.length)
+      ]
     return { isProfane: true, response }
   }
 
   if (!evaluateAllFilters) return { isProfane: false }
 
   const response =
-    sensitiveResponses[Math.floor(Math.random() * sensitiveResponses.length)]
+    defaultSensitiveResponses[
+    Math.floor(Math.random() * defaultSensitiveResponses.length)
+    ]
 
   // Check if text is overall toxic
   const isToxic = await testIfIsToxic(

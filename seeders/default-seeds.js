@@ -18,15 +18,6 @@ module.exports = {
       },
       ['id']
     )
-    // eslint-disable-next-line camelcase
-    const client_settings = await queryInterface.rawSelect(
-      'client_settings',
-      {
-        where: {},
-        plain: false,
-      },
-      ['id']
-    )
 
     if (configs.length <= 0) {
       await queryInterface.bulkInsert(
@@ -55,177 +46,164 @@ module.exports = {
       )
     }
 
-    if (client_settings.length <= 0) {
+    // eslint-disable-next-line camelcase
+    const agents = await queryInterface.rawSelect(
+      'agents',
+      {
+        where: {},
+        plain: false,
+      },
+      ['id']
+    )
+
+    if (agents.length <= 0) {
       await queryInterface.bulkInsert(
-        'client_settings',
+        'agents',
         [
           {
-            client: 'discord',
-            name: 'discord_api_token',
-            type: 'string',
-            defaultvalue: '',
+            id: 0,
+            agent: 'Thales',
+            dialog: '',
+            facts: '',
+            monologue: '',
+            morals: '',
+            sensitive_phrases: JSON.stringify([]),
+            sensitive_responses: JSON.stringify([]),
+            sensitive_words: JSON.stringify([]),
+            bad_words: JSON.stringify([]),
           },
+        ],
+        {}
+      )
+    }
+
+    // eslint-disable-next-line camelcase
+    const defaultBadWords = await queryInterface.rawSelect(
+      'default_bad_words',
+      {
+        where: {},
+        plain: false,
+      },
+      ['id']
+    )
+
+    if (defaultBadWords.length <= 0) {
+      await queryInterface.bulkInsert(
+        'default_bad_words',
+        [
           {
-            client: 'twitter',
-            name: 'twitterConsumerKey',
-            type: 'string',
-            defaultvalue: '',
+            id: 0,
+            phrase: 'shit',
           },
+        ],
+        {}
+      )
+    }
+
+    // eslint-disable-next-line camelcase
+    const defaultSensitivePhrases = await queryInterface.rawSelect(
+      'default_sensitive_phrases',
+      {
+        where: {},
+        plain: false,
+      },
+      ['id']
+    )
+
+    if (defaultSensitivePhrases.length <= 0) {
+      await queryInterface.bulkInsert(
+        'default_sensitive_phrases',
+        [
           {
-            client: 'twitter',
-            name: 'twitterConsumerSecret',
-            type: 'string',
-            defaultvalue: '',
+            id: 0,
+            phrase: 'i love you',
           },
+        ],
+        {}
+      )
+    }
+
+    // eslint-disable-next-line camelcase
+    const defaultSensitiveResponses = await queryInterface.rawSelect(
+      'default_sensitive_responses',
+      {
+        where: {},
+        plain: false,
+      },
+      ['id']
+    )
+
+    if (defaultSensitiveResponses.length <= 0) {
+      await queryInterface.bulkInsert(
+        'default_sensitive_responses',
+        [
           {
-            client: 'twitter',
-            name: 'twitterAccessToken',
-            type: 'string',
-            defaultvalue: '',
+            id: 0,
+            response: 'We should change the subject',
           },
+        ],
+        {}
+      )
+    }
+
+    // eslint-disable-next-line camelcase
+    const defaultSensitiveWords = await queryInterface.rawSelect(
+      'default_sensitive_words',
+      {
+        where: {},
+        plain: false,
+      },
+      ['id']
+    )
+
+    if (defaultSensitiveWords.length <= 0) {
+      await queryInterface.bulkInsert(
+        'default_sensitive_words',
+        [
           {
-            client: 'twitter',
-            name: 'twitterAccessTokenSecret',
-            type: 'string',
-            defaultvalue: '',
+            id: 0,
+            word: 'balls',
           },
+        ],
+        {}
+      )
+    }
+
+    // eslint-disable-next-line camelcase
+    const defaultstartingMessage = await queryInterface.rawSelect(
+      'default_starting_message',
+      {
+        where: {},
+        plain: false,
+      },
+      ['id']
+    )
+
+    if (defaultstartingMessage.length <= 0) {
+      await queryInterface.bulkInsert(
+        'default_starting_message',
+        [
           {
-            client: 'twitter',
-            name: 'ngrokToken',
-            type: 'string',
-            defaultvalue: '',
+            id: 0,
+            message: 'Heya',
           },
+        ],
+        {}
+      )
+    }
+
+    if (chains.length <= 0) {
+      await queryInterface.bulkInsert(
+        'deployed_spells',
+        [
           {
-            client: 'twitter',
-            name: 'twitterWebhookPort',
-            type: 'string',
-            defaultvalue: '3002',
-          },
-          {
-            client: 'twitter',
-            name: 'twitterID',
-            type: 'string',
-            defaultvalue: '',
-          },
-          {
-            client: 'twitter',
-            name: 'twitterBearerToken',
-            type: 'string',
-            defaultvalue: '',
-          },
-          {
-            client: 'twitter',
-            name: 'twitterTweetRules',
-            type: 'string',
-            defaultvalue: 'digital,being,digital being',
-          },
-          {
-            client: 'twilio',
-            name: 'twilioAccountSID',
-            type: 'string',
-            defaultvalue: '',
-          },
-          {
-            client: 'twilio',
-            name: 'twiolioPhoneNumber',
-            type: 'string',
-            defaultvalue: '',
-          },
-          {
-            client: 'twilio',
-            name: 'twiolioAuthToken',
-            type: 'string',
-            defaultvalue: '',
-          },
-          {
-            client: 'telegram',
-            name: 'telegramBotToken',
-            type: 'string',
-            defaultvalue: '',
-          },
-          {
-            client: 'xrengine',
-            name: 'xrEngineURL',
-            type: 'string',
-            defaultvalue: 'https://dev.theoverlay.io/location/bot',
-          },
-          {
-            client: 'whatsapp',
-            name: 'whatsappBotName',
-            type: 'string',
-            defaultvalue: '',
-          },
-          {
-            client: 'harmony',
-            name: 'harmonyURL',
-            type: 'string',
-            defaultvalue: 'https://dev.theoverlay.io/harmony',
-          },
-          {
-            client: 'zoom',
-            name: 'zoomInvitationLink',
-            type: 'string',
-            defaultvalue: '',
-          },
-          {
-            client: 'zoom',
-            name: 'zoomPassword',
-            type: 'string',
-            defaultvalue: '',
-          },
-          {
-            client: 'messenger',
-            name: 'messengerToken',
-            type: 'string',
-            defaultvalue: '',
-          },
-          {
-            client: 'messenger',
-            name: 'messengerVerifyToken',
-            type: 'string',
-            defaultvalue: '',
-          },
-          {
-            client: 'reddit',
-            name: 'redditAppID',
-            type: 'string',
-            defaultvalue: '',
-          },
-          {
-            client: 'reddit',
-            name: 'redditAppSecretID',
-            type: 'string',
-            defaultvalue: '',
-          },
-          {
-            client: 'reddit',
-            name: 'redditUsername',
-            type: 'string',
-            defaultvalue: '',
-          },
-          {
-            client: 'reddit',
-            name: 'redditPassword',
-            type: 'string',
-            defaultvalue: '',
-          },
-          {
-            client: 'reddit',
-            name: 'redditOAthToken',
-            type: 'string',
-            defaultvalue: '',
-          },
-          {
-            client: 'instagram',
-            name: 'instagramUsername',
-            type: 'string',
-            defaultvalue: '',
-          },
-          {
-            client: 'instagram',
-            name: 'instagramPassword',
-            type: 'string',
-            defaultvalue: '',
+            id: 'a13b41e8-d2bd-4258-a259-32f426e98cdd',
+            name: 'default',
+            version: 1,
+            user_id: 0,
+            created_at: new Date(),
+            updated_at: new Date(),
+            chain: `{"id": "demo@0.1.0", "nodes": {"2": {"id": 2, "data": {"name": "DefaultInput", "text": "Input text here", "outputs": [], "socketKey": "cd6fcc4e-d26b-4be5-9663-6b8f874de913", "dataControls": {"name": {"expanded": true}, "useDefault": {"expanded": true}, "playtestToggle": {"expanded": true}}, "playtestToggle": {"outputs": [], "receivePlaytest": false}}, "name": "Universal Input", "inputs": {}, "outputs": {"output": {"connections": [{"data": {"pins": []}, "node": 4, "input": "input"}, {"data": {"pins": []}, "node": 6, "input": "outputs"}]}}, "position": [-797.200674002495, -505.3683553966747]}, "4": {"id": 4, "data": {"name": "DefaultOutput", "socketKey": "49cc040d-4368-4a00-88f8-012638d39eab", "dataControls": {"name": {"expanded": true}, "sendToPlaytest": {"expanded": true}}}, "name": "Output", "inputs": {"input": {"connections": [{"data": {"pins": []}, "node": 2, "output": "output"}]}, "trigger": {"connections": [{"data": {"pins": []}, "node": 5, "output": "trigger"}]}}, "outputs": {"trigger": {"connections": [{"data": {"pins": []}, "node": 6, "input": "trigger"}]}}, "position": [-386.66075298933436, -456.18278434527997]}, "5": {"id": 5, "data": {"name": "DefaultTrigger", "socketKey": "8626681b-98d6-4bc8-8814-ddcc13ba0ca3", "dataControls": {"name": {"expanded": true}}}, "name": "Module Trigger In", "inputs": {}, "outputs": {"trigger": {"connections": [{"data": {"pins": []}, "node": 4, "input": "trigger"}]}}, "position": [-796.4439288922381, -268.1050207361015]}, "6": {"id": 6, "data": {"inputs": [{"name": "Outputs", "taskType": "output", "socketKey": "outputs", "socketType": "anySocket", "connectionType": "input"}], "dataControls": {"inputs": {"expanded": true}}}, "name": "State Write", "inputs": {"outputs": {"connections": [{"data": {"pins": []}, "node": 2, "output": "output"}]}, "trigger": {"connections": [{"data": {"pins": []}, "node": 4, "output": "trigger"}]}}, "outputs": {}, "position": [5.466299235514526, -614.530153771113]}}}`,
           },
         ],
         {}

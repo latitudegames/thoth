@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable require-await */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import axios from 'axios'
 import Rete from 'rete'
 
 import {
@@ -9,7 +10,6 @@ import {
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../types'
-import { getConversation } from '../axiosUtils'
 import { EngineContext } from '../engine'
 import { triggerSocket, stringSocket, anySocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
@@ -20,6 +20,27 @@ const info =
 type InputReturn = {
   output: string
   count: number
+}
+
+export async function getConversationCount(
+  agent: string,
+  speaker: string,
+  client: string,
+  channel: string
+) {
+  const response = await axios.get(
+    `${process.env.REACT_APP_API_URL}/conversation_count?agent=${agent}&speaker=${speaker}&client=${client}&channel=${channel}`
+  )
+
+  let count = 0
+
+  try {
+    count = parseInt(response.data)
+  } catch (e) {
+    console.log(e)
+  }
+
+  return count
 }
 
 export class ConversationCount extends ThothComponent<Promise<InputReturn>> {
@@ -74,7 +95,7 @@ export class ConversationCount extends ThothComponent<Promise<InputReturn>> {
     const channel = inputs['channel'][0] as string
     const action = inputs['string'][0]
 
-    const count = await getConversation(agent, speaker, client, channel)
+    const count = await getConversationCount(agent, speaker, client, channel)
 
     console.log('count returned: ' + count)
     return {

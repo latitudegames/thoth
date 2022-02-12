@@ -9,7 +9,6 @@ import ThothPageWrapper from './features/common/ThothPage/ThothPageWrapper'
 import LoginScreen from './features/Login/LoginScreen'
 import HomeScreen from './features/HomeScreen/HomeScreen'
 import Thoth from './features/Thoth/Thoth'
-import SuperReality from "./superreality/index"
 import Agents from './agents'
 
 import 'flexlayout-react/style/dark.css'
@@ -55,7 +54,6 @@ function App() {
     <ThothPageWrapper tabs={tabs} activeTab={activeTab}>
       <Routes>
         <Route path="/agents" element={<Agents />} />
-        <Route path="/superreality" element={<SuperReality />} />
 
         <Route path="/thoth" element={<GuardedRoute />}>
           <Route path="/thoth" element={<Thoth />} />
