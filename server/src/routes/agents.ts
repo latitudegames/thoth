@@ -51,7 +51,7 @@ const getAgentHandler = async (ctx: Koa.Context) => {
   }
   console.log("agent is ", agent);
   ctx.body = {
-    dialogue: agent.dialog,
+    dialog: agent.dialog,
     facts: agent.facts,
     monologue: agent.monologue,
     personality: agent.personality,
@@ -60,6 +60,7 @@ const getAgentHandler = async (ctx: Koa.Context) => {
 }
 
 const createOrUpdateAgentHandler = async (ctx: Koa.Context) => {
+  console.log("ctx.request.body is ", ctx.request.body)
   const { agentName, data } = ctx.request.body
   if (!agentName || agentName == undefined || agentName.length <= 0) {
     return (ctx.body = { error: 'invalid agent name' })
@@ -67,37 +68,21 @@ const createOrUpdateAgentHandler = async (ctx: Koa.Context) => {
 
   const agentExists = await database.instance.getAgentExists(agentName)
   if (!agentExists) {
-    // TODO: Combine all of these!
-    try {
-      await database.instance.setDialogue(agentName, data.dialogue)
-      await database.instance.setAgentFacts(agentName, data.facts, true)
-      await database.instance.setMonologue(agentName, data.monologue)
-      await database.instance.setPersonality(agentName, data.personality)
-      await database.instance.setGreetings(
-        agentName,
-        data.greetings
-      )
-    } catch (e) {
-      return (ctx.body = { error: 'internal error' })
-    }
-  }
-
-  try {
-    // TODO: Combine all of these!
-
     await database.instance.createAgent(agentName)
-    if (!data.dialogue || data.dialogue === undefined) data.dialogue = ''
-    await database.instance.setDialogue(agentName, data.dialogue)
-    if (!data.facts || data.facts === undefined) data.facts = ''
-    await database.instance.setAgentFacts(agentName, data.facts)
-    if (!data.monologue || data.monologue === undefined) data.monologue = ''
-    await database.instance.setMonologue(agentName, data.monologue)
-    if (!data.personality || data.personality === undefined)
-      data.personality = ''
-    await database.instance.setPersonality(agentName, data.personality)
-    if (!data.greetings || data.greetings === undefined)
-      data.greetings = ''
-    await database.instance.setGreetings(agentName, data.greetings)
+  }
+  // TODO: Combine all of these!
+  try {
+    await Promise.all([
+      database.instance.setDialogue(agentName, data?.dialog ?? ''),
+      database.instance.setAgentFacts(agentName, data?.facts ?? '', true),
+      database.instance.setMonologue(agentName, data?.monologue ?? ''),
+      database.instance.setPersonality(agentName, data?.personality ?? ''),
+      database.instance.setGreetings(
+        agentName,
+        data?.greetings ?? ''
+      )
+    ])
+
   } catch (e) {
     return (ctx.body = { error: 'internal error' })
   }
@@ -106,6 +91,7 @@ const createOrUpdateAgentHandler = async (ctx: Koa.Context) => {
 }
 
 const deleteAgentHandler = async (ctx: Koa.Context) => {
+  console.log("Request is", ctx.request.body)
   const { agentName } = ctx.request.body
   if (agentName === 'common') {
     return (ctx.body = { error: "you can't delete the default agent" })

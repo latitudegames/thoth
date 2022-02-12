@@ -27,8 +27,8 @@ import { conversation as _conversation } from "./conversation";
 import type { conversationAttributes, conversationCreationAttributes } from "./conversation";
 import { deployedSpells as _deployedSpells } from "./deployedSpells";
 import type { deployedSpellsAttributes, deployedSpellsCreationAttributes } from "./deployedSpells";
-import { dialogue as _dialogue } from "./dialogue";
-import type { dialogueAttributes, dialogueCreationAttributes } from "./dialogue";
+import { dialog as _dialogue } from "./dialog";
+import type { dialogueAttributes, dialogueCreationAttributes } from "./dialog";
 import { facts as _facts } from "./facts";
 import type { factsAttributes, factsCreationAttributes } from "./facts";
 import { ignored_keywords as _ignored_keywords } from "./ignored_keywords";
@@ -77,7 +77,7 @@ export {
   _context as context,
   _conversation as conversation,
   _deployedSpells as deployedSpells,
-  _dialogue as dialogue,
+  _dialogue as dialog,
   _facts as facts,
   _ignored_keywords as ignored_keywords,
   _leading_statements as leading_statements,
@@ -176,7 +176,7 @@ export function initModels(sequelize: Sequelize) {
   const context = _context.initModel(sequelize);
   const conversation = _conversation.initModel(sequelize);
   const deployedSpells = _deployedSpells.initModel(sequelize);
-  const dialogue = _dialogue.initModel(sequelize);
+  const dialog = _dialogue.initModel(sequelize);
   const facts = _facts.initModel(sequelize);
   const ignored_keywords = _ignored_keywords.initModel(sequelize);
   const leading_statements = _leading_statements.initModel(sequelize);
@@ -209,7 +209,7 @@ export function initModels(sequelize: Sequelize) {
     context: context,
     conversation: conversation,
     deployedSpells: deployedSpells,
-    dialogue: dialogue,
+    dialog: dialog,
     facts: facts,
     ignored_keywords: ignored_keywords,
     leading_statements: leading_statements,
