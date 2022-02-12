@@ -6,7 +6,7 @@ import { usePubSub } from '../../../contexts/PubSubProvider'
 import { useTabManager } from '../../../contexts/TabManagerProvider'
 import css from './menuBar.module.css'
 import thothlogo from './thoth.png'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 const MenuBar = () => {
   const navigate = useNavigate()
@@ -15,6 +15,7 @@ const MenuBar = () => {
   const { openModal } = useModal()
 
   const activeTabRef = useRef(null)
+  const location = useLocation();
 
   useEffect(() => {
     activeTabRef.current = activeTab
@@ -70,6 +71,8 @@ const MenuBar = () => {
   }
 
   const onAgents = () => {
+    if (location.pathname.includes('/agents'))
+      return navigate('/')
     navigate('/agents')
   }
 
@@ -207,10 +210,12 @@ const MenuBar = () => {
       },
     },
     agents: {
+
       items: {
-        edit: {
+        [location.pathname.includes('/agents') ? 'close' : 'edit']: {
           onClick: onAgents
         }
+
       },
     },
   }

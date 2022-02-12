@@ -6,9 +6,13 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
+// TODO: This was imported fropm our old codebase
+// We need to break some of this code out so that we have more control of it in the node graph
+// i.e. text classification and such
+
 import roomManager from '../components/roomManager'
 import { classifyText } from '../components/textClassifier'
-import { customConfig } from './customConfig'
+import { agentConfig } from './agentConfig'
 import { database } from './database'
 import { handleInput } from './handleInput'
 import { getRandomEmptyResponse, startsWithCapital, getSetting } from './utils'
@@ -268,7 +272,7 @@ export class telegram_client {
     const resp = handleInput(
       msg.text,
       msg.from.first_name,
-      customConfig.instance.get('agent') ?? 'Agent',
+      (await database.instance.getConfig())['agent'] ?? 'Agent',
       null,
       'telegram',
       msg.chat.id
@@ -445,7 +449,7 @@ export class telegram_client {
     const resp = handleInput(
       msg.text,
       msg.from.first_name,
-      customConfig.instance.get('agent') ?? 'Agent',
+      (await database.instance.getConfig())['agent'] ?? 'Agent',
       null,
       'telegram',
       msg.chat.id
@@ -586,7 +590,7 @@ export class telegram_client {
   agent
   settings
 
-  createTelegramClient = (agent, settings) => {
+  createTelegramClient = async (agent, settings) => {
     this.agent = agent
     this.settings = settings
 
@@ -594,7 +598,7 @@ export class telegram_client {
 
     if (!token) return console.warn('No API token for Telegram bot, skipping')
     const username_regex = new RegExp(
-      customConfig.instance.get('botNameRegex'),
+      (await database.instance.getConfig())['botNameRegex'],
       'ig'
     )
     let botName = ''

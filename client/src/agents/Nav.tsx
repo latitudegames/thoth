@@ -14,8 +14,8 @@ export default function Nav({ currentView, changeView }) {
         Agents
       </span>
 
-      <span onClick={() => changeView(views.Settings)} className={currentView === views.Settings ? "nav-item-active" : "nav-item"} >
-        Settings
+      <span onClick={() => changeView(views.Config)} className={currentView === views.Config ? "nav-item-active" : "nav-item"} >
+        Config
       </span>
 
       <span onClick={() => changeView(views.Prompts)} className={currentView === views.Prompts ? "nav-item-active" : "nav-item"} >

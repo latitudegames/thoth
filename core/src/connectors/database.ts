@@ -7,13 +7,12 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-nocheck
 
-import { customConfig } from '@latitudegames/thoth-core/src/connectors/customConfig'
+import { agentConfig } from '@latitudegames/thoth-core/src/connectors/agentConfig'
 import fs from 'fs'
 import path from 'path'
 import pg from 'pg'
 import internal from 'stream'
 
-import { initProfanityFilter } from '../components/profanityFilter'
 import { idGenerator } from './utils'
 
 const getRandomNumber = (min: number, max: number) =>
@@ -50,228 +49,60 @@ export class database {
   }
 
   async initData() {
-    await this.readConfig()
-    await this.onInit()
-    await initProfanityFilter()
-  }
-
-  async _initProfanityFilter() {
-    await initProfanityFilter()
+    await this.getConfig()
   }
 
   async firstInit() {
     const id = new idGenerator()
 
-    // TODO: Simplify this, some cruft from adding our old code in
-    const query1 =
-      'INSERT INTO config\n' +
-      'select t.*\n' +
-      'from ((SELECT ' +
-      id.getId() +
-      " as id, 'agent' as _key, 'Thales' as _value  \n" +
-      '      ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'openai_api_key' as _key, '' as _value \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'google_project_id' as _key, '' as _value \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'hf_api_token' as _key, '' as _value \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'use_gptj' as _key, '' as _value \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'editMessageMaxCount' as _key, '5' as _value \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'botNameRegex' as _key, '((?:digital|being)(?: |$))' as _value \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'chatHistoryMessagesCount' as _key, '20' as _value \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'botName' as _key, 'digital being' as _value \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'botNameHandler' as _key, 'digital.being' as _value \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'digitalBeingsOnly' as _key, 'false' as _value \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'fastMode' as _key, 'false' as _value \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'discord_calendar_channel' as _key, '' as _value \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'discussion_channel_topics' as _key, 'Apples|Trees|Space|Universe' as _value \n" +
-      '  ) union all\n' +
-      '	(SELECT ' +
-      id.getId() +
-      " as id, 'use_logtail' as _key, 'false' as _value \n" +
-      '  ) union all\n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'logtail_key' as _key, '' as _value \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'initCalendar' as _key, 'false' as _value \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'fps' as _key, '60' as _value \n" +
-      '  )\n' +
-      '     ) t\n' +
-      'WHERE NOT EXISTS (SELECT * FROM config);'
+    const kv = [
+      { key: 'agent', value: 'Thales' },
+      { key: 'openai_api_key', value: '' },
+      { key: 'google_project_id', value: '' },
+      { key: 'hf_api_token', value: '' },
+      { key: 'use_gptj', value: '' },
+      { key: 'editMessageMaxCount', value: '5' },
+      { key: 'botNameRegex', value: '((?:digital|being)(?: |$))' },
+      { key: 'chatHistoryMessagesCount', value: '20' },
+      { key: 'botName', value: 'digital being' },
+      { key: 'botNameHandler', value: 'digital.being' },
+      { key: 'digitalBeingsOnly', value: 'false' },
+      { key: 'fastMode', value: 'false' },
+      { key: 'discord_calendar_channel', value: '' },
+      {
+        key: 'discussion_channel_topics',
+        value: 'Apples|Trees|Space|Universe',
+      },
+      { key: 'use_logtail', value: 'false' },
+      { key: 'logtail_key', value: '' },
+      { key: 'initCalendar', value: '' },
+      { key: 'fps', value: '' },
+      {
+        key: 'fact_summarization',
+        value: 'Instructions: Extract the facts from the following passage.',
+      },
+    ]
 
-    await this.client.query(query1)
+    // TODO: Simplify this, some cruft from adding our old code in
+    let query = ''
+    for (let i = 0; i < kv.length; i++) {
+      query +=
+        (i == 0 ? 'INSERT INTO config\n select t.*\n from (' : '') +
+        '(SELECT ' +
+        id.getId() +
+        " as id, '" +
+        kv[i].key +
+        "' as _key, '" +
+        kv[i].value +
+        "' as _value  \n" +
+        '      ) ' +
+        (i !== kv.length - 1
+          ? 'union all \n'
+          : '\n) t\nWHERE NOT EXISTS (SELECT * FROM config);')
+    }
+
+    await this.client.query(query)
     id.reset()
-
-    // TODO: Simplify this, some cruft from adding our old code in
-    const query2 =
-      'INSERT INTO client_settings\n' +
-      'select t.*\n' +
-      'from ((SELECT ' +
-      id.getId() +
-      " as id, 'discord' as client, 'discord_api_token' as _name, 'string' as  _type, '' as _defaultValue \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'twitter' as client, 'twitterConsumerKey' as _name, 'string' as  _type, '' as _defaultValue \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'twitter' as client, 'twitterConsumerSecret' as _name, 'string' as  _type, '' as _defaultValue \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'twitter' as client, 'twitterAccessToken' as _name, 'string' as  _type, '' as _defaultValue \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'twitter' as client, 'twitterAccessTokenSecret' as _name, 'string' as  _type, '' as _defaultValue \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'twitter' as client, 'ngrokToken' as _name, 'string' as  _type, '' as _defaultValue \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'twitter' as client, 'twitterWebhookPort' as _name, 'string' as  _type, '3002' as _defaultValue \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'twitter' as client, 'twitterID' as _name, 'string' as  _type, '' as _defaultValue \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'twitter' as client, 'twitterBearerToken' as _name, 'string' as  _type, '' as _defaultValue \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'twitter' as client, 'twitterBearerToken' as _name, 'string' as  _type, '' as _defaultValue \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'twitter' as client, 'twitterTweetRules' as _name, 'string' as  _type, 'digital,being,digital being' as _defaultValue \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'discord' as client, 'loadDiscordLogger' as _name, 'string' as  _type, 'false' as _defaultValue \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'twilio' as client,  'twilioAccountSID' as _name, 'string' as  _type, '' as _defaultValue \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'twilio' as client, 'twiolioPhoneNumber' as _name, 'string' as  _type, '' as _defaultValue \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'twilio' as client, 'twiolioAuthToken' as _name, 'string' as  _type, '' as _defaultValue \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'telegram' as client, 'telegramBotToken' as _name, 'string' as  _type, '' as _defaultValue \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'xrengine' as client, 'xrEngineURL' as _name, 'string' as  _type, 'https://dev.theoverlay.io/location/bot' as _defaultValue \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'whatsapp' as client, 'whatsappBotName' as _name, 'string' as  _type, '' as _defaultValue \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'harmony' as client, 'harmonyURL' as _name, 'string' as  _type, '' as _defaultValue \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'zoom' as client, 'zoomInvitationLink' as _name, 'string' as  _type, '' as _defaultValue \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'zoom' as client, 'zoomPassword' as _name, 'string' as  _type, '' as _defaultValue \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'messenger' as client, 'messengerToken' as _name, 'string' as  _type, '' as _defaultValue \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'messenger' as client, 'messengerVerifyToken' as _name, 'string' as  _type, '' as _defaultValue \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'reddit' as client, 'redditAppID' as _name, 'string' as  _type, '' as _defaultValue \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'reddit' as client, 'redditAppSecretID' as _name, 'string' as  _type, '' as _defaultValue \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'reddit' as client, 'redditUsername' as _name, 'string' as  _type, '' as _defaultValue \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'reddit' as client, 'redditPassword' as _name, 'string' as  _type, '' as _defaultValue \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'reddit' as client, 'redditOAthToken' as _name, 'string' as  _type, '' as _defaultValue \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'instagram' as client, 'instagramUsername' as _name, 'string' as  _type, '' as _defaultValue \n" +
-      '  ) union all \n' +
-      ' (SELECT ' +
-      id.getId() +
-      " as id, 'instagram' as client, 'instagramPassword' as _name, 'string' as  _type, '' as _defaultValue \n" +
-      '  )\n' +
-      '     ) t\n' +
-      'WHERE NOT EXISTS (SELECT * FROM client_settings);'
-
-    await this.client.query(query2)
 
     const check = 'SELECT * FROM "public"."chains"'
     const r = await this.client.query(check)
@@ -284,20 +115,23 @@ export class database {
   }
 
   //reads the config table from the database
-  async readConfig() {
+  async getConfig() {
     const configs = {}
     const query = 'SELECT * FROM config'
 
-    const rows = await this.client.query(query)
-
+    const rows = (await this.client.query(query)).rows
+    console.log('rows are ', rows)
     if (rows && rows.rows && rows.rows.length > 0) {
       for (let i = 0; i < rows.rows.length; i++) {
         configs[rows.rows[i]._key] = rows.rows[i]._value
       }
     }
 
-    new customConfig(configs)
+    console.log('configs are ', configs)
+
+    return rows
   }
+
   //updates a config value
   async setConfig(key: any, value: any) {
     const check = 'SELECT * FROM config WHERE _key=$1'
@@ -748,7 +582,7 @@ export class database {
       }
     )
   }
-  async messageExists2(
+  async messageExistsWithCallback(
     client_name: any,
     chat_id: any,
     message_id: any,
@@ -848,7 +682,7 @@ export class database {
       })
       const now = new Date()
       const max_length = parseInt(
-        customConfig.instance.get('chatHistoryMessagesCount')
+        (await getConfig())['chatHistoryMessagesCount']
       )
       let data = ''
       let count = 0
@@ -873,10 +707,6 @@ export class database {
     } else {
       return asString ? '' : []
     }
-  }
-  async clearConversations() {
-    const query = 'DELETE FROM conversation'
-    await this.client.query(query, values)
   }
   async setSpeakersModel(agent: any, speaker: any, model: any) {
     const test = 'SELECT * FROM speakers_model WHERE agent=$1 AND speaker=$2'
@@ -1014,7 +844,7 @@ export class database {
     }
     return ''
   }
-  async setMeta(agent: any, speaker: any, meta: any) {
+  async setSpeakerAgentMeta(agent: any, speaker: any, meta: any) {
     const check = 'SELECT * FROM meta WHERE agent=$1 AND speaker=$2'
     const cvalues = [agent, speaker]
 
@@ -1032,7 +862,7 @@ export class database {
 
     await this.client.query(query, values)
   }
-  async getMeta(agent: any, speaker: any) {
+  async getSpeakerAgentMeta(agent: any, speaker: any) {
     const query = 'SELECT * FROM meta WHERE agent=$1 AND speaker=$2'
     const values = [agent, speaker]
 
@@ -1072,141 +902,18 @@ export class database {
     const row = await this.client.query(query, values)
     return row && row.rows[0] ? JSON.parse(row.rows[0].matrix) : null
   }
-
-  async setSpeakerProfaneResponses(agent: any, responses: any) {
-    const query =
-      'INSERT INTO speaker_profane_responses(agent, response) VALUES($1, $2)'
-    const values = [agent, responses]
-
-    await this.client.query(query, values)
-  }
-  async getSpeakerProfaneResponses(agent: any) {
-    const query = 'SELECT * FROM speaker_profane_responses WHERE agent=$1'
-    const values = [agent]
-
-    const row = await this.client.query(query, values)
-    if (row && row.rows && row.rows.length > 0) {
-      let res = ''
-      for (let i = 0; i < row.length; i++) {
-        res += row[i].rows.response + '\n'
-      }
-      return res
-    } else {
-      return ''
-    }
-  }
-  async setSensitiveResponses(agent: any, responses: any) {
-    const query =
-      'INSERT INTO default_sensitive_responses(agent, response) VALUES($1, $2)'
-    const values = [agent, responses]
-
-    await this.client.query(query, values)
-  }
-  async getSensitiveResponses(agent: any) {
-    const query = 'SELECT * FROM default_sensitive_responses WHERE agent=$1'
-    const values = [agent]
-
-    const row = await this.client.query(query, values)
-    if (row && row.rows && row.rows.length > 0) {
-      let res = ''
-      for (let i = 0; i < row.length; i++) {
-        res += row[i].rows.response + '\n'
-      }
-      return res
-    } else {
-      return ''
-    }
-  }
-  async setProfanceResponses(agent: any, responses: any) {
-    const query =
-      'INSERT INTO profane_responses(agent, response) VALUES($1, $2)'
-    const values = [agent, responses]
-
-    await this.client.query(query, values)
-  }
-  async getProfaneResponses(agent: any) {
-    const query = 'SELECT * FROM profane_responses WHERE agent=$1'
-    const values = [agent]
-
-    const row = await this.client.query(query, values)
-    if (row && row.rows && row.rows.length > 0) {
-      return rows.row[0].responses
-    } else {
-      return ''
-    }
-  }
-  async setRating(agent: any, rating: any) {
-    const check = 'SELECT * FROM rating WHERE agent=$1'
-    const cvalues = [agent]
-
-    const test = await this.client.query(check, cvalues)
-    let query = ''
-    let values = []
-
-    if (test && test.rows && test.rows.length > 0) {
-      query = 'UPDATE rating SET rating=$1 WHERE agent=$2'
-      values = [rating, agent]
-    } else {
-      query = 'INSERT INTO rating(agent, rating) VALUES($1, $2)'
-      values = [agent, rating]
-    }
-
-    await this.client.query(query, values)
-  }
-  async getRating(agent: any) {
-    const query = 'SELECT * FROM rating WHERE agent=$1'
-    const values = [agent]
-
-    const row = await this.client.query(query, values)
-    if (row && row.rows && row.rows.length > 0) {
-      return row[0].row.rating
-    } else {
-      return ''
-    }
-  }
-  async setAgentsFactsSummarization(facts: any) {
-    const check = 'SELECT * FROM agent_fact_summarization WHERE agent=$1'
-    const cvalues = ['common']
-
-    const test = await this.client.query(check, cvalues)
-    if (test && test.rows && test.rows.length > 0) {
-      await this.client.query(
-        'UPDATE agent_fact_summarization SET _sum=$1 WHERE agent=$2',
-        [facts, 'common']
-      )
-    } else {
-      await this.client.query(
-        'INSERT INTO agent_fact_summarization(agent, _sum) VALUES($1, $2)',
-        ['common', facts]
-      )
-    }
-  }
-  async getAgentsFactsSummarization() {
-    const query = 'SELECT * FROM agent_fact_summarization WHERE agent=$1'
-    const values = ['common']
-
-    const rows = await this.client.query(query, values)
-    if (rows && rows.rows && rows.rows.length > 0) {
-      return rows.rows[0]._sum
-    } else {
-      return ''
-    }
-  }
-  async getAgentsConfig(agent: string) {
-    const query = 'SELECT * FROM agent_config WHERE agent=$1'
+  async getAgent(agent: string) {
+    const query = 'SELECT * FROM agents WHERE agent=$1'
     const values = [agent]
 
     const rows = await this.client.query(query, values)
     if (rows && rows.rows && rows.rows.length > 0) {
-      if (rows.rows[0].config.length <= 0) {
-        return this.getAgentsConfig('common')
-      }
-
-      return rows.rows[0].config
+      return rows.rows[0]
     } else {
-      return this.getAgentsConfig('common')
+      return null
     }
   }
+
   async setAgentsConfig(agent: any, config: any) {
     const check = 'SELECT * FROM agent_config WHERE agent=$1'
     const cvalues = [agent]
@@ -1237,7 +944,7 @@ export class database {
       return false
     }
   }
-  async setAgentExists(agent: any) {
+  async createAgent(agent: any) {
     if (await this.getAgentExists(agent)) {
       return
     }
@@ -1262,6 +969,7 @@ export class database {
     }
   }
 
+  // TODO: Move to single table with other prompts
   async getContext(agent = 'common') {
     const query = 'SELECT * FROM context WHERE agent=$1'
     const values = [agent]
@@ -1274,260 +982,42 @@ export class database {
     }
   }
 
-  async getMorals(agent = 'common') {
-    const query = 'SELECT * FROM morals WHERE agent=$1'
-    const values = [agent]
-
-    const rows = await this.client.query(query, values)
-    if (rows && rows.rows && rows.rows.length > 0) {
-      return rows.rows[0].morals
-    } else {
-      return ''
-    }
-  }
-
   async setPersonality(agent: any, personality: any) {
     const query = 'INSERT INTO personality(agent, personality) VALUES($1, $2)'
     const values = [agent, personality]
 
     await this.client.query(query, values)
   }
-  async getPersonality(agent: any) {
-    const query = 'SELECT * FROM personality WHERE agent=$1'
-    const values = [agent]
 
-    const rows = await this.client.query(query, values)
-    if (rows && rows.rows && rows.rows.length > 0) {
-      return rows.rows[0].personality
-    } else {
-      return ''
-    }
-  }
-
-  async getDialogue(agent: any) {
-    const query = 'SELECT * FROM dialogue WHERE agent=$1'
-    const values = [agent]
-
-    const rows = await this.client.query(query, values)
-    if (rows && rows.rows && rows.rows.length > 0) {
-      return rows.rows[0].dialogue
-    } else {
-      return ''
-    }
-  }
   async setDialogue(agent: any, dialogue: any) {
-    const check = 'SELECT * FROM dialogue WHERE agent=$1'
+    const check = 'SELECT * FROM agents WHERE agent=$1'
     const cvalues = [agent]
 
     const test = await this.client.query(check, cvalues)
 
     if (test && test.rows && test.rows.length > 0) {
-      const query = 'UPDATE dialogue SET dialogue=$1 WHERE agent=$2'
+      const query = 'UPDATE agent SET dialogue=$1 WHERE agent=$2'
       const values = [dialogue, agent]
 
       await this.client.query(query, values)
     } else {
-      const query = 'INSERT INTO dialogue(agent, dialogue) VALUES($1, $2)'
-      const values = [agent, dialogue]
-
-      await this.client.query(query, values)
+      throw new Error('Unable to set dialogue for agent')
     }
   }
 
   async setMonologue(agent: any, monologue: any) {
-    const check = 'SELECT * FROM monologue WHERE agent=$1'
+    const check = 'SELECT * FROM agents WHERE agent=$1'
     const cvalues = [agent]
 
     const test = await this.client.query(check, cvalues)
 
     if (test && test.rows && test.rows.length > 0) {
-      const query = 'UPDATE monologue SET monologue=$1 WHERE agent=$2'
+      const query = 'UPDATE agent SET monologue=$1 WHERE agent=$2'
       const values = [monologue, agent]
 
       await this.client.query(query, values)
     } else {
-      const query = 'INSERT INTO monologue(agent, monologue) VALUES($1, $2)'
-      const values = [agent, monologue]
-
-      await this.client.query(query, values)
-    }
-  }
-  async getMonologue(agent: any) {
-    const query = 'SELECT * FROM monologue WHERE agent=$1'
-    const values = [agent]
-
-    const rows = await this.client.query(query, values)
-    if (rows && rows.rows && rows.rows.length > 0) {
-      return rows.rows[0].monologue
-    } else {
-      return ''
-    }
-  }
-
-  async addBadWord(word: string) {
-    const query = 'INSERT INTO default_bad_words(word) VALUES($1)'
-    const values = [word]
-
-    await this.client.query(query, values)
-  }
-  async badWordExists(word: any) {
-    const query = 'SELECT * FROM default_bad_words WHERE word=$1'
-    const values = [word]
-
-    const rows = await this.client.query(query, values)
-    return rows && rows.rows && rows.rows.length > 0
-  }
-  async removeBadWord(word: any) {
-    const query = 'DELETE FROM default_bad_words WHERE word=$1'
-    const values = [word]
-
-    await this.client.query(query, values)
-  }
-  async getBadWords() {
-    const query = 'SELECT * FROM default_bad_words'
-
-    const rows = await this.client.query(query)
-    let res = ''
-    if (rows && rows.rows && rows.rows.length > 0) {
-      for (let i = 0; i < rows.rows.length; i++) {
-        res += rows.rows[i].word + '\n'
-      }
-    }
-    return res
-  }
-
-  async addSensitiveWord(word: string) {
-    const query = 'INSERT INTO default_sensitive_words(word) VALUES($1)'
-    const values = [word]
-
-    await this.client.query(query, values)
-  }
-  async sensitiveWordExists(word: any) {
-    const query = 'SELECT * FROM default_sensitive_words WHERE word=$1'
-    const values = [word]
-
-    const rows = await this.client.query(query, values)
-    return rows && rows.rows && rows.rows.length > 0
-  }
-  async removeSensitiveWord(word: any) {
-    const query = 'DELETE FROM default_sensitive_words WHERE word=$1'
-    const values = [word]
-
-    await this.client.query(query, values)
-  }
-  async getSensitiveWords() {
-    const query = 'SELECT * FROM default_sensitive_words'
-
-    const rows = await this.client.query(query)
-    let res = ''
-    if (rows && rows.rows && rows.rows.length > 0) {
-      for (let i = 0; i < rows.rows.length; i++) {
-        res += rows.rows[i].word + '\n'
-      }
-    }
-    return res
-  }
-
-  async addSensitivePhrase(phrase: string) {
-    const query = 'INSERT INTO default_sensitive_phrases(phrase) VALUES($1)'
-    const values = [phrase]
-
-    await this.client.query(query, values)
-  }
-  async sensitivePhraseExists(phrase: any) {
-    const query = 'SELECT * FROM default_sensitive_phrases WHERE phrase=$1'
-    const values = [phrase]
-
-    const rows = await this.client.query(query, values)
-    return rows && rows.rows && rows.rows.length > 0
-  }
-  async removeSensitivePhrase(phrase: any) {
-    const query = 'DELETE FROM default_sensitive_phrases WHERE phrase=$1'
-    const values = [phrase]
-
-    await this.client.query(query, values)
-  }
-  async getSensitivePhrases() {
-    const query = 'SELECT * FROM default_sensitive_phrases'
-
-    const rows = await this.client.query(query)
-    let res = ''
-    if (rows && rows.rows && rows.rows.length > 0) {
-      for (let i = 0; i < rows.rows.length; i++) {
-        res += rows.rows[i].phrase + '\n'
-      }
-    }
-    return res
-  }
-
-  async addLeadingStatement(phrase: string) {
-    const query = 'INSERT INTO leading_statements(statement) VALUES($1)'
-    const values = [phrase]
-
-    await this.client.query(query, values)
-  }
-  async leadingStatementExists(phrase: any) {
-    const query = 'SELECT * FROM leading_statements WHERE statement=$1'
-    const values = [phrase]
-
-    const rows = await this.client.query(query, values)
-    return rows && rows.rows && rows.rows.length > 0
-  }
-  async removeLeadingStatement(phrase: any) {
-    const query = 'DELETE FROM leading_statements WHERE statement=$1'
-    const values = [phrase]
-
-    await this.client.query(query, values)
-  }
-  async getLeadingStatements() {
-    const query = 'SELECT * FROM leading_statements'
-
-    const rows = await this.client.query(query)
-    let res = ''
-    if (rows && rows.rows && rows.rows.length > 0) {
-      for (let i = 0; i < rows.rows.length; i++) {
-        res += rows.rows[i].statement + '\n'
-      }
-    }
-    return res
-  }
-
-  async onInit() {
-    if ((await this.getBadWords()).length <= 0) {
-      const data = fs
-        .readFileSync(rootDir + '/filters/default_bad_words.txt')
-        .toString()
-        .split('\n')
-      for (let i = 0; i < data.length; i++) {
-        await this.addBadWord(data[i])
-      }
-    }
-    if ((await this.getSensitiveWords()).length <= 0) {
-      const data = fs
-        .readFileSync(rootDir + '/filters/default_sensitive_words.txt')
-        .toString()
-        .split('\n')
-      for (let i = 0; i < data.length; i++) {
-        await this.addSensitiveWord(data[i])
-      }
-    }
-    if ((await this.getSensitivePhrases()).length <= 0) {
-      const data = fs
-        .readFileSync(rootDir + '/filters/default_sensitive_phrases.txt')
-        .toString()
-        .split('\n')
-      for (let i = 0; i < data.length; i++) {
-        await this.addSensitivePhrase(data[i])
-      }
-    }
-    if ((await this.getLeadingStatements()).length <= 0) {
-      const data = fs
-        .readFileSync(rootDir + '/filters/leading_statements.txt')
-        .toString()
-        .split('\n')
-      for (let i = 0; i < data.length; i++) {
-        await this.addLeadingStatement(data[i])
-      }
+      throw new Error('Unable to set monologue for agent')
     }
   }
 
@@ -1555,42 +1045,45 @@ export class database {
     }
   }
 
-  async getRandomStartingMessage(agent: string) {
-    const query = 'SELECT * FROM default_starting_message WHERE agent=$1'
-    const values = [agent]
-
-    const rows = await this.client.query(query, values)
-    if (rows && rows.rows && rows.rows.length > 0) {
-      const index = getRandomNumber(0, rows.rows.length)
-      if (rows.rows[index] === undefined || !rows.rows) {
-        return 'Hello there!'
-      }
-      return rows.rows[index].message
-    } else {
-      return this.getRandomStartingMessage('common')
-    }
+  async getRandomGreeting(agent: string) {
+    return 'Hello'
+    // TODO: Refactor to get starting message from agent db
+    // const query = 'SELECT * FROM greeting WHERE agent=$1'
+    // const values = [agent]
+    // const rows = await this.client.query(query, values)
+    // if (rows && rows.rows && rows.rows.length > 0) {
+    //   const index = getRandomNumber(0, rows.rows.length)
+    //   if (rows.rows[index] === undefined || !rows.rows) {
+    //     return 'Hello there!'
+    //   }
+    //   return rows.rows[index].message
+    // } else {
+    //   return this.getRandomGreeting('common')
+    // }
   }
 
   async getGreetings(agent: any) {
-    const query = 'SELECT * FROM default_starting_message WHERE agent=$1'
-    const values = [agent]
+    return 'Hello'
+    // TODO: Refactor to get starting message from agent db
+    // const query = 'SELECT * FROM greeting WHERE agent=$1'
+    // const values = [agent]
 
-    const rows = await this.client.query(query, values)
-    if (rows && rows.rows && rows.rows.length > 0) {
-      let res = ''
-      for (let i = 0; i < rows.rows.length; i++) {
-        if (rows.rows[i].message.length <= 0) continue
-        res += rows.rows[i].message + '|'
-      }
-      return res
-    }
+    // const rows = await this.client.query(query, values)
+    // if (rows && rows.rows && rows.rows.length > 0) {
+    //   let res = ''
+    //   for (let i = 0; i < rows.rows.length; i++) {
+    //     if (rows.rows[i].message.length <= 0) continue
+    //     res += rows.rows[i].message + '|'
+    //   }
+    //   return res
+    // }
 
-    return ''
+    // return ''
   }
 
   async setGreetings(agent: string | any[], data: string) {
     if (!agent || agent.length <= 0) return
-    const query = 'DELETE FROM default_starting_message WHERE agent=$1'
+    const query = 'DELETE FROM greeting WHERE agent=$1'
     const values = [agent]
 
     await this.client.query(query, values)
@@ -1598,8 +1091,7 @@ export class database {
     const messages = data.split('|')
     for (let i = 0; i < messages.length; i++) {
       if (messages.length <= 0) continue
-      const query2 =
-        'INSERT INTO default_starting_message(agent, message) VALUES($1, $2)'
+      const query2 = 'UPDATE agent SET greeting=$2 WHERE agent=$1)'
       const values2 = [agent, messages[i]]
 
       await this.client.query(query2, values2)
@@ -1680,7 +1172,7 @@ export class database {
     query = 'DELETE FROM relationship_matrix WHERE agent=$1'
     await this.client.query(query, values)
 
-    query = 'DELETE FROM default_starting_message WHERE agent=$1'
+    query = 'DELETE FROM greeting WHERE agent=$1'
     await this.client.query(query, values)
 
     query = 'DELETE FROM ignored_keywords WHERE agent=$1'
@@ -1897,45 +1389,6 @@ export class database {
       const values = [personality, clients, enabled, new Date()]
 
       await this.client.query(query, values)
-    }
-  }
-
-  async getClientSettings(client: any) {
-    const query = 'SELECT * FROM client_settings WHERE client=$1'
-    const values = [client]
-
-    const rows = await this.client.query(query, values)
-    if (rows && rows.rows && rows.rows.length > 0) {
-      const res = []
-      for (let i = 0; i < rows.rows.length; i++) {
-        res.push({
-          name: rows.rows[i].name,
-          type: rows.roes[i].type,
-          defaultValue: rows.rows[i].defaultValue,
-        }) //type is string or bool
-      }
-      return res
-    } else {
-      return []
-    }
-  }
-  async getAllClientSettings() {
-    const query = 'SELECT * FROM client_settings'
-
-    const rows = await this.client.query(query)
-    if (rows && rows.rows && rows.rows.length > 0) {
-      const res = []
-      for (let i = 0; i < rows.rows.length; i++) {
-        res.push({
-          client: rows.rows[i].client,
-          name: rows.rows[i].name,
-          type: rows.rows[i].type, //string or bool
-          defaultValue: rows.rows[i].defaultvalue,
-        })
-      }
-      return res
-    } else {
-      return []
     }
   }
 }

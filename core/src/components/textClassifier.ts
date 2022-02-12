@@ -39,11 +39,14 @@ export function trainClassifier() {
   }
 
   classifier.train()
-  classifier.save(rootDir + '/data/classifier/classifier.json', function (err: any) {
-    if (err) {
-      return console.error(err)
+  classifier.save(
+    rootDir + '/data/classifier/classifier.json',
+    function (err: any) {
+      if (err) {
+        return console.error(err)
+      }
     }
-  })
+  )
 }
 export function trainProfanityClassifier() {
   const lines = fs

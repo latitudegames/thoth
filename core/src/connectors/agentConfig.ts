@@ -4,14 +4,14 @@
 import { database } from './database'
 
 //The config of the server, which gets the data from the database, it replaces most of .env variables for easier use
-export class customConfig {
-    static instance: customConfig
+export class agentConfig {
+    static instance: agentConfig
 
     configs: any = {}
 
     constructor(configs: {}) {
         this.configs = configs
-        customConfig.instance = this
+        agentConfig.instance = this
     }
 
     get(key: any) {
@@ -61,4 +61,4 @@ export class customConfig {
     }
 }
 
-export default customConfig
+export default agentConfig

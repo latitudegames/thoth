@@ -1,14 +1,15 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-nocheck
 
+// TODO: This was imported fropm our old codebase
+// We should be able to remove this code once we've got everything working with the AI node graph
+
 import { database } from '@latitudegames/thoth-core/src/connectors/database'
 import { formOpinionAboutSpeaker } from '@latitudegames/thoth-core/src/components/formOpinionAboutSpeaker'
 import { makeCompletionRequest } from '@latitudegames/thoth-core/src/components/makeCompletionRequest'
-
-import { evaluateTextAndRespondIfToxic } from '@latitudegames/thoth-core/src/components/profanityFilter'
 import { summarizeAndStoreFactsAboutAgent } from '@latitudegames/thoth-core/src/components/summarizeAndStoreFactsAboutAgent'
 import { summarizeAndStoreFactsAboutSpeaker } from '@latitudegames/thoth-core/src/components/summarizeAndStoreFactsAboutSpeaker'
-
+import { generateContext } from '@latitudegames/thoth-core/src/components/generateContext'
 async function archiveConversation(
   speaker,
   agent,
@@ -17,9 +18,7 @@ async function archiveConversation(
   channel
 ) {
   // Get configuration settings for agent
-  const { conversationWindowSize } = await getConfigurationSettingsForAgent(
-    agent
-  )
+  const conversationWindowSize = 10;
 
   const conversation = (
     await database.instance.getConversation(
@@ -59,9 +58,8 @@ async function archiveConversation(
 
 async function archiveFacts(speaker, agent) {
   // Get configuration settings for agent
-  const { speakerFactsWindowSize, agentFactsWindowSize } =
-    getConfigurationSettingsForAgent(agent)
-
+  const speakerFactsWindowSize = 2
+  const agentFactsWindowSize = 2
   const existingSpeakerFacts = (
     await database.instance.getSpeakersFacts(agent, speaker, true)
   )
@@ -109,69 +107,6 @@ async function archiveFacts(speaker, agent) {
   }
 }
 
-//generates the context for the open ai request, it gets the default configration from the website and replaces it with the agent's specifics
-async function generateContext(speaker, agent, conversation, message) {
-  let keywords = []
-  if (!isInFastMode) {
-    keywords = keywordExtractor(message, agent)
-  }
-
-  const pr = await Promise.all([
-    keywords,
-    database.instance.getSpeakersFacts(agent, speaker),
-    database.instance.getAgentFacts(agent),
-    database.instance.getMorals(),
-    database.instance.getPersonality(agent),
-    database.instance.getDialogue(agent),
-    database.instance.getMonologue(agent),
-    database.instance.getFacts(agent),
-  ])
-
-  pr[1] = pr[1].toString().trim().replaceAll('\n\n', '\n')
-  pr[2] = pr[2].toString().trim().replaceAll('\n\n', '\n')
-
-  let kdata = ''
-  if (!isInFastMode) {
-    if (pr[0].length > 0) {
-      kdata = 'More context on the chat:\n'
-      for (const k in pr[0]) {
-        kdata +=
-          'Q: ' +
-          capitalizeFirstLetter(pr[0][k].word) +
-          '\nA: ' +
-          pr[0][k].info +
-          '\n\n'
-      }
-      kdata += '\n'
-    }
-  }
-
-  // Return a complex context (this will be passed to the transformer for completion)
-  return (
-    (await database.instance.getContext())
-      .toString()
-      .replaceAll('$room', pr[3])
-      .replaceAll('$morals', pr[4])
-      .replaceAll('$personality', pr[6])
-      .replaceAll('$exampleDialog', pr[8])
-      .replaceAll('$monologue', pr[9])
-      .replaceAll('$facts', pr[10])
-      .replaceAll('$speakerFacts', pr[1])
-      .replaceAll('$agentFacts', pr[2])
-      .replaceAll('$keywords', kdata)
-      .replaceAll('$agent', agent)
-      .replaceAll('$speaker', speaker)
-      .replaceAll('$conversation', conversation)
-  )
-}
-
-async function getConfigurationSettingsForAgent(agent) {
-  const config = JSON.parse(
-    (await database.instance.getAgentsConfig(agent)).toString()
-  )
-  return config
-}
-
 function respondWithMessage(agent, text, res) {
   if (res) res.status(200).send(JSON.stringify({ result: text }))
   console.log(agent + '>>> ' + text)
@@ -187,41 +122,7 @@ async function evaluateTerminalCommands(
   client,
   channel
 ) {
-  if (message === '/reset') {
-    // If the user types /reset into the console...
-    // If there is a response (i.e. this came from a web client, not local terminal)
-    if (res) {
-      const result = { result: `${agent} has been reset` }
-      // Add the status 200 message (message OK)
-      res
-        .status(200)
-        // Send the message as JSON
-        .send(JSON.stringify(result))
-    }
-
-    await database.instance.clearConversations()
-    return true
-  } else if (message === '/dump') {
-    // If a user types dump, show them logs of convo
-    // Read conversation history
-    const conversation = await database.instance.getConversation(
-      agent,
-      speaker,
-      client,
-      channel,
-      false
-    )
-    // If there is a response (i.e. this came from a web client, not local terminal)
-    const result = { result: conversation }
-    if (res) {
-      // Add the status 200 message (message OK)
-      res
-        .status(200)
-        // Send the message as JSON
-        .send(JSON.stringify(result))
-    }
-    return true
-  } else if (message === 'GET_AGENT_NAME') {
+  if (message === 'GET_AGENT_NAME') {
     if (res) res.status(200).send(JSON.stringify({ result: agent }))
     return true
   }
@@ -251,29 +152,15 @@ export async function handleInput(
   )
     return
 
-  const _meta = await database.instance.getMeta(agent, speaker)
+  const _meta = await database.instance.getSpeakerAgentMeta(agent, speaker)
   if (!_meta || _meta.length <= 0) {
-    database.instance.setMeta(agent, speaker, JSON.stringify({ messages: 0 }))
+    database.instance.setSpeakerAgentMeta(agent, speaker, JSON.stringify({ messages: 0 }))
   }
 
   // Get configuration settings for agent
-  const {
-    dialogFrequencyPenality,
-    dialogPresencePenality,
-    factsUpdateInterval,
-    useProfanityFilter,
-  } = await getConfigurationSettingsForAgent(agent)
-
-  // If the profanity filter is enabled in the agent's config...
-  if (useProfanityFilter) {
-    // Evaluate if the speaker's message is toxic
-    const { isProfane, isSensitive, response } =
-      await evaluateTextAndRespondIfToxic(speaker, agent, message)
-    if ((isProfane || isSensitive) && response) {
-      if (res) res.status(200).send(JSON.stringify({ result: response }))
-      return response
-    }
-  }
+  const dialogFrequencyPenality = .3
+  const dialogPresencePenality = .1
+  const factsUpdateInterval = 2
 
   // Parse files into objects
   const meta = !_meta || _meta.length <= 0 ? { messages: 0 } : JSON.parse(_meta)
@@ -348,28 +235,6 @@ export async function handleInput(
     const error = 'Sorry, I had an error'
     return respondWithMessage(agent, error, res)
   }
-  if (useProfanityFilter) {
-    // Check agent isn't about to say something offensive
-    const { isProfane, response } = await evaluateTextAndRespondIfToxic(
-      speaker,
-      agent,
-      choice.text,
-      true
-    )
-
-    if (isProfane) {
-      database.instance.setConversation(
-        agent,
-        clientName,
-        channelId,
-        agent,
-        response,
-        false
-      )
-      return respondWithMessage(agent, response, res)
-    }
-  }
-
   //every some messages it gets the facts for the user and the agent
   if (meta.messages % factsUpdateInterval == 0) {
     const conversation = (
@@ -401,7 +266,7 @@ export async function handleInput(
     )
   }
 
-  database.instance.setMeta(agent, speaker, meta)
+  database.instance.setSpeakerAgentMeta(agent, speaker, meta)
 
   const response = choice.text.split('\n')[0]
 

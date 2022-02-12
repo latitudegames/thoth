@@ -6,13 +6,10 @@
 // @ts-nocheck
 
 import WhatsAppBot from '@green-api/whatsapp-bot'
-import { customConfig } from '@latitudegames/thoth-core/src/connectors/customConfig'
+import { agentConfig } from '@latitudegames/thoth-core/src/connectors/agentConfig'
+
 import { database } from './database'
-import {
-  getRandomEmptyResponse,
-  getSetting,
-  startsWithCapital,
-} from './utils'
+import { getRandomEmptyResponse, getSetting, startsWithCapital } from './utils'
 import { onMessage } from './whatsapp/events/message'
 
 export class whatsapp_client {
@@ -145,7 +142,7 @@ export class whatsapp_client {
     }
 
     args['chat_history'] = await this.getChatHistory(msg.chat.id, 10)
-    await messageResponseHandler(args, response => {
+    await messageResponseHandler(args, async response => {
       log(JSON.stringify(response))
       Object.keys(response.response).map(function (key, index) {
         log('response: ' + response.response[key])
@@ -387,8 +384,8 @@ export class whatsapp_client {
       true
     )
   }
-
-  username_regex = new RegExp(customConfig.instance.get('botNameRegex'), 'ig')
+  // replace with configurable regex later
+  username_regex = new RegExp('((?:digital|being)(?: |$))', 'ig')
   botName
   agent
   settings

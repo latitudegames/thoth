@@ -1,7 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-nocheck
 
-import { customConfig } from '@latitudegames/thoth-core/src/connectors/customConfig'
 import axios from 'axios'
 import { config } from 'dotenv'
 
@@ -17,7 +16,7 @@ export async function makeCompletionRequest(
         engine,
         log = true
 ) {
-        if (customConfig.instance.getBool('use_gptj')) {
+        if ((await database.instance.getConfig())['use_gptj']) {
                 const params = {
                         temperature: 0.8,
                         repetition_penalty: 0.5,
@@ -55,16 +54,13 @@ async function makeOpenAIGPT3Request(
 ) {
         if (useDebug) return { success: true, choice: { text: 'Default response' } }
         const API_KEY =
-                process.env.OPENAI_API_KEY ?? customConfig.instance.get('openai_api_key')
+                process.env.OPENAI_API_KEY ?? (await database.instance.getConfig())['openai_api_key']
         const headers = {
                 'Content-Type': 'application/json',
                 Authorization: 'Bearer ' + API_KEY,
         }
         try {
-                const gptEngine =
-                        engine ??
-                        JSON.parse((await database.instance.getAgentsConfig('common')).toString())
-                                .summarizationModel
+                const gptEngine = engine ?? 'davinci'
                 const resp = await axios.post(
                         `https://api.openai.com/v1/engines/${gptEngine}/completions`,
                         data,
