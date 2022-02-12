@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable require-await */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import axios from 'axios'
 import Rete from 'rete'
 
 import {
@@ -9,10 +10,21 @@ import {
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../types'
-import { getConversation } from '../axiosUtils'
 import { EngineContext } from '../engine'
 import { triggerSocket, stringSocket, anySocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
+
+async function getConversation(
+  agent: string,
+  speaker: string,
+  client: string,
+  channel: string
+) {
+  const response = await axios.get(
+    `${process.env.REACT_APP_API_URL}/conversation?agent=${agent}&speaker=${speaker}&client=${client}&channel=${channel}`
+  )
+  return response.data
+}
 
 const info =
   'Conversation Recall is used to get conversation for an agent and user'

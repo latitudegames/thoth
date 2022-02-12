@@ -6,13 +6,13 @@
 // @ts-nocheck
 
 import WhatsAppBot from '@green-api/whatsapp-bot'
-import { customConfig } from '@latitudegames/thoth-core/src/superreality/customConfig'
-import { database } from '../superreality/database'
+import { customConfig } from '@latitudegames/thoth-core/src/connectors/customConfig'
+import { database } from './database'
 import {
   getRandomEmptyResponse,
   getSetting,
   startsWithCapital,
-} from '../superreality/utils'
+} from './utils'
 import { onMessage } from './whatsapp/events/message'
 
 export class whatsapp_client {

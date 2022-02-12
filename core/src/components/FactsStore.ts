@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable require-await */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import axios from 'axios'
 import Rete from 'rete'
 
 import {
@@ -9,7 +10,6 @@ import {
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../types'
-import { storeFacts } from '../axiosUtils'
 import { EngineContext } from '../engine'
 import { triggerSocket, stringSocket, anySocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
@@ -18,6 +18,16 @@ const info = 'Facts Store is used to store facts for an agent and user'
 
 type InputReturn = {
   output: unknown
+}
+
+async function storeFacts(agent: string, speaker: string, facts: string) {
+  const response = await axios.post(`${process.env.REACT_APP_API_URL}/facts`, {
+    agent: agent,
+    speaker: speaker,
+    facts: facts,
+  })
+
+  console.log(response.data)
 }
 
 export class FactsStore extends ThothComponent<Promise<InputReturn>> {

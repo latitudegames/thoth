@@ -1,4 +1,4 @@
-import { database } from '@latitudegames/thoth-core/src/superreality/database'
+import { database } from '@latitudegames/thoth-core/src/connectors/database'
 
 const maxMSDiff = 1000
 

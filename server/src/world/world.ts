@@ -1,5 +1,5 @@
-import { randomInt } from '@latitudegames/thoth-core/src/superreality/utils'
-import { database } from '@latitudegames/thoth-core/src/superreality/database'
+import { randomInt } from '@latitudegames/thoth-core/src/connectors/utils'
+import { database } from '@latitudegames/thoth-core/src/connectors/database'
 import agent from './agent'
 import gameObject from './gameObject'
 import time from './time'

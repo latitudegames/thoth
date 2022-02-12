@@ -16,6 +16,7 @@ export default async function getTextForSpeech() {
   }
 
   console.log(request)
+  console.log(client)
 
   /*const recognizeStream = client
     .streamingRecognize(request)
