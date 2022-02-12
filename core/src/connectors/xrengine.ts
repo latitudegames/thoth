@@ -9,19 +9,24 @@
 /* eslint-disable camelcase */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { customConfig } from '@latitudegames/thoth-core/src/connectors/customConfig'
+
+// TODO: This was imported fropm our old codebase
+// We need to break some of this code out so that we have more control of it in the node graph
+// i.e. text classification and such
+
+import { agentConfig } from '@latitudegames/thoth-core/src/connectors/agentConfig'
 
 import roomManager from '../components/roomManager'
 import { classifyText } from '../components/textClassifier'
+import { browserWindow, PageUtils } from './browser'
 import { database } from './database'
+import { handleInput } from './handleInput'
 import {
   detectOsOption,
   getRandomEmptyResponse,
   getSetting,
   startsWithCapital,
 } from './utils'
-import { browserWindow, PageUtils } from './browser'
-import { handleInput } from './handleInput'
 
 export class xrengine_client {
   UsersInRange = {}
@@ -154,7 +159,7 @@ export class xrengine_client {
     )
   }
   async wasHandled(chatId, messageId, foundCallback, notFoundCallback) {
-    return await database.instance.messageExists2(
+    return await database.instance.messageExistsWithCallback(
       'xr-engine',
       chatId,
       messageId,

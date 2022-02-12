@@ -3,8 +3,6 @@ import { xr_world_understanding_prompt as _xr_world_understanding_prompt } from 
 import type { xr_world_understanding_promptAttributes, xr_world_understanding_promptCreationAttributes } from "./xr_world_understanding_prompt"
 import { agent_config as _agent_config } from "./agent_config";
 import type { agent_configAttributes, agent_configCreationAttributes } from "./agent_config";
-import { agent_fact_summarization as _agent_fact_summarization } from "./agent_fact_summarization";
-import type { agent_fact_summarizationAttributes, agent_fact_summarizationCreationAttributes } from "./agent_fact_summarization";
 import { agent_facts as _agent_facts } from "./agent_facts";
 import type { agent_factsAttributes, agent_factsCreationAttributes } from "./agent_facts";
 import { agent_facts_archive as _agent_facts_archive } from "./agent_facts_archive";
@@ -51,18 +49,6 @@ import { personality as _personality } from "./personality";
 import type { personalityAttributes, personalityCreationAttributes } from "./personality";
 import { personality_questions as _personality_questions } from "./personality_questions";
 import type { personality_questionsAttributes, personality_questionsCreationAttributes } from "./personality_questions";
-import { profane_responses as _profane_responses } from "./profane_responses";
-import type { profane_responsesAttributes, profane_responsesCreationAttributes } from "./profane_responses";
-import { rating as _rating } from "./rating";
-import type { ratingAttributes, ratingCreationAttributes } from "./rating";
-import { relationship_matrix as _relationship_matrix } from "./relationship_matrix";
-import type { relationship_matrixAttributes, relationship_matrixCreationAttributes } from "./relationship_matrix";
-import { default_sensitive_phrases as _sensitive_phrases } from "./default_sensitive_phrases";
-import type { sensitive_phrasesAttributes, sensitive_phrasesCreationAttributes } from "./default_sensitive_phrases";
-import { default_sensitive_responses as _sensitive_responses } from "./default_sensitive_responses";
-import type { sensitive_responsesAttributes, sensitive_responsesCreationAttributes } from "./default_sensitive_responses";
-import { default_sensitive_words as _sensitive_words } from "./default_sensitive_words";
-import type { sensitive_wordsAttributes, sensitive_wordsCreationAttributes } from "./default_sensitive_words";
 import { speaker_fact_summarization as _speaker_fact_summarization } from "./speaker_fact_summarization";
 import type { speaker_fact_summarizationAttributes, speaker_fact_summarizationCreationAttributes } from "./speaker_fact_summarization";
 import { speaker_profane_responses as _speaker_profane_responses } from "./speaker_profane_responses";
@@ -73,8 +59,6 @@ import { speakers_facts_archive as _speakers_facts_archive } from "./speakers_fa
 import type { speakers_facts_archiveAttributes, speakers_facts_archiveCreationAttributes } from "./speakers_facts_archive";
 import { speakers_model as _speakers_model } from "./speakers_model";
 import type { speakers_modelAttributes, speakers_modelCreationAttributes } from "./speakers_model";
-import { default_starting_message as _starting_message } from "./default_starting_message";
-import type { starting_messageAttributes, starting_messageCreationAttributes } from "./default_starting_message";
 import { wikipedia as _wikipedia } from "./wikipedia";
 import type { wikipediaAttributes, wikipediaCreationAttributes } from "./wikipedia";
 import { xr_engine_room_prompt as _xr_engine_room_prompt } from "./xr_engine_room_prompt";
@@ -83,7 +67,6 @@ import type { xr_engine_room_promptAttributes, xr_engine_room_promptCreationAttr
 export {
   _xr_world_understanding_prompt as xr_world_understanding_prompt,
   _agent_config as agent_config,
-  _agent_fact_summarization as agent_fact_summarization,
   _agent_facts as agent_facts,
   _agent_facts_archive as agent_facts_archive,
   _agent_instance as agent_instance,
@@ -107,18 +90,11 @@ export {
   _opinion_form_prompt as opinion_form_prompt,
   _personality as personality,
   _personality_questions as personality_questions,
-  _profane_responses as profane_responses,
-  _rating as rating,
-  _relationship_matrix as relationship_matrix,
-  _sensitive_phrases as default_sensitive_phrases,
-  _sensitive_responses as default_sensitive_responses,
-  _sensitive_words as default_sensitive_words,
   _speaker_fact_summarization as speaker_fact_summarization,
   _speaker_profane_responses as speaker_profane_responses,
   _speakers_facts as speakers_facts,
   _speakers_facts_archive as speakers_facts_archive,
   _speakers_model as speakers_model,
-  _starting_message as default_starting_message,
   _wikipedia as wikipedia,
   _xr_engine_room_prompt as xr_engine_room_prompt,
 };
@@ -128,8 +104,6 @@ export type {
   xr_world_understanding_promptCreationAttributes,
   agent_configAttributes,
   agent_configCreationAttributes,
-  agent_fact_summarizationAttributes,
-  agent_fact_summarizationCreationAttributes,
   agent_factsAttributes,
   agent_factsCreationAttributes,
   agent_facts_archiveAttributes,
@@ -176,18 +150,6 @@ export type {
   personalityCreationAttributes,
   personality_questionsAttributes,
   personality_questionsCreationAttributes,
-  profane_responsesAttributes,
-  profane_responsesCreationAttributes,
-  ratingAttributes,
-  ratingCreationAttributes,
-  relationship_matrixAttributes,
-  relationship_matrixCreationAttributes,
-  sensitive_phrasesAttributes,
-  sensitive_phrasesCreationAttributes,
-  sensitive_responsesAttributes,
-  sensitive_responsesCreationAttributes,
-  sensitive_wordsAttributes,
-  sensitive_wordsCreationAttributes,
   speaker_fact_summarizationAttributes,
   speaker_fact_summarizationCreationAttributes,
   speaker_profane_responsesAttributes,
@@ -198,8 +160,6 @@ export type {
   speakers_facts_archiveCreationAttributes,
   speakers_modelAttributes,
   speakers_modelCreationAttributes,
-  starting_messageAttributes,
-  starting_messageCreationAttributes,
   wikipediaAttributes,
   wikipediaCreationAttributes,
   xr_engine_room_promptAttributes,
@@ -209,7 +169,6 @@ export type {
 export function initModels(sequelize: Sequelize) {
   const xr_world_understanding_prompt = _xr_world_understanding_prompt.initModel(sequelize);
   const agent_config = _agent_config.initModel(sequelize);
-  const agent_fact_summarization = _agent_fact_summarization.initModel(sequelize);
   const agent_facts = _agent_facts.initModel(sequelize);
   const agent_facts_archive = _agent_facts_archive.initModel(sequelize);
   const agent_instance = _agent_instance.initModel(sequelize);
@@ -233,26 +192,17 @@ export function initModels(sequelize: Sequelize) {
   const opinion_form_prompt = _opinion_form_prompt.initModel(sequelize);
   const personality = _personality.initModel(sequelize);
   const personality_questions = _personality_questions.initModel(sequelize);
-  const profane_responses = _profane_responses.initModel(sequelize);
-  const rating = _rating.initModel(sequelize);
-  const relationship_matrix = _relationship_matrix.initModel(sequelize);
-  const default_sensitive_phrases = _sensitive_phrases.initModel(sequelize);
-  const default_sensitive_responses = _sensitive_responses.initModel(sequelize);
-  const default_sensitive_words = _sensitive_words.initModel(sequelize);
   const speaker_fact_summarization = _speaker_fact_summarization.initModel(sequelize);
   const speaker_profane_responses = _speaker_profane_responses.initModel(sequelize);
   const speakers_facts = _speakers_facts.initModel(sequelize);
   const speakers_facts_archive = _speakers_facts_archive.initModel(sequelize);
   const speakers_model = _speakers_model.initModel(sequelize);
-  const default_starting_message = _starting_message.initModel(sequelize);
   const wikipedia = _wikipedia.initModel(sequelize);
   const xr_engine_room_prompt = _xr_engine_room_prompt.initModel(sequelize);
-
 
   return {
     xr_world_understanding_prompt: xr_world_understanding_prompt,
     agent_config: agent_config,
-    agent_fact_summarization: agent_fact_summarization,
     agent_facts: agent_facts,
     agent_facts_archive: agent_facts_archive,
     agent_instance: agent_instance,
@@ -276,18 +226,11 @@ export function initModels(sequelize: Sequelize) {
     opinion_form_prompt: opinion_form_prompt,
     personality: personality,
     personality_questions: personality_questions,
-    profane_responses: profane_responses,
-    rating: rating,
-    relationship_matrix: relationship_matrix,
-    default_sensitive_phrases: default_sensitive_phrases,
-    default_sensitive_responses: default_sensitive_responses,
-    default_sensitive_words: default_sensitive_words,
     speaker_fact_summarization: speaker_fact_summarization,
     speaker_profane_responses: speaker_profane_responses,
     speakers_facts: speakers_facts,
     speakers_facts_archive: speakers_facts_archive,
     speakers_model: speakers_model,
-    default_starting_message: default_starting_message,
     wikipedia: wikipedia,
     xr_engine_room_prompt: xr_engine_room_prompt,
   };

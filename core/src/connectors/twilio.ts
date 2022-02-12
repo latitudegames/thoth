@@ -5,7 +5,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import { customConfig } from '@latitudegames/thoth-core/src/connectors/customConfig'
+import { agentConfig } from '@latitudegames/thoth-core/src/connectors/agentConfig'
 import Twilio from 'twilio'
 
 import { database } from './database'

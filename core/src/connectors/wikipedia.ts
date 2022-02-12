@@ -134,7 +134,7 @@ export async function createWikipediaAgent(speaker, name, personality, facts) {
 
     database.instance.setDialogue(name, dialogPrompt + (await res).choice?.text)
     database.instance.setAgentFacts(name, factPrompt)
-    database.instance.setAgentExists(name)
+    database.instance.createAgent(name)
 
     stop = Date.now()
     console.log(

@@ -13,6 +13,7 @@ const ConfigEditor = () => {
 
   if (firstLoad) {
     axios.get(`${process.env.REACT_APP_API_URL}/config`).then(res => {
+      console.log("res.data is ", res.data);
       setConfig(res.data.config);
       setFirstLoad(false);
     });
@@ -87,7 +88,7 @@ const ConfigEditor = () => {
                 add();
               }}>Add</button>
             </label>
-            {config.map((value, idx) => {
+            {config && config.map((value, idx) => {
               return (
                 <div
                   key={idx}

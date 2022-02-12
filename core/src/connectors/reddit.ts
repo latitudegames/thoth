@@ -6,13 +6,13 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import { customConfig } from '@latitudegames/thoth-core/src/connectors/customConfig'
+import { agentConfig } from '@latitudegames/thoth-core/src/connectors/agentConfig'
 import SnooStream from 'snoostream'
 import * as snoowrap from 'snoowrap'
 
 import { database } from './database'
-import { getSetting } from './utils'
 import { handleInput } from './handleInput'
+import { getSetting } from './utils'
 
 export let reddit
 
@@ -109,12 +109,12 @@ export class reddit_client {
       this.reddit
         .getMessage(messageId)
         .reply(responses[key])
-        .then(res => {
+        .then(async res => {
           database.instance.addMessageInHistory(
             'reddit',
             chat_id,
             res.id,
-            customConfig.instance.get('botName'),
+            (await database.instance.getConfig())['botName'],
             response
           )
         })
@@ -122,12 +122,12 @@ export class reddit_client {
       this.reddit
         .getSubmission(chat_id)
         .reply(responses[key])
-        .then(res => {
+        .then(async res => {
           database.instance.addMessageInHistory(
             'reddit',
             chat_id,
             res.id,
-            customConfig.instance.get('botName'),
+            (await database.instance.getConfig())['botName'],
             response
           )
         })
@@ -233,7 +233,7 @@ export class reddit_client {
         const resp = await handleInput(
           body,
           author,
-          customConfig.instance.get('agent') ?? 'Agent',
+          (await database.instance.getConfig())['agent'] ?? 'Agent',
           null,
           'reddit',
           chat_id
@@ -288,7 +288,7 @@ export class reddit_client {
             const resp = await handleInput(
               body,
               author,
-              customConfig.instance.get('agent') ?? 'Agent',
+              (await database.instance.getConfig())['agent'] ?? 'Agent',
               null,
               'reddit',
               chat_id
@@ -350,7 +350,7 @@ export class reddit_client {
         const resp = await handleInput(
           body,
           author,
-          customConfig.instance.get('agent') ?? 'Agent',
+          (await database.instance.getConfig())['agent'] ?? 'Agent',
           null,
           'reddit',
           chat_id
@@ -405,7 +405,7 @@ export class reddit_client {
             const resp = await handleInput(
               body,
               author,
-              customConfig.instance.get('agent') ?? 'Agent',
+              (await database.instance.getConfig())['agent'] ?? 'Agent',
               null,
               'reddit',
               chat_id
@@ -453,6 +453,8 @@ export class reddit_client {
         const author = message.author.name
         const body = message.body
         const timestamp = message.created_utc
+        const agentConfig =
+          (await database.instance.getConfig())['agent'] ?? 'Agent'
         if (!author.includes('reddit')) {
           //log('current message: ' + body)
           await database.instance.messageExistsAsyncWitHCallback(
@@ -467,7 +469,7 @@ export class reddit_client {
               const resp = await handleInput(
                 body,
                 author,
-                customConfig.instance.get('agent') ?? 'Agent',
+                agentConfig,
                 null,
                 'reddit',
                 chat_id
