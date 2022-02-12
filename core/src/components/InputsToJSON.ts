@@ -22,9 +22,9 @@ type WorkerReturn = {
   output: string
 }
 
-export class StringCombiner extends ThothComponent<Promise<WorkerReturn>> {
+export class InputsToJSON extends ThothComponent<Promise<WorkerReturn>> {
   constructor() {
-    super('String Combiner')
+    super('Inputs To JSON')
 
     this.task = {
       outputs: {
@@ -33,13 +33,12 @@ export class StringCombiner extends ThothComponent<Promise<WorkerReturn>> {
       },
     }
 
-    this.category = 'Logic'
+    this.category = 'I/O'
     this.display = true
     this.info = info
   }
 
   builder(node: ThothNode) {
-    const inp = new Rete.Input('string', 'String', stringSocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
     const outp = new Rete.Output('output', 'String', stringSocket)
@@ -52,11 +51,7 @@ export class StringCombiner extends ThothComponent<Promise<WorkerReturn>> {
 
     node.inspector.add(inputGenerator)
 
-    return node
-      .addInput(inp)
-      .addInput(dataInput)
-      .addOutput(dataOutput)
-      .addOutput(outp)
+    return node.addInput(dataInput).addOutput(dataOutput).addOutput(outp)
   }
 
   async worker(
@@ -70,18 +65,13 @@ export class StringCombiner extends ThothComponent<Promise<WorkerReturn>> {
       return acc
     }, {} as Record<string, unknown>)
 
-    let input = inputs['string'] as string
+    const data: { [key: string]: any } = {}
     for (const x in inputs) {
-      if (x.toLowerCase().includes('replacer')) {
-        input = input.replace(
-          '$' + x.split(' ')[0].toLowerCase().trim(),
-          inputs[x] as string
-        )
-      }
+      data[x.toLowerCase().trim()] = inputs[x]
     }
 
     return {
-      output: input,
+      output: JSON.stringify(data),
     }
   }
 }
