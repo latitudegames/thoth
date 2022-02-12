@@ -6,12 +6,12 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import { customConfig } from '@latitudegames/thoth-core/src/superreality/customConfig'
+import { customConfig } from '@latitudegames/thoth-core/src/connectors/customConfig'
 import SnooStream from 'snoostream'
 import * as snoowrap from 'snoowrap'
 
-import { database } from '../superreality/database'
-import { getSetting } from '../superreality/utils'
+import { database } from './database'
+import { getSetting } from './utils'
 import { handleInput } from './handleInput'
 
 export let reddit
@@ -447,7 +447,7 @@ export class reddit_client {
     })
 
     setInterval(async () => {
-      ;(await reddit.getInbox()).forEach(async message => {
+      ; (await reddit.getInbox()).forEach(async message => {
         const id = message.name
         const senderId = message.id
         const author = message.author.name

@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-nocheck
 
-import { database } from '@latitudegames/thoth-core/src/superreality/database'
+import { database } from '@latitudegames/thoth-core/src/connectors/database'
 import { formOpinionAboutSpeaker } from '@latitudegames/thoth-core/src/components/formOpinionAboutSpeaker'
 import { makeCompletionRequest } from '@latitudegames/thoth-core/src/components/makeCompletionRequest'
 

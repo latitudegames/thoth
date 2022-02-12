@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable require-await */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import axios from 'axios'
 import Rete from 'rete'
 
 import {
@@ -9,7 +10,6 @@ import {
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../types'
-import { getFacts } from '../axiosUtils'
 import { EngineContext } from '../engine'
 import { triggerSocket, stringSocket, anySocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
@@ -19,6 +19,13 @@ const info = 'Facts Recall is used to get facts for an agent and user'
 type InputReturn = {
   output: unknown
   facts: unknown
+}
+
+export async function getFacts(agent: string, speaker: string) {
+  const response = await axios.get(
+    `${process.env.REACT_APP_API_URL}/facts?agent=${agent}&speaker=${speaker}`
+  )
+  return response.data
 }
 
 export class FactsRecall extends ThothComponent<Promise<InputReturn>> {

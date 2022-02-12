@@ -8,7 +8,7 @@
 // @ts-nocheck
 
 // required for message.lineReply
-import { customConfig } from '@latitudegames/thoth-core/src/superreality/customConfig'
+import { customConfig } from '@latitudegames/thoth-core/src/connectors/customConfig'
 import Discord, { Intents } from 'discord.js'
 import emoji from 'emoji-dictionary'
 import emojiRegex from 'emoji-regex'
@@ -16,13 +16,13 @@ import { EventEmitter } from 'events'
 
 import roomManager from '../components/roomManager'
 import { classifyText } from '../components/textClassifier'
-import { database } from '../superreality/database'
+import { database } from './database'
 import {
   getRandomEmptyResponse,
   getRandomTopic,
   startsWithCapital,
   getSetting,
-} from '../superreality/utils'
+} from './utils'
 import { handleInput } from './handleInput'
 
 // TODO: Remove this

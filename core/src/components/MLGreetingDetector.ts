@@ -11,7 +11,6 @@ import {
 } from '../../types'
 import { InputControl } from '../dataControls/InputControl'
 import { EngineContext } from '../engine'
-import { getValue } from '../hfUtils'
 import { triggerSocket, stringSocket, anySocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 
@@ -20,6 +19,16 @@ const info =
 
 type InputReturn = {
   output: unknown
+}
+
+function getValue(labels: any, scores: any, key: string) {
+  for (let i = 0; i < labels.length; i++) {
+    if (labels[i] === key) {
+      return scores[i]
+    }
+  }
+
+  return 0
 }
 
 export class MLGreetingDetector extends ThothComponent<Promise<InputReturn>> {

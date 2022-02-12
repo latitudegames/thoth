@@ -1,6 +1,6 @@
 import { createWikipediaAgent } from '@latitudegames/thoth-core/src/connectors/wikipedia'
-import customConfig from '@latitudegames/thoth-core/src/superreality/customConfig'
-import { database } from '@latitudegames/thoth-core/src/superreality/database'
+import customConfig from '@latitudegames/thoth-core/src/connectors/customConfig'
+import { database } from '@latitudegames/thoth-core/src/connectors/database'
 import { handleInput } from '@latitudegames/thoth-core/src/connectors/handleInput'
 import Koa from 'koa'
 import 'regenerator-runtime/runtime'
@@ -280,13 +280,13 @@ const executeHandler = async (ctx: Koa.Context) => {
       out = await createWikipediaAgent('Speaker', agent, '', '')
     }
 
-    out.startingMessage = await msg
+    out.defaultStartingMessage = await msg
     database.instance.setConversation(
       agent,
       'web',
       id,
       agent,
-      out.startingMessage,
+      out.defaultStartingMessage,
       false
     )
     return (ctx.body = out)

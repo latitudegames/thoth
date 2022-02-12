@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable require-await */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import axios from 'axios'
 import Rete from 'rete'
 
 import {
@@ -9,7 +10,6 @@ import {
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../types'
-import { getFactsCount } from '../axiosUtils'
 import { EngineContext } from '../engine'
 import { triggerSocket, stringSocket, anySocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
@@ -19,6 +19,22 @@ const info = 'Facts Count is used to count of facts for an agent and user'
 type InputReturn = {
   output: string
   count: number
+}
+
+export async function getFactsCount(agent: string, speaker: string) {
+  const response = await axios.get(
+    `${process.env.REACT_APP_API_URL}/facts_count?agent=${agent}&speaker=${speaker}`
+  )
+
+  let count = 0
+
+  try {
+    count = parseInt(response.data)
+  } catch (e) {
+    console.log(e)
+  }
+
+  return count
 }
 
 export class FactsCount extends ThothComponent<Promise<InputReturn>> {

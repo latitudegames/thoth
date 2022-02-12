@@ -4,11 +4,11 @@
 /* eslint-disable camelcase */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { customConfig } from '@latitudegames/thoth-core/src/superreality/customConfig'
+import { customConfig } from '@latitudegames/thoth-core/src/connectors/customConfig'
 import { TwitterApi } from 'twitter-api-v2'
 
-import { database } from '../superreality/database'
-import { getSetting } from '../superreality/utils'
+import { database } from './database'
+import { getSetting } from './utils'
 import { handleInput } from './handleInput'
 
 export class twitter_client {
