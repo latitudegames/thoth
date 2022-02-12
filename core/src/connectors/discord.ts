@@ -8,7 +8,7 @@
 // @ts-nocheck
 
 // required for message.lineReply
-import { customConfig } from '@latitudegames/thoth-core/src/connectors/customConfig'
+import { agentConfig } from '@latitudegames/thoth-core/src/connectors/agentConfig'
 import Discord, { Intents } from 'discord.js'
 import emoji from 'emoji-dictionary'
 import emojiRegex from 'emoji-regex'
@@ -17,13 +17,13 @@ import { EventEmitter } from 'events'
 import roomManager from '../components/roomManager'
 import { classifyText } from '../components/textClassifier'
 import { database } from './database'
+import { handleInput } from './handleInput'
 import {
   getRandomEmptyResponse,
   getRandomTopic,
   startsWithCapital,
   getSetting,
 } from './utils'
-import { handleInput } from './handleInput'
 
 // TODO: Remove this
 export const config = {
@@ -787,8 +787,9 @@ export class discord_client {
 
   //Event that is triggered when the discord client fully loaded
   ready = async client => {
+    const logDMUserID = (await database.instance.getConfig())['logDMUserID']
     await this.client.users
-      .fetch(customConfig.instance.get('logDMUserID'))
+      .fetch(logDMUserID)
       .then(user => {
         this.client.log_user = user
       })
@@ -1480,7 +1481,7 @@ export class discord_client {
   agent = undefined
   settings = undefined
 
-  createDiscordClient = (agent, settings) => {
+  createDiscordClient = async (agent, settings) => {
     this.agent = agent
     this.settings = settings
 
@@ -1505,12 +1506,15 @@ export class discord_client {
     this.client._parseWords = this._parseWords
     this.client.bot_name = config.bot_name
     this.client.name_regex = new RegExp(config.bot_name, 'ig')
+
+    const config = await database.instance.getConfig()
+
     this.client.username_regex = new RegExp(
-      customConfig.instance.get('botNameRegex'),
+      config['botNameRegex'] ?? '((?:digital|being)(?: |$))',
       'ig'
     )
-    this.client.edit_messages_max_count = customConfig.instance.getInt(
-      'editMessageMaxCount'
+    this.client.edit_messages_max_count = Int.parse(
+      config['editMessageMaxCount']
     )
 
     const embed = new Discord.MessageEmbed().setColor(0x00ae86)

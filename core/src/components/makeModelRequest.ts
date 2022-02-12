@@ -2,7 +2,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-nocheck
 
-import { customConfig } from '@latitudegames/thoth-core/src/connectors/customConfig'
 import { config } from 'dotenv'
 import fetch from 'node-fetch'
 config()
@@ -15,17 +14,13 @@ export async function makeModelRequest(
   options = { use_cache: false, wait_for_model: true }
 ) {
   try {
-    console.log(
-      "customConfig.instance.get('hf_api_token') is ",
-      customConfig.instance.get('hf_api_token').replace(' ', '_')
-    )
     const response = await fetch(
       `https://api-inference.huggingface.co/models/${model}`,
       {
         headers: {
-          Authorization: `Bearer ${customConfig.instance
-            .get('hf_api_token')
-            .replace(' ', '_')}`,
+          Authorization: `Bearer ${(
+            await database.instance.getConfig()
+          )['hf_api_token'].replace(' ', '_')}`,
         },
         method: 'POST',
         body: JSON.stringify({ inputs, parameters, options }),

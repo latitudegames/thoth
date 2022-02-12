@@ -1,16 +1,11 @@
 import { createWikipediaAgent } from '@latitudegames/thoth-core/src/connectors/wikipedia'
-import customConfig from '@latitudegames/thoth-core/src/connectors/customConfig'
+import agentConfig from '@latitudegames/thoth-core/src/connectors/agentConfig'
 import { database } from '@latitudegames/thoth-core/src/connectors/database'
 import { handleInput } from '@latitudegames/thoth-core/src/connectors/handleInput'
 import Koa from 'koa'
 import 'regenerator-runtime/runtime'
 import { noAuth } from '../middleware/auth'
 import { Route } from '../types'
-import {
-  reloadAgentInstances,
-  reloadConfigs,
-  reloadProfanity,
-} from '../utils/reload'
 
 export const modules: Record<string, unknown> = {}
 
@@ -45,20 +40,22 @@ function clientSettingsToInstance(settings: any) {
 
 const getAgentsHandler = async (ctx: Koa.Context) => {
   const agents = await database.instance.getAgents()
+  console.log("Handing back agents ", agents);
   ctx.body = agents
 }
 
 const getAgentHandler = async (ctx: Koa.Context) => {
-  const agent = ctx.query.agent
+  const agent = await database.instance.getAgent(ctx.query.agent as string)
+  if (agent == null) {
+    return {}
+  }
+  console.log("agent is ", agent);
   ctx.body = {
-    dialogue: (await database.instance.getDialogue(agent)).trim(),
-    facts: (await database.instance.getAgentFacts(agent)).trim(),
-    monologue: (await database.instance.getMonologue(agent)).trim(),
-    personality: (await database.instance.getPersonality(agent)).trim(),
-    greetings: (await database.instance.getGreetings(agent)).trim(),
-    ignoredKeywords: (
-      await database.instance.getIgnoredKeywordsData(agent)
-    ).trim(),
+    dialogue: agent.dialog,
+    facts: agent.facts,
+    monologue: agent.monologue,
+    personality: agent.personality,
+    greetings: agent.greetings,
   }
 }
 
@@ -80,10 +77,6 @@ const createOrUpdateAgentHandler = async (ctx: Koa.Context) => {
         agentName,
         data.greetings
       )
-      await database.instance.setIgnoredKeywords(
-        agentName,
-        data.ignoredKeywords
-      )
     } catch (e) {
       return (ctx.body = { error: 'internal error' })
     }
@@ -92,7 +85,7 @@ const createOrUpdateAgentHandler = async (ctx: Koa.Context) => {
   try {
     // TODO: Combine all of these!
 
-    await database.instance.setAgentExists(agentName)
+    await database.instance.createAgent(agentName)
     if (!data.dialogue || data.dialogue === undefined) data.dialogue = ''
     await database.instance.setDialogue(agentName, data.dialogue)
     if (!data.facts || data.facts === undefined) data.facts = ''
@@ -105,9 +98,6 @@ const createOrUpdateAgentHandler = async (ctx: Koa.Context) => {
     if (!data.greetings || data.greetings === undefined)
       data.greetings = ''
     await database.instance.setGreetings(agentName, data.greetings)
-    if (!data.ignoredKeywords || data.ignoredKeywords === undefined)
-      data.ignoredKeywords = ''
-    await database.instance.setIgnoredKeywords(agentName, data.ignoredKeywords)
   } catch (e) {
     return (ctx.body = { error: 'internal error' })
   }
@@ -125,103 +115,9 @@ const deleteAgentHandler = async (ctx: Koa.Context) => {
   return (ctx.body = 'ok')
 }
 
-const getProfanityHandler = async (ctx: Koa.Context) => {
-  const editorId = ctx.query.editor_id
-
-  if (editorId === '1') {
-    return (ctx.body = {
-      data: (await database.instance.getBadWords()).toString().split('\n'),
-    })
-  } else if (editorId === '2') {
-    return (ctx.body = {
-      data: (await database.instance.getSensitiveWords())
-        .toString()
-        .split('\r\n'),
-    })
-  } else if (editorId === '3') {
-    return (ctx.body = {
-      data: (await database.instance.getSensitivePhrases())
-        .toString()
-        .split('\n'),
-    })
-  } else if (editorId === '4') {
-    return (ctx.body = {
-      data: (await database.instance.getLeadingStatements())
-        .toString()
-        .split('\n'),
-    })
-  }
-  ctx.body = 'invalid editor id'
-}
-
-const addProfanityHandler = async (ctx: Koa.Context) => {
-  const word = ctx.request.body.word
-  const editorId = ctx.request.body.editorId
-
-  if (editorId == 1) {
-    if (await database.instance.badWordExists(word)) {
-      return (ctx.body = { error: 'already exists' })
-    }
-
-    await database.instance.addBadWord(word)
-    await reloadProfanity()
-    return (ctx.body = 'ok')
-  } else if (editorId == 2) {
-    if (await database.instance.sensitiveWordExists(word)) {
-      return (ctx.body = { error: 'already exists' })
-    }
-
-    await database.instance.addSensitiveWord(word)
-    await reloadProfanity()
-    return (ctx.body = 'ok')
-  } else if (editorId == 3) {
-    if (await database.instance.sensitivePhraseExists(word)) {
-      return (ctx.body = { error: 'already exists' })
-    }
-
-    await database.instance.addSensitivePhrase(word)
-    await reloadProfanity()
-    return (ctx.body = 'ok')
-  } else if (editorId == 4) {
-    if (await database.instance.leadingStatementExists(word)) {
-      return (ctx.body = { error: 'already exists' })
-    }
-
-    await database.instance.addLeadingStatement(word)
-    await reloadProfanity()
-    return (ctx.body = 'ok')
-  }
-  ctx.body = { error: 'invalid editor id' }
-}
-
-const deleteProfanityHandler = async (ctx: Koa.Context) => {
-  const word = ctx.request.body.word
-  const editorId = ctx.request.body.editorId
-
-  if (editorId == 1) {
-    await database.instance.removeBadWord(word)
-    await reloadProfanity()
-    return (ctx.body = 'ok')
-  } else if (editorId == 2) {
-    await database.instance.removeSensitiveWord(word)
-    await reloadProfanity()
-    return (ctx.body = 'ok')
-  } else if (editorId == 3) {
-    await database.instance.removeSensitivePhrase(word)
-    await reloadProfanity()
-    return (ctx.body = 'ok')
-  } else if (editorId == 4) {
-    await database.instance.removeLeadingStatement(word)
-    await reloadProfanity()
-    return (ctx.body = 'ok')
-  }
-
-  ctx.body = { error: 'invalid editor id' }
-}
-
 const getConfigHandler = async (ctx: Koa.Context) => {
   const data = {
-    config: customConfig.instance.allToArray(),
+    config: await database.instance.getConfig(),
   }
 
   return (ctx.body = data)
@@ -231,9 +127,8 @@ const addConfigHandler = async (ctx: Koa.Context) => {
   const data = ctx.request.body.data
 
   try {
-    await customConfig.instance.set(data.key, data.value)
+    await agentConfig.instance.set(data.key, data.value)
     ctx.body = 'ok'
-    await reloadConfigs()
   } catch (e) {
     console.error(e)
     return (ctx.body = { error: 'internal error' })
@@ -244,11 +139,10 @@ const updateConfigHandler = async (ctx: Koa.Context) => {
   const data = ctx.request.body.config
   try {
     for (let i = 0; i < data.length; i++) {
-      await customConfig.instance.set(data[i].key, data[i].value)
+      await agentConfig.instance.set(data[i].key, data[i].value)
     }
 
     ctx.body = 'ok'
-    await reloadConfigs()
   } catch (e) {
     console.error(e)
     return (ctx.body = { error: 'internal error' })
@@ -259,9 +153,8 @@ const deleteConfigHandler = async (ctx: Koa.Context) => {
   const data = ctx.request.body.data
 
   try {
-    await customConfig.instance.delete(data.key)
+    await agentConfig.instance.delete(data.key)
     ctx.body = 'ok'
-    await reloadConfigs()
   } catch (e) {
     console.error(e)
     return (ctx.body = { error: 'internal error' })
@@ -273,20 +166,20 @@ const executeHandler = async (ctx: Koa.Context) => {
   const speaker = ctx.request.body.sender
   const agent = ctx.request.body.agent
   const id = ctx.request.body.id
-  const msg = database.instance.getRandomStartingMessage(agent)
+  const msg = database.instance.getRandomGreeting(agent)
   if (message.includes('/become')) {
     let out: any = {}
     if (!(await database.instance.getAgentExists(agent))) {
       out = await createWikipediaAgent('Speaker', agent, '', '')
     }
 
-    out.defaultStartingMessage = await msg
+    out.defaultGreeting = await msg
     database.instance.setConversation(
       agent,
       'web',
       id,
       agent,
-      out.defaultStartingMessage,
+      out.defaultGreeting,
       false
     )
     return (ctx.body = out)
@@ -294,38 +187,14 @@ const executeHandler = async (ctx: Koa.Context) => {
   ctx.body = await handleInput(message, speaker, agent, null, 'web', id)
 }
 
-const getAgentConfigHandler = async (ctx: Koa.Context) => {
-  try {
-    const body =
-      (await database.instance.getAgentsConfig(
-        ctx.request.body.agent ?? 'common'
-      )) ?? {}
-    return (ctx.body = body)
-  } catch (e) {
-    console.error(e)
-    return (ctx.body = { error: 'internal error' })
-  }
-}
-
-const addAgentConfigHandler = async (ctx: Koa.Context) => {
-  const data = ctx.request.body.data
-
-  try {
-    ctx.body = await database.instance.setAgentsConfig('common', data)
-    return ctx.body
-  } catch (e) {
-    console.error(e)
-    return (ctx.body = { error: 'internal error' })
-  }
-}
-
 const getPromptsHandler = async (ctx: Koa.Context) => {
+  const config = await database.instance.getConfig() as any;
   try {
     const data = {
-      xr_world: await database.instance.get3dWorldUnderstandingPrompt(),
-      fact: await database.instance.getAgentsFactsSummarization(),
-      opinion: await database.instance.getOpinionFormPrompt(),
-      xr: await database.instance.getXrEngineRoomPrompt(),
+      xr_world: config['xr_world'],
+      fact: config['fact_summarization'],
+      opinion: config['opinion_summarization'],
+      xr: config['xr_room'],
     }
 
     return (ctx.body = data)
@@ -337,12 +206,12 @@ const getPromptsHandler = async (ctx: Koa.Context) => {
 
 const addPromptsHandler = async (ctx: Koa.Context) => {
   const data = ctx.request.body.data
-
   try {
-    await database.instance.set3dWorldUnderstandingPrompt(data.xr_world)
-    await database.instance.setAgentsFactsSummarization(data.fact)
-    await database.instance.setOpinionFormPrompt(data.opinion)
-    await database.instance.setXrEngineRoomPrompt(data.xr)
+    // TODO: Combine me!
+    await database.instance.setConfig('xr_world', data.xr_world)
+    await database.instance.setConfig('fact_summarization', data.fact)
+    await database.instance.setConfig('opinion', data.opinion)
+    await database.instance.setConfig('xr_room', data.xr_world)
 
     return (ctx.body = 'ok')
   } catch (e) {
@@ -383,7 +252,7 @@ const getAgentInstanceHandler = async (ctx: Koa.Context) => {
         id: newId,
         personality: '',
         clients: clientSettingsToInstance(
-          await database.instance.getAllClientSettings()
+          await database.instance.getConfig()
         ),
         enabled: true,
       }
@@ -413,7 +282,7 @@ const addAgentInstanceHandler = async (ctx: Koa.Context) => {
   }
   if (!clients || clients === undefined || clients === 'none') {
     clients = clientSettingsToInstance(
-      await database.instance.getAllClientSettings()
+      await database.instance.getConfig()
     )
   }
 
@@ -425,7 +294,6 @@ const addAgentInstanceHandler = async (ctx: Koa.Context) => {
       enabled
     )
     ctx.body = 'ok'
-    reloadAgentInstances()
   } catch (e) {
     console.error(e)
     return (ctx.body = { error: 'internal error' })
@@ -434,10 +302,7 @@ const addAgentInstanceHandler = async (ctx: Koa.Context) => {
 
 const deleteAgentInstanceHandler = async (ctx: Koa.Context) => {
   const { agentName } = ctx.request.body
-
   await database.instance.deleteAgentInstance(agentName)
-  reloadAgentInstances()
-
   return (ctx.body = 'ok')
 }
 
@@ -529,30 +394,12 @@ export const agents: Route[] = [
     delete: deleteAgentHandler,
   },
   {
-    path: '/profanity',
-    access: noAuth,
-    post: getProfanityHandler,
-  },
-  {
-    path: '/profanity',
-    access: noAuth,
-    get: getProfanityHandler,
-    post: addProfanityHandler,
-    delete: deleteProfanityHandler,
-  },
-  {
     path: '/config',
     access: noAuth,
     get: getConfigHandler,
     post: addConfigHandler,
     put: updateConfigHandler,
     delete: deleteConfigHandler,
-  },
-  {
-    path: '/agentConfig',
-    access: noAuth,
-    get: getAgentConfigHandler,
-    post: addAgentConfigHandler,
   },
   {
     path: '/prompts',
