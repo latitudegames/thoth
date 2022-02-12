@@ -27,6 +27,7 @@ const AIEditor = () => {
   useEffect(() => {
     if (!agents) {
       axios.get(`${process.env.REACT_APP_API_URL}/agents`).then(res => {
+        if (res.data.length == 0) return setAgents([]);
         let newAgents = [];
         for (let i = 0; i < res.data.length; i++) {
           newAgents.push(res.data[i]);
@@ -113,12 +114,6 @@ const AIEditor = () => {
               <span className="form-item-label">Greetings:</span>
               <textarea className="form-text-area" onChange={(e) => { setDataUpdated(true); currentAgentData.startingPhrases = e.target.value }} defaultValue={currentAgentData.startingPhrases}></textarea>
             </div>
-
-            <div className="form-item">
-              <span className="form-item-label">Ignored Keywords:</span>
-              <textarea className="form-text-area" onChange={(e) => { setDataUpdated(true); currentAgentData.ignoredKeywords = e.target.value }} defaultValue={currentAgentData.ignoredKeywords}></textarea>
-            </div>
-
 
             <input type='button' value='Update' onClick={update} />
             <input type='button' value='Delete' onClick={() => {

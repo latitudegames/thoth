@@ -1,6 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-nocheck
 
+// TODO: Turn into a node
+
 import { database } from '../connectors/database'
 import { makeCompletionRequest } from './makeCompletionRequest'
 
@@ -9,10 +11,6 @@ export async function summarizeAndStoreFactsAboutSpeaker(
     agent,
     input
 ) {
-    const { summarizationModel } = JSON.parse(
-        (await database.instance.getAgentsConfig('common')).toString()
-    )
-
     const speakerFactSummarizationPrompt = (
         await database.instance.getSpeakerFactSummarization('common')
     )
@@ -40,7 +38,7 @@ export async function summarizeAndStoreFactsAboutSpeaker(
         speaker,
         agent,
         'speaker_facts',
-        summarizationModel
+        'davinci'
     )
     if (success && choice.text != '' && !choice.text.includes('no facts')) {
         await database.instance.setSpeakersFacts(

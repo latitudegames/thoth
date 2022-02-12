@@ -1,7 +1,7 @@
 export const views = {
   Dashboard: "dashboard",
   Personalities: "personalities",
-  Settings: "settings",
+  Config: "config",
   Agents: 'agents',
   Prompts: 'prompts'
 };

@@ -7,11 +7,11 @@ export interface agentsAttributes {
   facts?: string;
   monologue?: string;
   morals?: string;
+  profanity_responses?: string;
   sensitive_phrases?: string;
   sensitive_responses?: string;
   sensitive_words?: string;
   bad_words?: string;
-
 }
 
 export type agentsOptionalAttributes = "agent";
@@ -42,6 +42,10 @@ export class agents extends Model<agentsAttributes, agentsCreationAttributes> im
       morals: {
         type: DataTypes.TEXT,
         allowNull: true
+      },
+      profanity_responses: {
+        type: DataTypes.TEXT,
+        allowNull: true,
       },
       sensitive_phrases: {
         type: DataTypes.TEXT,
