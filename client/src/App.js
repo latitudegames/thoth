@@ -9,7 +9,6 @@ import ThothPageWrapper from './features/common/ThothPage/ThothPageWrapper'
 import LoginScreen from './features/Login/LoginScreen'
 import HomeScreen from './features/HomeScreen/HomeScreen'
 import Thoth from './features/Thoth/Thoth'
-import Agents from './agents'
 
 import 'flexlayout-react/style/dark.css'
 import './design-globals/design-globals.css'
@@ -27,17 +26,15 @@ function App() {
 
   const authCheck = user && user.accessToken
 
-  useEffect(() => {
-    ; (async () => {
-      const currentUser = await getUser()
+  useEffect(async () => {
+    const currentUser = await getUser()
 
-      if (currentUser) {
-        // checkin?
-        checkIn(currentUser)
-      }
+    if (currentUser) {
+      // checkin?
+      checkIn(currentUser)
+    }
 
-      setChecked(true)
-    })()
+    setChecked(true)
   }, [])
 
   const redirect = () => {
@@ -53,8 +50,6 @@ function App() {
   return (
     <ThothPageWrapper tabs={tabs} activeTab={activeTab}>
       <Routes>
-        <Route path="/agents" element={<Agents />} />
-
         <Route path="/thoth" element={<GuardedRoute />}>
           <Route path="/thoth" element={<Thoth />} />
         </Route>

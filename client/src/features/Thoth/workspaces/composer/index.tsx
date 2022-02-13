@@ -17,6 +17,7 @@ import EventHandler from '@thoth/components/EventHandler'
 import Inspector from '@thoth/windows/InspectorWindow'
 import Playtest from '@thoth/windows/PlaytestWindow'
 import StateManager from '@thoth/windows/StateManagerWindow'
+import AgentManager from '@thoth/windows/AgentManagerWindow'
 import TextEditor from '@thoth/windows/TextEditorWindow'
 
 const Workspace = ({ tab, tabs, pubSub }) => {
@@ -73,6 +74,8 @@ const Workspace = ({ tab, tabs, pubSub }) => {
       switch (component) {
         case 'stateManager':
           return <StateManager {...props} />
+        case 'agentManager':
+          return <AgentManager {...props} />
         case 'playtest':
           return <Playtest {...props} />
         case 'inspector':

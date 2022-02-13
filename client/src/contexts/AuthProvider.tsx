@@ -5,10 +5,10 @@ import { login as userLogin } from './../services/game-api/auth'
 import { useDB } from './DatabaseProvider'
 
 const Context = createContext({
-  login: (email, password) => {},
+  login: (email, password) => { },
   user: {} as any,
-  checkIn: user => {},
-  getUser: () => {},
+  checkIn: user => { },
+  getUser: () => { },
 })
 
 export const useAuth = () => useContext(Context)
