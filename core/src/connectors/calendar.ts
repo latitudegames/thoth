@@ -1,7 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import { agentConfig } from '@latitudegames/thoth-core/src/connectors/agentConfig'
 import fs from 'fs'
 import { calendar_v3, google } from 'googleapis'
 import path from 'path'

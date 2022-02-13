@@ -56,15 +56,15 @@ const AIEditor = () => {
   }, [])
 
   return (
-    <div className="App">
+    <div className="agent-container">
       <input type="text" ref={newAgentRef} />
-      <input type='button' value='Create' onClick={async (e) => { e.preventDefault(); await createNew(); }} />
+      <input className='button' type='button' value='Create' onClick={async (e) => { e.preventDefault(); await createNew(); }} />
       <div>
         {!agents ? (
           <h1>Loading...</h1>
         ) : (
           <div className="agent-header">
-            <h2>Personality: {currentAgentData ? currentAgentData.agentName : "Loading..."}</h2>
+            <h2>Agent: {currentAgentData ? currentAgentData.agentName : "Loading..."}</h2>
             <span className="agent-select">
               <select name="agents" id="agents" onChange={(event) => {
                 switchAgent(agents[event.target.options.selectedIndex]);

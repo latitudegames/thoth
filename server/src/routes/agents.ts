@@ -1,5 +1,4 @@
 import { createWikipediaAgent } from '@latitudegames/thoth-core/src/connectors/wikipedia'
-import agentConfig from '@latitudegames/thoth-core/src/connectors/agentConfig'
 import { database } from '@latitudegames/thoth-core/src/connectors/database'
 import { handleInput } from '@latitudegames/thoth-core/src/connectors/handleInput'
 import Koa from 'koa'
@@ -13,7 +12,7 @@ function clientSettingsToInstance(settings: any) {
   function addSettingForClient(array: any, client: any, setting: any) {
     for (let i = 0; i < array.length; i++) {
       if (array[i].client === client) {
-        array[i].settings.push({ name: setting._name, value: setting.value })
+        array[i].settings.push({ name: setting.name, value: setting.value })
         return array
       }
     }
@@ -21,7 +20,7 @@ function clientSettingsToInstance(settings: any) {
     array.push({
       client: client,
       enabled: false,
-      settings: [{ name: setting._name, value: setting._defaultValue }],
+      settings: [{ name: setting.name, value: setting.defaultValue }],
     })
     return array
   }
@@ -30,7 +29,7 @@ function clientSettingsToInstance(settings: any) {
 
   for (let i = 0; i < settings.length; i++) {
     res = addSettingForClient(res, settings[i].client, {
-      _name: settings[i].name,
+      name: settings[i].name,
       value: settings[i].defaultValue,
     })
   }
@@ -40,7 +39,6 @@ function clientSettingsToInstance(settings: any) {
 
 const getAgentsHandler = async (ctx: Koa.Context) => {
   const agents = await database.instance.getAgents()
-  console.log("Handing back agents ", agents);
   ctx.body = agents
 }
 
@@ -49,7 +47,7 @@ const getAgentHandler = async (ctx: Koa.Context) => {
   if (agent == null) {
     return {}
   }
-  console.log("agent is ", agent);
+
   ctx.body = {
     ignoredKeywords: (
       await database.instance.getIgnoredKeywordsData(agent)
@@ -76,16 +74,13 @@ const createOrUpdateAgentHandler = async (ctx: Koa.Context) => {
   }
   // TODO: Combine all of these!
   try {
-    await Promise.all([
-      database.instance.setDialogue(agentName, data?.dialog ?? ''),
-      database.instance.setAgentFacts(agentName, data?.facts ?? '', true),
-      database.instance.setMonologue(agentName, data?.monologue ?? ''),
-      database.instance.setPersonality(agentName, data?.personality ?? ''),
-      database.instance.setGreetings(
-        agentName,
-        data?.greetings ?? ''
-      )
-    ])
+    await database.instance.updateAgent(agentName, {
+      dialog: data.dialog,
+      facts: data.facts,
+      monologue: data.monologue,
+      personality: data.personality,
+      greetings: data.greetings,
+    })
 
   } catch (e) {
     return (ctx.body = { error: 'internal error' })
@@ -106,11 +101,7 @@ const deleteAgentHandler = async (ctx: Koa.Context) => {
 }
 
 const getConfigHandler = async (ctx: Koa.Context) => {
-  const data = {
-    config: await database.instance.getConfig(),
-  }
-
-  return (ctx.body = data)
+  return (ctx.body = await database.instance.getConfig())
 }
 
 const addConfigHandler = async (ctx: Koa.Context) => {
@@ -128,8 +119,9 @@ const addConfigHandler = async (ctx: Koa.Context) => {
 const updateConfigHandler = async (ctx: Koa.Context) => {
   const data = ctx.request.body.config
   try {
+    // TODO: build string and set multiple configs at once
     for (let i = 0; i < data.length; i++) {
-      await agentConfig.instance.set(data[i].key, data[i].value)
+      await database.instance.setConfig(data[i].key, data[i].value)
     }
 
     ctx.body = 'ok'
@@ -256,10 +248,7 @@ const getAgentInstanceHandler = async (ctx: Koa.Context) => {
 
 const addAgentInstanceHandler = async (ctx: Koa.Context) => {
   const data = ctx.request.body.data
-  let instanceId = data.id
-  const personality = data.personality?.trim() ?? 'common'
-  let clients = data.clients
-  const enabled = data.enabled
+  let instanceId = ctx.request.body.id ?? ctx.request.body.instanceId
 
   if (!instanceId || instanceId === undefined || instanceId <= 0) {
     instanceId = 0
@@ -270,20 +259,10 @@ const addAgentInstanceHandler = async (ctx: Koa.Context) => {
       instanceId++
     }
   }
-  if (!clients || clients === undefined || clients === 'none') {
-    clients = clientSettingsToInstance(
-      await database.instance.getConfig()
-    )
-  }
 
   try {
-    await database.instance.updateAgentInstances(
-      instanceId,
-      personality,
-      clients,
-      enabled
-    )
-    ctx.body = 'ok'
+    console.log("updated agent database with", data)
+    return ctx.body = await database.instance.updateAgentInstances(instanceId, data)
   } catch (e) {
     console.error(e)
     return (ctx.body = { error: 'internal error' })

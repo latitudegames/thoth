@@ -8,6 +8,7 @@ export interface agentsAttributes {
   greetings?: string;
   monologue?: string;
   morals?: string;
+  personality?: string;
   profanity_responses?: string;
   sensitive_phrases?: string;
   sensitive_responses?: string;
@@ -20,7 +21,17 @@ export type agentsCreationAttributes = Optional<agentsAttributes, agentsOptional
 
 export class agents extends Model<agentsAttributes, agentsCreationAttributes> implements agentsAttributes {
   agent?: string;
-
+  dialog?: string;
+  facts?: string;
+  greetings?: string;
+  monologue?: string;
+  morals?: string;
+  personality?: string;
+  profanity_responses?: string;
+  sensitive_phrases?: string;
+  sensitive_responses?: string;
+  sensitive_words?: string;
+  bad_words?: string;
 
   static initModel(sequelize: Sequelize.Sequelize): typeof agents {
     return agents.init({
@@ -47,6 +58,10 @@ export class agents extends Model<agentsAttributes, agentsCreationAttributes> im
       morals: {
         type: DataTypes.TEXT,
         allowNull: true
+      },
+      personality: {
+        type: DataTypes.TEXT,
+        allowNull: true,
       },
       profanity_responses: {
         type: DataTypes.TEXT,
