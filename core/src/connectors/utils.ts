@@ -1,7 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-nocheck
 
-import { agentConfig } from '@latitudegames/thoth-core/src/connectors/agentConfig'
 import { existsSync } from 'fs'
 
 export function getRandomNumber(min, max) {
@@ -87,13 +86,6 @@ export function wait(ms) {
   return new Promise(resolve => {
     setTimeout(resolve, ms)
   })
-}
-
-export function getRandomTopic() {
-  const topics = agentConfig.instance
-    .get('discussion_channel_topics')
-    .split('|')
-  return topics[getRandomNumber(0, topics.length - 1)]
 }
 
 export function randomInt(min, max) {

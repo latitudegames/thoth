@@ -3,10 +3,13 @@ import { DataTypes, Model, Optional } from 'sequelize'
 
 export interface agent_instanceAttributes {
   id?: number
+  instanceId?: number
   personality?: string
   clients?: string
   enabled?: boolean
   updatedAt?: string
+  discord_enabled?: boolean
+  discord_api_key?: string
 }
 
 export type agent_instancePk = 'id'
@@ -26,10 +29,13 @@ export class agent_instance
   extends Model<agent_instanceAttributes, agent_instanceCreationAttributes>
   implements agent_instanceAttributes {
   id?: number
+  instanceId?: number
   personality?: string
   clients?: string
   enabled?: boolean
   updatedAt?: string
+  discord_enabled?: boolean
+  discord_api_key?: string
 
   static initModel(sequelize: Sequelize.Sequelize): typeof agent_instance {
     return agent_instance.init(
@@ -50,6 +56,14 @@ export class agent_instance
         },
         enabled: {
           type: DataTypes.BOOLEAN,
+          allowNull: true,
+        },
+        discord_enabled: {
+          type: DataTypes.BOOLEAN,
+          allowNull: true,
+        },
+        discord_api_key: {
+          type: DataTypes.TEXT,
           allowNull: true,
         },
         updatedAt: {

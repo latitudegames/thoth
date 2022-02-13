@@ -6,11 +6,8 @@
 // @ts-nocheck
 
 import WhatsAppBot from '@green-api/whatsapp-bot'
-import { agentConfig } from '@latitudegames/thoth-core/src/connectors/agentConfig'
-
 import { database } from './database'
 import { getRandomEmptyResponse, getSetting, startsWithCapital } from './utils'
-import { onMessage } from './whatsapp/events/message'
 
 export class whatsapp_client {
   //TODO: Needs tests - misses API key (needs request from whatsapp)
@@ -373,16 +370,17 @@ export class whatsapp_client {
     )
   }
   async getChatHistory(chatId, length) {
-    return await database.instance.getHistory(length, 'whatsapp', chatId)
+    return []
+    // return await database.instance.getHistory(length, 'whatsapp', chatId)
   }
   async updateMessage(chatId, messageId, newContent) {
-    await database.instance.updateMessage(
-      'whatsapp',
-      chatId,
-      messageId,
-      newContent,
-      true
-    )
+    // await database.instance.updateMessage(
+    //   'whatsapp',
+    //   chatId,
+    //   messageId,
+    //   newContent,
+    //   true
+    // )
   }
   // replace with configurable regex later
   username_regex = new RegExp('((?:digital|being)(?: |$))', 'ig')

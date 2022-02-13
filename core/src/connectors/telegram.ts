@@ -12,10 +12,9 @@
 
 import roomManager from '../components/roomManager'
 import { classifyText } from '../components/textClassifier'
-import { agentConfig } from './agentConfig'
 import { database } from './database'
 import { handleInput } from './handleInput'
-import { getRandomEmptyResponse, startsWithCapital, getSetting } from './utils'
+import { getRandomEmptyResponse, getSetting, startsWithCapital } from './utils'
 
 export class telegram_client {
   async handleMessage(chat_id, response, message_id, addPing, args, bot) {
@@ -566,25 +565,24 @@ export class telegram_client {
   }
 
   async addMessageToHistory(chatId, messageId, senderName, content) {
-    await database.instance.addMessageInHistory(
-      'telegram',
-      chatId,
-      messageId,
-      senderName,
-      content
-    )
+    return
+    // await database.instance.addMessageInHistory(
+    //   'telegram',
+    //   chatId,
+    //   messageId,
+    //   senderName,
+    //   content
+    // )
   }
-  async getChatHistory(chatId, length) {
-    return await database.instance.getHistory(length, 'telegram', chatId)
-  }
+
   async updateMessage(chatId, messageId, newContent) {
-    await database.instance.updateMessage(
-      'telegram',
-      chatId,
-      messageId,
-      newContent,
-      true
-    )
+    // await database.instance.updateMessage(
+    //   'telegram',
+    //   chatId,
+    //   messageId,
+    //   newContent,
+    //   true
+    // )
   }
 
   agent

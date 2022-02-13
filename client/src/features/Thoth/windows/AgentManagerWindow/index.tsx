@@ -19,6 +19,7 @@ import Agents from './Agents'
 import Config from './Config'
 import Prompts from './Prompts'
 import { views } from './views'
+import '../../thoth.module.css'
 
 
 const AgentManager = ({ tab, ...props }) => {
