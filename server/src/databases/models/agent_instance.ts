@@ -10,6 +10,8 @@ export interface agent_instanceAttributes {
   updatedAt?: string
   discord_enabled?: boolean
   discord_api_key?: string
+  discord_spell_handler?: string
+
 }
 
 export type agent_instancePk = 'id'
@@ -36,7 +38,7 @@ export class agent_instance
   updatedAt?: string
   discord_enabled?: boolean
   discord_api_key?: string
-
+  discord_spell_handler?: string
   static initModel(sequelize: Sequelize.Sequelize): typeof agent_instance {
     return agent_instance.init(
       {
@@ -63,6 +65,10 @@ export class agent_instance
           allowNull: true,
         },
         discord_api_key: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
+        discord_spell_handler: {
           type: DataTypes.TEXT,
           allowNull: true,
         },

@@ -21,11 +21,11 @@ function capitalizeFirstLetter(word) {
 const Agent = ({ id, updateCallback }) => {
   const [loaded, setLoaded] = useState(false)
 
-  const [instanceId, setInstanceId] = useState(-1)
   const [enabled, setEnabled] = useState(false)
   const [personality, setPersonality] = useState('')
   const [discord_enabled, setdiscord_enabled] = useState(false)
   const [discord_api_key, setDiscordApiKey] = useState('')
+  const [discord_spell_handler, setDiscordSpellHandler] = useState('')
 
   useEffect(() => {
     if (!loaded) {
@@ -35,10 +35,10 @@ const Agent = ({ id, updateCallback }) => {
         )
         console.log("res is", res)
         setPersonality(res.data.personality)
-        setInstanceId(res.data.instanceId)
-        setEnabled(res.data.enabled === true || res.data.enabled === 'true')
-        setdiscord_enabled(res.data.discord_enabled === true && res.data.discord_enabled === 'true')
+        setEnabled(res.data.enabled === true)
+        setdiscord_enabled(res.data.discord_enabled === true)
         setDiscordApiKey(res.data.discord_api_key)
+        setDiscordSpellHandler(res.data.discord_spell_handler)
         setLoaded(true)
       })()
     }
@@ -47,9 +47,11 @@ const Agent = ({ id, updateCallback }) => {
   const _delete = () => {
     axios
       .delete(`${process.env.REACT_APP_API_URL}/agentInstance`, {
-        instanceId,
+        id,
       })
       .then(res => {
+        console.log("deleted", res)
+        setLoaded(false)
         updateCallback()
       })
   }
@@ -60,17 +62,19 @@ const Agent = ({ id, updateCallback }) => {
       personality,
       enabled,
       discord_enabled,
-      discord_api_key
+      discord_api_key,
+      discord_spell_handler
     }
     axios
-      .post(`${process.env.REACT_APP_API_URL}/agentInstance`, { id: instanceId, data: _data })
+      .post(`${process.env.REACT_APP_API_URL}/agentInstance`, { id, data: _data })
       .then(res => {
         console.log("response on update", res)
-        setEnabled(res.renabled)
+        setEnabled(res.enabled)
         setPersonality(res.personality)
         setdiscord_enabled(res.discord_enabled)
         setDiscordApiKey(res.discord_api_key)
-        // updateCallback()
+        setDiscordSpellHandler(res.discord_spell_handler)
+        updateCallback()
       })
   }
 
@@ -86,51 +90,55 @@ const Agent = ({ id, updateCallback }) => {
           }}
         />
       </div>
+      {enabled && <>
 
-      <div className="form-item">
-        <span className="form-item-label">Personality</span>
-        <input
-          type="text"
-          defaultValue={personality}
-          onChange={e => setPersonality(e.target.value)}
-        />
-      </div>
 
-      <div className="form-item">
-        <span className="form-item-label">Instance ID</span>
-        <input
-          type="text"
-          defaultValue={instanceId}
-          onChange={e => {
-            setInstanceId(e.target.value)
-          }}
-        />
-      </div>
-
-      <div className="form-item">
-        <span className="form-item-label">Discord Enabled</span>
-        <input
-          type="checkbox"
-          defaultChecked={discord_enabled}
-          onChange={e => {
-            setdiscord_enabled(e.target.checked)
-          }}
-        />
-      </div>
-
-      {discord_enabled && (
         <div className="form-item">
-          <span className="form-item-label">Discord API Key</span>
+          <span className="form-item-label">Personality</span>
           <input
             type="text"
-            defaultValue={discord_api_key}
+            defaultValue={personality}
+            onChange={e => setPersonality(e.target.value)}
+          />
+        </div>
+
+        <div className="form-item">
+          <span className="form-item-label">Discord Enabled</span>
+          <input
+            type="checkbox"
+            value={discord_enabled}
+            defaultChecked={discord_enabled || discord_enabled === 'true'}
             onChange={e => {
-              setDiscordApiKey(e.target.value)
+              setdiscord_enabled(e.target.checked)
             }}
           />
         </div>
-      )}
 
+        {discord_enabled && (
+          <>
+            <div className="form-item">
+              <span className="form-item-label">Discord API Key</span>
+              <input
+                type="text"
+                defaultValue={discord_api_key}
+                onChange={e => {
+                  setDiscordApiKey(e.target.value)
+                }}
+              />
+            </div>
+            <div className="form-item">
+              <span className="form-item-label">SpellHandler</span>
+              <input
+                type="text"
+                defaultValue={discord_spell_handler}
+                onChange={e => {
+                  setDiscordSpellHandler(e.target.value)
+                }}
+              />
+            </div>
+          </>
+        )}
+      </>}
       <div className="form-item">
         <button onClick={() => update()}>Update</button>
         <button onClick={() => _delete()}>Delete</button>
