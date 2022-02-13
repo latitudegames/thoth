@@ -1,6 +1,3 @@
-// @ts-nocheck
-// @ts-nocheck
-
 import { EngineContext } from '@latitudegames/thoth-core'
 import { useContext, createContext } from 'react'
 import { useDispatch } from 'react-redux'
@@ -146,8 +143,7 @@ const ReteProvider = ({ children, tab }) => {
 
   const getCurrentGameState = () => {
     const currentGameState = selectGameStateBySpellId(
-      store.getState().gameState,
-      tab.spell
+      store.getState().gameState
     )
     return currentGameState?.state ?? {}
   }

@@ -8,35 +8,6 @@ import { Route } from '../types'
 
 export const modules: Record<string, unknown> = {}
 
-function clientSettingsToInstance(settings: any) {
-  function addSettingForClient(array: any, client: any, setting: any) {
-    for (let i = 0; i < array.length; i++) {
-      if (array[i].client === client) {
-        array[i].settings.push({ name: setting.name, value: setting.value })
-        return array
-      }
-    }
-
-    array.push({
-      client: client,
-      enabled: false,
-      settings: [{ name: setting.name, value: setting.defaultValue }],
-    })
-    return array
-  }
-
-  let res = []
-
-  for (let i = 0; i < settings.length; i++) {
-    res = addSettingForClient(res, settings[i].client, {
-      name: settings[i].name,
-      value: settings[i].defaultValue,
-    })
-  }
-
-  return res
-}
-
 const getAgentsHandler = async (ctx: Koa.Context) => {
   const agents = await database.instance.getAgents()
   ctx.body = agents
@@ -222,9 +193,6 @@ const getAgentInstanceHandler = async (ctx: Koa.Context) => {
       data = {
         id: newId,
         personality: '',
-        clients: clientSettingsToInstance(
-          await database.instance.getConfig()
-        ),
         enabled: true,
       }
     }

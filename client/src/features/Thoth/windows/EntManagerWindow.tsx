@@ -3,9 +3,9 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 
-import AgentInstance from './AgentInstance'
+import Ent from './EntWindow'
 
-const AgentInstances = () => {
+const Ents = () => {
   const [data, setData] = useState(false)
 
   const resetData = async () => {
@@ -40,7 +40,7 @@ const AgentInstances = () => {
           {data && data !== [] &&
             data.map((value, idx) => {
               return (
-                <AgentInstance
+                <Ent
                   id={value.id}
                   key={idx}
                   updateCallback={async () => {
@@ -57,4 +57,4 @@ const AgentInstances = () => {
   )
 }
 
-export default AgentInstances
+export default Ents

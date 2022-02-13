@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import { useEffect, useState } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars-2'
 import { useSelector } from 'react-redux'
@@ -32,7 +30,7 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
   const [deploySpell] = useDeploySpellMutation()
   const [saveSpell] = useSaveSpellMutation()
   const [getDeplopyment, { data: deploymentData }] = useLazyGetDeploymentQuery()
-  const spell = useSelector(state => selectSpellById(state, spellId))
+  const spell = useSelector(state => selectSpellById(spellId))
   const name = spell?.name as string
   const { data: deployments, isLoading } = useGetDeploymentsQuery(name, {
     skip: !spell?.name,
