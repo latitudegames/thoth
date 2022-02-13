@@ -4,7 +4,7 @@ import axios from "axios";
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 
-const ConfigEditor = () => {
+const ConfigManager = () => {
   const [firstLoad, setFirstLoad] = useState(true);
   const [config, setConfig] = useState(null);
   const [dataUpdated, setDataUpdated] = useState(false);
@@ -104,4 +104,4 @@ const ConfigEditor = () => {
   );
 };
 
-export default ConfigEditor;
+export default ConfigManager;
