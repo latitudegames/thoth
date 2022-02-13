@@ -77,6 +77,12 @@
                 "id": "#10",
                 "name": "State Manager",
                 "component": "stateManager"
+              },
+              {
+                "type": "tab",
+                "id": "#11",
+                "name": "Agent Manager",
+                "component": "agentManager"
               }
             ]
           },

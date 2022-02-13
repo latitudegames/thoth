@@ -91,9 +91,9 @@ export class database {
         id.getId() +
         " as id, '" +
         kv[i].key +
-        "' as _key, '" +
+        "' as key, '" +
         kv[i].value +
-        "' as _value  \n" +
+        "' as value  \n" +
         '      ) ' +
         (i !== kv.length - 1
           ? 'union all \n'
@@ -122,7 +122,7 @@ export class database {
     console.log('rows are ', rows)
     if (rows && rows.rows && rows.rows.length > 0) {
       for (let i = 0; i < rows.rows.length; i++) {
-        configs[rows.rows[i]._key] = rows.rows[i]._value
+        configs[rows.rows[i].key] = rows.rows[i].value
       }
     }
 
@@ -133,24 +133,24 @@ export class database {
 
   //updates a config value
   async setConfig(key: any, value: any) {
-    const check = 'SELECT * FROM config WHERE _key=$1'
+    const check = 'SELECT * FROM config WHERE key=$1'
     const cvalue = [key]
 
     const rows = await this.client.query(check, cvalue)
     if (rows && rows.rows && rows.rows.length > 0) {
-      const query = 'UPDATE config SET _value=$1 WHERE _key=$2'
+      const query = 'UPDATE config SET value=$1 WHERE key=$2'
       const values = [value, key]
 
       await this.client.query(query, values)
     } else {
-      const query = 'INSERT INTO config(_key, _value) VALUES($1, $2)'
+      const query = 'INSERT INTO config(key, value) VALUES($1, $2)'
       const values = [key, value]
 
       await this.client.query(query, values)
     }
   }
   async deleteConfig(key: any) {
-    const query = 'DELETE FROM config WHERE _key=$1'
+    const query = 'DELETE FROM config WHERE key=$1'
     const values = [key]
 
     await this.client.query(query, values)

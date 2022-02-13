@@ -26,6 +26,7 @@ const MenuBar = () => {
   const {
     $SAVE_SPELL,
     $CREATE_STATE_MANAGER,
+    $CREATE_AGENT_MANAGER,
     $CREATE_PLAYTEST,
     $CREATE_INSPECTOR,
     $CREATE_TEXT_EDITOR,
@@ -70,18 +71,16 @@ const MenuBar = () => {
     navigate('/home/all-projects')
   }
 
-  const onAgents = () => {
-    if (location.pathname.includes('/agents'))
-      return navigate('/')
-    navigate('/agents')
-  }
-
   const onSerialize = () => {
     publish($SERIALIZE(activeTabRef.current.id))
   }
 
   const onStateManagerCreate = () => {
     publish($CREATE_STATE_MANAGER(activeTabRef.current.id))
+  }
+
+  const onAgentManagerCreate = () => {
+    publish($CREATE_AGENT_MANAGER(activeTabRef.current.id))
   }
 
   const onPlaytestCreate = () => {
@@ -181,6 +180,9 @@ const MenuBar = () => {
             state_manager: {
               onClick: onStateManagerCreate,
             },
+            agent_manager: {
+              onClick: onAgentManagerCreate,
+            },
             playtest: {
               onClick: onPlaytestCreate,
             },
@@ -207,15 +209,6 @@ const MenuBar = () => {
             node_editing: {},
           },
         },
-      },
-    },
-    agents: {
-
-      items: {
-        [location.pathname.includes('/agents') ? 'close' : 'edit']: {
-          onClick: onAgents
-        }
-
       },
     },
   }

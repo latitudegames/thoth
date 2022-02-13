@@ -13,7 +13,7 @@ function clientSettingsToInstance(settings: any) {
   function addSettingForClient(array: any, client: any, setting: any) {
     for (let i = 0; i < array.length; i++) {
       if (array[i].client === client) {
-        array[i].settings.push({ name: setting._name, value: setting._value })
+        array[i].settings.push({ name: setting._name, value: setting.value })
         return array
       }
     }
@@ -31,7 +31,7 @@ function clientSettingsToInstance(settings: any) {
   for (let i = 0; i < settings.length; i++) {
     res = addSettingForClient(res, settings[i].client, {
       _name: settings[i].name,
-      _value: settings[i].defaultValue,
+      value: settings[i].defaultValue,
     })
   }
 
@@ -117,7 +117,7 @@ const addConfigHandler = async (ctx: Koa.Context) => {
   const data = ctx.request.body.data
 
   try {
-    await agentConfig.instance.set(data.key, data.value)
+    await database.instance.setConfig(data.key, data.value)
     ctx.body = 'ok'
   } catch (e) {
     console.error(e)
@@ -140,10 +140,10 @@ const updateConfigHandler = async (ctx: Koa.Context) => {
 }
 
 const deleteConfigHandler = async (ctx: Koa.Context) => {
-  const data = ctx.request.body.data
-
+  const data = ctx.request.body
+  console.log("delete data is ", data);
   try {
-    await agentConfig.instance.delete(data.key)
+    await database.instance.deleteConfig(data)
     ctx.body = 'ok'
   } catch (e) {
     console.error(e)

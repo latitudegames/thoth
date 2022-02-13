@@ -44,6 +44,7 @@ const AIEditor = () => {
   }
 
   const switchAgent = async (agent) => {
+    if (!agent) return;
     const res = await axios.get(`${process.env.REACT_APP_API_URL}/agent?agent=${agent.agent ?? agent}`);
     res.data.agentName = agent.agent;
     setCurrentAgentData(res.data);
