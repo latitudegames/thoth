@@ -3,7 +3,7 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from 'react';
 
-const AIEditor = () => {
+const AgentManager = () => {
   const [agents, setAgents] = useState();
   const [currentAgentData, setCurrentAgentData] = useState(null);
   const newAgentRef = useRef("New Agent");
@@ -149,4 +149,4 @@ const AIEditor = () => {
   );
 };
 
-export default AIEditor;
+export default AgentManager;

@@ -33,6 +33,8 @@ export class agent extends gameObject {
     this.name = name
     console.log('initing agent')
 
+    // TODO: Fix me
+
     for (let i = 0; i < clients.length; i++) {
       if (clients[i].enabled === 'true') {
         if (clients[i].client === 'discord') {

@@ -18,11 +18,11 @@ function capitalizeFirstLetter(word) {
   return word.charAt(0).toUpperCase() + word.slice(1)
 }
 
-const Agent = ({ id, updateCallback }) => {
+const Ent = ({ id, updateCallback }) => {
   const [loaded, setLoaded] = useState(false)
 
   const [enabled, setEnabled] = useState(false)
-  const [personality, setPersonality] = useState('')
+  const [agent, setAgent] = useState('')
   const [discord_enabled, setdiscord_enabled] = useState(false)
   const [discord_api_key, setDiscordApiKey] = useState('')
   const [discord_spell_handler, setDiscordSpellHandler] = useState('')
@@ -34,7 +34,7 @@ const Agent = ({ id, updateCallback }) => {
           `${process.env.REACT_APP_API_URL}/agentInstance?instanceId=` + id
         )
         console.log("res is", res)
-        setPersonality(res.data.personality)
+        setAgent(res.data.personality)
         setEnabled(res.data.enabled === true)
         setdiscord_enabled(res.data.discord_enabled === true)
         setDiscordApiKey(res.data.discord_api_key)
@@ -57,7 +57,7 @@ const Agent = ({ id, updateCallback }) => {
   const update = () => {
     console.log("Update called")
     const _data = {
-      personality,
+      personality: agent,
       enabled,
       discord_enabled,
       discord_api_key,
@@ -68,7 +68,7 @@ const Agent = ({ id, updateCallback }) => {
       .then(res => {
         console.log("response on update", res)
         setEnabled(res.enabled)
-        setPersonality(res.personality)
+        setAgent(res.personality)
         setdiscord_enabled(res.discord_enabled)
         setDiscordApiKey(res.discord_api_key)
         setDiscordSpellHandler(res.discord_spell_handler)
@@ -92,11 +92,11 @@ const Agent = ({ id, updateCallback }) => {
 
 
         <div className="form-item">
-          <span className="form-item-label">Personality</span>
+          <span className="form-item-label">Agent Template</span>
           <input
             type="text"
-            defaultValue={personality}
-            onChange={e => setPersonality(e.target.value)}
+            defaultValue={agent}
+            onChange={e => setAgent(e.target.value)}
           />
         </div>
 
@@ -145,4 +145,4 @@ const Agent = ({ id, updateCallback }) => {
   )
 }
 
-export default Agent
+export default Ent

@@ -39,25 +39,10 @@ export async function init() {
   //     serverLoop()
   //   }
   // }
-
-  // required for some current consumers (i.e Thoth)
-  // to-do: standardize an allowed origin list based on env values or another source of truth?
-  const options = {
-    origin: '*',
-  }
-  app.use(cors(options))
-
-  new cors_server(process.env.CORS_PORT, '0.0.0.0')
   new database()
-
   await database.instance.connect()
-  await creatorToolsDatabase.sequelize.sync({
-    force: !!process.env.REFRESH_DB,
-  })
-  await database.instance.firstInit()
-  await database.instance.initData()
   new world()
-  console.log('Database synced, starting loop')
+  console.log('Starting loop')
 
   process.on('unhandledRejection', (err: Error) => {
     console.error('Unhandled Rejection:' + err + ' - ' + err.stack)
@@ -151,7 +136,7 @@ export async function init() {
     }
   })
 
-  const PORT: number = Number(process.env.PORT) || 8001
+  const PORT: number = Number(process.env.AGENT_RUNNER_PORT || process.env.PORT) || 8002
 
   app.listen(PORT, '0.0.0.0', () => {
     console.log('Server listening on: 0.0.0.0:' + PORT)

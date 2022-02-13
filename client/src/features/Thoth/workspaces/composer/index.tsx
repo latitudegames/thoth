@@ -18,6 +18,8 @@ import Inspector from '@thoth/windows/InspectorWindow'
 import Playtest from '@thoth/windows/PlaytestWindow'
 import StateManager from '@thoth/windows/StateManagerWindow'
 import AgentManager from '@thoth/windows/AgentManagerWindow'
+import EntManager from '@thoth/windows/EntManagerWindow'
+import ConfigManager from '@thoth/windows/ConfigManagerWindow'
 import TextEditor from '@thoth/windows/TextEditorWindow'
 
 const Workspace = ({ tab, tabs, pubSub }) => {
@@ -76,6 +78,10 @@ const Workspace = ({ tab, tabs, pubSub }) => {
           return <StateManager {...props} />
         case 'agentManager':
           return <AgentManager {...props} />
+        case 'configManager':
+          return <ConfigManager {...props} />
+        case 'entManager':
+          return <EntManager {...props} />
         case 'playtest':
           return <Playtest {...props} />
         case 'inspector':

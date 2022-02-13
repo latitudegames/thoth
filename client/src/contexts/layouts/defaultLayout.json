@@ -62,6 +62,18 @@
                 "id": "#11",
                 "name": "Agent Manager",
                 "component": "agentManager"
+              },
+              {
+                "type": "tab",
+                "id": "#12",
+                "name": "Ent Manager",
+                "component": "entManager"
+              },
+              {
+                "type": "tab",
+                "id": "#13",
+                "name": "Config Manager",
+                "component": "configManager"
               }
             ]
           },
