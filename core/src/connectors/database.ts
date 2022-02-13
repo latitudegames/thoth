@@ -80,6 +80,21 @@ export class database {
         key: 'fact_summarization',
         value: 'Instructions: Extract the facts from the following passage.',
       },
+
+      {
+        key: 'xr_world',
+        value: 'The following is a description of the world that we are in.',
+      },
+
+      {
+        key: 'opinion',
+        value: 'Instructions: Form an opinion about the following statement.',
+      },
+
+      {
+        key: 'xr_room',
+        value: 'The following is a description of the room that we are in.',
+      },
     ]
 
     // TODO: Simplify this, some cruft from adding our old code in
@@ -130,10 +145,12 @@ export class database {
 
   //updates a config value
   async setConfig(key: any, value: any) {
-    const check = 'SELECT * FROM config WHERE key=$1'
-    const cvalue = [key]
+    console.log('setting ', key, value)
+    const check = `SELECT * FROM config WHERE key='${key}'`
 
-    const rows = await this.client.query(check, cvalue)
+    const rows = await this.client.query(check)
+    console.log('rows from setConfig are', rows)
+
     if (rows && rows.rows && rows.rows.length > 0) {
       const query = 'UPDATE config SET value=$1 WHERE key=$2'
       const values = [value, key]
@@ -146,9 +163,9 @@ export class database {
       await this.client.query(query, values)
     }
   }
-  async deleteConfig(key: any) {
-    const query = 'DELETE FROM config WHERE key=$1'
-    const values = [key]
+  async deleteConfig(id: any) {
+    const query = 'DELETE FROM config WHERE id=$1'
+    const values = [id]
 
     await this.client.query(query, values)
   }
@@ -556,11 +573,11 @@ export class database {
     return ''
   }
 
-  async deleteAgent(agent: any) {
-    const query = 'DELETE FROM agents WHERE agent=$1'
-    const values = [agent]
-
-    await this.client.query(query, values)
+  async deleteAgent(id: any) {
+    const query = `DELETE FROM agents WHERE id='${id}'`
+    console.log('deleting agent', query)
+    const response = await this.client.query(query)
+    console.log('response', response)
   }
 
   async createAgentSQL(sql: string | any[]) {

@@ -13,7 +13,7 @@ const ConfigEditor = () => {
 
   if (firstLoad) {
     axios.get(`${process.env.REACT_APP_API_URL}/config`).then(res => {
-      setConfig(res.data.config);
+      setConfig(res.data);
       setFirstLoad(false);
     });
   }
@@ -26,22 +26,13 @@ const ConfigEditor = () => {
 
     const body = { config: config };
     axios.put(`${process.env.REACT_APP_API_URL}/config`, body).then(res => {
-      if (res.data === 'ok') {
-        navigate('/');
-      } else {
-        console.log(res.data);
-      }
+      console.log(res.data);
     });
   }
 
   const _delete = async (key) => {
-    const body = { data: { key: key } };
-    axios.delete(`${process.env.REACT_APP_API_URL}/config`, body).then(res => {
-      if (res.data === 'ok') {
-        navigate('/');
-      } else {
-        console.log(res.data);
-      }
+    axios.delete(`${process.env.REACT_APP_API_URL}/config/` + key).then(res => {
+      console.log(res.data);
     });
   }
 
@@ -69,7 +60,6 @@ const ConfigEditor = () => {
           <h1>Loading...</h1>
         ) : (
           <div>
-            <h1>Config:</h1>
             <label>Add new Config Variable:<br />
               <label>Key:
                 <input className="form-item" type="text" name="new_config_variable_key" onChange={(e) => {
@@ -101,11 +91,11 @@ const ConfigEditor = () => {
                   ) : (
                     <textarea className="form-text-area" onChange={(e) => { setDataUpdated(true); config[idx] = { key: value.key, value: e.target.value } }} defaultValue={value.value}></textarea>
                   )}
-                  <button className="button" onClick={() => { _delete(value.key) }}>delete</button>
+                  <button className="button" onClick={() => { console.log("value is", value); _delete(value.id) }}>Delete</button>
                 </div>
               );
             })}
-            <button className="button" type='button' value='Update' onClick={update} />
+            <button className="button" type='button' value='Update' onClick={update}>Update</button>
           </div>
         )}
 
