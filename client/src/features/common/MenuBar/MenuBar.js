@@ -27,6 +27,8 @@ const MenuBar = () => {
     $SAVE_SPELL,
     $CREATE_STATE_MANAGER,
     $CREATE_AGENT_MANAGER,
+    $CREATE_ENT_MANAGER,
+    $CREATE_CONFIG_MANAGER,
     $CREATE_PLAYTEST,
     $CREATE_INSPECTOR,
     $CREATE_TEXT_EDITOR,
@@ -81,6 +83,14 @@ const MenuBar = () => {
 
   const onAgentManagerCreate = () => {
     publish($CREATE_AGENT_MANAGER(activeTabRef.current.id))
+  }
+
+  const onEntManagerCreate = () => {
+    publish($CREATE_ENT_MANAGER(activeTabRef.current.id))
+  }
+
+  const onConfigManagerCreate = () => {
+    publish($CREATE_CONFIG_MANAGER(activeTabRef.current.id))
   }
 
   const onPlaytestCreate = () => {
@@ -182,6 +192,12 @@ const MenuBar = () => {
             },
             agent_manager: {
               onClick: onAgentManagerCreate,
+            },
+            ent_manager: {
+              onClick: onEntManagerCreate,
+            },
+            config_manager: {
+              onClick: onConfigManagerCreate,
             },
             playtest: {
               onClick: onPlaytestCreate,

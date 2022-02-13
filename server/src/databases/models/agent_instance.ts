@@ -5,7 +5,6 @@ export interface agent_instanceAttributes {
   id?: number
   instanceId?: number
   personality?: string
-  clients?: string
   enabled?: boolean
   updatedAt?: string
   discord_enabled?: boolean
@@ -19,7 +18,6 @@ export type agent_instanceId = agent_instance[agent_instancePk]
 export type agent_instanceOptionalAttributes =
   | 'id'
   | 'personality'
-  | 'clients'
   | 'enabled'
   | 'updatedAt'
 export type agent_instanceCreationAttributes = Optional<
@@ -33,7 +31,6 @@ export class agent_instance
   id?: number
   instanceId?: number
   personality?: string
-  clients?: string
   enabled?: boolean
   updatedAt?: string
   discord_enabled?: boolean
@@ -49,10 +46,6 @@ export class agent_instance
           primaryKey: true,
         },
         personality: {
-          type: DataTypes.TEXT,
-          allowNull: true,
-        },
-        clients: {
           type: DataTypes.TEXT,
           allowNull: true,
         },
