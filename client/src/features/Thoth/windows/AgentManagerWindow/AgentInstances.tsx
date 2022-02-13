@@ -8,6 +8,12 @@ import AgentInstance from './AgentInstance'
 const AgentInstances = () => {
   const [data, setData] = useState(false)
 
+  const resetData = async () => {
+    const res = await axios.get(`${process.env.REACT_APP_API_URL}/agentInstances`);
+    console.log("res is ", res)
+    setData(res.data);
+  }
+
   const createNew = () => {
     console.log("Create new called")
     axios
@@ -23,7 +29,7 @@ const AgentInstances = () => {
     (async () => {
       const res = await axios.get(`${process.env.REACT_APP_API_URL}/agentInstances`);
       setData(res.data);
-      console.log("set the data")
+      console.log("set the data", res.data)
     })()
   }, [])
 
@@ -40,7 +46,7 @@ const AgentInstances = () => {
                   id={value.id}
                   key={idx}
                   updateCallback={async () => {
-                    setData((await axios.get(`${process.env.REACT_APP_API_URL}/agentInstances`)).data);
+                    resetData();
                   }}
                 />
               )

@@ -270,9 +270,9 @@ const addAgentInstanceHandler = async (ctx: Koa.Context) => {
 }
 
 const deleteAgentInstanceHandler = async (ctx: Koa.Context) => {
-  const { agentName } = ctx.request.body
-  await database.instance.deleteAgentInstance(agentName)
-  return (ctx.body = 'ok')
+  const { id } = ctx.request.body
+  console.log("deleteAgentInstanceHandler", deleteAgentInstanceHandler)
+  ctx.body = await database.instance.deleteAgentInstance(id)
 }
 
 const setFacts = async (ctx: Koa.Context) => {
