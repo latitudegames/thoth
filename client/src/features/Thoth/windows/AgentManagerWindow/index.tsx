@@ -17,7 +17,6 @@ import '../../thoth.module.css'
 import AgentInstances from "./AgentInstances"
 import Agents from './Agents'
 import Config from './Config'
-import Prompts from './Prompts'
 import { views } from './views'
 import '../../thoth.module.css'
 
@@ -126,10 +125,6 @@ const AgentManager = ({ tab, ...props }) => {
       <span onClick={() => changeView(views.Config)} className={currentView === views.Config ? "nav-item-active" : "nav-item"} >
         Config
       </span>
-
-      <span onClick={() => changeView(views.Prompts)} className={currentView === views.Prompts ? "nav-item-active" : "nav-item"} >
-        Prompts
-      </span>
     </>
   )
 
@@ -142,7 +137,6 @@ const AgentManager = ({ tab, ...props }) => {
         {currentView === views.Agents && <Agents />}
         {currentView === views.Config && <Config />}
         {currentView === views.AgentInstances && <AgentInstances />}
-        {currentView === views.Prompts && <Prompts />}
       </div>
 
     </Window>
