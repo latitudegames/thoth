@@ -55,7 +55,6 @@ export class database {
     const id = new idGenerator()
 
     const kv = [
-      { key: 'agent', value: 'Thales' },
       { key: 'openai_api_key', value: '' },
       { key: 'google_project_id', value: '' },
       { key: 'hf_api_token', value: '' },
@@ -119,14 +118,11 @@ export class database {
     const query = 'SELECT * FROM config'
 
     const rows = (await this.client.query(query)).rows
-    console.log('rows are ', rows)
     if (rows && rows.rows && rows.rows.length > 0) {
       for (let i = 0; i < rows.rows.length; i++) {
         configs[rows.rows[i].key] = rows.rows[i].value
       }
     }
-
-    console.log('configs are ', configs)
 
     return rows
   }
@@ -154,486 +150,6 @@ export class database {
     const values = [key]
 
     await this.client.query(query, values)
-  }
-
-  addMessageInHistory(
-    client_name: string,
-    chat_id: string,
-    message_id: string,
-    sender: any,
-    content: any
-  ) {
-    const date = new Date()
-    const utc = new Date(
-      date.getUTCFullYear(),
-      date.getUTCMonth(),
-      date.getUTCDate(),
-      date.getUTCHours(),
-      date.getUTCMinutes(),
-      date.getUTCSeconds()
-    )
-    const utcStr =
-      date.getDate() +
-      '/' +
-      (date.getMonth() + 1) +
-      '/' +
-      date.getFullYear() +
-      ' ' +
-      utc.getHours() +
-      ':' +
-      utc.getMinutes() +
-      ':' +
-      utc.getSeconds()
-    const global_message_id = client_name + '.' + chat_id + '.' + message_id
-    const query =
-      'INSERT INTO chat_history(client_name, chat_id, message_id, global_message_id, sender, content, createdAt) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *'
-    const values = [
-      client_name,
-      chat_id,
-      message_id,
-      global_message_id,
-      sender,
-      content,
-      utcStr,
-    ]
-
-    this.client.query(query, values, (err: { stack: any }, res: any) => {
-      if (err) {
-        console.error(`${err} ${err.stack}`)
-      }
-    })
-  }
-
-  addMessageInHistoryWithDate(
-    client_name: string,
-    chat_id: string,
-    message_id: string,
-    sender: any,
-    content: any,
-    date: any
-  ) {
-    const global_message_id = client_name + '.' + chat_id + '.' + message_id
-    const query =
-      'INSERT INTO chat_history(client_name, chat_id, message_id, global_message_id, sender, content, createdAt) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *'
-    const values = [
-      client_name,
-      chat_id,
-      message_id,
-      global_message_id,
-      sender,
-      content,
-      date,
-    ]
-
-    this.client.query(query, values, (err: { stack: any }, res: any) => {
-      if (err) {
-        console.error(`${err} ${err.stack}`)
-      }
-    })
-  }
-
-  async getHistory(length: number, client_name: any, chat_id: any) {
-    const query =
-      'SELECT * FROM chat_history WHERE client_name=$1 AND chat_id=$2'
-    const values = [client_name, chat_id]
-    return await this.client.query(
-      query,
-      values,
-      (
-        err: { stack: any },
-        res: { rows: string | any[] | undefined } | null | undefined
-      ) => {
-        if (err) {
-          return console.error(`${err} ${err.stack}`)
-        }
-        const _res = []
-        if (res !== undefined && res !== null && res.rows !== undefined) {
-          for (let i = 0; i < res.rows.length; i++) {
-            _res.push({
-              author: res.rows[i].sender,
-              content: res.rows[i].content,
-            })
-
-            if (i >= length) break
-          }
-        }
-        return _res
-      }
-    )
-  }
-
-  async deleteMessage(client_name: any, chat_id: any, message_id: any) {
-    const query =
-      'DELETE FROM chat_history WHERE client_name=$1 AND chat_id=$2 AND message_id=$3'
-    const values = [client_name, chat_id, message_id]
-
-    await this.client.query(query, values, (err: { stack: any }, res: any) => {
-      if (err) {
-        console.error(`${err} ${err.stack}`)
-      }
-    })
-  }
-
-  async updateMessage(
-    client_name: any,
-    chat_id: any,
-    message_id: any,
-    newContent: any,
-    updateTime: boolean
-  ) {
-    if (updateTime) {
-      const date = new Date()
-      const utc = new Date(
-        date.getUTCFullYear(),
-        date.getUTCMonth(),
-        date.getUTCDate(),
-        date.getUTCHours(),
-        date.getUTCMinutes(),
-        date.getUTCSeconds()
-      )
-      const utcStr =
-        date.getDate() +
-        '/' +
-        (date.getMonth() + 1) +
-        '/' +
-        date.getFullYear() +
-        ' ' +
-        utc.getHours() +
-        ':' +
-        utc.getMinutes() +
-        ':' +
-        utc.getSeconds()
-      const query =
-        'UPDATE chat_history SET content=$1, createdAt=$2 WHERE client_name=$3 AND chat_id=$4 AND message_id=$5'
-      const values = [newContent, utcStr, client_name, chat_id, message_id]
-
-      await this.client.query(
-        query,
-        values,
-        (err: { stack: any }, res: any) => {
-          if (err) {
-            console.error(`${err} ${err.stack}`)
-          }
-        }
-      )
-    } else {
-      const query =
-        'UPDATE chat_history SET content=$1 WHERE client_name=$2 AND chat_id=$3 AND message_id=$4'
-      const values = [newContent, client_name, chat_id, message_id]
-
-      await this.client.query(
-        query,
-        values,
-        (err: { stack: any }, res: any) => {
-          if (err) {
-            console.error(`${err} ${err.stack}`)
-          }
-        }
-      )
-    }
-  }
-
-  async messageExists(
-    client_name: string,
-    chat_id: string,
-    message_id: string,
-    sender: any,
-    content: any,
-    timestamp: string | number | Date
-  ) {
-    const query =
-      'SELECT * FROM chat_history WHERE client_name=$1 AND chat_id=$2 AND message_id=$3'
-    const values = [client_name, chat_id, message_id]
-
-    return await this.client.query(
-      query,
-      values,
-      (err: { stack: any }, res: { rows: string | any[] }) => {
-        if (err) {
-          console.error(`${err} ${err.stack}`)
-        } else {
-          if (res.rows && res.rows.length) {
-            this.updateMessage(client_name, chat_id, message_id, content, false)
-          } else {
-            const date = new Date(timestamp)
-            const utc = new Date(
-              date.getUTCFullYear(),
-              date.getUTCMonth(),
-              date.getUTCDate(),
-              date.getUTCHours(),
-              date.getUTCMinutes(),
-              date.getUTCSeconds()
-            )
-            const utcStr =
-              date.getDate() +
-              '/' +
-              (date.getMonth() + 1) +
-              '/' +
-              date.getFullYear() +
-              ' ' +
-              utc.getHours() +
-              ':' +
-              utc.getMinutes() +
-              ':' +
-              utc.getSeconds()
-            const global_message_id =
-              client_name + '.' + chat_id + '.' + message_id
-            const query2 =
-              'INSERT INTO chat_history(client_name, chat_id, message_id, global_message_id, sender, content, createdAt) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *'
-            const values2 = [
-              client_name,
-              chat_id,
-              message_id,
-              global_message_id,
-              sender,
-              content,
-              utcStr,
-            ]
-
-            this.client.query(
-              query2,
-              values2,
-              (err: { stack: any }, res: any) => {
-                if (err) {
-                  console.error(`${err} ${err.stack}`)
-                }
-              }
-            )
-            return true
-          }
-
-          return false
-        }
-      }
-    )
-  }
-  async messageExistsAsync(
-    client_name: string,
-    chat_id: string,
-    message_id: string,
-    sender: any,
-    content: any,
-    timestamp: string | number | Date
-  ) {
-    const query =
-      'SELECT * FROM chat_history WHERE client_name=$1 AND chat_id=$2 AND message_id=$3'
-    const values = [client_name, chat_id, message_id]
-
-    return await this.client.query(
-      query,
-      values,
-      async (err: { stack: any }, res: { rows: string | any[] }) => {
-        if (err) {
-          console.error(`${err} ${err.stack}`)
-        } else {
-          if (res.rows && res.rows.length) {
-            this.updateMessage(client_name, chat_id, message_id, content, false)
-          } else {
-            const date = new Date(timestamp)
-            const utc = new Date(
-              date.getUTCFullYear(),
-              date.getUTCMonth(),
-              date.getUTCDate(),
-              date.getUTCHours(),
-              date.getUTCMinutes(),
-              date.getUTCSeconds()
-            )
-            const utcStr =
-              date.getDate() +
-              '/' +
-              (date.getMonth() + 1) +
-              '/' +
-              date.getFullYear() +
-              ' ' +
-              utc.getHours() +
-              ':' +
-              utc.getMinutes() +
-              ':' +
-              utc.getSeconds()
-            const global_message_id =
-              client_name + '.' + chat_id + '.' + message_id
-            const query2 =
-              'INSERT INTO chat_history(client_name, chat_id, message_id, global_message_id, sender, content, createdAt) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *'
-            const values2 = [
-              client_name,
-              chat_id,
-              message_id,
-              global_message_id,
-              sender,
-              content,
-              utcStr,
-            ]
-
-            await this.client.query(
-              query2,
-              values2,
-              (err: { stack: any }, res: any) => {
-                if (err) {
-                  console.error(`${err} ${err.stack}`)
-                }
-              }
-            )
-            return true
-          }
-          return false
-        }
-      }
-    )
-  }
-  async messageExistsAsyncWitHCallback(
-    client_name: string,
-    chat_id: string,
-    message_id: string,
-    sender: any,
-    content: any,
-    timestamp: string | number | Date,
-    callback: () => void
-  ) {
-    const query =
-      'SELECT * FROM chat_history WHERE client_name=$1 AND chat_id=$2 AND message_id=$3'
-    const values = [client_name, chat_id, message_id]
-
-    return await this.client.query(
-      query,
-      values,
-      async (err: { stack: any }, res: { rows: string | any[] }) => {
-        if (err) {
-          console.error(`${err} ${err.stack}`)
-        } else {
-          if (res.rows && res.rows.length) {
-            this.updateMessage(client_name, chat_id, message_id, content, false)
-          } else {
-            const date = new Date(timestamp)
-            const utc = new Date(
-              date.getUTCFullYear(),
-              date.getUTCMonth(),
-              date.getUTCDate(),
-              date.getUTCHours(),
-              date.getUTCMinutes(),
-              date.getUTCSeconds()
-            )
-            const utcStr =
-              date.getDate() +
-              '/' +
-              (date.getMonth() + 1) +
-              '/' +
-              date.getFullYear() +
-              ' ' +
-              utc.getHours() +
-              ':' +
-              utc.getMinutes() +
-              ':' +
-              utc.getSeconds()
-            const global_message_id =
-              client_name + '.' + chat_id + '.' + message_id
-            const query2 =
-              'INSERT INTO chat_history(client_name, chat_id, message_id, global_message_id, sender, content, createdAt) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *'
-            const values2 = [
-              client_name,
-              chat_id,
-              message_id,
-              global_message_id,
-              sender,
-              content,
-              utcStr,
-            ]
-
-            await this.client.query(
-              query2,
-              values2,
-              (err: { stack: any }, res: any) => {
-                if (err) {
-                  console.error(`${err} ${err.stack}`)
-                }
-              }
-            )
-            callback()
-          }
-        }
-      }
-    )
-  }
-  async messageExistsAsyncWitHCallback2(
-    client_name: any,
-    chat_id: any,
-    message_id: any,
-    sender: any,
-    content: any,
-    timestamp: any,
-    callback: () => void
-  ) {
-    const query =
-      'SELECT * FROM chat_history WHERE client_name=$1 AND chat_id=$2 AND message_id=$3'
-    const values = [client_name, chat_id, message_id]
-
-    return await this.client.query(
-      query,
-      values,
-      async (err: { stack: any }, res: { rows: string | any[] }) => {
-        if (err) {
-          console.error(`${err} ${err.stack}`)
-        } else {
-          if (res.rows && res.rows.length) {
-          } else {
-            callback()
-          }
-        }
-      }
-    )
-  }
-  async messageExistsWithCallback(
-    client_name: any,
-    chat_id: any,
-    message_id: any,
-    foundCallback: () => void,
-    notFoundCallback: () => void
-  ) {
-    const query =
-      'SELECT * FROM chat_history WHERE client_name=$1 AND chat_id=$2 AND message_id=$3'
-    const values = [client_name, chat_id, message_id]
-
-    return await this.client.query(
-      query,
-      values,
-      (err: { stack: any }, res: { rows: string | any[] }) => {
-        if (err) {
-          console.error(`${err} ${err.stack}`)
-          notFoundCallback()
-        } else {
-          if (res && res.rows && res.rows.length > 0) foundCallback()
-          else notFoundCallback()
-        }
-      }
-    )
-  }
-
-  async getNewMessageId(
-    client_name: any,
-    chat_id: any,
-    callback: (arg0: number) => void
-  ) {
-    const query =
-      'SELECT * FROM chat_history WHERE client_name=$1 AND chat_id=$2'
-    const values = [client_name, chat_id]
-
-    return await this.client.query(
-      query,
-      values,
-      (
-        err: { stack: any },
-        res: { rows: string | any[] | undefined } | null | undefined
-      ) => {
-        if (err) {
-          console.error(`${err} ${err.stack}`)
-        }
-
-        if (res !== undefined && res !== null && res.rows !== undefined) {
-          callback(res.rows.length + 1)
-        } else {
-          callback(1)
-        }
-      }
-    )
   }
 
   async setConversation(
@@ -707,37 +223,7 @@ export class database {
       return asString ? '' : []
     }
   }
-  async setSpeakersModel(agent: any, speaker: any, model: any) {
-    const test = 'SELECT * FROM speakers_model WHERE agent=$1 AND speaker=$2'
-    const ctest = [agent, speaker]
 
-    const check = await this.client.query(test, ctest)
-
-    let query = ''
-    let values = []
-
-    if (check && check.rows && check.rows.length > 0) {
-      query = 'UPDATE speakers_model SET model=$1 WHERE agent=$2 AND speaker=$3'
-      values = [model, agent, speaker]
-    } else {
-      query =
-        'INSERT INTO speakers_model(agent, speaker, model) VALUES($1, $2, $3)'
-      values = [agent, speaker, model]
-    }
-
-    await this.client.query(query, values)
-  }
-  async getSpeakersModel(agent: any, speaker: any) {
-    const query = 'SELECT * FROM speakers_model WHERE agent=$1 AND speaker=$2'
-    const values = [agent, speaker]
-
-    const row = await this.client.query(query, values)
-    if (row && row.rows && row.rows.length > 0) {
-      return row.rows[0].model
-    } else {
-      return ''
-    }
-  }
   async setSpeakersFacts(agent: any, speaker: any, facts: any) {
     const query =
       'INSERT INTO speakers_facts(agent, speaker, facts) VALUES($1, $2, $3)'
@@ -913,25 +399,6 @@ export class database {
     }
   }
 
-  async setAgentsConfig(agent: any, config: any) {
-    const check = 'SELECT * FROM agent_config WHERE agent=$1'
-    const cvalues = [agent]
-
-    const test = await this.client.query(check, cvalues)
-
-    if (test && test.rows && test.rows.length > 0) {
-      const query = 'UPDATE agent_config SET config=$1 WHERE agent=$2'
-      const values = [config, agent]
-
-      await this.client.query(query, values)
-    } else {
-      const query = 'INSERT INTO agent_config(agent, config) VALUES($1, $2)'
-      const values = [agent, config]
-
-      await this.client.query(query, values)
-    }
-  }
-
   async getAgentExists(agent: any) {
     const query = 'SELECT * FROM agents WHERE agent=$1'
     const values = [agent]
@@ -943,15 +410,27 @@ export class database {
       return false
     }
   }
-  async createAgent(agent: any) {
-    // if (await this.getAgentExists(agent)) {
-    //   return
-    // }
 
+  async updateAgent(agent: any, data) {
+    let q = ''
+    Object.keys(data).forEach(key => {
+      if (data[key] !== null) {
+        q += `${key}='${data[key]}',`
+      }
+    })
+    // remove the last character from q
+    q = q.substring(0, q.length - 1)
+    const query = 'UPDATE agents SET ' + q + ' WHERE agent=$1'
+    console.log('update query is', query)
+    const values = [agent]
+
+    return await this.client.query(query, values)
+  }
+  async createAgent(agent: any) {
     const query = 'INSERT INTO agents(agent) VALUES($1)'
     const values = [agent]
 
-    await this.client.query(query, values)
+    return await this.client.query(query, values)
   }
   async getAgents() {
     const query = 'SELECT * FROM agents'
@@ -972,45 +451,6 @@ export class database {
     }
   }
 
-  async setPersonality(agent: any, personality: any) {
-    const query = 'INSERT INTO personality(agent, personality) VALUES($1, $2)'
-    const values = [agent, personality]
-
-    await this.client.query(query, values)
-  }
-
-  async setDialogue(agent: any, dialog: any) {
-    const check = 'SELECT * FROM agents WHERE agent=$1'
-    const cvalues = [agent]
-
-    const test = await this.client.query(check, cvalues)
-
-    if (test && test.rows && test.rows.length > 0) {
-      const query = 'UPDATE agents SET dialog=$1 WHERE agent=$2'
-      const values = [dialog, agent]
-
-      await this.client.query(query, values)
-    } else {
-      throw new Error('Unable to set dialog for agent')
-    }
-  }
-
-  async setMonologue(agent: any, monologue: any) {
-    const check = 'SELECT * FROM agents WHERE agent=$1'
-    const cvalues = [agent]
-
-    const test = await this.client.query(check, cvalues)
-
-    if (test && test.rows && test.rows.length > 0) {
-      const query = 'UPDATE agents SET monologue=$1 WHERE agent=$2'
-      const values = [monologue, agent]
-
-      await this.client.query(query, values)
-    } else {
-      throw new Error('Unable to set monologue for agent')
-    }
-  }
-
   async getSpeakerFactSummarization(agent = 'common') {
     const query = 'SELECT * FROM speaker_fact_summarization WHERE agent=$1'
     const values = [agent]
@@ -1024,7 +464,7 @@ export class database {
   }
 
   async getFacts(agent: any) {
-    const query = 'SELECT * FROM facts WHERE agent=$1'
+    const query = 'SELECT facts FROM agents WHERE agent=$1'
     const values = [agent]
 
     const rows = await this.client.query(query, values)
@@ -1083,7 +523,8 @@ export class database {
   }
 
   async getIgnoredKeywords(agent: any) {
-    const query = 'SELECT * FROM ignored_keywords WHERE agent=$1 OR agent=$2'
+    const query =
+      'SELECT ignored_keywords FROM agents WHERE agent=$1 OR agent=$2'
     const values = [agent, 'common']
 
     const rows = await this.client.query(query, values)
@@ -1098,7 +539,7 @@ export class database {
   }
 
   async getIgnoredKeywordsData(agent: any) {
-    const query = 'SELECT * FROM ignored_keywords WHERE agent=$1'
+    const query = 'SELECT ignored_keywords FROM agents WHERE agent=$1'
     const values = [agent]
 
     const rows = await this.client.query(query, values)
@@ -1112,24 +553,6 @@ export class database {
     }
 
     return ''
-  }
-
-  async setIgnoredKeywords(agent: string | any[], data: string) {
-    if (!agent || agent.length <= 0) return
-    const query = 'DELETE FROM ignored_keywords WHERE agent=$1'
-    const values = [agent]
-
-    await this.client.query(query, values)
-
-    const keywords = data.split('|')
-    for (let i = 0; i < keywords.length; i++) {
-      if (keywords.length <= 0) continue
-      const query2 =
-        'INSERT INTO ignored_keywords(agent, keyword) VALUES($1, $2)'
-      const values2 = [agent, keywords[i]]
-
-      await this.client.query(query2, values2)
-    }
   }
 
   async deleteAgent(agent: any) {
@@ -1284,13 +707,8 @@ export class database {
 
   async getAgentInstances() {
     const query = 'SELECT * FROM agent_instance'
-
     const rows = await this.client.query(query)
-    if (rows && rows.rows && rows.rows.length > 0) {
-      return rows.rows
-    } else {
-      return []
-    }
+    return rows.rows
   }
   async getAgentInstance(id: any) {
     const query = 'SELECT * FROM agent_instance WHERE id=$1'
@@ -1339,25 +757,31 @@ export class database {
 
     await this.client.query(query, values)
   }
-  async updateAgentInstances(id, personality, clients, enabled) {
-    clients = JSON.stringify(clients).replaceAll('\\', '')
+  async updateAgentInstances(id, data) {
+    console.log('updateAgentInstances', id, data)
     const check = 'SELECT * FROM agent_instance WHERE id=$1'
     const cvalues = [id]
 
     const rows = await this.client.query(check, cvalues)
+
     if (rows && rows.rows && rows.rows.length > 0) {
-      const query =
-        'UPDATE agent_instance SET personality=$1, clients=$2, enabled=$3, updated_at=$4 WHERE id=$5'
-      const values = [personality, clients, enabled, new Date(), id]
+      let q = ''
+      Object.keys(data).forEach(key => {
+        if (data[key] !== null) {
+          q += `${key}='${data[key]}',`
+        }
+      })
 
-      await this.client.query(query, values)
-    } else {
-      console.log('id is', id)
       const query =
-        'INSERT INTO agent_instance(personality, clients, enabled, updated_at) VALUES($1, $2, $3, $4)'
-      const values = [personality, clients, enabled, new Date()]
-
+        'UPDATE agent_instance SET ' + q + ' updated_at=$1 WHERE id=$2'
+      const values = [new Date().toUTCString(), id]
       await this.client.query(query, values)
+      console.log('called ', query)
+    } else if (!data || data == {}) {
+      const query = 'INSERT INTO agent_instance (personality) VALUES ($1)'
+      const values = ['common']
+      await this.client.query(query, values)
+      console.log('called ', query)
     }
   }
 }

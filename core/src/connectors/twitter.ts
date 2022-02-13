@@ -4,12 +4,11 @@
 /* eslint-disable camelcase */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { agentConfig } from '@latitudegames/thoth-core/src/connectors/agentConfig'
 import { TwitterApi } from 'twitter-api-v2'
-
 import { database } from './database'
 import { handleInput } from './handleInput'
 import { getSetting } from './utils'
+
 
 export class twitter_client {
   async handleMessage(response, chat_id, args, twitter, twitterV1, localUser) {

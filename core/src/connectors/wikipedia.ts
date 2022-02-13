@@ -87,14 +87,6 @@ export async function createWikipediaAgent(speaker, name, personality, facts) {
       return undefined
     }
 
-    console.log('res.choice.text')
-    console.log(res)
-
-    database.instance.setPersonality(
-      name,
-      personalitySourcePrompt + '\n' + personality + '\n' + res.choice.text
-    )
-
     const dialogPrompt = `The following is a conversation with ${name}. ${name} is helpful, knowledgeable and very friendly\n${speaker}: Hi there, ${name}! Can you tell me a little bit about yourself?\n${name}:`
 
     data = {
@@ -132,10 +124,14 @@ export async function createWikipediaAgent(speaker, name, personality, facts) {
     console.log('res.choice.text (2)')
     console.log(res)
 
-    database.instance.setDialogue(name, dialogPrompt + (await res).choice?.text)
-    database.instance.setAgentFacts(name, factPrompt)
-    database.instance.createAgent(name)
+    await database.instance.createAgent(name)
 
+    await database.instance.updateAgent(name, {
+      dialog: dialogPrompt + (await res).choice?.text,
+      personality:
+        personalitySourcePrompt + '\n' + personality + '\n' + res.choice.text,
+      facts: factPrompt,
+    })
     stop = Date.now()
     console.log(
       `Time Taken to execute save data = ${(stop - start) / 1000} seconds`

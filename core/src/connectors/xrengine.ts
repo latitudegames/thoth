@@ -14,8 +14,6 @@
 // We need to break some of this code out so that we have more control of it in the node graph
 // i.e. text classification and such
 
-import { agentConfig } from '@latitudegames/thoth-core/src/connectors/agentConfig'
-
 import roomManager from '../components/roomManager'
 import { classifyText } from '../components/textClassifier'
 import { browserWindow, PageUtils } from './browser'
@@ -134,29 +132,27 @@ export class xrengine_client {
     return this.messageResponses[chatId][message]
   }
 
-  async getChatHistory(chatId, length) {
-    return await database.instance.getHistory(length, 'xr-engine', chatId)
-  }
   async addMessageToHistory(chatId, messageId, senderName, content) {
-    await database.instance.addMessageInHistory(
-      'xr-engine',
-      chatId,
-      messageId,
-      senderName,
-      content
-    )
+    return
+    // await database.instance.addMessageInHistory(
+    //   'xr-engine',
+    //   chatId,
+    //   messageId,
+    //   senderName,
+    //   content
+    // )
   }
   async deleteMessageFromHistory(chatId, messageId) {
-    await database.instance.deleteMessage('xr-engine', chatId, messageId)
+    // await database.instance.deleteMessage('xr-engine', chatId, messageId)
   }
   async updateMessage(chatId, messageId, newContent) {
-    await database.instance.updateMessage(
-      'xr-engine',
-      chatId,
-      messageId,
-      newContent,
-      true
-    )
+    // await database.instance.updateMessage(
+    //   'xr-engine',
+    //   chatId,
+    //   messageId,
+    //   newContent,
+    //   true
+    // )
   }
   async wasHandled(chatId, messageId, foundCallback, notFoundCallback) {
     return await database.instance.messageExistsWithCallback(

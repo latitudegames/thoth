@@ -351,8 +351,8 @@ select#agents {
 }
 
 .form-item {
-  margin: 2em;
-  width: 50%;
+  padding: 5%;
+  width: 95%;
 }
 
 .form-item-label {
@@ -362,6 +362,20 @@ select#agents {
 
 .form-text-area {
   width: 100%;
+  box-sizing: border-box;
+  padding: var(--extraSmall);
+  /* not using a var here to optically correct for base + cap of typeface */
+  background-color: var(--dark-2);
+  padding-left: var(--small);
+  padding-right: var(--small);
+  color: #fff;
+  border-radius: 4px;
+  cursor: default;
+  border: 1px solid var(--dark-4);
+  box-shadow: inset 0px 5px 5px rgba(0, 0, 0, 0.1);
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-size: 11px;
+  height: var(--c4);
 }
 
 .admin-container {
@@ -371,4 +385,8 @@ select#agents {
 
 .agent-select {
   margin: 1em;
+}
+
+.agent-container {
+  width: 95%;
 }

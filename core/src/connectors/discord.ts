@@ -8,7 +8,6 @@
 // @ts-nocheck
 
 // required for message.lineReply
-import { agentConfig } from '@latitudegames/thoth-core/src/connectors/agentConfig'
 import Discord, { Intents } from 'discord.js'
 import emoji from 'emoji-dictionary'
 import emojiRegex from 'emoji-regex'
@@ -18,12 +17,7 @@ import roomManager from '../components/roomManager'
 import { classifyText } from '../components/textClassifier'
 import { database } from './database'
 import { handleInput } from './handleInput'
-import {
-  getRandomEmptyResponse,
-  getRandomTopic,
-  startsWithCapital,
-  getSetting,
-} from './utils'
+import { getRandomEmptyResponse, startsWithCapital, getSetting } from './utils'
 
 // TODO: Remove this
 export const config = {
@@ -677,7 +671,7 @@ export class discord_client {
     if (author.id === this.client.user.id) {
       await channel.messages.fetch(id).then(async msg => {
         log('updating local msg to db')
-        await this.updateMessage(channel.id, id, msg.content)
+        // await this.updateMessage(channel.id, id, msg.content)
       })
       log('same author')
       return
@@ -1435,18 +1429,20 @@ export class discord_client {
 
   async deleteMessageFromHistory(chatId, messageId) {
     if (!database || !database.instance) return // log("Postgres not inited");
-    await database.instance.deleteMessage('discord', chatId, messageId)
+    return
+    // await database.instance.deleteMessage('discord', chatId, messageId)
   }
 
   async updateMessage(chatId, messageId, newContent) {
     if (!database || !database.instance) return // log("Postgres not inited");
-    await database.instance.updateMessage(
-      'discord',
-      chatId,
-      messageId,
-      newContent,
-      true
-    )
+    return
+    // await database.instance.updateMessage(
+    //   'discord',
+    //   chatId,
+    //   messageId,
+    //   newContent,
+    //   true
+    // )
   }
 
   async wasHandled(chatId, messageId, sender, content, timestamp) {
@@ -1702,7 +1698,7 @@ export class discord_client {
             responded: false,
           }
           const resp = await handleInput(
-            'Tell me about ' + getRandomTopic(),
+            'Tell me about ' + 'butterlifes',
             'bot',
             this.agent.name ?? 'Agent',
             null,

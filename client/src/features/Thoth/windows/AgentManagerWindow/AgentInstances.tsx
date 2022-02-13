@@ -6,27 +6,26 @@ import React, { useEffect, useState } from 'react'
 import AgentInstance from './AgentInstance'
 
 const AgentInstances = () => {
-  const [data, setData] = useState([])
-  const [currentInc, setInc] = useState(0)
+  const [data, setData] = useState(false)
 
   const createNew = () => {
+    console.log("Create new called")
     axios
       .post(`${process.env.REACT_APP_API_URL}/agentInstance`, { data: {} })
-      .then(res => {
-        setInc(currentInc + 1)
+      .then(async res => {
+        console.log("response is", res)
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/agentInstances`);
+        setData(res.data);
       })
   }
 
-  useEffect(async () => {
-    const res = await axios.get(`${process.env.REACT_APP_API_URL}/agentInstances`);
-    setData(res.data);
-  }, [])
-
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_URL}/agentInstances`).then(res => {
-      setData(res.data)
-    })
-  }, [currentInc])
+    (async () => {
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/agentInstances`);
+      setData(res.data);
+      console.log("set the data")
+    })()
+  }, [])
 
   return (
     <div className="agent-editor">
@@ -34,13 +33,15 @@ const AgentInstances = () => {
 
       <React.Fragment>
         <div>
-          {data &&
+          {data && data !== [] &&
             data.map((value, idx) => {
               return (
                 <AgentInstance
                   id={value.id}
                   key={idx}
-                  updateCallback={() => setInc(currentInc + 1)}
+                  updateCallback={async () => {
+                    setData((await axios.get(`${process.env.REACT_APP_API_URL}/agentInstances`)).data);
+                  }}
                 />
               )
             })}
