@@ -9,6 +9,7 @@
 import fs from 'fs'
 import path from 'path'
 import pg from 'pg'
+import { off } from 'process'
 import internal from 'stream'
 
 import { idGenerator } from './utils'
@@ -691,8 +692,8 @@ export class database {
   async deleteAgentInstance(id: any) {
     const query = 'DELETE FROM agent_instance WHERE id=$1'
     const values = [id]
-
-    await this.client.query(query, values)
+    console.log('query called', query, values)
+    return await this.client.query(query, values)
   }
   async getLastUpdatedInstances() {
     const query = 'SELECT * FROM agent_instance'
@@ -723,6 +724,7 @@ export class database {
     const cvalues = [id]
 
     const rows = await this.client.query(check, cvalues)
+    console.log('rows', id, data)
 
     if (rows && rows.rows && rows.rows.length > 0) {
       let q = ''
@@ -735,13 +737,23 @@ export class database {
       const query =
         'UPDATE agent_instance SET ' + q + ' updated_at=$1 WHERE id=$2'
       const values = [new Date().toUTCString(), id]
-      await this.client.query(query, values)
       console.log('called ', query)
-    } else if (!data || data == {}) {
+      try {
+        return await this.client.query(query, values)
+      } catch (e) {
+        throw new Error(e)
+      }
+    } else if (Object.keys(data) <= 0) {
       const query = 'INSERT INTO agent_instance (personality) VALUES ($1)'
       const values = ['common']
-      await this.client.query(query, values)
       console.log('called ', query)
+      try {
+        return await this.client.query(query, values)
+      } catch (e) {
+        throw new Error(e)
+      }
+    } else {
+      console.log('nope ', data);
     }
   }
 }
