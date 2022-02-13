@@ -39,7 +39,7 @@ const AIEditor = () => {
     }
     console.log("newAgents", newAgents);
     setAgents(newAgents);
-    switchAgent(newAgents[0]);
+    switchAgent(newAgents && newAgents[0]);
     return newAgents;
   }
 
@@ -52,7 +52,7 @@ const AIEditor = () => {
 
   useEffect(async () => {
     const newAgents = await getAgents();
-    switchAgent(newAgents[0]);
+    switchAgent(newAgents && newAgents[0]);
   }, [])
 
   return (
