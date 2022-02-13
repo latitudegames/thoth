@@ -63,7 +63,7 @@ const ConfigEditor = () => {
   }
 
   return (
-    <div className="App">
+    <div className="agent-container">
       <div>
         {firstLoad ? (
           <h1>Loading...</h1>
@@ -91,21 +91,21 @@ const ConfigEditor = () => {
               return (
                 <div
                   key={idx}
+                  className="form-item"
                 >
-                  <label>{value.key}:
-                    {(value.value && value.value.length > 0 && (value.value.toLowerCase() === 'true' || value.value.toLowerCase() === 'false')) ? (
-                      <input type='checkbox' id={idx} name={idx} defaultChecked={value.value.toLowerCase().trim() == 'true' ? true : false} onChange={(e) => {
-                        setDataUpdated(true); config[idx] = { key: value.key, value: (e.target.checked.toString()) }
-                      }} />
-                    ) : (
-                      <textarea onChange={(e) => { setDataUpdated(true); config[idx] = { key: value.key, value: e.target.value } }} defaultValue={value.value}></textarea>
-                    )}
-                    <button onClick={() => { _delete(value.key) }}>delete</button>
-                  </label><br /><br />
+                  <span className="form-item-label">{value.key}</span>
+                  {(value.value && value.value.length > 0 && (value.value.toLowerCase() === 'true' || value.value.toLowerCase() === 'false')) ? (
+                    <input type='checkbox' id={idx} name={idx} defaultChecked={value.value.toLowerCase().trim() == 'true' ? true : false} onChange={(e) => {
+                      setDataUpdated(true); config[idx] = { key: value.key, value: (e.target.checked.toString()) }
+                    }} />
+                  ) : (
+                    <textarea className="form-text-area" onChange={(e) => { setDataUpdated(true); config[idx] = { key: value.key, value: e.target.value } }} defaultValue={value.value}></textarea>
+                  )}
+                  <button className="button" onClick={() => { _delete(value.key) }}>delete</button>
                 </div>
               );
             })}
-            <input type='button' value='Update' onClick={update} />
+            <button className="button" type='button' value='Update' onClick={update} />
           </div>
         )}
 

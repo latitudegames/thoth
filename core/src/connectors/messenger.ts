@@ -4,27 +4,21 @@
 /* eslint-disable no-invalid-this */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-
-import { agentConfig } from '@latitudegames/thoth-core/src/connectors/agentConfig'
 import request from 'request'
 
 import { database } from './database'
-import { getRandomEmptyResponse, getSetting } from './utils'
 import { handleInput } from './handleInput'
+import { getRandomEmptyResponse, getSetting } from './utils'
 
 export class messenger_client {
-  async getChatHistory(chatId, length) {
-    return await database.instance.getHistory(length, 'facebook', chatId)
-  }
-
   async addMessageToHistory(chatId, senderName, content, messageId) {
-    database.instance.addMessageInHistory(
-      'facebook',
-      chatId,
-      messageId + '',
-      senderName,
-      content
-    )
+    // database.instance.addMessageInHistory(
+    //   'facebook',
+    //   chatId,
+    //   messageId + '',
+    //   senderName,
+    //   content
+    // )
   }
 
   async handleMessage(senderPsid, receivedMessage) {

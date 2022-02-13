@@ -5,8 +5,6 @@
 /* eslint-disable camelcase */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-
-import agentConfig from '@latitudegames/thoth-core/src/connectors/agentConfig'
 import { launch } from 'puppeteer-stream'
 import Xvfb from 'xvfb'
 import { detectOsOption, getSetting } from './utils'

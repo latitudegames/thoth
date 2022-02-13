@@ -28,7 +28,7 @@ const Prompts = () => {
     }
 
     return (
-        <div className="agent-editor">
+        <div className="agent-container">
             Prompts
             {firstLoad ? (
                 <h1>Loading...</h1>
@@ -37,22 +37,22 @@ const Prompts = () => {
                     <form>
                         <div className="form-item">
                             <span className="form-item-label">3D World Understanding Prompt</span>
-                            <textarea style={{ height: 100, width: 800 }} onChange={(e) => { setDataUpdated(true); data.xr_world = e.target.value }} defaultValue={data.xr_world}></textarea>
+                            <textarea className="form-text-area" style={{ height: 100, width: 800 }} onChange={(e) => { setDataUpdated(true); data.xr_world = e.target.value }} defaultValue={data.xr_world}></textarea>
                         </div>
                         <div className="form-item">
                             <span className="form-item-label">Fact Summarization Prompt</span>
-                            <textarea style={{ height: 100, width: 800 }} onChange={(e) => { setDataUpdated(true); data.fact = e.target.value }} defaultValue={data.fact}></textarea>
+                            <textarea className="form-text-area" style={{ height: 100, width: 800 }} onChange={(e) => { setDataUpdated(true); data.fact = e.target.value }} defaultValue={data.fact}></textarea>
                         </div>
                         <div className="form-item">
                             <span className="form-item-label">Opinion Form Prompt</span>
-                            <textarea style={{ height: 100, width: 800 }} onChange={(e) => { setDataUpdated(true); data.opinion = e.target.value }} defaultValue={data.opinion}></textarea>
+                            <textarea className="form-text-area" style={{ height: 100, width: 800 }} onChange={(e) => { setDataUpdated(true); data.opinion = e.target.value }} defaultValue={data.opinion}></textarea>
                         </div>
                         <div className="form-item">
                             <span className="form-item-label">XREngine Room Prompt</span>
-                            <textarea style={{ height: 100, width: 800 }} onChange={(e) => { setDataUpdated(true); data.xr = e.target.value }} defaultValue={data.xr}></textarea>
+                            <textarea className="form-text-area" style={{ height: 100, width: 800 }} onChange={(e) => { setDataUpdated(true); data.xr = e.target.value }} defaultValue={data.xr}></textarea>
                         </div>
 
-                        <input type='button' value='Update' onClick={update} />
+                        <button type='button' value='Update' onClick={update}>Update</button>
                     </form>
                 </div>
             )}

@@ -19,27 +19,30 @@ function capitalizeFirstLetter(word) {
 }
 
 const Agent = ({ id, updateCallback }) => {
-  const [data, setData] = useState([])
-  const [personality, setPersonality] = useState('')
-  const [instanceId, setInstanceId] = useState('1')
-  const [enabled, setEnabled] = useState(false)
+  const [loaded, setLoaded] = useState(false)
 
-  useEffect(async () => {
-    setEnabled(false)
-    const res = await axios.get(
-      `${process.env.REACT_APP_API_URL}/agentInstance?instanceId=` + id
-    )
-    res.data.clients = JSON.parse(res.data.clients)
-    const d = res.data.clients ?? []
-    const _data = []
-    for (let i = 0; i < d.length; i++) {
-      _data.push(d[i])
+  const [instanceId, setInstanceId] = useState(-1)
+  const [enabled, setEnabled] = useState(false)
+  const [personality, setPersonality] = useState('')
+  const [discord_enabled, setdiscord_enabled] = useState(false)
+  const [discord_api_key, setDiscordApiKey] = useState('')
+
+  useEffect(() => {
+    if (!loaded) {
+      (async () => {
+        const res = await axios.get(
+          `${process.env.REACT_APP_API_URL}/agentInstance?instanceId=` + id
+        )
+        console.log("res is", res)
+        setPersonality(res.data.personality)
+        setInstanceId(res.data.instanceId)
+        setEnabled(res.data.enabled === true || res.data.enabled === 'true')
+        setdiscord_enabled(res.data.discord_enabled === true && res.data.discord_enabled === 'true')
+        setDiscordApiKey(res.data.discord_api_key)
+        setLoaded(true)
+      })()
     }
-    setData(_data)
-    setPersonality(res.data.personality)
-    setInstanceId(res.data.id)
-    setEnabled(res.data.enabled === 'true')
-  }, [])
+  }, [loaded])
 
   const _delete = () => {
     axios
@@ -52,57 +55,26 @@ const Agent = ({ id, updateCallback }) => {
   }
 
   const update = () => {
+    console.log("Update called")
     const _data = {
-      id: instanceId,
-      personality: personality,
-      clients: data,
-      enabled: enabled,
+      personality,
+      enabled,
+      discord_enabled,
+      discord_api_key
     }
     axios
-      .post(`${process.env.REACT_APP_API_URL}/agentInstance`, { data: _data })
+      .post(`${process.env.REACT_APP_API_URL}/agentInstance`, { id: instanceId, data: _data })
       .then(res => {
-        updateCallback()
+        console.log("response on update", res)
+        setEnabled(res.renabled)
+        setPersonality(res.personality)
+        setdiscord_enabled(res.discord_enabled)
+        setDiscordApiKey(res.discord_api_key)
+        // updateCallback()
       })
   }
 
-  function FormItem({ idx, value }) {
-    return (
-      <div key={idx}>
-        <input
-          type="checkbox"
-          defaultChecked={value.enabled == 'true'}
-          onChange={e => {
-            const d = { ...data } as any
-            d[idx]['enabled'] = e.target.checked.toString()
-            setData(d)
-          }}
-        ></input>
-
-        <span className="form-item-label">
-          {capitalizeFirstLetter(value.client)}
-        </span>
-
-        {value.settings.map((v2, idx2) => {
-          return (
-            <div key={idx2}>
-              <span className="form-item-label">{v2.name}</span>
-              <textarea
-                defaultValue={v2.value}
-                onChange={e => {
-                  ; (data[idx] as any).settings[idx2] = {
-                    name: v2.name,
-                    value: e.target.value,
-                  }
-                }}
-              />
-            </div>
-          )
-        })}
-      </div>
-    )
-  }
-
-  return (
+  return !loaded ? <>Loading...</> : (
     <div>
       <div className="form-item">
         <span className="form-item-label">Enabled</span>
@@ -131,20 +103,38 @@ const Agent = ({ id, updateCallback }) => {
           defaultValue={instanceId}
           onChange={e => {
             setInstanceId(e.target.value)
-            request(e.target.value)
           }}
         />
       </div>
 
       <div className="form-item">
+        <span className="form-item-label">Discord Enabled</span>
+        <input
+          type="checkbox"
+          defaultChecked={discord_enabled}
+          onChange={e => {
+            setdiscord_enabled(e.target.checked)
+          }}
+        />
+      </div>
+
+      {discord_enabled && (
+        <div className="form-item">
+          <span className="form-item-label">Discord API Key</span>
+          <input
+            type="text"
+            defaultValue={discord_api_key}
+            onChange={e => {
+              setDiscordApiKey(e.target.value)
+            }}
+          />
+        </div>
+      )}
+
+      <div className="form-item">
         <button onClick={() => update()}>Update</button>
         <button onClick={() => _delete()}>Delete</button>
       </div>
-
-      {enabled &&
-        data.map((value, idx) => {
-          return <FormItem key={idx} value={value} idx={idx} />
-        })}
     </div>
   )
 }

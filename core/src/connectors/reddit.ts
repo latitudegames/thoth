@@ -6,13 +6,12 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import { agentConfig } from '@latitudegames/thoth-core/src/connectors/agentConfig'
 import SnooStream from 'snoostream'
 import * as snoowrap from 'snoowrap'
-
 import { database } from './database'
 import { handleInput } from './handleInput'
 import { getSetting } from './utils'
+
 
 export let reddit
 
@@ -160,26 +159,27 @@ export class reddit_client {
     )
   }
   async deleteMessageFromHistory(chatId, messageId) {
-    await database.instance.deleteMessage('reddit-chat', chatId, messageId)
+    return
+    // await database.instance.deleteMessage('reddit-chat', chatId, messageId)
   }
   async updateMessage(chatId, messageId, newContent) {
-    await database.instance.updateMessage(
-      'reddit-chat',
-      chatId,
-      messageId,
-      newContent,
-      true
-    )
+    // await database.instance.updateMessage(
+    //   'reddit-chat',
+    //   chatId,
+    //   messageId,
+    //   newContent,
+    //   true
+    // )
   }
   async wasHandled(chatId, messageId, sender, content, timestamp) {
-    return await database.instance.messageExistsAsync(
-      'reddit-chat',
-      chatId,
-      messageId,
-      sender,
-      content,
-      timestamp
-    )
+    // return await database.instance.messageExistsAsync(
+    //   'reddit-chat',
+    //   chatId,
+    //   messageId,
+    //   sender,
+    //   content,
+    //   timestamp
+    // )
   }
 
   agent
@@ -453,8 +453,7 @@ export class reddit_client {
         const author = message.author.name
         const body = message.body
         const timestamp = message.created_utc
-        const agentConfig =
-          (await database.instance.getConfig())['agent'] ?? 'Agent'
+        const agentConfig = 'Agent'
         if (!author.includes('reddit')) {
           //log('current message: ' + body)
           await database.instance.messageExistsAsyncWitHCallback(

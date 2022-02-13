@@ -3,12 +3,11 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import { agentConfig } from '@latitudegames/thoth-core/src/connectors/agentConfig'
 import { IgApiClient } from 'instagram-private-api'
-
 import { database } from './database'
-import { getSetting } from './utils'
 import { handleInput } from './handleInput'
+import { getSetting } from './utils'
+
 
 export class instagram_client {
   agent
