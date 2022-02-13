@@ -8,25 +8,40 @@ const AIEditor = () => {
   const [currentAgentData, setCurrentAgentData] = useState(null);
   const newAgentRef = useRef("New Agent");
 
+  const [dialog, setDialog] = useState('');
+  const [morals, setMorals] = useState('');
+  const [facts, setFacts] = useState('');
+  const [monologue, setMonologue] = useState('');
+  const [personality, setPersonality] = useState('');
+  const [greetings, setGreetings] = useState('');
+
   const createNew = async () => {
     console.log("newAgentRef.current is,", newAgentRef.current.value)
     const agent = newAgentRef.current.value ?? "New Agent";
-    await update(agent);
     await getAgents();
+    await update(agent);
   }
 
-  const deleteAgent = async (agent) => {
-    const body = { agentName: agent.agent ?? agent };
-    const res = await axios.delete(`${process.env.REACT_APP_API_URL}/agent`, body);
+  const deleteAgent = async () => {
+    console.log("deleting", currentAgentData)
+    const res = await axios.delete(`${process.env.REACT_APP_API_URL}/agent/` + currentAgentData.id);
     console.log("deleted", res);
     await getAgents();
   }
 
   const update = async (agent) => {
-    const body = { agentName: agent ?? currentAgentData.agentName, data: currentAgentData };
+    console.log("currentAgentData is", agent ?? currentAgentData)
+    const body = {
+      agent: agent ?? currentAgentData.agent, data: {
+        dialog, morals, facts, monologue, personality, greetings
+      }
+    };
     const res = await axios.post(`${process.env.REACT_APP_API_URL}/agent`, body);
-    console.log("updated, switching to", agent);
-    switchAgent(agent);
+    console.log("updated, switching to", agent ?? currentAgentData.agent);
+    const newAgents = await getAgents();
+    setAgents(newAgents);
+
+    switchAgent(agent ?? currentAgentData.agent);
   }
 
   const getAgents = async () => {
@@ -39,20 +54,33 @@ const AIEditor = () => {
     }
     console.log("newAgents", newAgents);
     setAgents(newAgents);
-    switchAgent(newAgents && newAgents[0]);
+    setCurrentAgentData(newAgents && newAgents[0])
+    if (newAgents && newAgents[0]) {
+      switchAgent(newAgents[0]);
+
+    }
     return newAgents;
   }
 
   const switchAgent = async (agent) => {
-    if (!agent) return;
+    console.log("agent is", agent)
     const res = await axios.get(`${process.env.REACT_APP_API_URL}/agent?agent=${agent.agent ?? agent}`);
-    res.data.agentName = agent.agent;
+    console.log("res.data is", res.data)
+
     setCurrentAgentData(res.data);
+    setDialog(res.data.dialog)
+    setMorals(res.data.morals)
+    setFacts(res.data.facts)
+    setMonologue(res.data.monologue)
+    setPersonality(res.data.personality)
+    setGreetings(res.data.greetings)
   }
 
   useEffect(async () => {
     const newAgents = await getAgents();
-    switchAgent(newAgents && newAgents[0]);
+    setAgents(newAgents);
+    if (newAgents[0])
+      setCurrentAgentData(newAgents[0])
   }, [])
 
   return (
@@ -64,10 +92,9 @@ const AIEditor = () => {
           <h1>Loading...</h1>
         ) : (
           <div className="agent-header">
-            <h2>Agent: {currentAgentData ? currentAgentData.agentName : "Loading..."}</h2>
             <span className="agent-select">
               <select name="agents" id="agents" onChange={(event) => {
-                switchAgent(agents[event.target.options.selectedIndex]);
+                switchAgent(event.target.value)
               }}>
                 {agents.length > 0 && agents.map((agent, idx) =>
                   <option value={agent.agent} key={idx}>{agent.agent}</option>
@@ -81,43 +108,39 @@ const AIEditor = () => {
           <form>
             <div className="form-item">
               <span className="form-item-label">Dialogue:</span>
-              <textarea className="form-text-area" onChange={(e) => { e.preventDefault(); currentAgentData.dialog = e.target.value }} defaultValue={currentAgentData.dialog}></textarea>
+              <textarea className="form-text-area" onChange={(e) => { setDialog(e.target.value) }} value={dialog} ></textarea>
             </div>
 
             <div className="form-item">
               <span className="form-item-label">Morals:</span>
-              <textarea className="form-text-area" onChange={(e) => { e.preventDefault(); currentAgentData.morals = e.target.value }} defaultValue={currentAgentData.morals}></textarea>
+              <textarea className="form-text-area" onChange={(e) => { setMorals(e.target.value) }} value={morals}></textarea>
             </div>
 
             <div className="form-item">
               <span className="form-item-label">Facts:</span>
-              <textarea className="form-text-area" onChange={(e) => { e.preventDefault(); currentAgentData.facts = e.target.value }} defaultValue={currentAgentData.facts}></textarea>
+              <textarea className="form-text-area" onChange={(e) => { setFacts(e.target.value) }} value={facts}></textarea>
             </div>
 
             <div className="form-item">
               <span className="form-item-label">Monologue:</span>
 
-              <textarea className="form-text-area" onChange={(e) => { e.preventDefault(); currentAgentData.monologue = e.target.value }} defaultValue={currentAgentData.monologue}></textarea>
+              <textarea className="form-text-area" onChange={(e) => { setMonologue(e.target.value) }} value={monologue}></textarea>
             </div>
 
             <div className="form-item">
               <span className="form-item-label">Personality:</span>
-              <textarea className="form-text-area" onChange={(e) => { e.preventDefault(); currentAgentData.personality = e.target.value }} defaultValue={currentAgentData.personality}></textarea>
-            </div>
-
-            <div className="form-item">
-              <span className="form-item-label">Relationship Matrix:</span>
-              <textarea className="form-text-area" onChange={(e) => { e.preventDefault(); currentAgentData.relationshipMatrix = e.target.value }} defaultValue={currentAgentData.relationshipMatrix}></textarea>
+              <textarea className="form-text-area" onChange={(e) => { setPersonality(e.target.value) }} value={personality}></textarea>
             </div>
 
             <div className="form-item">
               <span className="form-item-label">Greetings:</span>
-              <textarea className="form-text-area" onChange={(e) => { e.preventDefault(); currentAgentData.startingPhrases = e.target.value }} defaultValue={currentAgentData.startingPhrases}></textarea>
+              <textarea className="form-text-area" onChange={(e) => { setGreetings(e.target.value) }} value={greetings}></textarea>
             </div>
 
-            <input type='button' value='Update' onClick={() => update()} />
-            <input type='button' value='Delete' onClick={() => {
-              deleteAgent(currentAgentData.agentName);
+            <input type='button' value='Update' onClick={(e) => { e.preventDefault(); update() }} />
+            <input type='button' value='Delete' onClick={(e) => {
+              e.preventDefault();
+              deleteAgent();
             }} />
           </form>
         }

@@ -46,9 +46,7 @@ const Agent = ({ id, updateCallback }) => {
 
   const _delete = () => {
     axios
-      .delete(`${process.env.REACT_APP_API_URL}/agentInstance`, {
-        id,
-      })
+      .delete(`${process.env.REACT_APP_API_URL}/agentInstance/` + id)
       .then(res => {
         console.log("deleted", res)
         setLoaded(false)

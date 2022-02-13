@@ -48,30 +48,25 @@ const getAgentHandler = async (ctx: Koa.Context) => {
     return {}
   }
 
-  ctx.body = {
-    dialog: agent.dialog,
-    facts: agent.facts,
-    monologue: agent.monologue,
-    personality: agent.personality,
-    greetings: agent.greetings,
-  }
+  ctx.body = agent
 }
 
 const createOrUpdateAgentHandler = async (ctx: Koa.Context) => {
   console.log("ctx.request.body is ", ctx.request.body)
-  const { agentName, data } = ctx.request.body
-  if (!agentName || agentName == undefined || agentName.length <= 0) {
+  const { agent, data } = ctx.request.body
+  if (!agent || agent == undefined || agent.length <= 0) {
     return (ctx.body = { error: 'invalid agent name' })
   }
 
-  const agentExists = await database.instance.getAgentExists(agentName)
+  const agentExists = await database.instance.getAgentExists(agent)
   if (!agentExists) {
-    await database.instance.createAgent(agentName)
+    await database.instance.createAgent(agent)
   }
   // TODO: Combine all of these!
   try {
-    await database.instance.updateAgent(agentName, {
+    await database.instance.updateAgent(agent, {
       dialog: data.dialog,
+      morals: data.morals,
       facts: data.facts,
       monologue: data.monologue,
       personality: data.personality,
@@ -86,14 +81,9 @@ const createOrUpdateAgentHandler = async (ctx: Koa.Context) => {
 }
 
 const deleteAgentHandler = async (ctx: Koa.Context) => {
-  console.log("Request is", ctx.request.body)
-  const { agentName } = ctx.request.body
-  if (agentName === 'common') {
-    return (ctx.body = { error: "you can't delete the default agent" })
-  }
-
-  await database.instance.deleteAgent(agentName)
-  return (ctx.body = 'ok')
+  console.log("params is", ctx.params)
+  const { id } = ctx.params
+  return (ctx.body = await database.instance.deleteAgent(id))
 }
 
 const getConfigHandler = async (ctx: Koa.Context) => {
@@ -113,6 +103,7 @@ const addConfigHandler = async (ctx: Koa.Context) => {
 }
 
 const updateConfigHandler = async (ctx: Koa.Context) => {
+  console.log("updateConfigHandler", ctx.request.body)
   const data = ctx.request.body.config
   try {
     // TODO: build string and set multiple configs at once
@@ -128,10 +119,10 @@ const updateConfigHandler = async (ctx: Koa.Context) => {
 }
 
 const deleteConfigHandler = async (ctx: Koa.Context) => {
-  const data = ctx.request.body
-  console.log("delete data is ", data);
+  const { id } = ctx.params
+  console.log("delete data is ", id);
   try {
-    await database.instance.deleteConfig(data)
+    await database.instance.deleteConfig(id)
     ctx.body = 'ok'
   } catch (e) {
     console.error(e)
@@ -184,12 +175,14 @@ const getPromptsHandler = async (ctx: Koa.Context) => {
 
 const addPromptsHandler = async (ctx: Koa.Context) => {
   const data = ctx.request.body.data
+  console.log("addPromptsHandler", ctx.request.body)
+
   try {
     // TODO: Combine me!
     await database.instance.setConfig('xr_world', data.xr_world)
-    await database.instance.setConfig('fact_summarization', data.fact)
-    await database.instance.setConfig('opinion', data.opinion)
-    await database.instance.setConfig('xr_room', data.xr_world)
+    // await database.instance.setConfig('fact_summarization', data.fact)
+    // await database.instance.setConfig('opinion', data.opinion)
+    // await database.instance.setConfig('xr_room', data.xr_world)
 
     return (ctx.body = 'ok')
   } catch (e) {
@@ -266,7 +259,7 @@ const addAgentInstanceHandler = async (ctx: Koa.Context) => {
 }
 
 const deleteAgentInstanceHandler = async (ctx: Koa.Context) => {
-  const { id } = ctx.request.body
+  const { id } = ctx.params
   console.log("deleteAgentInstanceHandler", deleteAgentInstanceHandler)
   ctx.body = await database.instance.deleteAgentInstance(id)
 }
@@ -359,11 +352,20 @@ export const agents: Route[] = [
     delete: deleteAgentHandler,
   },
   {
+    path: '/agent/:id',
+    access: noAuth,
+    delete: deleteAgentHandler,
+  },
+  {
     path: '/config',
     access: noAuth,
     get: getConfigHandler,
     post: addConfigHandler,
-    put: updateConfigHandler,
+    put: updateConfigHandler
+  },
+  {
+    path: '/config/:id',
+    access: noAuth,
     delete: deleteConfigHandler,
   },
   {
@@ -387,6 +389,11 @@ export const agents: Route[] = [
     access: noAuth,
     get: getAgentInstanceHandler,
     post: addAgentInstanceHandler,
+    delete: deleteAgentInstanceHandler,
+  },
+  {
+    path: '/agentInstance/:id',
+    access: noAuth,
     delete: deleteAgentInstanceHandler,
   },
   {

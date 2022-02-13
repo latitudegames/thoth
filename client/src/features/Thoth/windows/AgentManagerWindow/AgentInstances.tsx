@@ -35,8 +35,6 @@ const AgentInstances = () => {
 
   return (
     <div className="agent-editor">
-      Agent Instances
-
       <React.Fragment>
         <div>
           {data && data !== [] &&
