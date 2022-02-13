@@ -1,13 +1,10 @@
 import thothCore from '@latitudegames/thoth-core/server';
 import Koa from 'koa';
 import { CompletionRequest, completionsParser } from '../completions';
-// TODO: Solve Enki
-// import { getEnkiOutputs } from '../../enki/enki'
-// TODO: Solve huggingface
-// import { huggingface } from '../../vendor/huggingface/huggingface';
+import { getEnkiOutputs } from '../enki/enki'
+import { huggingface } from '../vendor/huggingface/huggingface';
 import { Module } from './module';
 import { Graph, Module as ModuleType, ModuleComponent, Node } from './types';
-
 
 const { initSharedEngine, getComponents } = thothCore
 const thothComponents = getComponents()
@@ -28,14 +25,14 @@ export const buildThothInterface = (
       })
       return response?.result || ''
     },
-    // enkiCompletion: async (taskName: string, inputs: string) => {
-    //   const outputs = await getEnkiOutputs(ctx, taskName, inputs)
-    //   return { outputs }
-    // },
-    // huggingface: async (model: string, options: any) => {
-    //   const outputs = await huggingface({ context: ctx, model, options })
-    //   return { outputs }
-    // },
+    enkiCompletion: async (taskName: string, inputs: string) => {
+      const outputs = await getEnkiOutputs(ctx, taskName, inputs)
+      return { outputs }
+    },
+    huggingface: async (model: string, options: any) => {
+      const outputs = await huggingface({ context: ctx, model, options })
+      return { outputs }
+    },
     getCurrentGameState: () => {
       return gameState
     },
