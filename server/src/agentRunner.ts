@@ -133,7 +133,8 @@ export async function init() {
     }
   })
 
-  const PORT: number = Number(process.env.AGENT_RUNNER_PORT || process.env.PORT) || 8002
+  const PORT: number =
+    Number(process.env.AGENT_RUNNER_PORT || process.env.PORT) || 8003
 
   app.listen(PORT, '0.0.0.0', () => {
     console.log('Agent server listening on: 0.0.0.0:' + PORT)
@@ -141,4 +142,3 @@ export async function init() {
 
   await initLoop()
 }
-init()
