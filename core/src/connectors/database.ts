@@ -658,6 +658,13 @@ export class database {
       return []
     }
   }
+  async setInstanceDirtyFlag(id, value) {
+    const query = 'UPDATE agent_instance SET dirty=$1 WHERE id=$2'
+    const values = [value, id]
+
+    await this.client.query(query, values)
+  }
+
   async setInstanceUpdated(id) {
     const query = 'UPDATE agent_instance SET updated_at=$1 WHERE id=$2'
     const values = [new Date(), id]
@@ -673,6 +680,7 @@ export class database {
     console.log('rows', id, data)
 
     if (rows && rows.rows && rows.rows.length > 0) {
+      data.dirty = 'true'
       let q = ''
       Object.keys(data).forEach(key => {
         if (data[key] !== null) {
@@ -699,7 +707,7 @@ export class database {
         throw new Error(e)
       }
     } else {
-      console.log('nope ', data);
+      console.log('nope ', data)
     }
   }
 }

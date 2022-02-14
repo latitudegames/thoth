@@ -1,5 +1,6 @@
 //@ts-ignore
 import Router from '@koa/router'
+import { roomManager } from '@latitudegames/thoth-core/src/components/roomManager'
 import { database } from '@latitudegames/thoth-core/src/connectors/database'
 import { config } from 'dotenv'
 import HttpStatus from 'http-status-codes'
@@ -16,25 +17,25 @@ export const app: Koa = new Koa()
 export const router: Router = new Router()
 
 export async function init() {
-  // async function initLoop() {
-  //   new roomManager()
-  //   const expectedServerDelta = 1000 / 60
-  //   let lastTime = 0
+  async function initLoop() {
+    new roomManager()
+    const expectedServerDelta = 1000 / 60
+    let lastTime = 0
 
-  //   // @ts-ignore
-  //   globalThis.requestAnimationFrame = f => {
-  //     const serverLoop = () => {
-  //       const now = Date.now()
-  //       if (now - lastTime >= expectedServerDelta) {
-  //         lastTime = now
-  //         f(now)
-  //       } else {
-  //         setImmediate(serverLoop)
-  //       }
-  //     }
-  //     serverLoop()
-  //   }
-  // }
+    // @ts-ignore
+    globalThis.requestAnimationFrame = f => {
+      const serverLoop = () => {
+        const now = Date.now()
+        if (now - lastTime >= expectedServerDelta) {
+          lastTime = now
+          f(now)
+        } else {
+          setImmediate(serverLoop)
+        }
+      }
+      serverLoop()
+    }
+  }
   new database()
   await database.instance.connect()
   new world()
@@ -135,9 +136,9 @@ export async function init() {
   const PORT: number = Number(process.env.AGENT_RUNNER_PORT || process.env.PORT) || 8003
 
   app.listen(PORT, '0.0.0.0', () => {
-    console.log('Server listening on: 0.0.0.0:' + PORT)
+    console.log('Agent server listening on: 0.0.0.0:' + PORT)
   })
 
-  // await initLoop()
+  await initLoop()
 }
 init()
