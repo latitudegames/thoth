@@ -1,18 +1,14 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//@ts-nocheck
-
 import axios from 'axios'
 //handles the input from a client according to a selected agent and responds
 export async function handleInput(
-  message,
-  speaker,
-  agent,
-  res,
-  clientName,
-  channelId
+  message: string | undefined,
+  speaker: string,
+  agent: string,
+  spell_handler = 'default',
+  spell_version = 'latest'
 ) {
   const response = await axios.post(
-    'http://localhost:8001/chains/default/latest',
+    `http://localhost:8001/chains/${spell_handler}/${spell_version}`,
     {
       Input: {
         message,

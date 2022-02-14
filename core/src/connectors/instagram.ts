@@ -11,11 +11,19 @@ import { getSetting } from './utils'
 
 export class instagram_client {
   agent
-  settings
+  spell_handler
+  spell_version
 
-  createInstagramClient = async (agent, settings) => {
+  createInstagramClient = async (
+    agent,
+    username,
+    password,
+    spell_version,
+    spell_handler
+  ) => {
     this.agent = agent
-    this.settings = settings
+    this.spell_version = spell_version
+    this.spell_handler = spell_handler
 
     const username = getSetting(settings, 'instagramUsername')
     const password = getSetting(settings, 'instagramPassword')
@@ -111,9 +119,8 @@ export class instagram_client {
                 pending.last_permanent_item.text,
                 pending.users[0].username,
                 agent.name,
-                null,
-                'instagram',
-                pending.last_permanent_item.item_id
+                this.spell_handler,
+                this.spell_version
               )
 
               const thread = ig.entity.directThread(chatId)
