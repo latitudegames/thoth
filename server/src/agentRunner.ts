@@ -1,5 +1,6 @@
 //@ts-ignore
 import Router from '@koa/router'
+import { roomManager } from '@latitudegames/thoth-core/src/components/roomManager'
 import { database } from '@latitudegames/thoth-core/src/connectors/database'
 import { config } from 'dotenv'
 import HttpStatus from 'http-status-codes'
