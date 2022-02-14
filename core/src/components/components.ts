@@ -41,6 +41,8 @@ import { StateWrite } from './StateWrite'
 import { StringCombiner } from './StringCombiner'
 import { StringEvaluator } from './StringEvaluator'
 import { StringProcessor } from './StringProcessor'
+import { SummarizeAndStoreFactsAboutAgent } from './SummarizeAndStoreFactsAboutAgent'
+import { SummarizeAndStoreFactsAboutSpeaker } from './SummarizeAndStoreFactsAboutSpeaker'
 import { SwitchGate } from './SwitchGate'
 import { TenseTransformer } from './TenseTransformer'
 import { TimeDetectorComponent } from './TimeDetector'
@@ -63,6 +65,10 @@ export const components = {
   fastProfanityDetector: () => new FastProfanityDetector(),
   mlGreetingDetector: () => new MLGreetingDetector(),
   mlProfanityDetector: () => new MLProfanityDetector(),
+  summarizeAndStoreFactsAboutAgent: () =>
+    new SummarizeAndStoreFactsAboutAgent(),
+  summarizeAndStoreFactsAboutSpeaker: () =>
+    new SummarizeAndStoreFactsAboutSpeaker(),
   factsStore: () => new FactsStore(),
   factsRecall: () => new FactsRecall(),
   factsCount: () => new FactsCount(),
