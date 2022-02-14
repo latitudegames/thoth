@@ -1,11 +1,10 @@
-
 import cors_proxy from 'cors-anywhere'
 
 //CORs server that is used for the web client to request an agent's image from wikipedia
 export class cors_server {
-  static getInstance
+  static getInstance: cors_server
 
-  constructor(port, host) {
+  constructor(port: number, host: string) {
     cors_server.getInstance = this
 
     cors_proxy
