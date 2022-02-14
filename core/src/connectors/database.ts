@@ -544,9 +544,7 @@ export class database {
 
   async deleteAgent(id: any) {
     const query = `DELETE FROM agents WHERE id='${id}'`
-    console.log('deleting agent', query)
     const response = await this.client.query(query)
-    console.log('response', response)
   }
 
   async addWikipediaData(agent: any, data: any) {
@@ -572,115 +570,6 @@ export class database {
 
     const rows = await this.client.query(query, values)
     return rows && rows.rows && rows.rows.length > 0
-  }
-
-  async set3dWorldUnderstandingPrompt(prompt: any) {
-    const query = 'SELECT * FROM xr_world_understanding_prompt'
-
-    const rows = await this.client.query(query)
-    if (rows && rows.rows && rows.rows.length > 0) {
-      const query2 = 'UPDATE xr_world_understanding_prompt SET _prompt=$1'
-      const values2 = [prompt]
-
-      await this.client.query(query2, values2)
-    } else {
-      const query2 =
-        'INSERT INTO xr_world_understanding_prompt(_prompt) VALUES($1)'
-      const values2 = [prompt]
-
-      await this.client.query(query2, values2)
-    }
-  }
-  async get3dWorldUnderstandingPrompt() {
-    const query = 'SELECT * FROM xr_world_understanding_prompt'
-
-    const rows = await this.client.query(query)
-    if (rows && rows.rows && rows.rows.length > 0) {
-      return rows.rows[0]._prompt
-    } else {
-      return ''
-    }
-  }
-
-  async setFactSummarizationPrompt(prompt: any) {
-    const query = 'SELECT * FROM fact_summarization_prompt'
-
-    const rows = await this.client.query(query)
-    if (rows && rows.rows && rows.rows.length > 0) {
-      const query2 = 'UPDATE fact_summarization_prompt SET _prompt=$1'
-      const values2 = [prompt]
-
-      await this.client.query(query2, values2)
-    } else {
-      const query2 = 'INSERT INTO fact_summarization_prompt(_prompt) VALUES($1)'
-      const values2 = [prompt]
-
-      await this.client.query(query2, values2)
-    }
-  }
-  async getFactSummarizationPrompt() {
-    const query = 'SELECT * FROM fact_summarization_prompt'
-
-    const rows = await this.client.query(query)
-    if (rows && rows.rows && rows.rows.length > 0) {
-      return rows.rows[0]._prompt
-    } else {
-      return ''
-    }
-  }
-
-  async setOpinionFormPrompt(prompt: any) {
-    const query = 'SELECT * FROM opinion_form_prompt'
-
-    const rows = await this.client.query(query)
-    if (rows && rows.rows && rows.rows.length > 0) {
-      const query2 = 'UPDATE opinion_form_prompt SET _prompt=$1'
-      const values2 = [prompt]
-
-      await this.client.query(query2, values2)
-    } else {
-      const query2 = 'INSERT INTO opinion_form_prompt(_prompt) VALUES($1)'
-      const values2 = [prompt]
-
-      await this.client.query(query2, values2)
-    }
-  }
-  async getOpinionFormPrompt() {
-    const query = 'SELECT * FROM opinion_form_prompt'
-
-    const rows = await this.client.query(query)
-    if (rows && rows.rows && rows.rows.length > 0) {
-      return rows.rows[0]._prompt
-    } else {
-      return ''
-    }
-  }
-
-  async setXrEngineRoomPrompt(prompt: any) {
-    const query = 'SELECT * FROM xr_engine_room_prompt'
-
-    const rows = await this.client.query(query)
-    if (rows && rows.rows && rows.rows.length > 0) {
-      const query2 = 'UPDATE xr_engine_room_prompt SET _prompt=$1'
-      const values2 = [prompt]
-
-      await this.client.query(query2, values2)
-    } else {
-      const query2 = 'INSERT INTO xr_engine_room_prompt(_prompt) VALUES($1)'
-      const values2 = [prompt]
-
-      await this.client.query(query2, values2)
-    }
-  }
-  async getXrEngineRoomPrompt() {
-    const query = 'SELECT * FROM xr_engine_room_prompt'
-
-    const rows = await this.client.query(query)
-    if (rows && rows.rows && rows.rows.length > 0) {
-      return rows.rows[0]._prompt
-    } else {
-      return ''
-    }
   }
 
   async getAgentInstances() {
