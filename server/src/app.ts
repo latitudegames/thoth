@@ -54,7 +54,6 @@ export async function init() {
   })
   await database.instance.firstInit()
   await database.instance.initData()
-  new world()
   console.log('Database synced, starting loop')
 
   process.on('unhandledRejection', (err: Error) => {

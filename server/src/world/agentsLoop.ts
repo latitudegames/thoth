@@ -1,22 +1,19 @@
 import { database } from '@latitudegames/thoth-core/src/connectors/database'
 
-const maxMSDiff = 1000
+const maxMSDiff = 5000
+let interval = 3000
 
 export function initAgentsLoop(update: Function, lateUpdate: Function) {
   const date = new Date()
-  let interval = (60 - date.getSeconds()) * 1000
-
-  setTimeout(() => {
-    setInterval(() => {
-      agentsLoop(
-        (id: number) => {
-          update(id)
-        },
-        (id: number) => {
-          lateUpdate(id)
-        }
-      )
-    }, 100 / 6)
+  setInterval(() => {
+    agentsLoop(
+      (id: number) => {
+        update(id)
+      },
+      (id: number) => {
+        lateUpdate(id)
+      }
+    )
   }, interval)
 }
 

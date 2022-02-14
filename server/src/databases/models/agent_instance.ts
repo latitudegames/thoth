@@ -7,10 +7,10 @@ export interface agent_instanceAttributes {
   personality?: string
   enabled?: boolean
   updated_at?: string
+  dirty?: boolean
   discord_enabled?: boolean
   discord_api_key?: string
   discord_spell_handler?: string
-
 }
 
 export type agent_instancePk = 'id'
@@ -45,6 +45,10 @@ export class agent_instance
           allowNull: false,
           autoIncrement: true,
           primaryKey: true,
+        },
+        dirty: {
+          type: DataTypes.BOOLEAN,
+          allowNull: true,
         },
         personality: {
           type: DataTypes.TEXT,
