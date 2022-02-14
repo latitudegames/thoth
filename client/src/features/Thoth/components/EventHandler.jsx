@@ -71,7 +71,7 @@ const EventHandler = ({ pubSub, tab }) => {
   }
 
   const createEntManager = () => {
-    createOrFocus(windowTypes.STATE_MANAGER, 'Ent Manager')
+    createOrFocus(windowTypes.ENT_MANAGER, 'Ent Manager')
   }
 
   const createPlaytest = () => {

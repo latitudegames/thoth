@@ -77,11 +77,11 @@ const Workspace = ({ tab, tabs, pubSub }) => {
         case 'stateManager':
           return <StateManager {...props} />
         case 'agentManager':
-          return <AgentManager {...props} />
+          return <AgentManager />
         case 'configManager':
-          return <ConfigManager {...props} />
+          return <ConfigManager />
         case 'entManager':
-          return <EntManager {...props} />
+          return <EntManager />
         case 'playtest':
           return <Playtest {...props} />
         case 'inspector':

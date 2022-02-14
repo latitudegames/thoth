@@ -1,15 +1,11 @@
 //@ts-ignore
-import cors from '@koa/cors'
 import Router from '@koa/router'
-import cors_server from './cors-server'
 import { database } from '@latitudegames/thoth-core/src/connectors/database'
-import roomManager from '@latitudegames/thoth-core/src/components/roomManager'
 import { config } from 'dotenv'
 import HttpStatus from 'http-status-codes'
 import Koa from 'koa'
 import koaBody from 'koa-body'
 import compose from 'koa-compose'
-import { creatorToolsDatabase } from './databases/creatorTools'
 import { routes } from './routes'
 import { Handler, Method, Middleware } from './types'
 import { world } from './world/world'
@@ -136,7 +132,7 @@ export async function init() {
     }
   })
 
-  const PORT: number = Number(process.env.AGENT_RUNNER_PORT || process.env.PORT) || 8002
+  const PORT: number = Number(process.env.AGENT_RUNNER_PORT || process.env.PORT) || 8003
 
   app.listen(PORT, '0.0.0.0', () => {
     console.log('Server listening on: 0.0.0.0:' + PORT)
