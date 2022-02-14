@@ -159,4 +159,3 @@ export async function init() {
 
   // await initLoop()
 }
-init()
