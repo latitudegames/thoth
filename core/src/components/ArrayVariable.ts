@@ -7,6 +7,7 @@ import {
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../types'
+import { BooleanControl } from '../dataControls/BooleanControl'
 import { InputControl } from '../dataControls/InputControl'
 import { arraySocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
@@ -49,8 +50,13 @@ export class ArrayVariable extends ThothComponent<InputReturn> {
       name: 'Name',
       icon: 'moon',
     })
+    const keepEmpty = new BooleanControl({
+      dataKey: 'keepEmpty',
+      name: 'Variable',
+      icon: 'moon',
+    })
 
-    node.inspector.add(_var).add(splitter).add(name)
+    node.inspector.add(_var).add(splitter).add(name).add(keepEmpty)
 
     return node.addOutput(out)
   }
@@ -63,7 +69,10 @@ export class ArrayVariable extends ThothComponent<InputReturn> {
   ) {
     const _var = node?.data?._var as string
     const splitter = node?.data?._var as string
-    const res = _var.split(splitter)
+    const keepEmpty = node?.data?.keepEmpty == 'true'
+    const res = !keepEmpty
+      ? _var.split(splitter).filter(el => el.length > 0)
+      : _var.split(splitter)
 
     this.name = node?.data?.name as string
 
