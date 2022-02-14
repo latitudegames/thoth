@@ -124,7 +124,7 @@ const executeHandler = async (ctx: Koa.Context) => {
     )
     return (ctx.body = out)
   }
-  ctx.body = await handleInput(message, speaker, agent, null, 'web', id)
+  ctx.body = await handleInput(message, speaker, agent)
 }
 
 const getPromptsHandler = async (ctx: Koa.Context) => {
@@ -356,8 +356,7 @@ export const agents: Route[] = [
     path: '/agentInstance',
     access: noAuth,
     get: getAgentInstanceHandler,
-    post: addAgentInstanceHandler,
-    delete: deleteAgentInstanceHandler,
+    post: addAgentInstanceHandler
   },
   {
     path: '/agentInstance/:id',

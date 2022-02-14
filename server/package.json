@@ -11,6 +11,7 @@
     "coverage": "jest --coverage --silent",
     "clean": "rm -rf dist",
     "dev": "nodemon index.ts",
+    "agent-runner": "nodemon src/agentRunner.ts",
     "dev:debug": "nodemon --config nodemon.json --inspect=0.0.0.0:9229 index.ts",
     "dev2": "TS_NODE_TRANSPILE_ONLY=true nodemon --watch 'src/*.ts' --exec 'ts-node' index.ts",
     "schema:refresh": "rm -rf sequelize/generated/* && node sequelize/creatorTools.js",

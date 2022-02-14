@@ -15,7 +15,7 @@ export const emptyResponse = [
   "It's a secret",
   'Some things you should figure by your self',
   'No you',
-  "I don'n know",
+  "I don't know",
 ]
 export function getRandomEmptyResponse() {
   return emptyResponse[getRandomNumber(0, emptyResponse.length - 1)]
