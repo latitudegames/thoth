@@ -85,8 +85,11 @@ const AgentManager = () => {
 
   return (
     <div className="agent-container">
-      <input type="text" ref={newAgentRef} />
-      <input className='button' type='button' value='Create' onClick={async (e) => { e.preventDefault(); await createNew(); }} />
+      <div>
+        <span className="create-agent">Create Agent</span>
+        <input type="text" ref={newAgentRef} />
+        <button className='button' type='button' onClick={async (e) => { e.preventDefault(); await createNew(); }}>Create New</button>
+      </div>
       <div>
         {!agents ? (
           <h1>Loading...</h1>
@@ -137,11 +140,11 @@ const AgentManager = () => {
               <textarea className="form-text-area" onChange={(e) => { setGreetings(e.target.value) }} value={greetings}></textarea>
             </div>
 
-            <input type='button' value='Update' onClick={(e) => { e.preventDefault(); update() }} />
-            <input type='button' value='Delete' onClick={(e) => {
+            <button value='Update' onClick={(e) => { e.preventDefault(); update() }} >Update</button>
+            <button value='Delete' onClick={(e) => {
               e.preventDefault();
               deleteAgent();
-            }} />
+            }} >Delete</button>
           </form>
         }
       </div>

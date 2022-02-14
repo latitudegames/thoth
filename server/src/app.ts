@@ -1,9 +1,7 @@
 //@ts-ignore
 import cors from '@koa/cors'
 import Router from '@koa/router'
-import cors_server from './cors-server'
 import { database } from '@latitudegames/thoth-core/src/connectors/database'
-import roomManager from '@latitudegames/thoth-core/src/components/roomManager'
 import { config } from 'dotenv'
 import HttpStatus from 'http-status-codes'
 import Koa from 'koa'
@@ -47,7 +45,7 @@ export async function init() {
   }
   app.use(cors(options))
 
-  new cors_server(process.env.CORS_PORT, '0.0.0.0')
+  // new cors_server(process.env.CORS_PORT, '0.0.0.0')
   new database()
 
   await database.instance.connect()
@@ -159,4 +157,3 @@ export async function init() {
 
   // await initLoop()
 }
-init()

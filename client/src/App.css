@@ -316,10 +316,6 @@ input[type='text'] {
   display: flex;
 }
 
-select#agents {
-  width: 200px;
-}
-
 .nav {
   width: 180px;
   float: left;
@@ -360,14 +356,13 @@ select#agents {
   margin-bottom: 0.5em;
 }
 
-.form-text-area {
+.form-text-area,
+.agent-select > select {
   width: 100%;
   box-sizing: border-box;
   padding: var(--extraSmall);
   /* not using a var here to optically correct for base + cap of typeface */
   background-color: var(--dark-2);
-  padding-left: var(--small);
-  padding-right: var(--small);
   color: #fff;
   border-radius: 4px;
   cursor: default;
@@ -388,5 +383,14 @@ select#agents {
 }
 
 .agent-container {
-  width: 95%;
+  max-width: 100%;
+  padding: 2em;
+}
+
+.agent-editor {
+  padding: 2em;
+}
+
+.form-item > input[type='text'] {
+  width: 100%;
 }
