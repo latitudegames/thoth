@@ -1,7 +1,9 @@
 import { ActionTypeComponent } from './ActionType'
 import { Alert } from './AlertMessage'
 import { ArchiveConversation } from './ArchiveConversation'
+import { ArrayVariable } from './ArrayVariable'
 import { BooleanGate } from './BooleanGate'
+import { BooleanVariable } from './BooleanVariable'
 import { Code } from './Code'
 import { ConversationCount } from './ConversationCount'
 import { ConversationRecall } from './ConversationRecall'
@@ -33,6 +35,7 @@ import { LogicalOperator } from './LogicalOperator'
 import { MLGreetingDetector } from './MLGreetingDetector'
 import { MLProfanityDetector } from './MLProfanityDetector'
 import { ModuleComponent } from './Module'
+import { NumberVariable } from './NumberVariable'
 import { OpinionAboutSpeakerGet } from './OpinionAboutSpeakerGet'
 import { OpinionAboutSpeakerSet } from './OpinionAboutSpeakerSet'
 import { Output } from './Output'
@@ -44,6 +47,7 @@ import { StateWrite } from './StateWrite'
 import { StringCombiner } from './StringCombiner'
 import { StringEvaluator } from './StringEvaluator'
 import { StringProcessor } from './StringProcessor'
+import { StringVariable } from './StringVariable'
 import { SummarizeAndStoreFactsAboutAgent } from './SummarizeAndStoreFactsAboutAgent'
 import { SummarizeAndStoreFactsAboutSpeaker } from './SummarizeAndStoreFactsAboutSpeaker'
 import { SwitchGate } from './SwitchGate'
@@ -86,6 +90,10 @@ export const components = {
   stringEvaluator: () => new StringEvaluator(),
   stringCombiner: () => new StringCombiner(),
   randomStringFromList: () => new RandomStringFromList(),
+  stringVariable: () => new StringVariable(),
+  numberVariable: () => new NumberVariable(),
+  booleanVariable: () => new BooleanVariable(),
+  arrayVariable: () => new ArrayVariable(),
   logicalOperator: () => new LogicalOperator(),
   archiveConversation: () => new ArchiveConversation(),
   generator: () => new Generator(),
