@@ -23,7 +23,7 @@ const getAgentHandler = async (ctx: Koa.Context) => {
 }
 
 const createOrUpdateAgentHandler = async (ctx: Koa.Context) => {
-  console.log("ctx.request.body is ", ctx.request.body)
+  console.log('ctx.request.body is ', ctx.request.body)
   const { agent, data } = ctx.request.body
   if (!agent || agent == undefined || agent.length <= 0) {
     return (ctx.body = { error: 'invalid agent name' })
@@ -43,7 +43,6 @@ const createOrUpdateAgentHandler = async (ctx: Koa.Context) => {
       personality: data.personality,
       greetings: data.greetings,
     })
-
   } catch (e) {
     return (ctx.body = { error: 'internal error' })
   }
@@ -52,7 +51,7 @@ const createOrUpdateAgentHandler = async (ctx: Koa.Context) => {
 }
 
 const deleteAgentHandler = async (ctx: Koa.Context) => {
-  console.log("params is", ctx.params)
+  console.log('params is', ctx.params)
   const { id } = ctx.params
   return (ctx.body = await database.instance.deleteAgent(id))
 }
@@ -74,7 +73,7 @@ const addConfigHandler = async (ctx: Koa.Context) => {
 }
 
 const updateConfigHandler = async (ctx: Koa.Context) => {
-  console.log("updateConfigHandler", ctx.request.body)
+  console.log('updateConfigHandler', ctx.request.body)
   const data = ctx.request.body.config
   try {
     // TODO: build string and set multiple configs at once
@@ -91,7 +90,7 @@ const updateConfigHandler = async (ctx: Koa.Context) => {
 
 const deleteConfigHandler = async (ctx: Koa.Context) => {
   const { id } = ctx.params
-  console.log("delete data is ", id);
+  console.log('delete data is ', id)
   try {
     await database.instance.deleteConfig(id)
     ctx.body = 'ok'
@@ -128,7 +127,7 @@ const executeHandler = async (ctx: Koa.Context) => {
 }
 
 const getPromptsHandler = async (ctx: Koa.Context) => {
-  const config = await database.instance.getConfig() as any;
+  const config = (await database.instance.getConfig()) as any
   try {
     const data = {
       xr_world: config['xr_world'],
@@ -146,7 +145,7 @@ const getPromptsHandler = async (ctx: Koa.Context) => {
 
 const addPromptsHandler = async (ctx: Koa.Context) => {
   const data = ctx.request.body.data
-  console.log("addPromptsHandler", ctx.request.body)
+  console.log('addPromptsHandler', ctx.request.body)
 
   try {
     // TODO: Combine me!
@@ -218,8 +217,11 @@ const addAgentInstanceHandler = async (ctx: Koa.Context) => {
   }
 
   try {
-    console.log("updated agent database with", data)
-    return ctx.body = await database.instance.updateAgentInstances(instanceId, data)
+    console.log('updated agent database with', data)
+    return (ctx.body = await database.instance.updateAgentInstances(
+      instanceId,
+      data
+    ))
   } catch (e) {
     console.error(e)
     return (ctx.body = { error: 'internal error' })
@@ -228,7 +230,7 @@ const addAgentInstanceHandler = async (ctx: Koa.Context) => {
 
 const deleteAgentInstanceHandler = async (ctx: Koa.Context) => {
   const { id } = ctx.params
-  console.log("deleteAgentInstanceHandler", deleteAgentInstanceHandler)
+  console.log('deleteAgentInstanceHandler', deleteAgentInstanceHandler)
   ctx.body = await database.instance.deleteAgentInstance(id)
 }
 
@@ -305,6 +307,30 @@ const getConversationCount = async (ctx: Koa.Context) => {
   return (ctx.body = conversation.length)
 }
 
+const getRelationshipMatrix = async (ctx: Koa.Context) => {
+  const agent = ctx.request.query.agent
+  const speaker = ctx.request.query.speaker
+
+  try {
+    const matrix = database.instance.getRelationshipMatrix(speaker, agent)
+    return (ctx.body = matrix)
+  } catch (e) {
+    return (ctx.body = { error: 'internal error' })
+  }
+}
+const setRelationshipMatrix = async (ctx: Koa.Context) => {
+  const agent = ctx.request.body.agent
+  const speaker = ctx.request.body.speaker
+  const matrix = ctx.request.body.matrix
+
+  try {
+    database.instance.setRelationshipMatrix(speaker, agent, matrix)
+    return (ctx.body = 'ok')
+  } catch (e) {
+    return (ctx.body = { error: 'internal error' })
+  }
+}
+
 export const agents: Route[] = [
   {
     path: '/agents',
@@ -329,7 +355,7 @@ export const agents: Route[] = [
     access: noAuth,
     get: getConfigHandler,
     post: addConfigHandler,
-    put: updateConfigHandler
+    put: updateConfigHandler,
   },
   {
     path: '/config/:id',
@@ -356,7 +382,7 @@ export const agents: Route[] = [
     path: '/agentInstance',
     access: noAuth,
     get: getAgentInstanceHandler,
-    post: addAgentInstanceHandler
+    post: addAgentInstanceHandler,
   },
   {
     path: '/agentInstance/:id',
@@ -384,5 +410,11 @@ export const agents: Route[] = [
     path: '/conversation_count',
     access: noAuth,
     get: getConversationCount,
+  },
+  {
+    path: 'relationship_matrix',
+    access: noAuth,
+    get: getRelationshipMatrix,
+    post: setRelationshipMatrix,
   },
 ]
