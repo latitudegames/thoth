@@ -14,7 +14,7 @@ import { EngineContext } from '../engine'
 import { triggerSocket, stringSocket, anySocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 
-const info = 'Facts Recall is used to get facts for an agent and user'
+const info = 'Summarize And Store Facts About Agent'
 
 const fewshot = ``
 

@@ -22,6 +22,7 @@ import { FastGreetingDetector } from './FastGreetingDetector'
 import { FastProfanityDetector } from './FastProfanityDetector'
 import { FastQuestionDetector } from './FastQuestionDetector'
 import { ForEach } from './ForEach'
+import { FormOpinionAboutSpeaker } from './FormOpinionAboutSpeaker'
 import { Generator } from './Generator'
 import { HuggingfaceComponent } from './Huggingface'
 import { InputComponent } from './Input'
@@ -32,6 +33,8 @@ import { LogicalOperator } from './LogicalOperator'
 import { MLGreetingDetector } from './MLGreetingDetector'
 import { MLProfanityDetector } from './MLProfanityDetector'
 import { ModuleComponent } from './Module'
+import { OpinionAboutSpeakerGet } from './OpinionAboutSpeakerGet'
+import { OpinionAboutSpeakerSet } from './OpinionAboutSpeakerSet'
 import { Output } from './Output'
 import { ProseToScript } from './ProseToScript'
 import { RandomStringFromList } from './RandomStringFromList'
@@ -76,6 +79,9 @@ export const components = {
   conversationStore: () => new ConversationStore(),
   conversationRecall: () => new ConversationRecall(),
   conversationCount: () => new ConversationCount(),
+  formOpinionAboutSpeaker: () => new FormOpinionAboutSpeaker(),
+  opinionAboutSpeakerSet: () => new OpinionAboutSpeakerSet(),
+  opinionAboutSpeakerGet: () => new OpinionAboutSpeakerGet(),
   forEach: () => new ForEach(),
   stringEvaluator: () => new StringEvaluator(),
   stringCombiner: () => new StringCombiner(),
