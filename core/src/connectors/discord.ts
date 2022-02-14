@@ -663,9 +663,7 @@ export class discord_client {
 
     const oldResponse = this.getResponse(channel.id, id)
     if (oldResponse === undefined) {
-      await channel.messages.fetch(id).then(async msg => {
-
-      })
+      await channel.messages.fetch(id).then(async msg => { })
       log('message not found')
       return
     }
@@ -1410,14 +1408,15 @@ export class discord_client {
     this.messageEvent = new EventEmitter()
     this.messageEvent.on(
       'new_message',
-      async function (ds, responses, addPing, channel, message) {
-        log('response: ' + responses)
+      async function (ds, response, addPing, channel, message) {
+        const responseMessage = response.message
+        log('response: ' + JSON.stringify(responseMessage))
         if (
-          responses !== undefined &&
-          responses.length <= 2000 &&
-          responses.length > 0
+          responseMessage !== undefined &&
+          responseMessage.length <= 2000 &&
+          responseMessage.length > 0
         ) {
-          let text = ds.replacePlaceholders(responses)
+          let text = ds.replacePlaceholders(responseMessage)
           if (addPing) {
             message
               .reply(text)
@@ -1440,8 +1439,8 @@ export class discord_client {
               })
               .catch(console.error)
           }
-        } else if (responses && responses.length >= 2000) {
-          let text = replacePlaceholders(responses)
+        } else if (responseMessage && responseMessage.length >= 2000) {
+          let text = replacePlaceholders(responseMessage)
           if (addPing) {
             message.reply(text).then(async function (msg) {
               ds.onMessageResponseUpdated(channel.id, message.id, msg.id)
