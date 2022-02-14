@@ -18,6 +18,8 @@ const windowTypes = {
   INSPECTOR: 'inspector',
   STATE_MANAGER: 'stateManager',
   AGENT_MANAGER: 'agentManager',
+  CONFIG_MANAGER: 'configManager',
+  ENT_MANAGER: 'entManager',
   EDITOR: 'editor',
   PLAYTEST: 'playtest',
 }

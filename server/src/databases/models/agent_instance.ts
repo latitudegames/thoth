@@ -16,8 +16,9 @@ export interface agent_instanceAttributes {
 export type agent_instancePk = 'id'
 export type agent_instanceId = agent_instance[agent_instancePk]
 export type agent_instanceOptionalAttributes =
-  | 'id'
-  | 'personality'
+  | 'discord_enabled'
+  | 'discord_api_key'
+  | 'discord_spell_handler'
   | 'enabled'
   | 'updated_at'
 export type agent_instanceCreationAttributes = Optional<
