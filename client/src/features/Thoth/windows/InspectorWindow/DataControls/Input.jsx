@@ -9,20 +9,13 @@ const Input = ({ control, updateData, initialValue }) => {
   const onChange = e => {
     if (type === 'number') {
       try {
-        const number =
-          e.target.value.includes('.') || e.target.value.includes(',')
-            ? parseFloat(e.target.value)
-            : parseInt(e.target.value)
+        const number = parseFloat(e.target.value.replace(/[^\d.-]/g, ''))
         setValue(number || 0)
         updateData({ [dataKey]: number || 0 })
       } catch (e) {
         setValue(0)
         updateData({ [dataKey]: 0 })
       }
-    } else if (type === 'boolean') {
-      const boolean = e.target.value == '1'
-      setValue(boolean)
-      updateData({ [dataKey]: boolean })
     } else if (type === 'array') {
       const data = e.target.value.split(',')
       if (data.length > 0) {
@@ -46,12 +39,26 @@ const Input = ({ control, updateData, initialValue }) => {
 
   return (
     <div style={{ flex: 1, display: 'flex' }}>
-      <InputComponent
-        style={{ flex: 6 }}
-        value={value}
-        type="text"
-        onChange={onChange}
-      />
+      {type !== 'boolean' ? (
+        <InputComponent
+          style={{ flex: 6 }}
+          value={value}
+          type="text"
+          onChange={onChange}
+        />
+      ) : (
+        <div>
+          <input
+            type="checkbox"
+            defaultChecked={false}
+            onChange={e => {
+              const boolean = e.target.checked
+              setValue(boolean)
+              updateData({ [dataKey]: boolean })
+            }}
+          />
+        </div>
+      )}
     </div>
   )
 }
