@@ -36,7 +36,7 @@ export class BooleanVariable extends ThothComponent<InputReturn> {
   builder(node: ThothNode) {
     const out = new Rete.Output('output', 'output', booleanSocket)
     const _var = new BooleanControl({
-      dataKey: 'var',
+      dataKey: '_var',
       name: 'Variable',
       icon: 'moon',
     })
@@ -46,7 +46,7 @@ export class BooleanVariable extends ThothComponent<InputReturn> {
       icon: 'moon',
     })
 
-    node.inspector.add(_var).add(name)
+    node.inspector.add(name).add(_var)
 
     return node.addOutput(out)
   }
@@ -59,7 +59,7 @@ export class BooleanVariable extends ThothComponent<InputReturn> {
   ) {
     const _var = node?.data?._var == 'true'
 
-    this.name = node?.data?.name as string
+    this.name = (node?.data?.name as string) + ' - ' + _var
 
     return {
       output: _var,

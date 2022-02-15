@@ -36,7 +36,7 @@ export class NumberVariable extends ThothComponent<InputReturn> {
   builder(node: ThothNode) {
     const out = new Rete.Output('output', 'output', numSocket)
     const _var = new NumberControl({
-      dataKey: 'var',
+      dataKey: '_var',
       name: 'Variable',
       icon: 'moon',
     })
@@ -46,7 +46,7 @@ export class NumberVariable extends ThothComponent<InputReturn> {
       icon: 'moon',
     })
 
-    node.inspector.add(_var).add(name)
+    node.inspector.add(name).add(_var)
 
     return node.addOutput(out)
   }
@@ -59,7 +59,7 @@ export class NumberVariable extends ThothComponent<InputReturn> {
   ) {
     const _var = node?.data?._var as number
 
-    this.name = node?.data?.name as string
+    this.name = (node?.data?.name as string) + ' - ' + _var
 
     return {
       output: _var,

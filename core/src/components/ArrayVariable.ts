@@ -36,7 +36,7 @@ export class ArrayVariable extends ThothComponent<InputReturn> {
   builder(node: ThothNode) {
     const out = new Rete.Output('output', 'output', arraySocket)
     const _var = new InputControl({
-      dataKey: 'var',
+      dataKey: '_var',
       name: 'Variable',
       icon: 'moon',
     })
@@ -56,7 +56,7 @@ export class ArrayVariable extends ThothComponent<InputReturn> {
       icon: 'moon',
     })
 
-    node.inspector.add(_var).add(splitter).add(name).add(keepEmpty)
+    node.inspector.add(name).add(_var).add(splitter).add(keepEmpty)
 
     return node.addOutput(out)
   }
@@ -74,7 +74,7 @@ export class ArrayVariable extends ThothComponent<InputReturn> {
       ? _var.split(splitter).filter(el => el.length > 0)
       : _var.split(splitter)
 
-    this.name = node?.data?.name as string
+    this.name = (node?.data?.name as string) + ' - ' + _var
 
     return {
       output: res,
