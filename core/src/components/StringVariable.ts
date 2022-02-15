@@ -35,7 +35,7 @@ export class StringVariable extends ThothComponent<InputReturn> {
   builder(node: ThothNode) {
     const out = new Rete.Output('output', 'output', stringSocket)
     const _var = new InputControl({
-      dataKey: 'var',
+      dataKey: '_var',
       name: 'Variable',
       icon: 'moon',
     })
@@ -45,7 +45,7 @@ export class StringVariable extends ThothComponent<InputReturn> {
       icon: 'moon',
     })
 
-    node.inspector.add(_var).add(name)
+    node.inspector.add(name).add(_var)
 
     return node.addOutput(out)
   }
@@ -58,7 +58,7 @@ export class StringVariable extends ThothComponent<InputReturn> {
   ) {
     const _var = node?.data?._var as string
 
-    this.name = node?.data?.name as string
+    this.name = (node?.data?.name as string) + ' - ' + _var
 
     return {
       output: _var,
