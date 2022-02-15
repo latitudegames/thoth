@@ -80,7 +80,26 @@ export class OpinionAboutSpeakerGet extends ThothComponent<
 
     return {
       output: action as string,
-      matrix: matrix,
+      matrix:
+        matrix.length > 0 && matrix !== 'internal error'
+          ? matrix
+          : JSON.stringify({
+              Enemy: 0,
+              Friend: 0,
+              Student: 0,
+              Teacher: 0,
+              Repulsed: 0,
+              Attracted: 0,
+              Honest: 0,
+              Manipulative: 0,
+
+              EnemyLimit: 1,
+              FriendLimit: 1,
+              StudentLimit: 1,
+              TeacherLimit: 1,
+              RepulsedLimit: 1,
+              AttractedLimit: 1,
+            }),
     }
   }
 }
