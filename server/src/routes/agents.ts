@@ -412,7 +412,7 @@ export const agents: Route[] = [
     get: getConversationCount,
   },
   {
-    path: 'relationship_matrix',
+    path: '/relationship_matrix',
     access: noAuth,
     get: getRelationshipMatrix,
     post: setRelationshipMatrix,
