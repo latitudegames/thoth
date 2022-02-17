@@ -112,6 +112,10 @@ const executeHandler = async (ctx: Koa.Context) => {
       out = await createWikipediaAgent('Speaker', agent, '', '')
     }
 
+    if (out === undefined) {
+      out = {}
+    }
+
     out.defaultGreeting = await msg
     database.instance.setConversation(
       agent,

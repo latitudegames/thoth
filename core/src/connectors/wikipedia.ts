@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-console */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
@@ -48,8 +50,6 @@ export async function createWikipediaAgent(speaker, name, personality, facts) {
     const factPrompt = factSourcePrompt + out.result.extract + '\n' + facts
 
     const personalitySourcePrompt = `Based on the above facts, the following is a description of the personality of an anthropomorphized ${name}:`
-
-    database.instance.setDefaultNeedsAndMotivations(name)
 
     stop = Date.now()
     console.log(
@@ -129,7 +129,7 @@ export async function createWikipediaAgent(speaker, name, personality, facts) {
     await database.instance.updateAgent(name, {
       dialog: dialogPrompt + (await res).choice?.text,
       personality:
-        personalitySourcePrompt + '\n' + personality + '\n' + res.choice.text,
+        personalitySourcePrompt + '\n' + personality + '\n' + res.choice?.text,
       facts: factPrompt,
     })
     stop = Date.now()
