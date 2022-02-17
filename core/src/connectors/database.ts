@@ -57,7 +57,7 @@ export class database {
     const kv = [
       {
         key: 'openai_api_key',
-        value: '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',
+        value: '',
       },
       { key: 'google_project_id', value: '' },
       { key: 'hf_api_token', value: '' },
