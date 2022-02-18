@@ -10,6 +10,7 @@ import compose from 'koa-compose'
 import { creatorToolsDatabase } from './databases/creatorTools'
 import { routes } from './routes'
 import { Handler, Method, Middleware } from './types'
+import { initSpeechServer } from './utils/googleSpeechToText'
 import { world } from './world/world'
 
 config({ path: '.env' })
@@ -40,6 +41,7 @@ export async function init() {
 
   // required for some current consumers (i.e Thoth)
   // to-do: standardize an allowed origin list based on env values or another source of truth?
+  initSpeechServer()
   const options = {
     origin: '*',
   }

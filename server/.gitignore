@@ -16,3 +16,4 @@ coverage
 
 # Snyk
 .dccache
+google_credentials.json
