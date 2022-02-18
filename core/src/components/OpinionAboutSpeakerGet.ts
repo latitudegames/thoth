@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable require-await */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import axios from 'axios'
 import Rete from 'rete'
 
 import {
@@ -9,53 +10,51 @@ import {
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../types'
-import { FewshotControl } from '../dataControls/FewshotControl'
 import { EngineContext } from '../engine'
 import { triggerSocket, stringSocket, anySocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 
-const info = 'Summarize And Store Facts About Speaker'
-
-const fewshot = ``
+const info = 'Opinion About Speaker Get'
 
 type InputReturn = {
   output: unknown
-  facts: unknown
+  matrix: unknown
 }
 
-export class SummarizeAndStoreFactsAboutSpeaker extends ThothComponent<
+export async function getMatrix(agent: string, speaker: string) {
+  const response = await axios.get(
+    `${process.env.REACT_APP_API_URL}/relationship_matrix?agent=${agent}&speaker=${speaker}`
+  )
+  return response.data
+}
+
+export class OpinionAboutSpeakerGet extends ThothComponent<
   Promise<InputReturn>
 > {
   constructor() {
-    super('Summarize And Store Facts About Speaker')
+    super('Opinion About Speaker Get')
 
     this.task = {
       outputs: {
         output: 'output',
-        facts: 'output',
+        matrix: 'output',
         trigger: 'option',
       },
     }
 
-    this.category = 'AI/ML'
+    this.category = 'Database'
     this.display = true
     this.info = info
   }
 
   builder(node: ThothNode) {
-    node.data.fewshot = fewshot
-
     const agentInput = new Rete.Input('agent', 'Agent', stringSocket)
     const speakerInput = new Rete.Input('speaker', 'Speaker', stringSocket)
     const out = new Rete.Output('output', 'Input String', anySocket)
     const inp = new Rete.Input('string', 'Input String', stringSocket)
-    const factsOut = new Rete.Output('facts', 'Output', stringSocket)
+    const matrixOut = new Rete.Output('matrix', 'Output', stringSocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
-
-    const fewshotControl = new FewshotControl({})
-
-    node.inspector.add(fewshotControl)
 
     return node
       .addInput(inp)
@@ -64,7 +63,7 @@ export class SummarizeAndStoreFactsAboutSpeaker extends ThothComponent<
       .addInput(speakerInput)
       .addOutput(dataOutput)
       .addOutput(out)
-      .addOutput(factsOut)
+      .addOutput(matrixOut)
   }
 
   async worker(
@@ -73,34 +72,34 @@ export class SummarizeAndStoreFactsAboutSpeaker extends ThothComponent<
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    const { completion } = thoth
     const speaker = inputs['speaker'][0] as string
     const agent = inputs['agent'][0] as string
     const action = inputs['string'][0]
-    const prompt = node.data.fewshot as string
 
-    const p = prompt
-      .replace('\n\n', '\n')
-      .replace('$speaker', speaker)
-      .replace('$agent', agent)
-      .replace('$example', action as string)
-
-    const body = {
-      p,
-      temperature: 0.3,
-      max_tokens: 20,
-      top_p: 1,
-      frequency_penalty: 0.0,
-      presence_penalty: 0.0,
-      stop: ['"""', '\n'],
-    }
-    const raw = (await completion(body)) as string
-    const result = raw?.trim()
-    if (!silent) node.display(result)
+    const matrix = await getMatrix(agent, speaker)
 
     return {
       output: action as string,
-      facts: result,
+      matrix:
+        matrix.length > 0 && matrix !== 'internal error'
+          ? matrix
+          : JSON.stringify({
+              Enemy: 0,
+              Friend: 0,
+              Student: 0,
+              Teacher: 0,
+              Repulsed: 0,
+              Attracted: 0,
+              Honest: 0,
+              Manipulative: 0,
+
+              EnemyLimit: 1,
+              FriendLimit: 1,
+              StudentLimit: 1,
+              TeacherLimit: 1,
+              RepulsedLimit: 1,
+              AttractedLimit: 1,
+            }),
     }
   }
 }

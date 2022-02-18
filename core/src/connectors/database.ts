@@ -39,8 +39,8 @@ export class database {
       host: process.env.PGHOST,
       ssl: process.env.PGSSL
         ? {
-          rejectUnauthorized: false,
-        }
+            rejectUnauthorized: false,
+          }
         : false,
     })
     this.client.connect()
@@ -55,7 +55,10 @@ export class database {
     const id = new idGenerator()
 
     const kv = [
-      { key: 'openai_api_key', value: '' },
+      {
+        key: 'openai_api_key',
+        value: '',
+      },
       { key: 'google_project_id', value: '' },
       { key: 'hf_api_token', value: '' },
       { key: 'use_gptj', value: '' },
@@ -132,14 +135,14 @@ export class database {
     const configs = {}
     const query = 'SELECT * FROM config'
 
-    const rows = (await this.client.query(query)).rows
+    const rows = await this.client.query(query)
     if (rows && rows.rows && rows.rows.length > 0) {
       for (let i = 0; i < rows.rows.length; i++) {
         configs[rows.rows[i].key] = rows.rows[i].value
       }
     }
 
-    return rows
+    return configs
   }
 
   //updates a config value
@@ -548,7 +551,7 @@ export class database {
   }
 
   async addWikipediaData(agent: any, data: any) {
-    const query = 'INSERT INTO wikipedia(agent, _data) VALUES($1, $2)'
+    const query = 'INSERT INTO wikipedia(agent, data) VALUES($1, $2)'
     const values = [agent, data]
 
     await this.client.query(query, values)
@@ -559,7 +562,7 @@ export class database {
 
     const rows = await this.client.query(query, values)
     if (rows && rows.rows && rows.rows.length > 0) {
-      return rows.rows[0]._data
+      return rows.rows[0].data
     } else {
       return ''
     }
