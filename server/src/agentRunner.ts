@@ -133,12 +133,8 @@ export async function init() {
     }
   })
 
-<<<<<<< HEAD
-  const PORT: number = Number(process.env.AGENT_RUNNER_PORT || process.env.PORT) || 8003
-=======
   const PORT: number =
     Number(process.env.AGENT_RUNNER_PORT || process.env.PORT) || 8002
->>>>>>> 2f40492eecc6778500ac181c2d1e3e74f85d345f
 
   app.listen(PORT, '0.0.0.0', () => {
     console.log('Agent server listening on: 0.0.0.0:' + PORT)
