@@ -1,94 +1,145 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//@ts-nocheck
+/* eslint-disable no-console */
+/* eslint-disable require-await */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import Rete from 'rete'
 
-import { database } from '../connectors/database'
-import { makeModelRequest } from './makeModelRequest'
+import {
+  NodeData,
+  ThothNode,
+  ThothWorkerInputs,
+  ThothWorkerOutputs,
+} from '../../types'
+import { FewshotControl } from '../dataControls/FewshotControl'
+import { EngineContext } from '../engine'
+import { triggerSocket, stringSocket, anySocket } from '../sockets'
+import { ThothComponent } from '../thoth-component'
 
-export async function readRelationshipMatrix(speaker: any, agent: any) {
-  // Check if we have an opinion yet
-  // If not, form one and save the file
-  // Read personality
-  const relationshipMatrix = await database.instance.getRelationshipMatrix(
-    speaker,
-    agent
-  )
+const info = 'Form Opinion About Speaker'
 
-  if (!relationshipMatrix)
-    return {
-      Enemy: 0,
-      Friend: 0,
-      Student: 0,
-      Teacher: 0,
-      Repulsed: 0,
-      Attracted: 0,
-      Honest: 0,
-      Manipulative: 0,
+const fewshot = `Enemy
+Friend
+Student
+Teacher
+Repulsed
+Attracted
+Honest
+Manipulative`
 
-      EnemyLimit: 1,
-      FriendLimit: 1,
-      StudentLimit: 1,
-      TeacherLimit: 1,
-      RepulsedLimit: 1,
-      AttractedLimit: 1,
+type InputReturn = {
+  output: unknown
+  matrix: unknown
+}
+
+export class FormOpinionAboutSpeaker extends ThothComponent<
+  Promise<InputReturn>
+> {
+  constructor() {
+    super('Form Opinion About Speaker')
+
+    this.task = {
+      outputs: {
+        output: 'output',
+        matrix: 'output',
+        trigger: 'option',
+      },
     }
 
-  return relationshipMatrix
-}
-
-async function writeRelationshipMatrix(speaker, agent, updateMatrix) {
-  await database.instance.setRelationshipMatrix(speaker, agent, updateMatrix)
-}
-
-export function sigmoid(x) {
-  return 1 / (1 + Math.exp(-x))
-}
-
-export async function formOpinionAboutSpeaker(speaker, agent, inputs) {
-  const relationshipMatrix = await readRelationshipMatrix(speaker, agent)
-
-  const alpha = 0.01 // how much better or worse does the bot start to feel about someone?
-
-  const decay = 0.001 // Decay rate of relationships as you chat with agent
-
-  const parameters = {
-    candidate_labels: [
-      'Enemy',
-      'Friend',
-      'Student',
-      'Teacher',
-      'Repulsed',
-      'Attracted',
-      'Honest',
-      'Manipulative',
-    ],
+    this.category = 'AI/ML'
+    this.display = true
+    this.info = info
   }
 
-  // 1. Send hugging face request and get response
-  const result = await makeModelRequest(
-    inputs,
-    'facebook/bart-large-mnli',
-    parameters
-  )
+  builder(node: ThothNode) {
+    node.data.fewshot = fewshot
 
-  // 2. for each key in response
-  // multiply value by sigmoid, then by alpha, then subtract decay
-  // 3. add to current relationship matrix
-  const resultMatrix = {}
-  for (let i = 0; i < result.labels.length; i++) {
-    resultMatrix[result.labels[i]] = result.scores[0]
+    const out = new Rete.Output('output', 'Input String', anySocket)
+    const inp = new Rete.Input('string', 'Input String', stringSocket)
+    const inpMatrix = new Rete.Input('matrix', 'Input Matrix', stringSocket)
+    const matrixOut = new Rete.Output('matrix', 'Output', stringSocket)
+    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
+    const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
+
+    const fewshotControl = new FewshotControl({})
+
+    node.inspector.add(fewshotControl)
+
+    return node
+      .addInput(inp)
+      .addInput(inpMatrix)
+      .addInput(dataInput)
+      .addOutput(dataOutput)
+      .addOutput(out)
+      .addOutput(matrixOut)
   }
 
-  for (const key of Object.keys(resultMatrix)) {
-    relationshipMatrix[key] = Math.max(
-      0,
-      relationshipMatrix[key] + sigmoid(resultMatrix[key]) * alpha - decay
+  async worker(
+    node: NodeData,
+    inputs: ThothWorkerInputs,
+    outputs: ThothWorkerOutputs,
+    { silent, thoth }: { silent: boolean; thoth: EngineContext }
+  ) {
+    const matrix = inputs['matrix'][0] as string
+    const action = inputs['string'][0]
+    const params = node.data.fewshot as string
+
+    const _matrix =
+      matrix.length <= 0 || matrix === 'internal error'
+        ? {
+            Enemy: 0,
+            Friend: 0,
+            Student: 0,
+            Teacher: 0,
+            Repulsed: 0,
+            Attracted: 0,
+            Honest: 0,
+            Manipulative: 0,
+
+            EnemyLimit: 1,
+            FriendLimit: 1,
+            StudentLimit: 1,
+            TeacherLimit: 1,
+            RepulsedLimit: 1,
+            AttractedLimit: 1,
+          }
+        : JSON.parse(matrix)
+
+    const alpha = 0.01 // how much better or worse does the bot start to feel about someone?
+
+    const decay = 0.001 // Decay rate of relationships as you chat with agent
+
+    const parameters = params.split('\n').filter(function (el) {
+      return el.length > 0
+    })
+    const _parameters = { candidate_labels: parameters }
+
+    const result: any = await thoth.huggingface(
+      'facebook/bart-large-mnli',
+      JSON.stringify({
+        inputs: action as string,
+        parameters: _parameters,
+        options: undefined,
+      })
     )
-  }
 
-  // 4. store result in database
-  await writeRelationshipMatrix(
-    speaker,
-    agent,
-    JSON.stringify(relationshipMatrix)
-  )
+    const resultMatrix: { [key: string]: any } = {}
+    for (let i = 0; i < result.labels.length; i++) {
+      resultMatrix[result.labels[i]] = result.scores[0]
+    }
+
+    for (const key of Object.keys(resultMatrix)) {
+      _matrix[key] = Math.max(
+        0,
+        _matrix[key] + sigmoid(_matrix[key]) * alpha - decay
+      )
+    }
+
+    return {
+      output: action as string,
+      matrix: JSON.stringify(_matrix),
+    }
+  }
+}
+
+function sigmoid(x: number) {
+  return 1 / (1 + Math.exp(-x))
 }

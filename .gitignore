@@ -12,3 +12,5 @@ build
 core/src/plugins/areaPlugin/style.css.d.ts
 yarn-error.log
 client/.env
+server/.env
+core/.env
