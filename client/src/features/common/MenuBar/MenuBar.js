@@ -134,6 +134,20 @@ const MenuBar = () => {
     [onNew]
   )
 
+  const nonLatitudeMenuBarItems = (process.env.USE_LATITUDE_API === "true") ? {
+    agent_manager: {
+      onClick: onAgentManagerCreate,
+    },
+    ent_manager: {
+      onClick: onEntManagerCreate,
+    },
+    config_manager: {
+      onClick: onConfigManagerCreate,
+    }
+  } : {}
+
+  console.log("nonLatitudeMenuBarItems, ", nonLatitudeMenuBarItems);
+
   //Menu bar entries
   const menuBarItems = {
     file: {
@@ -190,15 +204,7 @@ const MenuBar = () => {
             state_manager: {
               onClick: onStateManagerCreate,
             },
-            agent_manager: {
-              onClick: onAgentManagerCreate,
-            },
-            ent_manager: {
-              onClick: onEntManagerCreate,
-            },
-            config_manager: {
-              onClick: onConfigManagerCreate,
-            },
+            ...nonLatitudeMenuBarItems,
             playtest: {
               onClick: onPlaytestCreate,
             },
