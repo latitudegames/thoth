@@ -21,6 +21,10 @@ const request = {
 }
 
 export async function initSpeechServer() {
+  if (process.env.ENABLE_SPEECH_SERVER === 'false') {
+    return
+  }
+
   const io = new Server(parseInt(process.env.SPEECH_SERVER_PORT as string), {
     cors: { origin: '*', methods: ['GET', 'POST'] },
   })
