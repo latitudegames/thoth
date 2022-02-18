@@ -53,6 +53,8 @@
     "@google-cloud/speech": "^4.10.0",
     "@google-cloud/text-to-speech": "^3.4.0",
     "compromise": "^13.11.4",
-    "compromise-sentences": "^0.3.0"
+    "compromise-sentences": "^0.3.0",
+    "socket.io": "^4.4.1",
+    "socket.io-client": "^4.4.1"
   }
 }

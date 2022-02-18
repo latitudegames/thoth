@@ -3,9 +3,9 @@ import PubSub from 'pubsub-js'
 import { useContext, createContext } from 'react'
 
 const Context = createContext({
-  publish: (_event, _data) => { },
-  subscribe: (_event, _callback) => { },
-  PubSub: () => { },
+  publish: (_event, _data) => {},
+  subscribe: (_event, _callback) => {},
+  PubSub: () => {},
   events: {},
 })
 
