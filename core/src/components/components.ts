@@ -52,6 +52,7 @@ import { SummarizeAndStoreFactsAboutAgent } from './SummarizeAndStoreFactsAboutA
 import { SummarizeAndStoreFactsAboutSpeaker } from './SummarizeAndStoreFactsAboutSpeaker'
 import { SwitchGate } from './SwitchGate'
 import { TenseTransformer } from './TenseTransformer'
+import { TextToSpeech } from './TextToSpeech'
 import { TimeDetectorComponent } from './TimeDetector'
 import { TriggerIn } from './TriggerIn'
 import { TriggerOut } from './TriggerOut'
@@ -77,6 +78,7 @@ export const components = {
     new SummarizeAndStoreFactsAboutAgent(),
   summarizeAndStoreFactsAboutSpeaker: () =>
     new SummarizeAndStoreFactsAboutSpeaker(),
+  textToSpeech: () => new TextToSpeech(),
   factsStore: () => new FactsStore(),
   factsRecall: () => new FactsRecall(),
   factsCount: () => new FactsCount(),
