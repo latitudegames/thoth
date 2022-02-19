@@ -5,6 +5,7 @@ import Koa from 'koa'
 import 'regenerator-runtime/runtime'
 import { noAuth } from '../middleware/auth'
 import { Route } from '../types'
+import axios from 'axios'
 
 export const modules: Record<string, unknown> = {}
 
@@ -334,6 +335,39 @@ const setRelationshipMatrix = async (ctx: Koa.Context) => {
     return (ctx.body = { error: 'internal error' })
   }
 }
+const getSpeechToText = async (ctx: Koa.Context) => {
+  const text = ctx.request.query.text
+  const character = ctx.request.query.character
+
+  const speackResp = await axios.post(
+    `https://api.uberduck.ai/speak`,
+    {
+      speech: text,
+      voice: character,
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+      auth: {
+        username: process.env.UBER_DUCK_KEY as string,
+        password: process.env.UBER_DUCK_SECRET_KEY as string,
+      },
+    }
+  )
+
+  const audioResponse = await axios.get(
+    'https://api.uberduck.ai/speak-status',
+    {
+      params: {
+        uuid: speackResp.data.uuid,
+      },
+    }
+  )
+
+  return (ctx.body = audioResponse.data)
+}
 
 export const agents: Route[] = [
   {
@@ -420,5 +454,10 @@ export const agents: Route[] = [
     access: noAuth,
     get: getRelationshipMatrix,
     post: setRelationshipMatrix,
+  },
+  {
+    path: '/speech_to_text',
+    access: noAuth,
+    get: getSpeechToText,
   },
 ]
