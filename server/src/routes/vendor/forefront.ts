@@ -3,9 +3,9 @@ import { performance } from 'perf_hooks'
 import { post } from 'request-promise'
 
 // import { eventsDatabase } from '../../../databases/events'
-import { CustomError } from '../../../utils/CustomError'
-import { CompletionContext } from '../../../utils/modelRequest'
-import { ModelCompletionOpts } from '../openai/openai'
+import { CustomError } from '../../utils/CustomError'
+import { CompletionContext } from '../../utils/modelRequest'
+import { ModelCompletionOpts } from './openai'
 
 const FOREFRONT_AUTH = `Bearer ${process.env.FOREFRONT_KEY}`
 
@@ -84,7 +84,11 @@ export const forefront = async (
   if (!result) {
     return null
   }
-  return { ...result, durationMs, /* modelRequestId: modelRequest?.id, */ prompt }
+  return {
+    ...result,
+    durationMs,
+    /* modelRequestId: modelRequest?.id, */ prompt,
+  }
 }
 
 export type ForefrontCompletion = {

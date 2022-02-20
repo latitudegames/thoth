@@ -5,8 +5,6 @@ const HtmlWebPackPlugin = require('html-webpack-plugin')
 const path = require('path')
 const webpack = require('webpack')
 
-const prod = process.env.NODE_ENV === 'production'
-
 const babelOptions = {
   presets: [
     '@babel/env',

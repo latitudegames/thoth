@@ -44,7 +44,7 @@ export class TextInputControl extends Control {
       name: key,
       label,
       value,
-      putData: (...args) => this.putData.apply(this, args),
+      putData: (...args) => (this.putData = { ...this.putData, ...args }),
     }
   }
 }

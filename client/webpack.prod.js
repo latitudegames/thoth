@@ -1,10 +1,10 @@
-const Dotenv = require('dotenv-webpack')
 const CompressionPlugin = require('compression-webpack-plugin')
+const Dotenv = require('dotenv-webpack')
 const TerserPlugin = require('terser-webpack-plugin')
 const BundleAnalyzerPlugin =
   require('webpack-bundle-analyzer').BundleAnalyzerPlugin
-
 const { merge } = require('webpack-merge')
+
 const common = require('./webpack.common')
 
 module.exports = () => {

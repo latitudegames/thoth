@@ -1,9 +1,8 @@
+import { ReactElement } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars'
 
-import WindowToolbar from './WindowToolbar'
-
 import css from './window.module.css'
-import { ReactElement } from 'react'
+import WindowToolbar from './WindowToolbar'
 
 const WindowLayout = props => {
   return (

@@ -1,17 +1,14 @@
 import Koa from 'koa'
 
 import { apiKeyAuth } from '../../../middleware/auth'
-import { ai21 } from '../../../routes/vendor/ai21/ai21'
-import { gptj } from '../../../routes/vendor/coreweave/coreweave'
+import { ai21 } from '../../vendor/ai21'
+import { gptj } from '../../../routes/vendor/coreweave'
 import {
   forefront,
   ForefrontCompletionResponse,
-} from '../../../routes/vendor/forefront/forefront'
-import { huggingface } from '../../../routes/vendor/huggingface/huggingface'
-import {
-  modelComplete,
-  ModelCompletionOpts,
-} from '../../../routes/vendor/openai/openai'
+} from '../../../routes/vendor/forefront'
+import { huggingface } from '../../../routes/vendor/huggingface'
+import { modelComplete, ModelCompletionOpts } from '../../vendor/openai'
 import { Route } from '../../../types'
 import { CustomError } from '../../../utils/CustomError'
 import { CompletionContext } from '../../../utils/modelRequest'
@@ -67,10 +64,10 @@ export const completionsParser = async (
         return getFullResponse
           ? universalFormat
             ? formatOpenAIResponse(
-              results,
-              options?.prompt as string,
-              options?.echo
-            )
+                results,
+                options?.prompt as string,
+                options?.echo
+              )
             : results
           : { result: firstResult, durationMs: results.durationMs }
       } catch (err) {
@@ -78,7 +75,10 @@ export const completionsParser = async (
         throw new CustomError('open-ai-error', msg, err)
       }
     case ModelSources[ModelSources.coreweave]:
-      if (!process.env.USE_LATITUDE_API || process.env.USE_LATITUDE_API === '') {
+      if (
+        !process.env.USE_LATITUDE_API ||
+        process.env.USE_LATITUDE_API === ''
+      ) {
         throw new CustomError('input-failed', 'Latitude API not enabled')
       }
       const prediction = await gptj(options, context)
@@ -89,9 +89,9 @@ export const completionsParser = async (
       const ai21CompletionResponse = await ai21(options, context)
       return universalFormat
         ? formatAi21Response(
-          ai21CompletionResponse as AI21ModelResponse,
-          options.model
-        )
+            ai21CompletionResponse as AI21ModelResponse,
+            options.model
+          )
         : ai21CompletionResponse
     case ModelSources[ModelSources.huggingface]:
       const huggingfaceCompletionResponse = await huggingface({
@@ -101,17 +101,17 @@ export const completionsParser = async (
       })
       return universalFormat
         ? formatHuggingfaceResponse(
-          huggingfaceCompletionResponse as HuggingfaceModelResponse,
-          options.model
-        )
+            huggingfaceCompletionResponse as HuggingfaceModelResponse,
+            options.model
+          )
         : huggingfaceCompletionResponse
     case ModelSources[ModelSources.forefront]:
       const forefrontCompletionResponse = await forefront(options, context)
       return universalFormat
         ? formatForefrontResponse(
-          forefrontCompletionResponse as ForefrontCompletionResponse,
-          options.model
-        )
+            forefrontCompletionResponse as ForefrontCompletionResponse,
+            options.model
+          )
         : forefrontCompletionResponse
   }
 }

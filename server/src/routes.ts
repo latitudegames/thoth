@@ -10,5 +10,5 @@ export const routes: Route[] = [
   ...spells,
   ...auth,
   ...agents,
-  ...completions
+  ...completions,
 ]

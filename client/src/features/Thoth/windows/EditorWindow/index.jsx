@@ -1,10 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { createNode } from 'rete-context-menu-plugin/src/utils'
 
-import WindowToolbar from '@/features/common/Window/WindowToolbar'
+import Select from '../../../common/Select/Select'
 import { Editor, useEditor } from '../../contexts/EditorProvider'
 import Deployment from './Deployment'
-import Select from '../../../common/Select/Select'
 import css from './editorwindow.module.css'
 
 const EditorWindow = ({ tab }) => {

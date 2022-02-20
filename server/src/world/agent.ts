@@ -1,16 +1,16 @@
-import gameObject from './gameObject'
 import discord_client from '../../../core/src/connectors/discord'
-import { telegram_client } from '../../../core/src/connectors/telegram'
-import { zoom_client } from '../../../core/src/connectors/zoom'
-import { twitter_client } from '../../../core/src/connectors/twitter'
-import { reddit_client } from '../../../core/src/connectors/reddit'
 import { instagram_client } from '../../../core/src/connectors/instagram'
 import { messenger_client } from '../../../core/src/connectors/messenger'
-import { whatsapp_client } from '../../../core/src/connectors/whatsapp'
+import { reddit_client } from '../../../core/src/connectors/reddit'
+import { telegram_client } from '../../../core/src/connectors/telegram'
 import { twilio_client } from '../../../core/src/connectors/twilio'
+import { twitter_client } from '../../../core/src/connectors/twitter'
+import { whatsapp_client } from '../../../core/src/connectors/whatsapp'
 //import { harmony_client } from '../../../core/src/connectors/harmony'
 import { xrengine_client } from '../../../core/src/connectors/xrengine'
+import { zoom_client } from '../../../core/src/connectors/zoom'
 import { app, router } from '../app'
+import gameObject from './gameObject'
 
 export class agent extends gameObject {
   name = ''
@@ -28,19 +28,28 @@ export class agent extends gameObject {
   //harmony: any
   xrengine: xrengine_client
 
-  startDiscord(discord_api_token: string, spell_handler: string, spell_version: string) {
-    if (this.discord) throw new Error("Discord already running for this agent on this instance")
+  startDiscord(
+    discord_api_token: string,
+    spell_handler: string,
+    spell_version: string
+  ) {
+    if (this.discord)
+      throw new Error('Discord already running for this agent on this instance')
     this.discord = new discord_client()
-    this.discord.createDiscordClient(this, discord_api_token, spell_handler, spell_version)
-    console.log("Started discord client for agent " + this.name)
+    this.discord.createDiscordClient(
+      this,
+      discord_api_token,
+      spell_handler,
+      spell_version
+    )
+    console.log('Started discord client for agent ' + this.name)
   }
 
   stopDiscord() {
     if (!this.discord) throw new Error("Discord isn't running, can't stop it")
     this.discord.destroy()
     this.discord = null
-    console.log("Stopped discord client for agent " + this.name)
-
+    console.log('Stopped discord client for agent ' + this.name)
   }
 
   async onDestroy() {
@@ -50,12 +59,16 @@ export class agent extends gameObject {
 
   constructor(data: any) {
     super(data.id)
-    console.log("data is ", data)
-    this.name = data.agent ?? data.name ?? "agent"
+    console.log('data is ', data)
+    this.name = data.agent ?? data.name ?? 'agent'
     console.log('initing agent')
 
-    if (data.discord_enabled) {
-      this.startDiscord(data.discord_api_key, data.spell_handler, data.spell_version);
+    if (data.discordEnabled) {
+      this.startDiscord(
+        data.discord_api_key,
+        data.spell_handler,
+        data.spell_version
+      )
     }
 
     // TODO: Fix me

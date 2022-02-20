@@ -6,8 +6,8 @@ import requestPromise from 'request-promise'
 // TODO: For latitude we should send out this completion request
 // Otherwise we should set variables for the various coreweave models
 
-import { CustomError } from '../../../utils/CustomError'
-import { CompletionContext } from '../../../utils/modelRequest'
+import { CustomError } from '../../utils/CustomError'
+import { CompletionContext } from '../../utils/modelRequest'
 // import { eventsDatabase } from './../../../databases/events'
 
 // const modelUrls: Record<string, string> = {
@@ -78,7 +78,7 @@ export const modelComplete = async (
   //   .catch(() => {}) // Alan - ignoring errors here so a logging failure doesn't block generation.
   if (!success) throw new CustomError('coreweave-error', response)
   return success
-    ? { ...response, durationMs, /* modelRequestId: modelRequest?.id */ }
+    ? { ...response, durationMs /* modelRequestId: modelRequest?.id */ }
     : {}
 }
 

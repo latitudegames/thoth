@@ -1,21 +1,19 @@
 import { useEffect, useRef } from 'react'
+import { useSelector } from 'react-redux'
 
+import { useModule } from '../../../contexts/ModuleProvider'
 import {
-  useSaveSpellMutation,
-  useGetSpellsQuery,
   selectSpellById,
+  useSaveSpellMutation,
 } from '../../../state/api/spells'
 import { useEditor } from '../contexts/EditorProvider'
 import { useLayout } from '../contexts/LayoutProvider'
-import { useModule } from '../../../contexts/ModuleProvider'
-import { useSelector } from 'react-redux'
 
 const EventHandler = ({ pubSub, tab }) => {
   // only using this to handle events, so not rendering anything with it.
   const { createOrFocus, windowTypes } = useLayout()
 
   const [saveSpellMutation] = useSaveSpellMutation()
-  const { data: spellsData } = useGetSpellsQuery()
   const spell = useSelector(state => selectSpellById(state, tab?.spell))
 
   // Spell ref because callbacks cant hold values from state without them
@@ -34,7 +32,6 @@ const EventHandler = ({ pubSub, tab }) => {
     $UNDO,
     $REDO,
     $SAVE_SPELL,
-    $SAVE_SPELL_AS,
     $CREATE_STATE_MANAGER,
     $CREATE_AGENT_MANAGER,
     $CREATE_ENT_MANAGER,
@@ -52,10 +49,6 @@ const EventHandler = ({ pubSub, tab }) => {
     const chain = serialize(currentSpell)
 
     await saveSpellMutation({ ...currentSpell, chain })
-  }
-
-  const saveSpellAs = async () => {
-    console.log('Save spell as')
   }
 
   const createStateManager = () => {

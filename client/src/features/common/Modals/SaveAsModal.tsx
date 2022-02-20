@@ -1,11 +1,12 @@
-import { useState } from 'react'
 import { useSnackbar } from 'notistack'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+
+import { useTabManager } from '../../../contexts/TabManagerProvider'
 import {
   useGetSpellQuery,
   useSaveSpellMutation,
 } from '../../../state/api/spells'
-import { useTabManager } from '../../../contexts/TabManagerProvider'
-import { useForm } from 'react-hook-form'
 import Modal from '../Modal/Modal'
 import css from './modalForms.module.css'
 

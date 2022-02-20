@@ -1,11 +1,11 @@
-import { createSelector } from '@reduxjs/toolkit'
-import { FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Spell as SpellType } from '@latitudegames/thoth-core/types'
+import { createSelector } from '@reduxjs/toolkit'
+import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes'
+import { FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 
 import { initDB } from '../../database'
-import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes'
-import { updateGameState } from '../gameState'
 import { Module } from '../../database/schemas/module'
+import { updateGameState } from '../gameState'
 import { rootApi } from './api'
 // function camelize(str) {
 //   return str

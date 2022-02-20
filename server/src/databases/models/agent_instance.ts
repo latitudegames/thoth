@@ -1,41 +1,38 @@
 import * as Sequelize from 'sequelize'
 import { DataTypes, Model, Optional } from 'sequelize'
 
-export interface agent_instanceAttributes {
+export type agent_instAttr = {
   id?: number
   instanceId?: number
   personality?: string
   enabled?: boolean
   dirty?: boolean
   updatedAt?: string
-  discord_enabled?: boolean
+  discordEnabled?: boolean
   discord_api_key?: string
   discord_spell_handler?: string
-
 }
 
 export type agent_instancePk = 'id'
 export type agent_instanceId = agent_instance[agent_instancePk]
-export type agent_instanceOptionalAttributes =
-  | 'discord_enabled'
+export type agent_instOptAttr =
+  | 'discordEnabled'
   | 'discord_api_key'
   | 'discord_spell_handler'
   | 'enabled'
   | 'updatedAt'
-export type agent_instanceCreationAttributes = Optional<
-  agent_instanceAttributes,
-  agent_instanceOptionalAttributes
->
+export type agent_instCrateAttr = Optional<agent_instAttr, agent_instOptAttr>
 
 export class agent_instance
-  extends Model<agent_instanceAttributes, agent_instanceCreationAttributes>
-  implements agent_instanceAttributes {
+  extends Model<agent_instAttr, agent_instCrateAttr>
+  implements agent_instAttr
+{
   id?: number
   instanceId?: number
   personality?: string
   enabled?: boolean
   updatedAt?: string
-  discord_enabled?: boolean
+  discordEnabled?: boolean
   discord_api_key?: string
   discord_spell_handler?: string
   static initModel(sequelize: Sequelize.Sequelize): typeof agent_instance {
@@ -59,7 +56,7 @@ export class agent_instance
           type: DataTypes.BOOLEAN,
           allowNull: true,
         },
-        discord_enabled: {
+        discordEnabled: {
           type: DataTypes.BOOLEAN,
           allowNull: true,
         },

@@ -1,7 +1,7 @@
 import Koa from 'koa'
 
 import { apiKeyAuth } from '../../../middleware/auth'
-import { search as searchHelper } from '../../../routes/vendor/openai/openai'
+import { search as searchHelper } from '../../vendor/openai'
 import { Route } from '../../../types'
 import { CustomError } from '../../../utils/CustomError'
 

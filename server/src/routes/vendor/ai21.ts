@@ -4,11 +4,11 @@ import { performance } from 'perf_hooks'
 import { post } from 'request-promise'
 
 // import { eventsDatabase } from '../../../databases/events'
-import { apiKeyAuth } from '../../../middleware/auth'
-import { Route } from '../../../types'
-import { CustomError } from '../../../utils/CustomError'
-import { CompletionContext } from '../../../utils/modelRequest'
-import { ModelCompletionOpts } from '../openai/openai'
+import { apiKeyAuth } from '../../middleware/auth'
+import { Route } from '../../types'
+import { CustomError } from '../../utils/CustomError'
+import { CompletionContext } from '../../utils/modelRequest'
+import { ModelCompletionOpts } from './openai'
 
 const AI21_AUTH = `Bearer ${process.env.AI21_KEY}`
 
@@ -107,7 +107,7 @@ export const ai21 = async (
   if (!result) {
     return null
   }
-  return { ...result, durationMs, /* modelRequestId: modelRequest?.id */ }
+  return { ...result, durationMs /* modelRequestId: modelRequest?.id */ }
 }
 
 export const ai21Tokens = async (

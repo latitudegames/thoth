@@ -57,7 +57,6 @@ function nazi(text: string) {
   return r.test(text)
 }
 
-
 const info =
   'Fast Profaniuty Detector can detect whether or not a phrase is a prophane'
 

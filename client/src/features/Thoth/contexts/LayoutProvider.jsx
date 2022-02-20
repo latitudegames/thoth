@@ -1,3 +1,7 @@
+import { usePubSub } from '@/contexts/PubSubProvider'
+import { useTabManager } from '@/contexts/TabManagerProvider'
+import { useGetSpellQuery, useSaveSpellMutation } from '@/state/api/spells'
+import LoadingScreen from '@common/LoadingScreen/LoadingScreen'
 import {
   Layout as LayoutComponent,
   Model,
@@ -7,11 +11,6 @@ import {
   TabSetNode,
 } from 'flexlayout-react'
 import { useContext, createContext, useEffect, useState, useRef } from 'react'
-
-import LoadingScreen from '@common/LoadingScreen/LoadingScreen'
-import { usePubSub } from '@/contexts/PubSubProvider'
-import { useTabManager } from '@/contexts/TabManagerProvider'
-import { useGetSpellQuery, useSaveSpellMutation } from '@/state/api/spells'
 // Component types are listed here which are used to load components from the data sent by rete
 const windowTypes = {
   TEXT_EDITOR: 'textEditor',
@@ -31,17 +30,17 @@ const windowTypes = {
 const Context = createContext({
   inspectorData: {},
   textEditorData: {},
-  createModel: () => { },
+  createModel: () => {},
   currentModel: {},
   currentRef: {},
-  setCurrentRef: () => { },
-  saveInspector: () => { },
-  saveTextEditor: () => { },
-  createOrFocus: () => { },
-  addWindow: () => { },
+  setCurrentRef: () => {},
+  saveInspector: () => {},
+  saveTextEditor: () => {},
+  createOrFocus: () => {},
+  addWindow: () => {},
   windowTypes: {},
   workspaceMap: {},
-  getWorkspace: () => { },
+  getWorkspace: () => {},
 })
 
 export const useLayout = () => useContext(Context)

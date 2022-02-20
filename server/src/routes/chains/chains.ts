@@ -1,16 +1,19 @@
-import axios from 'axios';
-import Koa from 'koa';
+import axios from 'axios'
+import Koa from 'koa'
 
-import 'regenerator-runtime/runtime';
-import { noAuth } from '../../middleware/auth';
-import { Route } from '../../types';
-import { CustomError } from '../../utils/CustomError';
+import 'regenerator-runtime/runtime'
+import { creatorToolsDatabase } from '../../databases/creatorTools'
+import { noAuth } from '../../middleware/auth'
+import { Route } from '../../types'
+import { CustomError } from '../../utils/CustomError'
 import {
-  buildThothInterface, extractModuleInputKeys, runChain
-} from './runChain';
-import { getTestSpell } from './testSpells';
-import { Graph, Module } from './types';
-import { creatorToolsDatabase } from '../../databases/creatorTools';
+  buildThothInterface,
+  extractModuleInputKeys,
+  runChain,
+} from './runChain'
+import { getTestSpell } from './testSpells'
+import { Graph, Module } from './types'
+
 import { config } from 'dotenv'
 config({ path: '.env' })
 
@@ -27,17 +30,14 @@ const chainsHandler = async (ctx: Koa.Context) => {
       method: 'GET',
       url: process.env.API_URL + '/game/spells/' + spell,
       headers: ctx.headers as any,
-      data: ctx.request.body
-    });
-    rootSpell = response.data;
-  }
-
-  else {
+      data: ctx.request.body,
+    })
+    rootSpell = response.data
+  } else {
     rootSpell = await creatorToolsDatabase.chains.findOne({
       where: { name: spell },
     })
   }
-
 
   // eslint-disable-next-line functional/no-let
   let activeSpell
@@ -52,8 +52,8 @@ const chainsHandler = async (ctx: Koa.Context) => {
         method: 'GET',
         url: process.env.API_URL + `/game/spells/deployed/${spell}/${version}`,
         headers: ctx.headers as any,
-        data: ctx.request.body
-      });
+        data: ctx.request.body,
+      })
       activeSpell = response.data
     } else {
       activeSpell = await creatorToolsDatabase.deployedSpells.findOne({
@@ -104,9 +104,9 @@ const chainsHandler = async (ctx: Koa.Context) => {
     }
   }, {} as Record<string, unknown>)
   if (error) {
-    return ctx.body = { error }
+    return (ctx.body = { error })
   }
-  const outputs = await runChain(chain, inputs as any ?? [], thoth, modules)
+  const outputs = await runChain(chain, (inputs as any) ?? [], thoth, modules)
   const newGameState = thoth.getCurrentGameState()
 
   ctx.body = { spell: activeSpell.name, outputs, gameState: newGameState }

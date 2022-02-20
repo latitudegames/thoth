@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import axios from 'axios'
 //handles the input from a client according to a selected agent and responds
 export async function handleInput(

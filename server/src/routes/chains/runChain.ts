@@ -1,10 +1,11 @@
-import thothCore from '@latitudegames/thoth-core/server';
-import Koa from 'koa';
-import { CompletionRequest, completionsParser } from '../completions';
+import thothCore from '@latitudegames/thoth-core/server'
+import Koa from 'koa'
+
+import { CompletionRequest, completionsParser } from '../completions'
 import { getEnkiOutputs } from '../enki/enki'
-import { huggingface } from '../vendor/huggingface/huggingface';
-import { Module } from './module';
-import { Graph, Module as ModuleType, ModuleComponent, Node } from './types';
+import { huggingface } from '../vendor/huggingface'
+import { Module } from './module'
+import { Graph, Module as ModuleType, ModuleComponent, Node } from './types'
 
 const { initSharedEngine, getComponents } = thothCore
 const thothComponents = getComponents()

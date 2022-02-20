@@ -1,6 +1,6 @@
 module.exports = {
   extends: '../.eslintrc.js',
-  ignorePatterns: ['dist/**/*'],
+  ignorePatterns: ['dist/**/*', "webpack.*.js", "*.css", "*.css.d.test", "*.d.ts"],
   parserOptions: {
     project: './tsconfig.json',
     ecmaFeatures: {
@@ -8,5 +8,5 @@ module.exports = {
     },
     ecmaVersion: 2018,
     sourceType: 'module',
-  },
+  }
 }

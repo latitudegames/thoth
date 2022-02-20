@@ -1,31 +1,26 @@
-// @ts-nocheck
 import Editor from '@monaco-editor/react'
 import jsonFormat from 'json-format'
 import { useSnackbar } from 'notistack'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import {
   selectSpellById,
   useSaveSpellMutation,
 } from '../../../state/api/spells'
-import {
-  selectGameStateBySpellId,
-  // updateGameState,
-} from '../../../state/gameState'
-import Window from '../../common/Window/Window'
-
-import '../thoth.module.css'
+import { selectGameStateBySpellId } from '../../../state/gameState'
 import { RootState } from '../../../state/store'
+import Window from '../../common/Window/Window'
 import WindowMessage from '../components/WindowMessage'
+import '../thoth.module.css'
 
 const StateManager = ({ tab, ...props }) => {
   // const dispatch = useDispatch()
   const [saveSpell] = useSaveSpellMutation()
   const gameState = useSelector((state: RootState) => {
-    return selectGameStateBySpellId(state.gameState, tab.spell)
+    return (selectGameStateBySpellId as any)(state.gameState, tab.spell)
   })
-  const spell = useSelector(state => selectSpellById(state, tab.spell))
+  const spell = useSelector(state => (selectSpellById as any)(state, tab.spell))
 
   const { enqueueSnackbar } = useSnackbar()
   const [typing, setTyping] = useState<boolean>(false)

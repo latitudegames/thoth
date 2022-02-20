@@ -1,7 +1,7 @@
 import { database } from '@latitudegames/thoth-core/src/connectors/database'
 
 const maxMSDiff = 5000
-let interval = 3000
+const interval = 3000
 
 export function initAgentsLoop(update: Function, lateUpdate: Function) {
   const date = new Date()

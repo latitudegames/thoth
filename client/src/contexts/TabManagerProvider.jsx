@@ -1,6 +1,6 @@
 import { useContext, createContext, useEffect, useState } from 'react'
-import { v4 as uuidv4 } from 'uuid'
 import { useNavigate } from 'react-router-dom'
+import { v4 as uuidv4 } from 'uuid'
 
 import LoadingScreen from '../features/common/LoadingScreen/LoadingScreen'
 import { useDB } from './DatabaseProvider'
@@ -11,13 +11,15 @@ const Context = createContext({
   tabs: [],
   activeTab: {},
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  openTab: async options => {},
+  openTab: async _options => {},
   switchTab: () => {},
   closeTab: () => {},
   saveTabLayout: () => {},
   clearTabs: () => {},
-  closeTabBySpellId: spellId => {},
-  updateTab: (tabId, update) => Promise.resolve(),
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  closeTabBySpellId: _spellId => {},
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  updateTab: (_tabId, _update) => Promise.resolve(),
 })
 
 // Map of workspaces
@@ -39,15 +41,13 @@ const TabManager = ({ children }) => {
   // Suscribe to changes in the database for active tab, and all tabs
   useEffect(() => {
     if (!db) return
-    ;(async () => {
+    ;(() => {
       refreshTabs()
     })()
   }, [db])
 
   const filterTabs = tabDocs => {
-    return tabDocs
-      .map(tab => tab.toJSON())
-      .map(({ active, ...rest }) => ({ ...rest }))
+    return tabDocs.map(tab => tab.toJSON()).map(({ ...rest }) => ({ ...rest }))
   }
 
   const refreshTabs = async () => {
@@ -95,7 +95,7 @@ const TabManager = ({ children }) => {
       active: true,
     }
 
-    const newTabDoc = await db.tabs.insert(newTab)
+    await db.tabs.insert(newTab)
     refreshTabs()
   }
 

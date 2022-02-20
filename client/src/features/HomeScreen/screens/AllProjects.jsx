@@ -2,9 +2,9 @@ import { Scrollbars } from 'react-custom-scrollbars'
 
 import Icon from '../../common/Icon/Icon'
 import Panel from '../../common/Panel/Panel'
-import css from '../homeScreen.module.css'
 import FileInput from '../components/FileInput'
 import ProjectRow from '../components/ProjectRow'
+import css from '../homeScreen.module.css'
 
 const AllProjects = ({
   spells,

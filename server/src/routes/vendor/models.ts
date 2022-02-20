@@ -1,7 +1,7 @@
 import Koa from 'koa'
 
-import { apiKeyAuth } from '../../../middleware/auth'
-import { Route } from '../../../types'
+import { apiKeyAuth } from '../../middleware/auth'
+import { Route } from '../../types'
 import { modelComplete } from './coreweave'
 
 export const models: Route[] = [

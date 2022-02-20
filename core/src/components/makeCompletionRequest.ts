@@ -13,8 +13,7 @@ export async function makeCompletionRequest(
   speaker,
   agent,
   type,
-  engine,
-  log = true
+  engine
 ) {
   if ((await database.instance.getConfig())['use_gptj']) {
     const params = {
@@ -33,7 +32,6 @@ export async function makeCompletionRequest(
       params,
       options
     )
-    console.log('response', response.body)
     const responseModified = {
       success: true,
       choice: { text: response[0].generated_text.split('\n')[0] },
@@ -44,14 +42,7 @@ export async function makeCompletionRequest(
   }
 }
 const useDebug = false
-async function makeOpenAIGPT3Request(
-  data,
-  speaker,
-  agent,
-  type,
-  engine,
-  log = true
-) {
+async function makeOpenAIGPT3Request(data, speaker, agent, type, engine) {
   if (useDebug) return { success: true, choice: { text: 'Default response' } }
   const API_KEY =
     process.env.OPENAI_API_KEY ??

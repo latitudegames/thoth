@@ -1,10 +1,9 @@
+import Window from '@common/Window/Window.tsx'
 import Editor from '@monaco-editor/react'
+import WindowMessage from '@thoth/components/WindowMessage'
+import { useLayout } from '@thoth/contexts/LayoutProvider'
 import { useSnackbar } from 'notistack'
 import { useState, useEffect } from 'react'
-
-import { useLayout } from '@thoth/contexts/LayoutProvider'
-import Window from '@common/Window/Window.tsx'
-import WindowMessage from '@thoth/components/WindowMessage'
 
 import '../thoth.module.css'
 

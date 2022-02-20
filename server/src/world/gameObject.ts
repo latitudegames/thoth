@@ -8,17 +8,17 @@ export class gameObject {
     this.id = id
   }
 
-  async onCreate() { }
+  async onCreate() {}
 
-  async onDestroy() { }
+  async onDestroy() {}
 
   async onUpdate() {
-    for (let i in this.coroutines) {
+    for (const i in this.coroutines) {
       await this.coroutines[i].next()
     }
   }
 
-  async onLateUpdate() { }
+  async onLateUpdate() {}
 
   startCoroutine(func: Function) {
     let id = randomInt(0, 10000)

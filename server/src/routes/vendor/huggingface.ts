@@ -3,7 +3,7 @@ import { performance } from 'perf_hooks'
 import requestPromise from 'request-promise'
 
 // import { eventsDatabase } from './../../../databases/events'
-import { CustomError } from './../../../utils/CustomError'
+import { CustomError } from './../../utils/CustomError'
 
 const HUGGINGFACE_KEY = process.env.HUGGINGFACE_KEY
 
@@ -63,7 +63,7 @@ export const huggingface = async ({
   //   .catch(() => {}) // Alan - ignoring errors here so a logging failure doesn't block generation.
   if (!success) throw new CustomError('generation-model-error', response)
   return success
-    ? { ...response, durationMs, /* modelRequestId: modelRequest?.id */ }
+    ? { ...response, durationMs /* modelRequestId: modelRequest?.id */ }
     : {}
   // return response
 }

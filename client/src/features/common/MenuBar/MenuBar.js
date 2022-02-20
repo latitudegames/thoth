@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
+import { useNavigate } from 'react-router-dom'
 
 import { useModal } from '../../../contexts/ModalProvider'
 import { usePubSub } from '../../../contexts/PubSubProvider'
 import { useTabManager } from '../../../contexts/TabManagerProvider'
 import css from './menuBar.module.css'
 import thothlogo from './thoth.png'
-import { useNavigate, useLocation } from 'react-router-dom'
 
 const MenuBar = () => {
   const navigate = useNavigate()
@@ -15,11 +15,10 @@ const MenuBar = () => {
   const { openModal } = useModal()
 
   const activeTabRef = useRef(null)
-  const location = useLocation();
 
   useEffect(() => {
     activeTabRef.current = activeTab
-    console.log("changing current to ", activeTabRef.current)
+    console.log('changing current to ', activeTabRef.current)
   }, [activeTab])
 
   // grab all events we need
@@ -134,17 +133,20 @@ const MenuBar = () => {
     [onNew]
   )
 
-  const agentMenuItems = (process.env.REACT_APP_USE_AGENTS === "true") ? {
-    agent_manager: {
-      onClick: onAgentManagerCreate,
-    },
-    ent_manager: {
-      onClick: onEntManagerCreate,
-    },
-    config_manager: {
-      onClick: onConfigManagerCreate,
-    }
-  } : {}
+  const agentMenuItems =
+    process.env.REACT_APP_USE_AGENTS === 'true'
+      ? {
+          agent_manager: {
+            onClick: onAgentManagerCreate,
+          },
+          ent_manager: {
+            onClick: onEntManagerCreate,
+          },
+          config_manager: {
+            onClick: onConfigManagerCreate,
+          },
+        }
+      : {}
 
   //Menu bar entries
   const menuBarItems = {
@@ -235,7 +237,7 @@ const MenuBar = () => {
 
   //Menu bar rendering
   const ListItem = ({ item, label, topLevel, onClick }) => {
-    label = label ? label.replace(/_/g, ' ') : label
+    const listItemLabel = label ? label.replace(/_/g, ' ') : label
     let children = null
     if (item.items && Object.keys(item.items)) {
       children = (
@@ -260,7 +262,7 @@ const MenuBar = () => {
         className={`${css[topLevel ? 'menu-bar-item' : 'list-item']}`}
         onClick={onClick}
       >
-        {label}
+        {listItemLabel}
         {children && <div className={css['folder-arrow']}> ❯ </div>}
         {!topLevel && <br />}
         {children}

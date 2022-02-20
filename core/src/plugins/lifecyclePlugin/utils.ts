@@ -1,6 +1,6 @@
 import { NodeEditor } from 'rete'
 
-export function getHook<T extends unknown>(
+export function getHook<T>(
   editor: NodeEditor,
   name: undefined | string,
   method: keyof T

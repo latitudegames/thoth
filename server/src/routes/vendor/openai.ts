@@ -1,12 +1,10 @@
 // import Encoder from 'gpt-3-encoder'
 import OpenAI from 'openai-api'
 import { performance } from 'perf_hooks'
-
-import { CompletionContext } from '../../../utils/modelRequest'
+import { CompletionContext } from '../../utils/modelRequest'
 // import { eventsDatabase } from './../../../databases/events'
-import { ExFn } from './../../../types'
-import { CustomError } from './../../../utils/CustomError'
-import { formatOpenAIResponse } from './../../../utils/UniversalModelResponse'
+import { ExFn } from '../../types'
+import { CustomError } from '../../utils/CustomError'
 
 const modelEngines: Record<string, string> = {
   babbage: 'babbage',
@@ -89,7 +87,7 @@ export const complete = async (
   //   )
   //   .catch(() => {}) // Alan - ignoring errors here so a logging failure doesn't block generation.
   return success
-    ? { ...response, durationMs, /* modelRequestId: modelRequest?.id */ }
+    ? { ...response, durationMs /* modelRequestId: modelRequest?.id */ }
     : {}
 }
 

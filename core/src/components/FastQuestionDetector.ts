@@ -36,7 +36,6 @@ function isQuestion(input: string, data: string) {
   return false
 }
 
-
 const info =
   'Fast Question Detector can detect whether or not a phrase is a question'
 

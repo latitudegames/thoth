@@ -111,7 +111,7 @@ export const initEditor = async function ({
   const moduleDocs = await thoth.getModules()
 
   // Parse modules into dictionary of all modules and JSON values
-  let modules: Record<string, ModuleType> = moduleDocs
+  const modules: Record<string, ModuleType> = moduleDocs
     .map((doc: { toJSON: Function }) => doc.toJSON())
     .reduce((acc: Record<string, ModuleType>, module: ModuleType) => {
       // todo handle better mapping

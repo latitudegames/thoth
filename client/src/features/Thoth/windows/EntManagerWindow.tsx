@@ -1,5 +1,3 @@
-//@ts-nocheck
-
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 
@@ -9,27 +7,29 @@ const Ents = () => {
   const [data, setData] = useState(false)
 
   const resetData = async () => {
-    const res = await axios.get(`${process.env.REACT_APP_API_URL}/agentInstances`);
-    console.log("res is ", res)
-    setData(res.data);
+    const res = await axios.get(
+      `${process.env.REACT_APP_API_URL}/agentInstances`
+    )
+    setData(res.data)
   }
 
   const createNew = () => {
-    console.log("Create new called")
     axios
       .post(`${process.env.REACT_APP_API_URL}/agentInstance`, { data: {} })
       .then(async res => {
-        console.log("response is", res)
-        const res = await axios.get(`${process.env.REACT_APP_API_URL}/agentInstances`);
-        setData(res.data);
+        const res2 = await axios.get(
+          `${process.env.REACT_APP_API_URL}/agentInstances`
+        )
+        setData(res2.data)
       })
   }
 
   useEffect(() => {
-    (async () => {
-      const res = await axios.get(`${process.env.REACT_APP_API_URL}/agentInstances`);
-      setData(res.data);
-      console.log("set the data", res.data)
+    ;(async () => {
+      const res = await axios.get(
+        `${process.env.REACT_APP_API_URL}/agentInstances`
+      )
+      setData(res.data)
     })()
   }, [])
 
@@ -37,14 +37,15 @@ const Ents = () => {
     <div className="agent-editor">
       <React.Fragment>
         <div>
-          {data && data !== [] &&
+          {data &&
+            data !== [] &&
             data.map((value, idx) => {
               return (
                 <Ent
                   id={value.id}
                   key={idx}
-                  updateCallback={async () => {
-                    resetData();
+                  updateCallback={() => {
+                    resetData()
                   }}
                 />
               )

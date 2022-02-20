@@ -145,7 +145,7 @@ export class TenseTransformer extends ThothComponent<Promise<WorkerReturn>> {
     if (!silent) node.display(result)
 
     return {
-      action: result
+      action: result,
     }
   }
 }

@@ -1,26 +1,23 @@
-// @ts-nocheck
-
-import { useEffect } from 'react'
-
-import { store } from '@/state/store'
-import { useEditor } from '@thoth/contexts/EditorProvider'
-import { Layout } from '@thoth/contexts/LayoutProvider'
 import { useModule } from '@/contexts/ModuleProvider'
 import {
   useLazyGetSpellQuery,
   useSaveSpellMutation,
   selectSpellById,
 } from '@/state/api/spells'
+import { store } from '@/state/store'
 import { debounce } from '@/utils/debounce'
-import EditorWindow from '@thoth/windows/EditorWindow'
 import EventHandler from '@thoth/components/EventHandler'
+import { useEditor } from '@thoth/contexts/EditorProvider'
+import { Layout } from '@thoth/contexts/LayoutProvider'
+import AgentManager from '@thoth/windows/AgentManagerWindow'
+import ConfigManager from '@thoth/windows/ConfigManagerWindow'
+import EditorWindow from '@thoth/windows/EditorWindow'
+import EntManager from '@thoth/windows/EntManagerWindow'
 import Inspector from '@thoth/windows/InspectorWindow'
 import Playtest from '@thoth/windows/PlaytestWindow'
 import StateManager from '@thoth/windows/StateManagerWindow'
-import AgentManager from '@thoth/windows/AgentManagerWindow'
-import EntManager from '@thoth/windows/EntManagerWindow'
-import ConfigManager from '@thoth/windows/ConfigManagerWindow'
 import TextEditor from '@thoth/windows/TextEditorWindow'
+import { useEffect } from 'react'
 
 const Workspace = ({ tab, tabs, pubSub }) => {
   const [loadSpell, { data: spellData }] = useLazyGetSpellQuery()
@@ -45,7 +42,7 @@ const Workspace = ({ tab, tabs, pubSub }) => {
             .filter(tab => tab.type === 'spell')
             .forEach(filteredTab => {
               if (filteredTab.spell) {
-                const spell = selectSpellById(
+                const spell = (selectSpellById as any)(
                   store.getState(),
                   filteredTab.spell
                 )

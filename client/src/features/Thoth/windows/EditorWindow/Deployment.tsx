@@ -1,16 +1,4 @@
-import { useEffect, useState } from 'react'
-import { Scrollbars } from 'react-custom-scrollbars'
-import { useSelector } from 'react-redux'
-import { useSnackbar } from 'notistack'
-
-import css from './editorwindow.module.css'
-
-import WindowToolbar from '@common/Window/WindowToolbar'
-import { SimpleAccordion } from '@common/Accordion'
-import Input from '@common/Input/Input'
-import Panel from '@common/Panel/Panel'
 import { useModal } from '@/contexts/ModalProvider'
-
 import {
   useGetDeploymentsQuery,
   selectSpellById,
@@ -18,7 +6,17 @@ import {
   useLazyGetDeploymentQuery,
   useSaveSpellMutation,
 } from '@/state/api/spells'
+import { SimpleAccordion } from '@common/Accordion'
+import Input from '@common/Input/Input'
+import Panel from '@common/Panel/Panel'
+import WindowToolbar from '@common/Window/WindowToolbar'
 import { useEditor } from '@thoth/contexts/EditorProvider'
+import { useSnackbar } from 'notistack'
+import { useEffect, useState } from 'react'
+import { Scrollbars } from 'react-custom-scrollbars'
+import { useSelector } from 'react-redux'
+
+import css from './editorwindow.module.css'
 
 const DeploymentView = ({ open, setOpen, spellId, close }) => {
   const [loadingVersion, setLoadingVersion] = useState(false)
@@ -49,11 +47,10 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
 
   const loadVersion = async version => {
     // todo better confirmation popup
-    if (
-      confirm(
-        'Are you sure you want to load this version? Any changes you have made since your most recent deploy will be lost.'
-      )
-    ) {
+    const confirmed = confirm(
+      'Are you sure you want to load this version? Any changes you have made since your most recent deploy will be lost.'
+    )
+    if (confirmed) {
       setLoadingVersion(true)
       await getDeplopyment({
         spellId: spell?.name as string,
@@ -64,15 +61,15 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
 
   useEffect(() => {
     if (!deploymentData || !loadingVersion) return
-      ; (async () => {
-        close()
-        await saveSpell({ ...spell, chain: deploymentData.chain })
-        enqueueSnackbar(`version ${deploymentData.version} loaded!`, {
-          variant: 'success',
-        })
-        setLoadingVersion(false)
-        loadChain(deploymentData.chain)
-      })()
+    ;(async () => {
+      close()
+      await saveSpell({ ...spell, chain: deploymentData.chain })
+      enqueueSnackbar(`version ${deploymentData.version} loaded!`, {
+        variant: 'success',
+      })
+      setLoadingVersion(false)
+      loadChain(deploymentData.chain)
+    })()
   }, [deploymentData, loadingVersion])
 
   const copy = url => {
@@ -123,7 +120,7 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
                   title: 'Deploy',
                   options: {
                     // todo find better way to get next version here
-                    version: (deployments ? deployments?.length + 1 : 0),
+                    version: deployments ? deployments?.length + 1 : 0,
                   },
                   onClose: data => {
                     closeModal()
@@ -148,8 +145,9 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
                 return (
                   <SimpleAccordion
                     key={deploy.version}
-                    heading={`${deploy.version}${deploy.versionName ? ' - ' + deploy.versionName : ''
-                      }`}
+                    heading={`${deploy.version}${
+                      deploy.versionName ? ' - ' + deploy.versionName : ''
+                    }`}
                     defaultExpanded={true}
                   >
                     <button

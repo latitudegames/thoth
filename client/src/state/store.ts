@@ -1,8 +1,9 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query/react'
-import tabReducer from './tabs'
-import gameStateReducer from './gameState'
+
 import { spellApi } from './api/spells'
+import gameStateReducer from './gameState'
+import tabReducer from './tabs'
 
 export const store = configureStore({
   reducer: {

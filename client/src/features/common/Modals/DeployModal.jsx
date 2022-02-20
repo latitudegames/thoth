@@ -1,11 +1,8 @@
-import { SettingsRemoteSharp } from '@material-ui/icons'
 import { useState } from 'react'
-import { useModal } from '../../../contexts/ModalProvider'
-import Input from '../Input/Input'
+
 import Modal from '../Modal/Modal'
 
-const DeployModal = ({ content, onClose, options: _options }) => {
-  const { closeModal } = useModal()
+const DeployModal = ({ onClose, options: _options }) => {
   const [message, setMessage] = useState('')
   const [versionName, setVersionName] = useState('')
   const options = [

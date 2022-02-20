@@ -1,4 +1,3 @@
-//@ts-ignore
 import Router from '@koa/router'
 import { roomManager } from '@latitudegames/thoth-core/src/components/roomManager'
 import { database } from '@latitudegames/thoth-core/src/connectors/database'
@@ -7,6 +6,7 @@ import HttpStatus from 'http-status-codes'
 import Koa from 'koa'
 import koaBody from 'koa-body'
 import compose from 'koa-compose'
+
 import { routes } from './routes'
 import { Handler, Method, Middleware } from './types'
 import { world } from './world/world'
@@ -22,8 +22,7 @@ export async function init() {
     const expectedServerDelta = 1000 / 60
     let lastTime = 0
 
-    // @ts-ignore
-    globalThis.requestAnimationFrame = f => {
+    ;(globalThis as any).requestAnimationFrame = (f: any) => {
       const serverLoop = () => {
         const now = Date.now()
         if (now - lastTime >= expectedServerDelta) {

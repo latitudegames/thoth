@@ -8,8 +8,8 @@ import InputGenerator from './InputGenerator'
 import LongText from './LongTextControl'
 import ModuleSelect from './ModuleSelect'
 import OutputGenerator from './OutputGenerator'
-import SocketGenerator from './SocketGenerator'
 import PlaytestControl from './PlaytestControl'
+import SocketGenerator from './SocketGenerator'
 import SwitchControl from './SwitchControl'
 
 const StubComponent = props => <div>{props.name}</div>

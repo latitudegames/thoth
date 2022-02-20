@@ -7,7 +7,7 @@ import { apiKeyWithAccess } from '../../middleware/auth'
 import { Route } from '../../types'
 import { CustomError } from '../../utils/CustomError'
 import { CompletionContext } from '../../utils/modelRequest'
-import { ModelCompletionOpts, modelComplete } from '../vendor/openai/openai'
+import { ModelCompletionOpts, modelComplete } from '../vendor/openai'
 import { getPrompt, getPreamble, extractOutput } from './fewshotHelper'
 
 const enkiProductId = 'c8610408-df83-4388-a968-071aa2bfe2bb'
@@ -56,10 +56,10 @@ const getEnkis = async (ctx: Koa.Context) => {
     ctx.query.stringOutput === 'true'
       ? { preamble: getPreamble(fewshotData, fewshotSerialization) }
       : {
-        task: fewshotTask,
-        data: fewshotData,
-        serialization: fewshotSerialization,
-      }
+          task: fewshotTask,
+          data: fewshotData,
+          serialization: fewshotSerialization,
+        }
 }
 
 export const getEnkiOutputs = async (
@@ -173,8 +173,8 @@ export const getEnkiOutputs = async (
   const response =
     result.length > 0
       ? {
-        outputs: result.slice(0, numSamples),
-      }
+          outputs: result.slice(0, numSamples),
+        }
       : ''
   // eslint-disable-next-line  functional/no-let
   let outputData: string[] = []

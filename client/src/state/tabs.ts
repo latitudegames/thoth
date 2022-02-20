@@ -1,13 +1,13 @@
-import { v4 as uuidv4 } from 'uuid'
 import {
   createSlice,
   // PayloadAction,
   createDraftSafeSelector,
   createEntityAdapter,
 } from '@reduxjs/toolkit'
+import { v4 as uuidv4 } from 'uuid'
 
-import { RootState } from './store'
 import defaultJson from '../contexts/layouts/defaultLayout.json'
+import { RootState } from './store'
 
 // Used to set workspaces to tabs
 const workspaceMap = {

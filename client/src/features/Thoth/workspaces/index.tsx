@@ -1,5 +1,6 @@
-import WorkspaceProvider from '../contexts/WorkspaceProvider'
 import TabLayout from '@common/TabLayout/TabLayout'
+
+import WorkspaceProvider from '../contexts/WorkspaceProvider'
 import Composer from './composer'
 
 const workspaceMap = {

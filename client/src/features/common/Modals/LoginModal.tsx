@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 
 import { useAuth } from '../../../contexts/AuthProvider'
 import { useModal } from '../../../contexts/ModalProvider'
 import Modal from '../Modal/Modal'
 import css from './modalForms.module.css'
-import { useNavigate } from 'react-router-dom'
 
 const LoginModal = ({ title, onClose }) => {
   const navigate = useNavigate()

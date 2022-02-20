@@ -216,7 +216,7 @@ const formatOpenAIPrompt = (completion: OpenAICompletion, prompt: string) => {
 export const formatOpenAIResponse = (
   response: OpenAIModelResponse,
   prompt: string,
-  echo: boolean = false
+  echo = false
 ) => {
   const promptDict = echo
     ? formatOpenAIPrompt(response.choices[0], prompt)
@@ -273,7 +273,7 @@ const formatAi21TokenDict = (
 
 const formatAi21Completion = (
   completion: AI21Completion,
-  prompt_offset: number = 0
+  prompt_offset = 0
 ) => {
   const completionDict = {
     text: completion.data.text,

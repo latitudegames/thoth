@@ -1,22 +1,21 @@
+import { useTabManager } from '@/contexts/TabManagerProvider'
+import { useNewSpellMutation } from '@/state/api/spells'
+import Panel from '@common/Panel/Panel'
 import { useSnackbar } from 'notistack'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 import {
-  uniqueNamesGenerator,
   adjectives,
   colors,
+  uniqueNamesGenerator,
 } from 'unique-names-generator'
-import { useNavigate } from 'react-router-dom'
 
-import { useNewSpellMutation } from '@/state/api/spells'
-import { useTabManager } from '@/contexts/TabManagerProvider'
-import Panel from '@common/Panel/Panel'
-import Input from '@common/Input/Input'
+import TemplatePanel from '../components/TemplatePanel'
 import emptyImg from '../empty.png'
 import enkiImg from '../enki.png'
-import langImg from '../lang.png'
 import css from '../homeScreen.module.css'
-import TemplatePanel from '../components/TemplatePanel'
+import langImg from '../lang.png'
 import defaultChain from './chains/default'
 
 const customConfig = {
@@ -37,7 +36,7 @@ const CreateNew = () => {
 
   const { enqueueSnackbar } = useSnackbar()
   const navigate = useNavigate()
-  const { openTab, clearTabs } = useTabManager()
+  const { openTab } = useTabManager()
   const [newSpell] = useNewSpellMutation()
 
   const {
@@ -49,7 +48,7 @@ const CreateNew = () => {
   const onCreate = handleSubmit(async data => {
     const placeholderName = uniqueNamesGenerator(customConfig)
     const name = data.name || placeholderName
-    console.log("selectedTemplate is", selectedTemplate)
+    console.log('selectedTemplate is', selectedTemplate)
     const response = await newSpell({
       chain: selectedTemplate.chain,
       name,

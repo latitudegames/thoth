@@ -2,6 +2,7 @@
 import axios from 'axios'
 import { config } from 'dotenv'
 import Koa from 'koa'
+
 import { creatorToolsDatabase } from '../databases/creatorTools'
 import { noAuth } from '../middleware/auth'
 import { Route } from '../types'
@@ -10,7 +11,8 @@ import { CustomError } from '../utils/CustomError'
 config({ path: '.env' })
 
 // Should we use the Latitude API or run independently?
-const latitudeApiKey = process.env.LATITUDE_API_KEY !== '' && process.env.LATITUDE_API_KEY
+const latitudeApiKey =
+  process.env.LATITUDE_API_KEY !== '' && process.env.LATITUDE_API_KEY
 
 const saveHandler = async (ctx: Koa.Context) => {
   const body =
@@ -176,7 +178,7 @@ const getSpellHandler = async (ctx: Koa.Context) => {
         gameState: {},
         modules: [],
       })
-      userId: ctx.state.user?.id ?? 0, (ctx.body = newSpell)
+      ctx.state.user?.id ?? 0, (ctx.body = newSpell)
     } else {
       ctx.body = spell
     }

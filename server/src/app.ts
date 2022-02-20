@@ -1,4 +1,3 @@
-//@ts-ignore
 import cors from '@koa/cors'
 import Router from '@koa/router'
 import { database } from '@latitudegames/thoth-core/src/connectors/database'
@@ -10,7 +9,6 @@ import compose from 'koa-compose'
 import { creatorToolsDatabase } from './databases/creatorTools'
 import { routes } from './routes'
 import { Handler, Method, Middleware } from './types'
-import { world } from './world/world'
 
 config({ path: '.env' })
 

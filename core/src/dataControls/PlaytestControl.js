@@ -24,7 +24,7 @@ export class PlaytestControl extends DataControl {
     super(options)
   }
 
-  onData(playtestToggle) {
+  onData() {
     return
   }
 }

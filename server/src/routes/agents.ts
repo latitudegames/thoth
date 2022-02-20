@@ -1,7 +1,8 @@
-import { createWikipediaAgent } from '@latitudegames/thoth-core/src/connectors/wikipedia'
 import { database } from '@latitudegames/thoth-core/src/connectors/database'
 import { handleInput } from '@latitudegames/thoth-core/src/connectors/handleInput'
+import { createWikipediaAgent } from '@latitudegames/thoth-core/src/connectors/wikipedia'
 import Koa from 'koa'
+
 import 'regenerator-runtime/runtime'
 import { noAuth } from '../middleware/auth'
 import { Route } from '../types'
@@ -167,7 +168,7 @@ const addPromptsHandler = async (ctx: Koa.Context) => {
 
 const getAgentInstancesHandler = async (ctx: Koa.Context) => {
   try {
-    let data = await database.instance.getAgentInstances()
+    const data = await database.instance.getAgentInstances()
     return (ctx.body = data)
   } catch (e) {
     console.error(e)
