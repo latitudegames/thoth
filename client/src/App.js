@@ -9,15 +9,13 @@ import ThothPageWrapper from './features/common/ThothPage/ThothPageWrapper'
 import LoginScreen from './features/Login/LoginScreen'
 import HomeScreen from './features/HomeScreen/HomeScreen'
 import Thoth from './features/Thoth/Thoth'
-import SuperReality from "./superreality/index"
-import Agents from './agents'
 
 import 'flexlayout-react/style/dark.css'
 import './design-globals/design-globals.css'
 import './App.css'
 //These need to be imported last to override styles.
 
-const useLatitude = false; // process.env.REACT_APP_USE_LATITUDE
+const useLatitude = process.env.REACT_APP_USE_LATITUDE === 'true';
 
 function App() {
   // Use our routes
@@ -28,17 +26,15 @@ function App() {
 
   const authCheck = user && user.accessToken
 
-  useEffect(() => {
-    ; (async () => {
-      const currentUser = await getUser()
+  useEffect(async () => {
+    const currentUser = await getUser()
 
-      if (currentUser) {
-        // checkin?
-        checkIn(currentUser)
-      }
+    if (currentUser) {
+      // checkin?
+      checkIn(currentUser)
+    }
 
-      setChecked(true)
-    })()
+    setChecked(true)
   }, [])
 
   const redirect = () => {
@@ -54,9 +50,6 @@ function App() {
   return (
     <ThothPageWrapper tabs={tabs} activeTab={activeTab}>
       <Routes>
-        <Route path="/agents" element={<Agents />} />
-        <Route path="/superreality" element={<SuperReality />} />
-
         <Route path="/thoth" element={<GuardedRoute />}>
           <Route path="/thoth" element={<Thoth />} />
         </Route>
@@ -65,8 +58,8 @@ function App() {
         </Route>
         <Route path="/" element={<GuardedRoute />}>
           <Route path="/" element={<Thoth />} />
-          <Route path="/login" element={<LoginScreen />} />
         </Route>
+        <Route path="/login" element={<LoginScreen />} />
         {
           useLatitude &&
           <React.Fragment>

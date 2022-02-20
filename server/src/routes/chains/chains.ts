@@ -11,6 +11,8 @@ import {
 import { getTestSpell } from './testSpells';
 import { Graph, Module } from './types';
 import { creatorToolsDatabase } from '../../databases/creatorTools';
+import { config } from 'dotenv'
+config({ path: '.env' })
 
 export const modules: Record<string, unknown> = {}
 
@@ -20,7 +22,7 @@ const chainsHandler = async (ctx: Koa.Context) => {
 
   let rootSpell
 
-  if (process.env.USE_LATITUDE) {
+  if (process.env.LATITUDE_API_KEY !== '') {
     const response = await axios({
       method: 'GET',
       url: process.env.API_URL + '/game/spells/' + spell,
@@ -45,7 +47,7 @@ const chainsHandler = async (ctx: Koa.Context) => {
   } else if (version === 'latest') {
     activeSpell = rootSpell
   } else {
-    if (process.env.USE_LATITUDE) {
+    if (process.env.LATITUDE_API_KEY !== '') {
       const response = await axios({
         method: 'GET',
         url: process.env.API_URL + `/game/spells/deployed/${spell}/${version}`,

@@ -36,6 +36,9 @@ const EventHandler = ({ pubSub, tab }) => {
     $SAVE_SPELL,
     $SAVE_SPELL_AS,
     $CREATE_STATE_MANAGER,
+    $CREATE_AGENT_MANAGER,
+    $CREATE_ENT_MANAGER,
+    $CREATE_CONFIG_MANAGER,
     $CREATE_PLAYTEST,
     $CREATE_INSPECTOR,
     $CREATE_TEXT_EDITOR,
@@ -57,6 +60,18 @@ const EventHandler = ({ pubSub, tab }) => {
 
   const createStateManager = () => {
     createOrFocus(windowTypes.STATE_MANAGER, 'State Manager')
+  }
+
+  const createAgentManager = () => {
+    createOrFocus(windowTypes.AGENT_MANAGER, 'Agent Manager')
+  }
+
+  const createConfigManager = () => {
+    createOrFocus(windowTypes.CONFIG_MANAGER, 'Config Manager')
+  }
+
+  const createEntManager = () => {
+    createOrFocus(windowTypes.ENT_MANAGER, 'Ent Manager')
   }
 
   const createPlaytest = () => {
@@ -120,6 +135,9 @@ const EventHandler = ({ pubSub, tab }) => {
   const handlerMap = {
     [$SAVE_SPELL(tab.id)]: saveSpell,
     [$CREATE_STATE_MANAGER(tab.id)]: createStateManager,
+    [$CREATE_AGENT_MANAGER(tab.id)]: createAgentManager,
+    [$CREATE_ENT_MANAGER(tab.id)]: createEntManager,
+    [$CREATE_CONFIG_MANAGER(tab.id)]: createConfigManager,
     [$CREATE_PLAYTEST(tab.id)]: createPlaytest,
     [$CREATE_INSPECTOR(tab.id)]: createInspector,
     [$CREATE_TEXT_EDITOR(tab.id)]: createTextEditor,

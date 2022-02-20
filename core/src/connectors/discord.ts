@@ -8,7 +8,6 @@
 // @ts-nocheck
 
 // required for message.lineReply
-import { customConfig } from '@latitudegames/thoth-core/src/superreality/customConfig'
 import Discord, { Intents } from 'discord.js'
 import emoji from 'emoji-dictionary'
 import emojiRegex from 'emoji-regex'
@@ -16,21 +15,14 @@ import { EventEmitter } from 'events'
 
 import roomManager from '../components/roomManager'
 import { classifyText } from '../components/textClassifier'
-import { database } from '../superreality/database'
-import {
-  getRandomEmptyResponse,
-  getRandomTopic,
-  startsWithCapital,
-  getSetting,
-} from '../superreality/utils'
+import { database } from './database'
 import { handleInput } from './handleInput'
+import { getRandomEmptyResponse, startsWithCapital, getSetting } from './utils'
 
-// TODO: Remove this
-export const config = {
-  prefix: '!',
-  prefixOptionalWhenMentionOrDM: true,
-  bot_name: 'Cat',
+function log(...s) {
+  console.log(...s)
 }
+
 export const channelTypes = {
   text: 'GUILD_TEXT',
   dm: 'DM',
@@ -38,6 +30,10 @@ export const channelTypes = {
   thread: 'GUILD_PUBLIC_THREAD',
 }
 export class discord_client {
+  destroy() {
+    this.client.destroy()
+  }
+
   //Event that is triggered when a new user is added to the server
   async handleGuildMemberAdd(user) {
     const userId = user.user.id
@@ -320,9 +316,8 @@ export class discord_client {
     }
 
     const name = args.parsed_words[0]
-    this.client.bot_name = name
+    this.bot_name = name
     this.client.name_regex = new RegExp(name, 'ig')
-    config.bot_name = name
     log(client.bot_name + ' - ' + this.client.name_regex)
     message.channel.send('Updated bot name to: ' + name)
     message.channel.stopTyping()
@@ -356,6 +351,7 @@ export class discord_client {
 
   //Event that is trigger when a new message is created (sent)
   messageCreate = async (client, message) => {
+    log(client, message)
     //gets the emojis from the text and replaces to unix specific type
     const reg = emojiRegex()
     let match
@@ -371,15 +367,6 @@ export class discord_client {
     args['grpc_args'] = {}
 
     let { author, channel, content, mentions, id } = message
-
-    //if the user is banned, the message is ignored
-    if (
-      database &&
-      database.instance &&
-      (await database.instance.isUserBanned(author.id, 'discord'))
-    ) {
-      return
-    }
 
     //replaces the discord specific mentions (<!@id>) to the actual mention
     if (
@@ -420,7 +407,7 @@ export class discord_client {
       _prev = this.prevMessage[channel.id]
       this.prevMessage[channel.id] = author
       if (this.prevMessageTimers[channel.id] !== undefined)
-        clearTimeout(pthis.revMessageTimers[channel.id])
+        clearTimeout(this.prevMessageTimers[channel.id])
       this.prevMessageTimers[channel.id] = setTimeout(
         () => (this.prevMessage[channel.id] = ''),
         120000
@@ -432,7 +419,6 @@ export class discord_client {
       this.moreThanOneInConversation()
     // Ignore all bots
     if (author.bot) return
-    this.addMessageToHistory(channel.id, id, author.username, content)
 
     //checks if the message contains a direct mention to the bot, or if it is a DM, or if it mentions someone else
     const botMention = `<@!${client.user}>`
@@ -478,9 +464,10 @@ export class discord_client {
     //checks if the user is in discussion with the but, or includes !ping or started the conversation, if so it adds (if not exists) !ping in the start to handle the message the ping command
     const isDirectMethion =
       !content.startsWith('!') &&
-      content.toLowerCase().includes(client.bot_name.toLowerCase())
+      content.toLowerCase().includes(this.bot_name?.toLowerCase())
     const isUserNameMention =
       (channel.type === channelTypes['text'] || isDM) &&
+      content &&
       content
         .toLowerCase()
         .replace(',', '')
@@ -598,7 +585,7 @@ export class discord_client {
 
     // Set flag to true to skip using prefix if mentioning or DMing us
     const prefixOptionalWhenMentionOrDM =
-      this.client.config.prefixOptionalWhenMentionOrDM
+      this.client.prefixOptionalWhenMentionOrDM
 
     const msgStartsWithMention = content.startsWith(botMention)
 
@@ -607,8 +594,7 @@ export class discord_client {
         ? content.replace(botMention, '').trim()
         : content
 
-    const containsPrefix =
-      messageContent.indexOf(this.client.config.prefix) === 0
+    const containsPrefix = messageContent.indexOf(this.client.prefix) === 0
 
     // If we are not being messaged and the prefix is not present (or bypassed via config flag), ignore message,
     // so if msg does not contain prefix and either of
@@ -629,9 +615,8 @@ export class discord_client {
       message.content,
       message.author.username,
       this.agent.name ?? 'Agent',
-      null,
-      'discord',
-      channel.id
+      this.spell_handler,
+      this.spell_version
     )
     this.messageEvent.emit(
       'new_message',
@@ -646,14 +631,12 @@ export class discord_client {
   //Event that is triggered when a message is deleted
   messageDelete = async (client, message) => {
     const { author, channel, id } = message
-    await this.deleteMessageFromHistory(channel.id, id)
     if (!author) return
     if (!client || !client.user) return
     if (author.id === this.client.user.id) return
 
     const oldResponse = this.getResponse(channel.id, id)
     if (oldResponse === undefined) return
-    await this.deleteMessageFromHistory(channel.id, oldResponse)
 
     await channel.messages
       .fetch({ limit: this.client.edit_messages_max_count })
@@ -673,21 +656,14 @@ export class discord_client {
   messageUpdate = async (client, message) => {
     const { author, channel, id } = message
     if (author === null || channel === null || id === null) return
-    if (await database.instance.isUserBanned(author.id, 'discord')) return
     if (author.id === this.client.user.id) {
-      await channel.messages.fetch(id).then(async msg => {
-        log('updating local msg to db')
-        await this.updateMessage(channel.id, id, msg.content)
-      })
       log('same author')
       return
     }
 
     const oldResponse = this.getResponse(channel.id, id)
     if (oldResponse === undefined) {
-      await channel.messages.fetch(id).then(async msg => {
-        await this.updateMessage(channel.id, id, msg.content)
-      })
+      await channel.messages.fetch(id).then(async msg => { })
       log('message not found')
       return
     }
@@ -787,8 +763,9 @@ export class discord_client {
 
   //Event that is triggered when the discord client fully loaded
   ready = async client => {
+    const logDMUserID = (await database.instance.getConfig())['logDMUserID']
     await this.client.users
-      .fetch(customConfig.instance.get('logDMUserID'))
+      .fetch(logDMUserID)
       .then(user => {
         this.client.log_user = user
       })
@@ -858,7 +835,7 @@ export class discord_client {
                   _author = this.agent.name
 
                 if (msg.deleted === true) {
-                  await deleteMessageFromHistory(channel.id, msg.id)
+                  // await deleteMessageFromHistory(channel.id, msg.id)
                   log('deleted message: ' + msg.content)
                 } else await wasHandled(channel.id, msg.id, _author, msg.content, msg.createdTimestamp)
               })
@@ -994,7 +971,7 @@ export class discord_client {
       text = text.replace('{day_now}', new Date().getDay().toString())
     }
     if (text.includes('{name}')) {
-      text = text.replace('{name}', this.client.bot_name)
+      text = text.replace('{name}', this.bot_name)
     }
 
     return text
@@ -1010,9 +987,6 @@ export class discord_client {
             content: text,
           },
         },
-      })
-      .then(() => {
-        addMessageToHistory(chat_id, interaction.id, this.agent.name, text)
       })
       .catch(console.error)
   }
@@ -1107,12 +1081,6 @@ export class discord_client {
                   .reply(text)
                   .then(async function (msg) {
                     onMessageResponseUpdated(channel.id, message.id, msg.id)
-                    addMessageToHistory(
-                      channel.id,
-                      msg.id,
-                      this.agent.name,
-                      text
-                    )
                   })
                   .catch(console.error)
               } else {
@@ -1127,12 +1095,6 @@ export class discord_client {
                   .send(text)
                   .then(async function (msg) {
                     onMessageResponseUpdated(channel.id, message.id, msg.id)
-                    addMessageToHistory(
-                      channel.id,
-                      msg.id,
-                      this.agent.name,
-                      text
-                    )
                   })
                   .catch(console.error)
               }
@@ -1141,7 +1103,6 @@ export class discord_client {
               if (addPing) {
                 message.reply(text).then(async function (msg) {
                   onMessageResponseUpdated(channel.id, message.id, msg.id)
-                  addMessageToHistory(channel.id, msg.id, this.agent.name, text)
                 })
               } else {
                 while (
@@ -1157,17 +1118,11 @@ export class discord_client {
                   .send(text, { split: true })
                   .then(async function (msg) {
                     onMessageResponseUpdated(channel.id, message.id, msg.id)
-                    addMessageToHistory(
-                      channel.id,
-                      msg.id,
-                      this.agent.name,
-                      text
-                    )
                   })
               }
             } else {
               const emptyResponse = getRandomEmptyResponse()
-              log('sending empty response: ' + emptyResponse)
+              log('sending empty response 1: ' + emptyResponse)
               if (
                 emptyResponse !== undefined &&
                 emptyResponse !== '' &&
@@ -1179,12 +1134,6 @@ export class discord_client {
                     .reply(text)
                     .then(async function (msg) {
                       onMessageResponseUpdated(channel.id, message.id, msg.id)
-                      addMessageToHistory(
-                        channel.id,
-                        msg.id,
-                        this.agent.name,
-                        text
-                      )
                     })
                     .catch(console.error)
                 } else {
@@ -1199,12 +1148,6 @@ export class discord_client {
                     .send(text)
                     .then(async function (msg) {
                       onMessageResponseUpdated(channel.id, message.id, msg.id)
-                      addMessageToHistory(
-                        channel.id,
-                        msg.id,
-                        this.agent.name,
-                        text
-                      )
                     })
                     .catch(console.error)
                 }
@@ -1229,24 +1172,11 @@ export class discord_client {
           .then(async messages => {
             messages.forEach(async function (edited) {
               if (edited.id === message_id) {
-                // Warn an offending user about their actions
-                const warn_offender = function (_user, ratings) {
-                  edited.author.send(
-                    `You've got ${ratings} warnings and you will get blocked at 10!`
-                  )
-                }
-                // Ban an offending user
-                const ban_offender = function (message, _user) {
-                  database.instance.banUser(edited.author.id, 'discord')
-                  // TODO doesn't work with both discord-inline-reply and discord-reply
-                  // message.lineReply('blocked')
-                  edited.author.send(`You've been blocked!`)
-                }
-
-                await updateMessage(channel.id, edited.id, edited.content)
-
                 Object.keys(responses).map(async function (key, index) {
                   log('response: ' + responses)
+                  log('response: ' + key)
+                  log('response: ' + index)
+
                   if (
                     responses !== undefined &&
                     responses.length <= 2000 &&
@@ -1262,7 +1192,6 @@ export class discord_client {
                     log('response1: ' + text)
                     msg.edit(text)
                     onMessageResponseUpdated(channel.id, edited.id, msg.id)
-                    await updateMessage(channel.id, msg.id, msg.content)
                   } else if (responses.length >= 2000) {
                     let text = replacePlaceholders(responses)
                     while (
@@ -1282,17 +1211,11 @@ export class discord_client {
                             edited.id,
                             msg.id
                           )
-                          addMessageToHistory(
-                            channel.id,
-                            msg.id,
-                            this.agent.name,
-                            text
-                          )
                         })
                     }
                   } else {
                     const emptyResponse = getRandomEmptyResponse()
-                    log('sending empty response: ' + emptyResponse)
+                    log('sending empty response 2: ' + emptyResponse)
                     if (
                       emptyResponse !== undefined &&
                       emptyResponse !== '' &&
@@ -1308,7 +1231,6 @@ export class discord_client {
                       log('response4: ' + text)
                       msg.edit(text)
                       onMessageResponseUpdated(channel.id, edited.id, msg.id)
-                      await updateMessage(channel.id, msg.id, msg.content)
                     }
                   }
                 })
@@ -1403,51 +1325,6 @@ export class discord_client {
     return this.messageResponses[channel][message]
   }
 
-  addMessageToHistory(chatId, messageId, senderName, content) {
-    if (!database || !database.instance) return // log("Postgres not inited");
-    database.instance.addMessageInHistory(
-      'discord',
-      chatId,
-      messageId,
-      senderName,
-      content
-    )
-  }
-
-  async addMessageInHistoryWithDate(
-    chatId,
-    messageId,
-    senderName,
-    content,
-    timestamp
-  ) {
-    if (!database || !database.instance) return // log("Postgres not inited");
-    await database.instance.addMessageInHistoryWithDate(
-      'discord',
-      chatId,
-      messageId,
-      senderName,
-      content,
-      timestamp
-    )
-  }
-
-  async deleteMessageFromHistory(chatId, messageId) {
-    if (!database || !database.instance) return // log("Postgres not inited");
-    await database.instance.deleteMessage('discord', chatId, messageId)
-  }
-
-  async updateMessage(chatId, messageId, newContent) {
-    if (!database || !database.instance) return // log("Postgres not inited");
-    await database.instance.updateMessage(
-      'discord',
-      chatId,
-      messageId,
-      newContent,
-      true
-    )
-  }
-
   async wasHandled(chatId, messageId, sender, content, timestamp) {
     if (!database || !database.instance) return // log("Postgres not inited");
     return await database.instance.messageExists(
@@ -1475,19 +1352,24 @@ export class discord_client {
     return count > 1
   }
 
-  client = undefined
+  client = Discord.Client
   messageEvent = undefined
   agent = undefined
-  settings = undefined
 
-  createDiscordClient = (agent, settings) => {
+  createDiscordClient = async (
+    agent,
+    discord_api_token,
+    spell_handler,
+    spell_version = 'latest',
+    bot_name = 'Cat'
+  ) => {
     this.agent = agent
-    this.settings = settings
+    this.spell_handler = spell_handler
+    this.spell_version = spell_version
 
-    const t = getSetting(settings, 'discord_api_token')
-    const token = t != null && t != '' ? t : process.env.DISCORD_API_TOKEN
+    const token = discord_api_token ?? process.env.DISCORD_API_TOKEN
     if (!token) return console.warn('No API token for Discord bot, skipping')
-    console.log('Creating Discord client')
+
     this.client = new Discord.Client({
       partials: ['MESSAGE', 'USER', 'REACTION'],
       intents: [
@@ -1497,21 +1379,19 @@ export class discord_client {
         Intents.FLAGS.GUILD_MESSAGES,
       ],
     })
+    this.bot_name = bot_name
+    this.client.prefix = '!'
+    this.client.prefixOptionalWhenMentionOrDM = true
+
     //{ intents: [ Intents.GUILDS, Intents.GUILD_MEMBERS, Intents.GUILD_VOICE_STATES, Intents.GUILD_PRESENCES, Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES] });
     // We also need to make sure we're attaching the config to the CLIENT so it's accessible everywhere!
-    this.client.config = config
     this.client.helpFields = this.helpFields
     this.client._findCommand = this._findCommand
     this.client._parseWords = this._parseWords
-    this.client.bot_name = config.bot_name
-    this.client.name_regex = new RegExp(config.bot_name, 'ig')
-    this.client.username_regex = new RegExp(
-      customConfig.instance.get('botNameRegex'),
-      'ig'
-    )
-    this.client.edit_messages_max_count = customConfig.instance.getInt(
-      'editMessageMaxCount'
-    )
+    this.client.name_regex = new RegExp(bot_name, 'ig')
+
+    this.client.username_regex = new RegExp('((?:digital|being)(?: |$))', 'ig')
+    this.client.edit_messages_max_count = 5
 
     const embed = new Discord.MessageEmbed().setColor(0x00ae86)
 
@@ -1528,25 +1408,20 @@ export class discord_client {
     this.messageEvent = new EventEmitter()
     this.messageEvent.on(
       'new_message',
-      async function (ds, responses, addPing, channel, message) {
-        log('response: ' + responses)
+      async function (ds, response, addPing, channel, message) {
+        const responseMessage = response.message
+        log('response: ' + JSON.stringify(responseMessage))
         if (
-          responses !== undefined &&
-          responses.length <= 2000 &&
-          responses.length > 0
+          responseMessage !== undefined &&
+          responseMessage.length <= 2000 &&
+          responseMessage.length > 0
         ) {
-          let text = ds.replacePlaceholders(responses)
+          let text = ds.replacePlaceholders(responseMessage)
           if (addPing) {
             message
               .reply(text)
               .then(async function (msg) {
                 ds.onMessageResponseUpdated(channel.id, message.id, msg.id)
-                ds.addMessageToHistory(
-                  channel.id,
-                  msg.id,
-                  this.agent.name,
-                  text
-                )
               })
               .catch(console.error)
           } else {
@@ -1561,21 +1436,14 @@ export class discord_client {
               .send(text)
               .then(async function (msg) {
                 ds.onMessageResponseUpdated(channel.id, message.id, msg.id)
-                ds.addMessageToHistory(
-                  channel.id,
-                  msg.id,
-                  this.agent.name,
-                  text
-                )
               })
               .catch(console.error)
           }
-        } else if (responses && responses.length >= 2000) {
-          let text = replacePlaceholders(responses)
+        } else if (responseMessage && responseMessage.length >= 2000) {
+          let text = replacePlaceholders(responseMessage)
           if (addPing) {
             message.reply(text).then(async function (msg) {
               ds.onMessageResponseUpdated(channel.id, message.id, msg.id)
-              ds.addMessageToHistory(channel.id, msg.id, this.agent.name, text)
             })
           } else {
             while (
@@ -1591,17 +1459,11 @@ export class discord_client {
               .send(text, { split: true })
               .then(async function (msg) {
                 ds.onMessageResponseUpdated(channel.id, message.id, msg.id)
-                ds.addMessageToHistory(
-                  channel.id,
-                  msg.id,
-                  this.agent.name,
-                  text
-                )
               })
           }
         } else {
           const emptyResponse = getRandomEmptyResponse()
-          log('sending empty response: ' + emptyResponse)
+          log('sending empty response 3: ' + emptyResponse)
           if (
             emptyResponse !== undefined &&
             emptyResponse !== '' &&
@@ -1613,12 +1475,6 @@ export class discord_client {
                 .reply(text)
                 .then(async function (msg) {
                   ds.onMessageResponseUpdated(channel.id, message.id, msg.id)
-                  ds.addMessageToHistory(
-                    channel.id,
-                    msg.id,
-                    this.agent.name,
-                    text
-                  )
                 })
                 .catch(console.error)
             } else {
@@ -1633,12 +1489,6 @@ export class discord_client {
                 .send(text)
                 .then(async function (msg) {
                   ds.onMessageResponseUpdated(channel.id, message.id, msg.id)
-                  ds.addMessageToHistory(
-                    channel.id,
-                    msg.id,
-                    this.agent.name,
-                    text
-                  )
                 })
                 .catch(console.error)
             }
@@ -1698,12 +1548,11 @@ export class discord_client {
             responded: false,
           }
           const resp = await handleInput(
-            'Tell me about ' + getRandomTopic(),
+            'Tell me about ' + 'butterlifes',
             'bot',
             this.agent.name ?? 'Agent',
-            null,
-            'discord',
-            channel.id
+            this.spell_handler,
+            this.spell_version
           )
           channel.send(resp)
         }

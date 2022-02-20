@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-console */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
@@ -6,7 +8,7 @@ import weaviate from 'weaviate-client'
 import wiki from 'wikipedia'
 
 import { makeCompletionRequest } from '../components/makeCompletionRequest'
-import { database } from '../superreality/database'
+import { database } from './database'
 
 const client = weaviate.client({
   scheme: 'http',
@@ -28,7 +30,8 @@ export async function createWikipediaAgent(speaker, name, personality, facts) {
 
     let stop = Date.now()
     console.log(
-      `Time Taken to execute loaded data from wikipedia = ${(stop - start) / 1000
+      `Time Taken to execute loaded data from wikipedia = ${
+        (stop - start) / 1000
       } seconds`
     )
     start = Date.now()
@@ -48,9 +51,6 @@ export async function createWikipediaAgent(speaker, name, personality, facts) {
     const factPrompt = factSourcePrompt + out.result.extract + '\n' + facts
 
     const personalitySourcePrompt = `Based on the above facts, the following is a description of the personality of an anthropomorphized ${name}:`
-
-    database.instance.setDefaultEthics(name)
-    database.instance.setDefaultNeedsAndMotivations(name)
 
     stop = Date.now()
     console.log(
@@ -88,14 +88,6 @@ export async function createWikipediaAgent(speaker, name, personality, facts) {
       return undefined
     }
 
-    console.log('res.choice.text')
-    console.log(res)
-
-    database.instance.setPersonality(
-      name,
-      personalitySourcePrompt + '\n' + personality + '\n' + res.choice.text
-    )
-
     const dialogPrompt = `The following is a conversation with ${name}. ${name} is helpful, knowledgeable and very friendly\n${speaker}: Hi there, ${name}! Can you tell me a little bit about yourself?\n${name}:`
 
     data = {
@@ -126,17 +118,22 @@ export async function createWikipediaAgent(speaker, name, personality, facts) {
 
     stop = Date.now()
     console.log(
-      `Time Taken to execute openai request 2 = ${(stop - start) / 1000
+      `Time Taken to execute openai request 2 = ${
+        (stop - start) / 1000
       } seconds`
     )
     start = Date.now()
     console.log('res.choice.text (2)')
     console.log(res)
 
-    database.instance.setDialogue(name, dialogPrompt + (await res).choice?.text)
-    database.instance.setAgentFacts(name, factPrompt)
-    database.instance.setAgentExists(name)
+    await database.instance.createAgent(name)
 
+    await database.instance.updateAgent(name, {
+      dialog: dialogPrompt + (await res).choice?.text,
+      personality:
+        personalitySourcePrompt + '\n' + personality + '\n' + res.choice?.text,
+      facts: factPrompt,
+    })
     stop = Date.now()
     console.log(
       `Time Taken to execute save data = ${(stop - start) / 1000} seconds`

@@ -4,27 +4,21 @@
 /* eslint-disable no-invalid-this */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-
-import { customConfig } from '@latitudegames/thoth-core/src/superreality/customConfig'
 import request from 'request'
 
-import { database } from '../superreality/database'
-import { getRandomEmptyResponse, getSetting } from '../superreality/utils'
+import { database } from './database'
 import { handleInput } from './handleInput'
+import { getRandomEmptyResponse, getSetting } from './utils'
 
 export class messenger_client {
-  async getChatHistory(chatId, length) {
-    return await database.instance.getHistory(length, 'facebook', chatId)
-  }
-
   async addMessageToHistory(chatId, senderName, content, messageId) {
-    database.instance.addMessageInHistory(
-      'facebook',
-      chatId,
-      messageId + '',
-      senderName,
-      content
-    )
+    // database.instance.addMessageInHistory(
+    //   'facebook',
+    //   chatId,
+    //   messageId + '',
+    //   senderName,
+    //   content
+    // )
   }
 
   async handleMessage(senderPsid, receivedMessage) {

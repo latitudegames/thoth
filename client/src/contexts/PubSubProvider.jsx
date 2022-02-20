@@ -3,9 +3,9 @@ import PubSub from 'pubsub-js'
 import { useContext, createContext } from 'react'
 
 const Context = createContext({
-  publish: (_event, _data) => {},
-  subscribe: (_event, _callback) => {},
-  PubSub: () => {},
+  publish: (_event, _data) => { },
+  subscribe: (_event, _callback) => { },
+  PubSub: () => { },
   events: {},
 })
 
@@ -28,6 +28,9 @@ export const events = {
   $NODE_SET: (tabId, nodeId) => `nodeSet:${tabId}:${nodeId}`,
   $SAVE_SPELL: tabId => `saveSpell:${tabId}`,
   $CREATE_STATE_MANAGER: tabId => `createStateManage:${tabId}`,
+  $CREATE_AGENT_MANAGER: tabId => `createAgentManage:${tabId}`,
+  $CREATE_ENT_MANAGER: tabId => `createEntManage:${tabId}`,
+  $CREATE_CONFIG_MANAGER: tabId => `createConfigManage:${tabId}`,
   $CREATE_PLAYTEST: tabId => `createPlaytest:${tabId}`,
   $CREATE_INSPECTOR: tabId => `createInspector:${tabId}`,
   $CREATE_TEXT_EDITOR: tabId => `createTextEditor:${tabId}`,

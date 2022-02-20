@@ -6,16 +6,15 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
+// TODO: This was imported fropm our old codebase
+// We need to break some of this code out so that we have more control of it in the node graph
+// i.e. text classification and such
+
 import roomManager from '../components/roomManager'
 import { classifyText } from '../components/textClassifier'
-import { customConfig } from '../superreality/customConfig'
-import { database } from '../superreality/database'
-import {
-  getRandomEmptyResponse,
-  startsWithCapital,
-  getSetting,
-} from '../superreality/utils'
+import { database } from './database'
 import { handleInput } from './handleInput'
+import { getRandomEmptyResponse, getSetting, startsWithCapital } from './utils'
 
 export class telegram_client {
   async handleMessage(chat_id, response, message_id, addPing, args, bot) {
@@ -272,7 +271,7 @@ export class telegram_client {
     const resp = handleInput(
       msg.text,
       msg.from.first_name,
-      customConfig.instance.get('agent') ?? 'Agent',
+      (await database.instance.getConfig())['agent'] ?? 'Agent',
       null,
       'telegram',
       msg.chat.id
@@ -449,7 +448,7 @@ export class telegram_client {
     const resp = handleInput(
       msg.text,
       msg.from.first_name,
-      customConfig.instance.get('agent') ?? 'Agent',
+      (await database.instance.getConfig())['agent'] ?? 'Agent',
       null,
       'telegram',
       msg.chat.id
@@ -566,31 +565,30 @@ export class telegram_client {
   }
 
   async addMessageToHistory(chatId, messageId, senderName, content) {
-    await database.instance.addMessageInHistory(
-      'telegram',
-      chatId,
-      messageId,
-      senderName,
-      content
-    )
+    return
+    // await database.instance.addMessageInHistory(
+    //   'telegram',
+    //   chatId,
+    //   messageId,
+    //   senderName,
+    //   content
+    // )
   }
-  async getChatHistory(chatId, length) {
-    return await database.instance.getHistory(length, 'telegram', chatId)
-  }
+
   async updateMessage(chatId, messageId, newContent) {
-    await database.instance.updateMessage(
-      'telegram',
-      chatId,
-      messageId,
-      newContent,
-      true
-    )
+    // await database.instance.updateMessage(
+    //   'telegram',
+    //   chatId,
+    //   messageId,
+    //   newContent,
+    //   true
+    // )
   }
 
   agent
   settings
 
-  createTelegramClient = (agent, settings) => {
+  createTelegramClient = async (agent, settings) => {
     this.agent = agent
     this.settings = settings
 
@@ -598,7 +596,7 @@ export class telegram_client {
 
     if (!token) return console.warn('No API token for Telegram bot, skipping')
     const username_regex = new RegExp(
-      customConfig.instance.get('botNameRegex'),
+      (await database.instance.getConfig())['botNameRegex'],
       'ig'
     )
     let botName = ''

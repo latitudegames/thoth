@@ -6,7 +6,7 @@ import { usePubSub } from '../../../contexts/PubSubProvider'
 import { useTabManager } from '../../../contexts/TabManagerProvider'
 import css from './menuBar.module.css'
 import thothlogo from './thoth.png'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 const MenuBar = () => {
   const navigate = useNavigate()
@@ -15,6 +15,7 @@ const MenuBar = () => {
   const { openModal } = useModal()
 
   const activeTabRef = useRef(null)
+  const location = useLocation();
 
   useEffect(() => {
     activeTabRef.current = activeTab
@@ -25,6 +26,9 @@ const MenuBar = () => {
   const {
     $SAVE_SPELL,
     $CREATE_STATE_MANAGER,
+    $CREATE_AGENT_MANAGER,
+    $CREATE_ENT_MANAGER,
+    $CREATE_CONFIG_MANAGER,
     $CREATE_PLAYTEST,
     $CREATE_INSPECTOR,
     $CREATE_TEXT_EDITOR,
@@ -69,16 +73,24 @@ const MenuBar = () => {
     navigate('/home/all-projects')
   }
 
-  const onAgents = () => {
-    navigate('/agents')
-  }
-
   const onSerialize = () => {
     publish($SERIALIZE(activeTabRef.current.id))
   }
 
   const onStateManagerCreate = () => {
     publish($CREATE_STATE_MANAGER(activeTabRef.current.id))
+  }
+
+  const onAgentManagerCreate = () => {
+    publish($CREATE_AGENT_MANAGER(activeTabRef.current.id))
+  }
+
+  const onEntManagerCreate = () => {
+    publish($CREATE_ENT_MANAGER(activeTabRef.current.id))
+  }
+
+  const onConfigManagerCreate = () => {
+    publish($CREATE_CONFIG_MANAGER(activeTabRef.current.id))
   }
 
   const onPlaytestCreate = () => {
@@ -121,6 +133,18 @@ const MenuBar = () => {
     { enableOnTags: 'INPUT' },
     [onNew]
   )
+
+  const agentMenuItems = (process.env.REACT_APP_USE_AGENTS === "true") ? {
+    agent_manager: {
+      onClick: onAgentManagerCreate,
+    },
+    ent_manager: {
+      onClick: onEntManagerCreate,
+    },
+    config_manager: {
+      onClick: onConfigManagerCreate,
+    }
+  } : {}
 
   //Menu bar entries
   const menuBarItems = {
@@ -178,6 +202,7 @@ const MenuBar = () => {
             state_manager: {
               onClick: onStateManagerCreate,
             },
+            ...agentMenuItems,
             playtest: {
               onClick: onPlaytestCreate,
             },
@@ -204,13 +229,6 @@ const MenuBar = () => {
             node_editing: {},
           },
         },
-      },
-    },
-    agents: {
-      items: {
-        edit: {
-          onClick: onAgents
-        }
       },
     },
   }

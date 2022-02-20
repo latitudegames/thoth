@@ -16,7 +16,7 @@ export class agent extends gameObject {
   name = ''
 
   //Clients
-  discord: discord_client
+  discord: discord_client | null
   telegram: telegram_client
   zoom: zoom_client
   twitter: twitter_client
@@ -28,49 +28,76 @@ export class agent extends gameObject {
   //harmony: any
   xrengine: xrengine_client
 
-  constructor(id: number, name: string, clients: string | any[]) {
-    super(id)
-    this.name = name
+  startDiscord(discord_api_token: string, spell_handler: string, spell_version: string) {
+    if (this.discord) throw new Error("Discord already running for this agent on this instance")
+    this.discord = new discord_client()
+    this.discord.createDiscordClient(this, discord_api_token, spell_handler, spell_version)
+    console.log("Started discord client for agent " + this.name)
+  }
+
+  stopDiscord() {
+    if (!this.discord) throw new Error("Discord isn't running, can't stop it")
+    this.discord.destroy()
+    this.discord = null
+    console.log("Stopped discord client for agent " + this.name)
+
+  }
+
+  async onDestroy() {
+    await super.onDestroy()
+    if (this.discord) this.stopDiscord()
+  }
+
+  constructor(data: any) {
+    super(data.id)
+    console.log("data is ", data)
+    this.name = data.agent ?? data.name ?? "agent"
     console.log('initing agent')
 
-    for (let i = 0; i < clients.length; i++) {
-      if (clients[i].enabled === 'true') {
-        if (clients[i].client === 'discord') {
-          this.discord = new discord_client()
-          this.discord.createDiscordClient(this, clients[i].settings)
-        } else if (clients[i].client === 'telegram') {
-          this.telegram = new telegram_client()
-          this.telegram.createTelegramClient(this, clients[i].settings)
-        } else if (clients[i].client === 'zoom') {
-          this.zoom = new zoom_client()
-          this.zoom.createZoomClient(this, clients[i].settings)
-        } else if (clients[i].client === 'twitter') {
-          this.twitter = new twitter_client()
-          this.twitter.createTwitterClient(this, clients[i].settings)
-        } else if (clients[i].client === 'reddit') {
-          this.reddit = new reddit_client()
-          this.reddit.createRedditClient(this, clients[i].settings)
-        } else if (clients[i].client === 'instagram') {
-          this.instagram = new instagram_client()
-          this.instagram.createInstagramClient(this, clients[i].settings)
-        } else if (clients[i].client === 'messenger') {
-          this.messenger = new messenger_client()
-          this.messenger.createMessengerClient(app, this, clients[i].settings)
-        } else if (clients[i].client === 'whatsapp') {
-          this.whatsapp = new whatsapp_client()
-          this.whatsapp.createWhatsappClient(this, clients[i].settings)
-        } else if (clients[i].client === 'twilio') {
-          this.twilio = new twilio_client()
-          this.twilio.createTwilioClient(app, router, this, clients[i].settings)
-        } else if (clients[i].client === 'harmony') {
-          //this.harmony = new harmony_client();
-          //this.harmony.createHarmonyClient(this, clients[i].settings);
-        } else if (clients[i].client === 'xr-engine') {
-          this.xrengine = new xrengine_client()
-          this.xrengine.createXREngineClient(this, clients[i].settings)
-        }
-      }
+    if (data.discord_enabled) {
+      this.startDiscord(data.discord_api_key, data.spell_handler, data.spell_version);
     }
+
+    // TODO: Fix me
+
+    // for (let i = 0; i < clients.length; i++) {
+    //   if (clients[i].enabled === 'true') {
+    //     if (clients[i].client === 'discord') {
+    //       this.discord = new discord_client()
+    //       this.discord.createDiscordClient(this, clients[i].settings)
+    //     } else if (clients[i].client === 'telegram') {
+    //       this.telegram = new telegram_client()
+    //       this.telegram.createTelegramClient(this, clients[i].settings)
+    //     } else if (clients[i].client === 'zoom') {
+    //       this.zoom = new zoom_client()
+    //       this.zoom.createZoomClient(this, clients[i].settings)
+    //     } else if (clients[i].client === 'twitter') {
+    //       this.twitter = new twitter_client()
+    //       this.twitter.createTwitterClient(this, clients[i].settings)
+    //     } else if (clients[i].client === 'reddit') {
+    //       this.reddit = new reddit_client()
+    //       this.reddit.createRedditClient(this, clients[i].settings)
+    //     } else if (clients[i].client === 'instagram') {
+    //       this.instagram = new instagram_client()
+    //       this.instagram.createInstagramClient(this, clients[i].settings)
+    //     } else if (clients[i].client === 'messenger') {
+    //       this.messenger = new messenger_client()
+    //       this.messenger.createMessengerClient(app, this, clients[i].settings)
+    //     } else if (clients[i].client === 'whatsapp') {
+    //       this.whatsapp = new whatsapp_client()
+    //       this.whatsapp.createWhatsappClient(this, clients[i].settings)
+    //     } else if (clients[i].client === 'twilio') {
+    //       this.twilio = new twilio_client()
+    //       this.twilio.createTwilioClient(app, router, this, clients[i].settings)
+    //     } else if (clients[i].client === 'harmony') {
+    //       //this.harmony = new harmony_client();
+    //       //this.harmony.createHarmonyClient(this, clients[i].settings);
+    //     } else if (clients[i].client === 'xr-engine') {
+    //       this.xrengine = new xrengine_client()
+    //       this.xrengine.createXREngineClient(this, clients[i].settings)
+    //     }
+    //   }
+    // }
   }
 }
 

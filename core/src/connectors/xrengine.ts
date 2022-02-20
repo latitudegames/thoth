@@ -9,19 +9,22 @@
 /* eslint-disable camelcase */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { customConfig } from '@latitudegames/thoth-core/src/superreality/customConfig'
+
+// TODO: This was imported fropm our old codebase
+// We need to break some of this code out so that we have more control of it in the node graph
+// i.e. text classification and such
 
 import roomManager from '../components/roomManager'
 import { classifyText } from '../components/textClassifier'
-import { database } from '../superreality/database'
+import { browserWindow, PageUtils } from './browser'
+import { database } from './database'
+import { handleInput } from './handleInput'
 import {
   detectOsOption,
   getRandomEmptyResponse,
   getSetting,
   startsWithCapital,
-} from '../superreality/utils'
-import { browserWindow, PageUtils } from './browser'
-import { handleInput } from './handleInput'
+} from './utils'
 
 export class xrengine_client {
   UsersInRange = {}
@@ -129,32 +132,30 @@ export class xrengine_client {
     return this.messageResponses[chatId][message]
   }
 
-  async getChatHistory(chatId, length) {
-    return await database.instance.getHistory(length, 'xr-engine', chatId)
-  }
   async addMessageToHistory(chatId, messageId, senderName, content) {
-    await database.instance.addMessageInHistory(
-      'xr-engine',
-      chatId,
-      messageId,
-      senderName,
-      content
-    )
+    return
+    // await database.instance.addMessageInHistory(
+    //   'xr-engine',
+    //   chatId,
+    //   messageId,
+    //   senderName,
+    //   content
+    // )
   }
   async deleteMessageFromHistory(chatId, messageId) {
-    await database.instance.deleteMessage('xr-engine', chatId, messageId)
+    // await database.instance.deleteMessage('xr-engine', chatId, messageId)
   }
   async updateMessage(chatId, messageId, newContent) {
-    await database.instance.updateMessage(
-      'xr-engine',
-      chatId,
-      messageId,
-      newContent,
-      true
-    )
+    // await database.instance.updateMessage(
+    //   'xr-engine',
+    //   chatId,
+    //   messageId,
+    //   newContent,
+    //   true
+    // )
   }
   async wasHandled(chatId, messageId, foundCallback, notFoundCallback) {
-    return await database.instance.messageExists2(
+    return await database.instance.messageExistsWithCallback(
       'xr-engine',
       chatId,
       messageId,
@@ -762,7 +763,7 @@ class XREngineBot {
     await this.waitForTimeout(timeout)
   }
 
-  async interactObject() {}
+  async interactObject() { }
 
   /** Return screenshot
    * @param {Function} fn Function to execut _in the node context._

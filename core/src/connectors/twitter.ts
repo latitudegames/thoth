@@ -4,12 +4,11 @@
 /* eslint-disable camelcase */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { customConfig } from '@latitudegames/thoth-core/src/superreality/customConfig'
 import { TwitterApi } from 'twitter-api-v2'
-
-import { database } from '../superreality/database'
-import { getSetting } from '../superreality/utils'
+import { database } from './database'
 import { handleInput } from './handleInput'
+import { getSetting } from './utils'
+
 
 export class twitter_client {
   async handleMessage(response, chat_id, args, twitter, twitterV1, localUser) {
@@ -55,7 +54,10 @@ export class twitter_client {
       'twitterAccessTokenSecret'
     )
     const regex = new RegExp('', 'ig')
-    const regex2 = new RegExp(customConfig.instance.get('botNameRegex'), 'ig')
+    const regex2 = new RegExp(
+      (await database.instance.getConfig())['botNameRegex'],
+      'ig'
+    )
     if (!bearerToken || !twitterUser)
       return console.warn('No API token for Whatsapp bot, skipping')
 
@@ -169,7 +171,7 @@ export class twitter_client {
                     const utcStr = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' ' + utc.getHours() + ':' + utc.getMinutes() + ':' + utc.getSeconds()
                     var ts = Math.floor(utc.getTime() / 1000);
                     await database.instance.messageExistsAsyncWitHCallback2('reddit', twit.data.id, twit.data.id, authorName, twit.data.text, ts, () => {
-                        MessageClient.instance.sendMessage(twit.data.text, 
+                        MessageClient.instance.sendMessage(twit.data.text,
                             twit.data.id,
                             'twitter',
                             twit.data.in_reply_to_user_id ? twit.data.in_reply_to_user_id : twit.data.id,

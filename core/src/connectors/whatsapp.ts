@@ -6,14 +6,8 @@
 // @ts-nocheck
 
 import WhatsAppBot from '@green-api/whatsapp-bot'
-import { customConfig } from '@latitudegames/thoth-core/src/superreality/customConfig'
-import { database } from '../superreality/database'
-import {
-  getRandomEmptyResponse,
-  getSetting,
-  startsWithCapital,
-} from '../superreality/utils'
-import { onMessage } from './whatsapp/events/message'
+import { database } from './database'
+import { getRandomEmptyResponse, getSetting, startsWithCapital } from './utils'
 
 export class whatsapp_client {
   //TODO: Needs tests - misses API key (needs request from whatsapp)
@@ -145,7 +139,7 @@ export class whatsapp_client {
     }
 
     args['chat_history'] = await this.getChatHistory(msg.chat.id, 10)
-    await messageResponseHandler(args, response => {
+    await messageResponseHandler(args, async response => {
       log(JSON.stringify(response))
       Object.keys(response.response).map(function (key, index) {
         log('response: ' + response.response[key])
@@ -376,19 +370,20 @@ export class whatsapp_client {
     )
   }
   async getChatHistory(chatId, length) {
-    return await database.instance.getHistory(length, 'whatsapp', chatId)
+    return []
+    // return await database.instance.getHistory(length, 'whatsapp', chatId)
   }
   async updateMessage(chatId, messageId, newContent) {
-    await database.instance.updateMessage(
-      'whatsapp',
-      chatId,
-      messageId,
-      newContent,
-      true
-    )
+    // await database.instance.updateMessage(
+    //   'whatsapp',
+    //   chatId,
+    //   messageId,
+    //   newContent,
+    //   true
+    // )
   }
-
-  username_regex = new RegExp(customConfig.instance.get('botNameRegex'), 'ig')
+  // replace with configurable regex later
+  username_regex = new RegExp('((?:digital|being)(?: |$))', 'ig')
   botName
   agent
   settings

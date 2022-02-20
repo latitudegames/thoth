@@ -5,11 +5,9 @@
 /* eslint-disable camelcase */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-
-import customConfig from '@latitudegames/thoth-core/src/superreality/customConfig'
 import { launch } from 'puppeteer-stream'
 import Xvfb from 'xvfb'
-import { detectOsOption, getSetting } from '../superreality/utils'
+import { detectOsOption, getSetting } from './utils'
 
 export class zoom_client {
   async createZoomClient(agent, settings) {
@@ -88,7 +86,7 @@ export class zoom {
       )
       await this.clickElementById('button', 'joinBtn')
       await this.delay(20000)
-    } catch (ex) {}
+    } catch (ex) { }
 
     await this.playVideo('https://woolyss.com/f/spring-vp9-vorbis.webm')
 

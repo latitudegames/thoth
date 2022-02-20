@@ -1,47 +1,12 @@
 import { createWikipediaAgent } from '@latitudegames/thoth-core/src/connectors/wikipedia'
-import customConfig from '@latitudegames/thoth-core/src/superreality/customConfig'
-import { database } from '@latitudegames/thoth-core/src/superreality/database'
+import { database } from '@latitudegames/thoth-core/src/connectors/database'
 import { handleInput } from '@latitudegames/thoth-core/src/connectors/handleInput'
 import Koa from 'koa'
 import 'regenerator-runtime/runtime'
 import { noAuth } from '../middleware/auth'
 import { Route } from '../types'
-import {
-  reloadAgentInstances,
-  reloadConfigs,
-  reloadProfanity,
-} from '../utils/reload'
 
 export const modules: Record<string, unknown> = {}
-
-function clientSettingsToInstance(settings: any) {
-  function addSettingForClient(array: any, client: any, setting: any) {
-    for (let i = 0; i < array.length; i++) {
-      if (array[i].client === client) {
-        array[i].settings.push({ name: setting._name, value: setting._value })
-        return array
-      }
-    }
-
-    array.push({
-      client: client,
-      enabled: false,
-      settings: [{ name: setting._name, value: setting._defaultValue }],
-    })
-    return array
-  }
-
-  let res = []
-
-  for (let i = 0; i < settings.length; i++) {
-    res = addSettingForClient(res, settings[i].client, {
-      _name: settings[i].name,
-      _value: settings[i].defaultValue,
-    })
-  }
-
-  return res
-}
 
 const getAgentsHandler = async (ctx: Koa.Context) => {
   const agents = await database.instance.getAgents()
@@ -49,90 +14,35 @@ const getAgentsHandler = async (ctx: Koa.Context) => {
 }
 
 const getAgentHandler = async (ctx: Koa.Context) => {
-  const agent = ctx.query.agent
-  ctx.body = {
-    actions: (await database.instance.getActions(agent)).trim(),
-    dialogue: (await database.instance.getDialogue(agent)).trim(),
-    ethics: (await database.instance.getEthics(agent)).trim(),
-    facts: (await database.instance.getAgentFacts(agent)).trim(),
-    monologue: (await database.instance.getMonologue(agent)).trim(),
-    needsAndMotivation: (
-      await database.instance.getNeedsAndMotivations(agent)
-    ).trim(),
-    personality: (await database.instance.getPersonality(agent)).trim(),
-    room: (await database.instance.getRoom(agent)).trim(),
-    startingPhrases: (await database.instance.getStartingPhrases(agent)).trim(),
-    ignoredKeywords: (
-      await database.instance.getIgnoredKeywordsData(agent)
-    ).trim(),
+  const agent = await database.instance.getAgent(ctx.query.agent as string)
+  if (agent == null) {
+    return {}
   }
+
+  ctx.body = agent
 }
 
 const createOrUpdateAgentHandler = async (ctx: Koa.Context) => {
-  const { agentName, data } = ctx.request.body
-  if (!agentName || agentName == undefined || agentName.length <= 0) {
+  console.log('ctx.request.body is ', ctx.request.body)
+  const { agent, data } = ctx.request.body
+  if (!agent || agent == undefined || agent.length <= 0) {
     return (ctx.body = { error: 'invalid agent name' })
   }
 
-  const agentExists = await database.instance.getAgentExists(agentName)
+  const agentExists = await database.instance.getAgentExists(agent)
   if (!agentExists) {
-    // TODO: Combine all of these!
-    try {
-      await database.instance.setActions(agentName, data.actions)
-      await database.instance.setDialogue(agentName, data.dialogue)
-      await database.instance.setEthics(agentName, data.ethics)
-      await database.instance.setAgentFacts(agentName, data.facts, true)
-      await database.instance.setMonologue(agentName, data.monologue)
-      await database.instance.setNeedsAndMotivations(
-        agentName,
-        data.needsAndMotivation
-      )
-      await database.instance.setPersonality(agentName, data.personality)
-      await database.instance.setRoom(agentName, data.room)
-      await database.instance.setStartingPhrases(
-        agentName,
-        data.startingPhrases
-      )
-      await database.instance.setIgnoredKeywords(
-        agentName,
-        data.ignoredKeywords
-      )
-    } catch (e) {
-      return (ctx.body = { error: 'internal error' })
-    }
+    await database.instance.createAgent(agent)
   }
-
+  // TODO: Combine all of these!
   try {
-    // TODO: Combine all of these!
-
-    await database.instance.setAgentExists(agentName)
-    if (!data.actions || data.actions === undefined) data.actions = ''
-    await database.instance.setActions(agentName, data.actions)
-    if (!data.dialogue || data.dialogue === undefined) data.dialogue = ''
-    await database.instance.setDialogue(agentName, data.dialogue)
-    if (!data.ethics || data.ethics === undefined) data.ethics = ''
-    await database.instance.setEthics(agentName, data.ethics)
-    if (!data.facts || data.facts === undefined) data.facts = ''
-    await database.instance.setAgentFacts(agentName, data.facts)
-    if (!data.monologue || data.monologue === undefined) data.monologue = ''
-    await database.instance.setMonologue(agentName, data.monologue)
-    if (!data.needsAndMotivation || data.needsAndMotivation === undefined)
-      data.needsAndMotivation = ''
-    await database.instance.setNeedsAndMotivations(
-      agentName,
-      data.needsAndMotivation
-    )
-    if (!data.personality || data.personality === undefined)
-      data.personality = ''
-    await database.instance.setPersonality(agentName, data.personality)
-    if (!data.room || data.room === undefined) data.room = ''
-    await database.instance.setRoom(agentName, data.room)
-    if (!data.startingPhrases || data.startingPhrases === undefined)
-      data.startingPhrases = ''
-    await database.instance.setStartingPhrases(agentName, data.startingPhrases)
-    if (!data.ignoredKeywords || data.ignoredKeywords === undefined)
-      data.ignoredKeywords = ''
-    await database.instance.setIgnoredKeywords(agentName, data.ignoredKeywords)
+    await database.instance.updateAgent(agent, {
+      dialog: data.dialog,
+      morals: data.morals,
+      facts: data.facts,
+      monologue: data.monologue,
+      personality: data.personality,
+      greetings: data.greetings,
+    })
   } catch (e) {
     return (ctx.body = { error: 'internal error' })
   }
@@ -141,124 +51,21 @@ const createOrUpdateAgentHandler = async (ctx: Koa.Context) => {
 }
 
 const deleteAgentHandler = async (ctx: Koa.Context) => {
-  const { agentName } = ctx.request.body
-  if (agentName === 'common') {
-    return (ctx.body = { error: "you can't delete the default agent" })
-  }
-
-  await database.instance.deleteAgent(agentName)
-  return (ctx.body = 'ok')
-}
-
-const getProfanityHandler = async (ctx: Koa.Context) => {
-  const editorId = ctx.query.editor_id
-
-  if (editorId === '1') {
-    return (ctx.body = {
-      data: (await database.instance.getBadWords()).toString().split('\n'),
-    })
-  } else if (editorId === '2') {
-    return (ctx.body = {
-      data: (await database.instance.getSensitiveWords())
-        .toString()
-        .split('\r\n'),
-    })
-  } else if (editorId === '3') {
-    return (ctx.body = {
-      data: (await database.instance.getSensitivePhrases())
-        .toString()
-        .split('\n'),
-    })
-  } else if (editorId === '4') {
-    return (ctx.body = {
-      data: (await database.instance.getLeadingStatements())
-        .toString()
-        .split('\n'),
-    })
-  }
-  ctx.body = 'invalid editor id'
-}
-
-const addProfanityHandler = async (ctx: Koa.Context) => {
-  const word = ctx.request.body.word
-  const editorId = ctx.request.body.editorId
-
-  if (editorId == 1) {
-    if (await database.instance.badWordExists(word)) {
-      return (ctx.body = { error: 'already exists' })
-    }
-
-    await database.instance.addBadWord(word)
-    await reloadProfanity()
-    return (ctx.body = 'ok')
-  } else if (editorId == 2) {
-    if (await database.instance.sensitiveWordExists(word)) {
-      return (ctx.body = { error: 'already exists' })
-    }
-
-    await database.instance.addSensitiveWord(word)
-    await reloadProfanity()
-    return (ctx.body = 'ok')
-  } else if (editorId == 3) {
-    if (await database.instance.sensitivePhraseExists(word)) {
-      return (ctx.body = { error: 'already exists' })
-    }
-
-    await database.instance.addSensitivePhrase(word)
-    await reloadProfanity()
-    return (ctx.body = 'ok')
-  } else if (editorId == 4) {
-    if (await database.instance.leadingStatementExists(word)) {
-      return (ctx.body = { error: 'already exists' })
-    }
-
-    await database.instance.addLeadingStatement(word)
-    await reloadProfanity()
-    return (ctx.body = 'ok')
-  }
-  ctx.body = { error: 'invalid editor id' }
-}
-
-const deleteProfanityHandler = async (ctx: Koa.Context) => {
-  const word = ctx.request.body.word
-  const editorId = ctx.request.body.editorId
-
-  if (editorId == 1) {
-    await database.instance.removeBadWord(word)
-    await reloadProfanity()
-    return (ctx.body = 'ok')
-  } else if (editorId == 2) {
-    await database.instance.removeSensitiveWord(word)
-    await reloadProfanity()
-    return (ctx.body = 'ok')
-  } else if (editorId == 3) {
-    await database.instance.removeSensitivePhrase(word)
-    await reloadProfanity()
-    return (ctx.body = 'ok')
-  } else if (editorId == 4) {
-    await database.instance.removeLeadingStatement(word)
-    await reloadProfanity()
-    return (ctx.body = 'ok')
-  }
-
-  ctx.body = { error: 'invalid editor id' }
+  console.log('params is', ctx.params)
+  const { id } = ctx.params
+  return (ctx.body = await database.instance.deleteAgent(id))
 }
 
 const getConfigHandler = async (ctx: Koa.Context) => {
-  const data = {
-    config: customConfig.instance.allToArray(),
-  }
-
-  return (ctx.body = data)
+  return (ctx.body = await database.instance.getConfig())
 }
 
 const addConfigHandler = async (ctx: Koa.Context) => {
   const data = ctx.request.body.data
 
   try {
-    await customConfig.instance.set(data.key, data.value)
+    await database.instance.setConfig(data.key, data.value)
     ctx.body = 'ok'
-    await reloadConfigs()
   } catch (e) {
     console.error(e)
     return (ctx.body = { error: 'internal error' })
@@ -266,14 +73,15 @@ const addConfigHandler = async (ctx: Koa.Context) => {
 }
 
 const updateConfigHandler = async (ctx: Koa.Context) => {
+  console.log('updateConfigHandler', ctx.request.body)
   const data = ctx.request.body.config
   try {
+    // TODO: build string and set multiple configs at once
     for (let i = 0; i < data.length; i++) {
-      await customConfig.instance.set(data[i].key, data[i].value)
+      await database.instance.setConfig(data[i].key, data[i].value)
     }
 
     ctx.body = 'ok'
-    await reloadConfigs()
   } catch (e) {
     console.error(e)
     return (ctx.body = { error: 'internal error' })
@@ -281,12 +89,11 @@ const updateConfigHandler = async (ctx: Koa.Context) => {
 }
 
 const deleteConfigHandler = async (ctx: Koa.Context) => {
-  const data = ctx.request.body.data
-
+  const { id } = ctx.params
+  console.log('delete data is ', id)
   try {
-    await customConfig.instance.delete(data.key)
+    await database.instance.deleteConfig(id)
     ctx.body = 'ok'
-    await reloadConfigs()
   } catch (e) {
     console.error(e)
     return (ctx.body = { error: 'internal error' })
@@ -298,59 +105,39 @@ const executeHandler = async (ctx: Koa.Context) => {
   const speaker = ctx.request.body.sender
   const agent = ctx.request.body.agent
   const id = ctx.request.body.id
-  const msg = database.instance.getRandomStartingMessage(agent)
+  const msg = database.instance.getRandomGreeting(agent)
   if (message.includes('/become')) {
     let out: any = {}
     if (!(await database.instance.getAgentExists(agent))) {
       out = await createWikipediaAgent('Speaker', agent, '', '')
     }
 
-    out.startingMessage = await msg
+    if (out === undefined) {
+      out = {}
+    }
+
+    out.defaultGreeting = await msg
     database.instance.setConversation(
       agent,
       'web',
       id,
       agent,
-      out.startingMessage,
+      out.defaultGreeting,
       false
     )
     return (ctx.body = out)
   }
-  ctx.body = await handleInput(message, speaker, agent, null, 'web', id)
-}
-
-const getAgentConfigHandler = async (ctx: Koa.Context) => {
-  try {
-    const body =
-      (await database.instance.getAgentsConfig(
-        ctx.request.body.agent ?? 'common'
-      )) ?? {}
-    return (ctx.body = body)
-  } catch (e) {
-    console.error(e)
-    return (ctx.body = { error: 'internal error' })
-  }
-}
-
-const addAgentConfigHandler = async (ctx: Koa.Context) => {
-  const data = ctx.request.body.data
-
-  try {
-    ctx.body = await database.instance.setAgentsConfig('common', data)
-    return ctx.body
-  } catch (e) {
-    console.error(e)
-    return (ctx.body = { error: 'internal error' })
-  }
+  ctx.body = await handleInput(message, speaker, agent)
 }
 
 const getPromptsHandler = async (ctx: Koa.Context) => {
+  const config = (await database.instance.getConfig()) as any
   try {
     const data = {
-      xr_world: await database.instance.get3dWorldUnderstandingPrompt(),
-      fact: await database.instance.getAgentsFactsSummarization(),
-      opinion: await database.instance.getOpinionFormPrompt(),
-      xr: await database.instance.getXrEngineRoomPrompt(),
+      xr_world: config['xr_world'],
+      fact: config['fact_summarization'],
+      opinion: config['opinion_summarization'],
+      xr: config['xr_room'],
     }
 
     return (ctx.body = data)
@@ -362,12 +149,14 @@ const getPromptsHandler = async (ctx: Koa.Context) => {
 
 const addPromptsHandler = async (ctx: Koa.Context) => {
   const data = ctx.request.body.data
+  console.log('addPromptsHandler', ctx.request.body)
 
   try {
-    await database.instance.set3dWorldUnderstandingPrompt(data.xr_world)
-    await database.instance.setAgentsFactsSummarization(data.fact)
-    await database.instance.setOpinionFormPrompt(data.opinion)
-    await database.instance.setXrEngineRoomPrompt(data.xr)
+    // TODO: Combine me!
+    await database.instance.setConfig('xr_world', data.xr_world)
+    // await database.instance.setConfig('fact_summarization', data.fact)
+    // await database.instance.setConfig('opinion', data.opinion)
+    // await database.instance.setConfig('xr_room', data.xr_world)
 
     return (ctx.body = 'ok')
   } catch (e) {
@@ -407,9 +196,6 @@ const getAgentInstanceHandler = async (ctx: Koa.Context) => {
       data = {
         id: newId,
         personality: '',
-        clients: clientSettingsToInstance(
-          await database.instance.getAllClientSettings()
-        ),
         enabled: true,
       }
     }
@@ -422,12 +208,10 @@ const getAgentInstanceHandler = async (ctx: Koa.Context) => {
 
 const addAgentInstanceHandler = async (ctx: Koa.Context) => {
   const data = ctx.request.body.data
-  let instanceId = data.id
-  const personality = data.personality?.trim()
-  let clients = data.clients
-  const enabled = data.enabled
+  let instanceId = ctx.request.body.id ?? ctx.request.body.instanceId
 
   if (!instanceId || instanceId === undefined || instanceId <= 0) {
+    instanceId = 0
     while (
       (await database.instance.instanceIdExists(instanceId)) ||
       instanceId <= 0
@@ -435,32 +219,13 @@ const addAgentInstanceHandler = async (ctx: Koa.Context) => {
       instanceId++
     }
   }
-  if (!clients || clients === undefined || clients === 'none') {
-    clients = clientSettingsToInstance(
-      await database.instance.getAllClientSettings()
-    )
-  }
-
-  if (!instanceId) {
-    await database.instance.updateAgentInstances(
-      instanceId,
-      personality,
-      clients,
-      enabled
-    )
-    ctx.body = 'ok'
-    reloadAgentInstances()
-  }
 
   try {
-    await database.instance.updateAgentInstances(
+    console.log('updated agent database with', data)
+    return (ctx.body = await database.instance.updateAgentInstances(
       instanceId,
-      personality,
-      clients,
-      enabled
-    )
-    ctx.body = 'ok'
-    reloadAgentInstances()
+      data
+    ))
   } catch (e) {
     console.error(e)
     return (ctx.body = { error: 'internal error' })
@@ -468,12 +233,106 @@ const addAgentInstanceHandler = async (ctx: Koa.Context) => {
 }
 
 const deleteAgentInstanceHandler = async (ctx: Koa.Context) => {
-  const { agentName } = ctx.request.body
+  const { id } = ctx.params
+  console.log('deleteAgentInstanceHandler', deleteAgentInstanceHandler)
+  ctx.body = await database.instance.deleteAgentInstance(id)
+}
 
-  await database.instance.deleteAgentInstance(agentName)
-  reloadAgentInstances()
+const setFacts = async (ctx: Koa.Context) => {
+  const { agent, speaker, facts } = ctx.request.body
+
+  await database.instance.setSpeakersFacts(agent, speaker, facts)
 
   return (ctx.body = 'ok')
+}
+const getFacts = async (ctx: Koa.Context) => {
+  const agent = ctx.request.query.agent
+  const speaker = ctx.request.query.speaker
+
+  const facts = await database.instance.getSpeakersFacts(agent, speaker, false)
+
+  return (ctx.body = facts)
+}
+const getFactsCount = async (ctx: Koa.Context) => {
+  const agent = ctx.request.query.agent
+  const speaker = ctx.request.query.speaker
+
+  const facts = await database.instance.getSpeakersFacts(agent, speaker, false)
+
+  return (ctx.body = facts.length)
+}
+
+const getConversation = async (ctx: Koa.Context) => {
+  const agent = ctx.request.query.agent
+  const speaker = ctx.request.query.speaker
+  const client = ctx.request.query.client
+  const channel = ctx.request.query.channel
+
+  const conversation = await database.instance.getConversation(
+    agent,
+    speaker,
+    client,
+    channel,
+    false
+  )
+
+  return (ctx.body = conversation)
+}
+const setConversation = async (ctx: Koa.Context) => {
+  const agent = ctx.request.body.agent
+  const speaker = ctx.request.body.speaker
+  const client = ctx.request.body.client
+  const channel = ctx.request.body.channel
+  const conversation = ctx.request.body.conve
+
+  await database.instance.setConversation(
+    agent,
+    client,
+    channel,
+    speaker,
+    conversation,
+    false
+  )
+}
+const getConversationCount = async (ctx: Koa.Context) => {
+  const agent = ctx.request.query.agent
+  const speaker = ctx.request.query.speaker
+  const client = ctx.request.query.client
+  const channel = ctx.request.query.channel
+
+  const conversation = await database.instance.getConversation(
+    agent,
+    speaker,
+    client,
+    channel,
+    false
+  )
+
+  return (ctx.body = conversation.length)
+}
+
+const getRelationshipMatrix = async (ctx: Koa.Context) => {
+  const agent = ctx.request.query.agent
+  const speaker = ctx.request.query.speaker
+
+  try {
+    const matrix = database.instance.getRelationshipMatrix(speaker, agent)
+    return (ctx.body = matrix)
+  } catch (e) {
+    return (ctx.body = { error: 'internal error' })
+  }
+}
+const setRelationshipMatrix = async (ctx: Koa.Context) => {
+  const agent = ctx.request.body.agent
+  const speaker = ctx.request.body.speaker
+  const matrix = ctx.request.body.matrix
+
+  try {
+    database.instance.setRelationshipMatrix(speaker, agent, matrix)
+    return (ctx.body = 'ok')
+  } catch (e) {
+    return (ctx.body = { error: 'internal error' })
+  }
 }
 
 export const agents: Route[] = [
@@ -491,16 +350,9 @@ export const agents: Route[] = [
     delete: deleteAgentHandler,
   },
   {
-    path: '/profanity',
+    path: '/agent/:id',
     access: noAuth,
-    post: getProfanityHandler,
-  },
-  {
-    path: '/profanity',
-    access: noAuth,
-    get: getProfanityHandler,
-    post: addProfanityHandler,
-    delete: deleteProfanityHandler,
+    delete: deleteAgentHandler,
   },
   {
     path: '/config',
@@ -508,13 +360,11 @@ export const agents: Route[] = [
     get: getConfigHandler,
     post: addConfigHandler,
     put: updateConfigHandler,
-    delete: deleteConfigHandler,
   },
   {
-    path: '/agentConfig',
+    path: '/config/:id',
     access: noAuth,
-    get: getAgentConfigHandler,
-    post: addAgentConfigHandler,
+    delete: deleteConfigHandler,
   },
   {
     path: '/prompts',
@@ -537,6 +387,38 @@ export const agents: Route[] = [
     access: noAuth,
     get: getAgentInstanceHandler,
     post: addAgentInstanceHandler,
+  },
+  {
+    path: '/agentInstance/:id',
+    access: noAuth,
     delete: deleteAgentInstanceHandler,
+  },
+  {
+    path: '/facts',
+    access: noAuth,
+    get: getFacts,
+    post: setFacts,
+  },
+  {
+    path: '/facts_count',
+    access: noAuth,
+    get: getFactsCount,
+  },
+  {
+    path: '/conversation',
+    access: noAuth,
+    get: getConversation,
+    post: setConversation,
+  },
+  {
+    path: '/conversation_count',
+    access: noAuth,
+    get: getConversationCount,
+  },
+  {
+    path: '/relationship_matrix',
+    access: noAuth,
+    get: getRelationshipMatrix,
+    post: setRelationshipMatrix,
   },
 ]

@@ -7,6 +7,7 @@ export class InputControl extends DataControl {
       name: name,
       component: 'input',
       icon,
+      type: 'string',
     }
 
     super(options)

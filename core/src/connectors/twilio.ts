@@ -5,12 +5,10 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import { customConfig } from '@latitudegames/thoth-core/src/superreality/customConfig'
 import Twilio from 'twilio'
-
-import { database } from '../superreality/database'
-import { getRandomEmptyResponse, getSetting } from '../superreality/utils'
+import { database } from './database'
 import { handleInput } from './handleInput'
+import { getRandomEmptyResponse, getSetting } from './utils'
 
 export class twilio_client {
   async message(req, res) {
@@ -128,18 +126,15 @@ export class twilio_client {
     })
   }
 
-  async getChatHistory(chatId, length) {
-    return await database.instance.getHistory(length, 'twilio', chatId)
-  }
-
   async addMessageToHistory(chatId, senderName, content, messageId) {
-    database.instance.addMessageInHistory(
-      'twilio',
-      chatId,
-      messageId + '',
-      senderName,
-      content
-    )
+    return
+    // database.instance.addMessageInHistory(
+    //   'twilio',
+    //   chatId,
+    //   messageId + '',
+    //   senderName,
+    //   content
+    // )
   }
 
   client = null

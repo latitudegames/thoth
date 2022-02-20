@@ -1,7 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import { customConfig } from '@latitudegames/thoth-core/src/superreality/customConfig'
 import fs from 'fs'
 import { calendar_v3, google } from 'googleapis'
 import path from 'path'
@@ -64,7 +63,9 @@ function listEvents() {
             const diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000)
             if (diffMins <= 60 && diffMins > 0) {
               sendMessageToChannel(
-                customConfig.instance.get('discord_calendar_channel'),
+                (await database.instance.getConfig())[
+                'discord_calendar_channel'
+                ],
                 event.summary + ' is starting in ' + diffMins + ' minutes!'
               )
             }

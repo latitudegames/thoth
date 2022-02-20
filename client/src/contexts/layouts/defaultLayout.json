@@ -42,7 +42,7 @@
         "children": [
           {
             "type": "tabset",
-            "id": "#13",
+            "id": "#14",
             "weight": 50,
             "children": [
               {
@@ -56,6 +56,24 @@
                 "id": "#10",
                 "name": "State Manager",
                 "component": "stateManager"
+              },
+              {
+                "type": "tab",
+                "id": "#11",
+                "name": "Agent Manager",
+                "component": "agentManager"
+              },
+              {
+                "type": "tab",
+                "id": "#12",
+                "name": "Ent Manager",
+                "component": "entManager"
+              },
+              {
+                "type": "tab",
+                "id": "#13",
+                "name": "Config Manager",
+                "component": "configManager"
               }
             ]
           },
