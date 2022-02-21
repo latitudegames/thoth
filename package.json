@@ -31,6 +31,7 @@
     "yarn": "^1.22.10"
   },
   "devDependencies": {
+    "@types/node-fetch": "^2.6.1",
     "@typescript-eslint/eslint-plugin": "^4.31.1",
     "@typescript-eslint/parser": "^4.31.1",
     "concurrently": "^6.2.1",
