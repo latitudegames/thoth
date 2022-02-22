@@ -14,19 +14,18 @@ export async function makeModelRequest(
   options = { use_cache: false, wait_for_model: true }
 ) {
   try {
-    const response = await axios(
+    const response = await axios.post(
       `https://api-inference.huggingface.co/models/${model}`,
+      { inputs, parameters, options },
       {
         headers: {
           Authorization: `Bearer ${(
             await database.instance.getConfig()
           )['hf_api_token'].replace(' ', '_')}`,
         },
-        method: 'POST',
-        body: JSON.stringify({ inputs, parameters, options }),
       }
     )
-    return await response.json()
+    return await response.data.json()
   } catch (err) {
     console.error(err)
     return { success: false }

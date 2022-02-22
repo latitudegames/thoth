@@ -52,9 +52,11 @@ import { SummarizeAndStoreFactsAboutAgent } from './SummarizeAndStoreFactsAboutA
 import { SummarizeAndStoreFactsAboutSpeaker } from './SummarizeAndStoreFactsAboutSpeaker'
 import { SwitchGate } from './SwitchGate'
 import { TenseTransformer } from './TenseTransformer'
+import { TextToSpeech } from './TextToSpeech'
 import { TimeDetectorComponent } from './TimeDetector'
 import { TriggerIn } from './TriggerIn'
 import { TriggerOut } from './TriggerOut'
+import { WhileLoop } from './WhileLoop'
 
 // Here we load up all components of the builder into our editor for usage.
 // We might be able to programatically generate components from enki
@@ -76,6 +78,7 @@ export const components = {
     new SummarizeAndStoreFactsAboutAgent(),
   summarizeAndStoreFactsAboutSpeaker: () =>
     new SummarizeAndStoreFactsAboutSpeaker(),
+  textToSpeech: () => new TextToSpeech(),
   factsStore: () => new FactsStore(),
   factsRecall: () => new FactsRecall(),
   factsCount: () => new FactsCount(),
@@ -86,6 +89,7 @@ export const components = {
   opinionAboutSpeakerSet: () => new OpinionAboutSpeakerSet(),
   opinionAboutSpeakerGet: () => new OpinionAboutSpeakerGet(),
   forEach: () => new ForEach(),
+  whileLoop: () => new WhileLoop(),
   stringEvaluator: () => new StringEvaluator(),
   stringCombiner: () => new StringCombiner(),
   randomStringFromList: () => new RandomStringFromList(),
