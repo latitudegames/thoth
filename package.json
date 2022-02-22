@@ -31,9 +31,11 @@
     "yarn": "^1.22.10"
   },
   "devDependencies": {
+    "@types/node-fetch": "^2.6.1",
     "@typescript-eslint/eslint-plugin": "^4.31.1",
     "@typescript-eslint/parser": "^4.31.1",
     "concurrently": "^6.2.1",
+    "cors-anywhere": "^0.4.4",
     "craco": "^0.0.3",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.24.2",
@@ -45,6 +47,11 @@
     "@google-cloud/speech": "^4.10.0",
     "@google-cloud/text-to-speech": "^3.4.0",
     "compromise": "^13.11.4",
-    "compromise-sentences": "^0.3.0"
+    "compromise-sentences": "^0.3.0",
+    "fastify": "^3.27.2",
+    "fastify-cors": "^6.0.2",
+    "koa-http-proxy-middleware": "^0.0.2",
+    "socket.io": "^4.4.1",
+    "socket.io-client": "^4.4.1"
   }
 }

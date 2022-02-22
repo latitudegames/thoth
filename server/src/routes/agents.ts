@@ -5,6 +5,9 @@ import Koa from 'koa'
 import 'regenerator-runtime/runtime'
 import { noAuth } from '../middleware/auth'
 import { Route } from '../types'
+import axios from 'axios'
+import request from 'request'
+import fetch from 'node-fetch'
 
 export const modules: Record<string, unknown> = {}
 
@@ -334,6 +337,86 @@ const setRelationshipMatrix = async (ctx: Koa.Context) => {
     return (ctx.body = { error: 'internal error' })
   }
 }
+const getSpeechToText = async (ctx: Koa.Context) => {
+  const text = ctx.request.query.text
+  const character = ctx.request.query.character
+  const url = await getAudioUrl(
+    process.env.UBER_DUCK_KEY as string,
+    process.env.UBER_DUCK_SECRET_KEY as string,
+    character as string,
+    text as string
+  )
+
+  return (ctx.body = url)
+}
+
+function getAudioUrl(
+  key: string,
+  secretKey: string,
+  carachter: string,
+  text: string
+) {
+  if (carachter === undefined) throw new Error('Define the carachter voice.')
+  if (key === undefined) throw new Error('Define the key you got from uberduck')
+  if (carachter === undefined)
+    throw new Error('Define the secret key u got from uberduck.')
+
+  return new Promise(async (resolve, reject) => {
+    await request(
+      {
+        url: 'https://api.uberduck.ai/speak',
+        method: 'POST',
+        body: `{"speech": "${text}","voice": "${carachter}"}`,
+        auth: {
+          user: key,
+          pass: secretKey,
+        },
+      },
+      async (erro: any, response: any, body: any) => {
+        if (erro)
+          throw new Error(
+            'Error when making request, verify if yours params (key, secretKey, carachter) are correct.'
+          )
+        const audioResponse: string =
+          'https://api.uberduck.ai/speak-status?uuid=' + JSON.parse(body).uuid
+        let jsonResponse: any = false
+        async function getJson(url: string) {
+          let jsonResult: any = undefined
+          await fetch(url)
+            .then(res => res.json())
+            .then(json => {
+              jsonResult = json
+            })
+          return jsonResult
+        }
+
+        jsonResponse = await getJson(audioResponse)
+        while (jsonResponse.path === null)
+          jsonResponse = await getJson(audioResponse)
+
+        resolve(jsonResponse.path)
+      }
+    )
+  })
+}
+
+const getAgentImage = async (ctx: Koa.Context) => {
+  const agent = ctx.request.query.agent
+
+  const resp = await axios.get(
+    `https://en.wikipedia.org/w/api.php?action=query&format=json&formatversion=2&prop=pageimages&piprop=original&titles=${agent}`
+  )
+
+  if (
+    resp.data.query.pages &&
+    resp.data.query.pages.length > 0 &&
+    resp.data.query.pages[0].original
+  ) {
+    return (ctx.body = resp.data.query.pages[0].original.source)
+  }
+
+  return (ctx.body = '')
+}
 
 export const agents: Route[] = [
   {
@@ -420,5 +503,15 @@ export const agents: Route[] = [
     access: noAuth,
     get: getRelationshipMatrix,
     post: setRelationshipMatrix,
+  },
+  {
+    path: '/speech_to_text',
+    access: noAuth,
+    get: getSpeechToText,
+  },
+  {
+    path: '/get_agent_image',
+    access: noAuth,
+    get: getAgentImage,
   },
 ]

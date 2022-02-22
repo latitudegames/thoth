@@ -435,6 +435,9 @@ export class database {
     let q = ''
     Object.keys(data).forEach(key => {
       if (data[key] !== null) {
+        data[key] = (data[key] as string)
+          .replaceAll('"', ' ')
+          .replaceAll("'", ' ')
         q += `${key}='${data[key]}',`
       }
     })
