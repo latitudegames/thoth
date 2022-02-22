@@ -41,7 +41,7 @@ export async function init() {
 
   // required for some current consumers (i.e Thoth)
   // to-do: standardize an allowed origin list based on env values or another source of truth?
-  initSpeechServer()
+  initSpeechServer(false)
   const options = {
     origin: '*',
   }
@@ -52,7 +52,7 @@ export async function init() {
 
   await database.instance.connect()
   await creatorToolsDatabase.sequelize.sync({
-    force: !!process.env.REFRESH_DB,
+    force: process.env.REFRESH_DB?.toLowerCase().trim() === 'true',
   })
   await database.instance.firstInit()
   await database.instance.initData()
