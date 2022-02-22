@@ -1,5 +1,8 @@
 import { SpeechClient } from '@google-cloud/speech'
 import { Server } from 'socket.io'
+import { config } from 'dotenv'
+
+config({ path: '.env' })
 
 let speechClient: SpeechClient
 const encoding = 'LINEAR16'
@@ -20,8 +23,8 @@ const request = {
   interimResults: false,
 }
 
-export async function initSpeechServer() {
-  if (process.env.ENABLE_SPEECH_SERVER === 'false') {
+export async function initSpeechServer(ignoreDotEnv: boolean) {
+  if (ignoreDotEnv === false && process.env.ENABLE_SPEECH_SERVER === 'false') {
     return
   }
 

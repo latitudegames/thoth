@@ -58,10 +58,10 @@ export class database {
     const kv = [
       {
         key: 'openai_api_key',
-        value: '',
+        value: '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',
       },
       { key: 'google_project_id', value: '' },
-      { key: 'hf_api_token', value: '' },
+      { key: 'hf_api_token', value: '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' },
       { key: 'use_gptj', value: '' },
       { key: 'editMessageMaxCount', value: '5' },
       { key: 'botNameRegex', value: '((?:digital|being)(?: |$))' },
@@ -436,6 +436,9 @@ export class database {
     let q = ''
     Object.keys(data).forEach(key => {
       if (data[key] !== null) {
+        data[key] = (data[key] as string)
+          .replaceAll('"', ' ')
+          .replaceAll("'", ' ')
         q += `${key}='${data[key]}',`
       }
     })
