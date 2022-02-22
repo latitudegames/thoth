@@ -400,6 +400,24 @@ function getAudioUrl(
   })
 }
 
+const getAgentImage = async (ctx: Koa.Context) => {
+  const agent = ctx.request.query.agent
+
+  const resp = await axios.get(
+    `https://en.wikipedia.org/w/api.php?action=query&format=json&formatversion=2&prop=pageimages&piprop=original&titles=${agent}`
+  )
+
+  if (
+    resp.data.query.pages &&
+    resp.data.query.pages.length > 0 &&
+    resp.data.query.pages[0].original
+  ) {
+    return (ctx.body = resp.data.query.pages[0].original.source)
+  }
+
+  return (ctx.body = '')
+}
+
 export const agents: Route[] = [
   {
     path: '/agents',
@@ -490,5 +508,10 @@ export const agents: Route[] = [
     path: '/speech_to_text',
     access: noAuth,
     get: getSpeechToText,
+  },
+  {
+    path: '/get_agent_image',
+    access: noAuth,
+    get: getAgentImage,
   },
 ]
