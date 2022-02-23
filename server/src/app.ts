@@ -10,8 +10,10 @@ import compose from 'koa-compose'
 import { creatorToolsDatabase } from './databases/creatorTools'
 import { routes } from './routes'
 import { Handler, Method, Middleware } from './types'
-import { initSpeechServer } from './utils/googleSpeechToText'
+import { initSpeechServer } from './systems/googleSpeechToText'
 import { world } from './world/world'
+import { initSearchCorpus } from './systems/searchCorpus'
+import { initClassifier } from '@latitudegames/thoth-core/src/utils/textClassifier'
 
 config({ path: '.env' })
 
@@ -42,6 +44,9 @@ export async function init() {
   // required for some current consumers (i.e Thoth)
   // to-do: standardize an allowed origin list based on env values or another source of truth?
   initSpeechServer(false)
+  initSearchCorpus(false)
+  await initClassifier()
+
   const options = {
     origin: '*',
   }

@@ -1,10 +1,10 @@
-import thothCore from '@latitudegames/thoth-core/server';
-import Koa from 'koa';
-import { CompletionRequest, completionsParser } from '../completions';
+import thothCore from '@latitudegames/thoth-core/server'
+import Koa from 'koa'
+import { CompletionRequest, completionsParser } from '../completions'
 import { getEnkiOutputs } from '../enki/enki'
-import { huggingface } from '../vendor/huggingface/huggingface';
-import { Module } from './module';
-import { Graph, Module as ModuleType, ModuleComponent, Node } from './types';
+import { huggingface } from '../vendor/huggingface/huggingface'
+import { Module } from './module'
+import { Graph, Module as ModuleType, ModuleComponent, Node } from './types'
 
 const { initSharedEngine, getComponents } = thothCore
 const thothComponents = getComponents()
@@ -94,6 +94,7 @@ export const runChain = async (
   // you can see this at work in the 'workerInputs' function of module-manager
   // work inputs worker reads from the module inputs via the key in node.data.name
   // important to note: even single string values are wrapped in arrays due to match the client editor format
+  console.log('reading inputs: ', inputs)
   module.read(inputs)
 
   // ThothContext: map of services expected by Thoth components,
@@ -107,6 +108,7 @@ export const runChain = async (
   }
   // Engine process to set up the tasks and prime the system for the first 'run' command.
   await engine.process(graph, null, context)
+  console.log('processed')
 
   // Collect all the "trigger ins" that the module manager has gathered
   const triggerIns = engine.moduleManager.triggerIns
@@ -120,12 +122,16 @@ export const runChain = async (
   const component = engine.components.get(
     'Module Trigger In'
   ) as ModuleComponent
+  console.log('got component')
 
   // Defaulting to the first node trigger to start our "run"
   const triggeredNode = getFirstNodeTrigger(graph)
   await component.run(triggeredNode)
+  console.log('run component')
   // Write all the raw data that was output by the module run to an object
   module.write(rawOutputs)
+  console.log('wrote ')
+  console.log('raw outputs:', rawOutputs)
 
   const formattedOutputs: Record<string, unknown> = {}
 

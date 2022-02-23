@@ -7,6 +7,7 @@ export async function handleInput(
   spell_handler = 'default',
   spell_version = 'latest'
 ) {
+  console.log('message:', message)
   const response = await axios.post(
     `http://localhost:8001/chains/${spell_handler}/${spell_version}`,
     {
