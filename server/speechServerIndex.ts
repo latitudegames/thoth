@@ -1,3 +1,3 @@
-import { initSpeechServer } from './src/utils/googleSpeechToText'
+import { initSpeechServer } from './src/systems/googleSpeechToText'
 
 initSpeechServer(true)

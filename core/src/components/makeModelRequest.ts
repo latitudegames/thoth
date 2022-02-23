@@ -25,7 +25,7 @@ export async function makeModelRequest(
         },
       }
     )
-    return await response.data.json()
+    return await response.data
   } catch (err) {
     console.error(err)
     return { success: false }
