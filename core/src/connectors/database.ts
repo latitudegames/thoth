@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 /* eslint-disable require-await */
 /* eslint-disable no-empty */
@@ -12,7 +13,7 @@ import pg from 'pg'
 import { off } from 'process'
 import internal from 'stream'
 
-import { idGenerator } from './utils'
+import { idGenerator, randomInt } from './utils'
 
 const getRandomNumber = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1)) + min
@@ -675,5 +676,78 @@ export class database {
     } else {
       console.log('nope ', data)
     }
+  }
+
+  async addDocument(
+    agent,
+    document,
+    metadata,
+    keywords,
+    topic
+  ): Promise<number> {
+    let id = randomInt(0, 100000)
+    while (await this.documentIdExists(id)) {
+      id = randomInt(0, 100000)
+    }
+
+    const query =
+      'INSERT INTO documents(id, agent, document, metadata, keywords, topic) VALUES($1, $2, $3, $4, $5, $6)'
+    const values = [id, agent, document, metadata, keywords, topic]
+
+    await this.client.query(query, values)
+    return id
+  }
+  async removeDocument(documentId) {
+    const query = 'DELETE FROM documents WHERE id=$1'
+    const values = [documentId]
+
+    await this.client.query(query, values)
+  }
+  async updateDocument(documentId, agent, document, metadata, keywords, topic) {
+    const query =
+      'UPDATE documents SET agent=$1, document=$2, metadata=$3, keywords=$4, topic=$5 WHERE id=$6'
+    const values = [agent, document, metadata, keywords, topic, documentId]
+
+    await this.client.query(query, values)
+  }
+  async getDocument(documentId): Promise<any> {
+    const query = 'SELECT * FROM documents WHERE id=$1'
+    const values = [documentId]
+
+    const rows = await this.client.query(query, values)
+    if (rows && rows.rows && rows.rows.length > 0) {
+      return rows.rows[0]
+    } else {
+      return undefined
+    }
+  }
+  async getDocuments(agent): Promise<any[]> {
+    const query = 'SELECT * FROM documents WHERE agent=$1'
+    const values = [agent]
+
+    const rows = await this.client.query(query, values)
+    if (rows && rows.rows && rows.rows.length > 0) {
+      return rows.rows
+    } else {
+      return []
+    }
+  }
+  async getDocumentsWithTopic(agent, topic): Promise<any[]> {
+    const query = 'SELECT * FROM documents WHERE agent=$1 AND topic=$2'
+    const values = [agent, topic]
+
+    const rows = await this.client.query(query, values)
+    if (rows && rows.rows && rows.rows.length > 0) {
+      return rows.rows
+    } else {
+      return []
+    }
+  }
+  async documentIdExists(documentId) {
+    const query = 'SELECT * FROM documents WHERE id=$1'
+    const values = [documentId]
+
+    const rows = await this.client.query(query, values)
+    return rows && rows.rows && rows.rows.length > 0
   }
 }
