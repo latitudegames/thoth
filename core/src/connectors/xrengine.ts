@@ -15,7 +15,7 @@
 // i.e. text classification and such
 
 import roomManager from '../components/roomManager'
-import { classifyText } from '../components/textClassifier'
+import { classifyText } from '../utils/textClassifier'
 import { browserWindow, PageUtils } from './browser'
 import { database } from './database'
 import { handleInput } from './handleInput'
@@ -763,7 +763,7 @@ class XREngineBot {
     await this.waitForTimeout(timeout)
   }
 
-  async interactObject() { }
+  async interactObject() {}
 
   /** Return screenshot
    * @param {Function} fn Function to execut _in the node context._
