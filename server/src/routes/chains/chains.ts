@@ -21,6 +21,7 @@ export const modules: Record<string, unknown> = {}
 const chainsHandler = async (ctx: Koa.Context) => {
   const { spell, version } = ctx.params
   const { isTest, userGameState = {} } = ctx.request.body
+  console.log('body: ', ctx.request.body)
 
   let rootSpell
 
@@ -42,11 +43,14 @@ const chainsHandler = async (ctx: Koa.Context) => {
   let activeSpell
 
   if (isTest) {
+    console.log('test')
     activeSpell = getTestSpell(spell)
   } else if (version === 'latest') {
+    console.log('latest')
     activeSpell = rootSpell
   } else {
     if (process.env.LATITUDE_API_KEY !== '') {
+      console.log('checking the api')
       const response = await axios({
         method: 'GET',
         url: process.env.API_URL + `/game/spells/deployed/${spell}/${version}`,
@@ -55,6 +59,7 @@ const chainsHandler = async (ctx: Koa.Context) => {
       })
       activeSpell = response.data
     } else {
+      console.log('getting active spell')
       activeSpell = await creatorToolsDatabase.deployedSpells.findOne({
         where: { name: spell, version },
       })
@@ -89,6 +94,7 @@ const chainsHandler = async (ctx: Koa.Context) => {
   // Validates the body of the request against all expected values to ensure they are all present
   const inputs = inputKeys.reduce((inputs, expectedInput: string) => {
     const requestInput = ctx.request.body[expectedInput]
+    console.log('requestedInput:', requestInput)
 
     if (requestInput) {
       inputs[expectedInput] = [requestInput]
@@ -105,6 +111,7 @@ const chainsHandler = async (ctx: Koa.Context) => {
   if (error) {
     return (ctx.body = { error })
   }
+  console.log('inputs1234:', inputs)
   const outputs = await runChain(chain, (inputs as any) ?? [], thoth, modules)
   const newGameState = thoth.getCurrentGameState()
 
