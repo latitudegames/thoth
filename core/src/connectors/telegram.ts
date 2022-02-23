@@ -11,7 +11,7 @@
 // i.e. text classification and such
 
 import roomManager from '../components/roomManager'
-import { classifyText } from '../components/textClassifier'
+import { classifyText } from '../utils/textClassifier'
 import { database } from './database'
 import { handleInput } from './handleInput'
 import { getRandomEmptyResponse, getSetting, startsWithCapital } from './utils'
