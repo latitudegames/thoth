@@ -15,7 +15,7 @@ import './design-globals/design-globals.css'
 import './App.css'
 //These need to be imported last to override styles.
 
-const useLatitude = false; // process.env.REACT_APP_USE_LATITUDE
+const useLatitude = process.env.REACT_APP_USE_LATITUDE === 'true';
 
 function App() {
   // Use our routes
@@ -58,8 +58,8 @@ function App() {
         </Route>
         <Route path="/" element={<GuardedRoute />}>
           <Route path="/" element={<Thoth />} />
-          <Route path="/login" element={<LoginScreen />} />
         </Route>
+        <Route path="/login" element={<LoginScreen />} />
         {
           useLatitude &&
           <React.Fragment>

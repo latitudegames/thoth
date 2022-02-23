@@ -134,6 +134,18 @@ const MenuBar = () => {
     [onNew]
   )
 
+  const agentMenuItems = (process.env.REACT_APP_USE_AGENTS === "true") ? {
+    agent_manager: {
+      onClick: onAgentManagerCreate,
+    },
+    ent_manager: {
+      onClick: onEntManagerCreate,
+    },
+    config_manager: {
+      onClick: onConfigManagerCreate,
+    }
+  } : {}
+
   //Menu bar entries
   const menuBarItems = {
     file: {
@@ -190,15 +202,7 @@ const MenuBar = () => {
             state_manager: {
               onClick: onStateManagerCreate,
             },
-            agent_manager: {
-              onClick: onAgentManagerCreate,
-            },
-            ent_manager: {
-              onClick: onEntManagerCreate,
-            },
-            config_manager: {
-              onClick: onConfigManagerCreate,
-            },
+            ...agentMenuItems,
             playtest: {
               onClick: onPlaytestCreate,
             },
