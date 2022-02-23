@@ -8,7 +8,7 @@ import {
   ThothWorkerOutputs,
 } from '../../types'
 import { InputControl } from '../dataControls/InputControl'
-import { stringSocket } from '../sockets'
+import { anySocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 
 const info = `String Variable`
@@ -33,7 +33,7 @@ export class StringVariable extends ThothComponent<InputReturn> {
   }
 
   builder(node: ThothNode) {
-    const out = new Rete.Output('output', 'output', stringSocket)
+    const out = new Rete.Output('output', 'output', anySocket)
     const _var = new InputControl({
       dataKey: '_var',
       name: 'Variable',
