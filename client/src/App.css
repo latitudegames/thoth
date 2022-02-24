@@ -347,8 +347,7 @@ input[type='text'] {
 }
 
 .form-item {
-  padding: 5%;
-  width: 95%;
+  padding: 1em 0;
 }
 
 .form-item-label {
@@ -379,12 +378,14 @@ input[type='text'] {
 }
 
 .agent-select {
-  margin: 1em;
+  margin: 1em 0;
 }
 
 .agent-container {
   max-width: 100%;
   padding: 2em;
+  height: calc(100% - 4em);
+  overflow: auto;
 }
 
 .agent-editor {
