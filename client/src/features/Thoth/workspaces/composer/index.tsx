@@ -16,6 +16,7 @@ import Inspector from '@thoth/windows/InspectorWindow'
 import Playtest from '@thoth/windows/PlaytestWindow'
 import StateManager from '@thoth/windows/StateManagerWindow'
 import TextEditor from '@thoth/windows/TextEditorWindow'
+import DebugConsole from '@thoth/windows/DebugConsole'
 
 const Workspace = ({ tab, tabs, pubSub }) => {
   const [loadSpell, { data: spellData }] = useLazyGetSpellQuery()
@@ -79,6 +80,8 @@ const Workspace = ({ tab, tabs, pubSub }) => {
           return <TextEditor {...props} />
         case 'editorWindow':
           return <EditorWindow {...props} />
+        case 'debugConsole':
+          return <DebugConsole {...props} />
         default:
           return <p></p>
       }
