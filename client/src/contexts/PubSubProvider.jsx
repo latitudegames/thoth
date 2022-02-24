@@ -31,6 +31,7 @@ export const events = {
   $CREATE_PLAYTEST: tabId => `createPlaytest:${tabId}`,
   $CREATE_INSPECTOR: tabId => `createInspector:${tabId}`,
   $CREATE_TEXT_EDITOR: tabId => `createTextEditor:${tabId}`,
+  $CREATE_DEBUG_CONSOLE: tabId => `createDebugConsole:${tabId}`,
   $SERIALIZE: tabId => `serialize:${tabId}`,
   $EXPORT: tabId => `export:${tabId}`,
   $UNDO: tabId => `undo:${tabId}`,
