@@ -37,7 +37,7 @@ class speechUtils {
   socket
 
   constructor() {
-    this.socket = socketIOClient(process.env.VITE_SPEECH_SERVER_URL as string)
+    this.socket = socketIOClient(process.env.REACT_APP_SPEECH_SERVER_URL as string)
   }
 
   initRecording = (newMessageCallback: Function) => {
