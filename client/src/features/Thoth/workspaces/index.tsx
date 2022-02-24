@@ -1,5 +1,4 @@
 import WorkspaceProvider from '../contexts/WorkspaceProvider'
-import TabLayout from '@common/TabLayout/TabLayout'
 import Composer from './composer'
 
 const workspaceMap = {
@@ -9,7 +8,7 @@ const workspaceMap = {
 
 const Workspaces = ({ tabs, pubSub, activeTab }) => {
   return (
-    <TabLayout>
+    <>
       {tabs.map(tab => {
         const Workspace = workspaceMap[tab.type]
 
@@ -33,7 +32,7 @@ const Workspaces = ({ tabs, pubSub, activeTab }) => {
           </div>
         )
       })}
-    </TabLayout>
+    </>
   )
 }
 
