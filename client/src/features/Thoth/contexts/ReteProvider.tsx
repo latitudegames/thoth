@@ -123,6 +123,10 @@ const ReteProvider = ({ children, tab }) => {
     publish($INSPECTOR_SET(tab.id), data)
   }
 
+  const sendToDebug = data => {
+    publish($DEBUG_PRINT(tab.id), data)
+  }
+
   const sendToPlaytest = data => {
     publish($PLAYTEST_PRINT(tab.id), data)
   }
