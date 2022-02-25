@@ -127,6 +127,12 @@ const ReteProvider = ({ children, tab }) => {
     publish($DEBUG_PRINT(tab.id), data)
   }
 
+  const onDebug = (node, callback) => {
+    return subscribe($DEBUG_INPUT(tab.id, node.id), (event, data) => {
+      callback(data)
+    })
+  }
+
   const sendToPlaytest = data => {
     publish($PLAYTEST_PRINT(tab.id), data)
   }
