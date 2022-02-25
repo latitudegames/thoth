@@ -80,6 +80,8 @@ const ReteProvider = ({ children, tab }) => {
     $PLAYTEST_INPUT,
     $PLAYTEST_PRINT,
     $INSPECTOR_SET,
+    $DEBUG_PRINT,
+    $DEBUG_INPUT,
     $TEXT_EDITOR_CLEAR,
     $NODE_SET,
     ADD_MODULE,
