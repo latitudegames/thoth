@@ -18,6 +18,7 @@ import { ModuleManager } from './plugins/modulePlugin/module-manager'
 import SocketGenerator from './plugins/socketGenerator'
 import TaskPlugin from './plugins/taskPlugin'
 import { PubSubContext, ThothComponent } from './thoth-component'
+import DebuggerPlugin from './plugins/debuggerPlugin'
 export class ThothEditor extends NodeEditor<EventsTypes> {
   pubSub: PubSubContext
   thoth: EngineContext
@@ -127,6 +128,7 @@ export const initEditor = async function ({
   // WARNING: ModulePlugin needs to be initialized before TaskPlugin during engine setup
   editor.use(ModulePlugin, { engine, modules } as unknown as void)
   editor.use(TaskPlugin)
+  editor.use(DebuggerPlugin)
 
   // ███╗   ███╗ ██████╗ ██████╗ ██╗   ██╗██╗     ███████╗███████╗
   // ████╗ ████║██╔═══██╗██╔══██╗██║   ██║██║     ██╔════╝██╔════╝
