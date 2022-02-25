@@ -2,6 +2,10 @@ import Terminal from 'react-console-emulator'
 import { useAuth } from '@/contexts/AuthProvider'
 import { usePubSub } from '@/contexts/PubSubProvider'
 
+export type DebugMessage = {
+  message: string
+}
+
 
 const commands = {
   echo: {
