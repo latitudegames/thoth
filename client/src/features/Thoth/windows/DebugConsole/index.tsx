@@ -6,6 +6,7 @@ export type DebugMessage = {
   message: string
 }
 
+const DebugConsole = ({ tab }) => {
 
 const commands = {
   echo: {
@@ -16,14 +17,13 @@ const commands = {
     },
   },
 }
-
-const DebugConsole = props => {
-  const { user } = useAuth()
+  // https://github.com/linuswillner/react-console-emulator/tree/e2b602f631e8b7c57c4a7407491cbfb84f357519
   return (
     <Terminal
+      ref={terminalRef}
       commands={commands}
-      welcomeMessage={'Welcome to your handy dandy debug console'}
-      promptLabel={`${user}@Thoth:~$`}
+      promptLabel={`${user.id}@Thoth:~$`}
+      // readOnly={true}
     />
   )
 }
