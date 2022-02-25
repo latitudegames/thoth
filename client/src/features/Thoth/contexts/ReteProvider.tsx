@@ -24,6 +24,8 @@ export interface ReteContext extends EngineContext {
   onGameState: () => void
   sendToPlaytest: () => void
   sendToInspector: () => void
+  sendToDebug: () => void
+  onDebug: () => void
   clearTextEditor: () => void
   getSpell: () => void
   getModule: () => void
