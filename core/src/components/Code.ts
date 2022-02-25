@@ -94,6 +94,7 @@ export class Code extends ThothComponent<unknown> {
       return Function('"use strict";return (' + obj + ')')()(node, inputs, data)
     }
 
+    console.log('running')
     try {
       const value = runCodeWithArguments(node.data.code)
       if (!silent) node.display(`${JSON.stringify(value)}`)
@@ -106,6 +107,7 @@ export class Code extends ThothComponent<unknown> {
         )
       // close the data socket so it doesnt error out
       this._task.closed = ['data']
+      throw err
     }
   }
 }
