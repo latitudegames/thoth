@@ -8,6 +8,7 @@ export type DebugMessage = {
 
 const DebugConsole = ({ tab }) => {
   const { user } = useAuth()
+  const { publish, subscribe, events } = usePubSub()
 
 const commands = {
   echo: {
