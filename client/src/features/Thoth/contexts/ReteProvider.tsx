@@ -185,6 +185,8 @@ const ReteProvider = ({ children, tab }) => {
     onDeleteModule,
     onModuleUpdated,
     sendToInspector,
+    sendToDebug,
+    onDebug,
     sendToPlaytest,
     onPlaytest,
     clearTextEditor,
