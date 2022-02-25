@@ -14,6 +14,19 @@ const DebugConsole = ({ tab }) => {
   const [messages, setMessages] = useState<DebugMessage[]>([])
   const terminalRef = useRef()
 
+  const printToDebugger = useCallback(
+    (_, message) => {
+      const newMessages = [...messages, message]
+      setMessages(newMessages)
+      const terminal = terminalRef.current
+      terminal &&
+        (terminal as unknown as { pushToStdout: any }).pushToStdout(
+          `> ${messages}`
+        )
+    },
+    [messages]
+  )
+
 const commands = {
   echo: {
     description: 'Echo a passed string.',
