@@ -36,6 +36,21 @@
         "active": true
       },
       {
+        "type": "tabset",
+        "id": "#17",
+        "weight": 50,
+        "children": [
+          {
+            "type": "tab",
+            "id": "44",
+            "name": "Debug Console",
+            "component": "debugConsole",
+            "className": "debug-console"
+          }
+        ],
+        "active": true
+      },
+      {
         "type": "row",
         "id": "#7",
         "weight": 3.030260106260639,
