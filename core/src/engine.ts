@@ -47,6 +47,7 @@ export type EngineContext = {
     request: string
   ) => Promise<{ error: unknown; [key: string]: unknown }>
   onPlaytest?: Function
+  sendToDebug?: Function
   onAddModule?: Function
   onUpdateModule?: Function
   sendToPlaytest?: Function
