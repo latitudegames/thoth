@@ -11,6 +11,9 @@ const DebugConsole = ({ tab }) => {
   const { publish, subscribe, events } = usePubSub()
   const { $DEBUG_INPUT, $DEBUG_PRINT } = events
 
+  const [messages, setMessages] = useState<DebugMessage[]>([])
+  const terminalRef = useRef()
+
 const commands = {
   echo: {
     description: 'Echo a passed string.',
