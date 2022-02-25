@@ -28,6 +28,11 @@ const DebugConsole = ({ tab }) => {
     [messages]
   )
 
+  useEffect(() => {
+    const unsubscribe = subscribe($DEBUG_PRINT(tab.id), printToDebugger)
+
+    return unsubscribe
+  }, [subscribe, printToDebugger, $DEBUG_PRINT])
 
   /**
    * Terminal commands
