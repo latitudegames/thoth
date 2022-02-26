@@ -25,18 +25,12 @@ const DebugConsole = ({ tab }) => {
 
   const terminalRef = useRef<Terminal>()
 
-  const printToDebugger = useCallback(
-    (_, message) => {
-      const newMessages = [...messages, message]
-      setMessages(newMessages)
-      const terminal = terminalRef.current
-      terminal &&
-        (terminal as unknown as { pushToStdout: any }).pushToStdout(
-          `> ${messages}`
-        )
-    },
-    [messages]
-  )
+  const printToDebugger = useCallback((_, data) => {
+    const terminal = terminalRef.current
+    if (!terminal) return
+
+    terminal.pushToStdout(`> ${data.message}`)
+  }, [])
 
   useEffect(() => {
     const unsubscribe = subscribe($DEBUG_PRINT(tab.id), printToDebugger)
