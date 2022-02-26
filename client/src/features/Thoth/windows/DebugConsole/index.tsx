@@ -23,8 +23,7 @@ const DebugConsole = ({ tab }) => {
     $DEBUG_PRINT,
   } = events
 
-  const [messages, setMessages] = useState<DebugMessage[]>([])
-  const terminalRef = useRef()
+  const terminalRef = useRef<Terminal>()
 
   const printToDebugger = useCallback(
     (_, message) => {
