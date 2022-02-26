@@ -57,6 +57,12 @@ const DebugConsole = ({ tab }) => {
       commands={commands}
       promptLabel={`${user.id}@Thoth:~$`}
       // readOnly={true}
+      style={{
+        overflow: 'scroll',
+        'min-height': '15vh',
+        'max-height': '100%',
+        height: '100%',
+      }}
     />
   )
 }
