@@ -7,6 +7,10 @@ export type DebugMessage = {
   message: string
 }
 
+interface Terminal {
+  pushToStdout: any
+}
+
 const DebugConsole = ({ tab }) => {
   const { user } = useAuth()
   const {
