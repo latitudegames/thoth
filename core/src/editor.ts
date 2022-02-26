@@ -126,9 +126,9 @@ export const initEditor = async function ({
   // @seang TODO: update types for editor.use rather than casting as unknown here, we may want to bring our custom rete directly into the monorepo at this point
 
   // WARNING: ModulePlugin needs to be initialized before TaskPlugin during engine setup
+  editor.use(DebuggerPlugin)
   editor.use(ModulePlugin, { engine, modules } as unknown as void)
   editor.use(TaskPlugin)
-  editor.use(DebuggerPlugin)
 
   // ███╗   ███╗ ██████╗ ██████╗ ██╗   ██╗██╗     ███████╗███████╗
   // ████╗ ████║██╔═══██╗██╔══██╗██║   ██║██║     ██╔════╝██╔════╝
