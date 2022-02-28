@@ -59,8 +59,8 @@ const DebugConsole = ({ tab }) => {
       // readOnly={true}
       style={{
         overflow: 'scroll',
-        'min-height': '15vh',
-        'max-height': '100%',
+        minHeight: '15vh',
+        maxHeight: '100%',
         height: '100%',
       }}
     />
