@@ -4,7 +4,7 @@ import { SocketGeneratorControl } from '../dataControls/SocketGenerator'
 import { triggerSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 
-const info = `The State Write component allows you to define any number of inputs, and to write values to the state manager which correspond to the namesof thise inputs.  If the value does not exist in the state, it willbe written.
+const info = `The State Write component allows you to define any number of inputs, and to write values to the state manager which correspond to the names of those inputs.  If the value does not exist in the state, it will be written.
 
 Note here that there are a few assumptions made, which will be changed once we have selectable socket types when generating inputs. If the key already exists in the state and it is an array, whatever value you insert will be added to the array. If the existing value is an object, the object will be updated by the incoming value.`
 
