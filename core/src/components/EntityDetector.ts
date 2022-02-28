@@ -119,7 +119,7 @@ Action: `
 
 const info = `The entity detector takes in an action as a string, and attempts to report any discrete entities are mentioned, and their general type.
 
-The fewshot can be edited in the text edior, though note that the data structure must remian the same for proper processing.`
+The fewshot can be edited in the text editor, though note that the data structure must remain the same for proper processing.`
 
 type Entity = {
   name: string
