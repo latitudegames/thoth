@@ -136,13 +136,17 @@ export class SafetyVerifier extends ThothComponent<Promise<WorkerReturn>> {
       maxTokens: 10,
       temperature: 0.0,
     }
-    const raw = (await completion(body)) as string
-    const result = raw?.trim() !== 'X'
+    try {
+      const raw = (await completion(body)) as string
+      const result = raw?.trim() !== 'X'
 
-    if (!silent) node.display(`${result}`)
+      if (!silent) node.display(`${result}`)
 
-    return {
-      boolean: result,
+      return {
+        boolean: result,
+      }
+    } catch (err) {
+      throw new Error('Error in Safety Verifier component')
     }
   }
 }
