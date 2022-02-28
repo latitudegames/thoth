@@ -6,6 +6,7 @@ interface CssExports {
   'connections-container': string;
   'control': string;
   'deprecated-overlay': string;
+  'error': string;
   'input': string;
   'node': string;
   'node-depricated': string;
