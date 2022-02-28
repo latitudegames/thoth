@@ -16,8 +16,9 @@ import { triggerSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 
 const defaultCode = `
-// See component information in inspector for details.
-function worker(node, inputs, data) {
+// inputs: dictionary of inputs based on socket names
+// data: internal data of the node to read or write to nodes data state
+function worker(inputs, data) {
 
   // Keys of the object returned must match the names 
   // of your outputs you defined.
@@ -27,7 +28,7 @@ function worker(node, inputs, data) {
 
 const info = `The code component is your swiss army knife when other components won't cut it.  You can define any number of inputs and outputs on it, and then write a custom worker function.  You have access to the any data plugged into the inputs you created on your component, and can send data out along your outputs.
 
-Please note that the return of your function must be an object whose keys are the same value as the names given to your output sockets.  The incoming inputs argument is an object whose keys are the names you defined, aand each is an array.
+Please note that the return of your function must be an object whose keys are the same value as the names given to your output sockets.  The incoming inputs argument is an object whose keys are the names you defined.
 `
 export class Code extends ThothComponent<unknown> {
   constructor() {
@@ -90,8 +91,18 @@ export class Code extends ThothComponent<unknown> {
     { silent, data }: { silent: boolean; data: { code: unknown } }
   ) {
     function runCodeWithArguments(obj: unknown) {
+      const flattenedInputs = Object.entries(inputs).reduce(
+        (acc, [key, value]) => {
+          acc[key as string] = value[0]
+          return acc
+        },
+        {} as Record<string, any>
+      )
       // eslint-disable-next-line no-new-func
-      return Function('"use strict";return (' + obj + ')')()(node, inputs, data)
+      return Function('"use strict";return (' + obj + ')')()(
+        flattenedInputs,
+        data
+      )
     }
 
     try {
