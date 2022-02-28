@@ -50,6 +50,7 @@ const EventHandler = ({ pubSub, tab }) => {
     $SAVE_SPELL_AS,
     $CREATE_STATE_MANAGER,
     $CREATE_AGENT_MANAGER,
+    $CREATE_SEARCH_CORPUS,
     $CREATE_ENT_MANAGER,
     $CREATE_CONFIG_MANAGER,
     $CREATE_PLAYTEST,
@@ -77,6 +78,10 @@ const EventHandler = ({ pubSub, tab }) => {
 
   const createAgentManager = () => {
     createOrFocus(windowTypes.AGENT_MANAGER, 'Agent Manager')
+  }
+
+  const createSearchCorpus = () => {
+    createOrFocus(windowTypes.SEARCH_CORPUS, 'Search Corpus')
   }
 
   const createConfigManager = () => {
@@ -150,6 +155,7 @@ const EventHandler = ({ pubSub, tab }) => {
     [$SAVE_SPELL(tab.id)]: saveSpell,
     [$CREATE_STATE_MANAGER(tab.id)]: createStateManager,
     [$CREATE_AGENT_MANAGER(tab.id)]: createAgentManager,
+    [$CREATE_SEARCH_CORPUS(tab.id)]: createSearchCorpus,
     [$CREATE_ENT_MANAGER(tab.id)]: createEntManager,
     [$CREATE_CONFIG_MANAGER(tab.id)]: createConfigManager,
     [$CREATE_PLAYTEST(tab.id)]: createPlaytest,

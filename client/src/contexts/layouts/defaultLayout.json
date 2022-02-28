@@ -95,6 +95,12 @@
                 "id": "#13",
                 "name": "Config Manager",
                 "component": "configManager"
+              },
+              {
+                "type": "tab",
+                "id": "#14",
+                "name": "Search Corpus",
+                "component": "searchCorpus"
               }
             ]
           },

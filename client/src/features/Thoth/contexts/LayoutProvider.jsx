@@ -18,6 +18,7 @@ const windowTypes = {
   INSPECTOR: 'inspector',
   STATE_MANAGER: 'stateManager',
   AGENT_MANAGER: 'agentManager',
+  SEARCH_CORPUS: 'searchCorpus',
   CONFIG_MANAGER: 'configManager',
   ENT_MANAGER: 'entManager',
   EDITOR: 'editor',
@@ -31,17 +32,17 @@ const windowTypes = {
 const Context = createContext({
   inspectorData: {},
   textEditorData: {},
-  createModel: () => { },
+  createModel: () => {},
   currentModel: {},
   currentRef: {},
-  setCurrentRef: () => { },
-  saveInspector: () => { },
-  saveTextEditor: () => { },
-  createOrFocus: () => { },
-  addWindow: () => { },
+  setCurrentRef: () => {},
+  saveInspector: () => {},
+  saveTextEditor: () => {},
+  createOrFocus: () => {},
+  addWindow: () => {},
   windowTypes: {},
   workspaceMap: {},
-  getWorkspace: () => { },
+  getWorkspace: () => {},
 })
 
 export const useLayout = () => useContext(Context)
