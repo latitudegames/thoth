@@ -13,8 +13,6 @@ export class MyNode extends Node {
     const fullName = node.data.name ? `${name} - ${node.data.name}` : name
     const hasError = node.data.error
 
-    console.log('NODE ERROR', node.error)
-
     return (
       <div
         className={`${css['node']} ${css[selected]} ${
