@@ -117,17 +117,21 @@ export class DifficultyDetectorComponent extends ThothComponent<
       maxTokens: 100,
       temperature: 0.0,
     }
-    const raw = (await completion(body)) as string
-    const result = raw?.trim()
-    if (!silent) node.display(result)
+    try {
+      const raw = (await completion(body)) as string
+      const result = raw?.trim()
+      if (!silent) node.display(result)
 
-    const [difficulty, category] = result
-      ? result.split(', ')
-      : [undefined, undefined]
+      const [difficulty, category] = result
+        ? result.split(', ')
+        : [undefined, undefined]
 
-    return {
-      difficulty,
-      category,
+      return {
+        difficulty,
+        category,
+      }
+    } catch (err) {
+      throw new Error('Error in Difficulty Detector component')
     }
   }
 }
