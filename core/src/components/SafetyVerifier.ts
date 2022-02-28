@@ -78,7 +78,7 @@ Action: `
 
 const info = `The Safety Verifier component takes a string and attempts to classify if that string is safe or not.  It returns a boolean value that represents whether or not the input is safe.
 
-The fewshot can be edited in the text editor, however it contains content which may be triggering to some individuals. If you modify the fewshot, note that it must remian in the format for the processing to work.`
+The fewshot can be edited in the text editor, however it contains content which may be triggering to some individuals. If you modify the fewshot, note that it must remain in the format for the processing to work.`
 
 type WorkerReturn = {
   boolean: boolean
