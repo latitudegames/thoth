@@ -29,6 +29,7 @@ export const events = {
   $SAVE_SPELL: tabId => `saveSpell:${tabId}`,
   $CREATE_STATE_MANAGER: tabId => `createStateManage:${tabId}`,
   $CREATE_AGENT_MANAGER: tabId => `createAgentManage:${tabId}`,
+  $CREATE_SEARCH_CORPUS: tabId => `createSearchCorpus:${tabId}`,
   $CREATE_ENT_MANAGER: tabId => `createEntManage:${tabId}`,
   $CREATE_CONFIG_MANAGER: tabId => `createConfigManage:${tabId}`,
   $CREATE_PLAYTEST: tabId => `createPlaytest:${tabId}`,

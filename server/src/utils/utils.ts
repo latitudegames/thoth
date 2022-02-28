@@ -20,6 +20,10 @@ export function simplifyWords(words: string[]): string[] {
 
 export function includesMetadata(metadata: string[], words: string[]): number {
   let count = 0
+  for (let i = 0; i < metadata.length; i++) {
+    metadata[i] = metadata[i].trim().toLowerCase()
+  }
+
   for (let i = 0; i < words.length; i++) {
     if (metadata.includes(words[i])) {
       count++
@@ -29,6 +33,10 @@ export function includesMetadata(metadata: string[], words: string[]): number {
 }
 export function includesKeyword(keywords: string[], words: string[]): number {
   let count = 0
+  for (let i = 0; i < keywords.length; i++) {
+    keywords[i] = keywords[i].trim().toLowerCase()
+  }
+
   for (let i = 0; i < words.length; i++) {
     if (keywords.includes(words[i])) {
       count++

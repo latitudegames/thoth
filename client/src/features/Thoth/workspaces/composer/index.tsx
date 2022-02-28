@@ -21,6 +21,7 @@ import AgentManager from '@thoth/windows/AgentManagerWindow'
 import EntManager from '@thoth/windows/EntManagerWindow'
 import ConfigManager from '@thoth/windows/ConfigManagerWindow'
 import TextEditor from '@thoth/windows/TextEditorWindow'
+import SearchCorpus from '../../windows/SearchCorpusWindow'
 
 const Workspace = ({ tab, tabs, pubSub }) => {
   const [loadSpell, { data: spellData }] = useLazyGetSpellQuery()
@@ -78,6 +79,8 @@ const Workspace = ({ tab, tabs, pubSub }) => {
           return <StateManager {...props} />
         case 'agentManager':
           return <AgentManager />
+        case 'searchCorpus':
+          return <SearchCorpus />
         case 'configManager':
           return <ConfigManager />
         case 'entManager':
