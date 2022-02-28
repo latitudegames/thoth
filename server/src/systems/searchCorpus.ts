@@ -49,12 +49,13 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
   app.use(cors(options))
   app.use(koaBody({ multipart: true }))
 
-  router.get('/', async function (ctx: Koa.Context) {
-    ctx.body = 'Hello World!'
-  })
   router.get('/documents', async function (ctx: Koa.Context) {
-    const agent = ctx.query.agent || 'global'
-    const documents: string[] = await database.instance.getDocuments(agent)
+    const agent = ctx.query.agent ? ctx.query.agent : 'all'
+    const documents =
+      agent === 'all'
+        ? await database.instance.getAllDocuments()
+        : await database.instance.getDocuments(agent)
+    console.log('sending requested documents:', documents)
 
     return (ctx.body = documents)
   })
@@ -68,7 +69,7 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
     console.log(ctx.request.body)
     const agent = ctx.request.body?.agent || 'global'
     const document = dicompress(ctx.request.body?.document)
-    const metadata = ctx.request.body?.metadata || []
+    const metadata = ctx.request.body?.metadata || ''
     const keywords = await extractKeywords(document)
     console.log('keywords:', keywords)
     const topic = await classifyText(document)
@@ -79,7 +80,7 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
       id = await database.instance.addDocument(
         agent,
         document,
-        metadata.join(','),
+        metadata,
         keywords.join(','),
         topic
       )
@@ -96,6 +97,7 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
   })
   router.delete('/document', async function (ctx: Koa.Context) {
     const documentId = ctx.query.documentId
+    console.log('deleting document: ' + documentId)
 
     try {
       await database.instance.removeDocument(documentId)
@@ -119,7 +121,7 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
         documentId,
         agent,
         document,
-        metadata.join(','),
+        metadata,
         keywords.join(','),
         topic
       )
