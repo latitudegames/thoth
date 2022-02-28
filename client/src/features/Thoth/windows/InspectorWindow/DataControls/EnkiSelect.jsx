@@ -124,7 +124,7 @@ const EnkiSelect = ({ updateData, control, initialValue }) => {
     inputsToAdd.forEach(input => {
       const newInput = {
         name: input,
-        socketKey: input.toLowerCase(),
+        socketKey: input,
         socketType: 'stringSocket',
         taskType: 'output',
       }
@@ -134,7 +134,7 @@ const EnkiSelect = ({ updateData, control, initialValue }) => {
     outputsToAdd.forEach(output => {
       const newOutput = {
         name: output,
-        socketKey: output.toLowerCase(),
+        socketKey: output,
         socketType: 'stringSocket',
         taskType: 'output',
       }
