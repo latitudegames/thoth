@@ -7,7 +7,7 @@ export type DebugMessage = {
   message: string
 }
 
-export type Terminal = {
+interface Terminal {
   pushToStdout: any
 }
 
@@ -27,8 +27,9 @@ const DebugConsole = ({ tab }) => {
 
   const printToDebugger = useCallback((_, data) => {
     const terminal = terminalRef.current
+    if (!terminal) return
 
-    terminal.pushToStdout(`> ${data.message.stack}`)
+    terminal.pushToStdout(`> ${data.message}`)
   }, [])
 
   useEffect(() => {
@@ -56,6 +57,12 @@ const DebugConsole = ({ tab }) => {
       commands={commands}
       promptLabel={`${user.id}@Thoth:~$`}
       // readOnly={true}
+      style={{
+        overflow: 'scroll',
+        'min-height': '15vh',
+        'max-height': '100%',
+        height: '100%',
+      }}
     />
   )
 }
