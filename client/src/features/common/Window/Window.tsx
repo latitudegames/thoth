@@ -19,7 +19,7 @@ type Props = {
   borderless?: boolean
   darker?: boolean
   grid?: boolean
-  toolbar: ReactElement<any, any>
+  toolbar?: ReactElement<any, any> | false
   children: ReactElement<any, any> | ReactElement<any, any>[]
 }
 
@@ -30,6 +30,7 @@ const Window = (props: Props) => {
     borderless = false,
     darker = false,
     grid = false,
+    toolbar = false,
   } = props
 
   return (
@@ -43,7 +44,7 @@ const Window = (props: Props) => {
       ${css[grid ? 'grid' : '']}
       `}
     >
-      <WindowToolbar>{props.toolbar}</WindowToolbar>
+      {toolbar && <WindowToolbar>{props.toolbar}</WindowToolbar>}
       <WindowLayout>{props.children}</WindowLayout>
     </div>
   )
