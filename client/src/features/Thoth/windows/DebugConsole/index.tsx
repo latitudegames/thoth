@@ -1,10 +1,14 @@
-import { useState, useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import Terminal from 'react-console-emulator'
 import { useAuth } from '@/contexts/AuthProvider'
 import { usePubSub } from '@/contexts/PubSubProvider'
 
 export type DebugMessage = {
   message: string
+}
+
+export type Terminal = {
+  pushToStdout: any
 }
 
 const DebugConsole = ({ tab }) => {
@@ -19,21 +23,13 @@ const DebugConsole = ({ tab }) => {
     $DEBUG_PRINT,
   } = events
 
-  const [messages, setMessages] = useState<DebugMessage[]>([])
-  const terminalRef = useRef()
+  const terminalRef = useRef<Terminal>()
 
-  const printToDebugger = useCallback(
-    (_, message) => {
-      const newMessages = [...messages, message]
-      setMessages(newMessages)
-      const terminal = terminalRef.current
-      terminal &&
-        (terminal as unknown as { pushToStdout: any }).pushToStdout(
-          `> ${messages}`
-        )
-    },
-    [messages]
-  )
+  const printToDebugger = useCallback((_, data) => {
+    const terminal = terminalRef.current
+
+    terminal.pushToStdout(`> ${data.message.stack}`)
+  }, [])
 
   useEffect(() => {
     const unsubscribe = subscribe($DEBUG_PRINT(tab.id), printToDebugger)
