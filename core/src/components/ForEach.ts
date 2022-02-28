@@ -47,13 +47,18 @@ export class ForEach extends ThothComponent<Promise<WorkerReturn | undefined>> {
     if (element === undefined) {
       const inputsArray = inputs.array[0] as unknown[]
 
-      await Promise.all(
-        inputsArray.map((el: unknown) =>
-          this._task
-            .clone(false, {} as ThothTask, {} as ThothTask)
-            .run({ element: el })
+      try {
+        await Promise.all(
+          inputsArray.map((el: unknown) =>
+            this._task
+              .clone(false, {} as ThothTask, {} as ThothTask)
+              .run({ element: el })
+          )
         )
-      )
+      } catch (err) {
+        throw new Error('Error in ForEach Componenet.')
+      }
+
       this._task.closed = ['act']
     } else {
       this._task.closed = ['done']
