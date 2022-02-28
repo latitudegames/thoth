@@ -96,12 +96,17 @@ export class ActionTypeComponent extends ThothComponent<Promise<WorkerReturn>> {
       maxTokens: 100,
       temperature: 0.0,
     }
-    const raw = (await completion(body)) as string
-    const result = raw?.trim()
-    if (!silent) node.display(result)
 
-    return {
-      actionType: result,
+    try {
+      const raw = (await completion(body)) as string
+      const result = raw?.trim()
+      if (!silent) node.display(result)
+
+      return {
+        actionType: result,
+      }
+    } catch (err) {
+      throw new Error('Error in ActionType component')
     }
   }
 }
