@@ -137,13 +137,17 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       temperature,
       frequencyPenalty,
     }
-    const raw = (await completion(body)) as string
-    const result = raw?.trim()
-    const composed = `${prompt} ${result}`
+    try {
+      const raw = (await completion(body)) as string
+      const result = raw?.trim()
+      const composed = `${prompt} ${result}`
 
-    return {
-      result,
-      composed,
+      return {
+        result,
+        composed,
+      }
+    } catch (err) {
+      throw new Error('Error in Generator component.')
     }
   }
 }
