@@ -39,33 +39,38 @@ export class StateWrite extends ThothComponent {
 
   async worker(node, inputs, outputs, { thoth }) {
     const { getCurrentGameState, updateCurrentGameState } = thoth
-    const gameState = await getCurrentGameState()
-    let value
 
-    const updates = Object.entries(inputs).reduce((acc, [key, val]) => {
-      // Check here what type of data structure the gameState for the key is
-      switch (typeof gameState[key]) {
-        case 'object':
-          // if we have an array, add the value to the array and reassign to the state
-          if (Array.isArray(gameState[key])) {
-            value = [...gameState[key], val[0]]
+    try {
+      const gameState = await getCurrentGameState()
+      let value
+
+      const updates = Object.entries(inputs).reduce((acc, [key, val]) => {
+        // Check here what type of data structure the gameState for the key is
+        switch (typeof gameState[key]) {
+          case 'object':
+            // if we have an array, add the value to the array and reassign to the state
+            if (Array.isArray(gameState[key])) {
+              value = [...gameState[key], val[0]]
+              break
+            }
+
+            // if it is an object, we assume that the incoming data is an object update
+            value = { ...gameState[key], ...val[0] }
+
             break
-          }
+          default:
+            // default is to just overwrite whatever value is there with a new one.
+            value = val[0]
+        }
 
-          // if it is an object, we assume that the incoming data is an object update
-          value = { ...gameState[key], ...val[0] }
+        acc[key] = value
 
-          break
-        default:
-          // default is to just overwrite whatever value is there with a new one.
-          value = val[0]
-      }
+        return acc
+      }, {})
 
-      acc[key] = value
-
-      return acc
-    }, {})
-
-    await updateCurrentGameState(updates)
+      await updateCurrentGameState(updates)
+    } catch (err) {
+      throw new Error('Error in State Write component')
+    }
   }
 }
