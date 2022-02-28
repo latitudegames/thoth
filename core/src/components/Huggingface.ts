@@ -108,15 +108,16 @@ export class HuggingfaceComponent extends ThothComponent<
     try {
       const result = await thoth.huggingface(model, request)
 
-      if (result.error) throw Error()
+      // This might cause bug
+      if (result.error)
+        throw new Error(`Huggingface result.error: ${result.error}`)
 
       return {
         result,
       }
     } catch (err) {
       this._task.closed = ['trigger']
-
-      return {}
+      throw new Error('Error in HuggingFace component')
     }
   }
 }
