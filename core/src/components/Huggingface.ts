@@ -73,8 +73,8 @@ export class HuggingfaceComponent extends ThothComponent<
       language: 'handlebars',
     })
 
-    const stopControl = new InputControl({
-      dataKey: 'modelName',
+    const modelControl = new InputControl({
+      dataKey: 'model',
       name: 'Model Name',
     })
 
@@ -82,7 +82,7 @@ export class HuggingfaceComponent extends ThothComponent<
       .add(nameControl)
       .add(inputGenerator)
       .add(requestControl)
-      .add(stopControl)
+      .add(modelControl)
 
     return node
   }
