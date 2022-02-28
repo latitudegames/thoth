@@ -9,7 +9,7 @@
       {
         "type": "tabset",
         "id": "#3",
-        "weight": 2.960539823751833,
+        "weight": 7.102489336164113,
         "children": [
           {
             "type": "tab",
@@ -20,40 +20,46 @@
         ]
       },
       {
-        "type": "tabset",
-        "id": "#15",
-        "weight": 10.981039034584375,
+        "type": "row",
+        "id": "#9",
+        "weight": 34.08645212404496,
         "children": [
           {
-            "type": "tab",
-            "id": "#21",
-            "name": "Composer",
-            "component": "editorWindow",
-            "enableClose": false,
-            "className": "editor-tab"
-          }
-        ],
-        "active": true
-      },
-      {
-        "type": "tabset",
-        "id": "#17",
-        "weight": 50,
-        "children": [
+            "type": "tabset",
+            "id": "#15",
+            "weight": 77.96917497733455,
+            "children": [
+              {
+                "type": "tab",
+                "id": "#21",
+                "name": "Composer",
+                "component": "editorWindow",
+                "enableClose": false,
+                "className": "editor-tab"
+              }
+            ],
+            "active": true
+          },
           {
-            "type": "tab",
-            "id": "44",
-            "name": "Debug Console",
-            "component": "debugConsole",
-            "className": "debug-console"
+            "type": "tabset",
+            "id": "#8",
+            "weight": 22.030825022665457,
+            "children": [
+              {
+                "type": "tab",
+                "id": "44",
+                "name": "Debug Console",
+                "component": "debugConsole",
+                "className": "debug-console"
+              }
+            ]
           }
-        ],
-        "active": true
+        ]
       },
       {
         "type": "row",
         "id": "#7",
-        "weight": 3.030260106260639,
+        "weight": 7.945196793081777,
         "children": [
           {
             "type": "tabset",
