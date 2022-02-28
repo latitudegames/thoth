@@ -85,6 +85,11 @@ export class ActionTypeComponent extends ThothComponent<Promise<WorkerReturn>> {
     const fewshot = node.data.fewshot as string
     const prompt = fewshot + action + ','
 
+    if (!action)
+      throw new Error(
+        'ActionType Module requires action string to be passed into it.'
+      )
+
     const body = {
       prompt,
       stop: ['\n'],
