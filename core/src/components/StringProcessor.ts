@@ -68,7 +68,7 @@ export class StringProcessor extends ThothComponent<Record<string, string>> {
     // their javascript snippet, it should return a dict with the keys
     // they typed in, then we lower-case the keys for them.
     const lowerCasedOutputs = Object.keys(outputs).reduce((prev, key) => {
-      return { ...prev, [key.toLowerCase()]: outputs[key] }
+      return { ...prev, [key]: outputs[key] }
     }, {})
 
     return lowerCasedOutputs
