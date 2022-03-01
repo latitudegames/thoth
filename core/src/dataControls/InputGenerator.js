@@ -63,7 +63,7 @@ export class InputGeneratorControl extends DataControl {
     // From these new inputs, we iterate and add an output socket to the node
     newInputs.forEach(output => {
       const newInput = new Rete.Input(
-        output.name.toLowerCase(),
+        output.name,
         output.name,
         sockets[output.socketType]
       )

@@ -16,8 +16,9 @@ import { triggerSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 
 const defaultCode = `
-// See component information in inspector for details.
-function worker(node, inputs, data) {
+// inputs: dictionary of inputs based on socket names
+// data: internal data of the node to read or write to nodes data state
+function worker(inputs, data) {
 
   // Keys of the object returned must match the names 
   // of your outputs you defined.
@@ -90,8 +91,18 @@ export class Code extends ThothComponent<unknown> {
     { silent, data }: { silent: boolean; data: { code: unknown } }
   ) {
     function runCodeWithArguments(obj: unknown) {
+      const flattenedInputs = Object.entries(inputs).reduce(
+        (acc, [key, value]) => {
+          acc[key as string] = value[0]
+          return acc
+        },
+        {} as Record<string, any>
+      )
       // eslint-disable-next-line no-new-func
-      return Function('"use strict";return (' + obj + ')')()(node, inputs, data)
+      return Function('"use strict";return (' + obj + ')')()(
+        flattenedInputs,
+        data
+      )
     }
 
     try {

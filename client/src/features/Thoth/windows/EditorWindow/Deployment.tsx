@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Scrollbars } from 'react-custom-scrollbars'
+import { Scrollbars } from 'react-custom-scrollbars-2'
 import { useSelector } from 'react-redux'
 import { useSnackbar } from 'notistack'
 
