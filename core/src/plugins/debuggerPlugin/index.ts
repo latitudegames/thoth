@@ -36,9 +36,9 @@ function install(editor: IRunContextEditor) {
         editor.thoth.sendToDebug({ message: error })
         node.data.error = true
 
-        const fullNode = Node.fromJSON(node)
-        console.log('node object', fullNode)
-        editor.selectNode(fullNode)
+        // const fullNode = Node.fromJSON(node)
+        // console.log('node object', fullNode)
+        // editor.selectNode(fullNode)
         throw error
       }
     }
