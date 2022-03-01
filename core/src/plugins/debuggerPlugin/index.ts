@@ -1,8 +1,6 @@
 import { NodeEditor } from 'rete/types'
-import { Node } from 'rete'
 import { EngineContext } from '../../engine'
 import { ThothComponent } from '../../thoth-component'
-import { NodeData } from '../../../types'
 interface IRunContextEditor extends NodeEditor {
   thoth: EngineContext
   abort: Function
