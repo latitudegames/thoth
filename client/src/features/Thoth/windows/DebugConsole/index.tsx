@@ -29,7 +29,13 @@ const DebugConsole = ({ tab }) => {
     const terminal = terminalRef.current
     if (!terminal) return
 
-    terminal.pushToStdout(`> ${data.message}`)
+    terminal.pushToStdout(
+      `
+      > Error in ${data.errorIn} component.
+      
+      > Stack: ${data.errorMessage}
+      `
+    )
   }, [])
 
   useEffect(() => {
