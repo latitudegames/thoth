@@ -42,6 +42,8 @@ const DebugConsole = ({ tab }) => {
       > Stack: ${data.errorMessage}
       `
     )
+
+    scroll()
   }, [])
 
   const commandCallback = () => {
