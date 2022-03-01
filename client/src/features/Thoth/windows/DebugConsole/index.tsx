@@ -33,8 +33,7 @@ const DebugConsole = ({ tab }) => {
     terminal.pushToStdout(
       `
       > Error in ${data.errorIn} component.
-      
-      > Stack: ${data.errorMessage}
+      > ${data.errorMessage}
       `
     )
   }, [])
@@ -72,6 +71,7 @@ const DebugConsole = ({ tab }) => {
           maxHeight: '100%',
           height: '100%',
         }}
+        messageStyle={{ color: 'red' }}
       />
     </Window>
   )
