@@ -100,10 +100,8 @@ export class Code extends ThothComponent<unknown> {
 
       return value
     } catch (err) {
-      if (!silent)
-        node.display(
-          'Error evaluating code.  Open your browser console for more information.'
-        )
+      if (!silent) node.display(`Error evaluating code.`)
+
       // close the data socket so it doesnt error out
       this._task.closed = ['data']
       throw err
