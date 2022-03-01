@@ -26,9 +26,9 @@ function worker(inputs, data) {
 }
 `
 
-const info = `The code component is your swiss army knife when other components won't cut it.  You can define any number of inputs and outputs on it, and then write a custom worker function.  You have access to the any data plugged into the inputs you created on your component, and can send data out along your outputs.
+const info = `The code component is your swiss army knife when other components won't cut it.  You can define any number of inputs and outputs on it, and then write a custom worker function.  You have access to the data plugged into the inputs you created on your component, and can send data out along your outputs.
 
-Please note that the return of your function must be an object whose keys are the same value as the names given to your output sockets.  The incoming inputs argument is an object whose keys are the names you defined.
+Please note that the return of your function must be an object whose keys are the same value as the names given to your output sockets.  The incoming inputs argument is an object whose keys are the names you defined, and each is an array.
 `
 export class Code extends ThothComponent<unknown> {
   constructor() {
@@ -111,10 +111,8 @@ export class Code extends ThothComponent<unknown> {
 
       return value
     } catch (err) {
-      if (!silent)
-        node.display(
-          'Error evaluating code.  Open your browser console for more information.'
-        )
+      if (!silent) node.display(`Error evaluating code.`)
+
       // close the data socket so it doesnt error out
       this._task.closed = ['data']
       throw err
