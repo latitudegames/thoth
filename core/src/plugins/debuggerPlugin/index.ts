@@ -35,7 +35,7 @@ function install(editor: IRunContextEditor) {
 
         editor.thoth.sendToDebug({
           errorIn: node.name,
-          errorMessage: error.stack,
+          errorMessage: node.data.display,
         })
         node.data.error = true
 
