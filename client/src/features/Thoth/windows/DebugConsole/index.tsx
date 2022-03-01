@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef } from 'react'
 import Terminal from 'react-console-emulator'
 import { useAuth } from '@/contexts/AuthProvider'
 import { usePubSub } from '@/contexts/PubSubProvider'
+import Window from '@/features/common/Window/Window'
 
 export type DebugMessage = {
   message: string
@@ -56,20 +57,23 @@ const DebugConsole = ({ tab }) => {
       },
     },
   }
+
   // https://github.com/linuswillner/react-console-emulator/tree/e2b602f631e8b7c57c4a7407491cbfb84f357519
   return (
-    <Terminal
-      ref={terminalRef}
-      commands={commands}
-      promptLabel={`${user.id}@Thoth:~$`}
-      // readOnly={true}
-      style={{
-        overflow: 'scroll',
-        minHeight: '15vh',
-        maxHeight: '100%',
-        height: '100%',
-      }}
-    />
+    <Window>
+      <Terminal
+        ref={terminalRef}
+        commands={commands}
+        promptLabel={`${user.id}@Thoth:~$`}
+        // readOnly={true}
+        style={{
+          overflow: 'scroll',
+          minHeight: '15vh',
+          maxHeight: '100%',
+          height: '100%',
+        }}
+      />
+    </Window>
   )
 }
 
