@@ -33,7 +33,10 @@ function install(editor: IRunContextEditor) {
       } catch (error: any) {
         if (!editor.thoth.sendToDebug) return
 
-        editor.thoth.sendToDebug({ message: error })
+        editor.thoth.sendToDebug({
+          errorIn: node.name,
+          errorMessage: error.stack,
+        })
         node.data.error = true
 
         const fullNode = Node.fromJSON(node)
