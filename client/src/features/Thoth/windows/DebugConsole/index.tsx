@@ -28,7 +28,8 @@ const DebugConsole = ({ tab }) => {
   const terminalRef = useRef<Terminal>()
 
   const scroll = () => {
-    setScrollToBottom(!scrollToBottom)
+    setScrollToBottom(false)
+    setScrollToBottom(true)
   }
 
   const printToDebugger = useCallback((_, data) => {
@@ -38,8 +39,6 @@ const DebugConsole = ({ tab }) => {
     terminal.pushToStdout(
       `
       > Error in ${data.errorIn} component.
-      
-      > Stack: ${data.errorMessage}
       `
     )
 
