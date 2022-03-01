@@ -2,6 +2,7 @@ import { NodeEditor } from 'rete/types'
 import { Node } from 'rete'
 import { EngineContext } from '../../engine'
 import { ThothComponent } from '../../thoth-component'
+import { NodeData } from '../../../types'
 interface IRunContextEditor extends NodeEditor {
   thoth: EngineContext
   abort: Function
@@ -39,9 +40,12 @@ function install(editor: IRunContextEditor) {
         })
         node.data.error = true
 
-        // const fullNode = Node.fromJSON(node)
-        // console.log('node object', fullNode)
-        // editor.selectNode(fullNode)
+        const nodeView = [...editor.view.nodes.values()].find(
+          n => n.node.id === node.id
+        )
+
+        nodeView?.onStart()
+        nodeView?.node.update()
         throw error
       }
     }
