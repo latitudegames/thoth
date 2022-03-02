@@ -18,8 +18,12 @@ export class DisplayControl extends Control {
   }
 
   display(val) {
-    this.props.display = val
-    this.putData('display', val)
+    const valIsString = typeof val === 'string'
+
+    this.props.display = !valIsString ? JSON.stringify(val) : val
+
+    this.putData('display', !valIsString ? JSON.stringify(val) : val)
+
     this.update()
   }
 }
