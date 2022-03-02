@@ -9,6 +9,7 @@ import {
   Spell,
   ThothWorkerInputs,
 } from '../types'
+import debuggerPlugin from './plugins/debuggerPlugin'
 import ModulePlugin from './plugins/modulePlugin'
 import TaskPlugin from './plugins/taskPlugin'
 
@@ -77,6 +78,7 @@ export const initSharedEngine = ({
 
   if (server) {
     // WARNING: ModulePlugin needs to be initialized before TaskPlugin during engine setup
+    engine.use(debuggerPlugin, { server: true, throwError })
     engine.use(ModulePlugin, { engine, modules } as any)
     engine.use(TaskPlugin)
   }
