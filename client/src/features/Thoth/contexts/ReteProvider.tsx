@@ -78,6 +78,8 @@ export const useRete = () => useContext(Context)
 const ReteProvider = ({ children, tab }) => {
   const { events, publish, subscribe } = usePubSub()
   const dispatch = useDispatch()
+  const [fetchFromImageCache] = useFetchFromImageCacheMutation()
+
   const {
     models: { spells, modules },
   } = useDB()
