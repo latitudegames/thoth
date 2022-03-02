@@ -27,3 +27,7 @@ export type ImageType = {
   score: number | string
 }
 
+type WorkerReturn = {
+  images: ImageType[]
+}
+
