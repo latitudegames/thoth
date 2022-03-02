@@ -11,7 +11,7 @@ export const visualGenerationsApi = rootApi.injectEndpoints({
         url: '/image/cache/lookup',
         method: 'POST',
         body: {
-          searchOptions,
+          ...searchOptions,
         },
       }),
     }),
