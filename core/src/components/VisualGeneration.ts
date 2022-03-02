@@ -18,3 +18,12 @@ cacheTag- {insert cacheTag description here}.
 
 topK- number of (k) matches for a particular description. IE: if you submit as a caption: "castle" and k was 5, it would return a fortress, a keep, a battlement, a gatehouse, and a tower. The k=5 images most similar to the word "castle`
 
+export type ImageType = {
+  id: string
+  captionId: string
+  imageCaption: string
+  imageUrl: string
+  tag: string
+  score: number | string
+}
+
