@@ -1,4 +1,11 @@
 import { useEffect, useRef } from 'react'
+import { useSelector } from 'react-redux'
+
+import {
+  uniqueNamesGenerator,
+  adjectives,
+  colors,
+} from 'unique-names-generator'
 
 import {
   useSaveSpellMutation,
@@ -8,7 +15,6 @@ import {
 import { useEditor } from '../contexts/EditorProvider'
 import { useLayout } from '../contexts/LayoutProvider'
 import { useModule } from '../../../contexts/ModuleProvider'
-import { useSelector } from 'react-redux'
 
 const EventHandler = ({ pubSub, tab }) => {
   // only using this to handle events, so not rendering anything with it.
