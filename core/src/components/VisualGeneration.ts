@@ -71,4 +71,32 @@ export class VisualGeneration extends ThothComponent<Promise<WorkerReturn>> {
     return node
   }
 
+  async worker(
+    node: NodeData,
+    inputs: ThothWorkerInputs,
+    outputs: ThothWorkerOutputs,
+    { thoth }: { silent: boolean; thoth: EngineContext }
+  ) {
+    const { readFromImageCache } = thoth
+
+    const caption = inputs.caption[0]
+    if (!caption)
+      throw new Error('Input Needed, Please provide a caption input')
+
+    //Need to finish this
+    const cacheTag = node.data.cacheTag ?? 'some default here'
+
+    try {
+      const images = await readFromImageCache({
+        caption: caption,
+        cacheTag: cacheTag,
+        topK: node.data.topK,
+      })
+      return {
+        images,
+      }
+    } catch (err) {
+      throw new Error('Error in VisualGeneration component')
+    }
+  }
 }
