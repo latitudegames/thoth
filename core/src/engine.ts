@@ -9,11 +9,17 @@ import {
   Spell,
   ThothWorkerInputs,
 } from '../types'
+import debuggerPlugin from './plugins/debuggerPlugin'
 import ModulePlugin from './plugins/modulePlugin'
 import TaskPlugin from './plugins/taskPlugin'
 
 interface WorkerOutputs {
   [key: string]: unknown
+}
+
+export interface ThothEngine extends Engine {
+  activateDebugger?: Function
+  moduleManager?: any
 }
 export abstract class ThothEngineComponent<WorkerReturnType> {
   // Original Class: https://github.com/latitudegames/rete/blob/master/src/engine/component.ts
@@ -53,17 +59,27 @@ export type EngineContext = {
   onUpdateModule?: Function
   sendToPlaytest?: Function
 }
+
+export type InitEngineArguments = {
+  name: string
+  components: any[]
+  server: boolean
+  modules?: Record<string, ModuleType>
+  throwError?: Function
+}
 // @seang TODO: update this to not use positional arguments
-export const initSharedEngine = (
-  name: string,
-  components: any[],
+export const initSharedEngine = ({
+  name,
+  components,
   server = false,
-  modules: Record<string, ModuleType> = {}
-) => {
-  const engine = new Rete.Engine(name)
+  modules = {},
+  throwError,
+}: InitEngineArguments) => {
+  const engine = new Rete.Engine(name) as ThothEngine
 
   if (server) {
     // WARNING: ModulePlugin needs to be initialized before TaskPlugin during engine setup
+    engine.use(debuggerPlugin, { server: true, throwError })
     engine.use(ModulePlugin, { engine, modules } as any)
     engine.use(TaskPlugin)
   }

@@ -1,5 +1,4 @@
 import { NodeEditor } from 'rete/types'
-import { Node } from 'rete'
 import { EngineContext } from '../../engine'
 import { ThothComponent } from '../../thoth-component'
 interface IRunContextEditor extends NodeEditor {
@@ -7,7 +6,10 @@ interface IRunContextEditor extends NodeEditor {
   abort: Function
 }
 
-function install(editor: IRunContextEditor) {
+function install(
+  editor: IRunContextEditor,
+  { server = false, throwError }: { server?: boolean; throwError?: Function }
+) {
   editor.on('componentregister', (component: ThothComponent<unknown>) => {
     const worker = component.worker
     const builder = component.builder
@@ -31,18 +33,29 @@ function install(editor: IRunContextEditor) {
 
         return result
       } catch (error: any) {
-        if (!editor.thoth.sendToDebug) return
-
-        editor.thoth.sendToDebug({
+        const message = {
           errorIn: node.name,
-          errorMessage: node.data.display,
-        })
-        node.data.error = true
+          errorMessage: error.message,
+        }
 
-        // const fullNode = Node.fromJSON(node)
-        // console.log('node object', fullNode)
-        // editor.selectNode(fullNode)
-        throw error
+        if (throwError) {
+          throwError(message)
+          return
+        }
+
+        if (editor.thoth.sendToDebug) editor.thoth.sendToDebug(message)
+
+        if (!server) {
+          node.data.error = true
+
+          const nodeView = [...editor.view.nodes.values()].find(
+            n => n.node.id === node.id
+          )
+
+          nodeView?.onStart()
+          nodeView?.node.update()
+          throw error
+        }
       }
     }
   })
