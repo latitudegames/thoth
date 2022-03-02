@@ -208,6 +208,7 @@ const ReteProvider = ({ children, tab }) => {
     completion,
     enkiCompletion,
     huggingface,
+    readFromImageCache,
     getCurrentGameState,
     updateCurrentGameState,
     ...modules,
