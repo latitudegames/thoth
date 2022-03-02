@@ -6,7 +6,10 @@ interface IRunContextEditor extends NodeEditor {
   abort: Function
 }
 
-function install(editor: IRunContextEditor) {
+function install(
+  editor: IRunContextEditor,
+  { server = false, throwError }: { server?: boolean; throwError?: Function }
+) {
   editor.on('componentregister', (component: ThothComponent<unknown>) => {
     const worker = component.worker
     const builder = component.builder
