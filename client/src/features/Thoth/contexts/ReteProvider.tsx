@@ -164,6 +164,15 @@ const ReteProvider = ({ children, tab }) => {
     return result
   }
 
+  const readFromImageCache = async (caption, cacheTag, topK) => {
+    const result = await useFetchFromImageCacheQuery({
+      caption,
+      cacheTag,
+      topK,
+    })
+    return result
+  }
+
   const clearTextEditor = () => {
     publish($TEXT_EDITOR_CLEAR(tab.id))
   }
