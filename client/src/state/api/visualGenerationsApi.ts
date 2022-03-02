@@ -18,5 +18,4 @@ export const visualGenerationsApi = rootApi.injectEndpoints({
   }),
 })
 
-export const { useFetchFromImageCacheQuery, useLazyFetchFromImageCacheQuery } =
-  visualGenerationsApi
+export const { useFetchFromImageCacheMutation } = visualGenerationsApi
