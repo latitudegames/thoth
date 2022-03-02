@@ -12,7 +12,7 @@ import { store } from '../../../state/store'
 import { invokeInference } from '../../../utils/huggingfaceHelper'
 import { useDB } from '../../../contexts/DatabaseProvider'
 import { usePubSub } from '../../../contexts/PubSubProvider'
-import { useFetchFromImageCacheQuery } from '@/state/api/visualGenerationsApi'
+import { useFetchFromImageCacheMutation } from '@/state/api/visualGenerationsApi'
 import { ImageType } from '@latitudegames/thoth-core/src/components/VisualGeneration'
 /*
 Some notes here.  The new rete provider, not to be confused with the old rete provider renamed to the editor provider, is designed to serve as the single source of truth for interfacing with the rete internal system.  This unified interface will also allow us to replicate the same API in the server, where rete expects certain functions to exist but doesn't care what is behind these functions so long as they work.
