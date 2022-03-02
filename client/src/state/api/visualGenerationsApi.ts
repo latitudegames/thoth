@@ -5,7 +5,7 @@ export const visualGenerationsApi = rootApi.injectEndpoints({
   endpoints: builder => ({
     fetchFromImageCache: builder.query<
       ImageType[],
-      { caption: string; cacheTag: string; topK: number }
+      { caption: string; cacheTag?: string; topK?: number }
     >({
       query: searchOptions => ({
         url: '/image/cache/lookup',
