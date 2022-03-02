@@ -44,4 +44,31 @@ export class VisualGeneration extends ThothComponent<Promise<WorkerReturn>> {
     this.info = info
   }
 
+  builder(node: ThothNode) {
+    const triggerIn = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
+    const caption = new Rete.Input('caption', 'Search Term', stringSocket)
+    const triggerOut = new Rete.Output('trigger', 'Trigger', triggerSocket)
+    const imagesOut = new Rete.Output('images', 'Images', arraySocket)
+
+    node
+      .addInput(triggerIn)
+      .addInput(caption)
+      .addOutput(triggerOut)
+      .addOutput(imagesOut)
+
+    const topK = new InputControl({
+      dataKey: 'topK',
+      name: 'topK',
+    })
+
+    const cacheTag = new InputControl({
+      dataKey: 'cacheTag',
+      name: 'Cache Tag',
+    })
+
+    node.inspector.add(cacheTag).add(topK)
+
+    return node
+  }
+
 }
