@@ -33,21 +33,29 @@ function install(
 
         return result
       } catch (error: any) {
-        if (!editor.thoth.sendToDebug) return
-
-        editor.thoth.sendToDebug({
+        const message = {
           errorIn: node.name,
           errorMessage: error.message,
-        })
-        node.data.error = true
+        }
 
-        const nodeView = [...editor.view.nodes.values()].find(
-          n => n.node.id === node.id
-        )
+        if (throwError) {
+          throwError(message)
+          return
+        }
 
-        nodeView?.onStart()
-        nodeView?.node.update()
-        throw error
+        if (editor.thoth.sendToDebug) editor.thoth.sendToDebug(message)
+
+        if (!server) {
+          node.data.error = true
+
+          const nodeView = [...editor.view.nodes.values()].find(
+            n => n.node.id === node.id
+          )
+
+          nodeView?.onStart()
+          nodeView?.node.update()
+          throw error
+        }
       }
     }
   })
