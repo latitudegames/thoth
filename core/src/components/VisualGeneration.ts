@@ -82,14 +82,10 @@ export class VisualGeneration extends ThothComponent<Promise<WorkerReturn>> {
       throw new Error('Input Needed, Please provide a caption input')
 
     //Currently not using this yet
-    // const cacheTag = node.data.cacheTag ?? 'some default here'
+    const cacheTag = node.data.cacheTag ?? undefined
 
     try {
-      const images = await readFromImageCache({
-        caption: caption,
-        // cacheTag: cacheTag,
-        topK: node.data.topK,
-      })
+      const images = await readFromImageCache(caption, cacheTag, node.data.topK)
       return {
         images,
       }
