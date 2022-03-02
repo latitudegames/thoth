@@ -52,6 +52,14 @@ export type EngineContext = {
   onUpdateModule?: Function
   sendToPlaytest?: Function
 }
+
+export type InitEngineArguments = {
+  name: string
+  components: any[]
+  server: boolean
+  modules?: Record<string, ModuleType>
+  throwError?: Function
+}
 // @seang TODO: update this to not use positional arguments
 export const initSharedEngine = (
   name: string,
