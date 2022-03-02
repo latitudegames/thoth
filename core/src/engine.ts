@@ -61,13 +61,14 @@ export type InitEngineArguments = {
   throwError?: Function
 }
 // @seang TODO: update this to not use positional arguments
-export const initSharedEngine = (
-  name: string,
-  components: any[],
+export const initSharedEngine = ({
+  name,
+  components,
   server = false,
-  modules: Record<string, ModuleType> = {}
-) => {
-  const engine = new Rete.Engine(name)
+  modules = {},
+  throwError,
+}: InitEngineArguments) => {
+  const engine = new Rete.Engine(name) as ThothEngine
 
   if (server) {
     // WARNING: ModulePlugin needs to be initialized before TaskPlugin during engine setup
