@@ -16,6 +16,13 @@ import { useEditor } from '../contexts/EditorProvider'
 import { useLayout } from '../contexts/LayoutProvider'
 import { useModule } from '../../../contexts/ModuleProvider'
 
+// Config for unique name generator
+const customConfig = {
+  dictionaries: [adjectives, colors],
+  separator: ' ',
+  length: 2,
+}
+
 const EventHandler = ({ pubSub, tab }) => {
   // only using this to handle events, so not rendering anything with it.
   const { createOrFocus, windowTypes } = useLayout()
