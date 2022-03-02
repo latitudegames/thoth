@@ -167,7 +167,7 @@ const ReteProvider = ({ children, tab }) => {
   }
 
   const readFromImageCache = async (caption, cacheTag, topK) => {
-    const result = await useFetchFromImageCacheQuery({
+    const result = await fetchFromImageCache({
       caption,
       cacheTag,
       topK,
