@@ -28,7 +28,8 @@ const DebugConsole = ({ tab }) => {
   const terminalRef = useRef<Terminal>()
 
   const scroll = () => {
-    setScrollToBottom(!scrollToBottom)
+    setScrollToBottom(false)
+    setScrollToBottom(true)
   }
 
   const printToDebugger = useCallback((_, data) => {
