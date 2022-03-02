@@ -31,3 +31,5 @@ type WorkerReturn = {
   images: ImageType[]
 }
 
+export class VisualGeneration extends ThothComponent<Promise<WorkerReturn>> {
+}
