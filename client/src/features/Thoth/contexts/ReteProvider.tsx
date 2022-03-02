@@ -67,6 +67,10 @@ const Context = createContext({
     await new Promise(resolve => {
       resolve({} as { [key: string]: unknown; error: unknown })
     }),
+  readFromImageCache: async (): Promise<{ outputs: ImageType[] }> =>
+    await new Promise(resolve => {
+      resolve({} as { outputs: ImageType[] })
+    }),
 })
 
 export const useRete = () => useContext(Context)
