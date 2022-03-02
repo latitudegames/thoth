@@ -35,6 +35,7 @@ export interface ReteContext extends EngineContext {
   getModules: () => void
   getCurrentGameState: () => Record<string, unknown>
   updateCurrentGameState: () => Promise<Record<string, unknown>>
+  readFromImageCache: () => ImageType[]
 }
 
 const Context = createContext({
