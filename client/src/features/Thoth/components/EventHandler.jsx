@@ -104,6 +104,7 @@ const EventHandler = ({ pubSub, tab }) => {
     const modules = await getSpellModules(spell)
     // attach modules to spell to be exported
     spell.modules = modules
+    spell.name = uniqueNamesGenerator(customConfig)
 
     const json = JSON.stringify(spell)
 
