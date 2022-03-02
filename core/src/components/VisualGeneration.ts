@@ -32,4 +32,16 @@ type WorkerReturn = {
 }
 
 export class VisualGeneration extends ThothComponent<Promise<WorkerReturn>> {
+  constructor() {
+    super('VisualGeneration')
+    this.task = {
+      outputs: {
+        images: 'output',
+        trigger: 'option',
+      },
+    }
+    this.category = 'AI/ML'
+    this.info = info
+  }
+
 }
