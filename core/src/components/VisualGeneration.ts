@@ -59,12 +59,12 @@ export class VisualGeneration extends ThothComponent<Promise<WorkerReturn>> {
       name: 'topK',
     })
 
-    const cacheTag = new InputControl({
-      dataKey: 'cacheTag',
-      name: 'Cache Tag',
-    })
+    // const cacheTag = new InputControl({
+    //   dataKey: 'cacheTag',
+    //   name: 'Cache Tag',
+    // })
 
-    node.inspector.add(cacheTag).add(topK)
+    node.inspector.add(topK)
 
     return node
   }
