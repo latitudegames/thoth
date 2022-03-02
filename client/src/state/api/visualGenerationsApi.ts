@@ -3,7 +3,7 @@ import { ImageType } from '@latitudegames/thoth-core/src/components/VisualGenera
 
 export const visualGenerationsApi = rootApi.injectEndpoints({
   endpoints: builder => ({
-    fetchFromImageCache: builder.query<
+    fetchFromImageCache: builder.mutation<
       ImageType[],
       { caption: string; cacheTag?: string; topK?: number }
     >({
