@@ -15,6 +15,11 @@ import TaskPlugin from './plugins/taskPlugin'
 interface WorkerOutputs {
   [key: string]: unknown
 }
+
+export interface ThothEngine extends Engine {
+  activateDebugger?: Function
+  moduleManager?: any
+}
 export abstract class ThothEngineComponent<WorkerReturnType> {
   // Original Class: https://github.com/latitudegames/rete/blob/master/src/engine/component.ts
   name: string
