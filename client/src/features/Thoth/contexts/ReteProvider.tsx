@@ -12,7 +12,8 @@ import { store } from '../../../state/store'
 import { invokeInference } from '../../../utils/huggingfaceHelper'
 import { useDB } from '../../../contexts/DatabaseProvider'
 import { usePubSub } from '../../../contexts/PubSubProvider'
-
+import { useFetchFromImageCacheMutation } from '@/state/api/visualGenerationsApi'
+import { ImageType } from '@latitudegames/thoth-core/src/components/VisualGeneration'
 /*
 Some notes here.  The new rete provider, not to be confused with the old rete provider renamed to the editor provider, is designed to serve as the single source of truth for interfacing with the rete internal system.  This unified interface will also allow us to replicate the same API in the server, where rete expects certain functions to exist but doesn't care what is behind these functions so long as they work.
 Not all functions will be needed on the server, and functions which are not will be labeled as such.
@@ -34,6 +35,7 @@ export interface ReteContext extends EngineContext {
   getModules: () => void
   getCurrentGameState: () => Record<string, unknown>
   updateCurrentGameState: () => Promise<Record<string, unknown>>
+  readFromImageCache: () => Promise<Record<string, unknown>>
 }
 
 const Context = createContext({
@@ -65,6 +67,10 @@ const Context = createContext({
     await new Promise(resolve => {
       resolve({} as { [key: string]: unknown; error: unknown })
     }),
+  readFromImageCache: async (): Promise<{ outputs: ImageType[] }> =>
+    await new Promise(resolve => {
+      resolve({} as { outputs: ImageType[] })
+    }),
 })
 
 export const useRete = () => useContext(Context)
@@ -72,6 +78,8 @@ export const useRete = () => useContext(Context)
 const ReteProvider = ({ children, tab }) => {
   const { events, publish, subscribe } = usePubSub()
   const dispatch = useDispatch()
+  const [fetchFromImageCache] = useFetchFromImageCacheMutation()
+
   const {
     models: { spells, modules },
   } = useDB()
@@ -158,6 +166,15 @@ const ReteProvider = ({ children, tab }) => {
     return result
   }
 
+  const readFromImageCache = async (caption, cacheTag, topK) => {
+    const result = await fetchFromImageCache({
+      caption,
+      cacheTag,
+      topK,
+    })
+    return result
+  }
+
   const clearTextEditor = () => {
     publish($TEXT_EDITOR_CLEAR(tab.id))
   }
@@ -193,6 +210,7 @@ const ReteProvider = ({ children, tab }) => {
     completion,
     enkiCompletion,
     huggingface,
+    readFromImageCache,
     getCurrentGameState,
     updateCurrentGameState,
     ...modules,

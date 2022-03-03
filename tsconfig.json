@@ -19,7 +19,8 @@
     "strictNullChecks": true,
     "strict": false,
     "rootDir": ".",
-    "noEmit": true
+    "noEmit": true,
+    "downlevelIteration": true
   },
   "exclude": ["node_modules", "dist", "*.d.ts"],
   "typeRoots": ["@types/@thoth"]
