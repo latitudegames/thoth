@@ -19,7 +19,7 @@ const Thoth = ({ empty = false }) => {
   useEffect(() => {
     if (!tabs) return
 
-    if (!activeTab) navigate('/home')
+    if (!activeTab && !spellName) navigate('/home')
   }, [tabs])
 
   useEffect(() => {}, [spellName])
