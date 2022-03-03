@@ -11,13 +11,13 @@ const RequireAuth = (props: Record<string, any>) => {
     ? [...props?.access, ...defaultGroups]
     : defaultGroups
 
-  const auth =
+  const authorized =
     user &&
     !user.groups.includes('public') &&
     user.groups.some(g => groups.includes(g))
 
-  if (!auth && user?.id) navigate('/')
-  else if (!auth) loginRedirect()
+  if (!authorized && user?.id) navigate('/')
+  else if (!authorized) loginRedirect()
 
   return <Outlet />
 }
