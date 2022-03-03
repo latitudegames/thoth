@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react'
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { Routes, Route, Navigate } from 'react-router-dom'
 
 import { useAuth } from './contexts/AuthProvider'
 import { useTabManager } from './contexts/TabManagerProvider'
 import RequireAuth from './features/common/RequireAuth/RequireAuth'
-import GuardedRoute from './features/common/GuardedRoute/GuardedRoute'
 import LoadingScreen from './features/common/LoadingScreen/LoadingScreen'
 import ThothPageWrapper from './features/common/ThothPage/ThothPageWrapper'
 import LoginScreen from './features/Login/LoginScreen'
@@ -18,12 +17,9 @@ import './App.css'
 
 function App() {
   // Use our routes
-  const [checked, setChecked] = useState(false)
+  const [checked] = useState(false)
   const { tabs, activeTab } = useTabManager()
   const { user } = useAuth()
-  const navigate = useNavigate()
-
-  const authCheck = user && user.sessionId
 
   const redirect = () => {
     if (user && tabs.length > 0) {
