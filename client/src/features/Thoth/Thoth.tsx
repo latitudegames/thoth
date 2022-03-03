@@ -8,7 +8,7 @@ import LoadingScreen from '../common/LoadingScreen/LoadingScreen'
 import TabLayout from '../common/TabLayout/TabLayout'
 import Workspaces from './workspaces'
 
-const Thoth = ({ empty }) => {
+const Thoth = ({ empty = false }) => {
   const navigate = useNavigate()
   const { activeTab, tabs } = useTabManager()
   const pubSub = usePubSub()
