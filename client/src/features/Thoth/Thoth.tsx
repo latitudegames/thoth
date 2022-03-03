@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import { usePubSub } from '../../contexts/PubSubProvider'
 import { useTabManager } from '../../contexts/TabManagerProvider'
@@ -12,6 +12,7 @@ const Thoth = ({ empty }) => {
   const navigate = useNavigate()
   const { activeTab, tabs } = useTabManager()
   const pubSub = usePubSub()
+  const { spellName } = useParams()
 
   const { events, publish } = pubSub
 
