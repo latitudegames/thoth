@@ -54,8 +54,8 @@ function App() {
         <Route element={<RequireAuth />}></Route>
 
         <Route path="/login" element={<LoginScreen />} />
-        <GuardedRoute path="/thoth" element={<Thoth />} />
-        <GuardedRoute path="/home/*" element={<HomeScreen />} />
+        <Route path="/thoth" element={<Thoth />} />
+        <Route path="/home/*" element={<HomeScreen />} />
         <Route path="/" element={redirect()} />
       </Routes>
     </ThothPageWrapper>
