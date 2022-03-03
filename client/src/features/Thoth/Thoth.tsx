@@ -22,6 +22,8 @@ const Thoth = ({ empty }) => {
     if (!activeTab) navigate('/home')
   }, [tabs])
 
+  useEffect(() => {}, [spellName])
+
   useHotkeys(
     'Control+z',
     () => {
