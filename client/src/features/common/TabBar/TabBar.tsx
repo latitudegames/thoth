@@ -1,12 +1,10 @@
 import classnames from 'classnames'
-import React from 'react'
 import { VscClose } from 'react-icons/vsc'
 
 import { useTabManager } from '../../../contexts/TabManagerProvider'
 import Icon from '../Icon/Icon'
 import MenuBar from '../MenuBar/MenuBar'
 import css from './tabBar.module.css'
-// import { useAuth } from "../../../contexts/AuthProvider";
 
 const Tab = ({ tab, activeTab }) => {
   const { switchTab, closeTab } = useTabManager()
@@ -40,8 +38,6 @@ const Tab = ({ tab, activeTab }) => {
 }
 
 const TabBar = ({ tabs, activeTab }) => {
-  // const { user } = useAuth();
-
   return (
     <div className={css['th-tabbar']}>
       <div className={css['tabbar-section']}>
