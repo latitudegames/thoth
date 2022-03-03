@@ -54,6 +54,7 @@ function App() {
         <Route element={<RequireAuth />}>
           <Route path="/login" element={<LoginScreen />} />
           <Route path="/thoth" element={<Thoth />} />
+          <Route path="/thoth/:spellName" element={<Thoth />} />
           <Route path="/home/*" element={<HomeScreen />} />
           <Route path="/" element={redirect()} />
         </Route>
