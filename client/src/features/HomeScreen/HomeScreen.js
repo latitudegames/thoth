@@ -16,7 +16,7 @@ import LoadingScreen from '../common/LoadingScreen/LoadingScreen'
 
 //MAIN
 
-const StartScreen = ({ createNew, allProjects }) => {
+const StartScreen = () => {
   const models = useDB()
   const { openTab, closeTabBySpellId } = useTabManager()
   const navigate = useNavigate()
