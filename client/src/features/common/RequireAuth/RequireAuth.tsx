@@ -16,7 +16,7 @@ const RequireAuth = (props: Record<string, any>) => {
     !user.groups.includes('public') &&
     user.groups.some(g => groups.includes(g))
 
-  if (!auth && user?.id) window.location.href = `${appRootUrl}`
+  if (!auth && user?.id) navigate('/')
   else if (!auth) loginRedirect()
 
   return <Outlet />
