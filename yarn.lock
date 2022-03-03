@@ -1083,6 +1083,13 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
+"@callstack/async-storage@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@callstack/async-storage/-/async-storage-2.0.3.tgz#93fc98f768926024fe01d759acaba6c80feb5727"
+  integrity sha512-JK/cV/nRHdYDdBmT0GZ7otywZXFNpWMuzjkGgeyhd/Pc+alpaSspg73U6lxFBM5ndnY+T1iQ3RSfUZl3QG+nwQ==
+  dependencies:
+    lodash.merge "^4.6.0"
+
 "@craco/craco@^5.5.0":
   version "5.9.0"
   resolved "https://registry.yarnpkg.com/@craco/craco/-/craco-5.9.0.tgz#dcd34330b558596a4841374743071b7fa041dce9"
@@ -9557,6 +9564,11 @@ lodash.ismatch@^4.4.0:
   resolved "https://registry.yarnpkg.com/lodash.ismatch/-/lodash.ismatch-4.4.0.tgz#756cb5150ca3ba6f11085a78849645f188f85f37"
   integrity sha1-dWy1FQyjum8RCFp4hJZF8Yj4Xzc=
 
+lodash.merge@^4.6.0:
+  version "4.6.2"
+  resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.2.tgz#558aa53b43b661e1925a0afdfa36a9a1085fe57a"
+  integrity sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==
+
 lodash.template@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.template/-/lodash.template-4.5.0.tgz#f976195cf3f347d0d5f52483569fe8031ccce8ab"
@@ -12434,6 +12446,14 @@ rete-react-render-plugin@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/rete-react-render-plugin/-/rete-react-render-plugin-0.2.1.tgz#71a6d73f18f850b85262563f678b40080a7b0e32"
   integrity sha512-2ZMXUP0v+EiejHVMqdrOmUwyDBHC2UDOJ/pFkElaZL1Kn/E40JZA5yzdBXi6ajYZI2DCzoW5ZBcA2Ihjtur8MQ==
+
+"rete@git+https://github.com/latitudegames/rete.git#master":
+  version "1.4.5"
+  uid "24565a81a2bbcdd4cd73b0a725977550cc8ff988"
+  resolved "git+https://github.com/latitudegames/rete.git#24565a81a2bbcdd4cd73b0a725977550cc8ff988"
+  dependencies:
+    lodash "^4.17.21"
+    watch "^1.0.2"
 
 "rete@https://github.com/latitudegames/rete.git#master":
   version "1.4.5"
