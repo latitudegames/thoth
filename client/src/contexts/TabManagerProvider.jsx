@@ -75,7 +75,7 @@ const TabManager = ({ children }) => {
     workspace = 'default',
     name = 'Untitled',
     type = 'module',
-    moduleName,
+    moduleName = '',
     spellId = null,
     openNew = true,
   }) => {
