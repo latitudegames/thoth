@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 
 import { useAuth } from './contexts/AuthProvider'
@@ -17,7 +16,6 @@ import './App.css'
 
 function App() {
   // Use our routes
-  const [checked] = useState(false)
   const { tabs, activeTab } = useTabManager()
   const { user } = useAuth()
 
