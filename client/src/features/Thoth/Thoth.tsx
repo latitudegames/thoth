@@ -10,7 +10,7 @@ import Workspaces from './workspaces'
 
 const Thoth = ({ empty = false }) => {
   const navigate = useNavigate()
-  const { activeTab, tabs } = useTabManager()
+  const { activeTab, tabs, openTab } = useTabManager()
   const pubSub = usePubSub()
   const { spellName } = useParams()
 
