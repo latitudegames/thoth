@@ -4,7 +4,7 @@ import { getAuthHeader } from '../../contexts/NewAuthProvider'
 
 export const getEnkiPrompt = async taskName => {
   try {
-    const response = await fetch(url + `/enki/${taskName}`, {
+    const response = await fetch(latitudeApiRootUrl + `/enki/${taskName}`, {
       method: 'GET',
       prompt,
       mode: 'cors',
@@ -24,7 +24,7 @@ export const getEnkiPrompt = async taskName => {
 
 export const getEnkis = async () => {
   try {
-    const response = await fetch(url + `/enki`, {
+    const response = await fetch(latitudeApiRootUrl + `/enki`, {
       method: 'GET',
       prompt,
       mode: 'cors',
