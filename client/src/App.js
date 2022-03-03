@@ -51,12 +51,12 @@ function App() {
   return (
     <ThothPageWrapper tabs={tabs} activeTab={activeTab}>
       <Routes>
-        <Route element={<RequireAuth />}></Route>
-
-        <Route path="/login" element={<LoginScreen />} />
-        <Route path="/thoth" element={<Thoth />} />
-        <Route path="/home/*" element={<HomeScreen />} />
-        <Route path="/" element={redirect()} />
+        <Route element={<RequireAuth />}>
+          <Route path="/login" element={<LoginScreen />} />
+          <Route path="/thoth" element={<Thoth />} />
+          <Route path="/home/*" element={<HomeScreen />} />
+          <Route path="/" element={redirect()} />
+        </Route>
       </Routes>
     </ThothPageWrapper>
   )
