@@ -51,6 +51,8 @@ function App() {
   return (
     <ThothPageWrapper tabs={tabs} activeTab={activeTab}>
       <Routes>
+        <Route element={<RequireAuth />}></Route>
+
         <Route path="/login" element={<LoginScreen />} />
         <GuardedRoute path="/thoth" element={<Thoth />} />
         <GuardedRoute path="/home/*" element={<HomeScreen />} />
