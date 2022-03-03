@@ -62,11 +62,11 @@ const AuthProvider = ({ children }: { children: ReactElement }) => {
     console.log(
       'redirecting too:',
       `${latitudeApiRootUrl}/user/auth/authorize?client_id=${oAuthClientId}&state=${state}&redirect_uri=${encodeURIComponent(
-        `${appRootUrl}/callback`
+        `${appRootUrl}/`
       )}${force ? `&force=true` : ''}`
     )
     window.location.href = `${latitudeApiRootUrl}/user/auth/authorize?client_id=${oAuthClientId}&state=${state}&redirect_uri=${encodeURIComponent(
-      `${appRootUrl}/callback`
+      `${appRootUrl}/`
     )}${force ? `&force=true` : ''}`
   }
 
@@ -186,7 +186,7 @@ const AuthProvider = ({ children }: { children: ReactElement }) => {
               body: JSON.stringify({
                 code: code,
                 grant_type: 'authorization_code',
-                redirect_uri: `${appRootUrl}/callback`,
+                redirect_uri: `${appRootUrl}/`,
                 client_id: oAuthClientId,
               }),
               headers: { 'Content-Type': 'application/json' },
