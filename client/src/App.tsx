@@ -20,23 +20,10 @@ function App() {
   // Use our routes
   const [checked, setChecked] = useState(false)
   const { tabs, activeTab } = useTabManager()
-  const { user, getUser, checkIn } = useAuth()
+  const { user } = useAuth()
   const navigate = useNavigate()
 
-  const authCheck = user && user.accessToken
-
-  useEffect(() => {
-    ;(async () => {
-      const currentUser = await getUser()
-
-      if (currentUser) {
-        // checkin?
-        checkIn(currentUser)
-      }
-
-      setChecked(true)
-    })()
-  }, [])
+  const authCheck = user && user.sessionId
 
   const redirect = () => {
     if (user && tabs.length > 0) {
