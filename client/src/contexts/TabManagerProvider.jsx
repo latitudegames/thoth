@@ -86,7 +86,7 @@ const TabManager = ({ children }) => {
     }
 
     if (!openNew && type === 'spell') {
-      const tabOpened = await switchTab(spellId)
+      const tabOpened = await switchTab(null, { spell: { $eq: spellId } })
       if (tabOpened) return
     }
 
