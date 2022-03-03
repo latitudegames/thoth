@@ -6,8 +6,8 @@ export const rootApi = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
     baseUrl: `${process.env.REACT_APP_API_URL}/` || 'localhost:8000/',
-    prepareHeaders: headers => {
-      const authHeader = getAuthHeader()
+    prepareHeaders: async headers => {
+      const authHeader = await getAuthHeader()
       if (authHeader?.Authorization)
         headers.set('authorization', authHeader['Authorization'])
       return headers
