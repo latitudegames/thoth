@@ -76,7 +76,7 @@ const DebugConsole = ({ tab }) => {
         ref={terminalRef}
         commands={commands}
         commandCallback={commandCallback}
-        promptLabel={`${user.id}@Thoth:~$`}
+        promptLabel={`${user?.id}@Thoth:~$`}
         // readOnly={true}
         style={{
           overflow: 'hidden',
