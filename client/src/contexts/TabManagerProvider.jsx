@@ -12,8 +12,8 @@ const Context = createContext({
   activeTab: {},
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   openTab: async options => {},
-  switchTab: () => {},
-  closeTab: () => {},
+  switchTab: x => {},
+  closeTab: x => {},
   saveTabLayout: () => {},
   clearTabs: () => {},
   closeTabBySpellId: spellId => {},
