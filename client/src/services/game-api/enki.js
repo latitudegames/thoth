@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
-import { getAuthHeader } from '../../utils/authHelper'
-
-const url = process.env.REACT_APP_API_URL
+import { latitudeApiRootUrl } from '@/config'
+import { getAuthHeader } from '../../contexts/NewAuthProvider'
 
 export const getEnkiPrompt = async taskName => {
   try {
