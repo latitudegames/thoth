@@ -15,8 +15,14 @@ import LoadingScreen from '../common/LoadingScreen/LoadingScreen'
 
 //MAIN
 
+type ModelsType = {
+  modules: {
+    updateOrCreate: Function
+  }
+}
+
 const StartScreen = () => {
-  const models = useDB()
+  const models = useDB() as unknown as ModelsType
   const { openTab, closeTabBySpellId } = useTabManager()
   const navigate = useNavigate()
 
