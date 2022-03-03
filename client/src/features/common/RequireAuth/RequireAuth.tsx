@@ -1,5 +1,4 @@
 import { Outlet, useNavigate } from 'react-router-dom'
-import { appRootUrl } from '../../../config'
 import { useAuthContext } from '../../../contexts/NewAuthProvider'
 
 const defaultGroups = ['internal', 'thoth']
