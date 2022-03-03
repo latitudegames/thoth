@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { Route, Routes, useNavigate } from 'react-router-dom'
 
 import {
-  useSaveSpellMutation,
   useGetSpellsQuery,
   useDeleteSpellMutation,
 } from '../../state/api/spells'
@@ -21,7 +20,6 @@ const StartScreen = () => {
   const { openTab, closeTabBySpellId } = useTabManager()
   const navigate = useNavigate()
 
-  const [saveSpell] = useSaveSpellMutation()
   const [deleteSpell] = useDeleteSpellMutation()
   const { data: spells } = useGetSpellsQuery()
 
@@ -31,7 +29,7 @@ const StartScreen = () => {
       spellData.chain = spellData.graph
       delete spellData.graph
     }
-    const spell = await saveSpell(spellData)
+
     // TODO check for proper values here and throw errors
 
     // Load modules from the spell
