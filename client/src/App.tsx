@@ -29,7 +29,7 @@ function App() {
     return user ? <Navigate to="/home" /> : <Navigate to="/login" />
   }
 
-  if (!checked) return <LoadingScreen />
+  if (!user) return <LoadingScreen />
 
   return (
     <ThothPageWrapper tabs={tabs} activeTab={activeTab}>
