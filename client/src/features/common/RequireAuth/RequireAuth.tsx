@@ -6,6 +6,7 @@ const defaultGroups = ['internal', 'thoth']
 
 const RequireAuth = (props: Record<string, any>) => {
   const { user, loginRedirect } = useAuthContext()
+  const navigate = useNavigate()
   const groups = props?.access
     ? [...props?.access, ...defaultGroups]
     : defaultGroups
