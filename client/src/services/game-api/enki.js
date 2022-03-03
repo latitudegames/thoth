@@ -25,7 +25,7 @@ export const getEnkiPrompt = async taskName => {
 
 export const getEnkis = async () => {
   try {
-    const response = await fetch(latitudeApiRootUrl + `/enki`, {
+    const response = await fetch(url + `/enki`, {
       method: 'GET',
       prompt,
       mode: 'cors',
@@ -52,8 +52,7 @@ export const postEnkiCompletion = async (taskName, inputs) => {
       body: JSON.stringify({ inputs }),
       headers: {
         'Content-Type': 'application/json',
-        ...getAuthHeader(),
-      },
+          ...(await getAuthHeader()),
     })
 
     const parsed = await response.json()
