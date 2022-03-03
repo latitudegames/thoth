@@ -31,7 +31,7 @@ export const getEnkis = async () => {
       mode: 'cors',
       headers: {
         'Content-Type': 'application/json',
-        ...getAuthHeader(),
+        ...(await getAuthHeader()),
       },
     })
 
