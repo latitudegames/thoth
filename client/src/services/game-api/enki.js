@@ -5,7 +5,7 @@ const url = process.env.REACT_APP_API_URL
 
 export const getEnkiPrompt = async taskName => {
   try {
-    const response = await fetch(latitudeApiRootUrl + `/enki/${taskName}`, {
+    const response = await fetch(url + `/enki/${taskName}`, {
       method: 'GET',
       prompt,
       mode: 'cors',
@@ -25,7 +25,7 @@ export const getEnkiPrompt = async taskName => {
 
 export const getEnkis = async () => {
   try {
-    const response = await fetch(url + `/enki`, {
+    const response = await fetch(latitudeApiRootUrl + `/enki`, {
       method: 'GET',
       prompt,
       mode: 'cors',
