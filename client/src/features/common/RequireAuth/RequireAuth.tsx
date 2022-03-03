@@ -15,7 +15,8 @@ const RequireAuth = (props: Record<string, any>) => {
     !user.groups.includes('public') &&
     user.groups.some(g => groups.includes(g))
 
-  if (!authorized && user?.id) navigate('/')
+  if (!authorized && user?.id)
+    window.location.href = 'https://voyage.latitude.io'
   else if (!authorized) loginRedirect()
 
   return <Outlet />
