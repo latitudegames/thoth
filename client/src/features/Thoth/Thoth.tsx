@@ -24,6 +24,13 @@ const Thoth = ({ empty = false }) => {
 
   useEffect(() => {
     if (!spellName) return
+
+    openTab({
+      spellId: spellName,
+      name: spellName,
+      openNew: false,
+      type: 'spell',
+    })
   }, [spellName])
 
   useHotkeys(
