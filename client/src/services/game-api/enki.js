@@ -45,15 +45,19 @@ export const getEnkis = async () => {
 
 export const postEnkiCompletion = async (taskName, inputs) => {
   try {
-    const response = await fetch(url + `/enki/${taskName}/completion`, {
-      method: 'POST',
-      prompt,
-      mode: 'cors',
-      body: JSON.stringify({ inputs }),
-      headers: {
-        'Content-Type': 'application/json',
+    const response = await fetch(
+      latitudeApiRootUrl + `/enki/${taskName}/completion`,
+      {
+        method: 'POST',
+        prompt,
+        mode: 'cors',
+        body: JSON.stringify({ inputs }),
+        headers: {
+          'Content-Type': 'application/json',
           ...(await getAuthHeader()),
-    })
+        },
+      }
+    )
 
     const parsed = await response.json()
 
