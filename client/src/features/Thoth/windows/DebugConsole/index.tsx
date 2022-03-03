@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Terminal from 'react-console-emulator'
-import { useAuth } from '@/contexts/AuthProvider'
+import { useAuthContext } from '@/contexts/NewAuthProvider'
 import { usePubSub } from '@/contexts/PubSubProvider'
 import Window from '@/features/common/Window/Window'
 
