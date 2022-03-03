@@ -1,10 +1,11 @@
 /* eslint-disable no-console */
-import { latitudeApiRootUrl } from '@/config'
-import { getAuthHeader } from '../../contexts/NewAuthProvider'
+import { getAuthHeader } from '../../utils/authHelper'
+
+const url = process.env.REACT_APP_API_URL
 
 export const getEnkiPrompt = async taskName => {
   try {
-    const response = await fetch(url + `/enki/${taskName}`, {
+    const response = await fetch(latitudeApiRootUrl + `/enki/${taskName}`, {
       method: 'GET',
       prompt,
       mode: 'cors',
