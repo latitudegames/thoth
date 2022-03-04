@@ -54,7 +54,7 @@ const AgentManager = () => {
 
   const getAgents = async () => {
     const res = await axios.get(`${process.env.REACT_APP_API_URL}/agents`)
-
+    console.log("Res is", res)
     if (res.data.length == 0) return setAgents([])
     let newAgents = []
     for (let i = 0; i < res.data.length; i++) {
@@ -87,8 +87,10 @@ const AgentManager = () => {
 
   useEffect(async () => {
     const newAgents = await getAgents()
-    setAgents(newAgents)
-    if (newAgents[0]) setCurrentAgentData(newAgents[0])
+    if (newAgents) {
+      setAgents(newAgents)
+      if (newAgents[0]) setCurrentAgentData(newAgents[0])
+    }
   }, [])
 
   return (
