@@ -1,15 +1,14 @@
-import { getAuthHeader } from '../../utils/authHelper'
+import { latitudeApiRootUrl } from '@/config'
+import { getAuthHeader } from '../../contexts/NewAuthProvider'
 
 export const completion = async body => {
-  const url = process.env.REACT_APP_API_URL
-
   try {
-    const response = await fetch(url + '/text/completions', {
+    const response = await fetch(latitudeApiRootUrl + '/text/completions', {
       method: 'POST',
       mode: 'cors',
       headers: {
         'Content-Type': 'application/json',
-        ...getAuthHeader(),
+        ...(await getAuthHeader()),
       },
       body: JSON.stringify({ ...body, prompt: body.prompt.trimEnd() }),
     })
