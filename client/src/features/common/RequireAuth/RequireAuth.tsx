@@ -1,10 +1,10 @@
 import { Outlet } from 'react-router-dom'
-import { useAuthContext } from '../../../contexts/NewAuthProvider'
+import { useAuth } from '../../../contexts/AuthProvider'
 
 const defaultGroups = ['internal', 'thoth']
 
 const RequireAuth = (props: Record<string, any>) => {
-  const { user, loginRedirect } = useAuthContext()
+  const { user, loginRedirect } = useAuth()
   const groups = props?.access
     ? [...props?.access, ...defaultGroups]
     : defaultGroups
