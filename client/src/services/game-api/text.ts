@@ -1,5 +1,5 @@
 import { latitudeApiRootUrl } from '@/config'
-import { getAuthHeader } from '../../contexts/NewAuthProvider'
+import { getAuthHeader } from '../../contexts/AuthProvider'
 
 export const completion = async body => {
   try {
