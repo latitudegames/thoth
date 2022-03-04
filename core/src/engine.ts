@@ -43,7 +43,7 @@ export type EngineContext = {
     body: ModelCompletionOpts
   ) => Promise<string | OpenAIResultChoice | undefined>
   getCurrentGameState: () => Record<string, unknown>
-  updateCurrentGameState: () => Promise<Record<string, unknown>>
+  updateCurrentGameState: (update: Record<string, unknown>) => void
   enkiCompletion: (
     taskName: string,
     inputs: string[]
