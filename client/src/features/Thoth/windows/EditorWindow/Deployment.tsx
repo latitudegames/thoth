@@ -19,6 +19,7 @@ import {
   useSaveSpellMutation,
 } from '@/state/api/spells'
 import { useEditor } from '@thoth/contexts/EditorProvider'
+import { latitudeApiRootUrl } from '@/config'
 
 const DeploymentView = ({ open, setOpen, spellId, close }) => {
   const [loadingVersion, setLoadingVersion] = useState(false)
@@ -42,9 +43,7 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
   }
 
   const buildUrl = version => {
-    return encodeURI(
-      `${process.env.REACT_APP_API_URL}/games/spells/${spellId}/${version}`
-    )
+    return encodeURI(`${latitudeApiRootUrl}/games/spells/${spellId}/${version}`)
   }
 
   const loadVersion = async version => {

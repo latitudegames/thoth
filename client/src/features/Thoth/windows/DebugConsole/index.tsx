@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Terminal from 'react-console-emulator'
-import { useAuth } from '@/contexts/AuthProvider'
+import { useAuthContext } from '@/contexts/NewAuthProvider'
 import { usePubSub } from '@/contexts/PubSubProvider'
 import Window from '@/features/common/Window/Window'
 
@@ -14,7 +14,7 @@ interface Terminal {
 
 const DebugConsole = ({ tab }) => {
   const [scrollToBottom, setScrollToBottom] = useState<boolean>(false)
-  const { user } = useAuth()
+  const { user } = useAuthContext()
   const {
     //  publish,
     subscribe,
@@ -76,7 +76,7 @@ const DebugConsole = ({ tab }) => {
         ref={terminalRef}
         commands={commands}
         commandCallback={commandCallback}
-        promptLabel={`${user.id}@Thoth:~$`}
+        promptLabel={`${user?.id}@Thoth:~$`}
         // readOnly={true}
         style={{
           overflow: 'hidden',

@@ -10,10 +10,7 @@ import { setItem, getItem } from '../utils/AsyncStorage'
 import { useQuery } from '../hooks/useQuery'
 import { useLocation } from 'react-router-dom'
 import { oAuthClientId, latitudeApiRootUrl, appRootUrl } from '../config'
-// import { callQuery, callIncrement } from '../utils/queryApi'
 import { callExpire } from '../helpers/Expire'
-// import { useDB } from './DatabaseProvider'
-
 interface SessionInfoType {
   id: number
   email: string
