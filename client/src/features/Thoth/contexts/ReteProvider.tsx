@@ -13,65 +13,29 @@ import { invokeInference } from '../../../utils/huggingfaceHelper'
 import { useDB } from '../../../contexts/DatabaseProvider'
 import { usePubSub } from '../../../contexts/PubSubProvider'
 import { useFetchFromImageCacheMutation } from '@/state/api/visualGenerationsApi'
-import { ImageType } from '@latitudegames/thoth-core/src/components/VisualGeneration'
+import { ModelsType } from '../../../types'
 /*
 Some notes here.  The new rete provider, not to be confused with the old rete provider renamed to the editor provider, is designed to serve as the single source of truth for interfacing with the rete internal system.  This unified interface will also allow us to replicate the same API in the server, where rete expects certain functions to exist but doesn't care what is behind these functions so long as they work.
 Not all functions will be needed on the server, and functions which are not will be labeled as such.
 */
 
 export interface ReteContext extends EngineContext {
-  onInspector: () => void
-  onPlayTest: () => void
-  onGameState: () => void
-  sendToPlaytest: () => void
-  sendToInspector: () => void
-  sendToDebug: () => void
-  onDebug: () => void
+  onInspector: (node, callback) => void
+  onPlaytest: (callback) => void
+  sendToPlaytest: (data) => void
+  sendToInspector: (data) => void
+  sendToDebug: (data) => void
+  onDebug: (node, callback) => void
   clearTextEditor: () => void
-  getSpell: () => void
-  getModule: () => void
-  getGameState: () => void
-  setGameState: () => void
-  getModules: () => void
+  getSpell: Function
+  getModule: Function
+  getModules: Function
   getCurrentGameState: () => Record<string, unknown>
-  updateCurrentGameState: () => Promise<Record<string, unknown>>
-  readFromImageCache: () => Promise<Record<string, unknown>>
+  updateCurrentGameState: (update) => void
+  readFromImageCache: (caption, cacheTag, topK) => Promise<Record<string, any>>
 }
 
-const Context = createContext({
-  onInspector: () => {},
-  onPlayTest: () => {},
-  onGameState: () => {},
-  onAddModule: () => {},
-  onUpdateModule: () => {},
-  onDeleteModule: () => {},
-  onModuleUpdated: () => {},
-  sendToPlaytest: () => {},
-  sendToInspector: () => {},
-  sendToDebug: () => {},
-  onDebug: () => {},
-  clearTextEditor: () => {},
-  getSpell: () => {},
-  getModule: () => {},
-  getGameState: () => {},
-  setGameState: () => {},
-  getModules: async () => {},
-  getCurrentGameState: () => ({} as Record<string, unknown>),
-  updateCurrentGameState: () => ({} as Promise<Record<string, unknown>>),
-  completion: _completion,
-  enkiCompletion: async (): Promise<{ outputs: string[] }> =>
-    await new Promise(resolve => {
-      resolve({} as { outputs: string[] })
-    }),
-  huggingface: async (): Promise<{ [key: string]: unknown; error: unknown }> =>
-    await new Promise(resolve => {
-      resolve({} as { [key: string]: unknown; error: unknown })
-    }),
-  readFromImageCache: async (): Promise<{ outputs: ImageType[] }> =>
-    await new Promise(resolve => {
-      resolve({} as { outputs: ImageType[] })
-    }),
-})
+const Context = createContext<ReteContext>(undefined!)
 
 export const useRete = () => useContext(Context)
 
@@ -80,9 +44,7 @@ const ReteProvider = ({ children, tab }) => {
   const dispatch = useDispatch()
   const [fetchFromImageCache] = useFetchFromImageCacheMutation()
 
-  const {
-    models: { spells, modules },
-  } = useDB()
+  const { models } = useDB() as unknown as ModelsType
 
   const {
     $PLAYTEST_INPUT,
@@ -184,10 +146,10 @@ const ReteProvider = ({ children, tab }) => {
       store.getState().gameState,
       tab.spell
     )
-    return currentGameState?.state
+    return currentGameState?.state ?? {}
   }
 
-  const updateCurrentGameState = async update => {
+  const updateCurrentGameState = update => {
     const newState = {
       spellId: tab.spell,
       state: update,
@@ -213,10 +175,10 @@ const ReteProvider = ({ children, tab }) => {
     readFromImageCache,
     getCurrentGameState,
     updateCurrentGameState,
-    ...modules,
+    ...models.modules,
 
     // going to need to manuall create theses
-    ...spells,
+    ...models.spells,
   }
 
   return <Context.Provider value={publicInterface}>{children}</Context.Provider>
