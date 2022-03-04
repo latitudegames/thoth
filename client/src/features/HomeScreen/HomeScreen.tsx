@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Route, Routes, useNavigate } from 'react-router-dom'
 
 import {
@@ -13,10 +13,11 @@ import CreateNew from './screens/CreateNew'
 import OpenProject from './screens/OpenProject'
 import css from './homeScreen.module.css'
 import LoadingScreen from '../common/LoadingScreen/LoadingScreen'
+import { ModuleModal } from '@/database/models/moduleModel'
 
 //MAIN
 
-const StartScreen = ({ createNew, allProjects }) => {
+const StartScreen = () => {
   const models = useDB()
   const { openTab, closeTabBySpellId } = useTabManager()
   const navigate = useNavigate()
@@ -31,14 +32,14 @@ const StartScreen = ({ createNew, allProjects }) => {
       spellData.chain = spellData.graph
       delete spellData.graph
     }
-    const spell = await saveSpell(spellData)
+    await saveSpell(spellData)
     // TODO check for proper values here and throw errors
 
     // Load modules from the spell
     if (spellData?.modules && spellData.modules.length > 0)
       await Promise.all(
-        spellData.modules.map(module => {
-          return models.modules.updateOrCreate(module)
+        spellData.modules.map((module: ModuleModal) => {
+          return (models.modules as ModuleModal).updateOrCreate(module)
         })
       )
 
