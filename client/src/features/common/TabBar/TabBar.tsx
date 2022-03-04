@@ -1,5 +1,6 @@
 import classnames from 'classnames'
 import { VscClose } from 'react-icons/vsc'
+import { useNavigate } from 'react-router-dom'
 
 import { useTabManager } from '../../../contexts/TabManagerProvider'
 import Icon from '../Icon/Icon'
@@ -7,7 +8,8 @@ import MenuBar from '../MenuBar/MenuBar'
 import css from './tabBar.module.css'
 
 const Tab = ({ tab, activeTab }) => {
-  const { switchTab, closeTab } = useTabManager()
+  const navigate = useNavigate()
+  const { closeTab } = useTabManager()
   const active = tab.id === activeTab.id
 
   const title = `${tab.type}- ${tab.name}`
@@ -18,7 +20,7 @@ const Tab = ({ tab, activeTab }) => {
   })
 
   const onClick = () => {
-    switchTab(tab.id)
+    navigate(`/thoth/${tab.spell}`)
   }
 
   // Handle selecting the next tab down is none are active.
