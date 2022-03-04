@@ -8,9 +8,9 @@ import LoadingScreen from '../common/LoadingScreen/LoadingScreen'
 import TabLayout from '../common/TabLayout/TabLayout'
 import Workspaces from './workspaces'
 
-const Thoth = ({ empty }) => {
+const Thoth = ({ empty = false }) => {
   const navigate = useNavigate()
-  const { activeTab, tabs } = useTabManager()
+  const { activeTab, tabs, openTab } = useTabManager()
   const pubSub = usePubSub()
   const { spellName } = useParams()
 
@@ -19,10 +19,19 @@ const Thoth = ({ empty }) => {
   useEffect(() => {
     if (!tabs) return
 
-    if (!activeTab) navigate('/home')
+    if (!activeTab && !spellName) navigate('/home')
   }, [tabs])
 
-  useEffect(() => {}, [spellName])
+  useEffect(() => {
+    if (!spellName) return
+
+    openTab({
+      spellId: spellName,
+      name: spellName,
+      openNew: false,
+      type: 'spell',
+    })
+  }, [spellName])
 
   useHotkeys(
     'Control+z',

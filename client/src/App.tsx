@@ -1,10 +1,8 @@
-import { useEffect, useState } from 'react'
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 
 import { useAuth } from './contexts/AuthProvider'
 import { useTabManager } from './contexts/TabManagerProvider'
 import RequireAuth from './features/common/RequireAuth/RequireAuth'
-import GuardedRoute from './features/common/GuardedRoute/GuardedRoute'
 import LoadingScreen from './features/common/LoadingScreen/LoadingScreen'
 import ThothPageWrapper from './features/common/ThothPage/ThothPageWrapper'
 import LoginScreen from './features/Login/LoginScreen'
@@ -18,25 +16,8 @@ import './App.css'
 
 function App() {
   // Use our routes
-  const [checked, setChecked] = useState(false)
   const { tabs, activeTab } = useTabManager()
-  const { user, getUser, checkIn } = useAuth()
-  const navigate = useNavigate()
-
-  const authCheck = user && user.accessToken
-
-  useEffect(() => {
-    ;(async () => {
-      const currentUser = await getUser()
-
-      if (currentUser) {
-        // checkin?
-        checkIn(currentUser)
-      }
-
-      setChecked(true)
-    })()
-  }, [])
+  const { user } = useAuth()
 
   const redirect = () => {
     if (user && tabs.length > 0) {
@@ -46,7 +27,7 @@ function App() {
     return user ? <Navigate to="/home" /> : <Navigate to="/login" />
   }
 
-  if (!checked) return <LoadingScreen />
+  if (!user) return <LoadingScreen />
 
   return (
     <ThothPageWrapper tabs={tabs} activeTab={activeTab}>
