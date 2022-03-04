@@ -98,7 +98,7 @@
               },
               {
                 "type": "tab",
-                "id": "#14",
+                "id": "#16",
                 "name": "Search Corpus",
                 "component": "searchCorpus"
               }
