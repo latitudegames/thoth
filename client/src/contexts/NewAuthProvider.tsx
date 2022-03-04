@@ -19,7 +19,7 @@ interface SessionInfoType {
   appRootUrl: string
 }
 
-interface UserInfoType {
+export interface UserInfoType {
   id: number
   email: string
   groups: string[]
