@@ -1,4 +1,4 @@
-import { getSessionId } from '../contexts/NewAuthProvider'
+import { getSessionId } from '../contexts/AuthProvider'
 import { latitudeApiRootUrl } from '../config'
 
 export const callExpire = async () => {
