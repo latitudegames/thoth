@@ -1,5 +1,3 @@
-import React from 'react'
-
 import css from './panel.module.css'
 
 const Panel = ({
@@ -19,17 +17,17 @@ const Panel = ({
   return (
     <div
       className={
-        `${css['panel']} ${css[unpadded && 'unpadded']} ${
-          css[shadow && 'shadow']
-        } ${css[hover && 'hover']} ${css[roundness]} ${
-          css[shade && 'shade-' + shade]
+        `${css['panel']} ${unpadded && css['unpadded']} ${
+          shadow && css[shadow && 'shadow']
+        } ${hover && css['hover']} ${css[roundness]} ${
+          shade && css['shade-' + shade]
         } ` + className
       }
       style={{
-        display: flexColumn || (flexRow && 'flex'),
+        display: flexRow ? 'flex' : flexColumn,
         flexDirection: flexRow ? 'row' : 'column',
         gap: gap,
-        backgroundImage: bacgkroundImageURL ? bacgkroundImageURL : null,
+        backgroundImage: bacgkroundImageURL ? bacgkroundImageURL : undefined,
         ...style,
       }}
     >
