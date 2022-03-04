@@ -1,11 +1,18 @@
 import { useContext, createContext, useState, useEffect } from 'react'
-
 import { initDB } from '../database'
 import LoadingScreen from '../features/common/LoadingScreen/LoadingScreen'
+import { ModuleModal } from '@/database/models/moduleModel'
 
-const Context = createContext({
+interface ContextType {
+  db: {}
+  models: {}
+  modules?: ModuleModal[] | ModuleModal
+}
+
+const Context = createContext<ContextType>({
   db: {},
   models: {},
+  modules: [] as ModuleModal[],
 })
 
 export const useDB = () => useContext(Context)
@@ -28,6 +35,7 @@ const DatabaseProvider = ({ children }) => {
   const publicInterface = {
     db,
     models,
+    // modules
   }
 
   if (!db || !models) return <LoadingScreen />
