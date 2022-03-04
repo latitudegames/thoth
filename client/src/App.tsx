@@ -5,7 +5,6 @@ import { useTabManager } from './contexts/TabManagerProvider'
 import RequireAuth from './features/common/RequireAuth/RequireAuth'
 import LoadingScreen from './features/common/LoadingScreen/LoadingScreen'
 import ThothPageWrapper from './features/common/ThothPage/ThothPageWrapper'
-import LoginScreen from './features/Login/LoginScreen'
 import HomeScreen from './features/HomeScreen/HomeScreen'
 import Thoth from './features/Thoth/Thoth'
 
@@ -33,7 +32,6 @@ function App() {
     <ThothPageWrapper tabs={tabs} activeTab={activeTab}>
       <Routes>
         <Route element={<RequireAuth />}>
-          <Route path="/login" element={<LoginScreen />} />
           <Route path="/thoth" element={<Thoth />} />
           <Route path="/thoth/:spellName" element={<Thoth />} />
           <Route path="/home/*" element={<HomeScreen />} />
