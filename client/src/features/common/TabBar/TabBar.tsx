@@ -1,5 +1,4 @@
 import classnames from 'classnames'
-import React from 'react'
 import { VscClose } from 'react-icons/vsc'
 import { useNavigate } from 'react-router-dom'
 
@@ -7,11 +6,10 @@ import { useTabManager } from '../../../contexts/TabManagerProvider'
 import Icon from '../Icon/Icon'
 import MenuBar from '../MenuBar/MenuBar'
 import css from './tabBar.module.css'
-// import { useAuth } from "../../../contexts/AuthProvider";
 
 const Tab = ({ tab, activeTab }) => {
   const navigate = useNavigate()
-  const { switchTab, closeTab } = useTabManager()
+  const { closeTab } = useTabManager()
   const active = tab.id === activeTab.id
 
   const title = `${tab.type}- ${tab.name}`
@@ -42,8 +40,6 @@ const Tab = ({ tab, activeTab }) => {
 }
 
 const TabBar = ({ tabs, activeTab }) => {
-  // const { user } = useAuth();
-
   return (
     <div className={css['th-tabbar']}>
       <div className={css['tabbar-section']}>

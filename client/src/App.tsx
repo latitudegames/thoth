@@ -1,12 +1,11 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 
-import { useAuth } from './contexts/AuthProvider'
 import { useTabManager } from './contexts/TabManagerProvider'
 import RequireAuth from './features/common/RequireAuth/RequireAuth'
-import LoadingScreen from './features/common/LoadingScreen/LoadingScreen'
 import ThothPageWrapper from './features/common/ThothPage/ThothPageWrapper'
 import HomeScreen from './features/HomeScreen/HomeScreen'
 import Thoth from './features/Thoth/Thoth'
+import { useAuth } from './contexts/AuthProvider'
 
 import 'flexlayout-react/style/dark.css'
 import './design-globals/design-globals.css'
@@ -25,8 +24,6 @@ function App() {
 
     return user ? <Navigate to="/home" /> : <Navigate to="/login" />
   }
-
-  if (!user) return <LoadingScreen />
 
   return (
     <ThothPageWrapper tabs={tabs} activeTab={activeTab}>

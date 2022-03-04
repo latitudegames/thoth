@@ -12,17 +12,12 @@ import CreateNew from './screens/CreateNew'
 import OpenProject from './screens/OpenProject'
 import css from './homeScreen.module.css'
 import LoadingScreen from '../common/LoadingScreen/LoadingScreen'
+import { ModelsType } from '../../types'
 
 //MAIN
 
-type ModelsType = {
-  modules: {
-    updateOrCreate: Function
-  }
-}
-
 const StartScreen = () => {
-  const models = useDB() as unknown as ModelsType
+  const { models } = useDB() as unknown as ModelsType
   const { openTab, closeTabBySpellId } = useTabManager()
   const navigate = useNavigate()
 
@@ -35,7 +30,6 @@ const StartScreen = () => {
       spellData.chain = spellData.graph
       delete spellData.graph
     }
-
     // TODO check for proper values here and throw errors
 
     // Load modules from the spell

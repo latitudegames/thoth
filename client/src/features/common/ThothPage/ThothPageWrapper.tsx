@@ -1,6 +1,3 @@
-import React from 'react'
-// import ThothSidePanel from "../ThothSidePanel/ThothSidePanel";
-
 import ModalProvider from '../../../contexts/ModalProvider'
 import TabBar from '../TabBar/TabBar'
 import css from './pagewrapper.module.css'

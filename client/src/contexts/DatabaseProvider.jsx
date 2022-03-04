@@ -1,12 +1,8 @@
 import { useContext, createContext, useState, useEffect } from 'react'
-
 import { initDB } from '../database'
 import LoadingScreen from '../features/common/LoadingScreen/LoadingScreen'
 
-const Context = createContext({
-  db: {},
-  models: {},
-})
+const Context = createContext(!undefined)
 
 export const useDB = () => useContext(Context)
 

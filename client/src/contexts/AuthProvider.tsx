@@ -11,6 +11,8 @@ import { useQuery } from '../hooks/useQuery'
 import { useLocation } from 'react-router-dom'
 import { oAuthClientId, latitudeApiRootUrl, appRootUrl } from '../config'
 import { callExpire } from '../helpers/Expire'
+import LoadingScreen from '../features/common/LoadingScreen/LoadingScreen'
+
 interface SessionInfoType {
   id: number
   email: string
@@ -19,7 +21,7 @@ interface SessionInfoType {
   appRootUrl: string
 }
 
-interface UserInfoType {
+export interface UserInfoType {
   id: number
   email: string
   groups: string[]
@@ -49,19 +51,12 @@ const AuthProvider = ({ children }: { children: ReactElement }) => {
   // const { models } = useDB()
 
   const loginRedirect = async (force = false, returnToPath = '') => {
-    console.log('loginredirect')
     // User not logged in or session expired, set state and send to login
     const state = uuidv4()
     await setOauthState(state)
     await setStateStore(state, {
       origin: returnToPath ? returnToPath : window.location.pathname,
     })
-    console.log(
-      'redirecting too:',
-      `${latitudeApiRootUrl}/user/auth/authorize?client_id=${oAuthClientId}&state=${state}&redirect_uri=${encodeURIComponent(
-        `${appRootUrl}/`
-      )}${force ? `&force=true` : ''}`
-    )
     window.location.href = `${latitudeApiRootUrl}/user/auth/authorize?client_id=${oAuthClientId}&state=${state}&redirect_uri=${encodeURIComponent(
       `${appRootUrl}/`
     )}${force ? `&force=true` : ''}`
@@ -225,7 +220,7 @@ const AuthProvider = ({ children }: { children: ReactElement }) => {
     refreshSession,
   }
 
-  if (!done) return <></>
+  if (!done) return <LoadingScreen />
 
   return (
     <AuthContext.Provider value={publicInterface}>
