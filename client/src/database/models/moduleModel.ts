@@ -1,4 +1,13 @@
 import { v4 as uuidv4 } from 'uuid'
+//Still need to type the returns
+// export interface ModuleModal {
+//   getModule: (moduleName, callback) => {}
+//   findOneModule: (_query, callback) => {}
+//   updateModule: (moduleName: string, update: object) => {}
+//   updateOrCreate: (doc) => {}
+//   getNestedModules: (moduleNames: string[]) => {}
+//   getSpellModules: (spell) => {}
+// }
 
 const loadModuleModel = db => {
   const getModules = async callback => {
