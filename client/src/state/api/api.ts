@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { getAuthHeader } from '../../contexts/NewAuthProvider'
+import { getAuthHeader } from '../../contexts/AuthProvider'
 import { latitudeApiRootUrl } from '../../config'
 
 // initialize an empty api service that we'll inject endpoints into later as needed
