@@ -5,7 +5,7 @@ Original application concept and architecture:
     Michael Sharpe <m.sharpe@project89.org>
 
 Stargate Design System designed by:
-    Preston Gull <>
+    Preston Gull <gull.preston@gmail.com>
 
 Large code contributions by:
     Sean Gillespie <s.gillespie@project89.org>
