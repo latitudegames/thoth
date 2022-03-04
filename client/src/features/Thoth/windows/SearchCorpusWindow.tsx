@@ -20,7 +20,7 @@ const SearchCorpus = () => {
     }
     console.log('sending:', body)
     const res = await axios.post(
-      `${process.env.VITE_SEARCH_SERVER_URL}/document`,
+      `${process.env.REACT_APP_SEARCH_SERVER_URL}/document`,
       body
     )
     newDocument.agent = ''
@@ -33,7 +33,7 @@ const SearchCorpus = () => {
 
   const _delete = async documentId => {
     const res = await axios.delete(
-      `${process.env.VITE_SEARCH_SERVER_URL}/document`,
+      `${process.env.REACT_APP_SEARCH_SERVER_URL}/document`,
       {
         params: {
           documentId: documentId,
@@ -52,7 +52,7 @@ const SearchCorpus = () => {
       metadata: documents[index].metadata,
     }
     const res = await axios.post(
-      `${process.env.VITE_SEARCH_SERVER_URL}/update_document`,
+      `${process.env.REACT_APP_SEARCH_SERVER_URL}/update_document`,
       body
     )
 
@@ -62,7 +62,7 @@ const SearchCorpus = () => {
   const getDocuments = async () => {
     console.log('get documents')
     const res = await axios.get(
-      `${process.env.VITE_SEARCH_SERVER_URL}/documents`
+      `${process.env.REACT_APP_SEARCH_SERVER_URL}/documents`
     )
     console.log('got ', res.data)
     documents.splice(0, documents.length)
