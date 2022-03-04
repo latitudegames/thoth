@@ -15,6 +15,8 @@ import type { conversationAttributes, conversationCreationAttributes } from "./c
 import { conversation as _conversation } from "./conversation";
 import type { deployedSpellsAttributes, deployedSpellsCreationAttributes } from "./deployedSpells";
 import { deployedSpells as _deployedSpells } from "./deployedSpells";
+import type { documentsAttributes, documentsCreationAttributes } from "./documents";
+import { documents as _documents } from "./documents";
 import type { fewshotDataAttributes, fewshotDataCreationAttributes } from "./fewshotData";
 import { fewshotData as _fewshotData } from "./fewshotData";
 import type { fewshotSerializationAttributes, fewshotSerializationCreationAttributes } from "./fewshotSerialization";
@@ -32,6 +34,7 @@ export {
   _context as context,
   _conversation as conversation,
   _deployedSpells as deployedSpells,
+  _documents as documents,
   _fewshotTask as fewshotTask,
   _fewshotSerialization as fewshotSerialization,
   _fewshotData as fewshotData,
@@ -54,6 +57,8 @@ export type {
   conversationCreationAttributes,
   deployedSpellsAttributes,
   deployedSpellsCreationAttributes,
+  documentsAttributes,
+  documentsCreationAttributes,
   fewshotDataAttributes,
   fewshotDataCreationAttributes,
   fewshotSerializationAttributes,
@@ -73,6 +78,7 @@ export function initModels(sequelize: Sequelize) {
   const context = _context.initModel(sequelize);
   const conversation = _conversation.initModel(sequelize);
   const deployedSpells = _deployedSpells.initModel(sequelize);
+  const documents = _documents.initModel(sequelize);
   const fewshotTask = _fewshotTask.initModel(sequelize);
   const fewshotSerialization = _fewshotSerialization.initModel(sequelize);
   const fewshotData = _fewshotData.initModel(sequelize);
@@ -87,6 +93,7 @@ export function initModels(sequelize: Sequelize) {
     context: context,
     conversation: conversation,
     deployedSpells: deployedSpells,
+    documents: documents,
     fewshotTask: fewshotTask,
     fewshotSerialization: fewshotSerialization,
     fewshotData: fewshotData,
