@@ -1,7 +1,6 @@
 import { createTheme, ThemeProvider } from '@material-ui/core/styles'
 
 import AuthProvider from './AuthProvider'
-import NewAuthProvider from './NewAuthProvider'
 import DatabaseProvider from './DatabaseProvider'
 import ModuleProvider from './ModuleProvider'
 import PubSubProvider from './PubSubProvider'
@@ -19,8 +18,7 @@ const providers = [
   [ThemeProvider, { theme: darkTheme }],
   ToastProvider,
   DatabaseProvider,
-  NewAuthProvider,
-  // AuthProvider,
+  AuthProvider,
   ModuleProvider,
   TabManagerProvider,
 ]
