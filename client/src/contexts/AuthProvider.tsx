@@ -36,7 +36,7 @@ const initialState = {
 
 const AuthContext = createContext(initialState)
 
-export const useAuthContext = () => useContext(AuthContext)
+export const useAuth = () => useContext(AuthContext)
 
 const AuthProvider = ({ children }: { children: ReactElement }) => {
   const [done, setDone] = useState(false)
