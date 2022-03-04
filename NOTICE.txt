@@ -1,0 +1,4 @@
+Voyage Thoth
+Copyright 2021 Latitude, Inc.
+
+License under Apache License 2.0
