@@ -1,3 +1,4 @@
+import { ModelsType } from '@/types'
 import { useSnackbar } from 'notistack'
 import { useContext, createContext, useState, useEffect } from 'react'
 
@@ -18,8 +19,7 @@ const ModuleProvider = ({ children }) => {
 
   const { events, publish, subscribe } = usePubSub()
   const { enqueueSnackbar } = useSnackbar()
-  const { models } = useDB()
-
+  const { models } = useDB() as unknown as ModelsType
   const { ADD_MODULE, UPDATE_MODULE, $MODULE_UPDATED } = events
 
   // Subscribe to all general update module events
