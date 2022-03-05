@@ -1,7 +1,6 @@
 /* eslint-disable no-undef */
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path')
-const TerserPlugin = require('terser-webpack-plugin')
 
 module.exports = () => {
   const config = {
