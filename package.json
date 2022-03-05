@@ -21,8 +21,8 @@
     "start": "concurrently \"yarn start:core\" \"sleep 15s && yarn start:client\"",
     "lint": "lerna run lint --parallel",
     "lint:fix": "lerna run lint:fix --parallel",
-    "build": "copyfiles LICENSE.txt NOTICE.txt CONTRIBUTORS.txt client && lerna exec --scope @thoth/client -- yarn build",
-    "build:core": "copyfiles LICENSE.txt NOTICE.txt CONTRIBUTORS.txt core && lerna exec --scope @latitudegames/thoth-core -- yarn build",
+    "build": "copyfiles LICENSE.txt client && lerna exec --scope @thoth/client -- yarn build",
+    "build:core": "copyfiles LICENSE.txt core && lerna exec --scope @latitudegames/thoth-core -- yarn build",
     "publish:canary": "lerna exec --scope @latitudegames/thoth-core -- yarn canary",
     "install:canary": "lerna exec --scope @thoth/client -- yarn install:canary"
   },
