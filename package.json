@@ -2,6 +2,13 @@
   "name": "@thoth/root",
   "version": "0.0.1",
   "private": true,
+  "license": "apache 2.0",
+  "author": "Michael Sharpe <m.sharpe@project89.org> (https://www.project89.org)",
+  "contributors": [
+    "Sean Gillespie <s.gillespie@project89.org>",
+    "Jakob Grant <j.grant@project89.org>",
+    "Preston Gull <gull.preston@gmail.com>"
+  ],
   "workspaces": {
     "packages": [
       "client",
