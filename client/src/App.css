@@ -356,7 +356,8 @@ input[type='text'] {
 }
 
 .form-text-area,
-.agent-select > select {
+.agent-select > select,
+.search-corpus > select {
   width: 100%;
   box-sizing: border-box;
   padding: var(--extraSmall);
@@ -370,6 +371,36 @@ input[type='text'] {
   font-family: 'IBM Plex Mono', monospace !important;
   font-size: 11px;
   height: var(--c4);
+}
+
+.search-corpus > select {
+  width: 20%;
+}
+
+.search-corpus-btns {
+  vertical-align: middle;
+  display: inline-flex;
+  justify-content: space-between;
+  margin: 0 1rem;
+  width: 12%;
+}
+
+.search-corpus-documents-list {
+  margin: 1rem 0;
+}
+
+.search-corpus-document {
+  background: #545454;
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.search-corpus-btn {
+  height: var(--c20);
+  background-color: #2E2E2E;
+  border: none;
+  margin: 0 0.4rem;
 }
 
 .admin-container {
@@ -394,4 +425,39 @@ input[type='text'] {
 
 .form-item > input[type='text'] {
   width: 100%;
+}
+
+.form-item > input[type='checkbox'] {
+  display: inline-flex;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.justify-content-around {
+  justify-content: space-around;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.custom-checkbox {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 0.4rem;
+  margin: 0 0.5rem;
 }
