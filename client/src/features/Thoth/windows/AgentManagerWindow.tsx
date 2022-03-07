@@ -1,8 +1,9 @@
 //@ts-nocheck
 
+import Modal from '@/features/common/Modal/Modal'
 import axios from 'axios'
 import React, { useEffect, useRef, useState } from 'react'
-
+import { useForm } from 'react-hook-form'
 const AgentManager = () => {
   const [agents, setAgents] = useState()
   const [currentAgentData, setCurrentAgentData] = useState(null)
@@ -14,10 +15,25 @@ const AgentManager = () => {
   const [monologue, setMonologue] = useState('')
   const [personality, setPersonality] = useState('')
   const [greetings, setGreetings] = useState('')
+  const [openModal, setOpenModal] = useState(false)
+  const [versionName, setVersionName] = useState('')
+  const {
+    register,
+    handleSubmit,
+  } = useForm()
 
-  const createNew = async () => {
+  const options = [
+    {
+      label:'Save',
+      onClick: () => {
+        onSubmit({ versionName })
+      },
+    }
+  ]
+
+  const createNew = async (e) => {
     console.log('newAgentRef.current is,', newAgentRef.current.value)
-    const agent = newAgentRef.current.value ?? 'New Agent'
+    const agent = !newAgentRef.current.value ? 'New Agent' : newAgentRef.current.value
     await getAgents()
     await update(agent)
   }
@@ -93,20 +109,32 @@ const AgentManager = () => {
     }
   }, [])
 
+  const onSubmit = handleSubmit(async () => {
+    await createNew()
+    onClose()
+  })
+
+  const onClose = () =>{
+    setOpenModal(false)
+  }
+
+  const updateVersionName = e => {
+    setVersionName(e.target.value)
+  }
+
   return (
     <div className="agent-container">
       <div style={{ display: 'flex' }}>
         <span className="create-agent" style={{ lineHeight: '32px' }}>
           Create Agent
         </span>
-        <input type="text" style={{ marginLeft: 'auto' }} ref={newAgentRef} />
       </div>
       <button
         className="button"
         type="button"
         onClick={async e => {
           e.preventDefault()
-          await createNew()
+          setOpenModal(true)
         }}
       >
         Create New
@@ -225,6 +253,13 @@ const AgentManager = () => {
             </div>
           </form>
         )}
+        <div className="agent-createModal">
+        {openModal && 
+          <Modal title="New Agent" options={options} onClose={onClose} icon="add" className="agent-createModal">
+            <h4>CHANGE NOTES</h4>
+            <input type="text" style={{ marginLeft: 'auto' }} ref={newAgentRef} />
+          </Modal>}
+        </div>
       </div>
     </div>
   )
