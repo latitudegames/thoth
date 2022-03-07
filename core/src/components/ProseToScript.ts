@@ -119,12 +119,17 @@ export class ProseToScript extends ThothComponent<Promise<WorkerReturn>> {
       maxTokens: 300,
       temperature: 0.0,
     }
-    const raw = (await completion(body)) as string
-    const result = raw?.trim()
-    if (!silent) node.display(result)
 
-    return {
-      detectedItem: result,
+    try {
+      const raw = (await completion(body)) as string
+      const result = raw?.trim()
+      if (!silent) node.display(result)
+
+      return {
+        detectedItem: result,
+      }
+    } catch (err) {
+      throw new Error('Error in ProseToScript component')
     }
   }
 }

@@ -1,5 +1,3 @@
-import React from 'react'
-
 import css from './icon.module.css'
 
 export const componentCategories = {
@@ -20,7 +18,7 @@ export const dataControlCategories = {
   'Max Tokens': 'moon',
 }
 
-const Icon = ({ name = 'warn', size = 16, style, onClick = () => {} }) => {
+const Icon = ({ name = 'warn', size = 16, style = {}, onClick = () => {} }) => {
   return (
     <div
       onClick={onClick}

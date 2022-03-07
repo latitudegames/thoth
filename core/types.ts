@@ -114,6 +114,7 @@ export type NodeOutputs = {
 export type NodeData = ReteNodeData & {
   fewshot?: string
   display: Function
+  error?: boolean
 }
 
 // export type Node = {

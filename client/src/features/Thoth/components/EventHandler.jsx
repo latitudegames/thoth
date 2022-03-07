@@ -1,4 +1,11 @@
 import { useEffect, useRef } from 'react'
+import { useSelector } from 'react-redux'
+
+import {
+  uniqueNamesGenerator,
+  adjectives,
+  colors,
+} from 'unique-names-generator'
 
 import {
   useSaveSpellMutation,
@@ -8,7 +15,13 @@ import {
 import { useEditor } from '../contexts/EditorProvider'
 import { useLayout } from '../contexts/LayoutProvider'
 import { useModule } from '../../../contexts/ModuleProvider'
-import { useSelector } from 'react-redux'
+
+// Config for unique name generator
+const customConfig = {
+  dictionaries: [adjectives, colors],
+  separator: ' ',
+  length: 2,
+}
 
 const EventHandler = ({ pubSub, tab }) => {
   // only using this to handle events, so not rendering anything with it.
@@ -91,6 +104,7 @@ const EventHandler = ({ pubSub, tab }) => {
     const modules = await getSpellModules(spell)
     // attach modules to spell to be exported
     spell.modules = modules
+    spell.name = uniqueNamesGenerator(customConfig)
 
     const json = JSON.stringify(spell)
 

@@ -1,8 +1,7 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Route, Routes, useNavigate } from 'react-router-dom'
 
 import {
-  useSaveSpellMutation,
   useGetSpellsQuery,
   useDeleteSpellMutation,
 } from '../../state/api/spells'
@@ -13,15 +12,15 @@ import CreateNew from './screens/CreateNew'
 import OpenProject from './screens/OpenProject'
 import css from './homeScreen.module.css'
 import LoadingScreen from '../common/LoadingScreen/LoadingScreen'
+import { ModelsType } from '../../types'
 
 //MAIN
 
-const StartScreen = ({ createNew, allProjects }) => {
-  const models = useDB()
+const StartScreen = () => {
+  const { models } = useDB() as unknown as ModelsType
   const { openTab, closeTabBySpellId } = useTabManager()
   const navigate = useNavigate()
 
-  const [saveSpell] = useSaveSpellMutation()
   const [deleteSpell] = useDeleteSpellMutation()
   const { data: spells } = useGetSpellsQuery()
 
@@ -31,7 +30,6 @@ const StartScreen = ({ createNew, allProjects }) => {
       spellData.chain = spellData.graph
       delete spellData.graph
     }
-    const spell = await saveSpell(spellData)
     // TODO check for proper values here and throw errors
 
     // Load modules from the spell
