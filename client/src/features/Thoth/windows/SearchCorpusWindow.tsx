@@ -2,6 +2,9 @@
 
 import axios from 'axios'
 import React, { useEffect, useRef, useState } from 'react'
+import { VscNewFile, VscTrash } from 'react-icons/vsc';
+import { FaEdit } from 'react-icons/fa';
+import SearchCorpusDocument from './SearchCorpusDocument';
 
 const SearchCorpus = () => {
   const [documents, setDocuments] = useState([])
@@ -82,96 +85,98 @@ const SearchCorpus = () => {
     )
   }
 
+  const editForm = () => (
+    <div>
+      <h4>Available Documents</h4>
+      {documents.map((document, idx) => {
+        return (
+          <form id={idx}>
+            <div className="form-item">
+              <span className="form-item-label">Agent:</span>
+              <textarea
+                className="form-text-area"
+                defaultValue={document.agent}
+                onChange={e => (documents[idx].agent = e.target.value)}
+              ></textarea>
+            </div>
+            <div className="form-item">
+              <span className="form-item-label">Document:</span>
+              <textarea
+                className="form-text-area"
+                defaultValue={document.document}
+                onChange={e => (documents[idx].document = e.target.value)}
+              ></textarea>
+            </div>
+            <div className="form-item">
+              <span className="form-item-label">Metadata:</span>
+              <textarea
+                className="form-text-area"
+                defaultValue={document.metadata}
+                onChange={e => (documents[idx].metadata = e.target.value)}
+              ></textarea>
+            </div>
+            <br />
+            <button type="button" onClick={() => update(idx)}>
+              Updated
+            </button>
+            <br />
+            <button type="button" onClick={() => _delete(document.id)}>
+              Delete
+            </button>
+            <br />
+          </form>
+        )
+      })}
+    </div>
+  )
+
   useEffect(async () => {
     await getDocuments()
   }, [])
 
   return (
     <div className="agent-container">
-      <div>
-        <h4>Create new Document</h4>
-        <form>
-          <div className="form-item">
-            <span className="form-item-label">Agent:</span>
-            <textarea
-              className="form-text-area"
-              onChange={e => (newDocument.agent = e.target.value)}
-              defaultValue={newDocument.agent}
-            ></textarea>
-          </div>
-          <div className="form-item">
-            <span className="form-item-label">Document:</span>
-            <textarea
-              className="form-text-area"
-              onChange={e => (newDocument.document = e.target.value)}
-              defaultValue={newDocument.document}
-            ></textarea>
-          </div>
-          <div className="form-item">
-            <span className="form-item-label">Metadata:</span>
-            <textarea
-              className="form-text-area"
-              onChange={e => (newDocument.metadata = e.target.value)}
-              defaultValue={newDocument.metadata}
-            ></textarea>
-          </div>
-        </form>
-        <br />
-        <button
-          className="button"
-          type="button"
-          onClick={async e => {
-            e.preventDefault()
-            await add()
-          }}
-        >
-          Create New
-        </button>
-      </div>
       {!documents ? (
         <h1>Loading...</h1>
       ) : (
         <div>
-          <h4>Available Documents</h4>
-          {documents.map((document, idx) => {
-            return (
-              <form id={idx}>
-                <div className="form-item">
-                  <span className="form-item-label">Agent:</span>
-                  <textarea
-                    className="form-text-area"
-                    defaultValue={document.agent}
-                    onChange={e => (documents[idx].agent = e.target.value)}
-                  ></textarea>
-                </div>
-                <div className="form-item">
-                  <span className="form-item-label">Document:</span>
-                  <textarea
-                    className="form-text-area"
-                    defaultValue={document.document}
-                    onChange={e => (documents[idx].document = e.target.value)}
-                  ></textarea>
-                </div>
-                <div className="form-item">
-                  <span className="form-item-label">Metadata:</span>
-                  <textarea
-                    className="form-text-area"
-                    defaultValue={document.metadata}
-                    onChange={e => (documents[idx].metadata = e.target.value)}
-                  ></textarea>
-                </div>
-                <br />
-                <button type="button" onClick={() => update(idx)}>
-                  Updated
-                </button>
-                <br />
-                <button type="button" onClick={() => _delete(document.id)}>
-                  Delete
-                </button>
-                <br />
-              </form>
-            )
-          })}
+          <span className="search-corpus">
+            <select
+              name="documents"
+              id="documents"
+              onChange={event => {
+                event.preventDefault()
+                // TODO
+              }}
+            >
+              <option value=""></option>
+            </select>
+          </span>
+          <span className="search-corpus-btns">
+            <VscNewFile size={20} color="#A0A0A0" />
+            <FaEdit size={20} color="#A0A0A0" />
+            <VscTrash size={20} color="#A0A0A0" />
+          </span>
+
+          <div className="d-flex flex-column search-corpus-documents-list">
+            {
+              documents.map((document, idx) => (
+                <SearchCorpusDocument document={document} key={idx}/>
+              ))
+            }
+            {documents.length === 0 && 'No documents found'}
+          </div>
+
+          <button
+            className="button"
+            type="button"
+            onClick={async e => {
+              e.preventDefault()
+              await add()
+            }}
+          >
+            Create New
+          </button>
         </div>
       )}
     </div>
