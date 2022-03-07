@@ -17,6 +17,9 @@ const AgentManager = () => {
   const [greetings, setGreetings] = useState('')
   const [openModal, setOpenModal] = useState(false)
   const [versionName, setVersionName] = useState('')
+  const [files, setFiles] = useState("");
+  let importData = files && JSON.parse(files);
+
   const {
     register,
     handleSubmit,
@@ -122,6 +125,40 @@ const AgentManager = () => {
     setVersionName(e.target.value)
   }
 
+  const downloadFile = ({ data, fileName, fileType }) => {
+    const blob = new Blob([data], { type: fileType });
+  
+    const a = document.createElement("a");
+    a.download = fileName;
+    a.href = window.URL.createObjectURL(blob);
+    const clickEvt = new MouseEvent("click", {
+      view: window,
+      bubbles: true,
+      cancelable: true,
+    });
+    a.dispatchEvent(clickEvt);
+    a.remove();
+  };
+
+  const handleChange = e => {
+    const fileReader = new FileReader();
+    fileReader.readAsText(e.target.files[0], "UTF-8");
+    fileReader.onload = e => {
+      setFiles(e.target.result);
+    };
+  };
+
+  const onExportData = (e) =>{
+    e.preventDefault();
+    downloadFile({
+      data: JSON.stringify(files),
+      fileName: "users.json",
+      fileType: "text/json",
+    });
+  }
+
+  console.log(files && JSON.parse(files),'filee')
+
   return (
     <div className="agent-container">
       <div style={{ display: 'flex' }}>
@@ -161,6 +198,22 @@ const AgentManager = () => {
                 {agents.length === 0 && 'No personalities found'}
               </select>
             </span>
+            {currentAgentData && <div style={{ display: 'flex', margin: '1em' }}>
+              <button
+                value="import"
+                style={{marginRight: '12px'}}
+              >
+                <input type="file" onChange={handleChange} />
+              </button>
+              <button
+                value="export"
+                onClick={(e) => {
+                  onExportData(e)
+                }}
+              >
+                Export
+              </button>
+            </div>}
           </div>
         )}
         {currentAgentData && (
@@ -172,7 +225,7 @@ const AgentManager = () => {
                 onChange={e => {
                   setDialog(e.target.value)
                 }}
-                value={dialog}
+                value={importData && importData.Dialogue ? importData.Dialogue : dialog}
               ></textarea>
             </div>
 
@@ -183,7 +236,7 @@ const AgentManager = () => {
                 onChange={e => {
                   setMorals(e.target.value)
                 }}
-                value={morals}
+                value={importData && importData.Morals ? importData.Morals : morals}
               ></textarea>
             </div>
 
@@ -194,7 +247,7 @@ const AgentManager = () => {
                 onChange={e => {
                   setFacts(e.target.value)
                 }}
-                value={facts}
+                value={importData && importData.Facts ? importData.Facts : facts}
               ></textarea>
             </div>
 
@@ -206,7 +259,7 @@ const AgentManager = () => {
                 onChange={e => {
                   setMonologue(e.target.value)
                 }}
-                value={monologue}
+                value={importData && importData.Monologue ? importData.Monologue : monologue}
               ></textarea>
             </div>
 
@@ -217,7 +270,7 @@ const AgentManager = () => {
                 onChange={e => {
                   setPersonality(e.target.value)
                 }}
-                value={personality}
+                value={importData && importData.Personality ? importData.Personality : personality}
               ></textarea>
             </div>
 
@@ -228,7 +281,7 @@ const AgentManager = () => {
                 onChange={e => {
                   setGreetings(e.target.value)
                 }}
-                value={greetings}
+                value={importData && importData.Greetings ? importData.Greetings : greetings}
               ></textarea>
             </div>
             <div style={{ display: 'flex' }}>
