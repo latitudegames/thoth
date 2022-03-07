@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@callstack/async-storage": "^2.0.3",
-    "@latitudegames/thoth-core": "^0.0.59",
+    "@latitudegames/thoth-core": "0.0.61",
     "@material-ui/core": "^4.12.1",
     "@material-ui/icons": "^4.11.2",
     "@monaco-editor/react": "^4.2.1",
