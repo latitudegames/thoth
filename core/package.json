@@ -1,6 +1,13 @@
 {
   "name": "@latitudegames/thoth-core",
   "version": "0.0.61",
+  "license": "Apache-2.0",
+  "author": "Michael Sharpe <m.sharpe@project89.org> (https://www.project89.org)",
+  "contributors": [
+    "Sean Gillespie <s.gillespie@project89.org>",
+    "Jakob Grant <j.grant@project89.org>",
+    "Preston Gull <gull.preston@gmail.com>"
+  ],
   "description": "core shared code for thoth",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -22,6 +29,7 @@
     "deep-equal": "^2.0.5",
     "handlebars": "^4.7.7",
     "jsdom": "^17.0.0",
+    "license-webpack-plugin": "^4.0.2",
     "path": "^0.12.7",
     "react": "^17.0.2",
     "regenerator-runtime": "^0.13.9",
@@ -60,7 +68,6 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
-  "author": "Sean Gillespie <sean@latitude.io>",
   "auto": {
     "plugins": [
       "npm"
