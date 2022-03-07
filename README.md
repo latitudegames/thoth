@@ -59,3 +59,8 @@ Builds the @thoth/client app for production to the `client/build` folder.
 ### `yarn build:core`
 
 Builds the @thoth/core package for production to the `core/build` folder.
+
+## Apache license information
+
+Good example here for formatting apache license files for reference.
+https://www.openntf.org/Internal/home.nsf/dx/Applying_Apache_License

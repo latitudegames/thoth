@@ -29,6 +29,7 @@ import { StringProcessor } from './StringProcessor'
 import { SwitchGate } from './SwitchGate'
 import { TenseTransformer } from './TenseTransformer'
 import { TimeDetectorComponent } from './TimeDetector'
+import { VisualGeneration } from './VisualGeneration'
 
 // Here we load up all components of the builder into our editor for usage.
 // We might be able to programatically generate components from enki
@@ -65,6 +66,7 @@ export const components = {
   timeDetectorComponent: () => new TimeDetectorComponent(),
   TriggerIn: () => new TriggerIn(),
   triggerOut: () => new TriggerOut(),
+  VisualGeneration: () => new VisualGeneration(),
 }
 
 export const getComponents = () => {

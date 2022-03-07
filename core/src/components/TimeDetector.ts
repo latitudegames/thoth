@@ -92,12 +92,17 @@ export class TimeDetectorComponent extends ThothComponent<
       maxTokens: 100,
       temperature: 0.0,
     }
-    const raw = (await completion(body)) as string
-    const result = raw?.trim()
-    if (!silent) node.display(result)
 
-    return {
-      detectedTime: result,
+    try {
+      const raw = (await completion(body)) as string
+      const result = raw?.trim()
+      if (!silent) node.display(result)
+
+      return {
+        detectedTime: result,
+      }
+    } catch (err) {
+      throw new Error('Error in Time Detector component')
     }
   }
 }

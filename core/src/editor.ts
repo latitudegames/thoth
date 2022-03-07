@@ -18,6 +18,7 @@ import { ModuleManager } from './plugins/modulePlugin/module-manager'
 import SocketGenerator from './plugins/socketGenerator'
 import TaskPlugin from './plugins/taskPlugin'
 import { PubSubContext, ThothComponent } from './thoth-component'
+import DebuggerPlugin from './plugins/debuggerPlugin'
 export class ThothEditor extends NodeEditor<EventsTypes> {
   pubSub: PubSubContext
   thoth: EngineContext
@@ -121,10 +122,17 @@ export const initEditor = async function ({
     }, {} as Record<string, ModuleType>)
 
   // The engine is used to process/run the rete graph
-  const engine = initSharedEngine('demo@0.1.0', components, false, modules)
+
+  const engine = initSharedEngine({
+    name: 'demo@0.1.0',
+    components,
+    server: false,
+    modules: {},
+  })
   // @seang TODO: update types for editor.use rather than casting as unknown here, we may want to bring our custom rete directly into the monorepo at this point
 
   // WARNING: ModulePlugin needs to be initialized before TaskPlugin during engine setup
+  editor.use(DebuggerPlugin)
   editor.use(ModulePlugin, { engine, modules } as unknown as void)
   editor.use(TaskPlugin)
 

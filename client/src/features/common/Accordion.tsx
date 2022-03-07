@@ -4,7 +4,6 @@ import AccordionSummary from '@material-ui/core/AccordionSummary'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import React from 'react'
 
 import css from './accordion.module.css'
 import Icon from './Icon/Icon'
@@ -38,7 +37,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export const SimpleAccordion = ({ setExpanded = () => {}, ...props }) => {
+export const SimpleAccordion = ({ setExpanded = x => {}, ...props }) => {
   const classes = useStyles()
 
   const onChange = (_, expanded) => {

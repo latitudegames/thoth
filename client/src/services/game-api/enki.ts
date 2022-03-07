@@ -1,17 +1,15 @@
 /* eslint-disable no-console */
-import { getAuthHeader } from '../../utils/authHelper'
-
-const url = process.env.REACT_APP_API_URL
+import { latitudeApiRootUrl } from '@/config'
+import { getAuthHeader } from '../../contexts/AuthProvider'
 
 export const getEnkiPrompt = async taskName => {
   try {
-    const response = await fetch(url + `/enki/${taskName}`, {
+    const response = await fetch(latitudeApiRootUrl + `/enki/${taskName}`, {
       method: 'GET',
-      prompt,
       mode: 'cors',
       headers: {
         'Content-Type': 'application/json',
-        ...getAuthHeader(),
+        ...(await getAuthHeader()),
       },
     })
 
@@ -25,13 +23,12 @@ export const getEnkiPrompt = async taskName => {
 
 export const getEnkis = async () => {
   try {
-    const response = await fetch(url + `/enki`, {
+    const response = await fetch(latitudeApiRootUrl + `/enki`, {
       method: 'GET',
-      prompt,
       mode: 'cors',
       headers: {
         'Content-Type': 'application/json',
-        ...getAuthHeader(),
+        ...(await getAuthHeader()),
       },
     })
 
@@ -45,16 +42,19 @@ export const getEnkis = async () => {
 
 export const postEnkiCompletion = async (taskName, inputs) => {
   try {
-    const response = await fetch(url + `/enki/${taskName}/completion`, {
-      method: 'POST',
-      prompt,
-      mode: 'cors',
-      body: JSON.stringify({ inputs }),
-      headers: {
-        'Content-Type': 'application/json',
-        ...getAuthHeader(),
-      },
-    })
+    const response = await fetch(
+      latitudeApiRootUrl + `/enki/${taskName}/completion`,
+      {
+        method: 'POST',
+
+        mode: 'cors',
+        body: JSON.stringify({ inputs }),
+        headers: {
+          'Content-Type': 'application/json',
+          ...(await getAuthHeader()),
+        },
+      }
+    )
 
     const parsed = await response.json()
 

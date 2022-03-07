@@ -1,7 +1,8 @@
 /* eslint-disable no-undef */
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path')
-const TerserPlugin = require('terser-webpack-plugin')
+const LicenseWebpackPlugin =
+  require('license-webpack-plugin').LicenseWebpackPlugin
 
 module.exports = () => {
   const config = {
@@ -54,6 +55,7 @@ module.exports = () => {
         },
       ],
     },
+    plugins: [new LicenseWebpackPlugin()],
   }
 
   const isAnalyze = typeof process.env.BUNDLE_ANALYZE !== 'undefined'

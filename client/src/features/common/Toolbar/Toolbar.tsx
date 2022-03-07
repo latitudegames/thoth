@@ -1,5 +1,3 @@
-import React from 'react'
-
 import css from './toolbar.module.css'
 
 const Toolbar = ({ ...props }) => {

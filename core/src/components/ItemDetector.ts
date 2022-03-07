@@ -20,7 +20,7 @@ Action, Item: gather the valerian plant from the forest, valerian plant
 Action, Item: get the necklace from the box, necklace
 Action, Item: `
 
-const info = `The item detector attempts to recognize what item in a give text string is being mentioned or used.  The input is a text string the output is a string of the object`
+const info = `The item detector attempts to recognize what item in a given text string is being mentioned or used.  The input is a text string the output is a string of the object`
 
 type WorkerReturn = {
   detectedItem: string
@@ -75,12 +75,17 @@ export class ItemTypeComponent extends ThothComponent<Promise<WorkerReturn>> {
       maxTokens: 100,
       temperature: 0.0,
     }
-    const raw = (await completion(body)) as string
-    const result = raw?.trim()
-    if (!silent) node.display(result)
 
-    return {
-      detectedItem: result,
+    try {
+      const raw = (await completion(body)) as string
+      const result = raw?.trim()
+      if (!silent) node.display(result)
+
+      return {
+        detectedItem: result,
+      }
+    } catch (err) {
+      throw new Error('Error in Item Detector component')
     }
   }
 }
