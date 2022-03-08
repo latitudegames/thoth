@@ -1,10 +1,5 @@
-import { NodeEditor } from 'rete/types'
-import { EngineContext } from '../../engine'
+import { IRunContextEditor } from '../../../types'
 import { ThothComponent } from '../../thoth-component'
-interface IRunContextEditor extends NodeEditor {
-  thoth: EngineContext
-  abort: Function
-}
 
 function install(
   editor: IRunContextEditor,
