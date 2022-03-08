@@ -18,7 +18,6 @@ type DataControlData = Record<string, any>
 
 export class Inspector {
   // Stub of function.  Can be a nodes catch all onData
-  onData = Function
   cache: Record<string, any> = {}
   node: ThothNode
   component: ThothComponent<unknown>
@@ -175,6 +174,7 @@ export class Inspector {
   }
 
   handleData(update: Record<string, any>) {
+    console.log('Handling data!', update)
     // store all data controls inside the nodes data
     // WATCH in case our graphs start getting quite large.
     if (update.dataControls) this.cacheControls(update.dataControls)
@@ -182,7 +182,8 @@ export class Inspector {
     const { data } = update
 
     // Send data to a possibel node global handler
-    this.onData(data)
+    // Turned off until the pattern might be useful
+    // this.onData(data)
 
     // go over each data control
     const dataControlArray = Array.from(this.dataControls)
