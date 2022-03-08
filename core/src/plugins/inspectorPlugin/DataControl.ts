@@ -18,6 +18,8 @@ export abstract class DataControl {
   options: object
   icon: string
   write: boolean
+  //Jake added below
+  data: Record<string, unknown>
 
   constructor({
     dataKey,
