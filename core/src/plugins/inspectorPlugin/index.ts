@@ -1,4 +1,5 @@
 import { IRunContextEditor, ThothNode } from '../../../types'
+import { ThothComponent } from '../../thoth-component'
 // @seang todo: convert data controls to typescript to remove this
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore
@@ -7,7 +8,7 @@ import { Inspector } from './Inspector'
 function install(editor: IRunContextEditor) {
   const { onInspector, sendToInspector, clearTextEditor } = editor.thoth
 
-  editor.on('componentregister', component => {
+  editor.on('componentregister', (component: ThothComponent<unknown>) => {
     const builder = component.builder
 
     if (!component.info)
@@ -36,7 +37,7 @@ function install(editor: IRunContextEditor) {
 
       if (!onInspector) return
 
-      node.subscription = onInspector(node, (data: unknown) => {
+      node.subscription = onInspector(node, (data: Record<string, any>) => {
         node.inspector.handleData(data)
         editor.trigger('nodecreated')
         // NOTE might still need this.  Keep an eye out.
