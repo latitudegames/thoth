@@ -1,4 +1,5 @@
-import { Node, NodeEditor, Component } from 'rete'
+import { Node, NodeEditor } from 'rete'
+import { ThothComponent } from '../../thoth-component'
 
 import { Inspector } from './Inspector'
 export type RestProps = {}
@@ -6,9 +7,10 @@ export abstract class DataControl {
   inspector: Inspector | null = null
   editor: NodeEditor | null = null
   node: Node | null = null
-  component: Component | null = null
+  component: ThothComponent<unknown> | null = null
   id: string | null = null
   dataKey: string
+  key: string
   name: string
   defaultValue: unknown
   componentData: object
