@@ -1,5 +1,5 @@
 import deepEqual from 'deep-equal'
-import Rete from 'rete'
+import Rete, { Input, Output } from 'rete'
 import { v4 as uuidv4 } from 'uuid'
 import { DataSocketType, IRunContextEditor, ThothNode } from '../../../types'
 import { ThothComponent } from '../../thoth-component'
@@ -64,7 +64,11 @@ export class Inspector {
     return this
   }
 
-  handleSockets(sockets: DataSocketType[], control, type: keyof ThothNode) {
+  handleSockets(
+    sockets: DataSocketType[],
+    control: DataControlData,
+    type: 'inputs' | 'outputs'
+  ) {
     // we assume all sockets are of the same type here
     // and that the data key is set to 'inputs' or 'outputs'
     const isOutput = type === 'outputs'
@@ -72,13 +76,13 @@ export class Inspector {
     this.node.data[type] = sockets
 
     // get all sockets currently on the node
-    const existingSockets: DataSocketType[] = []
+    const existingSockets: string[] = []
 
-    this.node[type].forEach(out => {
+    this.node[type]?.forEach(out => {
       existingSockets.push(out.key)
     })
 
-    const ignored = (control && control?.data?.ignored) || []
+    const ignored: string[] = (control && control?.data?.ignored) || []
 
     // outputs that are on the node but not in the incoming sockets is removed
     existingSockets
@@ -94,10 +98,14 @@ export class Inspector {
       .forEach(key => {
         const socket = this.node[type].get(key)
 
+        if (!socket) return
+
         // we get the connections for the node and remove that connection
         const connections = this.node
           .getConnections()
-          .filter(con => con[type.slice(0, -1)].key === key)
+          .filter(
+            con => con[type.slice(0, -1) as 'input' | 'output'].key === key
+          )
 
         if (connections)
           connections.forEach(con => {
@@ -106,9 +114,9 @@ export class Inspector {
 
         // handle removing the socket, either output or input
         if (isOutput) {
-          this.node.removeOutput(socket)
+          this.node.removeOutput(socket as Output)
         } else {
-          this.node.removeInput(socket)
+          this.node.removeInput(socket as Input)
         }
       })
 
