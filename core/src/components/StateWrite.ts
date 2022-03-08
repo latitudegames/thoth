@@ -1,4 +1,5 @@
 import Rete from 'rete'
+import { ThothNode } from '../../types'
 
 import { SocketGeneratorControl } from '../dataControls/SocketGenerator'
 import { triggerSocket } from '../sockets'
@@ -22,7 +23,7 @@ export class StateWrite extends ThothComponent<void> {
     this.info = info
   }
 
-  builder(node) {
+  builder(node: ThothNode) {
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
 
     const inputGenerator = new SocketGeneratorControl({
