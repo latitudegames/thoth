@@ -12,7 +12,13 @@ module.exports = () => {
 
   const prodConfig = {
     mode: 'production',
-    plugins: [new CompressionPlugin()],
+    plugins: [
+      new CompressionPlugin(),
+      new Dotenv({
+        path: './.env',
+        systemvars: true,
+      }),
+    ],
     optimization: {
       minimize: true,
       minimizer: [new TerserPlugin()],
