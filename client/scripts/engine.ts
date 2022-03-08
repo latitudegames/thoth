@@ -1,13 +1,7 @@
 import thothCore from '@latitudegames/thoth-core/dist/server'
 
 const {
-  components: {
-    moduleInput,
-    moduleOutput,
-    moduleTriggerIn,
-    moduleTriggerOut,
-    tenseTransformer,
-  },
+  components: { moduleInput, moduleOutput, tenseTransformer },
 } = thothCore
 
 export const components = [
@@ -26,8 +20,6 @@ export const components = [
   // new ModuleComponent(),
   moduleInput(),
   moduleOutput(),
-  moduleTriggerOut(),
-  moduleTriggerIn(),
   // new PlaytestPrint(),
   // new PlaytestInput(),
   // new RunInputComponent(),
