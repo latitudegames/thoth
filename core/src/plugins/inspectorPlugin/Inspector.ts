@@ -152,9 +152,9 @@ export class Inspector {
       )
 
       if (isOutput) {
-        this.node.addOutput(newSocket)
+        this.node.addOutput(newSocket as Output)
       } else {
-        this.node.addInput(newSocket)
+        this.node.addInput(newSocket as Input)
       }
     })
   }
