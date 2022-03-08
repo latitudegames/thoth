@@ -49,6 +49,11 @@ export type ThothNode = Node & {
   inspector: Inspector
   display: (content: string) => void
   outputs: { name: string; [key: string]: unknown }[]
+  category?: string
+  deprecated?: boolean
+  displayName?: string
+  info: string
+  subscription: Function
 }
 
 export type ModuleType = {
