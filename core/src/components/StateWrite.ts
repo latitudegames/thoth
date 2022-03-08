@@ -78,7 +78,7 @@ export class StateWrite extends ThothComponent<void> {
         acc[key] = value
 
         return acc
-      }, {})
+      }, {} as Record<string, any>)
 
       await updateCurrentGameState(updates)
     } catch (err) {
