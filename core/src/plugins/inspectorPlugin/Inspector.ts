@@ -1,14 +1,33 @@
 import deepEqual from 'deep-equal'
-import Rete from 'rete'
+import Rete, { Input, Output } from 'rete'
 import { v4 as uuidv4 } from 'uuid'
+import { DataSocketType, IRunContextEditor, ThothNode } from '../../../types'
+import { ThothComponent } from '../../thoth-component'
 
 import * as socketMap from '../../sockets'
+import { DataControl } from './DataControl'
+
+type InspectorConstructor = {
+  component: ThothComponent<unknown>
+  editor: IRunContextEditor
+  node: ThothNode
+}
+
+// todo improve this typing
+type DataControlData = Record<string, any>
+
 export class Inspector {
   // Stub of function.  Can be a nodes catch all onData
-  onData = () => {}
-  cache = {}
+  onData = Function
+  cache: Record<string, any> = {}
+  node: ThothNode
+  component: ThothComponent<unknown>
+  editor: IRunContextEditor
+  dataControls: Map<string, DataControl>
+  category: string
+  info: string
 
-  constructor({ component, editor, node }) {
+  constructor({ component, editor, node }: InspectorConstructor) {
     this.component = component
     this.editor = editor
     this.dataControls = new Map()
@@ -16,18 +35,18 @@ export class Inspector {
     this.category = component.category
     this.info = component.info
   }
-
-  _add(list, control, prop) {
+  // addede DataControl[]
+  _add(list: Map<string, DataControl>, control: DataControl) {
     if (list.has(control.key))
       throw new Error(
         `Item with key '${control.key}' already been added to the inspector`
       )
 
-    if (control[prop] !== null)
+    if (control['inspector'] !== null)
       throw new Error('Inspector has already been added to some control')
 
     // Attach the inspector to the incoming control instance
-    control[prop] = this
+    control['inspector'] = this
     control.editor = this.editor
     control.node = this.node
     control.component = this.component
@@ -39,13 +58,17 @@ export class Inspector {
     list.set(control.dataKey, control)
   }
 
-  add(dataControl) {
-    this._add(this.dataControls, dataControl, 'inspector')
+  add(dataControl: DataControl) {
+    this._add(this.dataControls, dataControl)
     dataControl.onAdd()
     return this
   }
 
-  handleSockets(sockets, control, type) {
+  handleSockets(
+    sockets: DataSocketType[],
+    control: DataControlData,
+    type: 'inputs' | 'outputs'
+  ) {
     // we assume all sockets are of the same type here
     // and that the data key is set to 'inputs' or 'outputs'
     const isOutput = type === 'outputs'
@@ -53,12 +76,13 @@ export class Inspector {
     this.node.data[type] = sockets
 
     // get all sockets currently on the node
-    const existingSockets = []
-    this.node[type].forEach(out => {
+    const existingSockets: string[] = []
+
+    this.node[type]?.forEach(out => {
       existingSockets.push(out.key)
     })
 
-    const ignored = (control && control?.data?.ignored) || []
+    const ignored: string[] = (control && control?.data?.ignored) || []
 
     // outputs that are on the node but not in the incoming sockets is removed
     existingSockets
@@ -74,10 +98,14 @@ export class Inspector {
       .forEach(key => {
         const socket = this.node[type].get(key)
 
+        if (!socket) return
+
         // we get the connections for the node and remove that connection
         const connections = this.node
           .getConnections()
-          .filter(con => con[type.slice(0, -1)].key === key)
+          .filter(
+            con => con[type.slice(0, -1) as 'input' | 'output'].key === key
+          )
 
         if (connections)
           connections.forEach(con => {
@@ -86,9 +114,9 @@ export class Inspector {
 
         // handle removing the socket, either output or input
         if (isOutput) {
-          this.node.removeOutput(socket)
+          this.node.removeOutput(socket as Output)
         } else {
-          this.node.removeInput(socket)
+          this.node.removeInput(socket as Input)
         }
       })
 
@@ -100,7 +128,8 @@ export class Inspector {
     // Here we are running over and ensuring that the outputs are in the tasks outputs
     // We only need to do this with outputs, as inputs don't need to be in the task
     if (isOutput) {
-      this.component.task.outputs = this.node.data.outputs.reduce(
+      const dataOutputs = this.node.data.outputs as DataSocketType[]
+      this.component.task.outputs = dataOutputs.reduce(
         (acc, out) => {
           acc[out.socketKey] = out.taskType || 'output'
           return acc
@@ -123,14 +152,14 @@ export class Inspector {
       )
 
       if (isOutput) {
-        this.node.addOutput(newSocket)
+        this.node.addOutput(newSocket as Output)
       } else {
-        this.node.addInput(newSocket)
+        this.node.addInput(newSocket as Input)
       }
     })
   }
 
-  cacheControls(dataControls) {
+  cacheControls(dataControls: DataControlData) {
     const cache = Object.entries(dataControls).reduce(
       (acc, [key, { expanded = true }]) => {
         acc[key] = {
@@ -139,13 +168,13 @@ export class Inspector {
 
         return acc
       },
-      {}
+      {} as Record<string, any>
     )
 
     this.node.data.dataControls = cache
   }
 
-  handleData(update) {
+  handleData(update: Record<string, any>) {
     // store all data controls inside the nodes data
     // WATCH in case our graphs start getting quite large.
     if (update.dataControls) this.cacheControls(update.dataControls)
@@ -156,7 +185,8 @@ export class Inspector {
     this.onData(data)
 
     // go over each data control
-    for (const [key, control] of this.dataControls) {
+    const dataControlArray = Array.from(this.dataControls)
+    for (const [key, control] of dataControlArray) {
       const isEqual = deepEqual(this.cache[key], data[key])
 
       // compare agains the cache to see if it has changed
@@ -210,13 +240,13 @@ export class Inspector {
   data() {
     const dataControls = Array.from(this.dataControls.entries()).reduce(
       (acc, [key, val]) => {
-        const cache = this.node?.data?.dataControls
+        const cache = this.node?.data?.dataControls as DataControlData
         const cachedControl = cache && cache[key] ? cache[key] : {}
         // use the data method on controls to get data shape
         acc[key] = { ...val.control, ...cachedControl }
         return acc
       },
-      {}
+      {} as Record<string, any>
     )
 
     return {

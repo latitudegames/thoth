@@ -1,21 +1,25 @@
-import Rete from 'rete'
+import Rete, { Input, Output } from 'rete'
+import { DataSocketType, IRunContextEditor, ThothNode } from '../../../types'
 
 import * as sockets from '../../sockets'
+import { ThothComponent } from '../../thoth-component'
 
-function install(editor) {
-  editor.on('componentregister', component => {
+function install(editor: IRunContextEditor) {
+  editor.on('componentregister', (component: ThothComponent<unknown>) => {
     const builder = component.builder
 
     // we are going to override the default builder with our own, and will invoke the original builder inside it.
-    component.builder = node => {
+    component.builder = (node: ThothNode) => {
+      const nodeOutputs = node.data.outputs as DataSocketType[]
+
       // Handle outputs in the nodes data to repopulate when loading from JSON
-      if (node.data.outputs && node.data.outputs.length !== 0) {
-        const outputMap = {}
+      if (nodeOutputs && nodeOutputs.length !== 0) {
+        const outputMap = {} as Record<string, Output>
         node.outputs.forEach((value, key) => {
           outputMap[key] = value
         })
 
-        node.data.outputs.forEach(socket => {
+        nodeOutputs.forEach(socket => {
           if (!outputMap[socket.socketKey]) {
             const output = new Rete.Output(
               socket.socketKey ? socket.socketKey : socket.name,
@@ -27,8 +31,8 @@ function install(editor) {
         })
       }
 
-      if (node.data.outputs && node.data.outputs.length > 0) {
-        component.task.outputs = node.data.outputs.reduce(
+      if (nodeOutputs && nodeOutputs.length > 0) {
+        component.task.outputs = nodeOutputs.reduce(
           (acc, out) => {
             acc[out.socketKey] = out.taskType || 'output'
             return acc
@@ -37,14 +41,16 @@ function install(editor) {
         )
       }
 
-      if (node.data.inputs && node.data.inputs.length !== 0) {
+      const nodeInputs = node.data.inputs as DataSocketType[]
+
+      if (nodeInputs && nodeInputs.length !== 0) {
         // get inputs from node.inputs
-        const inputMap = {}
+        const inputMap = {} as Record<string, Input>
         node.inputs.forEach((value, key) => {
           inputMap[key] = value
         })
 
-        node.data.inputs.forEach(socket => {
+        nodeInputs.forEach(socket => {
           // If the input key is already on the node, return
           if (inputMap[socket.socketKey]) return
           const input = new Rete.Input(

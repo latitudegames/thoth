@@ -53,8 +53,7 @@ export abstract class ThothComponent<
   constructor(name: string) {
     super(name)
   }
-
-  abstract builder(node: ThothNode): Promise<ThothNode> | ThothNode
+  abstract builder(node: ThothNode): Promise<ThothNode> | ThothNode | void
 
   async build(node: ThothNode) {
     await this.builder(node)

@@ -1,12 +1,14 @@
+import { IRunContextEditor, ThothNode } from '../../../types'
+import { ThothComponent } from '../../thoth-component'
 // @seang todo: convert data controls to typescript to remove this
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore
 import { Inspector } from './Inspector'
 
-function install(editor) {
+function install(editor: IRunContextEditor) {
   const { onInspector, sendToInspector, clearTextEditor } = editor.thoth
 
-  editor.on('componentregister', component => {
+  editor.on('componentregister', (component: ThothComponent<unknown>) => {
     const builder = component.builder
 
     if (!component.info)
@@ -15,7 +17,7 @@ function install(editor) {
       )
 
     // we are going to override the default builder with our own, and will invoke the original builder inside it.
-    component.builder = node => {
+    component.builder = (node: ThothNode) => {
       // This will unsubscribe us
       // if (node.subscription) node.subscription()
       // Inspector class which will handle regsistering data controls, serializing, etc.
@@ -33,7 +35,9 @@ function install(editor) {
 
       // here we attach the default info control to the component which will show up in the inspector
 
-      node.subscription = onInspector(node, data => {
+      if (!onInspector) return
+
+      node.subscription = onInspector(node, (data: Record<string, any>) => {
         node.inspector.handleData(data)
         editor.trigger('nodecreated')
         // NOTE might still need this.  Keep an eye out.
@@ -44,11 +48,12 @@ function install(editor) {
     }
   })
 
-  let currentNode
+  let currentNode: ThothNode | undefined
 
   // handle publishing and subscribing to inspector
-  editor.on('nodeselect', node => {
+  editor.on('nodeselect', (node: ThothNode) => {
     if (currentNode && node.id === currentNode.id) return
+    if (!clearTextEditor || !sendToInspector) return
     currentNode = node
     clearTextEditor()
     sendToInspector(node.inspector.data())

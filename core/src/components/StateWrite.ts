@@ -1,6 +1,13 @@
 import Rete from 'rete'
+import {
+  NodeData,
+  ThothNode,
+  ThothWorkerInputs,
+  ThothWorkerOutputs,
+} from '../../types'
 
 import { SocketGeneratorControl } from '../dataControls/SocketGenerator'
+import { EngineContext } from '../engine'
 import { triggerSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 
@@ -8,7 +15,7 @@ const info = `The State Write component allows you to define any number of input
 
 Note here that there are a few assumptions made, which will be changed once we have selectable socket types when generating inputs. If the key already exists in the state and it is an array, whatever value you insert will be added to the array. If the existing value is an object, the object will be updated by the incoming value.`
 
-export class StateWrite extends ThothComponent {
+export class StateWrite extends ThothComponent<void> {
   constructor() {
     // Name of the component
     super('State Write')
@@ -22,7 +29,7 @@ export class StateWrite extends ThothComponent {
     this.info = info
   }
 
-  builder(node) {
+  builder(node: ThothNode) {
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
 
     const inputGenerator = new SocketGeneratorControl({
@@ -37,11 +44,16 @@ export class StateWrite extends ThothComponent {
     return node
   }
 
-  async worker(node, inputs, outputs, { thoth }) {
+  async worker(
+    node: NodeData,
+    inputs: ThothWorkerInputs,
+    outputs: ThothWorkerOutputs,
+    { thoth }: { thoth: EngineContext }
+  ) {
     const { getCurrentGameState, updateCurrentGameState } = thoth
 
     try {
-      const gameState = await getCurrentGameState()
+      const gameState = (await getCurrentGameState()) as Record<string, any>
       let value
 
       const updates = Object.entries(inputs).reduce((acc, [key, val]) => {
@@ -55,7 +67,7 @@ export class StateWrite extends ThothComponent {
             }
 
             // if it is an object, we assume that the incoming data is an object update
-            value = { ...gameState[key], ...val[0] }
+            value = { ...gameState[key], ...(val[0] as unknown[]) }
 
             break
           default:
@@ -66,7 +78,7 @@ export class StateWrite extends ThothComponent {
         acc[key] = value
 
         return acc
-      }, {})
+      }, {} as Record<string, any>)
 
       await updateCurrentGameState(updates)
     } catch (err) {
