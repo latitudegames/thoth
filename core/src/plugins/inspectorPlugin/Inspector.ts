@@ -185,7 +185,8 @@ export class Inspector {
     this.onData(data)
 
     // go over each data control
-    for (const [key, control] of this.dataControls) {
+    const dataControlArray = Array.from(this.dataControls)
+    for (const [key, control] of dataControlArray) {
       const isEqual = deepEqual(this.cache[key], data[key])
 
       // compare agains the cache to see if it has changed
