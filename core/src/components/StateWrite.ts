@@ -53,7 +53,7 @@ export class StateWrite extends ThothComponent<void> {
     const { getCurrentGameState, updateCurrentGameState } = thoth
 
     try {
-      const gameState = await getCurrentGameState()
+      const gameState = (await getCurrentGameState()) as Record<string, any>
       let value
 
       const updates = Object.entries(inputs).reduce((acc, [key, val]) => {
