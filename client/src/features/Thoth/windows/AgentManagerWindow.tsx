@@ -201,7 +201,9 @@ const AgentManager = () => {
                 value="import"
                 style={{marginRight: '12px'}}
               >
-                <input type="file" accept=".json" onChange={handleChange} />
+              <label className="btn btn-primary">
+                Import<input type="file" accept=".json" onChange={handleChange} style={{display: "none"}} name="image" />
+              </label>
               </button>
               <button
                 value="export"
