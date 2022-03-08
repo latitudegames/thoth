@@ -67,7 +67,7 @@ export class StateWrite extends ThothComponent<void> {
             }
 
             // if it is an object, we assume that the incoming data is an object update
-            value = { ...gameState[key], ...val[0] }
+            value = { ...gameState[key], ...(val[0] as unknown[]) }
 
             break
           default:
