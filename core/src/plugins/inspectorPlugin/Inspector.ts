@@ -35,8 +35,12 @@ export class Inspector {
     this.category = component.category
     this.info = component.info
   }
-
-  _add(list, control: DataControl, prop: keyof DataControl) {
+  // addede DataControl[]
+  _add(
+    list: Map<string, DataControl>,
+    control: DataControl,
+    prop: keyof DataControl
+  ) {
     if (list.has(control.key))
       throw new Error(
         `Item with key '${control.key}' already been added to the inspector`
