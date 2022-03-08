@@ -38,6 +38,8 @@ export abstract class ThothEngineComponent<WorkerReturnType> {
     ...args: unknown[]
   ): WorkerReturnType
 }
+
+// TODO separate the engine context out from the editor context for cleaner typing.
 export type EngineContext = {
   completion: (
     body: ModelCompletionOpts
@@ -58,6 +60,9 @@ export type EngineContext = {
   onAddModule?: Function
   onUpdateModule?: Function
   sendToPlaytest?: Function
+  onInspector?: Function
+  sendToInspector?: Function
+  clearTextEditor?: Function
 }
 
 export type InitEngineArguments = {
