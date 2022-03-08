@@ -1,7 +1,13 @@
 import Rete from 'rete'
-import { ThothNode } from '../../types'
+import {
+  NodeData,
+  ThothNode,
+  ThothWorkerInputs,
+  ThothWorkerOutputs,
+} from '../../types'
 
 import { SocketGeneratorControl } from '../dataControls/SocketGenerator'
+import { EngineContext } from '../engine'
 import { triggerSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 
@@ -38,7 +44,12 @@ export class StateWrite extends ThothComponent<void> {
     return node
   }
 
-  async worker(node, inputs, outputs, { thoth }) {
+  async worker(
+    node: NodeData,
+    inputs: ThothWorkerInputs,
+    outputs: ThothWorkerOutputs,
+    { thoth }: { thoth: EngineContext }
+  ) {
     const { getCurrentGameState, updateCurrentGameState } = thoth
 
     try {
