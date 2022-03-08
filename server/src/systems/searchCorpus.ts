@@ -227,6 +227,44 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
     } else return (ctx.body = 'No documents where found to search from!')
   })
 
+  router.get('/document-store', async function (ctx: Koa.Context) {
+    const stores = await database.instance.getDocumentStores()
+    return (ctx.body = stores)
+  })
+  router.post('/document-store', async function (ctx: Koa.Context) {
+    const name = ctx.request.body?.name || ''
+    let id = -1
+    try {
+      id = await database.instance.addDocumentStore(name)
+    } catch (e) {
+      console.log(e);
+      return (ctx.body = 'internal error')
+    }
+    if(id === -1) return (ctx.body = 'internal error')
+    return (ctx.body = { documentStoreId: id }) 
+  })
+  router.put('/document-store', async function (ctx: Koa.Context) {
+    const storeId = ctx.request.body?.id
+    const name = ctx.request.body?.name || ''
+    try {
+      await database.instance.updateDocumentStore(storeId, name)
+    } catch (e) {
+      console.log(e);
+      return (ctx.body = 'internal error')
+    }
+    return (ctx.body = 'ok') 
+  })
+  router.delete('/document-store', async function (ctx: Koa.Context) {
+    const storeId = ctx.query.storeId
+    try {
+      await database.instance.removeDocumentStore(storeId)
+    } catch (e) {
+      console.log(e)
+      return (ctx.body = 'internal error')
+    }
+    return (ctx.body = 'ok')
+  })
+
   app.use(router.routes()).use(router.allowedMethods())
 
   app.use(async (ctx: Koa.Context, next: () => Promise<any>) => {
