@@ -356,6 +356,10 @@ input[type='text'] {
   padding: 1em 0;
 }
 
+.entBtns{
+  display: flex;
+}
+
 .form-item-label {
   display: block;
   margin-bottom: 0.5em;
@@ -396,6 +400,8 @@ input[type='text'] {
 
 .agent-editor {
   padding: 2em;
+  height: calc(100% - 4em);
+  overflow: auto;
 }
 
 .form-item > input[type='text'] {
