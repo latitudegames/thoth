@@ -1,10 +1,5 @@
-import { NodeEditor } from 'rete/types'
-import { EngineContext } from '../../engine'
+import { IRunContextEditor } from '../../../types'
 import { ThothComponent } from '../../thoth-component'
-interface IRunContextEditor extends NodeEditor {
-  thoth: EngineContext
-  abort: Function
-}
 
 function install(
   editor: IRunContextEditor,
@@ -48,9 +43,12 @@ function install(
         if (!server) {
           node.data.error = true
 
-          const nodeView = [...editor.view.nodes.values()].find(
-            n => n.node.id === node.id
-          )
+          const nodeValues = Array.from(editor.view.nodes)
+          const foundNode = nodeValues.find(([, n]) => n.node.id === node.id)
+
+          if (!foundNode) return
+
+          const nodeView = foundNode[1]
 
           nodeView?.onStart()
           nodeView?.node.update()

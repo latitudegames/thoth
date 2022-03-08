@@ -1,14 +1,33 @@
 import deepEqual from 'deep-equal'
 import Rete from 'rete'
 import { v4 as uuidv4 } from 'uuid'
+import { DataSocketType, IRunContextEditor, ThothNode } from '../../../types'
+import { ThothComponent } from '../../thoth-component'
 
 import * as socketMap from '../../sockets'
+import { DataControl } from './DataControl'
+
+type InspectorConstructor = {
+  component: ThothComponent<unknown>
+  editor: IRunContextEditor
+  node: ThothNode
+}
+
+// todo improve this typing
+type DataControlData = Record<string, any>
+
 export class Inspector {
   // Stub of function.  Can be a nodes catch all onData
-  onData = () => {}
-  cache = {}
+  onData = Function
+  cache: Record<string, any> = {}
+  node: ThothNode
+  component: ThothComponent<unknown>
+  editor: IRunContextEditor
+  dataControls: Map<string, DataControl>
+  category: string
+  info: string
 
-  constructor({ component, editor, node }) {
+  constructor({ component, editor, node }: InspectorConstructor) {
     this.component = component
     this.editor = editor
     this.dataControls = new Map()
@@ -17,7 +36,7 @@ export class Inspector {
     this.info = component.info
   }
 
-  _add(list, control, prop) {
+  _add(list, control: DataControl, prop: keyof DataControl) {
     if (list.has(control.key))
       throw new Error(
         `Item with key '${control.key}' already been added to the inspector`
@@ -39,13 +58,13 @@ export class Inspector {
     list.set(control.dataKey, control)
   }
 
-  add(dataControl) {
+  add(dataControl: DataControl) {
     this._add(this.dataControls, dataControl, 'inspector')
     dataControl.onAdd()
     return this
   }
 
-  handleSockets(sockets, control, type) {
+  handleSockets(sockets: DataSocketType[], control, type: keyof ThothNode) {
     // we assume all sockets are of the same type here
     // and that the data key is set to 'inputs' or 'outputs'
     const isOutput = type === 'outputs'
@@ -53,7 +72,8 @@ export class Inspector {
     this.node.data[type] = sockets
 
     // get all sockets currently on the node
-    const existingSockets = []
+    const existingSockets: DataSocketType[] = []
+
     this.node[type].forEach(out => {
       existingSockets.push(out.key)
     })
@@ -130,7 +150,7 @@ export class Inspector {
     })
   }
 
-  cacheControls(dataControls) {
+  cacheControls(dataControls: DataControlData) {
     const cache = Object.entries(dataControls).reduce(
       (acc, [key, { expanded = true }]) => {
         acc[key] = {
@@ -139,13 +159,13 @@ export class Inspector {
 
         return acc
       },
-      {}
+      {} as Record<string, any>
     )
 
     this.node.data.dataControls = cache
   }
 
-  handleData(update) {
+  handleData(update: Record<string, any>) {
     // store all data controls inside the nodes data
     // WATCH in case our graphs start getting quite large.
     if (update.dataControls) this.cacheControls(update.dataControls)
@@ -210,13 +230,13 @@ export class Inspector {
   data() {
     const dataControls = Array.from(this.dataControls.entries()).reduce(
       (acc, [key, val]) => {
-        const cache = this.node?.data?.dataControls
+        const cache = this.node?.data?.dataControls as DataControlData
         const cachedControl = cache && cache[key] ? cache[key] : {}
         // use the data method on controls to get data shape
         acc[key] = { ...val.control, ...cachedControl }
         return acc
       },
-      {}
+      {} as Record<string, any>
     )
 
     return {
