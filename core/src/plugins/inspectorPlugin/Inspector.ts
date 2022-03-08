@@ -128,7 +128,8 @@ export class Inspector {
     // Here we are running over and ensuring that the outputs are in the tasks outputs
     // We only need to do this with outputs, as inputs don't need to be in the task
     if (isOutput) {
-      this.component.task.outputs = this.node.data.outputs.reduce(
+      const dataOutputs = this.node.data.outputs as DataSocketType[]
+      this.component.task.outputs = dataOutputs.reduce(
         (acc, out) => {
           acc[out.socketKey] = out.taskType || 'output'
           return acc
