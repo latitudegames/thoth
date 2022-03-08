@@ -157,8 +157,6 @@ const AgentManager = () => {
     });
   }
 
-  console.log(files && JSON.parse(files),'filee')
-
   return (
     <div className="agent-container">
       <div style={{ display: 'flex' }}>
@@ -203,7 +201,7 @@ const AgentManager = () => {
                 value="import"
                 style={{marginRight: '12px'}}
               >
-                <input type="file" onChange={handleChange} />
+                <input type="file" accept=".json" onChange={handleChange} />
               </button>
               <button
                 value="export"
