@@ -36,21 +36,17 @@ export class Inspector {
     this.info = component.info
   }
   // addede DataControl[]
-  _add(
-    list: Map<string, DataControl>,
-    control: DataControl,
-    prop: keyof DataControl
-  ) {
+  _add(list: Map<string, DataControl>, control: DataControl) {
     if (list.has(control.key))
       throw new Error(
         `Item with key '${control.key}' already been added to the inspector`
       )
 
-    if (control[prop] !== null)
+    if (control['inspector'] !== null)
       throw new Error('Inspector has already been added to some control')
 
     // Attach the inspector to the incoming control instance
-    control[prop] = this
+    control['inspector'] = this
     control.editor = this.editor
     control.node = this.node
     control.component = this.component
@@ -63,7 +59,7 @@ export class Inspector {
   }
 
   add(dataControl: DataControl) {
-    this._add(this.dataControls, dataControl, 'inspector')
+    this._add(this.dataControls, dataControl)
     dataControl.onAdd()
     return this
   }
