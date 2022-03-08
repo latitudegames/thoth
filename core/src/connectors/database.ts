@@ -760,4 +760,40 @@ export class database {
     const rows = await this.client.query(query, values)
     return rows && rows.rows && rows.rows.length > 0
   }
+
+  async addDocumentStore(name): Promise<number> {
+    let id = randomInt(0, 100000)
+    while(await this.documentStoreIdExists(id)) {
+      id = randomInt(0, 100000)
+    }
+
+    const query = 'INSERT INTO documents_store(id, name) VALUES($1,$2)'
+    const values = [id, name]
+
+    await this.client.query(query, values)
+    return id
+  }
+  async updateDocumentStore(storeId, name) {
+    const query = 'UPDATE documents_store SET name = $1 WHERE id = $2'
+    const values = [name, storeId]
+    await this.client.query(query, values)
+  }
+  async removeDocumentStore(storeId) {
+    const query = 'DELETE FROM documents_store WHERE id = $1'
+    const values = [storeId]
+    await this.client.query(query, values)
+  }
+  async getDocumentStores(): Promise<any[]> {
+    const query = 'SELECT * FROM documents_store'
+    const rows = await this.client.query(query) 
+    if(rows && rows.rows && rows.rows.length > 0) return rows.rows
+    else return []
+  }
+  async documentStoreIdExists(documentStoreId) {
+    const query = 'SELECT * FROM documents_store WHERE id=$1'
+    const values = [documentStoreId]
+
+    const rows = await this.client.query(query, values)
+    return rows && rows.rows && rows.rows.length > 0
+  }
 }
