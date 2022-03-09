@@ -38,7 +38,7 @@ function install(
 
         return result
       } catch (error: any) {
-        node.console.sendError(error)
+        node.console.error(error)
       }
     }
   })
