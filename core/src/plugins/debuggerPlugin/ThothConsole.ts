@@ -44,4 +44,15 @@ export class ThothConsole {
     this.nodeView.onStart()
     this.nodeView.node.update()
   }
+
+  formatErrorMessage(error: any) {
+    const message = {
+      errorIn: this.node.name,
+      nodeId: this.node.id,
+      errorMessage: error.message,
+    }
+
+    return message
+  }
+
 }
