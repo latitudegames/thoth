@@ -316,6 +316,12 @@ input[type='text'] {
   display: flex;
 }
 
+.agent-createModal{
+  position: relative;
+  right: 400px;
+  bottom: 350px;
+}
+
 .nav {
   width: 180px;
   float: left;
