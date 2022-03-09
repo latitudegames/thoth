@@ -15,6 +15,7 @@ interface CssExports {
   'out': string;
   'output': string;
   'selected': string;
+  'success': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
