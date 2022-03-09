@@ -75,6 +75,8 @@ export class ThothConsole {
     this.renderError()
   }
 
+  sendSuccess(result: any) {}
+
   sendToDebug(message: any) {
     if (this.editor.thoth.sendToDebug) this.editor.thoth.sendToDebug(message)
   }
