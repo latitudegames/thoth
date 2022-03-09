@@ -55,6 +55,13 @@ export class ThothConsole {
     return message
   }
 
+  sendError(error: any) {
+    const message = this.formatErrorMessage(error)
+    this.sendToDebug(message)
+    this.throwServerError(message)
+    this.updateNodeView()
+  }
+
   sendToDebug(message: any) {
     if (this.editor.thoth.sendToDebug) this.editor.thoth.sendToDebug(message)
   }
