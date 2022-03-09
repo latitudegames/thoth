@@ -79,6 +79,7 @@ const DebugConsole = ({ tab }) => {
       <Terminal
         ref={terminalRef}
         commands={commands}
+        dangerMode="true"
         commandCallback={commandCallback}
         promptLabel={`${user?.id}@Thoth:~$`}
         // readOnly={true}
