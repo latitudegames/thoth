@@ -71,7 +71,7 @@ export class ThothConsole {
     const message = this.formatErrorMessage(error)
     this.sendToDebug(message)
     this.throwServerError(message)
-    this.updateNodeView()
+    this.renderError()
   }
 
   sendToDebug(message: any) {
