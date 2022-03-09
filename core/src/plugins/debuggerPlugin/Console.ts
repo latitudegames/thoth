@@ -12,5 +12,9 @@ export class Console {
   editor: IRunContextEditor
   component: ThothComponent<unknown>
 
-  constructor({ component, editor, node }: ConsoleConstructor) {}
+  constructor({ component, editor, node }: ConsoleConstructor) {
+    this.component = component
+    this.editor = editor
+    this.node = node
+  }
 }
