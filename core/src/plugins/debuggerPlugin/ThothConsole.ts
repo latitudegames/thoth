@@ -55,6 +55,10 @@ export class ThothConsole {
     return message
   }
 
+  sendToDebug(message: any) {
+    if (this.editor.thoth.sendToDebug) this.editor.thoth.sendToDebug(message)
+  }
+
   throwServerError(message: any) {
     if (this.isServer && this.throwError) this.throwError(message)
   }
