@@ -55,6 +55,12 @@ export class ThothConsole {
     return message
   }
 
+  renderError() {
+    this.node.data.error = true
+    this.updateNodeView()
+    this.node.data.error = false
+  }
+
   sendError(error: any) {
     const message = this.formatErrorMessage(error)
     this.sendToDebug(message)
