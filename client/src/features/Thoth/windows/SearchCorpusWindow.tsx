@@ -46,7 +46,7 @@ const SearchCorpus = () => {
 
   const update = async index => {
     const body = {
-      documentId: documents[index].documentId,
+      documentId: documents[index].id,
       agent: documents[index].agent ?? 'global',
       document: documents[index].document,
       metadata: documents[index].metadata,
@@ -89,35 +89,33 @@ const SearchCorpus = () => {
   return (
     <div className="agent-container">
       <div>
-        <span className="create-agent">Create new Document</span>
-        <label>
-          {' '}
-          Agent:
-          <input
-            type="text"
-            defaultValue={newDocument.agent}
-            onChange={e => (newDocument.agent = e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          {' '}
-          Document:
-          <textarea
-            defaultValue={newDocument.document}
-            onChange={e => (newDocument.document = e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          {' '}
-          Metadata:
-          <input
-            type="text"
-            defaultValue={newDocument.metadata}
-            onChange={e => (newDocument.metadata = e.target.value)}
-          />
-        </label>
+        <h4>Create new Document</h4>
+        <form>
+          <div className="form-item">
+            <span className="form-item-label">Agent:</span>
+            <textarea
+              className="form-text-area"
+              onChange={e => (newDocument.agent = e.target.value)}
+              defaultValue={newDocument.agent}
+            ></textarea>
+          </div>
+          <div className="form-item">
+            <span className="form-item-label">Document:</span>
+            <textarea
+              className="form-text-area"
+              onChange={e => (newDocument.document = e.target.value)}
+              defaultValue={newDocument.document}
+            ></textarea>
+          </div>
+          <div className="form-item">
+            <span className="form-item-label">Metadata:</span>
+            <textarea
+              className="form-text-area"
+              onChange={e => (newDocument.metadata = e.target.value)}
+              defaultValue={newDocument.metadata}
+            ></textarea>
+          </div>
+        </form>
         <br />
         <button
           className="button"
@@ -130,57 +128,52 @@ const SearchCorpus = () => {
           Create New
         </button>
       </div>
-      <div>
-        {!documents ? (
-          <h1>Loading...</h1>
-        ) : (
-          <div className="agent-header">
-            <h4>Available Documents</h4>
-            <br />
-            <br />
-            {documents.map((document, idx) => {
-              return (
-                <div id={idx}>
-                  <label>
-                    Agent:
-                    <input
-                      type="text"
-                      defaultValue={document.agent}
-                      onChange={e => (documents[idx].agent = e.target.value)}
-                    />
-                  </label>
-                  <br />
-                  <label>
-                    Document:
-                    <textarea
-                      defaultValue={document.document}
-                      onChange={e => (documents[idx].document = e.target.value)}
-                    />
-                  </label>
-                  <br />
-                  <label>
-                    Metadata:
-                    <input
-                      type="text"
-                      defaultValue={document.metadata}
-                      onChange={e => (documents[idx].metadata = e.target.value)}
-                    />
-                  </label>
-                  <br />
-                  <button type="button" onClick={() => update(idx)}>
-                    Updated
-                  </button>
-                  <br />
-                  <button type="button" onClick={() => _delete(document.id)}>
-                    Delete
-                  </button>
-                  <br />
+      {!documents ? (
+        <h1>Loading...</h1>
+      ) : (
+        <div>
+          <h4>Available Documents</h4>
+          {documents.map((document, idx) => {
+            return (
+              <form id={idx}>
+                <div className="form-item">
+                  <span className="form-item-label">Agent:</span>
+                  <textarea
+                    className="form-text-area"
+                    defaultValue={document.agent}
+                    onChange={e => (documents[idx].agent = e.target.value)}
+                  ></textarea>
                 </div>
-              )
-            })}
-          </div>
-        )}
-      </div>
+                <div className="form-item">
+                  <span className="form-item-label">Document:</span>
+                  <textarea
+                    className="form-text-area"
+                    defaultValue={document.document}
+                    onChange={e => (documents[idx].document = e.target.value)}
+                  ></textarea>
+                </div>
+                <div className="form-item">
+                  <span className="form-item-label">Metadata:</span>
+                  <textarea
+                    className="form-text-area"
+                    defaultValue={document.metadata}
+                    onChange={e => (documents[idx].metadata = e.target.value)}
+                  ></textarea>
+                </div>
+                <br />
+                <button type="button" onClick={() => update(idx)}>
+                  Updated
+                </button>
+                <br />
+                <button type="button" onClick={() => _delete(document.id)}>
+                  Delete
+                </button>
+                <br />
+              </form>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }
