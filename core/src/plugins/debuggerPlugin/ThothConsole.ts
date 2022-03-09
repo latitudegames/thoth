@@ -55,4 +55,7 @@ export class ThothConsole {
     return message
   }
 
+  throwServerError(message: any) {
+    if (this.isServer && this.throwError) this.throwError(message)
+  }
 }
