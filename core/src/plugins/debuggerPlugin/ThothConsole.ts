@@ -68,7 +68,7 @@ export class ThothConsole {
     this.node.data.success = false
   }
 
-  sendError(error: any) {
+  error(error: any) {
     const message = this.formatErrorMessage(error)
     this.sendToDebug(message)
     this.throwServerError(message)
