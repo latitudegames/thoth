@@ -49,6 +49,7 @@ export class ThothConsole {
     const message = {
       errorIn: this.node.name,
       nodeId: this.node.id,
+      name: this.node.data.name || null,
       errorMessage: error.message,
     }
 
