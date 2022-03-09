@@ -38,7 +38,9 @@ const DebugConsole = ({ tab }) => {
 
     terminal.pushToStdout(
       `
-      > Error in ${data.errorIn} component.
+      > Node ${data.nodeId}: Error in ${data.errorIn} component ${
+        data.name ?? ''
+      }.
       > ${data.errorMessage}
       `
     )
