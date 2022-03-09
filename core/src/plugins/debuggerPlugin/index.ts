@@ -6,6 +6,13 @@ function install(
   editor: IRunContextEditor,
   { server = false, throwError }: { server?: boolean; throwError?: Function }
 ) {
+  const consoleLog = console.log
+
+  console.log = function (message) {
+    // if (editor.thoth.sendToDebug) editor.thoth.sendToDebug(message)
+    consoleLog.apply(console, arguments)
+  }
+
   editor.on('componentregister', (component: ThothComponent<unknown>) => {
     const worker = component.worker
 
