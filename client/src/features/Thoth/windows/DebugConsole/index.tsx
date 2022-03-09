@@ -32,16 +32,18 @@ const DebugConsole = ({ tab }) => {
     setScrollToBottom(true)
   }
 
-  const printToDebugger = useCallback((_, data) => {
+  // const formatErrorMessage = message => ({})
+
+  const printToDebugger = useCallback((_, message) => {
     const terminal = terminalRef.current
     if (!terminal) return
 
     terminal.pushToStdout(
       `
-      > Node ${data.nodeId}: Error in ${data.errorIn} component ${
-        data.name ?? ''
+      > Node ${message.nodeId}: Error in ${message.errorIn} component ${
+        message.name ?? ''
       }.
-      > ${data.errorMessage}
+      > ${message.errorMessage}
       `
     )
 
