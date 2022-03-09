@@ -68,6 +68,10 @@ export class ThothConsole {
     this.node.data.success = false
   }
 
+  log(message: any) {
+    this.sendToDebug(message)
+  }
+
   error(error: any) {
     const message = this.formatErrorMessage(error)
     this.sendToDebug(message)
