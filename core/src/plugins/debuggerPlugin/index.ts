@@ -1,5 +1,6 @@
 import { IRunContextEditor } from '../../../types'
 import { ThothComponent } from '../../thoth-component'
+import { ThothConsole } from './ThothConsole'
 
 function install(
   editor: IRunContextEditor,
@@ -16,7 +17,15 @@ function install(
     }
 
     component.worker = (node, inputs, outputs, data, ...args) => {
+      node.console = new ThothConsole({
+        node,
+        component,
+        editor,
+        server,
+        throwError,
+      })
       node.data.error = false
+
       try {
         const result = worker.apply(component, [
           node,
@@ -28,32 +37,7 @@ function install(
 
         return result
       } catch (error: any) {
-        const message = {
-          errorIn: node.name,
-          errorMessage: error.message,
-        }
-
-        if (throwError) {
-          throwError(message)
-          return
-        }
-
-        if (editor.thoth.sendToDebug) editor.thoth.sendToDebug(message)
-
-        if (!server) {
-          node.data.error = true
-
-          const nodeValues = Array.from(editor.view.nodes)
-          const foundNode = nodeValues.find(([, n]) => n.node.id === node.id)
-
-          if (!foundNode) return
-
-          const nodeView = foundNode[1]
-
-          nodeView?.onStart()
-          nodeView?.node.update()
-          throw error
-        }
+        node.console.sendError(error)
       }
     }
   })
