@@ -8,13 +8,6 @@ function install(
 ) {
   editor.on('componentregister', (component: ThothComponent<unknown>) => {
     const worker = component.worker
-    const builder = component.builder
-
-    component.builder = node => {
-      node.data.error = false
-
-      return builder.call(component, node)
-    }
 
     component.worker = (node, inputs, outputs, data, ...args) => {
       node.console = new ThothConsole({
@@ -24,7 +17,6 @@ function install(
         server,
         throwError,
       })
-      node.data.error = false
 
       try {
         const result = worker.apply(component, [
@@ -34,6 +26,8 @@ function install(
           data,
           ...args,
         ])
+
+        node.console.renderSuccess()
 
         return result
       } catch (error: any) {
