@@ -5,6 +5,7 @@ import EditSpellModal from './EditSpellModal'
 import SaveAsModal from './SaveAsModal'
 import DocumentAddModal from './DocumentAddModal'
 import DocumentEditModal from './DocumentEditModal'
+import DocumentDeleteModal from './DocumentDeleteModal'
 import StoreAddEditModal from './SearchCorpus/StoreAddEditModal'
 import StoreDeleteModal from './SearchCorpus/StoreDeleteModal'
 
@@ -16,6 +17,7 @@ const modals = {
   saveAsModal: SaveAsModal,
   documentAddModal: DocumentAddModal,
   documentEditModal: DocumentEditModal,
+  documentDeleteModal: DocumentDeleteModal,
   documentStoreAddEditModal: StoreAddEditModal,
   documentStoreDeleteModal: StoreDeleteModal
 }

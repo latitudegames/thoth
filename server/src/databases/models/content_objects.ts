@@ -1,32 +1,32 @@
 import * as Sequelize from 'sequelize'
 import { DataTypes, Model, Optional } from 'sequelize'
 
-export interface documentsAttributes {
+export interface contentObjAttributes {
   id: number
   description: string
   keywords: string
   is_included: boolean
-  storeId: number
+  documentId: number
 }
 
-export type documentsOptionalAttributes = 'description' | 'keywords' 
-export type documentsCreationAttributes = Optional<
-  documentsAttributes,
-  documentsOptionalAttributes
+export type contentObjOptionalAttributes = 'description' | 'keywords' 
+export type contentObjCreationAttributes = Optional<
+  contentObjAttributes,
+  contentObjOptionalAttributes
 >
 
-export class documents
-  extends Model<documentsAttributes, documentsCreationAttributes>
-  implements documentsAttributes
+export class contentObj
+  extends Model<contentObjAttributes, contentObjCreationAttributes>
+  implements contentObjAttributes
 {
   id: number
   description: string
   keywords: string
   is_included: boolean
-  storeId: number
+  documentId: number
   
-  static initModel(sequelize: Sequelize.Sequelize): typeof documents {
-    return documents.init(
+  static initModel(sequelize: Sequelize.Sequelize): typeof contentObj {
+    return contentObj.init(
       {
         id: {
           type: DataTypes.INTEGER,
@@ -47,19 +47,19 @@ export class documents
           allowNull: false,
           defaultValue: true
         },
-        storeId: {
+        documentId: {
           type: DataTypes.INTEGER,
           allowNull: false,
           references: {
-            model: 'documents_store',
+            model: 'documents',
             key: 'id'
           },
-          field: 'store_id'
+          field: 'document_id'
         }
       },
       {
         sequelize,
-        tableName: 'documents',
+        tableName: 'content_objects',
         schema: 'public',
         timestamps: false,
       }
