@@ -679,11 +679,10 @@ export class database {
   }
 
   async addDocument(
-    agent,
-    document,
-    metadata,
+    description,
     keywords,
-    topic
+    is_included,
+    storeId
   ): Promise<number> {
     let id = randomInt(0, 100000)
     while (await this.documentIdExists(id)) {
@@ -691,8 +690,8 @@ export class database {
     }
 
     const query =
-      'INSERT INTO documents(id, agent, document, metadata, keywords, topic) VALUES($1, $2, $3, $4, $5, $6)'
-    const values = [id, agent, document, metadata, keywords, topic]
+      'INSERT INTO documents(id, description, keywords, is_included, store_id) VALUES($1, $2, $3, $4, $5)'
+    const values = [id, description, keywords, is_included, storeId]
 
     await this.client.query(query, values)
     return id
@@ -703,22 +702,22 @@ export class database {
 
     await this.client.query(query, values)
   }
-  async updateDocument(documentId, agent, document, metadata, keywords, topic) {
+  async updateDocument(documentId, description, keywords, is_included, storeId) {
     const query =
-      'UPDATE documents SET agent=$1, document=$2, metadata=$3, keywords=$4, topic=$5 WHERE id=$6'
-    const values = [agent, document, metadata, keywords, topic, documentId]
+      'UPDATE documents SET description=$1, keywords=$2, is_included=$3, store_id=$4 WHERE id=$5'
+    const values = [description, keywords, is_included, storeId, documentId]
 
     await this.client.query(query, values)
   }
-  async getDocument(documentId): Promise<any> {
-    const query = 'SELECT * FROM documents WHERE id=$1'
-    const values = [documentId]
+  async getDocumentsOfStore(storeId): Promise<any> {
+    const query = 'SELECT * FROM documents WHERE store_id=$1 ORDER BY id DESC'
+    const values = [storeId]
 
     const rows = await this.client.query(query, values)
     if (rows && rows.rows && rows.rows.length > 0) {
-      return rows.rows[0]
+      return rows.rows
     } else {
-      return undefined
+      return []
     }
   }
   async getAllDocuments(): Promise<any[]> {

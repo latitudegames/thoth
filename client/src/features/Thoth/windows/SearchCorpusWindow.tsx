@@ -21,22 +21,11 @@ const SearchCorpus = () => {
   const [_update, setUpdate] = useState(false)
 
   const add = async () => {
-    const body = {
-      agent: newDocument.agent ?? 'global',
-      document: newDocument.document,
-      metadata: newDocument.metadata,
-    }
-    console.log('sending:', body)
-    const res = await axios.post(
-      `${process.env.REACT_APP_SEARCH_SERVER_URL}/document`,
-      body
-    )
-    newDocument.agent = ''
-    newDocument.document = ''
-    newDocument.metadata = ''
-    console.log('got response:', res.data)
-
-    await getDocuments()
+    openModal({
+      modal: 'documentAddModal',
+      storeId: storeRef.current.value,
+      getDocuments
+    })
   }
 
   const _delete = async documentId => {
@@ -52,21 +41,6 @@ const SearchCorpus = () => {
     await getDocuments()
   }
 
-  const update = async index => {
-    const body = {
-      documentId: documents[index].id,
-      agent: documents[index].agent ?? 'global',
-      document: documents[index].document,
-      metadata: documents[index].metadata,
-    }
-    const res = await axios.post(
-      `${process.env.REACT_APP_SEARCH_SERVER_URL}/update_document`,
-      body
-    )
-
-    await getDocuments()
-  }
-
   const getDocumentsStores = async () => {
     console.log('get documents store');
     const res = await axios.get(
@@ -74,10 +48,19 @@ const SearchCorpus = () => {
     )
     console.log('stores ::: ', res.data);
     setDocumentsStores(res.data)
+    await getDocuments()
   }
 
-  const switchDocumentStore = (storeId) => {
-    console.log('storeId ::: ', storeId);
+  const getDocuments = async () => {
+    const docs = await axios.get(
+      `${process.env.REACT_APP_SEARCH_SERVER_URL}/document`,
+      {
+        params: {
+          storeId: storeRef.current.value
+        }
+      }
+    )
+    setDocuments(docs.data)
   }
 
   const openAddEditModal = (opType) => {
@@ -164,7 +147,7 @@ const SearchCorpus = () => {
               ref={storeRef}
               onChange={event => {
                 event.preventDefault()
-                switchDocumentStore(event.target.value)
+                getDocuments()
               }}
             >
               {documentsStores && 
@@ -181,9 +164,9 @@ const SearchCorpus = () => {
           </span>
 
           <div className="d-flex flex-column search-corpus-documents-list">
-            {
+            {documents &&
               documents.map((document, idx) => (
-                <SearchCorpusDocument document={document} key={idx}/>
+                <SearchCorpusDocument document={document} getDoc={getDocuments} key={idx}/>
               ))
             }
             {documents.length === 0 && 'No documents found'}
