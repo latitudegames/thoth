@@ -50,39 +50,29 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
   app.use(koaBody({ multipart: true }))
 
   router.get('/documents', async function (ctx: Koa.Context) {
-    const agent = ctx.query.agent ? ctx.query.agent : 'all'
-    const documents =
-      agent === 'all'
-        ? await database.instance.getAllDocuments()
-        : await database.instance.getDocuments(agent)
-    console.log('sending requested documents:', documents)
-
+    const documents = await database.instance.getAllDocuments()
     return (ctx.body = documents)
   })
   router.get('/document', async function (ctx: Koa.Context) {
-    const documentId = ctx.query.documentId
-    const document: any = await database.instance.getDocument(documentId)
-
-    return (ctx.body = document)
+    const storeId = ctx.query.storeId
+    const documents: any = await database.instance.getDocumentsOfStore(storeId)
+    
+    return (ctx.body = documents)
   })
   router.post('/document', async function (ctx: Koa.Context) {
-    console.log(ctx.request.body)
-    const agent = ctx.request.body?.agent || 'global'
-    const document = dicompress(ctx.request.body?.document)
-    const metadata = ctx.request.body?.metadata || ''
-    const keywords = await extractKeywords(document)
-    console.log('keywords:', keywords)
-    const topic = await classifyText(document)
-    console.log('topic:', topic)
+    const { body } = ctx.request
+    const description = body?.description || '' 
+    const keywords = body?.keywords
+    const is_included = body?.is_included && true
+    const storeId = body?.storeId
 
     let id = -1
     try {
       id = await database.instance.addDocument(
-        agent,
-        document,
-        metadata,
-        keywords.join(','),
-        topic
+        description,
+        keywords,
+        is_included,
+        storeId
       )
     } catch (e) {
       console.log(e)
@@ -109,21 +99,20 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
     return (ctx.body = 'ok')
   })
   router.post('/update_document', async function (ctx: Koa.Context) {
-    const documentId = ctx.request.body?.documentId
-    const agent = ctx.request.body?.agent || 'global'
-    const document = dicompress(ctx.request.body?.document)
-    const metadata = ctx.request.body?.metadata || []
-    const keywords = await extractKeywords(document)
-    const topic = await classifyText(document)
+    const { body } = ctx.request
+    const documentId = body?.documentId
+    const description = body?.description || '' 
+    const keywords = body?.keywords
+    const is_included = body?.is_included && true
+    const storeId = body?.storeId
 
     try {
       await database.instance.updateDocument(
         documentId,
-        agent,
-        document,
-        metadata,
-        keywords.join(','),
-        topic
+        description,
+        keywords,
+        is_included,
+        storeId
       )
     } catch (e) {
       console.log(e)

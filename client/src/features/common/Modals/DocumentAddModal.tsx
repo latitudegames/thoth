@@ -1,71 +1,73 @@
 import { useState } from 'react'
 import Modal from '../Modal/Modal'
+import css from './modalForms.module.css'
+import axios from 'axios'
 
-const DocumentAddModal = () => {
+const DocumentAddModal = ({ closeModal, storeId, getDocuments }) => {
   const [newDocument, setNewDocument] = useState({
-    agent: '',
-    document: '',
-    metadata: ''
+    description: '',
+    keywords: '',
+    is_included: true,
+    storeId: parseInt(storeId)
   })
 
   const add = async () => {
-    const body = {
-      agent: newDocument.agent,
-      document: newDocument.document,
-      metadata: newDocument.metadata,
-    }
-    console.log('req Body ::: ', body);
-    
+    const body = { ...newDocument }
+    await axios.post(
+      `${process.env.REACT_APP_SEARCH_SERVER_URL}/document`,
+      body
+    )
+    await getDocuments()
+    closeModal()
   }
-  
+  const options = [
+    {
+      className: `${css['loginButton']} secondary`,
+      label: 'Add',
+      onClick: add,
+    },
+  ]
   return (
-    <Modal title='Add Document' icon='add'>
+    <Modal title='Add Document' icon='add' options={options}>
       <form>
-        <div className="form-item">
-          <span className="form-item-label">Agent:</span>
-          <textarea
-            className="form-text-area"
+        <div className="form-item d-flex align-items-center">
+          <input 
+            type="checkbox" 
+            name="include" 
+            className="custom-checkbox"
             onChange={e => setNewDocument({
               ...newDocument,
-              agent: e.target.value
+              is_included: !newDocument.is_included
             })}
-            defaultValue={newDocument.agent}
-          ></textarea>
+            checked={newDocument.is_included}
+          />
+          <span className="form-item-label" style={{ marginBottom: 'unset' }}>Include</span>
         </div>
         <div className="form-item">
-          <span className="form-item-label">Document:</span>
-          <textarea
+          <span className="form-item-label">Keywords</span>
+          <input
+            type='text'
             className="form-text-area"
             onChange={e => setNewDocument({
               ...newDocument,
-              document: e.target.value
+              keywords: e.target.value
             })}
-            defaultValue={newDocument.document}
-          ></textarea>
+            defaultValue={newDocument.keywords}
+          ></input>
         </div>
         <div className="form-item">
-          <span className="form-item-label">Metadata:</span>
-          <textarea
+          <span className="form-item-label">Description</span>
+          <input
+            type='text'
             className="form-text-area"
             onChange={e => setNewDocument({
               ...newDocument,
-              metadata: e.target.value
+              description: e.target.value
             })}
-            defaultValue={newDocument.metadata}
-          ></textarea>
+            defaultValue={newDocument.description}
+          ></input>
         </div>
       </form>
-      <br />
-      <button
-        className="button"
-        type="button"
-        onClick={async e => {
-          e.preventDefault()
-          await add()
-        }}
-      >
-        Create New
-      </button>
     </Modal>
   );
 }
