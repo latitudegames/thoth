@@ -1,23 +1,36 @@
 import { NodeView } from 'rete/types/view/node'
-import { IRunContextEditor, ThothNode } from '../../../types'
+import { IRunContextEditor, NodeData } from '../../../types'
 import { ThothComponent } from '../../thoth-component'
 
 type ConsoleConstructor = {
   component: ThothComponent<unknown>
   editor: IRunContextEditor
-  node: ThothNode
+  node: NodeData
+  server: boolean
+  throwError?: Function
 }
 
-export class Console {
-  node: ThothNode
+export class ThothConsole {
+  node: NodeData
   editor: IRunContextEditor
   component: ThothComponent<unknown>
   nodeView: NodeView
+  isServer: boolean
+  throwError?: Function
 
-  constructor({ component, editor, node }: ConsoleConstructor) {
+  constructor({
+    component,
+    editor,
+    node,
+    server,
+    throwError,
+  }: ConsoleConstructor) {
     this.component = component
     this.editor = editor
     this.node = node
+    this.isServer = server
+
+    if (throwError) this.throwError = throwError
 
     const nodeValues = Array.from(editor.view.nodes)
     const foundNode = nodeValues.find(([, n]) => n.node.id === node.id)
