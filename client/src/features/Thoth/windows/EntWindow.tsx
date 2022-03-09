@@ -26,7 +26,7 @@ const Ent = ({ id, updateCallback }) => {
   const [discord_enabled, setdiscord_enabled] = useState(false)
   const [discord_api_key, setDiscordApiKey] = useState('')
   const [discord_spell_handler, setDiscordSpellHandler] = useState('')
-
+  console.log(discord_enabled,'discord_enabled')
   useEffect(() => {
     if (!loaded) {
       (async () => {
@@ -66,12 +66,14 @@ const Ent = ({ id, updateCallback }) => {
     axios
       .post(`${process.env.REACT_APP_API_URL}/agentInstance`, { id, data: _data })
       .then(res => {
-        console.log("response on update", res)
-        setEnabled(res.enabled)
-        setAgent(res.personality)
-        setdiscord_enabled(res.discord_enabled)
-        setDiscordApiKey(res.discord_api_key)
-        setDiscordSpellHandler(res.discord_spell_handler)
+        console.log("response on update", JSON.parse(res.config.data).data)
+        let responseData = res && JSON.parse(res?.config?.data).data
+        console.log(responseData,'responseData')
+        setEnabled(responseData.enabled)
+        setAgent(responseData.personality)
+        setdiscord_enabled(responseData.discord_enabled)
+        setDiscordApiKey(responseData.discord_api_key)
+        setDiscordSpellHandler(responseData.discord_spell_handler)
         updateCallback()
       })
   }
@@ -137,8 +139,11 @@ const Ent = ({ id, updateCallback }) => {
           </>
         )}
       </>}
-      <div className="form-item">
-        <button onClick={() => update()}>Update</button>
+      <div className="form-item entBtns">
+        <button 
+          onClick={() => update()} 
+          style={{marginRight: '10px'}}
+        >Update</button>
         <button onClick={() => _delete()}>Delete</button>
       </div>
     </div>
