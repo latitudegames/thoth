@@ -800,6 +800,51 @@ export class database {
     return rows && rows.rows && rows.rows.length > 0
   }
 
+  async addContentObj(
+    description,
+    keywords,
+    is_included,
+    documentId
+  ): Promise<number> {
+    let id = randomInt(0, 100000)
+    while (await this.contentObjIdExists(id)) {
+      id = randomInt(0, 100000)
+    }
+
+    const query =
+      'INSERT INTO content_objects(id, description, keywords, is_included, document_id) VALUES($1, $2, $3, $4, $5)'
+    const values = [id, description, keywords, is_included, documentId]
+
+    await this.client.query(query, values)
+    return id
+  }
+  async editContentObj(objId, description, keywords, is_included, documentId) {
+    const query = 'UPDATE content_objects SET description = $1, keywords = $2, is_included = $3, document_id = $4 WHERE id = $5'
+    const values = [description, keywords, is_included, documentId, objId]
+    await this.client.query(query, values)
+  }
+  async getContentObjOfDocument(documentId): Promise<any> {
+    const query = 'SELECT * FROM content_objects WHERE document_id = $1 ORDER BY id DESC'
+    const values = [documentId]
+
+    const rows = await this.client.query(query, values)
+    if(rows && rows.rows && rows.rows.length > 0) return rows.rows
+    else return []
+  }
+  async removeContentObject(objId) {
+    const query = 'DELETE FROM content_objects WHERE id=$1'
+    const values = [objId]
+
+    await this.client.query(query, values)
+  }
+  async contentObjIdExists(contentObjId) {
+    const query = 'SELECT * FROM content_objects WHERE id=$1'
+    const values = [contentObjId]
+
+    const rows = await this.client.query(query, values)
+    return rows && rows.rows && rows.rows.length > 0
+  }
+
   async addDocumentStore(name): Promise<number> {
     let id = randomInt(0, 100000)
     while(await this.documentStoreIdExists(id)) {
