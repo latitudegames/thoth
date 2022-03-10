@@ -32,7 +32,11 @@ const DebugConsole = ({ tab }) => {
     setScrollToBottom(true)
   }
 
-  // const formatErrorMessage = message => ({})
+  const formatErrorMessage = message =>
+    `> Node ${message.nodeId}: Error in ${message.from} component ${
+      message.name ?? 'unnamed'
+    }.`
+
 
   const printToDebugger = useCallback((_, message) => {
     const terminal = terminalRef.current
