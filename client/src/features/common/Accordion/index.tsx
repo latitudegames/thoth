@@ -38,13 +38,8 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-<<<<<<< HEAD:client/src/features/common/Accordion.tsx
-export const SimpleAccordion = ({ setExpanded = x => {}, ...props }) => {
-  const classes = useStyles()
-=======
 export const SimpleAccordion = ({ setExpanded = x => { }, ...props }) => {
   const classes = useStyles() as any
->>>>>>> Downstream merge with main branch, fix some things:client/src/features/common/Accordion/index.tsx
 
   const onChange = (_, expanded) => {
     setExpanded(expanded)
