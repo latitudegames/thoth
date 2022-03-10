@@ -10,6 +10,19 @@ type ConsoleConstructor = {
   throwError?: Function
 }
 
+type ErrorMessage = {
+  errorIn: string
+  message: string
+}
+
+type Message = {
+  errorIn: string
+  nodeId: number
+  name: string | null
+  error: ErrorMessage
+  type: 'error' | ''
+}
+
 export class ThothConsole {
   node: NodeData
   editor: IRunContextEditor
