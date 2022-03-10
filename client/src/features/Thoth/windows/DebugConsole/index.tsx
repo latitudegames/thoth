@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { renderToString } from 'react-dom/server'
 import Terminal from 'react-console-emulator'
 import { useAuth } from '@/contexts/AuthProvider'
 import { usePubSub } from '@/contexts/PubSubProvider'
@@ -103,8 +104,9 @@ const DebugConsole = ({ tab }) => {
       <Terminal
         ref={terminalRef}
         commands={commands}
-        dangerMode="true"
+        dangerMode={true}
         commandCallback={commandCallback}
+        noNewlineParsing={true}
         promptLabel={`${user?.id}@Thoth:~$`}
         // readOnly={true}
         style={{
