@@ -1,8 +1,9 @@
 //@ts-nocheck
 
+import Modal from '@/features/common/Modal/Modal'
 import axios from 'axios'
 import React, { useEffect, useRef, useState } from 'react'
-
+import { useForm } from 'react-hook-form'
 const AgentManager = () => {
   const [agents, setAgents] = useState()
   const [currentAgentData, setCurrentAgentData] = useState(null)
@@ -14,10 +15,28 @@ const AgentManager = () => {
   const [monologue, setMonologue] = useState('')
   const [personality, setPersonality] = useState('')
   const [greetings, setGreetings] = useState('')
+  const [openModal, setOpenModal] = useState(false)
+  const [versionName, setVersionName] = useState('')
+  const [files, setFiles] = useState("");
+  let importData = files && JSON.parse(files);
 
-  const createNew = async () => {
+  const {
+    register,
+    handleSubmit,
+  } = useForm()
+
+  const options = [
+    {
+      label:'Save',
+      onClick: () => {
+        onSubmit({ versionName })
+      },
+    }
+  ]
+
+  const createNew = async (e) => {
     console.log('newAgentRef.current is,', newAgentRef.current.value)
-    const agent = newAgentRef.current.value ?? 'New Agent'
+    const agent = !newAgentRef.current.value ? 'New Agent' : newAgentRef.current.value
     await getAgents()
     await update(agent)
   }
@@ -93,20 +112,64 @@ const AgentManager = () => {
     }
   }, [])
 
+  const onSubmit = handleSubmit(async () => {
+    await createNew()
+    onClose()
+  })
+
+  const onClose = () =>{
+    setOpenModal(false)
+  }
+
+  const updateVersionName = e => {
+    setVersionName(e.target.value)
+  }
+
+  const downloadFile = ({ data, fileName, fileType }) => {
+    const blob = new Blob([data], { type: fileType });
+  
+    const a = document.createElement("a");
+    a.download = fileName;
+    a.href = window.URL.createObjectURL(blob);
+    const clickEvt = new MouseEvent("click", {
+      view: window,
+      bubbles: true,
+      cancelable: true,
+    });
+    a.dispatchEvent(clickEvt);
+    a.remove();
+  };
+
+  const handleChange = e => {
+    const fileReader = new FileReader();
+    fileReader.readAsText(e.target.files[0], "UTF-8");
+    fileReader.onload = e => {
+      setFiles(e.target.result);
+    };
+  };
+
+  const onExportData = (e) =>{
+    e.preventDefault();
+    downloadFile({
+      data: JSON.stringify(files),
+      fileName: "users.json",
+      fileType: "text/json",
+    });
+  }
+
   return (
     <div className="agent-container">
       <div style={{ display: 'flex' }}>
         <span className="create-agent" style={{ lineHeight: '32px' }}>
           Create Agent
         </span>
-        <input type="text" style={{ marginLeft: 'auto' }} ref={newAgentRef} />
       </div>
       <button
         className="button"
         type="button"
         onClick={async e => {
           e.preventDefault()
-          await createNew()
+          setOpenModal(true)
         }}
       >
         Create New
@@ -133,6 +196,24 @@ const AgentManager = () => {
                 {agents.length === 0 && 'No personalities found'}
               </select>
             </span>
+            {currentAgentData && <div style={{ display: 'flex', margin: '1em' }}>
+              <button
+                value="import"
+                style={{marginRight: '12px'}}
+              >
+              <label className="btn btn-primary">
+                Import<input type="file" accept=".json" onChange={handleChange} style={{display: "none"}} name="image" />
+              </label>
+              </button>
+              <button
+                value="export"
+                onClick={(e) => {
+                  onExportData(e)
+                }}
+              >
+                Export
+              </button>
+            </div>}
           </div>
         )}
         {currentAgentData && (
@@ -144,7 +225,7 @@ const AgentManager = () => {
                 onChange={e => {
                   setDialog(e.target.value)
                 }}
-                value={dialog}
+                value={importData && importData.Dialogue ? importData.Dialogue : dialog}
               ></textarea>
             </div>
 
@@ -155,7 +236,7 @@ const AgentManager = () => {
                 onChange={e => {
                   setMorals(e.target.value)
                 }}
-                value={morals}
+                value={importData && importData.Morals ? importData.Morals : morals}
               ></textarea>
             </div>
 
@@ -166,7 +247,7 @@ const AgentManager = () => {
                 onChange={e => {
                   setFacts(e.target.value)
                 }}
-                value={facts}
+                value={importData && importData.Facts ? importData.Facts : facts}
               ></textarea>
             </div>
 
@@ -178,7 +259,7 @@ const AgentManager = () => {
                 onChange={e => {
                   setMonologue(e.target.value)
                 }}
-                value={monologue}
+                value={importData && importData.Monologue ? importData.Monologue : monologue}
               ></textarea>
             </div>
 
@@ -189,7 +270,7 @@ const AgentManager = () => {
                 onChange={e => {
                   setPersonality(e.target.value)
                 }}
-                value={personality}
+                value={importData && importData.Personality ? importData.Personality : personality}
               ></textarea>
             </div>
 
@@ -200,7 +281,7 @@ const AgentManager = () => {
                 onChange={e => {
                   setGreetings(e.target.value)
                 }}
-                value={greetings}
+                value={importData && importData.Greetings ? importData.Greetings : greetings}
               ></textarea>
             </div>
             <div style={{ display: 'flex' }}>
@@ -225,6 +306,13 @@ const AgentManager = () => {
             </div>
           </form>
         )}
+        <div className="agent-createModal">
+        {openModal && 
+          <Modal title="New Agent" options={options} onClose={onClose} icon="add" className="agent-createModal">
+            <h4>CHANGE NOTES</h4>
+            <input type="text" style={{ marginLeft: 'auto' }} ref={newAgentRef} />
+          </Modal>}
+        </div>
       </div>
     </div>
   )
