@@ -33,11 +33,12 @@ const StoreAddEditModal = ({ closeModal, store, getDocumentsStores, opType }) =>
     closeModal()
     
   }
-  const title = opType === 'add' ? 'Add' : 'Update'
+  const operation = opType === 'add' ? 'Add' : 'Update'
+  const title = `${operation} Store`
   const options = [
     {
       className: `${css['loginButton']} secondary`,
-      label: title,
+      label: operation,
       onClick: performOperation,
     },
   ]

@@ -13,32 +13,14 @@ const SearchCorpus = () => {
   const { openModal } = useModal()
   const storeRef = useRef(null)
   const [documents, setDocuments] = useState([])
-  const [newDocument, setNewDocument] = useState({
-    agent: '',
-    document: '',
-    metadata: '',
-  })
-  const [_update, setUpdate] = useState(false)
 
   const add = async () => {
     openModal({
       modal: 'documentAddModal',
       storeId: storeRef.current.value,
+      isContentObject: false,
       getDocuments
     })
-  }
-
-  const _delete = async documentId => {
-    const res = await axios.delete(
-      `${process.env.REACT_APP_SEARCH_SERVER_URL}/document`,
-      {
-        params: {
-          documentId: documentId,
-        },
-      }
-    )
-    console.log('deleted', res)
-    await getDocuments()
   }
 
   const getDocumentsStores = async () => {
@@ -48,7 +30,8 @@ const SearchCorpus = () => {
     )
     console.log('stores ::: ', res.data);
     setDocumentsStores(res.data)
-    await getDocuments()
+    setDocuments([])
+    if(storeRef.current.value) await getDocuments()
   }
 
   const getDocuments = async () => {
@@ -85,51 +68,6 @@ const SearchCorpus = () => {
     })
   }
 
-  const editForm = () => (
-    <div>
-      <h4>Available Documents</h4>
-      {documents.map((document, idx) => {
-        return (
-          <form id={idx}>
-            <div className="form-item">
-              <span className="form-item-label">Agent:</span>
-              <textarea
-                className="form-text-area"
-                defaultValue={document.agent}
-                onChange={e => (documents[idx].agent = e.target.value)}
-              ></textarea>
-            </div>
-            <div className="form-item">
-              <span className="form-item-label">Document:</span>
-              <textarea
-                className="form-text-area"
-                defaultValue={document.document}
-                onChange={e => (documents[idx].document = e.target.value)}
-              ></textarea>
-            </div>
-            <div className="form-item">
-              <span className="form-item-label">Metadata:</span>
-              <textarea
-                className="form-text-area"
-                defaultValue={document.metadata}
-                onChange={e => (documents[idx].metadata = e.target.value)}
-              ></textarea>
-            </div>
-            <br />
-            <button type="button" onClick={() => update(idx)}>
-              Updated
-            </button>
-            <br />
-            <button type="button" onClick={() => _delete(document.id)}>
-              Delete
-            </button>
-            <br />
-          </form>
-        )
-      })}
-    </div>
-  )
-
   useEffect(async () => {
     await getDocumentsStores()
   }, [])
@@ -152,7 +90,7 @@ const SearchCorpus = () => {
             >
               {documentsStores && 
                 documentsStores.map(store => (
-                  <option value={store.id}>{store.name}</option>
+                  <option value={store.id} key={store.id}>{store.name}</option>
                 ))
               }
             </select>

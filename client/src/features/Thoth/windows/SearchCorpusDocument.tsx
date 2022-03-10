@@ -1,16 +1,40 @@
-import { useState } from 'react'
+//@ts-nocheck
+import { useEffect, useState } from 'react'
 import { useModal } from '@/contexts/ModalProvider';
 import { VscWand, VscTrash, VscSave } from 'react-icons/vsc'
 import axios from 'axios'
 
 const SearchCorpusDocument = ({ document, getDoc }) => {
   const [isInclude, setIsInclude] = useState(document.is_included)
+  const [contentObjects, setContentObjects] = useState(null)
   const { openModal } = useModal()
 
+  useEffect(async () => {
+    await getContentObjects()
+  }, [])
+
+  const getContentObjects = async () => {
+    console.log('get documents store');
+    const res = await axios.get(
+      `${process.env.REACT_APP_SEARCH_SERVER_URL}/content-object`,
+      {
+        params: {
+          documentId: document.id
+        }
+      }
+    )
+    console.log('objects ::: ', res.data);
+    setContentObjects(res.data)
+  }
+
   const openAddModal = () => {
-    // openModal({
-    //   modal: 'documentAddModal'
-    // })
+    openModal({
+      modal: 'documentAddModal',
+      isContentObject: true,
+      documentId: document.id,
+      getDocuments: getDoc,
+      getContentObjects
+    })
   }
 
   const openEditModal = (field: string) => {
@@ -26,7 +50,16 @@ const SearchCorpusDocument = ({ document, getDoc }) => {
     openModal({
       modal: 'documentDeleteModal',
       documentId: document.id,
+      isContentObj: false,
       getDocuments: getDoc
+    })
+  }
+
+  const openContentEditModal = () => {
+    openModal({
+      modal: 'contentObjEditModal',
+      contents: contentObjects,
+      getContentObjects
     })
   }
 
@@ -107,6 +140,7 @@ const SearchCorpusDocument = ({ document, getDoc }) => {
             type="button"
             onClick={async e => {
               e.preventDefault()
+              openContentEditModal()
             }}
           >
             Click to edit

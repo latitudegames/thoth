@@ -54,7 +54,9 @@ export class documents
             model: 'documents_store',
             key: 'id'
           },
-          field: 'store_id'
+          field: 'store_id',
+          onDelete: 'CASCADE',
+          onUpdate: 'CASCADE'
         }
       },
       {

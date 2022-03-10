@@ -3,21 +3,27 @@ import Modal from '../Modal/Modal'
 import css from './modalForms.module.css'
 import axios from 'axios'
 
-const DocumentAddModal = ({ closeModal, storeId, getDocuments }) => {
-  const [newDocument, setNewDocument] = useState({
+const DocumentAddModal = ({ closeModal, storeId, documentId, isContentObject, getDocuments, getContentObjects }) => {
+  let parentId = isContentObject ? 'documentId' : 'storeId'
+  let doc = {
     description: '',
     keywords: '',
     is_included: true,
-    storeId: parseInt(storeId)
-  })
+    [parentId]: isContentObject ? parseInt(documentId) : parseInt(storeId)
+  }
+  const title = isContentObject ? 'Add Content Object' : 'Add Document'
+  const [newDocument, setNewDocument] = useState(doc)
 
   const add = async () => {
     const body = { ...newDocument }
-    await axios.post(
-      `${process.env.REACT_APP_SEARCH_SERVER_URL}/document`,
-      body
-    )
+    let url = 
+      isContentObject ? 
+      `${process.env.REACT_APP_SEARCH_SERVER_URL}/content-object` :
+      `${process.env.REACT_APP_SEARCH_SERVER_URL}/document`
+    
+    await axios.post(url, body)
     await getDocuments()
+    if(isContentObject) await getContentObjects()
     closeModal()
   }
   const options = [
@@ -28,7 +34,7 @@ const DocumentAddModal = ({ closeModal, storeId, getDocuments }) => {
     },
   ]
   return (
-    <Modal title='Add Document' icon='add' options={options}>
+    <Modal title={title} icon='add' options={options}>
       <form>
         <div className="form-item d-flex align-items-center">
           <input 
