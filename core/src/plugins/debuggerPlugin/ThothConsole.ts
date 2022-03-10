@@ -68,7 +68,8 @@ export class ThothConsole {
     }
     }
 
-    return message
+  formatErrorMessage(error: any) {
+    return this.formatMessage(error.message, 'error')
   }
 
   renderError() {
