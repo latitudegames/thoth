@@ -216,6 +216,72 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
     } else return (ctx.body = 'No documents where found to search from!')
   })
 
+  router.post('/content-object', async function (ctx: Koa.Context) {
+    const { body } = ctx.request
+    const description = body?.description || '' 
+    const keywords = body?.keywords
+    const is_included = body?.is_included && true
+    const documentId = body?.documentId
+
+    let id = -1
+    try {
+      id = await database.instance.addContentObj(
+        description,
+        keywords,
+        is_included,
+        documentId
+      )
+    } catch (e) {
+      console.log(e)
+      return (ctx.body = 'internal error')
+    }
+
+    if (id === -1) {
+      return (ctx.body = 'internal error')
+    }
+
+    return (ctx.body = { contentObjId: id })
+  })
+  router.put('/content-object', async function (ctx:Koa.Context) {
+    const { body } = ctx.request
+    const objId = body.objId
+    const description = body?.description || '' 
+    const keywords = body?.keywords
+    const is_included = body?.is_included && true
+    const documentId = body?.documentId
+
+    try {
+      await database.instance.editContentObj(
+        objId,
+        description,
+        keywords,
+        is_included,
+        documentId
+      )
+    } catch (e) {
+      console.log(e)
+      return (ctx.body = 'internal error')
+    }
+
+    return (ctx.body = 'ok')
+  })
+  router.get('/content-object', async function (ctx:Koa.Context) {
+    const documentId = ctx.query.documentId
+    const contentObjects: any = await database.instance.getContentObjOfDocument(documentId)
+    
+    return (ctx.body = contentObjects)
+  })
+  router.delete('/content-object', async function (ctx:Koa.Context) {
+    const objId = ctx.query.objId
+    try {
+      await database.instance.removeContentObject(objId)
+    } catch (e) {
+      console.log(e);
+      return (ctx.body = 'internal error')
+    }
+    return (ctx.body = 'ok')
+  })
+
   router.get('/document-store', async function (ctx: Koa.Context) {
     const stores = await database.instance.getDocumentStores()
     return (ctx.body = stores)
