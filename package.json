@@ -26,15 +26,9 @@
     "db:seed": "npx sequelize-cli db:seed:all --url 'postgres://thoth:thoth_default_pw@localhost:5432/thoth'",
     "lint": "lerna run lint --parallel",
     "lint:fix": "lerna run lint:fix --parallel",
-<<<<<<< HEAD
     "build": "copyfiles LICENSE.txt client && lerna exec --scope @thoth/client -- yarn build",
     "build:core": "copyfiles LICENSE.txt core && lerna exec --scope @latitudegames/thoth-core -- yarn build",
     "install:core": "lerna exec --scope @latitudegames/thoth-core -- yarn install",
-=======
-    "install:core": "lerna exec --scope @latitudegames/thoth-core -- yarn install",
-    "build": "copyfiles LICENSE.txt client && lerna exec --scope @thoth/client -- yarn build",
-    "build:core": "copyfiles LICENSE.txt core && lerna exec --scope @latitudegames/thoth-core -- yarn build",
->>>>>>> Downstream merge with main branch, fix some things
     "publish:canary": "lerna exec --scope @latitudegames/thoth-core -- yarn canary",
     "install:canary": "lerna exec --scope @latitudegames/thoth-client -- yarn install:canary"
   },

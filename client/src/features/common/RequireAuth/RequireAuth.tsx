@@ -1,17 +1,11 @@
-<<<<<<< HEAD
-=======
 import { useLatitude } from '@/config'
->>>>>>> Downstream merge with main branch, fix some things
 import { Outlet } from 'react-router-dom'
 import { useAuth } from '../../../contexts/AuthProvider'
 
 const defaultGroups = ['internal', 'thoth']
 
 const RequireAuth = (props: Record<string, any>) => {
-<<<<<<< HEAD
-=======
   if (!useLatitude) return <Outlet />
->>>>>>> Downstream merge with main branch, fix some things
   const { user, loginRedirect } = useAuth()
   const groups = props?.access
     ? [...props?.access, ...defaultGroups]
