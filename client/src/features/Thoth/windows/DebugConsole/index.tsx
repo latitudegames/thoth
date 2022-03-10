@@ -67,14 +67,9 @@ const DebugConsole = ({ tab }) => {
     const terminal = terminalRef.current
     if (!terminal) return
 
-    terminal.pushToStdout(
-      `
-      > Node ${message.nodeId}: Error in ${message.errorIn} component ${
-        message.name ?? ''
-      }.
-      > ${message.errorMessage}
-      `
-    )
+    const msg = getMessage(message)
+
+    terminal.pushToStdout(msg)
 
     scroll()
   }, [])
