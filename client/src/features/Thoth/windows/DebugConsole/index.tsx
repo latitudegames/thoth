@@ -37,6 +37,11 @@ const DebugConsole = ({ tab }) => {
       message.name ?? 'unnamed'
     }.`
 
+  const formatLogMessage = message =>
+    `> Node ${message.nodeId}: Message from ${message.from} component ${
+      message.name ?? 'unnamed'
+    }.`
+
 
   const printToDebugger = useCallback((_, message) => {
     const terminal = terminalRef.current
