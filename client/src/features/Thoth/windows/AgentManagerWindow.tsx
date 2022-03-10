@@ -218,10 +218,42 @@ const AgentManager = () => {
         )}
         {currentAgentData && (
           <form>
+
+            <div style={{display:'flex'}}>
+              <div className="form-item agentFields" style={{width:'100%'}}>
+                <span className="form-item-label">Name</span>
+                <textarea
+                  className="form-text-area"
+                  onChange={e => {
+                    setDialog(e.target.value)
+                  }}
+                  value={importData && importData.Dialogue ? importData.Dialogue : dialog}
+                ></textarea>
+              </div>
+              <div className="agent-select agent-Manager" style={{width:'100%'}}>
+                <span className="form-item-label">Personalities</span>
+                <select
+                  name="agents"
+                  id="agents"
+                  onChange={event => {
+                    switchAgent(event.target.value)
+                  }}
+                >
+                  {agents.length > 0 &&
+                    agents.map((agent, idx) => (
+                      <option value={agent.agent} key={idx}>
+                        {agent.agent}
+                      </option>
+                    ))
+                  }
+                </select>
+              </div>
+            </div>
+
             <div className="form-item">
-              <span className="form-item-label">Dialogue:</span>
+              <span className="form-item-label">Dialog</span>
               <textarea
-                className="form-text-area"
+                className="form-text-area dialogInput"
                 onChange={e => {
                   setDialog(e.target.value)
                 }}
@@ -230,7 +262,18 @@ const AgentManager = () => {
             </div>
 
             <div className="form-item">
-              <span className="form-item-label">Morals:</span>
+              <span className="form-item-label">Personality</span>
+              <textarea
+                className="form-text-area personalityInput"
+                onChange={e => {
+                  setPersonality(e.target.value)
+                }}
+                value={importData && importData.Personality ? importData.Personality : personality}
+              ></textarea>
+            </div>
+
+            <div className="form-item">
+              <span className="form-item-label">Morals and Ethics</span>
               <textarea
                 className="form-text-area"
                 onChange={e => {
@@ -241,21 +284,10 @@ const AgentManager = () => {
             </div>
 
             <div className="form-item">
-              <span className="form-item-label">Facts:</span>
-              <textarea
-                className="form-text-area"
-                onChange={e => {
-                  setFacts(e.target.value)
-                }}
-                value={importData && importData.Facts ? importData.Facts : facts}
-              ></textarea>
-            </div>
-
-            <div className="form-item">
-              <span className="form-item-label">Monologue:</span>
+              <span className="form-item-label">Monologue</span>
 
               <textarea
-                className="form-text-area"
+                className="form-text-area MonologueInput"
                 onChange={e => {
                   setMonologue(e.target.value)
                 }}
@@ -264,36 +296,27 @@ const AgentManager = () => {
             </div>
 
             <div className="form-item">
-              <span className="form-item-label">Personality:</span>
+              <span className="form-item-label">Facts</span>
               <textarea
-                className="form-text-area"
+                className="form-text-area FactsInput"
                 onChange={e => {
-                  setPersonality(e.target.value)
+                  setFacts(e.target.value)
                 }}
-                value={importData && importData.Personality ? importData.Personality : personality}
+                value={importData && importData.Facts ? importData.Facts : facts}
               ></textarea>
             </div>
 
             <div className="form-item">
-              <span className="form-item-label">Greetings:</span>
+              <span className="form-item-label">Greetings</span>
               <textarea
-                className="form-text-area"
+                className="form-text-area gettingsInput"
                 onChange={e => {
                   setGreetings(e.target.value)
                 }}
                 value={importData && importData.Greetings ? importData.Greetings : greetings}
               ></textarea>
             </div>
-            <div style={{ display: 'flex' }}>
-              <button
-                value="Update"
-                onClick={e => {
-                  e.preventDefault()
-                  update()
-                }}
-              >
-                Update
-              </button>
+            <div className="agentBtns">
               <button
                 value="Delete"
                 onClick={e => {
@@ -302,6 +325,16 @@ const AgentManager = () => {
                 }}
               >
                 Delete
+              </button>
+              <button
+                value="Update"
+                onClick={e => {
+                  e.preventDefault()
+                  update()
+                }}
+                className='updateBtn'
+              >
+                Save
               </button>
             </div>
           </form>
