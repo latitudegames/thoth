@@ -1,12 +1,13 @@
 //@ts-nocheck
-
 import Modal from '@/features/common/Modal/Modal'
 import axios from 'axios'
 import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { thothApiRootUrl } from '@/config'
+
 const AgentManager = () => {
-  const [agents, setAgents] = useState()
-  const [currentAgentData, setCurrentAgentData] = useState(null)
+  const [agents, setAgents] = useState([] as any[])
+  const [currentAgentData, setCurrentAgentData] = useState({ id: '', name: '', agent: null })
   const newAgentRef = useRef('New Agent')
 
   const [dialog, setDialog] = useState('')
@@ -27,7 +28,7 @@ const AgentManager = () => {
 
   const options = [
     {
-      label:'Save',
+      label: 'Save',
       onClick: () => {
         onSubmit({ versionName })
       },
@@ -38,22 +39,20 @@ const AgentManager = () => {
     console.log('newAgentRef.current is,', newAgentRef.current.value)
     const agent = !newAgentRef.current.value ? 'New Agent' : newAgentRef.current.value
     await getAgents()
-    await update(agent)
+    await update(agent as any)
   }
 
   const deleteAgent = async () => {
-    console.log('deleting', currentAgentData)
     const res = await axios.delete(
-      `${process.env.REACT_APP_API_URL}/agent/` + currentAgentData.id
+      `${thothApiRootUrl}/agent/` + currentAgentData.id
     )
     console.log('deleted', res)
     await getAgents()
   }
 
-  const update = async agent => {
-    console.log('currentAgentData is', agent ?? currentAgentData)
+  const update = async (agent = currentAgentData.agent) => {
     const body = {
-      agent: agent ?? currentAgentData.agent,
+      agent: agent,
       data: {
         dialog,
         morals,
@@ -63,19 +62,18 @@ const AgentManager = () => {
         greetings,
       },
     }
-    const res = await axios.post(`${process.env.REACT_APP_API_URL}/agent`, body)
-    console.log('updated, switching to', agent ?? currentAgentData.agent)
-    const newAgents = await getAgents()
+    await axios.post(`${thothApiRootUrl}/agent`, body)
+    const newAgents = await getAgents() as any[]
     setAgents(newAgents)
 
-    switchAgent(agent ?? currentAgentData.agent)
+    switchAgent(agent)
   }
 
   const getAgents = async () => {
-    const res = await axios.get(`${process.env.REACT_APP_API_URL}/agents`)
+    const res = await axios.get(`${thothApiRootUrl}/agents`)
     console.log("Res is", res)
     if (res.data.length == 0) return setAgents([])
-    let newAgents = []
+    let newAgents = [] as any[]
     for (let i = 0; i < res.data.length; i++) {
       newAgents.push(res.data[i])
     }
@@ -91,7 +89,7 @@ const AgentManager = () => {
   const switchAgent = async agent => {
     console.log('agent is', agent)
     const res = await axios.get(
-      `${process.env.REACT_APP_API_URL}/agent?agent=${agent.agent ?? agent}`
+      `${thothApiRootUrl}/agent?agent=${agent.agent ?? agent}`
     )
     console.log('res.data is', res.data)
 
@@ -104,12 +102,14 @@ const AgentManager = () => {
     setGreetings(res.data.greetings)
   }
 
-  useEffect(async () => {
-    const newAgents = await getAgents()
-    if (newAgents) {
-      setAgents(newAgents)
-      if (newAgents[0]) setCurrentAgentData(newAgents[0])
-    }
+  useEffect(() => {
+    (async () => {
+      const newAgents = await getAgents()
+      if (newAgents) {
+        setAgents(newAgents)
+        if (newAgents[0]) setCurrentAgentData(newAgents[0])
+      }
+    })();
   }, [])
 
   const onSubmit = handleSubmit(async () => {
@@ -117,7 +117,7 @@ const AgentManager = () => {
     onClose()
   })
 
-  const onClose = () =>{
+  const onClose = () => {
     setOpenModal(false)
   }
 
@@ -127,7 +127,7 @@ const AgentManager = () => {
 
   const downloadFile = ({ data, fileName, fileType }) => {
     const blob = new Blob([data], { type: fileType });
-  
+
     const a = document.createElement("a");
     a.download = fileName;
     a.href = window.URL.createObjectURL(blob);
@@ -148,7 +148,7 @@ const AgentManager = () => {
     };
   };
 
-  const onExportData = (e) =>{
+  const onExportData = (e) => {
     e.preventDefault();
     downloadFile({
       data: JSON.stringify(files),
@@ -199,11 +199,11 @@ const AgentManager = () => {
             {currentAgentData && <div style={{ display: 'flex', margin: '1em' }}>
               <button
                 value="import"
-                style={{marginRight: '12px'}}
+                style={{ marginRight: '12px' }}
               >
-              <label className="btn btn-primary">
-                Import<input type="file" accept=".json" onChange={handleChange} style={{display: "none"}} name="image" />
-              </label>
+                <label className="btn btn-primary">
+                  Import<input type="file" accept=".json" onChange={handleChange} style={{ display: "none" }} name="image" />
+                </label>
               </button>
               <button
                 value="export"
@@ -219,8 +219,8 @@ const AgentManager = () => {
         {currentAgentData && (
           <form>
 
-            <div style={{display:'flex'}}>
-              <div className="form-item agentFields" style={{width:'100%'}}>
+            <div style={{ display: 'flex' }}>
+              <div className="form-item agentFields" style={{ width: '100%' }}>
                 <span className="form-item-label">Name</span>
                 <textarea
                   className="form-text-area"
@@ -230,7 +230,7 @@ const AgentManager = () => {
                   value={importData && importData.Dialogue ? importData.Dialogue : dialog}
                 ></textarea>
               </div>
-              <div className="agent-select agent-Manager" style={{width:'100%'}}>
+              <div className="agent-select agent-Manager" style={{ width: '100%' }}>
                 <span className="form-item-label">Personalities</span>
                 <select
                   name="agents"
@@ -340,11 +340,11 @@ const AgentManager = () => {
           </form>
         )}
         <div className="agent-createModal">
-        {openModal && 
-          <Modal title="New Agent" options={options} onClose={onClose} icon="add" className="agent-createModal">
-            <h4>CHANGE NOTES</h4>
-            <input type="text" style={{ marginLeft: 'auto' }} ref={newAgentRef} />
-          </Modal>}
+          {openModal &&
+            <Modal title="New Agent" options={options} onClose={onClose} icon="add" className="agent-createModal">
+              <h4>CHANGE NOTES</h4>
+              <input type="text" style={{ marginLeft: 'auto' }} ref={newAgentRef} />
+            </Modal>}
         </div>
       </div>
     </div>

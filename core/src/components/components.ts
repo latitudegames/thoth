@@ -59,6 +59,7 @@ import { TriggerIn } from './TriggerIn'
 import { TriggerOut } from './TriggerOut'
 import { VisualGeneration } from './VisualGeneration'
 import { WhileLoop } from './WhileLoop'
+import { VisualGeneration } from './VisualGeneration'
 
 // Here we load up all components of the builder into our editor for usage.
 // We might be able to programatically generate components from enki

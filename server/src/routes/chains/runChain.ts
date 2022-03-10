@@ -1,10 +1,12 @@
 import thothCore from '@latitudegames/thoth-core/server'
 import Koa from 'koa'
 import { CompletionRequest, completionsParser } from '../completions'
-import { getEnkiOutputs } from '../enki/enki'
-import { huggingface } from '../vendor/huggingface/huggingface'
 import { Module } from './module'
 import { Graph, Module as ModuleType, ModuleComponent, Node } from './types'
+
+// todo: make these dynamically loaded
+// import { getEnkiOutputs } from '../enki/enki'
+// import { huggingface } from '../vendor/huggingface/huggingface'
 
 const { initSharedEngine, getComponents } = thothCore
 const thothComponents = getComponents()
@@ -25,14 +27,14 @@ export const buildThothInterface = (
       })
       return response?.result || ''
     },
-    enkiCompletion: async (taskName: string, inputs: string) => {
-      const outputs = await getEnkiOutputs(ctx, taskName, inputs)
-      return { outputs }
-    },
-    huggingface: async (model: string, options: any) => {
-      const outputs = await huggingface({ context: ctx, model, options })
-      return { outputs }
-    },
+    // enkiCompletion: async (taskName: string, inputs: string) => {
+    //   const outputs = await getEnkiOutputs(ctx, taskName, inputs)
+    //   return { outputs }
+    // },
+    // huggingface: async (model: string, options: any) => {
+    //   const outputs = await huggingface({ context: ctx, model, options })
+    //   return { outputs }
+    // },
     getCurrentGameState: () => {
       return gameState
     },
@@ -65,7 +67,7 @@ export function extractNodes(nodes: Record<string, Node>, map: Set<unknown>) {
 }
 
 // TODO: create a proper engine interface with the proper methods types on it.
-const engine = initSharedEngine('demo@0.1.0', thothComponents, true) as any
+const engine = initSharedEngine({ name: 'demo@0.1.0', components: thothComponents, server: true, modules: {} }) as any
 
 export const runChain = async (
   graph: Graph,

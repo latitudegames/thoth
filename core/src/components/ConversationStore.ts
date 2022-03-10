@@ -30,7 +30,7 @@ export async function setConversation(
   channel: string
 ) {
   const response = await axios.post(
-    `${process.env.REACT_APP_API_URL}/conversation`,
+    `${process.env.REACT_APP_API_ROOT_URL}/conversation`,
     {
       agent: agent,
       speaker: speaker,

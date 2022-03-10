@@ -21,6 +21,7 @@ export abstract class DataControl {
   //Jake added below
   data: Record<string, unknown>
   type: string
+  data: Record<string, unknown>
 
   constructor({
     dataKey,

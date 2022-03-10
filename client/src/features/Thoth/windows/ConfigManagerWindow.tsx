@@ -12,7 +12,7 @@ const ConfigManager = () => {
   const navigate = useNavigate();
 
   if (firstLoad) {
-    axios.get(`${process.env.REACT_APP_API_URL}/config`).then(res => {
+    axios.get(`${process.env.REACT_APP_API_ROOT_URL}/config`).then(res => {
       setConfig(res.data);
       setFirstLoad(false);
     });
@@ -25,13 +25,13 @@ const ConfigManager = () => {
     }
 
     const body = { config: config };
-    axios.put(`${process.env.REACT_APP_API_URL}/config`, body).then(res => {
+    axios.put(`${process.env.REACT_APP_API_ROOT_URL}/config`, body).then(res => {
       console.log(res.data);
     });
   }
 
   const _delete = async (key) => {
-    axios.delete(`${process.env.REACT_APP_API_URL}/config/` + key).then(res => {
+    axios.delete(`${process.env.REACT_APP_API_ROOT_URL}/config/` + key).then(res => {
       console.log(res.data);
     });
   }
@@ -42,7 +42,7 @@ const ConfigManager = () => {
     }
 
     const body = { data: { key: newConfig.key, value: newConfig.value } };
-    axios.post(`${process.env.REACT_APP_API_URL}/config`, body).then(res => {
+    axios.post(`${process.env.REACT_APP_API_ROOT_URL}/config`, body).then(res => {
       if (res.data === 'ok') {
         navigate('/');
       } else {
@@ -77,7 +77,7 @@ const ConfigManager = () => {
                 add();
               }}>Add</button>
             </label>
-            {config && config.map((value, idx) => {
+            {config && config.length > 0 && config.map((value, idx) => {
               return (
                 <div
                   key={idx}

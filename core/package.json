@@ -1,5 +1,9 @@
 {
   "name": "@latitudegames/thoth-core",
+<<<<<<< HEAD
+=======
+  "private": true,
+>>>>>>> Downstream merge with main branch, fix some things
   "version": "0.0.64",
   "license": "Apache-2.0",
   "author": "Michael Sharpe <m.sharpe@project89.org> (https://www.project89.org)",
@@ -48,7 +52,7 @@
     "discord-inline-reply": "^1.0.3",
     "discord-reply": "0.1.2",
     "discord.js": "^13.5.0",
-    "dotenv": "10.0.0",
+    "dotenv-flow": "3.2.0",
     "emoji-dictionary": "1.0.11",
     "emoji-regex": "10.0.0",
     "glob": "^7.2.0",

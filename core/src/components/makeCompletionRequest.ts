@@ -2,7 +2,7 @@
 //@ts-nocheck
 
 import axios from 'axios'
-import { config } from 'dotenv'
+import { config } from 'dotenv-flow'
 
 import { database } from '../connectors/database'
 import { makeModelRequest } from './makeModelRequest'

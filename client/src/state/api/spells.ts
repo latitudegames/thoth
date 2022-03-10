@@ -197,5 +197,7 @@ export const {
   useLazyGetDeploymentQuery,
 } = spellApi
 
+console.log("spellApi is", spellApi)
+
 export const useGetSpellSubscription =
   spellApi.endpoints.getSpell.useLazyQuerySubscription

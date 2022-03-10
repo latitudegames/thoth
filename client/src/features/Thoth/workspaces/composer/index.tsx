@@ -23,6 +23,7 @@ import ConfigManager from '@thoth/windows/ConfigManagerWindow'
 import TextEditor from '@thoth/windows/TextEditorWindow'
 import DebugConsole from '@thoth/windows/DebugConsole'
 import SearchCorpus from '../../windows/SearchCorpusWindow'
+import DebugConsole from '@thoth/windows/DebugConsole'
 
 const Workspace = ({ tab, tabs, pubSub }) => {
   const [loadSpell, { data: spellData }] = useLazyGetSpellQuery()

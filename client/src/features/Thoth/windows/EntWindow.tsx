@@ -31,7 +31,7 @@ const Ent = ({ id, updateCallback }) => {
     if (!loaded) {
       (async () => {
         const res = await axios.get(
-          `${process.env.REACT_APP_API_URL}/agentInstance?instanceId=` + id
+          `${process.env.REACT_APP_API_ROOT_URL}/agentInstance?instanceId=` + id
         )
         console.log("res is", res)
         setAgent(res.data.personality)
@@ -55,7 +55,7 @@ const Ent = ({ id, updateCallback }) => {
 
   const _delete = () => {
     axios
-      .delete(`${process.env.REACT_APP_API_URL}/agentInstance/` + id)
+      .delete(`${process.env.REACT_APP_API_ROOT_URL}/agentInstance/` + id)
       .then(res => {
         console.log("deleted", res)
         setLoaded(false)
@@ -73,7 +73,7 @@ const Ent = ({ id, updateCallback }) => {
       discord_spell_handler
     }
     axios
-      .post(`${process.env.REACT_APP_API_URL}/agentInstance`, { id, data: _data })
+      .post(`${process.env.REACT_APP_API_ROOT_URL}/agentInstance`, { id, data: _data })
       .then(res => {
         console.log("response on update", JSON.parse(res.config.data).data)
         let responseData = res && JSON.parse(res?.config?.data).data
