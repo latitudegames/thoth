@@ -42,6 +42,13 @@ const DebugConsole = ({ tab }) => {
       message.name ?? 'unnamed'
     }.`
 
+  const ErrorMessage = message => (
+    <div style={{ lineHeight: '21px', color: 'var(--red)' }}>
+      <p style={{ margin: 0 }}>{formatErrorMessage(message)}</p>
+      <p style={{ margin: 0 }}>Error message: ${message.errorMessage}</p>
+      <br />
+    </div>
+  )
 
   const printToDebugger = useCallback((_, message) => {
     const terminal = terminalRef.current
