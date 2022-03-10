@@ -58,6 +58,11 @@ const DebugConsole = ({ tab }) => {
     </div>
   )
 
+  const getMessage = message => {
+    if (message.type === 'error') return renderToString(ErrorMessage(message))
+    if (message.type === 'log') return renderToString(LogMessage(message))
+  }
+
   const printToDebugger = useCallback((_, message) => {
     const terminal = terminalRef.current
     if (!terminal) return
