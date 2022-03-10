@@ -50,6 +50,14 @@ const DebugConsole = ({ tab }) => {
     </div>
   )
 
+  const LogMessage = message => (
+    <div style={{ lineHeight: '21px', color: 'var(--green)' }}>
+      <p style={{ margin: 0 }}>{formatLogMessage(message)}</p>
+      <p style={{ margin: 0 }}>${message.content}</p>
+      <br />
+    </div>
+  )
+
   const printToDebugger = useCallback((_, message) => {
     const terminal = terminalRef.current
     if (!terminal) return
