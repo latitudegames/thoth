@@ -26,7 +26,7 @@ const Ent = ({ id, updateCallback }) => {
   const [discord_enabled, setdiscord_enabled] = useState(false)
   const [discord_api_key, setDiscordApiKey] = useState('')
   const [discord_spell_handler, setDiscordSpellHandler] = useState('')
-  console.log(discord_enabled,'discord_enabled')
+  const [spellList, setSpellList] = useState('')
   useEffect(() => {
     if (!loaded) {
       (async () => {
@@ -43,6 +43,15 @@ const Ent = ({ id, updateCallback }) => {
       })()
     }
   }, [loaded])
+
+  useEffect(() => {
+    (async () => {
+      const res = await axios.get(
+        `${process.env.REACT_APP_API_URL}/game/spells`
+      )
+      setSpellList(res.data)
+    })()
+  }, [])
 
   const _delete = () => {
     axios
@@ -68,7 +77,6 @@ const Ent = ({ id, updateCallback }) => {
       .then(res => {
         console.log("response on update", JSON.parse(res.config.data).data)
         let responseData = res && JSON.parse(res?.config?.data).data
-        console.log(responseData,'responseData')
         setEnabled(responseData.enabled)
         setAgent(responseData.personality)
         setdiscord_enabled(responseData.discord_enabled)
@@ -126,7 +134,7 @@ const Ent = ({ id, updateCallback }) => {
                 }}
               />
             </div>
-            <div className="form-item">
+            {/* <div className="form-item">
               <span className="form-item-label">SpellHandler</span>
               <input
                 type="text"
@@ -135,7 +143,25 @@ const Ent = ({ id, updateCallback }) => {
                   setDiscordSpellHandler(e.target.value)
                 }}
               />
-            </div>
+            </div> */}
+
+            <span className="agent-select">
+              <select
+                name="spellHandler"
+                id="spellHandler"
+                value={discord_spell_handler}
+                onChange={event => {
+                  setDiscordSpellHandler(event.target.value)
+                }}
+              >
+                {spellList.length > 0 &&
+                  spellList.map((spell, idx) => (
+                    <option value={spell.name} key={idx}>
+                      {spell.name}
+                    </option>
+                  ))}
+              </select>
+            </span>
           </>
         )}
       </>}
