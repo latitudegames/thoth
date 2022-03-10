@@ -9,6 +9,7 @@ import DocumentEditModal from './DocumentEditModal'
 import DocumentDeleteModal from './DocumentDeleteModal'
 import StoreAddEditModal from './SearchCorpus/StoreAddEditModal'
 import StoreDeleteModal from './SearchCorpus/StoreDeleteModal'
+import ContentObjEditModal from './ContentObjEditModal'
 
 const modals = {
   example: ExampleModal,
@@ -21,7 +22,8 @@ const modals = {
   documentEditModal: DocumentEditModal,
   documentDeleteModal: DocumentDeleteModal,
   documentStoreAddEditModal: StoreAddEditModal,
-  documentStoreDeleteModal: StoreDeleteModal
+  documentStoreDeleteModal: StoreDeleteModal,
+  contentObjEditModal: ContentObjEditModal
 }
 
 export const getModals = () => {

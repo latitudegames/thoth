@@ -42,6 +42,7 @@ import { Output } from './Output'
 import { ProseToScript } from './ProseToScript'
 import { RandomStringFromList } from './RandomStringFromList'
 import { SafetyVerifier } from './SafetyVerifier'
+import { Search } from './Search'
 import { StateRead } from './StateRead'
 import { StateWrite } from './StateWrite'
 import { StringCombiner } from './StringCombiner'
@@ -115,6 +116,7 @@ export const components = {
   proseToScript: () => new ProseToScript(),
   runInputCompnent: () => new RunInputComponent(),
   safetyVerifier: () => new SafetyVerifier(),
+  search: () => new Search(),
   stateWrite: () => new StateWrite(),
   stateRead: () => new StateRead(),
   stringProcessor: () => new StringProcessor(),

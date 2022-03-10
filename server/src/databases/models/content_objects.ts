@@ -54,7 +54,9 @@ export class contentObj
             model: 'documents',
             key: 'id'
           },
-          field: 'document_id'
+          field: 'document_id',
+          onDelete: 'CASCADE',
+          onUpdate: 'CASCADE'
         }
       },
       {

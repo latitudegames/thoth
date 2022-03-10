@@ -14,19 +14,23 @@
   overflow: hidden;
 }
 
+.modal-main-div {
+  padding: 1rem;
+  background: var(--dark-2);
+  border-radius: var(--extraSmall);
+  width: calc(25% - 4px);
+}
+
 .modal-panel {
   animation: modal 0.3s ease-out;
-  overflow: hidden;
+  overflow-y: auto;
   background-color: var(--dark-2);
-  border-radius: var(--extraSmall);
-  background-size: cover;
-  background-position: center;
-  box-sizing: border-box;
-  display: inline-block;
-  margin-bottom: 10px;
-  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.3);
-  width: calc(25% - 4px);
-  padding: var(--small);
+  max-height: calc(100vh - 100px);
+}
+
+.modal-panel-content {
+  display: flex;
+  flex-direction: column;
 }
 
 .modal-action-strip {
@@ -39,11 +43,17 @@
   margin-top: var(--small);
   width: 100%;
   gap: var(--extraSmall);
+  position: sticky;
+  bottom: 0;
+  background: var(--dark-2);
 }
 
 .modal-title {
   display: flex;
   align-items: center;
+  position: sticky;
+  top: 0;
+  background: var(--dark-2);
 }
 
 .modal-title h1 {

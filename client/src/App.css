@@ -399,11 +399,17 @@ input[type='text'] {
   margin: 1rem 0;
 }
 
-.search-corpus-document {
-  background: #545454;
+.search-corpus-document,
+.content-obj {
   margin: 1rem 0;
   padding: 1rem;
   border-radius: 0.5rem;
+}
+.search-corpus-document {
+  background: #545454;
+}
+.content-obj {
+  background: var(--dark-3);
 }
 
 .search-corpus-btn {
