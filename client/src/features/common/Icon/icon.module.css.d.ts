@@ -37,6 +37,7 @@ interface CssExports {
   'text': string;
   'tiles': string;
   'time': string;
+  'trash': string;
   'warn': string;
   'water': string;
   'water-play': string;
