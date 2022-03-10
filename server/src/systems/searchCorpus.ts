@@ -2,7 +2,7 @@
 import cors from '@koa/cors'
 //@ts-ignore
 import weaviate from 'weaviate-client'
-import { config } from 'dotenv'
+import { config } from 'dotenv-flow'
 import HttpStatus from 'http-status-codes'
 import Koa from 'koa'
 import koaBody from 'koa-body'
@@ -144,8 +144,8 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
       keywords: string | string[]
       topic: string
     }[] = sameTopicOnly
-      ? await database.instance.getDocumentsWithTopic(agent, topic)
-      : await database.instance.getDocuments(agent)
+        ? await database.instance.getDocumentsWithTopic(agent, topic)
+        : await database.instance.getDocuments(agent)
 
     console.log('loaded ' + documents.length + ' documents')
     for (let i = 0; i < documents.length; i++) {

@@ -1,5 +1,5 @@
 import cryptojs from 'crypto-js'
-import { config } from 'dotenv'
+import { config } from 'dotenv-flow'
 
 config()
 const key = `${process.env.AES_KEY}`

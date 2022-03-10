@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import axios from 'axios'
-import { config } from 'dotenv'
+import { config } from 'dotenv-flow'
 import Koa from 'koa'
 import { creatorToolsDatabase } from '../databases/creatorTools'
 import { noAuth } from '../middleware/auth'

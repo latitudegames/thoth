@@ -2,5 +2,10 @@ node_modules
 build
 .DS_Store
 dist
+<<<<<<< HEAD
 LICENSE
 .env
+=======
+.env
+LICENSE
+>>>>>>> Downstream merge with main branch, fix some things

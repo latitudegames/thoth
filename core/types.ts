@@ -15,6 +15,7 @@ import { Inspector } from './src/plugins/inspectorPlugin/Inspector'
 import { ModuleGraphData } from './src/plugins/modulePlugin/module-manager'
 import { TaskOutputTypes } from './src/plugins/taskPlugin/task'
 import { SocketNameType, SocketType } from './src/sockets'
+import { EngineContext } from './src/engine'
 import { ThothTask } from './src/thoth-component'
 
 export type EventsTypes = {

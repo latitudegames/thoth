@@ -21,7 +21,7 @@ type InputReturn = {
 }
 
 async function storeFacts(agent: string, speaker: string, facts: string) {
-  const response = await axios.post(`${process.env.REACT_APP_API_URL}/facts`, {
+  const response = await axios.post(`${process.env.REACT_APP_API_ROOT_URL}/facts`, {
     agent: agent,
     speaker: speaker,
     facts: facts,

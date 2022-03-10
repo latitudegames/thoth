@@ -1,4 +1,4 @@
-import dotenv from 'dotenv'
+import dotenv from 'dotenv-flow'
 import { Sequelize } from 'sequelize'
 
 import { initModels } from './models/init-models'
@@ -6,12 +6,13 @@ dotenv.config()
 
 // TODO: Replace creator tools db with pg host etc
 
-
-const connectionString = process.env.CREATOR_TOOLS_DB_URL || "postgres://" + process.env.PGUSER + ":" + process.env.PGPASSWORD + "@" + process.env.PGHOST + ":" + process.env.PGPORT + "/" + process.env.PGDATABASE
-
-const sequelize = new Sequelize(connectionString, {
+const creatorToolsUrl = !!process.env.CREATOR_TOOLS_DB_URL && process.env.CREATOR_TOOLS_DB_URL != "" && process.env.CREATOR_TOOLS_DB_URL;
+const connectionString = creatorToolsUrl || "postgres://" + process.env.PGUSER + ":" + process.env.PGPASSWORD + "@" + process.env.PGHOST + ":" + process.env.PGPORT + "/" + process.env.PGDATABASE
+console.log("connectionString")
+console.log(connectionString)
+const sequelize = new Sequelize(creatorToolsUrl || connectionString, {
   dialect: 'postgres',
-  dialectOptions: process.env.CREATOR_TOOLS_DB_URL ? { ssl: { rejectUnauthorized: false } } : {},
+  dialectOptions: creatorToolsUrl ? { ssl: { rejectUnauthorized: false } } : {},
   define: {
     charset: 'utf8mb4',
     collate: 'utf8mb4_unicode_ci',

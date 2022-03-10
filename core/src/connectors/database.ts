@@ -22,6 +22,7 @@ const getRandomNumber = (min: number, max: number) =>
 const { Client } = pg
 const rootDir = path.resolve(path.dirname(''))
 
+const useLatitude = process.env.USE_LATITUDE_API === 'true'
 export class database {
   static instance: database
 
@@ -33,16 +34,23 @@ export class database {
   }
 
   async connect() {
+    console.log('process.env.PGUSER is', process.env.PGUSER)
+    console.log('process.env.PGPASSWORD is', process.env.PGPASSWORD)
+    console.log('process.env.PGDATABASE is', process.env.PGDATABASE)
+    console.log('process.env.PGPORT is', process.env.PGPORT)
+    console.log('process.env.PGHOST is', process.env.PGHOST)
+    console.log('process.env.USE_LATITUDE_API is', process.env.USE_LATITUDE_API)
+
     this.client = new Client({
       user: process.env.PGUSER,
       password: process.env.PGPASSWORD,
       database: process.env.PGDATABASE,
       port: process.env.PGPORT,
       host: process.env.PGHOST,
-      ssl: process.env.PGSSL
+      ssl: useLatitude
         ? {
-            rejectUnauthorized: false,
-          }
+          rejectUnauthorized: false,
+        }
         : false,
     })
     this.client.connect()

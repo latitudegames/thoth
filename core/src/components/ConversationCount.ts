@@ -29,7 +29,7 @@ export async function getConversationCount(
   channel: string
 ) {
   const response = await axios.get(
-    `${process.env.REACT_APP_API_URL}/conversation_count?agent=${agent}&speaker=${speaker}&client=${client}&channel=${channel}`
+    `${process.env.REACT_APP_API_ROOT_URL}/conversation_count?agent=${agent}&speaker=${speaker}&client=${client}&channel=${channel}`
   )
 
   let count = 0
