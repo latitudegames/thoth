@@ -49,6 +49,7 @@ const CreateNew = () => {
   const onCreate = handleSubmit(async data => {
     const placeholderName = uniqueNamesGenerator(customConfig)
     const name = data.name || placeholderName
+    console.log("selectedTemplate is", selectedTemplate)
     const response = await newSpell({
       chain: selectedTemplate.chain,
       name,

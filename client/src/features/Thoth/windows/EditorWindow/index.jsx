@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import { createNode } from 'rete-context-menu-plugin/src/utils'
 
 import WindowToolbar from '@/features/common/Window/WindowToolbar'
@@ -65,7 +65,7 @@ const EditorWindow = ({ tab }) => {
 
   const EditorToolbar = () => {
     return (
-      <>
+      <Fragment>
         <button style={{ opacity: 0 }}>Deploy...</button>
         <Select
           searchable
@@ -86,7 +86,7 @@ const EditorWindow = ({ tab }) => {
         >
           Deploy
         </button>
-      </>
+      </Fragment>
     )
   }
 
@@ -98,12 +98,14 @@ const EditorWindow = ({ tab }) => {
         </div>
         <Editor tab={tab} />
       </div>
-      <Deployment
-        open={deployOpen}
-        setOpen={setDeployOpen}
-        close={closeDeploy}
-        spellId={tab.spell}
-      />
+      {deployOpen &&
+        <Deployment
+          open={deployOpen}
+          setOpen={setDeployOpen}
+          close={closeDeploy}
+          spellId={tab.spell}
+        />
+      }
     </div>
   )
 }

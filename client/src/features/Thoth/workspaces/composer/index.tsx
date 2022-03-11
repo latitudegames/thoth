@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { useEffect } from 'react'
 
 import { store } from '@/state/store'
@@ -15,7 +17,12 @@ import EventHandler from '@thoth/components/EventHandler'
 import Inspector from '@thoth/windows/InspectorWindow'
 import Playtest from '@thoth/windows/PlaytestWindow'
 import StateManager from '@thoth/windows/StateManagerWindow'
+import AgentManager from '@thoth/windows/AgentManagerWindow'
+import EntManager from '@thoth/windows/EntManagerWindow'
+import ConfigManager from '@thoth/windows/ConfigManagerWindow'
 import TextEditor from '@thoth/windows/TextEditorWindow'
+import DebugConsole from '@thoth/windows/DebugConsole'
+import SearchCorpus from '../../windows/SearchCorpusWindow'
 import DebugConsole from '@thoth/windows/DebugConsole'
 
 const Workspace = ({ tab, tabs, pubSub }) => {
@@ -72,6 +79,14 @@ const Workspace = ({ tab, tabs, pubSub }) => {
       switch (component) {
         case 'stateManager':
           return <StateManager {...props} />
+        case 'agentManager':
+          return <AgentManager />
+        case 'searchCorpus':
+          return <SearchCorpus />
+        case 'configManager':
+          return <ConfigManager />
+        case 'entManager':
+          return <EntManager />
         case 'playtest':
           return <Playtest {...props} />
         case 'inspector':

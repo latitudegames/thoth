@@ -16,8 +16,8 @@ const info = `The Module component allows you to add modules into your chain.  A
 export class ModuleComponent extends ThothComponent<ModuleWorkerOutput[]> {
   _task: Task
   updateModuleSockets: Function
-  task
-  info
+  task: any
+  info: any
   subscriptionMap: Record<number, Function> = {}
   editor: any
   noBuildUpdate: boolean
@@ -69,7 +69,7 @@ export class ModuleComponent extends ThothComponent<ModuleWorkerOutput[]> {
     delete this.subscriptionMap[node.id]
   }
 
-  async subscribe(node: ThothNode) {
+  subscribe(node: ThothNode) {
     if (!node.data.module) return
     let cache: ModuleType
 

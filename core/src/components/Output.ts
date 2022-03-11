@@ -84,10 +84,9 @@ export class Output extends ThothComponent<void> {
     if (node.data.sendToPlaytest && sendToPlaytest) {
       sendToPlaytest(text)
     }
+
     if (!silent) node.display(text as string)
 
-    return {
-      text,
-    }
+    return { text }
   }
 }

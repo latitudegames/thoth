@@ -10,6 +10,7 @@ import { useAuth } from './contexts/AuthProvider'
 import 'flexlayout-react/style/dark.css'
 import './design-globals/design-globals.css'
 import './App.css'
+import { useLatitude } from './config'
 //These need to be imported last to override styles.
 
 function App() {
@@ -18,11 +19,11 @@ function App() {
   const { user } = useAuth()
 
   const redirect = () => {
-    if (user && tabs.length > 0) {
+    if ((!useLatitude || user) && tabs.length > 0) {
       return <Navigate to="/thoth" />
     }
 
-    return user ? <Navigate to="/home" /> : <Navigate to="/login" />
+    return !useLatitude || user ? <Navigate to="/home" /> : <Navigate to="/login" />
   }
 
   return (

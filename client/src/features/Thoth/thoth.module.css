@@ -44,7 +44,7 @@
   background-color: rgba(40, 40, 40, 0.95);
   color: rgba(150, 150, 150, 0.95);
   flex: 1;
-  font-family: "IBM Plex Mono", "mono";
+  font-family: 'IBM Plex Mono', 'mono';
   overflow-y: hidden;
   display: flex;
 }
@@ -117,9 +117,21 @@
   border-radius: var(--extraSmall) var(--extraSmall) 0px 0px;
 }
 .node-bottom-container {
-  font-family: "IBM Plex Mono", monospace !important;
+  font-family: 'IBM Plex Mono', monospace !important;
   padding: var(--extraSmall);
   display: flex;
   flex-direction: row;
   gap: var(--extraSmall);
+}
+.form-text-area {
+  color: #fff;
+  border-radius: 4px;
+  cursor: default;
+  background-color: var(--dark-2);
+  border: 1px solid var(--dark-3);
+  box-shadow: inset 0px 5px 5px rgba(0, 0, 0, 0.1);
+  flex: 1;
+  height: var(--c4);
+  margin-right: var(--extraSmall);
+  padding: var(--c2);
 }
