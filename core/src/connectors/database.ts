@@ -777,6 +777,16 @@ export class database {
       return []
     }
   }
+  async getAllDocumentsForSearch(): Promise<any[]> {
+    const query = 'SELECT * FROM documents WHERE is_included = true'
+
+    const rows = await this.client.query(query)
+    if (rows && rows.rows && rows.rows.length > 0) {
+      return rows.rows
+    } else {
+      return []
+    }
+  }
   async getDocuments(agent): Promise<any[]> {
     const query = 'SELECT * FROM documents WHERE agent=$1'
     const values = [agent]
