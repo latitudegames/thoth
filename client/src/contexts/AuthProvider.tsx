@@ -200,6 +200,7 @@ const AuthProvider = ({ children }: { children: ReactElement }) => {
             })
             const sessionInfo = await sessionReq.json()
             const userInfo = await userReq.json()
+            console.log({userInfo})
             approveOrRemove(sessionInfo, userInfo)
           } catch (error) {
             removeData()
