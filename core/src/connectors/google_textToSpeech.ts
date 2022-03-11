@@ -1,19 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable require-await */
-import speech from '@google-cloud/speech'
+// import speech from '@google-cloud/speech'
 
 export default async function getTextForSpeech() {
-  const client = new speech.SpeechClient()
+  // const client = new speech.SpeechClient()
 
-  const request = {
-    config: {
-      encoding: 'LINEAR16',
-      sampleRateHertz: 16000,
-      languageCode: 'en-US',
-    },
-    interimResults: false,
-    languageCode: 'en-GB',
-  }
+  // const request = {
+  //   config: {
+  //     encoding: 'LINEAR16',
+  //     sampleRateHertz: 16000,
+  //     languageCode: 'en-US',
+  //   },
+  //   interimResults: false,
+  //   languageCode: 'en-GB',
+  // }
 
   /*const recognizeStream = client
     .streamingRecognize(request)
