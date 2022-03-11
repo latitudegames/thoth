@@ -6,12 +6,11 @@ export interface agent_instanceAttributes {
   instanceId?: number
   personality?: string
   enabled?: boolean
+  updated_at?: string
   dirty?: boolean
-  updatedAt?: string
   discord_enabled?: boolean
   discord_api_key?: string
   discord_spell_handler?: string
-
 }
 
 export type agent_instancePk = 'id'
@@ -21,7 +20,7 @@ export type agent_instanceOptionalAttributes =
   | 'discord_api_key'
   | 'discord_spell_handler'
   | 'enabled'
-  | 'updatedAt'
+  | 'updated_at'
 export type agent_instanceCreationAttributes = Optional<
   agent_instanceAttributes,
   agent_instanceOptionalAttributes
@@ -34,7 +33,7 @@ export class agent_instance
   instanceId?: number
   personality?: string
   enabled?: boolean
-  updatedAt?: string
+  updated_at?: string
   discord_enabled?: boolean
   discord_api_key?: string
   discord_spell_handler?: string
@@ -59,6 +58,10 @@ export class agent_instance
           type: DataTypes.BOOLEAN,
           allowNull: true,
         },
+        updated_at: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
         discord_enabled: {
           type: DataTypes.BOOLEAN,
           allowNull: true,
@@ -70,11 +73,7 @@ export class agent_instance
         discord_spell_handler: {
           type: DataTypes.TEXT,
           allowNull: true,
-        },
-        updatedAt: {
-          type: DataTypes.DATE,
-          allowNull: true,
-        },
+        }
       },
       {
         sequelize,

@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { Component, Connection, Input, Output } from 'rete'
+import { Component, Connection, Input, Output, NodeEditor } from 'rete'
 import { Node } from 'rete/types'
 //@seang todo: convert inspector plugin fully to typescript
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -10,6 +10,7 @@ import {
   WorkerOutputs,
 } from 'rete/types/core/data'
 
+import { EngineContext } from './src/engine'
 import { Inspector } from './src/plugins/inspectorPlugin/Inspector'
 import { ModuleGraphData } from './src/plugins/modulePlugin/module-manager'
 import { TaskOutputTypes } from './src/plugins/taskPlugin/task'
@@ -31,6 +32,11 @@ export type EventsTypes = {
   resetconnection: void
 }
 
+export interface IRunContextEditor extends NodeEditor {
+  thoth: EngineContext
+  abort: Function
+}
+
 export type DataSocketType = {
   name: SocketNameType
   taskType: 'output' | 'option'
@@ -43,6 +49,11 @@ export type ThothNode = Node & {
   inspector: Inspector
   display: (content: string) => void
   outputs: { name: string;[key: string]: unknown }[]
+  category?: string
+  deprecated?: boolean
+  displayName?: string
+  info: string
+  subscription: Function
 }
 
 export type ModuleType = {
@@ -114,6 +125,7 @@ export type NodeOutputs = {
 export type NodeData = ReteNodeData & {
   fewshot?: string
   display: Function
+  error?: boolean
 }
 
 // export type Node = {

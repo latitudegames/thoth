@@ -2,7 +2,7 @@
 import cors from '@koa/cors'
 //@ts-ignore
 import weaviate from 'weaviate-client'
-import { config } from 'dotenv'
+import { config } from 'dotenv-flow'
 import HttpStatus from 'http-status-codes'
 import Koa from 'koa'
 import koaBody from 'koa-body'
@@ -49,39 +49,30 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
   app.use(cors(options))
   app.use(koaBody({ multipart: true }))
 
-  router.get('/', async function (ctx: Koa.Context) {
-    ctx.body = 'Hello World!'
-  })
   router.get('/documents', async function (ctx: Koa.Context) {
-    const agent = ctx.query.agent || 'global'
-    const documents: string[] = await database.instance.getDocuments(agent)
-
+    const documents = await database.instance.getAllDocuments()
     return (ctx.body = documents)
   })
   router.get('/document', async function (ctx: Koa.Context) {
-    const documentId = ctx.query.documentId
-    const document: any = await database.instance.getDocument(documentId)
+    const storeId = ctx.query.storeId
+    const documents: any = await database.instance.getDocumentsOfStore(storeId)
 
-    return (ctx.body = document)
+    return (ctx.body = documents)
   })
   router.post('/document', async function (ctx: Koa.Context) {
-    console.log(ctx.request.body)
-    const agent = ctx.request.body?.agent || 'global'
-    const document = dicompress(ctx.request.body?.document)
-    const metadata = ctx.request.body?.metadata || []
-    const keywords = await extractKeywords(document)
-    console.log('keywords:', keywords)
-    const topic = await classifyText(document)
-    console.log('topic:', topic)
+    const { body } = ctx.request
+    const description = body?.description || ''
+    const keywords = body?.keywords
+    const is_included = body?.is_included && true
+    const storeId = body?.storeId
 
     let id = -1
     try {
       id = await database.instance.addDocument(
-        agent,
-        document,
-        metadata.join(','),
-        keywords.join(','),
-        topic
+        description,
+        keywords,
+        is_included,
+        storeId
       )
     } catch (e) {
       console.log(e)
@@ -96,6 +87,7 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
   })
   router.delete('/document', async function (ctx: Koa.Context) {
     const documentId = ctx.query.documentId
+    console.log('deleting document: ' + documentId)
 
     try {
       await database.instance.removeDocument(documentId)
@@ -107,21 +99,20 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
     return (ctx.body = 'ok')
   })
   router.post('/update_document', async function (ctx: Koa.Context) {
-    const documentId = ctx.request.body?.documentId
-    const agent = ctx.request.body?.agent || 'global'
-    const document = dicompress(ctx.request.body?.document)
-    const metadata = ctx.request.body?.metadata || []
-    const keywords = await extractKeywords(document)
-    const topic = await classifyText(document)
+    const { body } = ctx.request
+    const documentId = body?.documentId
+    const description = body?.description || ''
+    const keywords = body?.keywords
+    const is_included = body?.is_included && true
+    const storeId = body?.storeId
 
     try {
       await database.instance.updateDocument(
         documentId,
-        agent,
-        document,
-        metadata.join(','),
-        keywords.join(','),
-        topic
+        description,
+        keywords,
+        is_included,
+        storeId
       )
     } catch (e) {
       console.log(e)
@@ -153,8 +144,8 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
       keywords: string | string[]
       topic: string
     }[] = sameTopicOnly
-      ? await database.instance.getDocumentsWithTopic(agent, topic)
-      : await database.instance.getDocuments(agent)
+        ? await database.instance.getDocumentsWithTopic(agent, topic)
+        : await database.instance.getDocuments(agent)
 
     console.log('loaded ' + documents.length + ' documents')
     for (let i = 0; i < documents.length; i++) {
@@ -223,6 +214,110 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
         return (ctx.body = 'No documents where found to search from!')
       }
     } else return (ctx.body = 'No documents where found to search from!')
+  })
+
+  router.post('/content-object', async function (ctx: Koa.Context) {
+    const { body } = ctx.request
+    const description = body?.description || ''
+    const keywords = body?.keywords
+    const is_included = body?.is_included && true
+    const documentId = body?.documentId
+
+    let id = -1
+    try {
+      id = await database.instance.addContentObj(
+        description,
+        keywords,
+        is_included,
+        documentId
+      )
+    } catch (e) {
+      console.log(e)
+      return (ctx.body = 'internal error')
+    }
+
+    if (id === -1) {
+      return (ctx.body = 'internal error')
+    }
+
+    return (ctx.body = { contentObjId: id })
+  })
+  router.put('/content-object', async function (ctx: Koa.Context) {
+    const { body } = ctx.request
+    const objId = body.objId
+    const description = body?.description || ''
+    const keywords = body?.keywords
+    const is_included = body?.is_included && true
+    const documentId = body?.documentId
+
+    try {
+      await database.instance.editContentObj(
+        objId,
+        description,
+        keywords,
+        is_included,
+        documentId
+      )
+    } catch (e) {
+      console.log(e)
+      return (ctx.body = 'internal error')
+    }
+
+    return (ctx.body = 'ok')
+  })
+  router.get('/content-object', async function (ctx: Koa.Context) {
+    const documentId = ctx.query.documentId
+    const contentObjects: any = await database.instance.getContentObjOfDocument(documentId)
+
+    return (ctx.body = contentObjects)
+  })
+  router.delete('/content-object', async function (ctx: Koa.Context) {
+    const objId = ctx.query.objId
+    try {
+      await database.instance.removeContentObject(objId)
+    } catch (e) {
+      console.log(e);
+      return (ctx.body = 'internal error')
+    }
+    return (ctx.body = 'ok')
+  })
+
+  router.get('/document-store', async function (ctx: Koa.Context) {
+    const stores = await database.instance.getDocumentStores()
+    return (ctx.body = stores)
+  })
+  router.post('/document-store', async function (ctx: Koa.Context) {
+    const name = ctx.request.body?.name || ''
+    let id = -1
+    try {
+      id = await database.instance.addDocumentStore(name)
+    } catch (e) {
+      console.log(e);
+      return (ctx.body = 'internal error')
+    }
+    if (id === -1) return (ctx.body = 'internal error')
+    return (ctx.body = { documentStoreId: id })
+  })
+  router.put('/document-store', async function (ctx: Koa.Context) {
+    const storeId = ctx.request.body?.id
+    const name = ctx.request.body?.name || ''
+    try {
+      await database.instance.updateDocumentStore(storeId, name)
+    } catch (e) {
+      console.log(e);
+      return (ctx.body = 'internal error')
+    }
+    return (ctx.body = 'ok')
+  })
+  router.delete('/document-store', async function (ctx: Koa.Context) {
+    const storeId = ctx.query.storeId
+    try {
+      await database.instance.removeDocumentStore(storeId)
+    } catch (e) {
+      console.log(e)
+      return (ctx.body = 'internal error')
+    }
+    return (ctx.body = 'ok')
   })
 
   app.use(router.routes()).use(router.allowedMethods())

@@ -23,7 +23,7 @@ type InputReturn = {
 
 export async function getFacts(agent: string, speaker: string) {
   const response = await axios.get(
-    `${process.env.REACT_APP_API_URL}/facts?agent=${agent}&speaker=${speaker}`
+    `${process.env.REACT_APP_API_ROOT_URL}/facts?agent=${agent}&speaker=${speaker}`
   )
   return response.data
 }

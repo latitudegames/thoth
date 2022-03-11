@@ -26,12 +26,12 @@ const Ent = ({ id, updateCallback }) => {
   const [discord_enabled, setdiscord_enabled] = useState(false)
   const [discord_api_key, setDiscordApiKey] = useState('')
   const [discord_spell_handler, setDiscordSpellHandler] = useState('')
-
+  const [spellList, setSpellList] = useState('')
   useEffect(() => {
     if (!loaded) {
       (async () => {
         const res = await axios.get(
-          `${process.env.REACT_APP_API_URL}/agentInstance?instanceId=` + id
+          `${process.env.REACT_APP_API_ROOT_URL}/agentInstance?instanceId=` + id
         )
         console.log("res is", res)
         setAgent(res.data.personality)
@@ -44,9 +44,18 @@ const Ent = ({ id, updateCallback }) => {
     }
   }, [loaded])
 
+  useEffect(() => {
+    (async () => {
+      const res = await axios.get(
+        `${process.env.REACT_APP_API_ROOT_URL}/game/spells`
+      )
+      setSpellList(res.data)
+    })()
+  }, [])
+
   const _delete = () => {
     axios
-      .delete(`${process.env.REACT_APP_API_URL}/agentInstance/` + id)
+      .delete(`${process.env.REACT_APP_API_ROOT_URL}/agentInstance/` + id)
       .then(res => {
         console.log("deleted", res)
         setLoaded(false)
@@ -64,14 +73,15 @@ const Ent = ({ id, updateCallback }) => {
       discord_spell_handler
     }
     axios
-      .post(`${process.env.REACT_APP_API_URL}/agentInstance`, { id, data: _data })
+      .post(`${process.env.REACT_APP_API_ROOT_URL}/agentInstance`, { id, data: _data })
       .then(res => {
-        console.log("response on update", res)
-        setEnabled(res.enabled)
-        setAgent(res.personality)
-        setdiscord_enabled(res.discord_enabled)
-        setDiscordApiKey(res.discord_api_key)
-        setDiscordSpellHandler(res.discord_spell_handler)
+        console.log("response on update", JSON.parse(res.config.data).data)
+        let responseData = res && JSON.parse(res?.config?.data).data
+        setEnabled(responseData.enabled)
+        setAgent(responseData.personality)
+        setdiscord_enabled(responseData.discord_enabled)
+        setDiscordApiKey(responseData.discord_api_key)
+        setDiscordSpellHandler(responseData.discord_spell_handler)
         updateCallback()
       })
   }
@@ -124,7 +134,7 @@ const Ent = ({ id, updateCallback }) => {
                 }}
               />
             </div>
-            <div className="form-item">
+            {/* <div className="form-item">
               <span className="form-item-label">SpellHandler</span>
               <input
                 type="text"
@@ -133,12 +143,33 @@ const Ent = ({ id, updateCallback }) => {
                   setDiscordSpellHandler(e.target.value)
                 }}
               />
-            </div>
+            </div> */}
+
+            <span className="agent-select">
+              <select
+                name="spellHandler"
+                id="spellHandler"
+                value={discord_spell_handler}
+                onChange={event => {
+                  setDiscordSpellHandler(event.target.value)
+                }}
+              >
+                {spellList.length > 0 &&
+                  spellList.map((spell, idx) => (
+                    <option value={spell.name} key={idx}>
+                      {spell.name}
+                    </option>
+                  ))}
+              </select>
+            </span>
           </>
         )}
       </>}
-      <div className="form-item">
-        <button onClick={() => update()}>Update</button>
+      <div className="form-item entBtns">
+        <button
+          onClick={() => update()}
+          style={{ marginRight: '10px' }}
+        >Update</button>
         <button onClick={() => _delete()}>Delete</button>
       </div>
     </div>

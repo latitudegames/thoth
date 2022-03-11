@@ -13,7 +13,7 @@ import { SocketGeneratorControl } from '../dataControls/SocketGenerator'
 import { EngineContext } from '../engine'
 import { triggerSocket, stringSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
-const info = `The generator component is our general purpose completion component.  You can define any number of inputs, and utilise those inputs in a templating language known as Handlebars.  Any value which is wrapped like {{this}} in double braces will be replaced with the corresponding value coming in to the input with the same name.  This allows you to write almost any fewshot you might need, and input values from anywhere else in your chain.
+const info = `The generator component is our general purpose completion component.  You can define any number of inputs, and utilize those inputs in a templating language known as Handlebars.  Any value which is wrapped like {{this}} in double braces will be replaced with the corresponding value coming in to the input with the same name.  This allows you to write almost any fewshot you might need, and input values from anywhere else in your chain.
 
 Controls have also been added which give you control of some of the fundamental settings of the OpenAI completion endpoint, including temperature, max tokens, and your stop sequence.
 
@@ -137,13 +137,17 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       temperature,
       frequencyPenalty,
     }
-    const raw = (await completion(body)) as string
-    const result = raw?.trim()
-    const composed = `${prompt} ${result}`
+    try {
+      const raw = (await completion(body)) as string
+      const result = raw?.trim()
+      const composed = `${prompt} ${result}`
 
-    return {
-      result,
-      composed,
+      return {
+        result,
+        composed,
+      }
+    } catch (err) {
+      throw new Error('Error in Generator component.')
     }
   }
 }

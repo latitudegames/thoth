@@ -3,14 +3,13 @@ import { DataTypes, Model, Optional } from 'sequelize'
 
 export interface documentsAttributes {
   id: number
-  agent: string
-  document: string
-  metadata: string
+  description: string
   keywords: string
-  topic: string
+  is_included: boolean
+  storeId: number
 }
 
-export type documentsOptionalAttributes = 'agent'
+export type documentsOptionalAttributes = 'description' | 'keywords'
 export type documentsCreationAttributes = Optional<
   documentsAttributes,
   documentsOptionalAttributes
@@ -18,14 +17,12 @@ export type documentsCreationAttributes = Optional<
 
 export class documents
   extends Model<documentsAttributes, documentsCreationAttributes>
-  implements documentsAttributes
-{
+  implements documentsAttributes {
   id: number
-  agent: string
-  document: string
-  metadata: string
+  description: string
   keywords: string
-  topic: string
+  is_included: boolean
+  storeId: number
 
   static initModel(sequelize: Sequelize.Sequelize): typeof documents {
     return documents.init(
@@ -36,15 +33,7 @@ export class documents
           autoIncrement: false,
           primaryKey: true,
         },
-        agent: {
-          type: DataTypes.TEXT,
-          allowNull: false,
-        },
-        document: {
-          type: DataTypes.TEXT,
-          allowNull: false,
-        },
-        metadata: {
+        description: {
           type: DataTypes.TEXT,
           allowNull: false,
         },
@@ -52,10 +41,22 @@ export class documents
           type: DataTypes.TEXT,
           allowNull: false,
         },
-        topic: {
-          type: DataTypes.TEXT,
+        is_included: {
+          type: DataTypes.BOOLEAN,
           allowNull: false,
+          defaultValue: true
         },
+        storeId: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+          references: {
+            model: 'documents_store',
+            key: 'id'
+          },
+          field: 'store_id',
+          onDelete: 'CASCADE',
+          onUpdate: 'CASCADE'
+        }
       },
       {
         sequelize,

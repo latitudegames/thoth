@@ -7,6 +7,7 @@
 /* eslint-disable no-param-reassign */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-nocheck
+import { agentConfig } from '@latitudegames/thoth-core/src/connectors/agentConfig'
 import fs from 'fs'
 import path from 'path'
 import pg from 'pg'
@@ -21,6 +22,7 @@ const getRandomNumber = (min: number, max: number) =>
 const { Client } = pg
 const rootDir = path.resolve(path.dirname(''))
 
+const useLatitude = process.env.USE_LATITUDE_API === 'true'
 export class database {
   static instance: database
 
@@ -38,10 +40,10 @@ export class database {
       database: process.env.PGDATABASE,
       port: process.env.PGPORT,
       host: process.env.PGHOST,
-      ssl: process.env.PGSSL
+      ssl: useLatitude
         ? {
-            rejectUnauthorized: false,
-          }
+          rejectUnauthorized: false,
+        }
         : false,
     })
     this.client.connect()
@@ -515,6 +517,36 @@ export class database {
     //   return this.getRandomGreeting('common')
     // }
   }
+  async getGreetings(agent: any) {
+    return 'Hello'
+    // TODO: Refactor to get starting message from agent db
+    // const query = 'SELECT * FROM greetings WHERE agent=$1'
+    // const values = [agent]
+
+    // const rows = await this.client.query(query, values)
+    // if (rows && rows.rows && rows.rows.length > 0) {
+    //   let res = ''
+    //   for (let i = 0; i < rows.rows.length; i++) {
+    //     if (rows.rows[i].message.length <= 0) continue
+    //     res += rows.rows[i].message + '|'
+    //   }
+    //   return res
+    // }
+
+    // return ''
+  }
+
+  async setGreetings(agent: string | any[], data: string) {
+    if (!agent || agent.length <= 0) return
+    const messages = data.split('|')
+    for (let i = 0; i < messages.length; i++) {
+      if (messages.length <= 0) continue
+      const query = 'UPDATE agents SET greetings=$2 WHERE agent=$1'
+      const values = [agent, messages[i]]
+
+      await this.client.query(query, values)
+    }
+  }
 
   async getIgnoredKeywords(agent: any) {
     const query =
@@ -552,6 +584,15 @@ export class database {
   async deleteAgent(id: any) {
     const query = `DELETE FROM agents WHERE id='${id}'`
     const response = await this.client.query(query)
+  }
+
+  async createAgentSQL(sql: string | any[]) {
+    if (!sql || sql.length <= 0) {
+      return false
+    }
+
+    await this.client.query(sql)
+    return true
   }
 
   async addWikipediaData(agent: any, data: any) {
@@ -679,11 +720,10 @@ export class database {
   }
 
   async addDocument(
-    agent,
-    document,
-    metadata,
+    description,
     keywords,
-    topic
+    is_included,
+    storeId
   ): Promise<number> {
     let id = randomInt(0, 100000)
     while (await this.documentIdExists(id)) {
@@ -691,8 +731,8 @@ export class database {
     }
 
     const query =
-      'INSERT INTO documents(id, agent, document, metadata, keywords, topic) VALUES($1, $2, $3, $4, $5, $6)'
-    const values = [id, agent, document, metadata, keywords, topic]
+      'INSERT INTO documents(id, description, keywords, is_included, store_id) VALUES($1, $2, $3, $4, $5)'
+    const values = [id, description, keywords, is_included, storeId]
 
     await this.client.query(query, values)
     return id
@@ -703,22 +743,38 @@ export class database {
 
     await this.client.query(query, values)
   }
-  async updateDocument(documentId, agent, document, metadata, keywords, topic) {
+  async updateDocument(
+    documentId,
+    description,
+    keywords,
+    is_included,
+    storeId
+  ) {
     const query =
-      'UPDATE documents SET agent=$1, document=$2, metadata=$3, keywords=$4, topic=$5 WHERE id=$6'
-    const values = [agent, document, metadata, keywords, topic, documentId]
+      'UPDATE documents SET description=$1, keywords=$2, is_included=$3, store_id=$4 WHERE id=$5'
+    const values = [description, keywords, is_included, storeId, documentId]
 
     await this.client.query(query, values)
   }
-  async getDocument(documentId): Promise<any> {
-    const query = 'SELECT * FROM documents WHERE id=$1'
-    const values = [documentId]
+  async getDocumentsOfStore(storeId): Promise<any> {
+    const query = 'SELECT * FROM documents WHERE store_id=$1 ORDER BY id DESC'
+    const values = [storeId]
 
     const rows = await this.client.query(query, values)
     if (rows && rows.rows && rows.rows.length > 0) {
-      return rows.rows[0]
+      return rows.rows
     } else {
-      return undefined
+      return []
+    }
+  }
+  async getAllDocuments(): Promise<any[]> {
+    const query = 'SELECT * FROM documents'
+
+    const rows = await this.client.query(query)
+    if (rows && rows.rows && rows.rows.length > 0) {
+      return rows.rows
+    } else {
+      return []
     }
   }
   async getDocuments(agent): Promise<any[]> {
@@ -746,6 +802,89 @@ export class database {
   async documentIdExists(documentId) {
     const query = 'SELECT * FROM documents WHERE id=$1'
     const values = [documentId]
+
+    const rows = await this.client.query(query, values)
+    return rows && rows.rows && rows.rows.length > 0
+  }
+
+  async addContentObj(
+    description,
+    keywords,
+    is_included,
+    documentId
+  ): Promise<number> {
+    let id = randomInt(0, 100000)
+    while (await this.contentObjIdExists(id)) {
+      id = randomInt(0, 100000)
+    }
+
+    const query =
+      'INSERT INTO content_objects(id, description, keywords, is_included, document_id) VALUES($1, $2, $3, $4, $5)'
+    const values = [id, description, keywords, is_included, documentId]
+
+    await this.client.query(query, values)
+    return id
+  }
+  async editContentObj(objId, description, keywords, is_included, documentId) {
+    const query =
+      'UPDATE content_objects SET description = $1, keywords = $2, is_included = $3, document_id = $4 WHERE id = $5'
+    const values = [description, keywords, is_included, documentId, objId]
+    await this.client.query(query, values)
+  }
+  async getContentObjOfDocument(documentId): Promise<any> {
+    const query =
+      'SELECT * FROM content_objects WHERE document_id = $1 ORDER BY id DESC'
+    const values = [documentId]
+
+    const rows = await this.client.query(query, values)
+    if (rows && rows.rows && rows.rows.length > 0) return rows.rows
+    else return []
+  }
+  async removeContentObject(objId) {
+    const query = 'DELETE FROM content_objects WHERE id=$1'
+    const values = [objId]
+
+    await this.client.query(query, values)
+  }
+  async contentObjIdExists(contentObjId) {
+    const query = 'SELECT * FROM content_objects WHERE id=$1'
+    const values = [contentObjId]
+
+    const rows = await this.client.query(query, values)
+    return rows && rows.rows && rows.rows.length > 0
+  }
+
+  async addDocumentStore(name): Promise<number> {
+    let id = randomInt(0, 100000)
+    while (await this.documentStoreIdExists(id)) {
+      id = randomInt(0, 100000)
+    }
+
+    const query = 'INSERT INTO documents_store(id, name) VALUES($1,$2)'
+    const values = [id, name]
+
+    await this.client.query(query, values)
+    return id
+  }
+  async updateDocumentStore(storeId, name) {
+    const query = 'UPDATE documents_store SET name = $1 WHERE id = $2'
+    const values = [name, storeId]
+    await this.client.query(query, values)
+  }
+  async removeDocumentStore(storeId) {
+    const query = 'DELETE FROM documents_store WHERE id = $1'
+    const values = [storeId]
+    await this.client.query(query, values)
+  }
+  async getDocumentStores(): Promise<any[]> {
+    const query = 'SELECT * FROM documents_store'
+    const rows = await this.client.query(query)
+    if (rows && rows.rows && rows.rows.length > 0) return rows.rows
+    else return []
+  }
+  async documentStoreIdExists(documentStoreId) {
+    const query = 'SELECT * FROM documents_store WHERE id=$1'
+    const values = [documentStoreId]
 
     const rows = await this.client.query(query, values)
     return rows && rows.rows && rows.rows.length > 0

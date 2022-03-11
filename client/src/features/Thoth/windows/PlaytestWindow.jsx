@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { Scrollbars } from 'react-custom-scrollbars'
+import { Scrollbars } from 'react-custom-scrollbars-2'
 import { useHotkeys } from 'react-hotkeys-hook'
 
 import { usePubSub } from '../../../contexts/PubSubProvider'
@@ -113,7 +113,8 @@ const Playtest = ({ tab }) => {
   const { $PLAYTEST_INPUT, $PLAYTEST_PRINT } = events
 
   const printToConsole = useCallback(
-    (_, text) => {
+    (_, _text) => {
+      let text = typeof _text === 'object' ? JSON.stringify(_text) : _text
       const newHistory = [...history, text]
       setHistory(newHistory)
     },

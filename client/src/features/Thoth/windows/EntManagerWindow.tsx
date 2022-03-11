@@ -9,7 +9,7 @@ const Ents = () => {
   const [data, setData] = useState(false)
 
   const resetData = async () => {
-    const res = await axios.get(`${process.env.REACT_APP_API_URL}/agentInstances`);
+    const res = await axios.get(`${process.env.REACT_APP_API_ROOT_URL}/agentInstances`);
     console.log("res is ", res)
     setData(res.data);
   }
@@ -17,17 +17,17 @@ const Ents = () => {
   const createNew = () => {
     console.log("Create new called")
     axios
-      .post(`${process.env.REACT_APP_API_URL}/agentInstance`, { data: {} })
+      .post(`${process.env.REACT_APP_API_ROOT_URL}/agentInstance`, { data: {} })
       .then(async res => {
         console.log("response is", res)
-        const res = await axios.get(`${process.env.REACT_APP_API_URL}/agentInstances`);
+        const res = await axios.get(`${process.env.REACT_APP_API_ROOT_URL}/agentInstances`);
         setData(res.data);
       })
   }
 
   useEffect(() => {
     (async () => {
-      const res = await axios.get(`${process.env.REACT_APP_API_URL}/agentInstances`);
+      const res = await axios.get(`${process.env.REACT_APP_API_ROOT_URL}/agentInstances`);
       setData(res.data);
       console.log("set the data", res.data)
     })()

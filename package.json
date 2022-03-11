@@ -2,6 +2,13 @@
   "name": "@thoth/root",
   "version": "0.0.1",
   "private": true,
+  "license": "apache 2.0",
+  "author": "Michael Sharpe <m.sharpe@project89.org> (https://www.project89.org)",
+  "contributors": [
+    "Sean Gillespie <s.gillespie@project89.org>",
+    "Jakob Grant <j.grant@project89.org>",
+    "Preston Gull <gull.preston@gmail.com>"
+  ],
   "workspaces": {
     "packages": [
       "client",
@@ -12,16 +19,16 @@
   "scripts": {
     "start:core": "lerna exec --scope @latitudegames/thoth-core -- yarn start",
     "start:client": "lerna exec --scope @latitudegames/thoth-client -- yarn start",
-    "start:agent-runner": "lerna exec --scope @latitudegames/thoth-server -- yarn run agent-runner",
     "start": "concurrently \"yarn start:core\" \"sleep 10s && yarn start:client\"",
-    "dev": "concurrently \"cd server && docker-compose up\" \"sleep 5s && yarn run dev:server\" \"yarn start:core\" \"sleep 1s && yarn start:client\" \"sleep 1s && yarn start:agent-runner\" \"sleep 5s && yarn run db:seed\" ",
+    "dev": "concurrently \"cd server && docker-compose up\" \"sleep 5s && yarn run dev:server\" \"yarn start:core\" \"sleep 1s && yarn start:client\" \"sleep 5s && yarn run db:seed\" ",
+    "dev:client": "concurrently \"yarn start:core\" \"sleep 1s && yarn start:client\"",
     "dev:server": "lerna exec --scope @latitudegames/thoth-server -- yarn run dev",
     "db:seed": "npx sequelize-cli db:seed:all --url 'postgres://thoth:thoth_default_pw@localhost:5432/thoth'",
     "lint": "lerna run lint --parallel",
     "lint:fix": "lerna run lint:fix --parallel",
-    "build": "lerna exec --scope @latitudegames/thoth-client -- yarn build",
+    "build": "copyfiles LICENSE.txt client && lerna exec --scope @thoth/client -- yarn build",
+    "build:core": "copyfiles LICENSE.txt core && lerna exec --scope @latitudegames/thoth-core -- yarn build",
     "install:core": "lerna exec --scope @latitudegames/thoth-core -- yarn install",
-    "build:core": "lerna exec --scope @latitudegames/thoth-core -- yarn build",
     "publish:canary": "lerna exec --scope @latitudegames/thoth-core -- yarn canary",
     "install:canary": "lerna exec --scope @latitudegames/thoth-client -- yarn install:canary"
   },
@@ -35,7 +42,9 @@
     "@typescript-eslint/eslint-plugin": "^4.31.1",
     "@typescript-eslint/parser": "^4.31.1",
     "concurrently": "^6.2.1",
+    "copyfiles": "^2.4.1",
     "cors-anywhere": "^0.4.4",
+    "copyfiles": "^2.4.1",
     "craco": "^0.0.3",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.24.2",

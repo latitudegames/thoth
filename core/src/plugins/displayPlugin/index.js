@@ -18,7 +18,7 @@ function install(editor) {
         displayMap[node.id] = display
       }
 
-      builder.call(component, node)
+      return builder.call(component, node)
     }
 
     component.worker = (node, inputs, outputs, data, ...args) => {

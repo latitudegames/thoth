@@ -64,7 +64,7 @@ export class TextToSpeech extends ThothComponent<Promise<WorkerReturn>> {
     const character = inputs['character']?.[0] as string
 
     const url = await axios.get(
-      `${process.env.REACT_APP_API_URL}/speech_to_text`,
+      `${process.env.REACT_APP_API_ROOT_URL}/speech_to_text`,
       {
         params: {
           text: action,

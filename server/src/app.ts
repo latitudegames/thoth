@@ -2,7 +2,7 @@
 import cors from '@koa/cors'
 import Router from '@koa/router'
 import { database } from '@latitudegames/thoth-core/src/connectors/database'
-import { config } from 'dotenv'
+import { config } from 'dotenv-flow'
 import HttpStatus from 'http-status-codes'
 import Koa from 'koa'
 import koaBody from 'koa-body'

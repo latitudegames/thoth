@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars'
-import { useSelector } from 'react-redux'
+// import { useSelector } from 'react-redux'
 import { useSnackbar } from 'notistack'
 
 import css from './editorwindow.module.css'
@@ -13,12 +13,13 @@ import { useModal } from '@/contexts/ModalProvider'
 
 import {
   useGetDeploymentsQuery,
-  selectSpellById,
+  // selectSpellById,
   useDeploySpellMutation,
   useLazyGetDeploymentQuery,
   useSaveSpellMutation,
 } from '@/state/api/spells'
 import { useEditor } from '@thoth/contexts/EditorProvider'
+import { thothApiRootUrl } from '@/config'
 
 const DeploymentView = ({ open, setOpen, spellId, close }) => {
   const [loadingVersion, setLoadingVersion] = useState(false)
@@ -29,21 +30,23 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
   const [deploySpell] = useDeploySpellMutation()
   const [saveSpell] = useSaveSpellMutation()
   const [getDeplopyment, { data: deploymentData }] = useLazyGetDeploymentQuery()
-  const spell = useSelector(state => selectSpellById(spellId))
+  // const spell = useSelector(state => selectSpellById(spellId))
+  const spell = spellId;
   const name = spell?.name as string
   const { data: deployments, isLoading } = useGetDeploymentsQuery(name, {
-    skip: !spell?.name,
+    skip: !spell,
   })
 
   const deploy = data => {
+    console.log(spell, data, 'data')
     if (!spell) return
-    deploySpell({ spellId: spell.name, ...data })
+    deploySpell({ spellId: spell, ...data })
     enqueueSnackbar('Spell deployed', { variant: 'success' })
   }
 
   const buildUrl = version => {
     return encodeURI(
-      `${process.env.REACT_APP_API_URL}/game/spells/deployed/${spellId}/${version}`
+      `${thothApiRootUrl}/game/spells/deployed/${spellId}/${version}`
     )
   }
 
@@ -56,7 +59,7 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
     ) {
       setLoadingVersion(true)
       await getDeplopyment({
-        spellId: spell?.name as string,
+        spellId: spell as string,
         version,
       })
     }
