@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable require-await */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import axios from 'axios'
 import Rete from 'rete'
 
 import {
@@ -112,25 +113,32 @@ export class FormOpinionAboutSpeaker extends ThothComponent<
     })
     const _parameters = { candidate_labels: parameters }
 
-    const result: any = await thoth.huggingface(
-      'facebook/bart-large-mnli',
-      JSON.stringify({
+    const resp = await axios.post(
+      `${process.env.REACT_APP_API_URL}/hf_request`,
+      {
         inputs: action as string,
+        model: 'facebook/bart-large-mnli',
         parameters: _parameters,
         options: undefined,
-      })
+      }
     )
 
-    const resultMatrix: { [key: string]: any } = {}
-    for (let i = 0; i < result.labels.length; i++) {
-      resultMatrix[result.labels[i]] = result.scores[0]
-    }
+    const { success, data } = resp.data
 
-    for (const key of Object.keys(resultMatrix)) {
-      _matrix[key] = Math.max(
-        0,
-        _matrix[key] + sigmoid(_matrix[key]) * alpha - decay
-      )
+    const result: any = success ? data : null
+
+    if (result) {
+      const resultMatrix: { [key: string]: any } = {}
+      for (let i = 0; i < result.labels.length; i++) {
+        resultMatrix[result.labels[i]] = result.scores[0]
+      }
+
+      for (const key of Object.keys(resultMatrix)) {
+        _matrix[key] = Math.max(
+          0,
+          _matrix[key] + sigmoid(_matrix[key]) * alpha - decay
+        )
+      }
     }
 
     return {

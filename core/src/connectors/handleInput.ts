@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 import axios from 'axios'
 //handles the input from a client according to a selected agent and responds
 export async function handleInput(
@@ -19,4 +20,20 @@ export async function handleInput(
   )
   // Outputs are broken right now, so we are writing gamestate just in case
   return response.data.gameState.outputs ?? response.data.outputs
+}
+
+export async function handleCustomInput(
+  message: string,
+  sender: string,
+  isVoice: boolean,
+  agent: string = 'Thales'
+) {
+  const response = await axios.post(`http://localhost:8001/custom_message`, {
+    message: message,
+    sender: sender,
+    agent: agent,
+    isVoice: isVoice,
+  })
+
+  return response.data.response
 }

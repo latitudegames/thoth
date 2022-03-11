@@ -53,9 +53,15 @@ export async function initSpeechServer(ignoreDotEnv: boolean) {
     })
 
     client.on('binaryData', function (data) {
-      if (recognizeStream !== null) {
-        recognizeStream.write(data)
-      }
+      try {
+        if (
+          recognizeStream !== null &&
+          recognizeStream !== undefined &&
+          recognizeStream.destroyed === false
+        ) {
+          recognizeStream.write(data)
+        }
+      } catch (e) {}
     })
 
     function startRecognitionStream(client: any) {

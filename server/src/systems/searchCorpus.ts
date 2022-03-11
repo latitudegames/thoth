@@ -121,11 +121,12 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
 
     return (ctx.body = 'ok')
   })
-  router.get('/search', async function (ctx: Koa.Context) {
-    const agent = ctx.query.agent
-    const question = ctx.query.question as string
+  router.post('/search', async function (ctx: Koa.Context) {
+    const agent = ctx.request.body?.agent
+    const question = ctx.request.body?.question as string
     const sameTopicOnly =
-      (ctx.query.sameTopicOnly as string).toLowerCase().trim() === 'true'
+      (ctx.request.body?.sameTopicOnly as string).toLowerCase().trim() ===
+      'true'
     const cleanQuestion = removePanctuationalMarks(question)
     const words = simplifyWords(cleanQuestion.split(' '))
     const topic = await classifyText(question)
@@ -144,8 +145,8 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
       keywords: string | string[]
       topic: string
     }[] = sameTopicOnly
-        ? await database.instance.getDocumentsWithTopic(agent, topic)
-        : await database.instance.getDocuments(agent)
+      ? await database.instance.getDocumentsWithTopic(agent, topic)
+      : await database.instance.getDocuments(agent)
 
     console.log('loaded ' + documents.length + ' documents')
     for (let i = 0; i < documents.length; i++) {
@@ -267,7 +268,9 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
   })
   router.get('/content-object', async function (ctx: Koa.Context) {
     const documentId = ctx.query.documentId
-    const contentObjects: any = await database.instance.getContentObjOfDocument(documentId)
+    const contentObjects: any = await database.instance.getContentObjOfDocument(
+      documentId
+    )
 
     return (ctx.body = contentObjects)
   })
@@ -276,7 +279,7 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
     try {
       await database.instance.removeContentObject(objId)
     } catch (e) {
-      console.log(e);
+      console.log(e)
       return (ctx.body = 'internal error')
     }
     return (ctx.body = 'ok')
@@ -292,7 +295,7 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
     try {
       id = await database.instance.addDocumentStore(name)
     } catch (e) {
-      console.log(e);
+      console.log(e)
       return (ctx.body = 'internal error')
     }
     if (id === -1) return (ctx.body = 'internal error')
@@ -304,7 +307,7 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
     try {
       await database.instance.updateDocumentStore(storeId, name)
     } catch (e) {
-      console.log(e);
+      console.log(e)
       return (ctx.body = 'internal error')
     }
     return (ctx.body = 'ok')

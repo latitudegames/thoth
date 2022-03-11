@@ -14,6 +14,7 @@ import { initSpeechServer } from './systems/googleSpeechToText'
 import { world } from './world/world'
 import { initSearchCorpus } from './systems/searchCorpus'
 import { initClassifier } from '@latitudegames/thoth-core/src/utils/textClassifier'
+import { cacheManager } from './cacheManager'
 
 config({ path: '.env' })
 
@@ -46,6 +47,8 @@ export async function init() {
   initSpeechServer(false)
   initSearchCorpus(false)
   await initClassifier()
+  new cacheManager(-1)
+  new world()
 
   const options = {
     origin: '*',

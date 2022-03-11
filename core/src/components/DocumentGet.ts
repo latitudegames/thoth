@@ -12,19 +12,18 @@ import {
   ThothWorkerOutputs,
 } from '../../types'
 import { EngineContext } from '../engine'
-import { triggerSocket, anySocket, stringSocket } from '../sockets'
+import { triggerSocket, anySocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 
-const info =
-  'Search is used to do neural search in the search corpus and return a document'
+const info = 'Document Get is used to get a document from the search corpus'
 
 type WorkerReturn = {
   output: string
 }
 
-export class Search extends ThothComponent<Promise<WorkerReturn>> {
+export class DocumentGet extends ThothComponent<Promise<WorkerReturn>> {
   constructor() {
-    super('Search')
+    super('Document Get')
 
     this.task = {
       outputs: {
@@ -33,21 +32,19 @@ export class Search extends ThothComponent<Promise<WorkerReturn>> {
       },
     }
 
-    this.category = 'AI/ML'
+    this.category = 'I/O'
     this.display = true
     this.info = info
   }
 
   builder(node: ThothNode) {
-    const agentInput = new Rete.Input('agent', 'Agent', stringSocket)
-    const questionInput = new Rete.Input('question', 'Question', stringSocket)
+    const idInput = new Rete.Input('id', 'ID', anySocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
     const output = new Rete.Output('output', 'Output', anySocket)
 
     return node
-      .addInput(agentInput)
-      .addInput(questionInput)
+      .addInput(idInput)
       .addInput(dataInput)
       .addOutput(dataOutput)
       .addOutput(output)
@@ -59,16 +56,13 @@ export class Search extends ThothComponent<Promise<WorkerReturn>> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    const agent = inputs['agent'][0] as string
-    const question = inputs['question'][0] as string
+    const id = inputs['id'][0] as string
 
     const resp = await axios.get(
-      `${process.env.VITE_SEARCH_SERVER_URL}/search`,
+      `${process.env.VITE_SEARCH_SERVER_URL}/document`,
       {
         params: {
-          agent: agent,
-          question: question,
-          sameTopicOnly: false,
+          documentId: id,
         },
       }
     )

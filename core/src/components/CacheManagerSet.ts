@@ -12,19 +12,14 @@ import {
   ThothWorkerOutputs,
 } from '../../types'
 import { EngineContext } from '../engine'
-import { triggerSocket, anySocket, stringSocket } from '../sockets'
+import { triggerSocket, stringSocket, anySocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 
-const info =
-  'Search is used to do neural search in the search corpus and return a document'
+const info = 'Cache Manager Set is used to (set/add) data in the cache manager'
 
-type WorkerReturn = {
-  output: string
-}
-
-export class Search extends ThothComponent<Promise<WorkerReturn>> {
+export class CacheManagerSet extends ThothComponent<void> {
   constructor() {
-    super('Search')
+    super('Cache Manager Set')
 
     this.task = {
       outputs: {
@@ -33,24 +28,24 @@ export class Search extends ThothComponent<Promise<WorkerReturn>> {
       },
     }
 
-    this.category = 'AI/ML'
+    this.category = 'I/O'
     this.display = true
     this.info = info
   }
 
   builder(node: ThothNode) {
+    const keyInput = new Rete.Input('key', 'Key', stringSocket)
     const agentInput = new Rete.Input('agent', 'Agent', stringSocket)
-    const questionInput = new Rete.Input('question', 'Question', stringSocket)
+    const valueInput = new Rete.Input('value', 'Value', anySocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
-    const output = new Rete.Output('output', 'Output', anySocket)
 
     return node
+      .addInput(keyInput)
       .addInput(agentInput)
-      .addInput(questionInput)
+      .addInput(valueInput)
       .addInput(dataInput)
       .addOutput(dataOutput)
-      .addOutput(output)
   }
 
   async worker(
@@ -59,22 +54,14 @@ export class Search extends ThothComponent<Promise<WorkerReturn>> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
+    const key = inputs['key'][0] as string
     const agent = inputs['agent'][0] as string
-    const question = inputs['question'][0] as string
+    const value = inputs['value'][0]
 
-    const resp = await axios.get(
-      `${process.env.VITE_SEARCH_SERVER_URL}/search`,
-      {
-        params: {
-          agent: agent,
-          question: question,
-          sameTopicOnly: false,
-        },
-      }
-    )
-
-    return {
-      output: resp.data,
-    }
+    await axios.post(`${process.env.REACT_APP_API_URL}/cache_manager`, {
+      key: key,
+      agent: agent,
+      value: value,
+    })
   }
 }

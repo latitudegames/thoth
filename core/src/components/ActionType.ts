@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import axios from 'axios'
 import Rete from 'rete'
 
 import {
@@ -10,6 +12,7 @@ import { FewshotControl } from '../dataControls/FewshotControl'
 import { EngineContext } from '../engine'
 import { stringSocket, triggerSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
+
 const fewshot = `Given an action classify the type of action it is
 
 Types: look, get, use, craft, dialog, movement, travel, combat, consume, other
@@ -80,33 +83,32 @@ export class ActionTypeComponent extends ThothComponent<Promise<WorkerReturn>> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    const { completion } = thoth
     const action = inputs['action'][0]
     const fewshot = node.data.fewshot as string
     const prompt = fewshot + action + ','
 
-    if (!action)
-      throw new Error(
-        'ActionType Module requires action string to be passed into it.'
-      )
+    const resp = await axios.post(
+      `${process.env.REACT_APP_API_URL}/text_completion`,
+      {
+        params: {
+          prompt: prompt,
+          modelName: 'davinci',
+          temperature: 0.0,
+          maxTokens: 100,
+          stop: ['\n'],
+        },
+      }
+    )
 
-    const body = {
-      prompt,
-      stop: ['\n'],
-      maxTokens: 100,
-      temperature: 0.0,
+    let result = ''
+    const { success, choice } = resp.data
+    if (success) {
+      result = choice?.trim()
+      if (!silent) node.display(result)
     }
 
-    try {
-      const raw = (await completion(body)) as string
-      const result = raw?.trim()
-      if (!silent) node.display(result)
-
-      return {
-        actionType: result,
-      }
-    } catch (err) {
-      throw new Error('Error in ActionType component')
+    return {
+      actionType: result,
     }
   }
 }
