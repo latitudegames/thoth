@@ -2,7 +2,7 @@ import { useLatitude } from '@/config'
 import { Outlet } from 'react-router-dom'
 import { useAuth } from '../../../contexts/AuthProvider'
 
-const defaultGroups = ['internal', 'thoth']
+const defaultGroups = ['internal', 'thoth', 'creator-tester']
 
 const RequireAuth = (props: Record<string, any>) => {
   if (!useLatitude) return <Outlet />
