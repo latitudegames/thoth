@@ -126,7 +126,7 @@ export class world extends gameObject {
     if (this.objects[obj.id] === undefined) {
       this.objects[obj.id] = obj
     } else {
-      throw new Error('Object already exists')
+      //throw new Error('Object already exists')
     }
   }
 

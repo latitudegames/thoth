@@ -111,10 +111,11 @@ const chainsHandler = async (ctx: Koa.Context) => {
   if (error) {
     return (ctx.body = { error })
   }
-  console.log('inputs1234:', inputs)
+
   const outputs = await runChain(chain, (inputs as any) ?? [], thoth, modules)
   const newGameState = thoth.getCurrentGameState()
 
+  console.log('chain runnnnnnnnnnn')
   ctx.body = { spell: activeSpell.name, outputs, gameState: newGameState }
 }
 

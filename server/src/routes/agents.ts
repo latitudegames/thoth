@@ -135,7 +135,7 @@ const executeHandler = async (ctx: Koa.Context) => {
     )
     return (ctx.body = out)
   }
-  ctx.body = await handleInput(message, speaker, agent)
+  ctx.body = await handleInput(message, speaker, agent, 'web', id)
 }
 
 const getPromptsHandler = async (ctx: Koa.Context) => {
@@ -524,6 +524,7 @@ const textCompletion = async (ctx: Koa.Context) => {
   const presencePenalty = ctx.request.body.presencePenalty as number
   const stop = ctx.request.body.stop as string[]
 
+  console.log('textCompletion for prompt:', prompt)
   const { success, choice } = await makeCompletion(modelName, {
     prompt: prompt,
     temperature: temperature,
@@ -538,7 +539,7 @@ const textCompletion = async (ctx: Koa.Context) => {
 }
 
 const hfRequest = async (ctx: Koa.Context) => {
-  const inputs = ctx.request.body.input as string
+  const inputs = ctx.request.body.inputs as string
   const model = ctx.request.body.model as string
   const parameters = ctx.request.body.parameters as any
   const options = (ctx.request.body.options as any) || {
@@ -739,7 +740,7 @@ export const agents: Route[] = [
   {
     path: '/text_completion',
     access: noAuth,
-    get: textCompletion,
+    post: textCompletion,
   },
   {
     path: '/hf_request',

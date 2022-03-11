@@ -1,3 +1,5 @@
+/* eslint-disable no-async-promise-executor */
+/* eslint-disable camelcase */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 /* eslint-disable no-console */
 /* eslint-disable require-await */
@@ -10,20 +12,19 @@ import {
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../types'
-import { InputControl } from '../dataControls/InputControl'
 import { EngineContext } from '../engine'
 import { triggerSocket, stringSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 
-const info = 'String Adder adds a string in the current input.'
+const info = 'Agent Text Completion is using OpenAI for the agent to respond.'
 
 type WorkerReturn = {
   output: string
 }
 
-export class StringAdder extends ThothComponent<Promise<WorkerReturn>> {
+export class AddAgent extends ThothComponent<Promise<WorkerReturn>> {
   constructor() {
-    super('String Adder')
+    super('Add Agent')
 
     this.task = {
       outputs: {
@@ -32,33 +33,37 @@ export class StringAdder extends ThothComponent<Promise<WorkerReturn>> {
       },
     }
 
-    this.category = 'Logic'
+    this.category = 'AI/ML'
     this.display = true
     this.info = info
   }
 
   builder(node: ThothNode) {
-    const inp = new Rete.Input('string', 'String', stringSocket)
-    const newInput = new Rete.Input('newInput', 'New Input', stringSocket)
+    const inp = new Rete.Input('string', 'Text', stringSocket)
+    const agent = new Rete.Input('agent', 'Agent', stringSocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
-    const outp = new Rete.Output('output', 'String', stringSocket)
-
-    const operationType = new InputControl({
-      dataKey: 'newLineStarting',
-      name: 'New Line Starting',
-      icon: 'moon',
-    })
-
-    node.inspector.add(operationType)
+    const outp = new Rete.Output('output', 'output', stringSocket)
 
     return node
       .addInput(inp)
-      .addInput(newInput)
+      .addInput(agent)
       .addInput(dataInput)
       .addOutput(dataOutput)
       .addOutput(outp)
   }
+
+  /*for text completion:
+  const data = {
+    "prompt": context,
+    "temperature": 0.9,
+    "max_tokens": 100,
+    "top_p": 1,
+    "frequency_penalty": dialogFrequencyPenality,
+    "presence_penalty": dialogPresencePenality,
+    "stop": ["\"\"\"", `${speaker}:`, '\n']
+  };
+  */
 
   async worker(
     node: NodeData,
@@ -66,13 +71,11 @@ export class StringAdder extends ThothComponent<Promise<WorkerReturn>> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    const input = inputs['string'][0] as string
-    const newInput = inputs['newInput'][0] as string
-    const newLineStarting = node?.data?.newLineStarting as string
-    console.log('new output:', input + (newLineStarting ?? '') + newInput)
+    const action = inputs['string'][0] as string
+    const agent = inputs['agent'][0] as string
 
     return {
-      output: input + (newLineStarting ?? '') + newInput,
+      output: action + '\n' + agent + ': ',
     }
   }
 }

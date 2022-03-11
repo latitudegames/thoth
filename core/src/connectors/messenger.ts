@@ -42,7 +42,6 @@ export class messenger_client {
             message,
             senderPsid,
             this.agent.name ?? 'Agent',
-            null,
             'messenger',
             senderPsid
           )

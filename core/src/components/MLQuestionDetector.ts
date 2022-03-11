@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable require-await */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import axios from 'axios'
 import Rete from 'rete'
 
 import {
@@ -77,6 +78,7 @@ export class MLQuestionDetector extends ThothComponent<Promise<InputReturn>> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
+    console.log('ml greeting detector')
     const action = inputs['string'][0]
     const params = {
       candidate_labels: ['Question', 'Not Question'],
@@ -84,13 +86,18 @@ export class MLQuestionDetector extends ThothComponent<Promise<InputReturn>> {
     const minDiffData = node?.data?.minDiff as string
     const minDiff = minDiffData ? parseFloat(minDiffData) : 0.4
 
-    const r = await thoth.huggingface(
-      'facebook/bart-large-mnli',
-      JSON.stringify({
+    const resp = await axios.post(
+      `${process.env.REACT_APP_API_URL}/hf_request`,
+      {
         inputs: action as string,
+        model: 'facebook/bart-large-mnli',
         parameters: params,
-      })
+        options: undefined,
+      }
     )
+
+    const { success, data } = resp.data
+    const r = data
 
     const question = getValue(r.labels, r.scores, 'Question')
     const notQuestion = getValue(r.labels, r.scores, 'Not Question')
@@ -98,7 +105,7 @@ export class MLQuestionDetector extends ThothComponent<Promise<InputReturn>> {
       question > notQuestion ? question - notQuestion : notQuestion - question
     const is = diff > minDiff && question > notQuestion
 
-    this._task.closed = is ? ['false'] : ['true']
+    this._task.closed = success && is ? ['false'] : ['true']
 
     return {
       output: action as string,

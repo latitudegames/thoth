@@ -133,11 +133,10 @@ export class FastGreetingDetector extends ThothComponent<
     const maxLengthData = node?.data?.maxLength as string
     const maxLength = maxLengthData ? parseInt(maxLengthData) : 10
 
-    const is = detectFastGreeting(
-      action as string,
-      maxLength,
-      fewshot as string
-    )
+    const isQuestion = (action as string).toLowerCase().endsWith('?')
+    const is =
+      !isQuestion &&
+      detectFastGreeting(action as string, maxLength, fewshot as string)
 
     this._task.closed = is ? ['false'] : ['true']
     return {

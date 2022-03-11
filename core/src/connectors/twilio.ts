@@ -56,7 +56,6 @@ export class twilio_client {
           req.body.Body,
           req.body.From,
           this.agent.name ?? 'Agent',
-          null,
           'twilio',
           req.body.From
         )

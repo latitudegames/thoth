@@ -14,7 +14,6 @@ import {
   ThothWorkerOutputs,
 } from '../../types'
 import { InputControl } from '../dataControls/InputControl'
-import { NumberControl } from '../dataControls/NumberControl'
 import { EngineContext } from '../engine'
 import { triggerSocket, stringSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
@@ -43,9 +42,10 @@ export class AgentTextCompletion extends ThothComponent<Promise<WorkerReturn>> {
 
   builder(node: ThothNode) {
     const inp = new Rete.Input('string', 'Text', stringSocket)
+    const speaker = new Rete.Input('speaker', 'Speaker', stringSocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
-    const outp = new Rete.Output('Voice', 'String', stringSocket)
+    const outp = new Rete.Output('output', 'output', stringSocket)
 
     const modelName = new InputControl({
       dataKey: 'modelName',
@@ -53,31 +53,31 @@ export class AgentTextCompletion extends ThothComponent<Promise<WorkerReturn>> {
       icon: 'moon',
     })
 
-    const temperature = new NumberControl({
+    const temperature = new InputControl({
       dataKey: 'temperature',
       name: 'Temperature',
       icon: 'moon',
     })
 
-    const maxTokens = new NumberControl({
+    const maxTokens = new InputControl({
       dataKey: 'maxTokens',
       name: 'Max Tokens',
       icon: 'moon',
     })
 
-    const topP = new NumberControl({
+    const topP = new InputControl({
       dataKey: 'topP',
       name: 'Top P',
       icon: 'moon',
     })
 
-    const frequencyPenalty = new NumberControl({
+    const frequencyPenalty = new InputControl({
       dataKey: 'frequencyPenalty',
       name: 'Frequency Penalty',
       icon: 'moon',
     })
 
-    const presencePenalty = new NumberControl({
+    const presencePenalty = new InputControl({
       dataKey: 'presencePenalty',
       name: 'Presence Penalty',
       icon: 'moon',
@@ -100,6 +100,7 @@ export class AgentTextCompletion extends ThothComponent<Promise<WorkerReturn>> {
 
     return node
       .addInput(inp)
+      .addInput(speaker)
       .addInput(dataInput)
       .addOutput(dataOutput)
       .addOutput(outp)
@@ -123,7 +124,8 @@ export class AgentTextCompletion extends ThothComponent<Promise<WorkerReturn>> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    const action = inputs['string'][0]
+    const speaker = inputs['speaker'][0] as string
+    const action = speaker + ': ' + inputs['string'][0]
 
     const modelName = node?.data?.modelName as string
     const temperatureData = node?.data?.temperature as string
@@ -136,28 +138,35 @@ export class AgentTextCompletion extends ThothComponent<Promise<WorkerReturn>> {
     const frequencyPenalty = parseFloat(frequencyPenaltyData)
     const presencePenaltyData = node?.data?.presencePenalty as string
     const presencePenalty = parseFloat(presencePenaltyData)
-    const stop = node?.data?.stop as string
+    const stop = (node?.data?.stop as string).split(',')
+    for (let i = 0; i < stop.length; i++) {
+      stop[i] = stop[i].trim().replace('${speaker}', speaker)
+    }
 
+    console.log(
+      'sending completion to:',
+      `${process.env.REACT_APP_API_URL}/text_completion`
+    )
     const resp = await axios.post(
       `${process.env.REACT_APP_API_URL}/text_completion`,
       {
-        params: {
-          prompt: action,
-          modelName: modelName,
-          temperature: temperature,
-          maxTokens: maxTokens,
-          topP: topP,
-          frequencyPenalty: frequencyPenalty,
-          presencePenalty: presencePenalty,
-          stop: stop,
-        },
+        prompt: action,
+        modelName: modelName,
+        temperature: temperature,
+        maxTokens: maxTokens,
+        topP: topP,
+        frequencyPenalty: frequencyPenalty,
+        presencePenalty: presencePenalty,
+        stop: stop,
       }
     )
 
     const { success, choice } = resp.data
+    const res = success ? choice.text : 'Sorry i had an error!'
+    console.log('success:', success, 'choice:', choice.text, 'res:', res)
 
     return {
-      output: success ? choice : '',
+      output: res,
     }
   }
 }

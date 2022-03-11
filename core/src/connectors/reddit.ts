@@ -12,7 +12,6 @@ import { database } from './database'
 import { handleInput } from './handleInput'
 import { getSetting } from './utils'
 
-
 export let reddit
 
 export const prevMessage = {}
@@ -230,14 +229,7 @@ export class reddit_client {
         const author = post.author.name
         const body = post.body
         const timestamp = post.created_utc
-        const resp = await handleInput(
-          body,
-          author,
-          (await database.instance.getConfig())['agent'] ?? 'Agent',
-          null,
-          'reddit',
-          chat_id
-        )
+        const resp = await handleInput(body, author, 'Agent', 'reddit', chat_id)
         await this.handleMessage(resp, id, chat_id, 'isPost', reddit)
         const date = new Date(post.created)
         const utc = new Date(
@@ -288,8 +280,7 @@ export class reddit_client {
             const resp = await handleInput(
               body,
               author,
-              (await database.instance.getConfig())['agent'] ?? 'Agent',
-              null,
+              'Agent',
               'reddit',
               chat_id
             )
@@ -347,14 +338,7 @@ export class reddit_client {
         const author = post.author.name
         const body = post.selftext
         const timestamp = post.created_utc
-        const resp = await handleInput(
-          body,
-          author,
-          (await database.instance.getConfig())['agent'] ?? 'Agent',
-          null,
-          'reddit',
-          chat_id
-        )
+        const resp = await handleInput(body, author, 'Agent', 'reddit', chat_id)
         await this.handleMessage(resp, id, chat_id, 'isPost', reddit)
         const date = new Date(post.created)
         const utc = new Date(
@@ -405,8 +389,7 @@ export class reddit_client {
             const resp = await handleInput(
               body,
               author,
-              (await database.instance.getConfig())['agent'] ?? 'Agent',
-              null,
+              'Agent',
               'reddit',
               chat_id
             )
@@ -447,7 +430,7 @@ export class reddit_client {
     })
 
     setInterval(async () => {
-      ; (await reddit.getInbox()).forEach(async message => {
+      ;(await reddit.getInbox()).forEach(async message => {
         const id = message.name
         const senderId = message.id
         const author = message.author.name
@@ -469,7 +452,6 @@ export class reddit_client {
                 body,
                 author,
                 agentConfig,
-                null,
                 'reddit',
                 chat_id
               )

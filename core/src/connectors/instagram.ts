@@ -8,7 +8,6 @@ import { database } from './database'
 import { handleInput } from './handleInput'
 import { getSetting } from './utils'
 
-
 export class instagram_client {
   agent
   spell_handler
@@ -119,6 +118,8 @@ export class instagram_client {
                 pending.last_permanent_item.text,
                 pending.users[0].username,
                 agent.name,
+                'instagram',
+                pending.thread_id,
                 this.spell_handler,
                 this.spell_version
               )
