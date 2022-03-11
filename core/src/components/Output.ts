@@ -87,6 +87,9 @@ export class Output extends ThothComponent<void> {
 
     if (!silent) node.display(text as string)
 
+    const name = node.data.name as string
+    console.log(name, '- output:', text)
+
     return { text }
   }
 }

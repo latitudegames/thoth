@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import axios from 'axios'
 import Rete from 'rete'
 
 import {
@@ -14,7 +16,6 @@ import { stringSocket, triggerSocket } from '../sockets'
 //@ts-ignore
 import { ThothComponent } from '../thoth-component'
 const fewshot = `Change each statement to be in the third person present tense and correct all grammar.
-
 Matt: am sleepy.
 Third Person: Matt is sleepy.
 ---
@@ -72,7 +73,6 @@ Third Person: Fred commands the mercenaries to attack the dragon while he rescue
 `
 
 const info = `The Tense Transformer will take any string and attempt to turn it into the first person present tense.  It requires a name and text as an input, and will output the result.
-
 You can edit the fewshot in the text editor, but be aware that you must retain the fewshots data structure so processing will work.`
 
 type WorkerReturn = {
@@ -128,29 +128,31 @@ export class TenseTransformer extends ThothComponent<Promise<WorkerReturn>> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    const { completion } = thoth
     // ADD ON INPUT
     const { name, text } = inputs
     const prompt = `${node.data.fewshot}${name[0]}: ${text[0]}\nThird Person:`
 
-    const body = {
-      prompt,
-      stop: ['\n'],
-      maxTokens: 100,
-      temperature: 0.0,
-    }
-
-    try {
-      const raw = (await completion(body)) as string
-      const result = raw?.trim()
-
-      if (!silent) node.display(result)
-
-      return {
-        action: result,
+    const resp = await axios.post(
+      `${process.env.REACT_APP_API_URL}/text_completion`,
+      {
+        params: {
+          prompt: prompt,
+          modelName: 'davinci',
+          temperature: 0.0,
+          maxTokens: 100,
+          stop: ['\n'],
+        },
       }
-    } catch (err) {
-      throw new Error('Error in Tense Transformer component')
+    )
+
+    const { success, choice } = resp.data
+
+    const result = success ? choice?.trim() : ''
+
+    if (!silent) node.display(result)
+
+    return {
+      action: result,
     }
   }
 }

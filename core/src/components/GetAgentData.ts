@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 /* eslint-disable no-console */
 /* eslint-disable require-await */
@@ -12,19 +14,19 @@ import {
   ThothWorkerOutputs,
 } from '../../types'
 import { EngineContext } from '../engine'
-import { triggerSocket, anySocket, stringSocket } from '../sockets'
+import { triggerSocket, stringSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 
 const info =
-  'Search is used to do neural search in the search corpus and return a document'
+  'Generate Context is used to generate the context for the text completion'
 
 type WorkerReturn = {
   output: string
 }
 
-export class Search extends ThothComponent<Promise<WorkerReturn>> {
+export class GetAgentData extends ThothComponent<Promise<WorkerReturn>> {
   constructor() {
-    super('Search')
+    super('Get Agent Data')
 
     this.task = {
       outputs: {
@@ -33,21 +35,19 @@ export class Search extends ThothComponent<Promise<WorkerReturn>> {
       },
     }
 
-    this.category = 'AI/ML'
+    this.category = 'Database'
     this.display = true
     this.info = info
   }
 
   builder(node: ThothNode) {
     const agentInput = new Rete.Input('agent', 'Agent', stringSocket)
-    const questionInput = new Rete.Input('question', 'Question', stringSocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
-    const output = new Rete.Output('output', 'Output', anySocket)
+    const output = new Rete.Output('output', 'Output', stringSocket)
 
     return node
       .addInput(agentInput)
-      .addInput(questionInput)
       .addInput(dataInput)
       .addOutput(dataOutput)
       .addOutput(output)
@@ -60,21 +60,18 @@ export class Search extends ThothComponent<Promise<WorkerReturn>> {
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
     const agent = inputs['agent'][0] as string
-    const question = inputs['question'][0] as string
 
     const resp = await axios.get(
-      `${process.env.VITE_SEARCH_SERVER_URL}/search`,
+      `${process.env.REACT_APP_API_URL}/agent_data`,
       {
         params: {
           agent: agent,
-          question: question,
-          sameTopicOnly: false,
         },
       }
     )
 
     return {
-      output: resp.data,
+      output: JSON.stringify(resp.data.agent),
     }
   }
 }

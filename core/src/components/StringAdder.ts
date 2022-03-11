@@ -2,7 +2,6 @@
 /* eslint-disable no-console */
 /* eslint-disable require-await */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import axios from 'axios'
 import Rete from 'rete'
 
 import {
@@ -11,20 +10,20 @@ import {
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../types'
+import { InputControl } from '../dataControls/InputControl'
 import { EngineContext } from '../engine'
-import { triggerSocket, anySocket, stringSocket } from '../sockets'
+import { triggerSocket, stringSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 
-const info =
-  'Search is used to do neural search in the search corpus and return a document'
+const info = 'String Adder adds a string in the current input.'
 
 type WorkerReturn = {
   output: string
 }
 
-export class Search extends ThothComponent<Promise<WorkerReturn>> {
+export class StringAdder extends ThothComponent<Promise<WorkerReturn>> {
   constructor() {
-    super('Search')
+    super('String Adder')
 
     this.task = {
       outputs: {
@@ -33,24 +32,32 @@ export class Search extends ThothComponent<Promise<WorkerReturn>> {
       },
     }
 
-    this.category = 'AI/ML'
+    this.category = 'Logic'
     this.display = true
     this.info = info
   }
 
   builder(node: ThothNode) {
-    const agentInput = new Rete.Input('agent', 'Agent', stringSocket)
-    const questionInput = new Rete.Input('question', 'Question', stringSocket)
+    const inp = new Rete.Input('string', 'String', stringSocket)
+    const newInput = new Rete.Input('newInput', 'New Input', stringSocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
-    const output = new Rete.Output('output', 'Output', anySocket)
+    const outp = new Rete.Output('output', 'String', stringSocket)
+
+    const operationType = new InputControl({
+      dataKey: 'newLineStarting',
+      name: 'New Line Starting',
+      icon: 'moon',
+    })
+
+    node.inspector.add(operationType)
 
     return node
-      .addInput(agentInput)
-      .addInput(questionInput)
+      .addInput(inp)
+      .addInput(newInput)
       .addInput(dataInput)
       .addOutput(dataOutput)
-      .addOutput(output)
+      .addOutput(outp)
   }
 
   async worker(
@@ -59,22 +66,12 @@ export class Search extends ThothComponent<Promise<WorkerReturn>> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    const agent = inputs['agent'][0] as string
-    const question = inputs['question'][0] as string
-
-    const resp = await axios.get(
-      `${process.env.VITE_SEARCH_SERVER_URL}/search`,
-      {
-        params: {
-          agent: agent,
-          question: question,
-          sameTopicOnly: false,
-        },
-      }
-    )
+    const input = inputs['string'][0] as string
+    const newInput = inputs['newInput'][0] as string
+    const newLineStarting = node?.data?.newLineStarting as string
 
     return {
-      output: resp.data,
+      output: input + (newLineStarting ?? '') + newInput,
     }
   }
 }
