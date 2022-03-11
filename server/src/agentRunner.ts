@@ -1,8 +1,9 @@
+import { config } from 'dotenv-flow'
+config()
 //@ts-ignore
 import Router from '@koa/router'
 import { roomManager } from '@latitudegames/thoth-core/src/components/roomManager'
 import { database } from '@latitudegames/thoth-core/src/connectors/database'
-import { config } from 'dotenv-flow'
 import HttpStatus from 'http-status-codes'
 import Koa from 'koa'
 import koaBody from 'koa-body'
@@ -10,8 +11,6 @@ import compose from 'koa-compose'
 import { routes } from './routes'
 import { Handler, Method, Middleware } from './types'
 import { world } from './world/world'
-
-config({ path: '.env' })
 
 export const app: Koa = new Koa()
 export const router: Router = new Router()

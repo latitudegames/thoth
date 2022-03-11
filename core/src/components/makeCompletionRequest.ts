@@ -1,12 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-nocheck
-
 import axios from 'axios'
-import { config } from 'dotenv-flow'
 
 import { database } from '../connectors/database'
 import { makeModelRequest } from './makeModelRequest'
-config()
 
 export async function makeCompletionRequest(
   data,
