@@ -134,18 +134,9 @@ const Ent = ({ id, updateCallback }) => {
                 }}
               />
             </div>
-            {/* <div className="form-item">
-              <span className="form-item-label">SpellHandler</span>
-              <input
-                type="text"
-                defaultValue={discord_spell_handler}
-                onChange={e => {
-                  setDiscordSpellHandler(e.target.value)
-                }}
-              />
-            </div> */}
 
-            <span className="agent-select">
+            <div className="form-item agent-select">
+              <span className="form-item-label">Spell Handler (Incoming Message Handler)</span>
               <select
                 name="spellHandler"
                 id="spellHandler"
@@ -161,7 +152,45 @@ const Ent = ({ id, updateCallback }) => {
                     </option>
                   ))}
               </select>
-            </span>
+            </div>
+
+            <div className="form-item agent-select">
+              <span className="form-item-label">Interval Update Handler</span>
+              <select
+                name="spellHandler"
+                id="spellHandler"
+                value={discord_spell_handler}
+                onChange={event => {
+                  setDiscordSpellHandler(event.target.value)
+                }}
+              >
+                {spellList.length > 0 &&
+                  spellList.map((spell, idx) => (
+                    <option value={spell.name} key={idx}>
+                      {spell.name}
+                    </option>
+                  ))}
+              </select>
+            </div>
+
+            <div className="form-item agent-select">
+              <span className="form-item-label">Event Feed Handler</span>
+              <select
+                name="spellHandler"
+                id="spellHandler"
+                value={discord_spell_handler}
+                onChange={event => {
+                  setDiscordSpellHandler(event.target.value)
+                }}
+              >
+                {spellList.length > 0 &&
+                  spellList.map((spell, idx) => (
+                    <option value={spell.name} key={idx}>
+                      {spell.name}
+                    </option>
+                  ))}
+              </select>
+            </div>
           </>
         )}
       </>}

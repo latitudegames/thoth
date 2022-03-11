@@ -1,4 +1,5 @@
 import { ActionTypeComponent } from './ActionType'
+import { AgentManager } from './AgentManager'
 import { Alert } from './AlertMessage'
 import { ArchiveConversation } from './ArchiveConversation'
 import { ArrayVariable } from './ArrayVariable'
@@ -99,6 +100,7 @@ export const components = {
   arrayVariable: () => new ArrayVariable(),
   logicalOperator: () => new LogicalOperator(),
   archiveConversation: () => new ArchiveConversation(),
+  AgentManager: () => new AgentManager(),
   generator: () => new Generator(),
   huggingfaceComponent: () => new HuggingfaceComponent(),
   inputComponent: () => new InputComponent(),
