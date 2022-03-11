@@ -2,6 +2,22 @@
 
 Thoth is a multishot system builder. It leverages a visual coding style interface to allows game designers and developers to rapidly create powerful natural language systems and prototype games.
 
+## Getting Started
+
+If you are NOT a Latitude employee then you will need to change a couple of configurations so that Thoth can bypass the Latitude API.
+1. Copy client/.env.default to .env and change `REACT_APP_USE_LATITUDE_API=true` to `REACT_APP_USE_LATITUDE_API=false`
+2. Copy server/.env.default to .env and change `USE_LATITUDE_API=true` to `USE_LATITUDE_API=false`
+
+To clone, install and run, do the following:
+```
+git clone https://github.com/latitudegames/thoth
+yarn install
+yarn run dev
+```
+
+Make sure you are using Node 16 or above, and that you have Docker installed.
+
+
 ## Client Setup
 
 1. Generate a [Personal Access Token](https://github.com/settings/tokens) on Github which will allow you to install private latitude packages. Make sure you check the `write:packages` option. (`read:packages` will suffice as well if you aren't planning on publishing new versions of @latitudegames/thoth-core)
