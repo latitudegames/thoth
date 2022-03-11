@@ -272,7 +272,6 @@ export class telegram_client {
       msg.text,
       msg.from.first_name,
       (await database.instance.getConfig())['agent'] ?? 'Agent',
-      null,
       'telegram',
       msg.chat.id
     )
@@ -449,7 +448,6 @@ export class telegram_client {
       msg.text,
       msg.from.first_name,
       (await database.instance.getConfig())['agent'] ?? 'Agent',
-      null,
       'telegram',
       msg.chat.id
     )

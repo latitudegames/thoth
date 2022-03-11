@@ -1,4 +1,5 @@
 import { ActionTypeComponent } from './ActionType'
+import { AddAgent } from './AddAgent'
 import { AgentTextCompletion } from './AgentTextCompletion'
 import { Alert } from './AlertMessage'
 import { ArchiveConversation } from './ArchiveConversation'
@@ -55,6 +56,8 @@ import { OpinionAboutSpeakerGet } from './OpinionAboutSpeakerGet'
 import { OpinionAboutSpeakerSet } from './OpinionAboutSpeakerSet'
 import { Output } from './Output'
 import { ProseToScript } from './ProseToScript'
+import { RandomGreetingResponse } from './RandomGreetingResponse'
+import { RandomProfanityResponse } from './RandomProfanityResponse'
 import { RandomStringFromList } from './RandomStringFromList'
 import { SafetyVerifier } from './SafetyVerifier'
 import { Search } from './Search'
@@ -126,11 +129,14 @@ export const components = {
   stringEvaluator: () => new StringEvaluator(),
   stringCombiner: () => new StringCombiner(),
   randomStringFromList: () => new RandomStringFromList(),
+  randomGreetingResponse: () => new RandomGreetingResponse(),
+  randomProfanityResponse: () => new RandomProfanityResponse(),
   stringVariable: () => new StringVariable(),
   stringAdder: () => new StringAdder(),
   numberVariable: () => new NumberVariable(),
   booleanVariable: () => new BooleanVariable(),
   arrayVariable: () => new ArrayVariable(),
+  addAgent: () => new AddAgent(),
   logicalOperator: () => new LogicalOperator(),
   archiveConversation: () => new ArchiveConversation(),
   generator: () => new Generator(),

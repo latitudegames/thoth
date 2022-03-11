@@ -54,7 +54,9 @@ export class IsNullOrUndefined extends ThothComponent<Promise<WorkerReturn>> {
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
     const action = inputs['string'][0]
-    const is = action === null || action === undefined
+    const is =
+      action === null || action === undefined || (action as string).length <= 0
+    console.log('found null or empty input:', is)
 
     this._task.closed = is ? ['false'] : ['true']
     return {

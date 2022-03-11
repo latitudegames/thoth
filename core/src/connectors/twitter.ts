@@ -9,7 +9,6 @@ import { database } from './database'
 import { handleInput } from './handleInput'
 import { getSetting } from './utils'
 
-
 export class twitter_client {
   async handleMessage(response, chat_id, args, twitter, twitterV1, localUser) {
     if (args === 'DM') {
@@ -114,7 +113,6 @@ export class twitter_client {
                 event.message_create.message_data.text,
                 authorName,
                 this.agent.name ?? 'Agent',
-                null,
                 'twitter',
                 event.id
               )
