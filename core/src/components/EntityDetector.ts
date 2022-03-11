@@ -119,7 +119,7 @@ Action: `
 
 const info = `The entity detector takes in an action as a string, and attempts to report any discrete entities are mentioned, and their general type.
 
-The fewshot can be edited in the text edior, though note that the data structure must remian the same for proper processing.`
+The fewshot can be edited in the text editor, though note that the data structure must remain the same for proper processing.`
 
 type Entity = {
   name: string
@@ -191,35 +191,40 @@ export class EntityDetector extends ThothComponent<
       maxTokens: 50,
       temperature: 0.0,
     }
-    const result = (await completion(body)) as string
 
-    const split = result?.replace('\n', '')?.trim()?.split('Types: ')
+    try {
+      const result = (await completion(body)) as string
 
-    const [entities, types] = split
-      ? split.map(item => item.split(', ').map(x => x.trim()))
-      : [undefined, undefined]
+      const split = result?.replace('\n', '')?.trim()?.split('Types: ')
 
-    if (!entities || entities.length === 0) return []
-    if (!types) return []
+      const [entities, types] = split
+        ? split.map(item => item.split(', ').map(x => x.trim()))
+        : [undefined, undefined]
 
-    for (let i = 0; i < entities.length; i++) {
-      if (types[i]?.includes('(dialog)')) {
-        types.splice(i, 1)
-        entities.splice(i, 1)
+      if (!entities || entities.length === 0) return []
+      if (!types) return []
+
+      for (let i = 0; i < entities.length; i++) {
+        if (types[i]?.includes('(dialog)')) {
+          types.splice(i, 1)
+          entities.splice(i, 1)
+        }
       }
-    }
 
-    if (entities[0] === 'none') return []
+      if (entities[0] === 'none') return []
 
-    const allEntities = entities.map((entity, i) => ({
-      name: entity,
-      type: types[i],
-    }))
+      const allEntities = entities.map((entity, i) => ({
+        name: entity,
+        type: types[i],
+      }))
 
-    if (!silent) node.display(JSON.stringify(allEntities))
+      if (!silent) node.display(JSON.stringify(allEntities))
 
-    return {
-      entities: allEntities,
+      return {
+        entities: allEntities,
+      }
+    } catch (err) {
+      throw new Error('Error in Entitiy Detector component')
     }
   }
 }

@@ -12,7 +12,7 @@ import { SwitchControl } from '../dataControls/SwitchControl'
 import { EngineContext } from '../engine'
 import { triggerSocket, anySocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
-const info = `The output component will pass values out from your spell.  You can have multiple outputs in a spell and all output values willbe collected.  It also has an option to send the output to the playtest area for easy testing.`
+const info = `The output component will pass values out from your spell.  You can have multiple outputs in a spell and all output values will be collected. It also has an option to send the output to the playtest area for easy testing.`
 
 export class Output extends ThothComponent<void> {
   constructor() {
@@ -74,17 +74,19 @@ export class Output extends ThothComponent<void> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    const output = inputs.input.filter(Boolean)[0]
+    if (!inputs.input) throw new Error('No input provided to output component')
+
+    const text = inputs.input.filter(Boolean)[0]
 
     //just need a new check here for playtest send boolean
     const { sendToPlaytest } = thoth
 
     if (node.data.sendToPlaytest && sendToPlaytest) {
-      sendToPlaytest(output)
+      sendToPlaytest(text)
     }
 
-    if (!silent) node.display(output as string)
+    if (!silent) node.display(text as string)
 
-    return { text: output }
+    return { text }
   }
 }

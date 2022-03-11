@@ -316,6 +316,12 @@ input[type='text'] {
   display: flex;
 }
 
+.agent-createModal {
+  position: relative;
+  right: 400px;
+  bottom: 350px;
+}
+
 .nav {
   width: 180px;
   float: left;
@@ -347,8 +353,11 @@ input[type='text'] {
 }
 
 .form-item {
-  padding: 5%;
-  width: 95%;
+  padding: 1em 0;
+}
+
+.entBtns {
+  display: flex;
 }
 
 .form-item-label {
@@ -357,7 +366,8 @@ input[type='text'] {
 }
 
 .form-text-area,
-.agent-select > select {
+.agent-select > select,
+.search-corpus > select {
   width: 100%;
   box-sizing: border-box;
   padding: var(--extraSmall);
@@ -373,24 +383,134 @@ input[type='text'] {
   height: var(--c4);
 }
 
+.search-corpus > select {
+  width: 20%;
+}
+
+.search-corpus-btns {
+  vertical-align: middle;
+  display: inline-flex;
+  justify-content: space-between;
+  margin: 0 1rem;
+  width: 12%;
+}
+
+.search-corpus-documents-list {
+  margin: 1rem 0;
+}
+
+.search-corpus-document,
+.content-obj {
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+.search-corpus-document {
+  background: #545454;
+}
+.content-obj {
+  background: var(--dark-3);
+}
+
+.search-corpus-btn {
+  height: var(--c20);
+  background-color: #2e2e2e;
+  border: none;
+  margin: 0 0.4rem;
+}
+
 .admin-container {
   margin-left: 11em;
   margin-top: 1em;
 }
 
 .agent-select {
-  margin: 1em;
+  margin: 1em 0;
+}
+
+.agentFields {
+  padding-right: 10px;
+}
+
+.agentBtns {
+  display: flex;
+}
+
+.agentBtns button {
+  background-color: #878587;
+}
+
+.agentBtns .updateBtn {
+  margin-left: auto;
+  order: 2;
+}
+
+.form-text-area,
+.agent-Manager select {
+  background: #fff;
+  color: #636363;
+}
+
+.dialogInput {
+  min-height: 100px;
+}
+.personalityInput,
+.MonologueInput,
+.FactsInput {
+  min-height: 50px;
+}
+.gettingsInput {
+  min-height: 80px;
 }
 
 .agent-container {
   max-width: 100%;
   padding: 2em;
+  height: calc(100% - 4em);
+  overflow: auto;
 }
 
 .agent-editor {
   padding: 2em;
+  height: calc(100% - 4em);
+  overflow: auto;
 }
 
 .form-item > input[type='text'] {
   width: 100%;
+}
+
+.form-item > input[type='checkbox'] {
+  display: inline-flex;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.justify-content-around {
+  justify-content: space-around;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.custom-checkbox {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 0.4rem;
+  margin: 0 0.5rem;
 }

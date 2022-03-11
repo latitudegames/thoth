@@ -15,3 +15,7 @@ client/.env
 server/.env
 core/.env
 google_credentials.json
+
+# Ignore lockfiles
+yarn.lock
+package-lock.json

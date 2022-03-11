@@ -21,7 +21,7 @@ async function getConversation(
   channel: string
 ) {
   const response = await axios.get(
-    `${process.env.REACT_APP_API_URL}/conversation?agent=${agent}&speaker=${speaker}&client=${client}&channel=${channel}`
+    `${process.env.REACT_APP_API_ROOT_URL}/conversation?agent=${agent}&speaker=${speaker}&client=${client}&channel=${channel}`
   )
   return response.data
 }

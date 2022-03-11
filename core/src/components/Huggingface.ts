@@ -15,7 +15,7 @@ import { triggerSocket, stringSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 const info = `The huggingface component is used to access models on huggingface.co.  For now it is very simple.  You define a number of inputs with the input generator, and you can use those in forming the request to your huggingface inference model.  You input the name of the model from hugginface into the model name field, and you run it.  It will call the model, and return the result.
 
-NOTE:  Hugginface models are on demand, and sometimes require time to "boot up".  We have tried to trigger an initial request the cause the model to load in the background while you and working, but this will not always be done in time. If it is not done, we will notify you via the "error" trigger out.
+NOTE:  Hugginface models are on demand, and sometimes require time to "boot up".  We have tried to trigger an initial request that causes the model to load in the background while you are working, but this will not always be done in time. If it is not done, we will notify you via the "error" trigger out.
 
 Also note that you will likely need to parse the return from huggingface yourself inside a code component, or similar.`
 
@@ -73,8 +73,8 @@ export class HuggingfaceComponent extends ThothComponent<
       language: 'handlebars',
     })
 
-    const stopControl = new InputControl({
-      dataKey: 'modelName',
+    const modelControl = new InputControl({
+      dataKey: 'model',
       name: 'Model Name',
     })
 
@@ -82,7 +82,7 @@ export class HuggingfaceComponent extends ThothComponent<
       .add(nameControl)
       .add(inputGenerator)
       .add(requestControl)
-      .add(stopControl)
+      .add(modelControl)
 
     return node
   }
@@ -108,15 +108,16 @@ export class HuggingfaceComponent extends ThothComponent<
     try {
       const result = await thoth.huggingface(model, request)
 
-      if (result.error) throw Error()
+      // This might cause bug
+      if (result.error)
+        throw new Error(`Huggingface result.error: ${result.error}`)
 
       return {
         result,
       }
     } catch (err) {
       this._task.closed = ['trigger']
-
-      return {}
+      throw new Error('Error in HuggingFace component')
     }
   }
 }

@@ -28,11 +28,12 @@ module.exports = () => {
     entry: ['regenerator-runtime/runtime.js', './src/index.js'],
     output: {
       path: path.resolve(__dirname, '../build'),
-      filename: '[name].bundle.js',
+      filename: '[name].[contenthash].bundle.js',
       clean: true,
     },
     resolve: {
       alias: {
+        handlebars: 'handlebars/dist/handlebars.min.js',
         '@': path.resolve(__dirname, 'src'),
         '@thoth': path.resolve(__dirname, 'src/features/Thoth'),
         '@common': path.resolve(__dirname, 'src/features/common'),

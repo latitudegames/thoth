@@ -1,73 +1,99 @@
 //@ts-nocheck
-
-import axios from "axios";
-import React, { useEffect, useRef, useState } from 'react';
+import Modal from '@/features/common/Modal/Modal'
+import axios from 'axios'
+import React, { useEffect, useRef, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { thothApiRootUrl } from '@/config'
 
 const AgentManager = () => {
-  const [agents, setAgents] = useState();
-  const [currentAgentData, setCurrentAgentData] = useState(null);
-  const newAgentRef = useRef("New Agent");
+  const [agents, setAgents] = useState([] as any[])
+  const [currentAgentData, setCurrentAgentData] = useState({ id: '', name: '', agent: null })
+  const newAgentRef = useRef('New Agent')
 
-  const [dialog, setDialog] = useState('');
-  const [morals, setMorals] = useState('');
-  const [facts, setFacts] = useState('');
-  const [monologue, setMonologue] = useState('');
-  const [personality, setPersonality] = useState('');
-  const [greetings, setGreetings] = useState('');
+  const [dialog, setDialog] = useState('')
+  const [morals, setMorals] = useState('')
+  const [facts, setFacts] = useState('')
+  const [monologue, setMonologue] = useState('')
+  const [personality, setPersonality] = useState('')
+  const [greetings, setGreetings] = useState('')
+  const [openModal, setOpenModal] = useState(false)
+  const [versionName, setVersionName] = useState('')
+  const [files, setFiles] = useState("");
+  let importData = files && JSON.parse(files);
 
-  const createNew = async () => {
-    console.log("newAgentRef.current is,", newAgentRef.current.value)
-    const agent = newAgentRef.current.value ?? "New Agent";
-    await getAgents();
-    await update(agent);
+  const {
+    register,
+    handleSubmit,
+  } = useForm()
+
+  const options = [
+    {
+      label: 'Save',
+      onClick: () => {
+        onSubmit({ versionName })
+      },
+    }
+  ]
+
+  const createNew = async (e) => {
+    console.log('newAgentRef.current is,', newAgentRef.current.value)
+    const agent = !newAgentRef.current.value ? 'New Agent' : newAgentRef.current.value
+    await getAgents()
+    await update(agent as any)
   }
 
   const deleteAgent = async () => {
-    console.log("deleting", currentAgentData)
-    const res = await axios.delete(`${process.env.REACT_APP_API_URL}/agent/` + currentAgentData.id);
-    console.log("deleted", res);
-    await getAgents();
+    const res = await axios.delete(
+      `${thothApiRootUrl}/agent/` + currentAgentData.id
+    )
+    console.log('deleted', res)
+    await getAgents()
   }
 
-  const update = async (agent) => {
-    console.log("currentAgentData is", agent ?? currentAgentData)
+  const update = async (agent = currentAgentData.agent) => {
     const body = {
-      agent: agent ?? currentAgentData.agent, data: {
-        dialog, morals, facts, monologue, personality, greetings
-      }
-    };
-    const res = await axios.post(`${process.env.REACT_APP_API_URL}/agent`, body);
-    console.log("updated, switching to", agent ?? currentAgentData.agent);
-    const newAgents = await getAgents();
-    setAgents(newAgents);
+      agent: agent,
+      data: {
+        dialog,
+        morals,
+        facts,
+        monologue,
+        personality,
+        greetings,
+      },
+    }
+    await axios.post(`${thothApiRootUrl}/agent`, body)
+    const newAgents = await getAgents() as any[]
+    setAgents(newAgents)
 
-    switchAgent(agent ?? currentAgentData.agent);
+    switchAgent(agent)
   }
 
   const getAgents = async () => {
-    const res = await axios.get(`${process.env.REACT_APP_API_URL}/agents`)
-
-    if (res.data.length == 0) return setAgents([]);
-    let newAgents = [];
+    const res = await axios.get(`${thothApiRootUrl}/agents`)
+    console.log("Res is", res)
+    if (res.data.length == 0) return setAgents([])
+    let newAgents = [] as any[]
     for (let i = 0; i < res.data.length; i++) {
-      newAgents.push(res.data[i]);
+      newAgents.push(res.data[i])
     }
-    console.log("newAgents", newAgents);
-    setAgents(newAgents);
+    console.log('newAgents', newAgents)
+    setAgents(newAgents)
     setCurrentAgentData(newAgents && newAgents[0])
     if (newAgents && newAgents[0]) {
-      switchAgent(newAgents[0]);
-
+      switchAgent(newAgents[0])
     }
-    return newAgents;
+    return newAgents
   }
 
-  const switchAgent = async (agent) => {
-    console.log("agent is", agent)
-    const res = await axios.get(`${process.env.REACT_APP_API_URL}/agent?agent=${agent.agent ?? agent}`);
-    console.log("res.data is", res.data)
+  const switchAgent = async agent => {
+    console.log('agent is', agent)
+    const res = await axios.get(
+      `${thothApiRootUrl}/agent?agent=${agent.agent ?? agent}`
+    )
+    console.log('res.data is', res.data)
 
-    setCurrentAgentData(res.data);
+    setCurrentAgentData(res.data)
     setDialog(res.data.dialog)
     setMorals(res.data.morals)
     setFacts(res.data.facts)
@@ -76,80 +102,253 @@ const AgentManager = () => {
     setGreetings(res.data.greetings)
   }
 
-  useEffect(async () => {
-    const newAgents = await getAgents();
-    setAgents(newAgents);
-    if (newAgents[0])
-      setCurrentAgentData(newAgents[0])
+  useEffect(() => {
+    (async () => {
+      const newAgents = await getAgents()
+      if (newAgents) {
+        setAgents(newAgents)
+        if (newAgents[0]) setCurrentAgentData(newAgents[0])
+      }
+    })();
   }, [])
+
+  const onSubmit = handleSubmit(async () => {
+    await createNew()
+    onClose()
+  })
+
+  const onClose = () => {
+    setOpenModal(false)
+  }
+
+  const updateVersionName = e => {
+    setVersionName(e.target.value)
+  }
+
+  const downloadFile = ({ data, fileName, fileType }) => {
+    const blob = new Blob([data], { type: fileType });
+
+    const a = document.createElement("a");
+    a.download = fileName;
+    a.href = window.URL.createObjectURL(blob);
+    const clickEvt = new MouseEvent("click", {
+      view: window,
+      bubbles: true,
+      cancelable: true,
+    });
+    a.dispatchEvent(clickEvt);
+    a.remove();
+  };
+
+  const handleChange = e => {
+    const fileReader = new FileReader();
+    fileReader.readAsText(e.target.files[0], "UTF-8");
+    fileReader.onload = e => {
+      setFiles(e.target.result);
+    };
+  };
+
+  const onExportData = (e) => {
+    e.preventDefault();
+    downloadFile({
+      data: JSON.stringify(files),
+      fileName: "users.json",
+      fileType: "text/json",
+    });
+  }
 
   return (
     <div className="agent-container">
-      <div>
-        <span className="create-agent">Create Agent</span>
-        <input type="text" ref={newAgentRef} />
-        <button className='button' type='button' onClick={async (e) => { e.preventDefault(); await createNew(); }}>Create New</button>
+      <div style={{ display: 'flex' }}>
+        <span className="create-agent" style={{ lineHeight: '32px' }}>
+          Create Agent
+        </span>
       </div>
+      <button
+        className="button"
+        type="button"
+        onClick={async e => {
+          e.preventDefault()
+          setOpenModal(true)
+        }}
+      >
+        Create New
+      </button>
       <div>
         {!agents ? (
           <h1>Loading...</h1>
         ) : (
           <div className="agent-header">
             <span className="agent-select">
-              <select name="agents" id="agents" onChange={(event) => {
-                switchAgent(event.target.value)
-              }}>
-                {agents.length > 0 && agents.map((agent, idx) =>
-                  <option value={agent.agent} key={idx}>{agent.agent}</option>
-                )}
-                {agents.length === 0 && "No personalities found"}
+              <select
+                name="agents"
+                id="agents"
+                onChange={event => {
+                  switchAgent(event.target.value)
+                }}
+              >
+                {agents.length > 0 &&
+                  agents.map((agent, idx) => (
+                    <option value={agent.agent} key={idx}>
+                      {agent.agent}
+                    </option>
+                  ))}
+                {agents.length === 0 && 'No personalities found'}
               </select>
             </span>
+            {currentAgentData && <div style={{ display: 'flex', margin: '1em' }}>
+              <button
+                value="import"
+                style={{ marginRight: '12px' }}
+              >
+                <label className="btn btn-primary">
+                  Import<input type="file" accept=".json" onChange={handleChange} style={{ display: "none" }} name="image" />
+                </label>
+              </button>
+              <button
+                value="export"
+                onClick={(e) => {
+                  onExportData(e)
+                }}
+              >
+                Export
+              </button>
+            </div>}
           </div>
         )}
-        {currentAgentData &&
+        {currentAgentData && (
           <form>
-            <div className="form-item">
-              <span className="form-item-label">Dialogue:</span>
-              <textarea className="form-text-area" onChange={(e) => { setDialog(e.target.value) }} value={dialog} ></textarea>
+
+            <div style={{ display: 'flex' }}>
+              <div className="form-item agentFields" style={{ width: '100%' }}>
+                <span className="form-item-label">Name</span>
+                <textarea
+                  className="form-text-area"
+                  onChange={e => {
+                    setDialog(e.target.value)
+                  }}
+                  value={importData && importData.Dialogue ? importData.Dialogue : dialog}
+                ></textarea>
+              </div>
+              <div className="agent-select agent-Manager" style={{ width: '100%' }}>
+                <span className="form-item-label">Personalities</span>
+                <select
+                  name="agents"
+                  id="agents"
+                  onChange={event => {
+                    switchAgent(event.target.value)
+                  }}
+                >
+                  {agents.length > 0 &&
+                    agents.map((agent, idx) => (
+                      <option value={agent.agent} key={idx}>
+                        {agent.agent}
+                      </option>
+                    ))
+                  }
+                </select>
+              </div>
             </div>
 
             <div className="form-item">
-              <span className="form-item-label">Morals:</span>
-              <textarea className="form-text-area" onChange={(e) => { setMorals(e.target.value) }} value={morals}></textarea>
+              <span className="form-item-label">Dialog</span>
+              <textarea
+                className="form-text-area dialogInput"
+                onChange={e => {
+                  setDialog(e.target.value)
+                }}
+                value={importData && importData.Dialogue ? importData.Dialogue : dialog}
+              ></textarea>
             </div>
 
             <div className="form-item">
-              <span className="form-item-label">Facts:</span>
-              <textarea className="form-text-area" onChange={(e) => { setFacts(e.target.value) }} value={facts}></textarea>
+              <span className="form-item-label">Personality</span>
+              <textarea
+                className="form-text-area personalityInput"
+                onChange={e => {
+                  setPersonality(e.target.value)
+                }}
+                value={importData && importData.Personality ? importData.Personality : personality}
+              ></textarea>
             </div>
 
             <div className="form-item">
-              <span className="form-item-label">Monologue:</span>
-
-              <textarea className="form-text-area" onChange={(e) => { setMonologue(e.target.value) }} value={monologue}></textarea>
+              <span className="form-item-label">Morals and Ethics</span>
+              <textarea
+                className="form-text-area"
+                onChange={e => {
+                  setMorals(e.target.value)
+                }}
+                value={importData && importData.Morals ? importData.Morals : morals}
+              ></textarea>
             </div>
 
             <div className="form-item">
-              <span className="form-item-label">Personality:</span>
-              <textarea className="form-text-area" onChange={(e) => { setPersonality(e.target.value) }} value={personality}></textarea>
+              <span className="form-item-label">Monologue</span>
+
+              <textarea
+                className="form-text-area MonologueInput"
+                onChange={e => {
+                  setMonologue(e.target.value)
+                }}
+                value={importData && importData.Monologue ? importData.Monologue : monologue}
+              ></textarea>
             </div>
 
             <div className="form-item">
-              <span className="form-item-label">Greetings:</span>
-              <textarea className="form-text-area" onChange={(e) => { setGreetings(e.target.value) }} value={greetings}></textarea>
+              <span className="form-item-label">Facts</span>
+              <textarea
+                className="form-text-area FactsInput"
+                onChange={e => {
+                  setFacts(e.target.value)
+                }}
+                value={importData && importData.Facts ? importData.Facts : facts}
+              ></textarea>
             </div>
 
-            <button value='Update' onClick={(e) => { e.preventDefault(); update() }} >Update</button>
-            <button value='Delete' onClick={(e) => {
-              e.preventDefault();
-              deleteAgent();
-            }} >Delete</button>
+            <div className="form-item">
+              <span className="form-item-label">Greetings</span>
+              <textarea
+                className="form-text-area gettingsInput"
+                onChange={e => {
+                  setGreetings(e.target.value)
+                }}
+                value={importData && importData.Greetings ? importData.Greetings : greetings}
+              ></textarea>
+            </div>
+            <div className="agentBtns">
+              <button
+                value="Delete"
+                onClick={e => {
+                  e.preventDefault()
+                  deleteAgent()
+                }}
+              >
+                Delete
+              </button>
+              <button
+                value="Update"
+                onClick={e => {
+                  e.preventDefault()
+                  update()
+                }}
+                className='updateBtn'
+              >
+                Save
+              </button>
+            </div>
           </form>
-        }
+        )}
+        <div className="agent-createModal">
+          {openModal &&
+            <Modal title="New Agent" options={options} onClose={onClose} icon="add" className="agent-createModal">
+              <h4>CHANGE NOTES</h4>
+              <input type="text" style={{ marginLeft: 'auto' }} ref={newAgentRef} />
+            </Modal>}
+        </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default AgentManager;
+export default AgentManager

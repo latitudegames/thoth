@@ -139,13 +139,18 @@ export class TenseTransformer extends ThothComponent<Promise<WorkerReturn>> {
       maxTokens: 100,
       temperature: 0.0,
     }
-    const raw = (await completion(body)) as string
-    const result = raw?.trim()
 
-    if (!silent) node.display(result)
+    try {
+      const raw = (await completion(body)) as string
+      const result = raw?.trim()
 
-    return {
-      action: result
+      if (!silent) node.display(result)
+
+      return {
+        action: result,
+      }
+    } catch (err) {
+      throw new Error('Error in Tense Transformer component')
     }
   }
 }

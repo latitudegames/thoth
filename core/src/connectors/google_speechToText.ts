@@ -1,12 +1,11 @@
 /* eslint-disable require-await */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import textToSpeech from '@google-cloud/text-to-speech'
+// import textToSpeech from '@google-cloud/text-to-speech'
 
 export default async function getSpeechForText() {
-  const textToSpeechClient = new textToSpeech.TextToSpeechClient({
-    projectId: process.env.google_project_id,
-  })
-  console.log(textToSpeechClient)
+  // const textToSpeechClient = new textToSpeech.TextToSpeechClient({
+  //   projectId: process.env.google_project_id,
+  // })
 
   /*const request = {
     input: {

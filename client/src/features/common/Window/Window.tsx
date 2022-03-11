@@ -1,14 +1,22 @@
-import { Scrollbars } from 'react-custom-scrollbars'
+import { ReactElement, useEffect, useRef } from 'react'
+import { Scrollbars } from 'react-custom-scrollbars-2'
 
 import WindowToolbar from './WindowToolbar'
 
 import css from './window.module.css'
-import { ReactElement } from 'react'
 
-const WindowLayout = props => {
+const WindowLayout = ({ scrollToBottom, children }) => {
+  const scrollbars = useRef<any>()
+
+  useEffect(() => {
+    scrollbars.current.scrollToBottom()
+  }, [scrollToBottom])
+
   return (
     <div className={css['window-layout']}>
-      <Scrollbars>{props.children}</Scrollbars>
+      <Scrollbars ref={ref => (scrollbars.current = ref)}>
+        {children}
+      </Scrollbars>
     </div>
   )
 }
@@ -19,7 +27,8 @@ type Props = {
   borderless?: boolean
   darker?: boolean
   grid?: boolean
-  toolbar: ReactElement<any, any>
+  scrollToBottom?: boolean
+  toolbar?: ReactElement<any, any> | false
   children: ReactElement<any, any> | ReactElement<any, any>[]
 }
 
@@ -30,6 +39,8 @@ const Window = (props: Props) => {
     borderless = false,
     darker = false,
     grid = false,
+    toolbar = false,
+    scrollToBottom = false,
   } = props
 
   return (
@@ -43,8 +54,10 @@ const Window = (props: Props) => {
       ${css[grid ? 'grid' : '']}
       `}
     >
-      <WindowToolbar>{props.toolbar}</WindowToolbar>
-      <WindowLayout>{props.children}</WindowLayout>
+      {toolbar && <WindowToolbar>{props.toolbar}</WindowToolbar>}
+      <WindowLayout scrollToBottom={scrollToBottom}>
+        {props.children}
+      </WindowLayout>
     </div>
   )
 }

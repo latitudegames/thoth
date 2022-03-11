@@ -22,7 +22,7 @@ type InputReturn = {
 
 async function storeMatrix(agent: string, speaker: string, matrix: string) {
   const response = await axios.post(
-    `${process.env.REACT_APP_API_URL}/relationship_matrix`,
+    `${process.env.REACT_APP_API_ROOT_URL}/relationship_matrix`,
     {
       agent: agent,
       speaker: speaker,

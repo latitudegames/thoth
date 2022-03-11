@@ -23,7 +23,7 @@ type InputReturn = {
 
 export async function getFactsCount(agent: string, speaker: string) {
   const response = await axios.get(
-    `${process.env.REACT_APP_API_URL}/facts_count?agent=${agent}&speaker=${speaker}`
+    `${process.env.REACT_APP_API_ROOT_URL}/facts_count?agent=${agent}&speaker=${speaker}`
   )
 
   let count = 0

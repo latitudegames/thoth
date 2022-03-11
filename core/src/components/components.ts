@@ -42,6 +42,7 @@ import { Output } from './Output'
 import { ProseToScript } from './ProseToScript'
 import { RandomStringFromList } from './RandomStringFromList'
 import { SafetyVerifier } from './SafetyVerifier'
+import { Search } from './Search'
 import { StateRead } from './StateRead'
 import { StateWrite } from './StateWrite'
 import { StringCombiner } from './StringCombiner'
@@ -56,6 +57,7 @@ import { TextToSpeech } from './TextToSpeech'
 import { TimeDetectorComponent } from './TimeDetector'
 import { TriggerIn } from './TriggerIn'
 import { TriggerOut } from './TriggerOut'
+import { VisualGeneration } from './VisualGeneration'
 import { WhileLoop } from './WhileLoop'
 
 // Here we load up all components of the builder into our editor for usage.
@@ -115,6 +117,7 @@ export const components = {
   proseToScript: () => new ProseToScript(),
   runInputCompnent: () => new RunInputComponent(),
   safetyVerifier: () => new SafetyVerifier(),
+  search: () => new Search(),
   stateWrite: () => new StateWrite(),
   stateRead: () => new StateRead(),
   stringProcessor: () => new StringProcessor(),
@@ -123,6 +126,7 @@ export const components = {
   timeDetectorComponent: () => new TimeDetectorComponent(),
   triggerIn: () => new TriggerIn(),
   triggerOut: () => new TriggerOut(),
+  VisualGeneration: () => new VisualGeneration(),
 }
 
 export const getComponents = () => {

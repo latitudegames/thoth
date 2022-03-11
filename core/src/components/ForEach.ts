@@ -8,7 +8,7 @@ import {
 } from '../../types'
 import { arraySocket, triggerSocket, anySocket } from '../sockets'
 import { ThothComponent, ThothTask } from '../thoth-component'
-const info = `The forEach component takes in an array, and will iterate over each item in the array, firing a new trigger signal with the appropriate value,until all items in the array have been processed.`
+const info = `The forEach component takes in an array, and will iterate over each item in the array, firing a new trigger signal with the appropriate value, until all items in the array have been processed.`
 
 type WorkerReturn = {
   element: string | string[] | unknown
@@ -47,13 +47,18 @@ export class ForEach extends ThothComponent<Promise<WorkerReturn | undefined>> {
     if (element === undefined) {
       const inputsArray = inputs.array[0] as unknown[]
 
-      await Promise.all(
-        inputsArray.map((el: unknown) =>
-          this._task
-            .clone(false, {} as ThothTask, {} as ThothTask)
-            .run({ element: el })
+      try {
+        await Promise.all(
+          inputsArray.map((el: unknown) =>
+            this._task
+              .clone(false, {} as ThothTask, {} as ThothTask)
+              .run({ element: el })
+          )
         )
-      )
+      } catch (err) {
+        throw new Error('Error in ForEach Componenet.')
+      }
+
       this._task.closed = ['act']
     } else {
       this._task.closed = ['done']

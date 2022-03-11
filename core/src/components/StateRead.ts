@@ -7,7 +7,7 @@ import {
 import { SocketGeneratorControl } from '../dataControls/SocketGenerator'
 import { EngineContext } from '../engine'
 import { ThothComponent } from '../thoth-component'
-const info = `The State Read component allows you to read values from the state.  These can be found in and are managed by the State Manager window.  This window consists of a JSON object.  You can define any number ouf outputs where an outputs name corresponds to a key in the state manager.  Whatever value is assigned to that key will be read ans passed into your chain.`
+const info = `The State Read component allows you to read values from the state.  These can be found in and are managed by the State Manager window.  This window consists of a JSON object.  You can define any number of outputs where an outputs name corresponds to a key in the state manager.  Whatever value is assigned to that key will be read ans passed into your chain.`
 export class StateRead extends ThothComponent<
   Promise<Record<string, unknown>>
 > {
@@ -43,18 +43,23 @@ export class StateRead extends ThothComponent<
     { thoth }: { silent: boolean; thoth: EngineContext }
   ) {
     const { getCurrentGameState } = thoth
-    const gameState = await getCurrentGameState()
 
-    return Object.entries(gameState).reduce((acc, [key, value]) => {
-      const nodeOutputs = node.data.outputs as {
-        name: string
-        [key: string]: unknown
-      }[]
-      if (nodeOutputs.some(out => out.name === key)) {
-        acc[key] = value
-      }
+    try {
+      const gameState = await getCurrentGameState()
 
-      return acc
-    }, {} as { [key: string]: unknown })
+      return Object.entries(gameState).reduce((acc, [key, value]) => {
+        const nodeOutputs = node.data.outputs as {
+          name: string
+          [key: string]: unknown
+        }[]
+        if (nodeOutputs.some(out => out.name === key)) {
+          acc[key] = value
+        }
+
+        return acc
+      }, {} as { [key: string]: unknown })
+    } catch (err) {
+      throw new Error('Error in State Read component')
+    }
   }
 }
