@@ -1,7 +1,5 @@
 import cryptojs from 'crypto-js'
-import { config } from 'dotenv-flow'
 
-config()
 const key = `${process.env.AES_KEY}`
 const iv = `${process.env.AES_IV}`
 const OLD_KEY = `,cf&Vzp3,QA9XJNPf0!X$%~tpw%meD_{vZwGJvWPN}E{4Dw^*qChQkEWt_TDyZ4`
