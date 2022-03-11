@@ -32,8 +32,7 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
   const [getDeplopyment, { data: deploymentData }] = useLazyGetDeploymentQuery()
   // const spell = useSelector(state => selectSpellById(spellId))
   const spell = spellId;
-  const name = spell?.name as string
-  const { data: deployments, isLoading } = useGetDeploymentsQuery(name, {
+  const { data: deployments, isLoading } = useGetDeploymentsQuery(spellId, {
     skip: !spell,
   })
 
