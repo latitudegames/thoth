@@ -9,8 +9,7 @@ import koaBody from 'koa-body'
 import Router from '@koa/router'
 import axios from 'axios'
 import {
-  includesKeyword,
-  includesMetadata,
+  includeInFields,
   removePanctuationalMarks,
   simplifyWords,
 } from '../utils/utils'
@@ -119,12 +118,8 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
 
     return (ctx.body = 'ok')
   })
-  router.post('/search', async function (ctx: Koa.Context) {
-    const agent = ctx.request.body?.agent
-    const question = ctx.request.body?.question as string
-    const sameTopicOnly =
-      (ctx.request.body?.sameTopicOnly as string).toLowerCase().trim() ===
-      'true'
+  router.get('/search', async function (ctx: Koa.Context) {
+    const question = ctx.query.question as string
     const cleanQuestion = removePanctuationalMarks(question)
     const words = simplifyWords(cleanQuestion.split(' '))
     const topic = await classifyText(question)
@@ -135,30 +130,23 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
     let maxKeywords = 0
     let maxIdKeywords = -1
 
-    const documents: {
-      id: number
-      agent: string
-      document: string
-      metadata: string | string[]
-      keywords: string | string[]
-      topic: string
-    }[] = sameTopicOnly
-        ? await database.instance.getDocumentsWithTopic(agent, topic)
-        : await database.instance.getDocuments(agent)
+    const documents = await database.instance.getAllDocumentsForSearch()
 
     console.log('loaded ' + documents.length + ' documents')
     for (let i = 0; i < documents.length; i++) {
-      documents[i].metadata = (documents[i].metadata as string).split(',')
-      documents[i].keywords = (documents[i].keywords as string).split(',')
+      documents[i].description = (documents[i].description as string).split(',').map(el => el.trim().toLowerCase())
+      documents[i].keywords = (documents[i].keywords as string).split(',').map(el => el.trim().toLowerCase())
 
-      const metadataCount = includesMetadata(
-        documents[i].metadata as string[],
+      const metadataCount = includeInFields(
+        documents[i].description as string[],
         words
       )
-      const keywordsCount = includesKeyword(
+      const keywordsCount = includeInFields(
         documents[i].keywords as string[],
         words
       )
+      console.log('metadataCount :: ', metadataCount);
+      console.log('keywordsCount :: ', keywordsCount);
 
       if (metadataCount > maxMetadata) {
         maxMetadata = metadataCount
@@ -169,22 +157,32 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
         maxIdKeywords = i
       }
     }
+    console.log('maxIdMetadata ::: ', maxIdMetadata);
+    console.log('maxIdKeywords ::: ', maxIdKeywords);
 
     const testDocs = []
     if (maxIdKeywords === maxIdMetadata && maxIdKeywords !== -1) {
-      return (ctx.body = documents[maxIdKeywords].document)
+      return (ctx.body = documents[maxIdKeywords])
     } else if (maxIdKeywords !== maxIdMetadata) {
       if (maxIdKeywords !== -1 && maxIdMetadata !== -1) {
-        testDocs.push(documents[maxIdMetadata].document)
-        testDocs.push(documents[maxIdKeywords].document)
+        testDocs.push(documents[maxIdMetadata])
+        testDocs.push(documents[maxIdKeywords])
+      } else if (maxIdKeywords !== -1) {
+        testDocs.push(documents[maxIdKeywords])
+      } else if (maxIdMetadata !== -1) {
+        testDocs.push(documents[maxIdMetadata])
       } else {
         for (let i = 0; i < documents.length; i++) {
-          testDocs.push(documents[i].document)
+          testDocs.push(documents[i])
         }
       }
     }
 
     if (testDocs.length !== 0) {
+      testDocs.forEach(doc => {
+        doc.keywords = doc.keywords.join(',')
+        doc.description = doc.description.join(',')
+      })
       const response = await axios.post(
         `https://api.openai.com/v1/engines/${searchEngine}/search`,
         { documents: testDocs, query: question },
@@ -198,6 +196,7 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
 
       let highestScore = 0
       let highestScoreIndex = -1
+      console.log('response ::: ', response.data);
 
       for (let i = 0; i < response.data.data; i++) {
         if (response.data.data[i].score > highestScore) {
@@ -208,10 +207,12 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
 
       if (highestScoreIndex >= 0) {
         return (ctx.body =
-          documents[response.data.data[highestScoreIndex].document])
+          documents[response.data.data[highestScoreIndex]])
       } else {
         return (ctx.body = 'No documents where found to search from!')
       }
+
+      // return (ctx.body  = testDocs)
     } else return (ctx.body = 'No documents where found to search from!')
   })
 
