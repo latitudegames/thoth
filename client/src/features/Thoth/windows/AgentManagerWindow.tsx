@@ -19,7 +19,7 @@ const AgentManager = () => {
   const [versionName, setVersionName] = useState('')
   const [files, setFiles] = useState("");
   let importData = files && JSON.parse(files);
-
+  console.log(personality,'personality')
   const {
     register,
     handleSubmit,
