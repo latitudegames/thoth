@@ -2,11 +2,9 @@
 //@ts-nocheck
 
 import axios from 'axios'
-import { config } from 'dotenv'
 
 import { database } from '@latitudegames/thoth-core/src/connectors/database'
 import { makeModelRequest } from './makeModelRequest'
-config()
 
 export async function makeCompletionRequest(
   data,

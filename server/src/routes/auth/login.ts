@@ -1,12 +1,9 @@
 import axios from 'axios';
-import dotenv from 'dotenv-flow';
 import Koa from 'koa';
 
 import { noAuth } from '../../middleware/auth';
 import { Route } from '../../types';
 import { CustomError } from './../../utils/CustomError';
-
-dotenv.config()
 
 export const auth: Route[] = [
   {

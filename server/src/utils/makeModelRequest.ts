@@ -1,10 +1,7 @@
 /* eslint-disable no-console */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-nocheck
-
 import axios from 'axios'
-import { config } from 'dotenv'
-config()
 
 //Model Request using the Hugging Face API (models can be found at -> https://huggingface.co/models)
 export async function makeModelRequest(
