@@ -27,5 +27,9 @@
       "path": "../core"
     }
   ],
-  "include": ["src", "src/contexts/layouts/defaultLayout.json"]
+  "include": [
+    "src",
+    "src/contexts/layouts/defaultLayout.json",
+    "../server/src/googleSpeechToText.ts"
+  ]
 }

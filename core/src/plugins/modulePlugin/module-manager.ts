@@ -194,6 +194,8 @@ export class ModuleManager {
   ) {
     if (!module) return
     const socketKey = node.data.socketKey as string
+    console.log('setting output', inputs)
+    console.log("inputs['input'][0]", inputs['input'][0])
     module.setOutput(socketKey, inputs['input'][0])
   }
 
@@ -205,7 +207,7 @@ export class ModuleManager {
   ) {
     if (!module) return
 
-    // module.setOutput(node.data.name, inputs["input"][0]);
+    // module.setOutput(node.data.name as any, inputs['input'][0])
   }
 
   workerTriggerOuts(
@@ -216,6 +218,12 @@ export class ModuleManager {
   ) {
     if (!module) return
     const socketKey = node.data.socketKey as string
+    console.log(
+      'setting output',
+      inputs,
+      "inputs['input'][0]",
+      inputs['input'][0]
+    )
     module.setOutput(socketKey, outputs['trigger'])
   }
 

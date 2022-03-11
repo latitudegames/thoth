@@ -4,6 +4,7 @@ interface CssExports {
   'active': string;
   'bottom-container': string;
   'code-editor': string;
+  'form-text-area': string;
   'node-bottom-container': string;
   'node-grid': string;
   'node-grid-item': string;

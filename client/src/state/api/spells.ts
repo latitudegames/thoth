@@ -72,7 +72,7 @@ export const spellApi = rootApi.injectEndpoints({
         const { data: spell } = await queryFulfilled
 
         dispatch(
-          updateGameState({ state: spell.gameState, spellId: spell.name })
+          updateGameState({ state: spell?.gameState, spellId: spell?.name })
         )
       },
     }),
@@ -88,11 +88,9 @@ export const spellApi = rootApi.injectEndpoints({
             updateGameState({ state: spell.gameState, spellId: spell.name })
           )
 
-        spell.modules = modules
-
         const baseQueryOptions = {
           url: 'game/spells/save',
-          body: spell,
+          body: { ...spell, modules },
           method: 'POST',
         }
 
@@ -198,6 +196,8 @@ export const {
   useGetDeploymentsQuery,
   useLazyGetDeploymentQuery,
 } = spellApi
+
+console.log("spellApi is", spellApi)
 
 export const useGetSpellSubscription =
   spellApi.endpoints.getSpell.useLazyQuerySubscription
