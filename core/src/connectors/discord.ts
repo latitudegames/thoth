@@ -21,7 +21,8 @@ import { handleInput } from './handleInput'
 import { getRandomEmptyResponse, startsWithCapital, getSetting } from './utils'
 
 function log(...s) {
-  console.log(...s)
+  return
+  // console.log(...s)
 }
 
 export const channelTypes = {
@@ -611,7 +612,6 @@ export class discord_client {
       channel.sendTyping()
     }, message.content.length)
 
-    console.log(this.agent)
     const response = await handleInput(
       message.content,
       message.author.username,
@@ -621,7 +621,6 @@ export class discord_client {
       this.spell_handler,
       this.spell_version
     )
-    console.log('got response:', response)
     this.handlePingSoloAgent(message.channel.id, message.id, response, false)
   }
 
@@ -660,7 +659,7 @@ export class discord_client {
 
     const oldResponse = this.getResponse(channel.id, id)
     if (oldResponse === undefined) {
-      await channel.messages.fetch(id).then(async msg => {})
+      await channel.messages.fetch(id).then(async msg => { })
       log('message not found')
       return
     }
@@ -1542,7 +1541,6 @@ export class discord_client {
           return
         if (channelIds.includes(channel.id)) return
 
-        console.log('sending to channel with topic: ' + channel.topic)
         channelIds.push(channel.id)
         if (
           discussionChannels[channel.id] === undefined ||

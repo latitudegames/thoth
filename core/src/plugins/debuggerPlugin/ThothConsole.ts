@@ -1,4 +1,5 @@
 import { NodeView } from 'rete/types/view/node'
+
 import { IRunContextEditor, NodeData } from '../../../types'
 import { ThothComponent } from '../../thoth-component'
 
@@ -9,20 +10,6 @@ type ConsoleConstructor = {
   server: boolean
   throwError?: Function
 }
-
-type ErrorMessage = {
-  errorIn: string
-  message: string
-}
-
-type Message = {
-  errorIn: string
-  nodeId: number
-  name: string | null
-  error: ErrorMessage
-  type: 'error' | ''
-}
-
 export class ThothConsole {
   node: NodeData
   editor: IRunContextEditor
@@ -44,7 +31,8 @@ export class ThothConsole {
     this.isServer = server
 
     if (throwError) this.throwError = throwError
-
+    console.log('editor.view is ', editor.view)
+    if (!editor.view) return;
     const nodeValues = Array.from(editor.view.nodes)
     const foundNode = nodeValues.find(([, n]) => n.node.id === node.id)
 
@@ -54,6 +42,7 @@ export class ThothConsole {
   }
 
   updateNodeView() {
+    if (!this.nodeView) return
     this.nodeView.onStart()
     this.nodeView.node.update()
   }
@@ -95,10 +84,12 @@ export class ThothConsole {
     this.renderError()
   }
 
-  sendSuccess(result: any) {}
+  sendSuccess(result: any) {
+    console.log('Success', result)
+  }
 
   sendToDebug(message: any) {
-    if (this.editor.thoth.sendToDebug) this.editor.thoth.sendToDebug(message)
+    if (this.editor && this.editor.thoth && this.editor.thoth.sendToDebug) this.editor.thoth.sendToDebug(message)
   }
 
   throwServerError(message: any) {

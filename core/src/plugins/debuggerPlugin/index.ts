@@ -17,14 +17,15 @@ function install(
   editor.on('componentregister', (component: ThothComponent<unknown>) => {
     const worker = component.worker
 
-    component.worker = (node, inputs, outputs, data, ...args) => {
-      node.console = new ThothConsole({
+    component.worker = (node: any, inputs, outputs, data, ...args) => {
+      const arg = {
         node,
         component,
         editor,
         server,
         throwError,
-      })
+      }
+      node.console = new ThothConsole(arg)
 
       try {
         const result = worker.apply(component, [
