@@ -10,7 +10,14 @@ export interface agent_instanceAttributes {
   dirty?: boolean
   discord_enabled?: boolean
   discord_api_key?: string
-  discord_spell_handler?: string
+  discord_spell_handler_incoming?: string
+  discord_spell_handler_update?: string
+  discord_spell_handler_feed?: string
+  xrengine_enabled?: boolean
+  xrengine_url?: string
+  xrengine_spell_handler_incoming?: string
+  xrengine_spell_handler_update?: string
+  xrengine_spell_handler_feed?: string
 }
 
 export type agent_instancePk = 'id'
@@ -18,7 +25,14 @@ export type agent_instanceId = agent_instance[agent_instancePk]
 export type agent_instanceOptionalAttributes =
   | 'discord_enabled'
   | 'discord_api_key'
-  | 'discord_spell_handler'
+  | 'discord_spell_handler_incoming'
+  | 'discord_spell_handler_update'
+  | 'discord_spell_handler_feed'
+  | 'xrengine_enabled'
+  | 'xrengine_url'
+  | 'xrengine_spell_handler_incoming'
+  | 'xrengine_spell_handler_update'
+  | 'xrengine_spell_handler_feed'
   | 'enabled'
   | 'updated_at'
 export type agent_instanceCreationAttributes = Optional<
@@ -36,7 +50,14 @@ export class agent_instance
   updated_at?: string
   discord_enabled?: boolean
   discord_api_key?: string
-  discord_spell_handler?: string
+  discord_spell_handler_incoming?: string
+  discord_spell_handler_update?: string
+  discord_spell_handler_feed?: string
+  xrengine_enabled?: boolean
+  xrengine_url?: string
+  xrengine_spell_handler_incoming?: string
+  xrengine_spell_handler_update?: string
+  xrengine_spell_handler_feed?: string
   static initModel(sequelize: Sequelize.Sequelize): typeof agent_instance {
     return agent_instance.init(
       {
@@ -70,7 +91,35 @@ export class agent_instance
           type: DataTypes.TEXT,
           allowNull: true,
         },
-        discord_spell_handler: {
+        discord_spell_handler_incoming: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
+        discord_spell_handler_update: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
+        discord_spell_handler_feed: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
+        xrengine_enabled: {
+          type: DataTypes.BOOLEAN,
+          allowNull: true,
+        },
+        xrengine_url: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
+        xrengine_spell_handler_incoming: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
+        xrengine_spell_handler_update: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
+        xrengine_spell_handler_feed: {
           type: DataTypes.TEXT,
           allowNull: true,
         }
