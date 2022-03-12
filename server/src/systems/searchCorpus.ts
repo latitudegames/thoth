@@ -14,7 +14,6 @@ import {
   removePanctuationalMarks,
   simplifyWords,
 } from '../utils/utils'
-import { dicompress } from '@latitudegames/thoth-core/src/utils/compression'
 import { database } from '@latitudegames/thoth-core/src/connectors/database'
 import {
   initClassifier,
@@ -145,8 +144,8 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
       keywords: string | string[]
       topic: string
     }[] = sameTopicOnly
-      ? await database.instance.getDocumentsWithTopic(agent, topic)
-      : await database.instance.getDocuments(agent)
+        ? await database.instance.getDocumentsWithTopic(agent, topic)
+        : await database.instance.getDocuments(agent)
 
     console.log('loaded ' + documents.length + ' documents')
     for (let i = 0; i < documents.length; i++) {
