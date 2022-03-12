@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import axios from 'axios'
 import Handlebars from 'handlebars'
 import Rete from 'rete'
 
@@ -14,18 +16,11 @@ import { EngineContext } from '../engine'
 import { triggerSocket, stringSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 const info = `The huggingface component is used to access models on huggingface.co.  For now it is very simple.  You define a number of inputs with the input generator, and you can use those in forming the request to your huggingface inference model.  You input the name of the model from hugginface into the model name field, and you run it.  It will call the model, and return the result.
-
-NOTE:  Hugginface models are on demand, and sometimes require time to "boot up".  We have tried to trigger an initial request that causes the model to load in the background while you are working, but this will not always be done in time. If it is not done, we will notify you via the "error" trigger out.
-
+NOTE:  Hugginface models are on demand, and sometimes require time to "boot up".  We have tried to trigger an initial request the cause the model to load in the background while you and working, but this will not always be done in time. If it is not done, we will notify you via the "error" trigger out.
 Also note that you will likely need to parse the return from huggingface yourself inside a code component, or similar.`
 
 type WorkerReturn = {
-  result?:
-    | {
-        [key: string]: unknown
-        error: unknown
-      }
-    | undefined
+  result: any
 }
 
 export class HuggingfaceComponent extends ThothComponent<
@@ -73,8 +68,8 @@ export class HuggingfaceComponent extends ThothComponent<
       language: 'handlebars',
     })
 
-    const modelControl = new InputControl({
-      dataKey: 'model',
+    const stopControl = new InputControl({
+      dataKey: 'modelName',
       name: 'Model Name',
     })
 
@@ -82,7 +77,7 @@ export class HuggingfaceComponent extends ThothComponent<
       .add(nameControl)
       .add(inputGenerator)
       .add(requestControl)
-      .add(modelControl)
+      .add(stopControl)
 
     return node
   }
@@ -106,18 +101,29 @@ export class HuggingfaceComponent extends ThothComponent<
     const model = (node.data.model as string) || 'roberta-large-mnli'
 
     try {
-      const result = await thoth.huggingface(model, request)
+      const resp = await axios.post(
+        `${process.env.REACT_APP_API_URL}/hf_request`,
+        {
+          inputs: request,
+          model: model,
+          parameters: [],
+          options: undefined,
+        }
+      )
 
-      // This might cause bug
-      if (result.error)
-        throw new Error(`Huggingface result.error: ${result.error}`)
+      const { success, data } = resp.data
+
+      if (!success) throw Error()
 
       return {
-        result,
+        result: success ? data : '',
       }
     } catch (err) {
       this._task.closed = ['trigger']
-      throw new Error('Error in HuggingFace component')
+
+      return {
+        result: '',
+      }
     }
   }
 }

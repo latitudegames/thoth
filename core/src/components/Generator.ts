@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import axios from 'axios'
 import Handlebars from 'handlebars'
 import Rete from 'rete'
 
@@ -13,10 +15,8 @@ import { SocketGeneratorControl } from '../dataControls/SocketGenerator'
 import { EngineContext } from '../engine'
 import { triggerSocket, stringSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
-const info = `The generator component is our general purpose completion component.  You can define any number of inputs, and utilize those inputs in a templating language known as Handlebars.  Any value which is wrapped like {{this}} in double braces will be replaced with the corresponding value coming in to the input with the same name.  This allows you to write almost any fewshot you might need, and input values from anywhere else in your chain.
-
+const info = `The generator component is our general purpose completion component.  You can define any number of inputs, and utilise those inputs in a templating language known as Handlebars.  Any value which is wrapped like {{this}} in double braces will be replaced with the corresponding value coming in to the input with the same name.  This allows you to write almost any fewshot you might need, and input values from anywhere else in your chain.
 Controls have also been added which give you control of some of the fundamental settings of the OpenAI completion endpoint, including temperature, max tokens, and your stop sequence.
-
 The componet has two returns.  The composed will output your entire fewshot plus the completion, whereas the result output will only be the result of the completion. `
 
 type WorkerReturn = {
@@ -106,7 +106,6 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
     outputs: ThothWorkerOutputs,
     { thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    const { completion } = thoth
     const inputs = Object.entries(rawInputs).reduce((acc, [key, value]) => {
       acc[key] = value[0]
       return acc
@@ -130,24 +129,28 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       ? parseFloat(frequencyPenaltyData)
       : 0
 
-    const body = {
-      prompt,
-      stop,
-      maxTokens,
-      temperature,
-      frequencyPenalty,
-    }
-    try {
-      const raw = (await completion(body)) as string
-      const result = raw?.trim()
-      const composed = `${prompt} ${result}`
-
-      return {
-        result,
-        composed,
+    const resp = await axios.post(
+      `${process.env.REACT_APP_API_URL}/text_completion`,
+      {
+        params: {
+          prompt: prompt,
+          modelName: 'davinci',
+          temperature: temperature,
+          maxTokens: maxTokens,
+          frequencyPenalty: frequencyPenalty,
+          stop: stop,
+        },
       }
-    } catch (err) {
-      throw new Error('Error in Generator component.')
+    )
+
+    const { success, choice } = resp.data
+
+    const result = success ? choice?.trim() : ''
+    const composed = `${prompt} ${result}`
+
+    return {
+      result,
+      composed,
     }
   }
 }

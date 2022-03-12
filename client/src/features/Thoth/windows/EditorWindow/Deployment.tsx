@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Scrollbars } from 'react-custom-scrollbars-2'
-import { useSelector } from 'react-redux'
+import { Scrollbars } from 'react-custom-scrollbars'
+// import { useSelector } from 'react-redux'
 import { useSnackbar } from 'notistack'
 
 import css from './editorwindow.module.css'
@@ -13,13 +13,13 @@ import { useModal } from '@/contexts/ModalProvider'
 
 import {
   useGetDeploymentsQuery,
-  selectSpellById,
+  // selectSpellById,
   useDeploySpellMutation,
   useLazyGetDeploymentQuery,
   useSaveSpellMutation,
 } from '@/state/api/spells'
 import { useEditor } from '@thoth/contexts/EditorProvider'
-import { latitudeApiRootUrl } from '@/config'
+import { thothApiRootUrl } from '@/config'
 
 const DeploymentView = ({ open, setOpen, spellId, close }) => {
   const [loadingVersion, setLoadingVersion] = useState(false)
@@ -30,20 +30,23 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
   const [deploySpell] = useDeploySpellMutation()
   const [saveSpell] = useSaveSpellMutation()
   const [getDeplopyment, { data: deploymentData }] = useLazyGetDeploymentQuery()
-  const spell = useSelector(state => selectSpellById(state, spellId))
-  const name = spell?.name as string
-  const { data: deployments, isLoading } = useGetDeploymentsQuery(name, {
-    skip: !spell?.name,
+  // const spell = useSelector(state => selectSpellById(spellId))
+  const spell = spellId;
+  const { data: deployments, isLoading } = useGetDeploymentsQuery(spellId, {
+    skip: !spell,
   })
 
   const deploy = data => {
+    console.log(spell, data, 'data')
     if (!spell) return
-    deploySpell({ spellId: spell.name, ...data })
+    deploySpell({ spellId: spell, ...data })
     enqueueSnackbar('Spell deployed', { variant: 'success' })
   }
 
   const buildUrl = version => {
-    return encodeURI(`${latitudeApiRootUrl}/games/spells/${spellId}/${version}`)
+    return encodeURI(
+      `${thothApiRootUrl}/game/spells/deployed/${spellId}/${version}`
+    )
   }
 
   const loadVersion = async version => {
@@ -55,7 +58,7 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
     ) {
       setLoadingVersion(true)
       await getDeplopyment({
-        spellId: spell?.name as string,
+        spellId: spell as string,
         version,
       })
     }
@@ -63,15 +66,15 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
 
   useEffect(() => {
     if (!deploymentData || !loadingVersion) return
-    ;(async () => {
-      close()
-      await saveSpell({ ...spell, chain: deploymentData.chain })
-      enqueueSnackbar(`version ${deploymentData.version} loaded!`, {
-        variant: 'success',
-      })
-      setLoadingVersion(false)
-      loadChain(deploymentData.chain)
-    })()
+      ; (async () => {
+        close()
+        await saveSpell({ ...spell, chain: deploymentData.chain })
+        enqueueSnackbar(`version ${deploymentData.version} loaded!`, {
+          variant: 'success',
+        })
+        setLoadingVersion(false)
+        loadChain(deploymentData.chain)
+      })()
   }, [deploymentData, loadingVersion])
 
   const copy = url => {
@@ -122,8 +125,7 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
                   title: 'Deploy',
                   options: {
                     // todo find better way to get next version here
-                    version:
-                      '0.0.' + (deployments ? deployments?.length + 1 : 0),
+                    version: (deployments ? deployments?.length + 1 : 0),
                   },
                   onClose: data => {
                     closeModal()
@@ -148,9 +150,8 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
                 return (
                   <SimpleAccordion
                     key={deploy.version}
-                    heading={`${deploy.version}${
-                      deploy.versionName ? ' - ' + deploy.versionName : ''
-                    }`}
+                    heading={`${deploy.version}${deploy.versionName ? ' - ' + deploy.versionName : ''
+                      }`}
                     defaultExpanded={true}
                   >
                     <button

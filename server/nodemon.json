@@ -1,0 +1,18 @@
+{
+  "watch": [
+    "package.json",
+    "nodemon.json",
+    ".eslintrc.json",
+    ".prettierrc",
+    "src/",
+    "node_modules/@latitudegames/"
+  ],
+  "execMap": {
+    "ts": "node -r ts-node/register"
+  },
+  "ignoreRoot": [".git"],
+  "restartable": "rs",
+  "verbose": true,
+  "ext": "js,json,ts",
+  "ignore": ["*.test.ts", "*.spec.ts"]
+}

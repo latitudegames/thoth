@@ -1,3 +1,6 @@
+// @ts-nocheck
+// @ts-nocheck
+
 import { EngineContext } from '@latitudegames/thoth-core'
 import { useContext, createContext } from 'react'
 import { useDispatch } from 'react-redux'

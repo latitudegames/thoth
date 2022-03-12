@@ -1,6 +1,0 @@
-Voyage Thoth
-Copyright 2021 Latitude, Inc.
-
-This product includes software developed at Latitude, Inc. (https://www.latitude.io).
-
-Licensed under Apache License 2.0
