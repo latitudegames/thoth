@@ -9,7 +9,7 @@ Thoth is a multishot system builder. It leverages a visual coding style interfac
 1. Clone the repository
 1. Navigate to the project root by running `cd thoth`
 1. Run `yarn install` to install project dependencies
-1. Run `yarn start` to start the @thoth/client app
+1. Run `yarn start` to start the @latitudegames/thoth-client app
 
 ## Core Local Setup
 
@@ -49,12 +49,12 @@ In the project directory, you can run:
 
 ### `yarn start`
 
-Runs @thoth/client in the development mode.\
+Runs @latitudegames/thoth-client in the development mode.\
 Open [http://localhost:3001](http://localhost:3001) to view it in the browser.
 
 ### `yarn build`
 
-Builds the @thoth/client app for production to the `client/build` folder.
+Builds the @latitudegames/thoth-client app for production to the `client/build` folder.
 
 ### `yarn build:core`
 

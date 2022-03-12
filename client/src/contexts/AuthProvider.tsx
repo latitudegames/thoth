@@ -31,9 +31,9 @@ export interface UserInfoType {
 const initialState = {
   session: {} as SessionInfoType | null,
   user: {} as UserInfoType | null,
-  logoutAndRedirect: () => {},
-  loginRedirect: (force?: boolean, returnToPath?: string) => {},
-  refreshSession: (origin: string) => {},
+  logoutAndRedirect: () => { },
+  loginRedirect: (force?: boolean, returnToPath?: string) => { },
+  refreshSession: (origin: string) => { },
 }
 
 const AuthContext = createContext(initialState)
@@ -68,8 +68,8 @@ const AuthProvider = ({ children }: { children: ReactElement }) => {
     if (search) {
       let queryDictionary = JSON.parse(
         '{"' +
-          search.substring(1).replace(/&/g, '","').replace(/=/g, '":"') +
-          '"}',
+        search.substring(1).replace(/&/g, '","').replace(/=/g, '":"') +
+        '"}',
         function (key, value) {
           return key === '' ? value : decodeURIComponent(value)
         }
@@ -140,7 +140,7 @@ const AuthProvider = ({ children }: { children: ReactElement }) => {
   }
 
   useEffect(() => {
-    ;(async () => {
+    ; (async () => {
       try {
         // Check if User has an existing sessionId in local storage
         const sessionId = await getSessionId()

@@ -143,7 +143,8 @@ export class Task {
       }
 
       // the main output data of the task, which is gathered up when the next node gets this nodes value
-      this.outputData = await this.worker(this, inputs, data, socketInfo)
+      const outputData = await this.worker(this, inputs, data, socketInfo)
+      this.outputData = outputData
 
       // an onRun option in case a task whats to do something when the task is run.
       if (this.component.task.onRun)
