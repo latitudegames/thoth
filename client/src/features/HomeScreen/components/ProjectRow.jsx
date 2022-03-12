@@ -25,7 +25,7 @@ const ProjectRow = ({
       {label}
       {onDelete && (
         <Icon
-          name="minus"
+          name="trash"
           onClick={() => {
             onDelete(spell.name)
           }}
