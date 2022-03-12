@@ -25,8 +25,17 @@ export async function handleInput(
   )
   console.log('response:', response.data.outputs)
   console.log('response1:', response.data.outputs.Greeting)
-  // Outputs are broken right now, so we are writing gamestate just in case
-  return response.data.outputs.Greeting
+  let index = undefined
+
+  for (const x in response.data.outputs) {
+    index = x
+  }
+
+  if (index && index !== undefined) {
+    return response.data.outputs[index]
+  } else {
+    return undefined
+  }
 }
 
 export async function handleCustomInput(

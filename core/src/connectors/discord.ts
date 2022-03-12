@@ -1094,7 +1094,11 @@ export class discord_client {
                 })
                 .catch(console.error)
             }
-          } else if (responses.length >= 2000) {
+          } else if (
+            responses &&
+            responses !== undefined &&
+            responses.length >= 2000
+          ) {
             let text = this.replacePlaceholders(responses)
             if (addPing) {
               message.reply(text).then(async function (msg) {
