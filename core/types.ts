@@ -16,6 +16,7 @@ import { ModuleGraphData } from './src/plugins/modulePlugin/module-manager'
 import { TaskOutputTypes } from './src/plugins/taskPlugin/task'
 import { SocketNameType, SocketType } from './src/sockets'
 import { ThothTask } from './src/thoth-component'
+import { ThothConsole } from './src/plugins/debuggerPlugin/ThothConsole'
 
 export type EventsTypes = {
   run: void
@@ -54,6 +55,7 @@ export type ThothNode = Node & {
   displayName?: string
   info: string
   subscription: Function
+  console: ThothConsole
 }
 
 export type ModuleType = {
@@ -126,6 +128,7 @@ export type NodeData = ReteNodeData & {
   fewshot?: string
   display: Function
   error?: boolean
+  console: ThothConsole
 }
 
 // export type Node = {
