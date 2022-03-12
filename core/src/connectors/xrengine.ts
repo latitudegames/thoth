@@ -16,12 +16,13 @@
 // i.e. text classification and such
 
 import { random } from 'lodash'
+import Xvfb from 'xvfb'
+
 import roomManager from '../components/roomManager'
 import { classifyText } from '../utils/textClassifier'
 import { browserWindow, PageUtils } from './browser'
 import { database } from './database'
 import { handleCustomInput } from './handleInput'
-import Xvfb from 'xvfb'
 import {
   detectOsOption,
   getRandomEmptyResponse,
@@ -327,38 +328,38 @@ export class xrengine_client {
         if (content.startsWith('!ping')) this.sentMessage(_sender)
         else {
           if (content === '!ping ' || !content.startsWith('!ping')) {
-            if (true) {
-              //roomManager.instance.agentCanResponse(user, 'xrengine')) {
-              content = '!ping ' + content
-              this.sentMessage(_sender)
-            } else {
-              const oldChat = database.instance.getConversation(
-                defaultAgent,
-                _sender,
-                'xrengine',
-                msg.chat.id,
-                false
-              )
-              if (oldChat !== undefined && oldChat.length > 0) {
-                const context = await classifyText(values)
-                const ncontext = await classifyText(content)
-                log('c1: ' + context + ' c2: ' + ncontext)
+            // if (true) {
+            //roomManager.instance.agentCanResponse(user, 'xrengine')) {
+            content = '!ping ' + content
+            this.sentMessage(_sender)
+            // } else {
+            //   const oldChat = database.instance.getConversation(
+            //     defaultAgent,
+            //     _sender,
+            //     'xrengine',
+            //     msg.chat.id,
+            //     false
+            //   )
+            //   if (oldChat !== undefined && oldChat.length > 0) {
+            //     const context = await classifyText(values)
+            //     const ncontext = await classifyText(content)
+            //     log('c1: ' + context + ' c2: ' + ncontext)
 
-                if (context == ncontext) {
-                  roomManager.instance.userTalkedSameTopic(_sender, 'xrengine')
-                  if (
-                    roomManager.instance.agentCanResponse(_sender, 'xrengine')
-                  ) {
-                    content = '!ping ' + content
-                    this.sentMessage(_sender)
-                  } else {
-                    return
-                  }
-                } else {
-                  return
-                }
-              }
-            }
+            //     if (context == ncontext) {
+            //       roomManager.instance.userTalkedSameTopic(_sender, 'xrengine')
+            //       if (
+            //         roomManager.instance.agentCanResponse(_sender, 'xrengine')
+            //       ) {
+            //         content = '!ping ' + content
+            //         this.sentMessage(_sender)
+            //       } else {
+            //         return
+            //       }
+            //     } else {
+            //       return
+            //     }
+            //   }
+            // }
           } else {
             // roomManager.instance.userGotInConversationFromAgent(_sender)
           }
@@ -467,6 +468,7 @@ export class xrengine_client {
   settings
 
   async createXREngineClient(agent, settings, cli) {
+    console.log('createXREngineClient', agent)
     this.agent = agent
     this.settings = settings
     //generateVoice('hello there', (buf, path) => {}, false)
@@ -490,11 +492,11 @@ export class xrengine_client {
 
       log('started virtual window')
       log('Preparing to connect to ', settings.url)
-      cli.xrengineBot.delay(Math.random() * 100000)
+      cli.xrengineBot.delay(3000 + Math.random() * 1000)
       log('Connecting to server...')
       await cli.xrengineBot.launchBrowser()
       const XRENGINE_URL =
-        (settings.url as string) || 'https://localhost:3000/location/test'
+        (settings.url as string) || 'https://n3xus.city/location/test '
       cli.xrengineBot.enterRoom(XRENGINE_URL, { name: 'TestBot' })
       log('bot fully loaded')
     })
@@ -683,7 +685,17 @@ class XREngineBot {
     // }
     //#endregion
 
-    await this.updateChannelState()
+    let active = false
+
+    while (!active) {
+      try {
+        await this.updateChannelState()
+        active = true
+      } catch {
+        console.error("Trying to update but can't")
+      }
+    }
+
     if (!this.activeChannel) return log('No active channel')
     const messages = this.activeChannel.messages
     if (messages === undefined || messages === null) return
@@ -787,7 +799,7 @@ class XREngineBot {
     await this.waitForTimeout(timeout)
   }
 
-  async interactObject() {}
+  async interactObject() { }
 
   /** Return screenshot
    * @param {Function} fn Function to execut _in the node context._
@@ -961,7 +973,7 @@ class XREngineBot {
         )
       }
 
-      /*if (this.autoLog) 
+      /*if (this.autoLog)
       console.log('>>', message.text())*/
     })
 

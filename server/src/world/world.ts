@@ -20,12 +20,6 @@ export class world extends gameObject {
     world.instance = this
     new time()
     this.onCreate()
-
-    if (process.env.CREATE_XR_ENGINE_AGENT === 'true') {
-      this._xrEngineAgent = new xrEngineAgent(
-        process.env.XR_ENGINE_URL as string
-      )
-    }
   }
 
   async updateObjects() {
