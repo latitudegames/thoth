@@ -115,7 +115,7 @@ const patchHandler = async (ctx: Koa.Context) => {
     return (ctx.body = response.data)
   }
 
-  const name = ctx.params.spellName
+  const name = ctx.params.name
   const userId = ctx.state.user?.id ?? 0
 
   const spell = await creatorToolsDatabase.chains.findOne({
@@ -306,14 +306,10 @@ export const spells: Route[] = [
     post: newHandler,
   },
   {
-    path: '/game/spells/:spellName',
+    path: '/game/spells/:name',
     access: noAuth,
     patch: patchHandler,
-  },
-  {
-    path: '/game/spells/:spellName',
-    access: noAuth,
-    delete: deleteHandler,
+    delete: deleteHandler
   },
   {
     path: '/game/spells',
