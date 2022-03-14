@@ -1543,12 +1543,12 @@ export class discord_client {
 
         channelIds.push(channel.id)
         if (
-          discussionChannels[channel.id] === undefined ||
-          !discussionChannels
+          this.discussionChannels[channel.id] === undefined ||
+          !this.discussionChannels
         ) {
-          discussionChannels[channel.id] = {
+          this.discussionChannels[channel.id] = {
             timeout: setTimeout(() => {
-              delete discussionChannels[channel.id]
+              delete this.discussionChannels[channel.id]
             }, 1000 * 3600 * 4),
             responded: false,
           }
