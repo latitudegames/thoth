@@ -100,7 +100,10 @@ const StateManager = ({ tab, ...props }) => {
       ...spell,
       gameState: parsedState,
     }
-    saveSpell(spellUpdate)
+    const res = await saveSpell(spellUpdate)
+    if ('error' in res) return
+    res.data.gameState && setCode(JSON.stringify(res.data.gameState?.state))
+
     enqueueSnackbar('State saved', {
       preventDuplicate: true,
       variant: 'success',
