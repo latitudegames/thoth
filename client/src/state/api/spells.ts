@@ -4,7 +4,7 @@ import { Spell as SpellType } from '@latitudegames/thoth-core/types'
 
 import { initDB } from '../../database'
 import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes'
-import { updateGameState } from '../gameState'
+import { setGameState, updateGameState } from '../gameState'
 import { Module } from '../../database/schemas/module'
 import { rootApi } from './api'
 // function camelize(str) {
