@@ -21,7 +21,11 @@ export class MyNode extends Node {
         } ${css[hasSuccess ? 'success' : '']}`}
       >
         {node.deprecated && <div className={css['deprecated-overlay']}></div>}
-        <div className={`${css['node-id']} ${hasError ? css['error'] : ''}`}>
+        <div
+          className={`${css['node-id']} ${hasError ? css['error'] : ''} ${
+            hasSuccess ? css['success'] : ''
+          }`}
+        >
           <p>{node.id}</p>
         </div>
         <div className={css['node-title']}>
