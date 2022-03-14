@@ -34,6 +34,7 @@ const createOrUpdateAgentHandler = async (ctx: Koa.Context) => {
   console.log('ctx.request.body is ', ctx.request.body)
   const { agent, data } = ctx.request.body
   if (!agent || agent == undefined || agent.length <= 0) {
+    ctx.status = 404
     return (ctx.body = { error: 'invalid agent name' })
   }
 
@@ -52,6 +53,8 @@ const createOrUpdateAgentHandler = async (ctx: Koa.Context) => {
       greetings: data.greetings,
     })
   } catch (e) {
+    console.log('createOrUpdateAgentHandler:', e)
+    ctx.status = 500
     return (ctx.body = { error: 'internal error' })
   }
 
@@ -75,7 +78,8 @@ const addConfigHandler = async (ctx: Koa.Context) => {
     await database.instance.setConfig(data.key, data.value)
     ctx.body = 'ok'
   } catch (e) {
-    console.error(e)
+    console.log('addConfigHandler:', e)
+    ctx.status = 500
     return (ctx.body = { error: 'internal error' })
   }
 }
@@ -91,7 +95,8 @@ const updateConfigHandler = async (ctx: Koa.Context) => {
 
     ctx.body = 'ok'
   } catch (e) {
-    console.error(e)
+    console.log('updateConfigHandler:', e)
+    ctx.status = 500
     return (ctx.body = { error: 'internal error' })
   }
 }
@@ -103,7 +108,8 @@ const deleteConfigHandler = async (ctx: Koa.Context) => {
     await database.instance.deleteConfig(id)
     ctx.body = 'ok'
   } catch (e) {
-    console.error(e)
+    console.log('deleteConfigHandler:', e)
+    ctx.status = 500
     return (ctx.body = { error: 'internal error' })
   }
 }
@@ -150,7 +156,8 @@ const getPromptsHandler = async (ctx: Koa.Context) => {
 
     return (ctx.body = data)
   } catch (e) {
-    console.error(e)
+    console.log('getPromptsHandler:', e)
+    ctx.status = 500
     return (ctx.body = { error: 'internal error' })
   }
 }
@@ -168,7 +175,8 @@ const addPromptsHandler = async (ctx: Koa.Context) => {
 
     return (ctx.body = 'ok')
   } catch (e) {
-    console.error(e)
+    console.log('addPromptsHandler:', e)
+    ctx.status = 500
     return (ctx.body = { error: 'internal error' })
   }
 }
@@ -178,7 +186,8 @@ const getAgentInstancesHandler = async (ctx: Koa.Context) => {
     let data = await database.instance.getAgentInstances()
     return (ctx.body = data)
   } catch (e) {
-    console.error(e)
+    console.log('getAgentInstancesHandler:', e)
+    ctx.status = 500
     return (ctx.body = { error: 'internal error' })
   }
 }
@@ -209,7 +218,8 @@ const getAgentInstanceHandler = async (ctx: Koa.Context) => {
     }
     return (ctx.body = data)
   } catch (e) {
-    console.error(e)
+    console.log('getAgentInstanceHandler:', e)
+    ctx.status = 500
     return (ctx.body = { error: 'internal error' })
   }
 }
@@ -235,7 +245,8 @@ const addAgentInstanceHandler = async (ctx: Koa.Context) => {
       data
     ))
   } catch (e) {
-    console.error(e)
+    console.log('addAgentInstanceHandler:', e)
+    ctx.status = 500
     return (ctx.body = { error: 'internal error' })
   }
 }
@@ -336,6 +347,8 @@ const getRelationshipMatrix = async (ctx: Koa.Context) => {
     const matrix = database.instance.getRelationshipMatrix(speaker, agent)
     return (ctx.body = matrix)
   } catch (e) {
+    console.log('getRelationshipMatrix:', e)
+    ctx.status = 500
     return (ctx.body = { error: 'internal error' })
   }
 }
@@ -348,6 +361,8 @@ const setRelationshipMatrix = async (ctx: Koa.Context) => {
     database.instance.setRelationshipMatrix(speaker, agent, matrix)
     return (ctx.body = 'ok')
   } catch (e) {
+    console.log('setRelationshipMatrix:', e)
+    ctx.status = 500
     return (ctx.body = { error: 'internal error' })
   }
 }
@@ -629,6 +644,17 @@ const requestInformationAboutVideo = async (
   return success ? choice : "Sorry I can't answer your question!"
 }
 
+const getPersonalities = async (ctx: Koa.Context) => {
+  const agents = await database.instance.getAgents()
+  const res: string[] = []
+
+  for (let i = 0; i < agents.length; i++) {
+    res.push(agents[i].agent)
+  }
+
+  return (ctx.body = { personalities: res })
+}
+
 export const agents: Route[] = [
   {
     path: '/agents',
@@ -766,5 +792,10 @@ export const agents: Route[] = [
     path: '/custom_message',
     access: noAuth,
     post: customMessage,
+  },
+  {
+    path: '/personalities',
+    access: noAuth,
+    get: getPersonalities,
   },
 ]
