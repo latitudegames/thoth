@@ -71,5 +71,6 @@ export const selectGameStateBySpellId = createDraftSafeSelector(
 )
 
 export const { selectById } = gameStateSelectors
-export const { updateGameState, createGameState } = gameStateSlice.actions
+export const { updateGameState, createGameState, setGameState } =
+  gameStateSlice.actions
 export default gameStateSlice.reducer
