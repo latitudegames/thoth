@@ -42,6 +42,12 @@ const StartScreen = () => {
         })
       )
 
+    // Create new spell
+    await newSpell({
+      chain: spellData.chain,
+      name: spellData.name,
+    })
+
     await openTab({
       name: spellData.name,
       spellId: spellData.name,
