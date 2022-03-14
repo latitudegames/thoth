@@ -72,8 +72,11 @@ export class ThothConsole {
     this.node.data.success = false
   }
 
-  log(message: any) {
-    this.sendToDebug(message)
+  log(_message: any) {
+    const message =
+      typeof _message !== 'string' ? JSON.stringify(_message) : _message
+    this.sendToDebug(this.formatMessage(message, 'log'))
+    this.renderLog()
   }
 
   error(error: any) {
