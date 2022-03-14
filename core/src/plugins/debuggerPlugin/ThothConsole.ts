@@ -53,12 +53,12 @@ export class ThothConsole {
     this.nodeView.node.update()
   }
 
-  formatMessage(_message: string, type: 'error' | 'log') {
+  formatMessage(_message: string, type: 'error' | 'log'): Message {
     return {
       from: this.node.name,
       nodeId: this.node.id,
-      name: this.node.data.name || null,
-      errorMessage: _message,
+      name: (this.node?.data?.name as string) ?? null,
+      content: _message,
       type,
     }
   }
