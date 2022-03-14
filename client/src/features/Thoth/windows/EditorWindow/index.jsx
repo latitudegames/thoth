@@ -9,7 +9,6 @@ import css from './editorwindow.module.css'
 
 const EditorWindow = ({ tab }) => {
   const { getNodes, getNodeMap, editor } = useEditor()
-  console.log(getNodes,'getNodes')
   const [deployOpen, setDeployOpen] = useState(false)
   const nodeList = getNodes()
   const nodeMap = getNodeMap()
@@ -41,7 +40,6 @@ const EditorWindow = ({ tab }) => {
     //Categorize node list into respective categories
     if (nodeList)
       Object.keys(nodeList).map(item => {
-        console.log(item,'item')
         if (doesCategoryExist(arr, nodeList[item].category) !== false) {
           return arr[
             doesCategoryExist(arr, nodeList[item].category)
