@@ -208,7 +208,7 @@ const Ent = ({ id, updateCallback }) => {
               <select
                 name="spellHandlerFeed"
                 id="spellHandlerFeed"
-                value={discord_spell_handle_feed}
+                value={discord_spell_handler_feed}
                 onChange={event => {
                   setDiscordSpellHandlerFeed(event.target.value)
                 }}
