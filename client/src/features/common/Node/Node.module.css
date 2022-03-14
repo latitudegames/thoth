@@ -42,6 +42,10 @@
   position: absolute;
   top: -5px;
   right: 10px;
+  color: var(--dark-4);
+}
+.node-id.error {
+  color: var(--red);
 }
 .node-title {
   /* font-family: 'IBM Plex Mono', monospace !important; */
