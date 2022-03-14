@@ -10,17 +10,12 @@ type ConsoleConstructor = {
   throwError?: Function
 }
 
-type ErrorMessage = {
-  errorIn: string
-  message: string
-}
-
-type Message = {
-  errorIn: string
+export type Message = {
+  from: string
   nodeId: number
   name: string | null
-  error: ErrorMessage
-  type: 'error' | ''
+  content?: string
+  type: 'error' | 'log'
 }
 
 export class ThothConsole {
