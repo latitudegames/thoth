@@ -3,40 +3,31 @@
 import Modal from '@/features/common/Modal/Modal'
 import axios from 'axios'
 import React, { useEffect, useRef, useState } from 'react'
+import { useModal } from '@/contexts/ModalProvider'
 import { useForm } from 'react-hook-form'
+import { useSnackbar } from 'notistack'
 const AgentManager = () => {
   const [agents, setAgents] = useState()
   const [currentAgentData, setCurrentAgentData] = useState(null)
-  const newAgentRef = useRef('New Agent')
-
   const [dialog, setDialog] = useState('')
   const [morals, setMorals] = useState('')
   const [facts, setFacts] = useState('')
+  const { openModal, closeModal } = useModal()
   const [monologue, setMonologue] = useState('')
   const [personality, setPersonality] = useState('')
   const [greetings, setGreetings] = useState('')
-  const [openModal, setOpenModal] = useState(false)
-  const [versionName, setVersionName] = useState('')
+
+  const { enqueueSnackbar } = useSnackbar()
   const [files, setFiles] = useState("");
   let importData = files && JSON.parse(files);
-  console.log(personality,'personality')
   const {
     register,
     handleSubmit,
   } = useForm()
-
-  const options = [
-    {
-      label:'Save',
-      onClick: () => {
-        onSubmit({ versionName })
-      },
-    }
-  ]
-
+  let versionName = localStorage.getItem("agentName")
+  console.log(versionName,'versionNameversionName')
   const createNew = async (e) => {
-    console.log('newAgentRef.current is,', newAgentRef.current.value)
-    const agent = !newAgentRef.current.value ? 'New Agent' : newAgentRef.current.value
+    const agent = !versionName ? 'New Agent' : versionName
     await getAgents()
     await update(agent)
   }
@@ -114,16 +105,7 @@ const AgentManager = () => {
 
   const onSubmit = handleSubmit(async () => {
     await createNew()
-    onClose()
   })
-
-  const onClose = () =>{
-    setOpenModal(false)
-  }
-
-  const updateVersionName = e => {
-    setVersionName(e.target.value)
-  }
 
   const downloadFile = ({ data, fileName, fileType }) => {
     const blob = new Blob([data], { type: fileType });
@@ -157,6 +139,12 @@ const AgentManager = () => {
     });
   }
 
+  const createAgent = data => {
+    onSubmit()
+    localStorage.setItem("agentName",data && data.versionName)
+    enqueueSnackbar('Agent Created', { variant: 'success' })
+  }
+
   return (
     <div className="agent-container">
       <div style={{ display: 'flex' }}>
@@ -167,9 +155,19 @@ const AgentManager = () => {
       <button
         className="button"
         type="button"
-        onClick={async e => {
+        onClick={(e) => {
           e.preventDefault()
-          setOpenModal(true)
+          openModal({
+            modal: 'agentModal',
+            title: 'New Agent',
+            options: {
+              version: 1,
+            },
+            onClose: data => {
+              closeModal()
+              createAgent(data)
+            },
+          })
         }}
       >
         Create New
@@ -339,13 +337,6 @@ const AgentManager = () => {
             </div>
           </form>
         )}
-        <div className="agent-createModal">
-        {openModal && 
-          <Modal title="New Agent" options={options} onClose={onClose} icon="add" className="agent-createModal">
-            <h4>CHANGE NOTES</h4>
-            <input type="text" style={{ marginLeft: 'auto' }} ref={newAgentRef} />
-          </Modal>}
-        </div>
       </div>
     </div>
   )
