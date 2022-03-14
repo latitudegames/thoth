@@ -94,7 +94,7 @@ const StateManager = ({ tab, ...props }) => {
     setTyping(true)
   }
 
-  const onSave = () => {
+  const onSave = async () => {
     if (!gameState) return
     const parsedState = JSON.parse(code)
     const spellUpdate = {
