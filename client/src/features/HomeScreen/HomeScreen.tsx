@@ -4,6 +4,7 @@ import { Route, Routes, useNavigate } from 'react-router-dom'
 import {
   useGetSpellsQuery,
   useDeleteSpellMutation,
+  useNewSpellMutation,
 } from '../../state/api/spells'
 import { useDB } from '../../contexts/DatabaseProvider'
 import { useTabManager } from '../../contexts/TabManagerProvider'
