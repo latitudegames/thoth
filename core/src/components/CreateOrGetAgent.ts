@@ -15,36 +15,15 @@ import { EngineContext } from '../engine'
 import { triggerSocket, stringSocket, anySocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 
-const info =
-  'Conversation Store is used to store conversation for an agent and user'
+const info = 'Create Or GetAgent is used to generate or get an existing agent'
 
 type InputReturn = {
   output: unknown
 }
 
-export async function setConversation(
-  agent: string,
-  speaker: string,
-  conv: string,
-  client: string,
-  channel: string
-) {
-  const response = await axios.post(
-    `${process.env.REACT_APP_API_ROOT_URL}/conversation`,
-    {
-      agent: agent,
-      speaker: speaker,
-      conversation: conv,
-      client: client,
-      channel: channel,
-    }
-  )
-  return response.data
-}
-
-export class ConversationStore extends ThothComponent<Promise<InputReturn>> {
+export class CreateOrGetAgent extends ThothComponent<Promise<InputReturn>> {
   constructor() {
-    super('Conversation Store')
+    super('Create Or Get Agent')
 
     this.task = {
       outputs: {
@@ -61,14 +40,6 @@ export class ConversationStore extends ThothComponent<Promise<InputReturn>> {
   builder(node: ThothNode) {
     const agentInput = new Rete.Input('agent', 'Agent', stringSocket)
     const speakerInput = new Rete.Input('speaker', 'Speaker', stringSocket)
-    const factsInp = new Rete.Input(
-      'convs',
-      'Conversation Speaker',
-      stringSocket
-    )
-    const factaInp = new Rete.Input('conva', 'Conversation Agent', stringSocket)
-    const clientInput = new Rete.Input('client', 'Client', stringSocket)
-    const channelInput = new Rete.Input('channel', 'Channel', stringSocket)
     const inp = new Rete.Input('string', 'Input', stringSocket)
     const out = new Rete.Output('output', 'Output', anySocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
@@ -76,12 +47,8 @@ export class ConversationStore extends ThothComponent<Promise<InputReturn>> {
 
     return node
       .addInput(inp)
-      .addInput(factsInp)
-      .addInput(factaInp)
-      .addInput(clientInput)
       .addInput(agentInput)
       .addInput(speakerInput)
-      .addInput(channelInput)
       .addInput(dataInput)
       .addOutput(dataOutput)
       .addOutput(out)
@@ -93,30 +60,16 @@ export class ConversationStore extends ThothComponent<Promise<InputReturn>> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    const speaker = inputs['speaker'][0] as string
     const agent = inputs['agent'][0] as string
+    const speaker = inputs['speaker'][0] as string
     const action = inputs['string'][0]
-    const convSpeaker = inputs['convs'][0] as string
-    const convAgent = inputs['conva'][0] as string
-    const client = inputs['client'][0] as string
-    const channel = inputs['channel'][0] as string
 
-    const resp1 = await setConversation(
-      agent,
-      speaker,
-      convSpeaker,
-      client,
-      channel
-    )
-    const resp2 = await setConversation(
-      agent,
-      speaker,
-      convAgent,
-      client,
-      channel
-    )
-    console.log(resp1)
-    console.log(resp2)
+    const resp = await axios.post('chat_agent', {
+      speaker: speaker,
+      agent: agent,
+    })
+
+    console.log(resp.data)
 
     return {
       output: action as string,

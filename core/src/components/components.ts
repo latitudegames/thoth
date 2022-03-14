@@ -13,6 +13,7 @@ import { Code } from './Code'
 import { ConversationCount } from './ConversationCount'
 import { ConversationRecall } from './ConversationRecall'
 import { ConversationStore } from './ConversationStore'
+import { CreateOrGetAgent } from './CreateOrGetAgent'
 // import { EnkiTask } from './EnkiTask'
 import { InputFieldComponent } from './deprecated/InputField'
 import { ModuleInput } from './deprecated/ModuleInput'
@@ -24,6 +25,7 @@ import { DifficultyDetectorComponent } from './DifficultyDetector'
 import { DocumentDelete } from './DocumentDelete'
 import { DocumentGet } from './DocumentGet'
 import { DocumentSet } from './DocumentSet'
+import { Echo } from './Echo'
 import { EntityDetector } from './EntityDetector'
 import { FactsCount } from './FactsCount'
 import { FactsRecall } from './FactsRecall'
@@ -95,6 +97,7 @@ export const components = {
   mlGreetingDetector: () => new MLGreetingDetector(),
   mlProfanityDetector: () => new MLProfanityDetector(),
   mlQuestionDetector: () => new MLQuestionDetector(),
+  echo: () => new Echo(),
   summarizeAndStoreFactsAboutAgent: () =>
     new SummarizeAndStoreFactsAboutAgent(),
   summarizeAndStoreFactsAboutSpeaker: () =>
@@ -104,6 +107,7 @@ export const components = {
   keywordExtractor: () => new KeywordExtractor(),
   namedEntityRecognition: () => new NamedEntityRecognition(),
   generateContext: () => new GenerateContext(),
+  createOrGetAgent: () => new CreateOrGetAgent(),
   factsStore: () => new FactsStore(),
   factsRecall: () => new FactsRecall(),
   factsCount: () => new FactsCount(),

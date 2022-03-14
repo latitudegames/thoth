@@ -23,6 +23,7 @@ const { Client } = pg
 const rootDir = path.resolve(path.dirname(''))
 
 const useLatitude = process.env.USE_LATITUDE_API === 'true'
+const PGSSL = process.env.PGSSL === 'true'
 export class database {
   static instance: database
 
@@ -40,7 +41,7 @@ export class database {
       database: process.env.PGDATABASE,
       port: process.env.PGPORT,
       host: process.env.PGHOST,
-      ssl: useLatitude
+      ssl: PGSSL
         ? {
             rejectUnauthorized: false,
           }

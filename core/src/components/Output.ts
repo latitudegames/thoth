@@ -74,6 +74,12 @@ export class Output extends ThothComponent<void> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
+    console.log(
+      'inputs.input, from output:',
+      inputs,
+      'outputs:',
+      outputs.text.task.inputs
+    )
     if (!inputs.input) throw new Error('No input provided to output component')
 
     const text = inputs.input.filter(Boolean)[0]
