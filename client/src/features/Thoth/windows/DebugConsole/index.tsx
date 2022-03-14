@@ -43,25 +43,28 @@ const DebugConsole = ({ tab }) => {
       message.name ?? 'unnamed'
     }.`
 
-  const ErrorMessage = message => (
-    <div style={{ lineHeight: '21px', color: 'var(--red)' }}>
-      <p style={{ margin: 0 }}>{formatErrorMessage(message)}</p>
-      <p style={{ margin: 0 }}>Error message: ${message.errorMessage}</p>
-      <br />
-    </div>
-  )
-
-  const LogMessage = message => (
-    <div style={{ lineHeight: '21px', color: 'var(--green)' }}>
-      <p style={{ margin: 0 }}>{formatLogMessage(message)}</p>
+  const Message = (message, type) => (
+    <div
+      style={{
+        lineHeight: '21px',
+        color: type === 'error' ? 'var(--red)' : 'var(--green)',
+      }}
+    >
+      <p style={{ margin: 0 }}>
+        {type === 'error'
+          ? formatErrorMessage(message)
+          : formatLogMessage(message)}
+      </p>
       <p style={{ margin: 0 }}>${message.content}</p>
       <br />
     </div>
   )
 
   const getMessage = message => {
-    if (message.type === 'error') return renderToString(ErrorMessage(message))
-    if (message.type === 'log') return renderToString(LogMessage(message))
+    if (message.type === 'error')
+      return renderToString(Message(message, message.type))
+    if (message.type === 'log')
+      return renderToString(Message(message, message.type))
   }
 
   const printToDebugger = useCallback((_, message) => {
