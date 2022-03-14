@@ -48,7 +48,7 @@
               {
                 "type": "tab",
                 "id": "44",
-                "name": "Debug Console",
+                "name": "Console",
                 "component": "debugConsole",
                 "className": "debug-console"
               }
