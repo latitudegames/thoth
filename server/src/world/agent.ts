@@ -69,7 +69,7 @@ export class agent extends gameObject {
     this.name = data.agent ?? data.name ?? "agent"
 
     if (data.discord_enabled) {
-      this.startDiscord(data.discord_api_key, data.spell_handler, data.spell_version);
+      this.startDiscord(data.discord_api_key, data.discord_spell_handler_incoming, data.spell_version);
     }
 
     if (data.xrengine_enabled) {

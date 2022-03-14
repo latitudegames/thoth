@@ -1552,16 +1552,16 @@ export class discord_client {
             }, 1000 * 3600 * 4),
             responded: false,
           }
-          const resp = await handleInput(
-            'Tell me about ' + 'butterlifes',
-            'bot',
-            this.agent.name ?? 'Agent',
-            'discord',
-            message.channel.id,
-            this.spell_handler,
-            this.spell_version
-          )
-          channel.send(resp)
+          // const resp = await handleInput(
+          //   'Tell me about ' + 'butterlifes',
+          //   'bot',
+          //   this.agent.name ?? 'Agent',
+          //   'discord',
+          //   message.channel.id,
+          //   this.spell_handler,
+          //   this.spell_version
+          // )
+          // channel.send(resp)
         }
       })
     }, 1000 * 3600)
