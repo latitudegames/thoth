@@ -66,7 +66,7 @@ export class ThothConsole {
     this.node.data.error = false
   }
 
-  renderSuccess() {
+  renderLog() {
     this.node.data.success = true
     this.updateNodeView()
     this.node.data.success = false
