@@ -170,7 +170,7 @@ const Ent = ({ id, updateCallback }) => {
               <select
                 name="spellHandlerIncoming"
                 id="spellHandlerIncoming"
-                value={xrengine_spell_handler_incoming}
+                value={discord_spell_handler_incoming}
                 onChange={event => {
                   setDiscordSpellHandlerIncoming(event.target.value)
                 }}
@@ -189,7 +189,7 @@ const Ent = ({ id, updateCallback }) => {
               <select
                 name="spellHandlerUpdate"
                 id="spellHandlerUpdate"
-                value={xrengine_spell_handler_update}
+                value={discord_spell_handler_update}
                 onChange={event => {
                   setDiscordSpellHandlerUpdate(event.target.value)
                 }}
