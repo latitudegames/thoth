@@ -85,7 +85,7 @@ export const spellApi = rootApi.injectEndpoints({
 
         if (spell.gameState)
           dispatch(
-            updateGameState({ state: spell.gameState, spellId: spell.name })
+            setGameState({ state: spell.gameState, spellId: spell.name })
           )
 
         const baseQueryOptions = {
