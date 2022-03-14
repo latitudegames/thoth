@@ -24,6 +24,7 @@ const StartScreen = () => {
 
   const [deleteSpell] = useDeleteSpellMutation()
   const { data: spells } = useGetSpellsQuery()
+  const [newSpell] = useNewSpellMutation()
 
   const onReaderLoad = async event => {
     const spellData = JSON.parse(event.target.result)
