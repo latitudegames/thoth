@@ -112,7 +112,9 @@ const StateManager = ({ tab, ...props }) => {
 
   const toolbar = (
     <>
-      <button className="small">History</button>
+      <button className="small" onClick={onSave}>
+        Save
+      </button>
       <button className="small" onClick={onClear}>
         Clear
       </button>
