@@ -655,6 +655,25 @@ const getPersonalities = async (ctx: Koa.Context) => {
   return (ctx.body = { personalities: res })
 }
 
+const chatAgent = async (ctx: Koa.Context) => {
+  const speaker = ctx.request.body.speaker as string
+  const agent = ctx.request?.body?.agent as string
+
+  const personality = ''
+  const facts = ''
+  let out = undefined
+
+  if (!(await database.instance.getAgentExists(agent))) {
+    out = await createWikipediaAgent(speaker, agent, personality, facts)
+  }
+
+  if (out === undefined) {
+    out = {}
+  }
+
+  return (ctx.body = out)
+}
+
 export const agents: Route[] = [
   {
     path: '/agents',
@@ -797,5 +816,10 @@ export const agents: Route[] = [
     path: '/personalities',
     access: noAuth,
     get: getPersonalities,
+  },
+  {
+    path: '/chat_agent',
+    access: noAuth,
+    post: chatAgent,
   },
 ]
