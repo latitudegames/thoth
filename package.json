@@ -44,7 +44,6 @@
     "concurrently": "^6.2.1",
     "copyfiles": "^2.4.1",
     "cors-anywhere": "^0.4.4",
-    "copyfiles": "^2.4.1",
     "craco": "^0.0.3",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.24.2",
