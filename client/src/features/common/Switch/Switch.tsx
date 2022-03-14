@@ -3,11 +3,10 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 
 const SwitchComponent = ({ label: _label, checked, onChange }) => {
   const label = { inputProps: { 'aria-label': _label } }
-
   return (
     <FormControlLabel
       label={_label}
-      control={<Switch {...label} checked={checked} onChange={onChange} />}
+      control={<Switch {...label} checked={checked === true || checked === "true"} onChange={onChange} />}
     />
   )
 }

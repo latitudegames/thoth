@@ -1200,5 +1200,5 @@ class XREngineBot {
 }
 
 function log(text: string) {
-  console.log(text)
+  // console.log(text)
 }
