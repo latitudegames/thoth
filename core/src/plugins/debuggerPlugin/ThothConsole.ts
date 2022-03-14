@@ -31,8 +31,7 @@ export class ThothConsole {
     this.isServer = server
 
     if (throwError) this.throwError = throwError
-    console.log('editor.view is ', editor.view)
-    if (!editor.view) return;
+    if (!editor.view) return
     const nodeValues = Array.from(editor.view.nodes)
     const foundNode = nodeValues.find(([, n]) => n.node.id === node.id)
 
