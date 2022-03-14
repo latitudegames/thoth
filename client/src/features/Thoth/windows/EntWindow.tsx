@@ -25,9 +25,11 @@ const Ent = ({ id, updateCallback }) => {
   const [agent, setAgent] = useState('')
   const [discord_enabled, setdiscord_enabled] = useState(false)
   const [discord_api_key, setDiscordApiKey] = useState('')
+
   const [discord_spell_handler_incoming, setDiscordSpellHandlerIncoming] = useState('')
   const [discord_spell_handler_update, setDiscordSpellHandlerUpdate] = useState('')
   const [discord_spell_handler_feed, setDiscordSpellHandlerFeed] = useState('')
+
   const [xrengine_spell_handler_incoming, setXREngineSpellHandlerIncoming] = useState('')
   const [xrengine_spell_handler_update, setXREngineSpellHandlerUpdate] = useState('')
   const [xrengine_spell_handler_feed, setXREngineSpellHandlerFeed] = useState('')
@@ -206,7 +208,7 @@ const Ent = ({ id, updateCallback }) => {
               <select
                 name="spellHandlerFeed"
                 id="spellHandlerFeed"
-                value={discord_spell_handler_incoming}
+                value={discord_spell_handle_feed}
                 onChange={event => {
                   setDiscordSpellHandlerFeed(event.target.value)
                 }}
