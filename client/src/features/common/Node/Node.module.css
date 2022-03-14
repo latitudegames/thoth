@@ -47,6 +47,9 @@
 .node-id.error {
   color: var(--red);
 }
+.node-id.success {
+  color: var(--green);
+}
 .node-title {
   /* font-family: 'IBM Plex Mono', monospace !important; */
   /* text-transform: uppercase; */
