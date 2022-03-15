@@ -1,5 +1,3 @@
-/* eslint-disable camelcase */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 /* eslint-disable no-console */
 /* eslint-disable require-await */
@@ -14,21 +12,18 @@ import {
   ThothWorkerOutputs,
 } from '../../../types'
 import { EngineContext } from '../../engine'
-import { triggerSocket, anySocket, stringSocket } from '../../sockets'
+import { triggerSocket, anySocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
-const info =
-  'Named Entity Recognition returns the type of the object the input string is talking about.'
+const info = 'Document Get is used to get a document from the search corpus'
 
 type WorkerReturn = {
-  output: any
+  output: string
 }
 
-export class NamedEntityRecognition extends ThothComponent<
-  Promise<WorkerReturn>
-> {
+export class DocumentGet extends ThothComponent<Promise<WorkerReturn>> {
   constructor() {
-    super('Named Entity Recognition')
+    super('Document Get')
 
     this.task = {
       outputs: {
@@ -37,19 +32,19 @@ export class NamedEntityRecognition extends ThothComponent<
       },
     }
 
-    this.category = 'Conversation'
+    this.category = 'Database'
     this.display = true
     this.info = info
   }
 
   builder(node: ThothNode) {
-    const input = new Rete.Input('string', 'String', stringSocket)
+    const idInput = new Rete.Input('id', 'ID', anySocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
     const output = new Rete.Output('output', 'Output', anySocket)
 
     return node
-      .addInput(input)
+      .addInput(idInput)
       .addInput(dataInput)
       .addOutput(dataOutput)
       .addOutput(output)
@@ -61,35 +56,19 @@ export class NamedEntityRecognition extends ThothComponent<
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    const action = inputs['string'][0] as string
+    const id = inputs['id'][0] as string
 
-    const resp = await axios.post(
-      `${process.env.REACT_APP_API_URL}/hf_request`,
+    const resp = await axios.get(
+      `${process.env.VITE_SEARCH_SERVER_URL}/document`,
       {
-        inputs: action,
-        model: 'dslim/bert-large-NER',
-        parameters: [],
-        options: undefined,
+        params: {
+          documentId: id,
+        },
       }
     )
 
-    const { success, data } = resp.data
-    let type = 'No Type Found'
-
-    if (success) {
-      if (data && data.length > 0) {
-        if (data[0].entity_group === 'PER') {
-          type = 'Alive Object'
-        } else {
-          type = 'Location'
-        }
-      } else {
-        type = 'Not Alive Object'
-      }
-    }
-
     return {
-      output: type,
+      output: resp.data,
     }
   }
 }

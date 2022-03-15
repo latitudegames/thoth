@@ -14,21 +14,19 @@ import {
   ThothWorkerOutputs,
 } from '../../../types'
 import { EngineContext } from '../../engine'
-import { triggerSocket, anySocket, stringSocket } from '../../sockets'
+import { triggerSocket, stringSocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
 const info =
-  'Named Entity Recognition returns the type of the object the input string is talking about.'
+  'Generate Context is used to generate the context for the text completion'
 
 type WorkerReturn = {
-  output: any
+  output: string
 }
 
-export class NamedEntityRecognition extends ThothComponent<
-  Promise<WorkerReturn>
-> {
+export class GetAgentData extends ThothComponent<Promise<WorkerReturn>> {
   constructor() {
-    super('Named Entity Recognition')
+    super('Get Agent Data')
 
     this.task = {
       outputs: {
@@ -37,19 +35,19 @@ export class NamedEntityRecognition extends ThothComponent<
       },
     }
 
-    this.category = 'Conversation'
+    this.category = 'Agents'
     this.display = true
     this.info = info
   }
 
   builder(node: ThothNode) {
-    const input = new Rete.Input('string', 'String', stringSocket)
+    const agentInput = new Rete.Input('agent', 'Agent', stringSocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
-    const output = new Rete.Output('output', 'Output', anySocket)
+    const output = new Rete.Output('output', 'Output', stringSocket)
 
     return node
-      .addInput(input)
+      .addInput(agentInput)
       .addInput(dataInput)
       .addOutput(dataOutput)
       .addOutput(output)
@@ -61,35 +59,19 @@ export class NamedEntityRecognition extends ThothComponent<
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    const action = inputs['string'][0] as string
+    const agent = inputs['agent'][0] as string
 
-    const resp = await axios.post(
-      `${process.env.REACT_APP_API_URL}/hf_request`,
+    const resp = await axios.get(
+      `${process.env.REACT_APP_API_URL}/agent_data`,
       {
-        inputs: action,
-        model: 'dslim/bert-large-NER',
-        parameters: [],
-        options: undefined,
+        params: {
+          agent: agent,
+        },
       }
     )
 
-    const { success, data } = resp.data
-    let type = 'No Type Found'
-
-    if (success) {
-      if (data && data.length > 0) {
-        if (data[0].entity_group === 'PER') {
-          type = 'Alive Object'
-        } else {
-          type = 'Location'
-        }
-      } else {
-        type = 'Not Alive Object'
-      }
-    }
-
     return {
-      output: type,
+      output: JSON.stringify(resp.data.agent),
     }
   }
 }
