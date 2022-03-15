@@ -1,6 +1,7 @@
 import { ActionTypeComponent } from './ActionType'
 import { AddAgent } from './AddAgent'
 import { AgentTextCompletion } from './AgentTextCompletion'
+import { AgentManager } from "./AgentManager"
 import { Alert } from './AlertMessage'
 import { ArchiveConversation } from './ArchiveConversation'
 import { ArrayVariable } from './ArrayVariable'
@@ -104,6 +105,7 @@ export const components = {
     new SummarizeAndStoreFactsAboutSpeaker(),
   textToSpeech: () => new TextToSpeech(),
   agentTextCompletion: () => new AgentTextCompletion(),
+  agentManager: () => new AgentManager(),
   keywordExtractor: () => new KeywordExtractor(),
   namedEntityRecognition: () => new NamedEntityRecognition(),
   generateContext: () => new GenerateContext(),

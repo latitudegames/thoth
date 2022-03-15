@@ -42,7 +42,6 @@ export class AgentTextCompletion extends ThothComponent<Promise<WorkerReturn>> {
 
   builder(node: ThothNode) {
     const inp = new Rete.Input('string', 'Text', stringSocket)
-    const speaker = new Rete.Input('speaker', 'Speaker', stringSocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
     const outp = new Rete.Output('output', 'output', stringSocket)
@@ -100,23 +99,10 @@ export class AgentTextCompletion extends ThothComponent<Promise<WorkerReturn>> {
 
     return node
       .addInput(inp)
-      .addInput(speaker)
       .addInput(dataInput)
       .addOutput(dataOutput)
       .addOutput(outp)
   }
-
-  /*for text completion:
-  const data = {
-    "prompt": context,
-    "temperature": 0.9,
-    "max_tokens": 100,
-    "top_p": 1,
-    "frequency_penalty": dialogFrequencyPenality,
-    "presence_penalty": dialogPresencePenality,
-    "stop": ["\"\"\"", `${speaker}:`, '\n']
-  };
-  */
 
   async worker(
     node: NodeData,
@@ -124,9 +110,7 @@ export class AgentTextCompletion extends ThothComponent<Promise<WorkerReturn>> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    const speaker = inputs['speaker'][0] as string
-    const action = speaker + ': ' + inputs['string'][0]
-
+    const action = inputs['string'][0]
     const modelName = node?.data?.modelName as string
     const temperatureData = node?.data?.temperature as string
     const temperature = parseFloat(temperatureData)
@@ -138,9 +122,9 @@ export class AgentTextCompletion extends ThothComponent<Promise<WorkerReturn>> {
     const frequencyPenalty = parseFloat(frequencyPenaltyData)
     const presencePenaltyData = node?.data?.presencePenalty as string
     const presencePenalty = parseFloat(presencePenaltyData)
-    const stop = ((node?.data?.stop as string) ?? '').split(',')
+    const stop = (node?.data?.stop as string).split(',')
     for (let i = 0; i < stop.length; i++) {
-      stop[i] = stop[i].trim().replace('${speaker}', speaker)
+      stop[i] = stop[i].trim()
     }
 
     console.log(
@@ -162,6 +146,7 @@ export class AgentTextCompletion extends ThothComponent<Promise<WorkerReturn>> {
     )
 
     const { success, choice } = resp.data
+
     const res = success ? choice.text : 'Sorry i had an error!'
     console.log('success:', success, 'choice:', choice.text, 'res:', res)
 

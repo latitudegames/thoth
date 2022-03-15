@@ -10,7 +10,7 @@ import {
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../types'
-import { InputControl } from '../dataControls/InputControl'
+import { BooleanControl } from '../dataControls/BooleanControl'
 import { EngineContext } from '../engine'
 import { triggerSocket, stringSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
@@ -44,13 +44,13 @@ export class StringAdder extends ThothComponent<Promise<WorkerReturn>> {
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
     const outp = new Rete.Output('output', 'String', stringSocket)
 
-    const operationType = new InputControl({
+    const newLineStarting = new BooleanControl({
       dataKey: 'newLineStarting',
-      name: 'New Line Starting',
+      name: 'New Line',
       icon: 'moon',
     })
 
-    node.inspector.add(operationType)
+    node.inspector.add(newLineStarting)
 
     return node
       .addInput(inp)
@@ -68,11 +68,11 @@ export class StringAdder extends ThothComponent<Promise<WorkerReturn>> {
   ) {
     const input = inputs['string'][0] as string
     const newInput = inputs['newInput'][0] as string
-    const newLineStarting = node?.data?.newLineStarting as string
-    console.log('new output:', input + (newLineStarting ?? '') + newInput)
+    const newLineStarting = node?.data?.newLineStarting === true || node?.data?.newLineStarting === 'true'
+    console.log('new output:', input + (newLineStarting ? '\n' : '') + newInput)
 
     return {
-      output: input + (newLineStarting ?? '') + newInput,
+      output: input + (newLineStarting ? '\n' : '') + newInput,
     }
   }
 }

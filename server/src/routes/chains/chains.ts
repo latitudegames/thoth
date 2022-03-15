@@ -93,6 +93,9 @@ const chainsHandler = async (ctx: Koa.Context) => {
 
   // Validates the body of the request against all expected values to ensure they are all present
   const inputs = inputKeys.reduce((inputs, expectedInput: string) => {
+
+    console.log("ctx.request.body is", ctx.request.body)
+
     const requestInput = ctx.request.body[expectedInput]
     console.log('requestedInput:', requestInput)
 
