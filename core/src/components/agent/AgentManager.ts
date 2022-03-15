@@ -11,11 +11,11 @@ import {
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
-} from '../../types'
-import { InputControl } from '../dataControls/InputControl'
-import { EngineContext } from '../engine'
-import { triggerSocket, anySocket } from '../sockets'
-import { ThothComponent } from '../thoth-component'
+} from '../../../types'
+import { InputControl } from '../../dataControls/InputControl'
+import { EngineContext } from '../../engine'
+import { triggerSocket, anySocket } from '../../sockets'
+import { ThothComponent } from '../../thoth-component'
 
 const info = 'Archive Conversation is used to archive old conversation'
 // TODO: Update this

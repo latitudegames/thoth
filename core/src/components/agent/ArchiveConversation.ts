@@ -10,10 +10,10 @@ import {
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
-} from '../../types'
-import { EngineContext } from '../engine'
-import { triggerSocket, stringSocket, anySocket } from '../sockets'
-import { ThothComponent } from '../thoth-component'
+} from '../../../types'
+import { EngineContext } from '../../engine'
+import { triggerSocket, stringSocket, anySocket } from '../../sockets'
+import { ThothComponent } from '../../thoth-component'
 
 const info = 'Archive Conversation is used to archive old conversation'
 

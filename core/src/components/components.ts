@@ -1,9 +1,9 @@
 import { ActionTypeComponent } from './ActionType'
-import { AddAgent } from './AddAgent'
-import { AgentTextCompletion } from './AgentTextCompletion'
-import { AgentManager } from "./AgentManager"
+import { AddAgent } from './agent/AddAgent'
+import { AgentTextCompletion } from './agent/AgentTextCompletion'
+import { AgentManager } from './agent/AgentManager'
 import { Alert } from './AlertMessage'
-import { ArchiveConversation } from './ArchiveConversation'
+import { ArchiveConversation } from './agent/ArchiveConversation'
 import { ArrayVariable } from './ArrayVariable'
 import { BooleanGate } from './BooleanGate'
 import { BooleanVariable } from './BooleanVariable'
@@ -83,6 +83,9 @@ import { WhileLoop } from './WhileLoop'
 
 // Here we load up all components of the builder into our editor for usage.
 // We might be able to programatically generate components from enki
+
+// NOTE: PLEASE KEEP THESE IN ALPHABETICAL ORDER
+// todo some kind of custom build parser perhaps to take car of keeping these in alphabetical order
 
 export const components = {
   actionTypeComponent: () => new ActionTypeComponent(),
