@@ -18,7 +18,7 @@
 import { random } from 'lodash'
 import Xvfb from 'xvfb'
 
-import roomManager from '../components/roomManager'
+import roomManager from '../components/agent/roomManager'
 import { classifyText } from '../utils/textClassifier'
 import { browserWindow, PageUtils } from './browser'
 import { database } from './database'
