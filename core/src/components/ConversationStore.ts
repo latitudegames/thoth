@@ -29,17 +29,22 @@ export async function setConversation(
   client: string,
   channel: string
 ) {
-  const response = await axios.post(
-    `${process.env.REACT_APP_API_ROOT_URL}/conversation`,
-    {
-      agent: agent,
-      speaker: speaker,
-      conversation: conv,
-      client: client,
-      channel: channel,
-    }
-  )
-  return response.data
+  try {
+    const response = await axios.post(
+      `${process.env.REACT_APP_API_URL}/conversation`,
+      {
+        agent: agent,
+        speaker: speaker,
+        conversation: conv,
+        client: client,
+        channel: channel,
+      }
+    )
+    return response.data
+  } catch (e) {
+    console.log(e)
+    return undefined
+  }
 }
 
 export class ConversationStore extends ThothComponent<Promise<InputReturn>> {

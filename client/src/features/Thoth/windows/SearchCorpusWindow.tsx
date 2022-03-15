@@ -103,8 +103,8 @@ const SearchCorpus = () => {
 
           <div className="d-flex flex-column search-corpus-documents-list">
             {documents &&
-              documents.map((document, idx) => (
-                <SearchCorpusDocument document={document} getDoc={getDocuments} key={idx}/>
+              documents.map((document) => (
+                <SearchCorpusDocument document={document} getDoc={getDocuments} key={document.id}/>
               ))
             }
             {documents.length === 0 && 'No documents found'}

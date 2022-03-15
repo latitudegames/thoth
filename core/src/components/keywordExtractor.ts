@@ -130,7 +130,7 @@ async function keywordExtractor(input: string, onlyKeywords: boolean) {
     )
 
     const weaviateResponse = _resp.data
-    if (weaviateResponse.length === 0) {
+    if (weaviateResponse.length === 0 || !weaviateResponse.Paragraph) {
       continue
     }
 

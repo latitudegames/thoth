@@ -268,17 +268,31 @@ const getFacts = async (ctx: Koa.Context) => {
   const agent = ctx.request.query.agent
   const speaker = ctx.request.query.speaker
 
-  const facts = await database.instance.getSpeakersFacts(agent, speaker, false)
-
-  return (ctx.body = facts)
+  try {
+    const facts = await database.instance.getSpeakersFacts(
+      agent,
+      speaker,
+      false
+    )
+    return (ctx.body = facts)
+  } catch (e) {
+    return (ctx.body = '')
+  }
 }
 const getFactsCount = async (ctx: Koa.Context) => {
   const agent = ctx.request.query.agent
   const speaker = ctx.request.query.speaker
 
-  const facts = await database.instance.getSpeakersFacts(agent, speaker, false)
-
-  return (ctx.body = facts.length)
+  try {
+    const facts = await database.instance.getSpeakersFacts(
+      agent,
+      speaker,
+      false
+    )
+    return (ctx.body = facts.length)
+  } catch (e) {
+    return (ctx.body = 0)
+  }
 }
 
 const getConversation = async (ctx: Koa.Context) => {
@@ -302,7 +316,7 @@ const setConversation = async (ctx: Koa.Context) => {
   const speaker = ctx.request.body.speaker
   const client = ctx.request.body.client
   const channel = ctx.request.body.channel
-  const conversation = ctx.request.body.conve
+  const conversation = ctx.request.body.conv
 
   await database.instance.setConversation(
     agent,
@@ -312,6 +326,8 @@ const setConversation = async (ctx: Koa.Context) => {
     conversation,
     false
   )
+
+  return (ctx.body = 'ok')
 }
 const getConversationCount = async (ctx: Koa.Context) => {
   const agent = ctx.request.query.agent
@@ -537,7 +553,12 @@ const textCompletion = async (ctx: Koa.Context) => {
   const topP = ctx.request.body.topP as number
   const frequencyPenalty = ctx.request.body.frequencyPenalty as number
   const presencePenalty = ctx.request.body.presencePenalty as number
-  const stop = ctx.request.body.stop as string[]
+  const sender = (ctx.request.body.sender as string) ?? 'User'
+  let stop = ctx.request.body.stop as string[]
+
+  if (!stop || stop.length === undefined || stop.length <= 0) {
+    stop = ['"""', `${sender}:`, '\n']
+  }
 
   console.log('textCompletion for prompt:', prompt)
   const { success, choice } = await makeCompletion(modelName, {
@@ -608,9 +629,12 @@ const getAgentData = async (ctx: Koa.Context) => {
 const getAgentFacts = async (ctx: Koa.Context) => {
   const agent = ctx.request.query.agent as string
 
-  const data = await database.instance.getAgentFacts(agent)
-
-  return (ctx.body = { facts: data })
+  try {
+    const data = await database.instance.getAgentFacts(agent)
+    return (ctx.body = { facts: data })
+  } catch (e) {
+    return (ctx.body = { facts: '' })
+  }
 }
 
 const requestInformationAboutVideo = async (
@@ -672,6 +696,25 @@ const chatAgent = async (ctx: Koa.Context) => {
   }
 
   return (ctx.body = out)
+}
+
+const saveConversation = async (ctx: Koa.Context) => {
+  const agent = ctx.request.body.agent as string
+  const speaker = ctx.request.body.speaker as string
+  const conversation = ctx.request.body.conv as string
+  const client = ctx.request.body.client as string
+  const channel = ctx.request.body.channel as string
+
+  await database.instance.setConversation(
+    agent,
+    client,
+    channel,
+    speaker,
+    conversation,
+    false
+  )
+
+  return (ctx.body = 'ok')
 }
 
 export const agents: Route[] = [
@@ -821,5 +864,10 @@ export const agents: Route[] = [
     path: '/chat_agent',
     access: noAuth,
     post: chatAgent,
+  },
+  {
+    path: '/save_conv',
+    access: noAuth,
+    post: saveConversation,
   },
 ]

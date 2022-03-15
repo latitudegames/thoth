@@ -66,9 +66,12 @@ export class StringAdder extends ThothComponent<Promise<WorkerReturn>> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    const input = inputs['string'][0] as string
-    const newInput = inputs['newInput'][0] as string
-    const newLineStarting = node?.data?.newLineStarting === true || node?.data?.newLineStarting === 'true'
+    const input = (inputs['string']?.[0] as string) ?? ''
+    const newInput = (inputs['newInput']?.[0] as string) ?? ''
+    const newLineStarting =
+      node?.data?.newLineStarting === true ||
+      node?.data?.newLineStarting === 'true'
+
     console.log('new output:', input + (newLineStarting ? '\n' : '') + newInput)
 
     return {
