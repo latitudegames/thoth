@@ -134,6 +134,7 @@ export class GenerateContext extends ThothComponent<Promise<WorkerReturn>> {
       .replace('$personality', agentData.perseonality)
       .replace('$exampleDialog', agentData.dialog)
       .replace('$monologue', agentData.monologue)
+      .replace('$ethics', agentData.ethics)
       .replace('$facts', agentData.facts)
       .replace('$speakerFacts', speakersFacts)
       .replace('$agentFacts', agentFacts)
