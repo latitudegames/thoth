@@ -129,15 +129,18 @@ export class GenerateContext extends ThothComponent<Promise<WorkerReturn>> {
       kdata += '\n'
     }
 
+    console.log('agentData:', agentData)
+
     const res = fewshot
-      .replace('$morals', agentData.morals)
-      .replace('$personality', agentData.perseonality)
-      .replace('$exampleDialog', agentData.dialog)
-      .replace('$monologue', agentData.monologue)
-      .replace('$ethics', agentData.ethics)
-      .replace('$facts', agentData.facts)
-      .replace('$speakerFacts', speakersFacts)
-      .replace('$agentFacts', agentFacts)
+      .replace('$morals', agentData.morals ?? '')
+      .replace('$personality', agentData.perseonality ?? '')
+      .replace('$exampleDialog', agentData.dialog ?? '')
+      .replace('$monologue', agentData.monologue ?? '')
+      .replace('$ethics', agentData.ethics ?? '')
+      .replace('$facts', agentData.facts ?? '')
+      .replace('$needsAndMotivations', agentData.needsAndMotivations ?? '')
+      .replace('$speakerFacts', speakersFacts ?? '')
+      .replace('$agentFacts', agentFacts ?? '')
       .replace('$keywords', kdata)
       .replace('$agent', agent)
       .replace('$speaker', speaker)
