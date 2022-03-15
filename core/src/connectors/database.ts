@@ -43,8 +43,8 @@ export class database {
       host: process.env.PGHOST,
       ssl: PGSSL
         ? {
-            rejectUnauthorized: false,
-          }
+          rejectUnauthorized: false,
+        }
         : false,
     })
     this.client.connect()
@@ -769,16 +769,6 @@ export class database {
     const values = [storeId]
 
     const rows = await this.client.query(query, values)
-    if (rows && rows.rows && rows.rows.length > 0) {
-      return rows.rows
-    } else {
-      return []
-    }
-  }
-  async getAllDocuments(): Promise<any[]> {
-    const query = 'SELECT * FROM documents'
-
-    const rows = await this.client.query(query)
     if (rows && rows.rows && rows.rows.length > 0) {
       return rows.rows
     } else {

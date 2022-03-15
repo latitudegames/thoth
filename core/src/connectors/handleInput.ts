@@ -11,8 +11,10 @@ export async function handleInput(
   spell_handler = 'default',
   spell_version = 'latest'
 ) {
+  const url = `http://localhost:8001/chains/${spell_handler}/${spell_version}`
+  console.log("url is", url)
   const response = await axios.post(
-    `http://localhost:8001/chains/${spell_handler}/${spell_version}`,
+    `${url}`,
     {
       Input: {
         Input: message,
@@ -23,8 +25,8 @@ export async function handleInput(
       },
     }
   )
+  console.log('data:', response.data)
   console.log('response:', response.data.outputs)
-  console.log('response1:', response.data.outputs.Greeting)
   let index = undefined
 
   for (const x in response.data.outputs) {

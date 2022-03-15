@@ -55,7 +55,6 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
   router.get('/document', async function (ctx: Koa.Context) {
     const storeId = ctx.query.storeId
     const documents: any = await database.instance.getDocumentsOfStore(storeId)
-
     return (ctx.body = documents)
   })
   router.post('/document', async function (ctx: Koa.Context) {

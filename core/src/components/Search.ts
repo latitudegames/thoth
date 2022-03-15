@@ -24,11 +24,11 @@ type WorkerReturn = {
 
 export class Search extends ThothComponent<Promise<WorkerReturn>> {
   constructor() {
-    super('Search')
+    super('Search Documents')
 
     this.task = {
       outputs: {
-        output: 'output',
+        output: 'results',
         trigger: 'option',
       },
     }
@@ -39,18 +39,25 @@ export class Search extends ThothComponent<Promise<WorkerReturn>> {
   }
 
   builder(node: ThothNode) {
-    const agentInput = new Rete.Input('agent', 'Agent', stringSocket)
-    const questionInput = new Rete.Input('question', 'Question', stringSocket)
-    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
-    const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
-    const output = new Rete.Output('output', 'Output', anySocket)
+    const searchStrInput = new Rete.Input(
+      'searchStr',
+      'Search String',
+      stringSocket
+    )
+    const dataInput = new Rete.Input(
+      'trigger',
+      'Trigger In',
+      triggerSocket,
+      true
+    )
+    const dataOutput = new Rete.Output('trigger', 'Trigger Out', triggerSocket)
+    const output = new Rete.Output('results', 'Results []', anySocket)
 
     return node
-      .addInput(agentInput)
-      .addInput(questionInput)
+      .addInput(searchStrInput)
       .addInput(dataInput)
-      .addOutput(dataOutput)
       .addOutput(output)
+      .addOutput(dataOutput)
   }
 
   async worker(
