@@ -268,17 +268,31 @@ const getFacts = async (ctx: Koa.Context) => {
   const agent = ctx.request.query.agent
   const speaker = ctx.request.query.speaker
 
-  const facts = await database.instance.getSpeakersFacts(agent, speaker, false)
-
-  return (ctx.body = facts)
+  try {
+    const facts = await database.instance.getSpeakersFacts(
+      agent,
+      speaker,
+      false
+    )
+    return (ctx.body = facts)
+  } catch (e) {
+    return (ctx.body = '')
+  }
 }
 const getFactsCount = async (ctx: Koa.Context) => {
   const agent = ctx.request.query.agent
   const speaker = ctx.request.query.speaker
 
-  const facts = await database.instance.getSpeakersFacts(agent, speaker, false)
-
-  return (ctx.body = facts.length)
+  try {
+    const facts = await database.instance.getSpeakersFacts(
+      agent,
+      speaker,
+      false
+    )
+    return (ctx.body = facts.length)
+  } catch (e) {
+    return (ctx.body = 0)
+  }
 }
 
 const getConversation = async (ctx: Koa.Context) => {
@@ -608,9 +622,12 @@ const getAgentData = async (ctx: Koa.Context) => {
 const getAgentFacts = async (ctx: Koa.Context) => {
   const agent = ctx.request.query.agent as string
 
-  const data = await database.instance.getAgentFacts(agent)
-
-  return (ctx.body = { facts: data })
+  try {
+    const data = await database.instance.getAgentFacts(agent)
+    return (ctx.body = { facts: data })
+  } catch (e) {
+    return (ctx.body = { facts: '' })
+  }
 }
 
 const requestInformationAboutVideo = async (

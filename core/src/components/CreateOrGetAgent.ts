@@ -64,10 +64,13 @@ export class CreateOrGetAgent extends ThothComponent<Promise<InputReturn>> {
     const speaker = inputs['speaker'][0] as string
     const action = inputs['string'][0]
 
-    const resp = await axios.post('chat_agent', {
-      speaker: speaker,
-      agent: agent,
-    })
+    const resp = await axios.post(
+      `${process.env.REACT_APP_API_ROOT_URL}/chat_agent`,
+      {
+        speaker: speaker,
+        agent: agent,
+      }
+    )
 
     console.log(resp.data)
 
