@@ -15,7 +15,6 @@ const AgentManager = () => {
   const [monologue, setMonologue] = useState('')
   const [personality, setPersonality] = useState('')
   const [greetings, setGreetings] = useState('')
-
   const { enqueueSnackbar } = useSnackbar()
   const [files, setFiles] = useState("");
   let importData = files && JSON.parse(files);
@@ -23,7 +22,6 @@ const AgentManager = () => {
     handleSubmit,
   } = useForm()
   let versionName = localStorage.getItem("agentName")
-  console.log(versionName, 'versionNameversionName')
   const createNew = async () => {
     const agent = !versionName ? 'New Agent' : versionName
     await getAgents()
@@ -138,7 +136,7 @@ const AgentManager = () => {
 
   const createAgent = data => {
     onSubmit()
-    localStorage.setItem("agentName", data && data.versionName)
+    localStorage.setItem("agentName", data && data.name)
     enqueueSnackbar('Agent Created', { variant: 'success' })
   }
 
@@ -236,8 +234,8 @@ const AgentManager = () => {
                 >
                   {(agents as any)?.length > 0 &&
                     (agents as any)?.map((agent, idx) => (
-                      <option value={agent.agent} key={idx}>
-                        {agent.agent}
+                      <option value={agent.personality} key={idx}>
+                        {agent.personality}
                       </option>
                     ))
                   }
