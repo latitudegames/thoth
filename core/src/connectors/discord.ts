@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable no-param-reassign */
 /* eslint-disable prefer-const */
 /* eslint-disable no-invalid-this */
@@ -20,7 +21,8 @@ import { handleInput } from './handleInput'
 import { getRandomEmptyResponse, startsWithCapital, getSetting } from './utils'
 
 function log(...s) {
-  console.log(...s)
+  return
+  // console.log(...s)
 }
 
 export const channelTypes = {
@@ -486,9 +488,9 @@ export class discord_client {
     }
 
     if (otherMention) {
-      roomManager.instance.userPingedSomeoneElse(author.id, 'discord')
+      //roomManager.instance.userPingedSomeoneElse(author.id, 'discord')
     } else if (content.startsWith('!ping')) {
-      roomManager.instance.userGotInConversationFromAgent(author.id), 'discord'
+      //roomManager.instance.userGotInConversationFromAgent(author.id), 'discord'
     } else if (!content.startsWith('!ping')) {
       if (
         this.discussionChannels[channel.id] !== undefined &&
@@ -518,10 +520,10 @@ export class discord_client {
             log('c1: ' + context + ' c2: ' + ncontext)
 
             if (context == ncontext) {
-              roomManager.instance.userTalkedSameTopic(author.id, 'discord')
+              /*roomManager.instance.userTalkedSameTopic(author.id, 'discord')
               if (roomManager.instance.agentCanResponse(author.id, 'discord')) {
                 content = '!ping ' + content
-              }
+              }*/
             }
           }
         }
@@ -610,22 +612,16 @@ export class discord_client {
       channel.sendTyping()
     }, message.content.length)
 
-    console.log(this.agent)
     const response = await handleInput(
       message.content,
       message.author.username,
-      this.agent.name ?? 'Agent',
+      this.agent.name ?? 'Thales',
+      'discord',
+      message.channel.id,
       this.spell_handler,
       this.spell_version
     )
-    this.messageEvent.emit(
-      'new_message',
-      this,
-      response,
-      addPing,
-      channel,
-      message
-    )
+    this.handlePingSoloAgent(message.channel.id, message.id, response, false)
   }
 
   //Event that is triggered when a message is deleted
@@ -663,7 +659,7 @@ export class discord_client {
 
     const oldResponse = this.getResponse(channel.id, id)
     if (oldResponse === undefined) {
-      await channel.messages.fetch(id).then(async msg => {})
+      await channel.messages.fetch(id).then(async msg => { })
       log('message not found')
       return
     }
@@ -750,9 +746,9 @@ export class discord_client {
 
       this.client.users.fetch(newMember.userId).then(user => {
         if (newMember.status === 'online') {
-          roomManager.instance.addUser(user.id, 'discord')
+          //roomManager.instance.addUser(user.id, 'discord')
         } else {
-          roomManager.instance.removeUser(user.id, 'discord')
+          // roomManager.instance.removeUser(user.id, 'discord')
         }
         // TODO: Replace message with direct message handler
         log('Discord', newMember.status, user.username, utcStr)
@@ -1068,19 +1064,79 @@ export class discord_client {
       .fetch(chat_id)
       .then(channel => {
         channel.messages.fetch(message_id).then(message => {
-          Object.keys(responses).map(function (key, index) {
-            log('response: ' + responses)
+          log('response:', responses)
+          if (
+            responses !== undefined &&
+            responses.length <= 2000 &&
+            responses.length > 0
+          ) {
+            let text = this.replacePlaceholders(responses)
+            if (addPing) {
+              message
+                .reply(text)
+                .then(async function (msg) {
+                  //this.onMessageResponseUpdated(channel.id, message.id, msg.id)
+                })
+                .catch(console.error)
+            } else {
+              while (
+                text === undefined ||
+                text === '' ||
+                text.replace(/\s/g, '').length === 0
+              )
+                text = getRandomEmptyResponse()
+              log('response1: ' + text)
+              message.channel
+                .send(text)
+                .then(async function (msg) {
+                  //this.onMessageResponseUpdated(channel.id, message.id, msg.id)
+                })
+                .catch(console.error)
+            }
+          } else if (
+            responses &&
+            responses !== undefined &&
+            responses.length >= 2000
+          ) {
+            let text = this.replacePlaceholders(responses)
+            if (addPing) {
+              message.reply(text).then(async function (msg) {
+                //this.onMessageResponseUpdated(channel.id, message.id, msg.id)
+              })
+            } else {
+              while (
+                text === undefined ||
+                text === '' ||
+                text.replace(/\s/g, '').length === 0
+              )
+                text = getRandomEmptyResponse()
+              log('response2: ' + text)
+            }
+            if (text.length > 0) {
+              message.channel
+                .send(text, { split: true })
+                .then(async function (msg) {
+                  //this.onMessageResponseUpdated(channel.id, message.id, msg.id)
+                })
+            }
+          } else {
+            const emptyResponse = getRandomEmptyResponse()
+            log('sending empty response 1: ' + emptyResponse)
             if (
-              responses !== undefined &&
-              responses.length <= 2000 &&
-              responses.length > 0
+              emptyResponse !== undefined &&
+              emptyResponse !== '' &&
+              emptyResponse.replace(/\s/g, '').length !== 0
             ) {
-              let text = replacePlaceholders(responses)
+              let text = emptyResponse
               if (addPing) {
                 message
                   .reply(text)
                   .then(async function (msg) {
-                    onMessageResponseUpdated(channel.id, message.id, msg.id)
+                    //this.onMessageResponseUpdated(
+                    //  channel.id,
+                    //  message.id,
+                    //  msg.id
+                    //)
                   })
                   .catch(console.error)
               } else {
@@ -1090,70 +1146,20 @@ export class discord_client {
                   text.replace(/\s/g, '').length === 0
                 )
                   text = getRandomEmptyResponse()
-                log('response1: ' + text)
+                log('response4: ' + text)
                 message.channel
                   .send(text)
                   .then(async function (msg) {
-                    onMessageResponseUpdated(channel.id, message.id, msg.id)
+                    //this.onMessageResponseUpdated(
+                    //  channel.id,
+                    //  message.id,
+                    //  msg.id
+                    //)
                   })
                   .catch(console.error)
               }
-            } else if (responses.length >= 2000) {
-              let text = replacePlaceholders(responses)
-              if (addPing) {
-                message.reply(text).then(async function (msg) {
-                  onMessageResponseUpdated(channel.id, message.id, msg.id)
-                })
-              } else {
-                while (
-                  text === undefined ||
-                  text === '' ||
-                  text.replace(/\s/g, '').length === 0
-                )
-                  text = getRandomEmptyResponse()
-                log('response2: ' + text)
-              }
-              if (text.length > 0) {
-                message.channel
-                  .send(text, { split: true })
-                  .then(async function (msg) {
-                    onMessageResponseUpdated(channel.id, message.id, msg.id)
-                  })
-              }
-            } else {
-              const emptyResponse = getRandomEmptyResponse()
-              log('sending empty response 1: ' + emptyResponse)
-              if (
-                emptyResponse !== undefined &&
-                emptyResponse !== '' &&
-                emptyResponse.replace(/\s/g, '').length !== 0
-              ) {
-                let text = emptyResponse
-                if (addPing) {
-                  message
-                    .reply(text)
-                    .then(async function (msg) {
-                      onMessageResponseUpdated(channel.id, message.id, msg.id)
-                    })
-                    .catch(console.error)
-                } else {
-                  while (
-                    text === undefined ||
-                    text === '' ||
-                    text.replace(/\s/g, '').length === 0
-                  )
-                    text = getRandomEmptyResponse()
-                  log('response4: ' + text)
-                  message.channel
-                    .send(text)
-                    .then(async function (msg) {
-                      onMessageResponseUpdated(channel.id, message.id, msg.id)
-                    })
-                    .catch(console.error)
-                }
-              }
             }
-          })
+          }
         })
       })
       .catch(err => log(err))
@@ -1316,7 +1322,7 @@ export class discord_client {
       this.conversation[user].timeOutFinished = true
       this.conversation[user].isInConversation = false
       delete this.conversation[user]
-      roomManager.instance.removeUser(user, 'discord')
+      //   roomManager.instance.removeUser(user, 'discord')
     }
   }
 
@@ -1535,7 +1541,6 @@ export class discord_client {
           return
         if (channelIds.includes(channel.id)) return
 
-        console.log('sending to channel with topic: ' + channel.topic)
         channelIds.push(channel.id)
         if (
           discussionChannels[channel.id] === undefined ||
@@ -1547,14 +1552,16 @@ export class discord_client {
             }, 1000 * 3600 * 4),
             responded: false,
           }
-          const resp = await handleInput(
-            'Tell me about ' + 'butterlifes',
-            'bot',
-            this.agent.name ?? 'Agent',
-            this.spell_handler,
-            this.spell_version
-          )
-          channel.send(resp)
+          // const resp = await handleInput(
+          //   'Tell me about ' + 'butterlifes',
+          //   'bot',
+          //   this.agent.name ?? 'Agent',
+          //   'discord',
+          //   message.channel.id,
+          //   this.spell_handler,
+          //   this.spell_version
+          // )
+          // channel.send(resp)
         }
       })
     }, 1000 * 3600)

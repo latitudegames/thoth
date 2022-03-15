@@ -2,6 +2,7 @@
 /* eslint-disable no-console */
 /* eslint-disable require-await */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import axios from 'axios'
 import Rete from 'rete'
 
 import {
@@ -10,18 +11,13 @@ import {
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../types'
-import { InputControl } from '../dataControls/InputControl'
 import { EngineContext } from '../engine'
 import { triggerSocket, stringSocket, anySocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 
 const info = 'Archive Conversation is used to archive old conversation'
 
-type WorkerReturn = {
-  output: string
-}
-
-export class ArchiveConversation extends ThothComponent<Promise<WorkerReturn>> {
+export class ArchiveConversation extends ThothComponent<void> {
   constructor() {
     super('Archive Conversation')
 
@@ -40,23 +36,17 @@ export class ArchiveConversation extends ThothComponent<Promise<WorkerReturn>> {
   builder(node: ThothNode) {
     const agentInput = new Rete.Input('agent', 'Agent', stringSocket)
     const speakerInput = new Rete.Input('speaker', 'Speaker', stringSocket)
-    const inp = new Rete.Input('string', 'Fact', stringSocket)
+    const clientInput = new Rete.Input('client', 'Client', stringSocket)
+    const channelInput = new Rete.Input('channel', 'Channel', stringSocket)
     const out = new Rete.Output('output', 'Output', anySocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
 
-    const messageCount = new InputControl({
-      dataKey: 'messageCount',
-      name: 'Message Count',
-      icon: 'moon',
-    })
-
-    node.inspector.add(messageCount)
-
     return node
-      .addInput(inp)
       .addInput(agentInput)
       .addInput(speakerInput)
+      .addInput(clientInput)
+      .addInput(channelInput)
       .addInput(dataInput)
       .addOutput(dataOutput)
       .addOutput(out)
@@ -68,15 +58,16 @@ export class ArchiveConversation extends ThothComponent<Promise<WorkerReturn>> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    const action = inputs['string'][0] as string
-    const messageCountData = node?.data?.messageCount as string
-    const messageCount = messageCountData ? parseFloat(messageCountData) : 10
+    const agent = inputs['agent'][0]
+    const speaker = inputs['speaker'][0]
+    const client = inputs['client'][0]
+    const channel = inputs['channel'][0]
 
-    console.log(messageCount)
-    //send post request
-
-    return {
-      output: action,
-    }
+    await axios.post(`${process.env.REACT_APP_API_URL}/archiveConversation`, {
+      agent: agent,
+      speaker: speaker,
+      client: client,
+      channel: channel,
+    })
   }
 }

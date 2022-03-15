@@ -74,7 +74,7 @@ export class TextToSpeech extends ThothComponent<Promise<WorkerReturn>> {
     )
 
     return {
-      output: (url as any).path as string,
+      output: (url.data as any).path as string,
     }
   }
 }

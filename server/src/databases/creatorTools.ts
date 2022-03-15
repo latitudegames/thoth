@@ -1,8 +1,6 @@
-import dotenv from 'dotenv-flow'
 import { Sequelize } from 'sequelize'
 
 import { initModels } from './models/init-models'
-dotenv.config()
 
 // TODO: Replace creator tools db with pg host etc
 

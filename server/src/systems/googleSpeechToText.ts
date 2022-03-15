@@ -28,7 +28,8 @@ export async function initSpeechServer(ignoreDotEnv: boolean) {
     return
   }
 
-  const io = new Server(parseInt(process.env.SPEECH_SERVER_PORT as string), {
+  const PORT: number = Number(process.env.SPEECH_SERVER_PORT) || 65532
+  const io = new Server(PORT, {
     cors: { origin: '*', methods: ['GET', 'POST'] },
   })
   console.log('speech server started on port', process.env.SPEECH_SERVER_PORT)
@@ -53,9 +54,15 @@ export async function initSpeechServer(ignoreDotEnv: boolean) {
     })
 
     client.on('binaryData', function (data) {
-      if (recognizeStream !== null) {
-        recognizeStream.write(data)
-      }
+      try {
+        if (
+          recognizeStream !== null &&
+          recognizeStream !== undefined &&
+          recognizeStream.destroyed === false
+        ) {
+          recognizeStream.write(data)
+        }
+      } catch (e) {}
     })
 
     function startRecognitionStream(client: any) {

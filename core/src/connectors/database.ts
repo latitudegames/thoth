@@ -23,6 +23,7 @@ const { Client } = pg
 const rootDir = path.resolve(path.dirname(''))
 
 const useLatitude = process.env.USE_LATITUDE_API === 'true'
+const PGSSL = process.env.PGSSL === 'true'
 export class database {
   static instance: database
 
@@ -40,7 +41,7 @@ export class database {
       database: process.env.PGDATABASE,
       port: process.env.PGPORT,
       host: process.env.PGHOST,
-      ssl: useLatitude
+      ssl: PGSSL
         ? {
           rejectUnauthorized: false,
         }
@@ -245,6 +246,13 @@ export class database {
     } else {
       return asString ? '' : []
     }
+  }
+  archiveConversation(agent: any, client: any, channel: any, sender: any) {
+    const query =
+      'UPDATE conversation SET archive=$1 WHERE agent=$2 AND client=$3 AND channel=$4 AND sender=$5'
+    const values = [true, agent, client, channel, sender]
+
+    this.client.query(query, values)
   }
 
   async setSpeakersFacts(agent: any, speaker: any, facts: any) {

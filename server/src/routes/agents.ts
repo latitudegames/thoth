@@ -1,6 +1,8 @@
 import { createWikipediaAgent } from '@latitudegames/thoth-core/src/connectors/wikipedia'
 import { database } from '@latitudegames/thoth-core/src/connectors/database'
 import { handleInput } from '@latitudegames/thoth-core/src/connectors/handleInput'
+//@ts-ignore
+import weaviate from 'weaviate-client'
 import Koa from 'koa'
 import 'regenerator-runtime/runtime'
 import { noAuth } from '../middleware/auth'
@@ -8,6 +10,9 @@ import { Route } from '../types'
 import axios from 'axios'
 import request from 'request'
 import fetch from 'node-fetch'
+import { cacheManager } from '../cacheManager'
+import { makeCompletion } from '../utils/makeCompletionRequest'
+import { makeModelRequest } from '../utils/makeModelRequest'
 
 export const modules: Record<string, unknown> = {}
 
@@ -29,6 +34,7 @@ const createOrUpdateAgentHandler = async (ctx: Koa.Context) => {
   console.log('ctx.request.body is ', ctx.request.body)
   const { agent, data } = ctx.request.body
   if (!agent || agent == undefined || agent.length <= 0) {
+    ctx.status = 404
     return (ctx.body = { error: 'invalid agent name' })
   }
 
@@ -47,6 +53,8 @@ const createOrUpdateAgentHandler = async (ctx: Koa.Context) => {
       greetings: data.greetings,
     })
   } catch (e) {
+    console.log('createOrUpdateAgentHandler:', e)
+    ctx.status = 500
     return (ctx.body = { error: 'internal error' })
   }
 
@@ -70,7 +78,8 @@ const addConfigHandler = async (ctx: Koa.Context) => {
     await database.instance.setConfig(data.key, data.value)
     ctx.body = 'ok'
   } catch (e) {
-    console.error(e)
+    console.log('addConfigHandler:', e)
+    ctx.status = 500
     return (ctx.body = { error: 'internal error' })
   }
 }
@@ -86,7 +95,8 @@ const updateConfigHandler = async (ctx: Koa.Context) => {
 
     ctx.body = 'ok'
   } catch (e) {
-    console.error(e)
+    console.log('updateConfigHandler:', e)
+    ctx.status = 500
     return (ctx.body = { error: 'internal error' })
   }
 }
@@ -98,7 +108,8 @@ const deleteConfigHandler = async (ctx: Koa.Context) => {
     await database.instance.deleteConfig(id)
     ctx.body = 'ok'
   } catch (e) {
-    console.error(e)
+    console.log('deleteConfigHandler:', e)
+    ctx.status = 500
     return (ctx.body = { error: 'internal error' })
   }
 }
@@ -130,7 +141,7 @@ const executeHandler = async (ctx: Koa.Context) => {
     )
     return (ctx.body = out)
   }
-  ctx.body = await handleInput(message, speaker, agent)
+  ctx.body = await handleInput(message, speaker, agent, 'web', id)
 }
 
 const getPromptsHandler = async (ctx: Koa.Context) => {
@@ -145,7 +156,8 @@ const getPromptsHandler = async (ctx: Koa.Context) => {
 
     return (ctx.body = data)
   } catch (e) {
-    console.error(e)
+    console.log('getPromptsHandler:', e)
+    ctx.status = 500
     return (ctx.body = { error: 'internal error' })
   }
 }
@@ -163,7 +175,8 @@ const addPromptsHandler = async (ctx: Koa.Context) => {
 
     return (ctx.body = 'ok')
   } catch (e) {
-    console.error(e)
+    console.log('addPromptsHandler:', e)
+    ctx.status = 500
     return (ctx.body = { error: 'internal error' })
   }
 }
@@ -173,7 +186,8 @@ const getAgentInstancesHandler = async (ctx: Koa.Context) => {
     let data = await database.instance.getAgentInstances()
     return (ctx.body = data)
   } catch (e) {
-    console.error(e)
+    console.log('getAgentInstancesHandler:', e)
+    ctx.status = 500
     return (ctx.body = { error: 'internal error' })
   }
 }
@@ -204,7 +218,8 @@ const getAgentInstanceHandler = async (ctx: Koa.Context) => {
     }
     return (ctx.body = data)
   } catch (e) {
-    console.error(e)
+    console.log('getAgentInstanceHandler:', e)
+    ctx.status = 500
     return (ctx.body = { error: 'internal error' })
   }
 }
@@ -230,7 +245,8 @@ const addAgentInstanceHandler = async (ctx: Koa.Context) => {
       data
     ))
   } catch (e) {
-    console.error(e)
+    console.log('addAgentInstanceHandler:', e)
+    ctx.status = 500
     return (ctx.body = { error: 'internal error' })
   }
 }
@@ -252,17 +268,31 @@ const getFacts = async (ctx: Koa.Context) => {
   const agent = ctx.request.query.agent
   const speaker = ctx.request.query.speaker
 
-  const facts = await database.instance.getSpeakersFacts(agent, speaker, false)
-
-  return (ctx.body = facts)
+  try {
+    const facts = await database.instance.getSpeakersFacts(
+      agent,
+      speaker,
+      false
+    )
+    return (ctx.body = facts)
+  } catch (e) {
+    return (ctx.body = '')
+  }
 }
 const getFactsCount = async (ctx: Koa.Context) => {
   const agent = ctx.request.query.agent
   const speaker = ctx.request.query.speaker
 
-  const facts = await database.instance.getSpeakersFacts(agent, speaker, false)
-
-  return (ctx.body = facts.length)
+  try {
+    const facts = await database.instance.getSpeakersFacts(
+      agent,
+      speaker,
+      false
+    )
+    return (ctx.body = facts.length)
+  } catch (e) {
+    return (ctx.body = 0)
+  }
 }
 
 const getConversation = async (ctx: Koa.Context) => {
@@ -286,7 +316,7 @@ const setConversation = async (ctx: Koa.Context) => {
   const speaker = ctx.request.body.speaker
   const client = ctx.request.body.client
   const channel = ctx.request.body.channel
-  const conversation = ctx.request.body.conve
+  const conversation = ctx.request.body.conv
 
   await database.instance.setConversation(
     agent,
@@ -296,6 +326,8 @@ const setConversation = async (ctx: Koa.Context) => {
     conversation,
     false
   )
+
+  return (ctx.body = 'ok')
 }
 const getConversationCount = async (ctx: Koa.Context) => {
   const agent = ctx.request.query.agent
@@ -313,6 +345,15 @@ const getConversationCount = async (ctx: Koa.Context) => {
 
   return (ctx.body = conversation.length)
 }
+const archiveConversation = async (ctx: Koa.Context) => {
+  const agent = ctx.request.body.agent
+  const speaker = ctx.request.body.speaker
+  const client = ctx.request.body.client
+  const channel = ctx.request.body.channel
+
+  await database.instance.archiveConversation(agent, client, channel, speaker)
+  return (ctx.body = 'ok')
+}
 
 const getRelationshipMatrix = async (ctx: Koa.Context) => {
   const agent = ctx.request.query.agent
@@ -322,6 +363,8 @@ const getRelationshipMatrix = async (ctx: Koa.Context) => {
     const matrix = database.instance.getRelationshipMatrix(speaker, agent)
     return (ctx.body = matrix)
   } catch (e) {
+    console.log('getRelationshipMatrix:', e)
+    ctx.status = 500
     return (ctx.body = { error: 'internal error' })
   }
 }
@@ -334,18 +377,30 @@ const setRelationshipMatrix = async (ctx: Koa.Context) => {
     database.instance.setRelationshipMatrix(speaker, agent, matrix)
     return (ctx.body = 'ok')
   } catch (e) {
+    console.log('setRelationshipMatrix:', e)
+    ctx.status = 500
     return (ctx.body = { error: 'internal error' })
   }
 }
 const getSpeechToText = async (ctx: Koa.Context) => {
   const text = ctx.request.query.text
   const character = ctx.request.query.character
+  const cache = cacheManager.instance.get(
+    'global',
+    'speech_' + character + ': ' + text
+  )
+  if (cache !== undefined && cache !== null) {
+    return (ctx.body = cache)
+  }
+
   const url = await getAudioUrl(
     process.env.UBER_DUCK_KEY as string,
     process.env.UBER_DUCK_SECRET_KEY as string,
     character as string,
     text as string
   )
+
+  cacheManager.instance.set('global', 'speech_' + character + ': ' + text, url)
 
   return (ctx.body = url)
 }
@@ -416,6 +471,250 @@ const getAgentImage = async (ctx: Koa.Context) => {
   }
 
   return (ctx.body = '')
+}
+
+const customMessage = async (ctx: Koa.Context) => {
+  const sender = ctx.request.body?.sender as string
+  const agent = ctx.request.body?.agent as string
+  const message = (ctx.request.body?.message as string).trim().toLowerCase()
+  const isVoice = ctx.request.body?.isVoice as boolean
+  let url: any = ''
+  let response = ''
+
+  if (message.startsWith('[welcome]')) {
+    const user = message.replace('[welcome]', '').trim()
+    response = 'Welcome ' + user + '!'
+  }
+  let cmd = message.trim().toLowerCase()
+
+  if (cmd.length <= 0) {
+    response = "I can't understand you!"
+  } else if (cmd === 'play') {
+  } else if (cmd === 'pause') {
+  } else if (cmd.startsWith('go to')) {
+  } else {
+    response = await requestInformationAboutVideo(sender, agent, cmd)
+  }
+
+  if (isVoice) {
+    const character = 'kurzgesagt'
+    const cache = cacheManager.instance.get(
+      'global',
+      'speech_' + character + ': ' + response
+    )
+    if (cache !== undefined && cache !== null) {
+      return (ctx.body = cache)
+    }
+
+    url = await getAudioUrl(
+      process.env.UBER_DUCK_KEY as string,
+      process.env.UBER_DUCK_SECRET_KEY as string,
+      character as string,
+      response as string
+    )
+
+    cacheManager.instance.set(
+      'global',
+      'speech_' + character + ': ' + response,
+      url
+    )
+  }
+
+  return (ctx.body = { response: isVoice ? url : message, isVoice: isVoice })
+}
+const getFromCache = async (ctx: Koa.Context) => {
+  const key = ctx.request.query.key as string
+  const agent = ctx.request.query.agent as string
+
+  const value = cacheManager.instance.get(agent, key)
+  return (ctx.body = { data: value })
+}
+const deleteFromCache = async (ctx: Koa.Context) => {
+  const key = ctx.request.query.key as string
+  const agent = ctx.request.query.agent as string
+
+  cacheManager.instance._delete(agent, key)
+  return (ctx.body = 'ok')
+}
+const setInCache = async (ctx: Koa.Context) => {
+  const key = ctx.request.body.key as string
+  const agent = ctx.request.body.agent as string
+  const value = ctx.request.body.value
+
+  cacheManager.instance.set(agent, key, value)
+  return (ctx.body = 'ok')
+}
+
+const textCompletion = async (ctx: Koa.Context) => {
+  const prompt = ctx.request.body.prompt as string
+  const modelName = ctx.request.body.modelName as string
+  const temperature = ctx.request.body.temperature as number
+  const maxTokens = ctx.request.body.maxTokens as number
+  const topP = ctx.request.body.topP as number
+  const frequencyPenalty = ctx.request.body.frequencyPenalty as number
+  const presencePenalty = ctx.request.body.presencePenalty as number
+  const sender = (ctx.request.body.sender as string) ?? 'User'
+  let stop = ctx.request.body.stop as string[]
+
+  if (!stop || stop.length === undefined || stop.length <= 0) {
+    stop = ['"""', `${sender}:`, '\n']
+  }
+
+  console.log('textCompletion for prompt:', prompt)
+  const { success, choice } = await makeCompletion(modelName, {
+    prompt: prompt,
+    temperature: temperature,
+    max_tokens: maxTokens,
+    top_p: topP,
+    frequency_penalty: frequencyPenalty,
+    presence_penalty: presencePenalty,
+    stop: stop,
+  })
+
+  return (ctx.body = { success, choice })
+}
+
+const hfRequest = async (ctx: Koa.Context) => {
+  const inputs = ctx.request.body.inputs as string
+  const model = ctx.request.body.model as string
+  const parameters = ctx.request.body.parameters as any
+  const options = (ctx.request.body.options as any) || {
+    use_cache: false,
+    wait_for_model: true,
+  }
+
+  const { success, data } = await makeModelRequest(
+    inputs,
+    model,
+    parameters,
+    options
+  )
+
+  return (ctx.body = { success, data })
+}
+
+const makeWeaviateRequest = async (ctx: Koa.Context) => {
+  const keyword = ctx.request.body.keyword as string
+
+  const client = weaviate.client({
+    scheme: 'http',
+    host: 'semantic-search-wikipedia-with-weaviate.api.vectors.network:8080/',
+  })
+
+  const res = await client.graphql
+    .get()
+    .withNearText({
+      concepts: [keyword],
+      certainty: 0.75,
+    })
+    .withClassName('Paragraph')
+    .withFields('title content inArticle { ... on Article {  title } }')
+    .withLimit(3)
+    .do()
+
+  if (res.data.Get !== undefined) {
+    return (ctx.body = { data: res.data.Get })
+  }
+  return (ctx.body = { data: '' })
+}
+
+const getAgentData = async (ctx: Koa.Context) => {
+  const agent = ctx.request.query.agent as string
+
+  const data = await database.instance.getAgent(agent)
+
+  return (ctx.body = { agent: data })
+}
+
+const getAgentFacts = async (ctx: Koa.Context) => {
+  const agent = ctx.request.query.agent as string
+
+  try {
+    const data = await database.instance.getAgentFacts(agent)
+    return (ctx.body = { facts: data })
+  } catch (e) {
+    return (ctx.body = { facts: '' })
+  }
+}
+
+const requestInformationAboutVideo = async (
+  sender: string,
+  agent: string,
+  question: string
+): Promise<string> => {
+  const videoInformation = ``
+  const prompt = `Information: ${videoInformation} \n ${sender}: ${
+    question.trim().endsWith('?') ? question.trim() : question.trim() + '?'
+  }\n${agent}:`
+
+  const modelName = 'davinci'
+  const temperature = 0.9
+  const maxTokens = 100
+  const topP = 1
+  const frequencyPenalty = 0.5
+  const presencePenalty = 0.5
+  const stop: string[] = ['"""', `${sender}:`, '\n']
+
+  const { success, choice } = await makeCompletion(modelName, {
+    prompt: prompt,
+    temperature: temperature,
+    max_tokens: maxTokens,
+    top_p: topP,
+    frequency_penalty: frequencyPenalty,
+    presence_penalty: presencePenalty,
+    stop: stop,
+  })
+
+  return success ? choice : "Sorry I can't answer your question!"
+}
+
+const getPersonalities = async (ctx: Koa.Context) => {
+  const agents = await database.instance.getAgents()
+  const res: string[] = []
+
+  for (let i = 0; i < agents.length; i++) {
+    res.push(agents[i].agent)
+  }
+
+  return (ctx.body = { personalities: res })
+}
+
+const chatAgent = async (ctx: Koa.Context) => {
+  const speaker = ctx.request.body.speaker as string
+  const agent = ctx.request?.body?.agent as string
+
+  const personality = ''
+  const facts = ''
+  let out = undefined
+
+  if (!(await database.instance.getAgentExists(agent))) {
+    out = await createWikipediaAgent(speaker, agent, personality, facts)
+  }
+
+  if (out === undefined) {
+    out = {}
+  }
+
+  return (ctx.body = out)
+}
+
+const saveConversation = async (ctx: Koa.Context) => {
+  const agent = ctx.request.body.agent as string
+  const speaker = ctx.request.body.speaker as string
+  const conversation = ctx.request.body.conv as string
+  const client = ctx.request.body.client as string
+  const channel = ctx.request.body.channel as string
+
+  await database.instance.setConversation(
+    agent,
+    client,
+    channel,
+    speaker,
+    conversation,
+    false
+  )
+
+  return (ctx.body = 'ok')
 }
 
 export const agents: Route[] = [
@@ -499,6 +798,11 @@ export const agents: Route[] = [
     get: getConversationCount,
   },
   {
+    path: '/archive_conversation',
+    access: noAuth,
+    post: archiveConversation,
+  },
+  {
     path: '/relationship_matrix',
     access: noAuth,
     get: getRelationshipMatrix,
@@ -513,5 +817,57 @@ export const agents: Route[] = [
     path: '/get_agent_image',
     access: noAuth,
     get: getAgentImage,
+  },
+  {
+    path: '/cache_manager',
+    access: noAuth,
+    get: getFromCache,
+    delete: deleteFromCache,
+    post: setInCache,
+  },
+  {
+    path: '/text_completion',
+    access: noAuth,
+    post: textCompletion,
+  },
+  {
+    path: '/hf_request',
+    access: noAuth,
+    post: hfRequest,
+  },
+  {
+    path: '/weaviate',
+    access: noAuth,
+    post: makeWeaviateRequest,
+  },
+  {
+    path: '/agent_data',
+    access: noAuth,
+    get: getAgentData,
+  },
+  {
+    path: '/agent_facts',
+    access: noAuth,
+    get: getAgentFacts,
+  },
+  {
+    path: '/custom_message',
+    access: noAuth,
+    post: customMessage,
+  },
+  {
+    path: '/personalities',
+    access: noAuth,
+    get: getPersonalities,
+  },
+  {
+    path: '/chat_agent',
+    access: noAuth,
+    post: chatAgent,
+  },
+  {
+    path: '/save_conv',
+    access: noAuth,
+    post: saveConversation,
   },
 ]

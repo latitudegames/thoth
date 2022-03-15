@@ -3,6 +3,7 @@ import InfoModal from './InfoModal'
 import DeployModal from './DeployModal'
 import EditSpellModal from './EditSpellModal'
 import SaveAsModal from './SaveAsModal'
+import AgentModal from './AgentModal'
 import DocumentAddModal from './DocumentAddModal'
 import DocumentEditModal from './DocumentEditModal'
 import DocumentDeleteModal from './DocumentDeleteModal'
@@ -14,6 +15,7 @@ const modals = {
   example: ExampleModal,
   infoModal: InfoModal,
   deployModal: DeployModal,
+  agentModal: AgentModal,
   editSpellModal: EditSpellModal,
   saveAsModal: SaveAsModal,
   documentAddModal: DocumentAddModal,

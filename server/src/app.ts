@@ -1,8 +1,9 @@
+import { config } from 'dotenv-flow'
+config()
 //@ts-ignore
 import cors from '@koa/cors'
 import Router from '@koa/router'
 import { database } from '@latitudegames/thoth-core/src/connectors/database'
-import { config } from 'dotenv-flow'
 import HttpStatus from 'http-status-codes'
 import Koa from 'koa'
 import koaBody from 'koa-body'
@@ -14,8 +15,7 @@ import { initSpeechServer } from './systems/googleSpeechToText'
 import { world } from './world/world'
 import { initSearchCorpus } from './systems/searchCorpus'
 import { initClassifier } from '@latitudegames/thoth-core/src/utils/textClassifier'
-
-config({ path: '.env' })
+import { cacheManager } from './cacheManager'
 
 export const app: Koa = new Koa()
 export const router: Router = new Router()
@@ -46,6 +46,8 @@ export async function init() {
   initSpeechServer(false)
   initSearchCorpus(false)
   await initClassifier()
+  new cacheManager(-1)
+  new world()
 
   const options = {
     origin: '*',

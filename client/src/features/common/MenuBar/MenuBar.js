@@ -83,7 +83,7 @@ const MenuBar = () => {
   }
 
   const onCreateSearchCorpus = () => {
-    publicat($CREATE_SEARCH_CORPUS(activeTabRef.current.id))
+    publish($CREATE_SEARCH_CORPUS(activeTabRef.current.id))
   }
 
   const onAgentManagerCreate = () => {
@@ -142,16 +142,16 @@ const MenuBar = () => {
   const agentMenuItems =
     process.env.REACT_APP_USE_AGENTS === 'true'
       ? {
-        agent_manager: {
-          onClick: onAgentManagerCreate,
-        },
-        ent_manager: {
-          onClick: onEntManagerCreate,
-        },
-        config_manager: {
-          onClick: onConfigManagerCreate,
-        },
-      }
+          agent_manager: {
+            onClick: onAgentManagerCreate,
+          },
+          ent_manager: {
+            onClick: onEntManagerCreate,
+          },
+          config_manager: {
+            onClick: onConfigManagerCreate,
+          },
+        }
       : {}
 
   //Menu bar entries

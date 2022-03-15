@@ -93,6 +93,9 @@ const chainsHandler = async (ctx: Koa.Context) => {
 
   // Validates the body of the request against all expected values to ensure they are all present
   const inputs = inputKeys.reduce((inputs, expectedInput: string) => {
+
+    console.log("ctx.request.body is", ctx.request.body)
+
     const requestInput = ctx.request.body[expectedInput]
     console.log('requestedInput:', requestInput)
 
@@ -111,10 +114,11 @@ const chainsHandler = async (ctx: Koa.Context) => {
   if (error) {
     return (ctx.body = { error })
   }
-  console.log('inputs1234:', inputs)
+
   const outputs = await runChain(chain, (inputs as any) ?? [], thoth, modules)
   const newGameState = thoth.getCurrentGameState()
 
+  console.log('chain runnnnnnnnnnn')
   ctx.body = { spell: activeSpell.name, outputs, gameState: newGameState }
 }
 

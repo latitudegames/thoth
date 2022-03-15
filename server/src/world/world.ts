@@ -4,6 +4,7 @@ import agent from './agent'
 import gameObject from './gameObject'
 import time from './time'
 import { initAgentsLoop } from './agentsLoop'
+import { xrEngineAgent } from './xrEngineAgent'
 
 export class world extends gameObject {
   static instance: world
@@ -11,6 +12,7 @@ export class world extends gameObject {
   objects: { [id: number]: any } = {}
   oldAgents: any
   newAgents: any
+  _xrEngineAgent: xrEngineAgent
 
   constructor() {
     super(0)
@@ -22,32 +24,34 @@ export class world extends gameObject {
 
   async updateObjects() {
     this.newAgents = await database.instance.getAgentInstances()
-    const newAgents = this.newAgents;
+    const newAgents = this.newAgents
     delete newAgents['updated_at']
-    const oldAgents = this.oldAgents ?? [];
-    if (oldAgents['updated_at'])
-      delete oldAgents['updated_at'];
-    if (JSON.stringify(newAgents) === JSON.stringify(oldAgents)) return; // They are the same
+    const oldAgents = this.oldAgents ?? []
+    if (oldAgents['updated_at']) delete oldAgents['updated_at']
+    if (JSON.stringify(newAgents) === JSON.stringify(oldAgents)) return // They are the same
 
     // If an entry exists in oldAgents but not in newAgents, it has been deleted
     for (const i in oldAgents) {
       // filter for entries where oldAgents where id === newAgents[i].id
-      if (newAgents.filter((x: any) => x.id === oldAgents[i].id)[0] === undefined) {
+      if (
+        newAgents.filter((x: any) => x.id === oldAgents[i].id)[0] === undefined
+      ) {
         await this.removeObject(oldAgents[i].id)
-        console.log("removed ", oldAgents[i].id)
+        console.log('removed ', oldAgents[i].id)
       }
     }
 
     // If an entry exists in newAgents but not in oldAgents, it has been added
     for (const i in newAgents) {
       // filter for entries where oldAgents where id === newAgents[i].id
-      if (oldAgents.filter((x: any) => x.id === newAgents[i].id)[0] === undefined) {
+      if (
+        oldAgents.filter((x: any) => x.id === newAgents[i].id)[0] === undefined
+      ) {
         if (newAgents[i].enabled) {
           await this.addObject(new agent(newAgents[i]))
         }
       }
     }
-
 
     for (const i in newAgents) {
       if (newAgents[i].dirty) {
@@ -59,7 +63,7 @@ export class world extends gameObject {
 
     // ODYzNTQ1NjczNTkyNjAyNjU1.YOodlA.Z4sa1z_vnal3LKQ9PYwJ5fzlbzI
 
-    this.oldAgents = this.newAgents;
+    this.oldAgents = this.newAgents
   }
 
   async onCreate() {
@@ -112,11 +116,11 @@ export class world extends gameObject {
   }
 
   async addObject(obj: gameObject) {
-    console.log("adding object", obj.id)
+    console.log('adding object', obj.id)
     if (this.objects[obj.id] === undefined) {
       this.objects[obj.id] = obj
     } else {
-      throw new Error("Object already exists")
+      //throw new Error('Object already exists')
     }
   }
 
@@ -125,7 +129,7 @@ export class world extends gameObject {
       await (this.objects[id] as gameObject)?.onDestroy()
       this.objects[id] = null
       delete this.objects[id]
-      console.log("Removed ", id)
+      console.log('Removed ', id)
     }
   }
 

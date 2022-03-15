@@ -45,8 +45,17 @@ export class Search extends ThothComponent<Promise<WorkerReturn>> {
   }
 
   builder(node: ThothNode) {
-    const searchStrInput = new Rete.Input('searchStr', 'Search String', stringSocket)
-    const dataInput = new Rete.Input('trigger', 'Trigger In', triggerSocket, true)
+    const searchStrInput = new Rete.Input(
+      'searchStr',
+      'Search String',
+      stringSocket
+    )
+    const dataInput = new Rete.Input(
+      'trigger',
+      'Trigger In',
+      triggerSocket,
+      true
+    )
     const dataOutput = new Rete.Output('trigger', 'Trigger Out', triggerSocket)
     const output = new Rete.Output('results', 'Results []', anySocket)
     

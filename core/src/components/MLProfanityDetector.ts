@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable require-await */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import axios from 'axios'
 import Rete from 'rete'
 
 import {
@@ -81,6 +82,7 @@ export class MLProfanityDetector extends ThothComponent<Promise<InputReturn>> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
+    console.log('ml profanity detector, url:', process.env.REACT_APP_API_URL)
     const action = inputs['string'][0]
     const params = {
       candidate_labels: ['Profane', 'Not Profane'],
@@ -88,34 +90,45 @@ export class MLProfanityDetector extends ThothComponent<Promise<InputReturn>> {
     const minDiffData = node?.data?.minDiff as string
     const minDiff = minDiffData ? parseFloat(minDiffData) : 0.4
 
-    const r = await thoth.huggingface(
-      'facebook/bart-large-mnli',
-      JSON.stringify({
+    const resp = await axios.post(
+      `${process.env.REACT_APP_API_URL}/hf_request`,
+      {
         inputs: action as string,
+        model: 'facebook/bart-large-mnli',
         parameters: params,
-      })
+        options: undefined,
+      }
     )
+
+    const _success = resp.data.success
+    const r = resp.data.data
 
     const profane = getValue(r.labels, r.scores, 'Profane')
     const notProfane = getValue(r.labels, r.scores, 'Not Profane')
     const diff =
       profane > notProfane ? profane - notProfane : notProfane - profane
-    const is = diff > minDiff && profane > notProfane
+    const is = _success && diff > minDiff && profane > notProfane
     let type = ''
+    let success = false
 
     if (is) {
       const parameters = {
         candidate_labels: ['Violoent', 'Sexual', 'Offensive', 'Questionable'],
       }
 
-      const result = await thoth.huggingface(
-        'facebook/bart-large-mnli',
-        JSON.stringify({
+      const resp = await axios.post(
+        `${process.env.REACT_APP_API_URL}/hf_request`,
+        {
           inputs: action as string,
+          model: 'facebook/bart-large-mnli',
           parameters: parameters,
           options: undefined,
-        })
+        }
       )
+
+      success = resp.data.success
+      const result = resp.data.data
+
       const score1 = getValue(result.labels, result.scores, 'Violent') //Violent
       const score2 = getValue(result.labels, result.scores, 'Sexual') //Sexual
       const score3 = getValue(result.labels, result.scores, 'Offensive') //Offensive
@@ -132,7 +145,7 @@ export class MLProfanityDetector extends ThothComponent<Promise<InputReturn>> {
       }
     }
 
-    this._task.closed = type.length > 0 ? ['false'] : ['true']
+    this._task.closed = success && type.length > 0 ? ['false'] : ['true']
 
     return {
       output: action as string,

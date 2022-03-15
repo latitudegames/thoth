@@ -12,12 +12,13 @@ export class MyNode extends Node {
     const name = node.displayName ? node.displayName : node.name
     const fullName = node.data.name ? `${name} - ${node.data.name}` : name
     const hasError = node.data.error
+    const hasSuccess = node.data.success
 
     return (
       <div
         className={`${css['node']} ${css[selected]} ${
           css[hasError ? 'error' : '']
-        }`}
+        } ${css[hasSuccess ? 'success' : '']}`}
       >
         {node.deprecated && <div className={css['deprecated-overlay']}></div>}
         <div className={css['node-title']}>

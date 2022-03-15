@@ -71,14 +71,23 @@ export class StringCombiner extends ThothComponent<Promise<WorkerReturn>> {
     }, {} as Record<string, unknown>)
 
     let input = inputs['string'] as string
+    console.log('combining input:', input)
     for (const x in inputs) {
       if (x.toLowerCase().includes('replacer')) {
+        console.log(
+          'replacing: $',
+          x.split(' ')[0].toLowerCase().trim(),
+          'with:',
+          inputs[x]
+        )
         input = input.replace(
           '$' + x.split(' ')[0].toLowerCase().trim(),
           inputs[x] as string
         )
       }
     }
+
+    console.log('new string combined:', input)
 
     return {
       output: input,

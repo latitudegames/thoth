@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable no-inner-declarations */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
@@ -14,15 +15,19 @@
 // We need to break some of this code out so that we have more control of it in the node graph
 // i.e. text classification and such
 
+import { random } from 'lodash'
+import Xvfb from 'xvfb'
+
 import roomManager from '../components/roomManager'
 import { classifyText } from '../utils/textClassifier'
 import { browserWindow, PageUtils } from './browser'
 import { database } from './database'
-import { handleInput } from './handleInput'
+import { handleCustomInput } from './handleInput'
 import {
   detectOsOption,
   getRandomEmptyResponse,
   getSetting,
+  randomInt,
   startsWithCapital,
 } from './utils'
 
@@ -108,7 +113,7 @@ export class xrengine_client {
       this.conversation[user].timeOutFinished = true
       this.conversation[user].isInConversation = false
       delete this.conversation[user]
-      roomManager.instance.removeUser(user, 'discord')
+      // roomManager.instance.removeUser(user, 'discord')
     }
   }
 
@@ -155,6 +160,9 @@ export class xrengine_client {
     // )
   }
   async wasHandled(chatId, messageId, foundCallback, notFoundCallback) {
+    notFoundCallback()
+    return false
+
     return await database.instance.messageExistsWithCallback(
       'xr-engine',
       chatId,
@@ -183,272 +191,274 @@ export class xrengine_client {
     )
   }
 
-  async handleMessages(messages, bot) {
-    for (let i = 0; i < messages.length; i++) {
-      if (messages[i].text.includes('[') && messages[i].text.includes(']'))
-        continue
-      else if (
-        messages[i].text.includes('joined the layer') ||
-        messages[i].text.includes('left the layer') ||
-        messages[i].text.length === 0
+  async handleMessage(
+    id,
+    sender,
+    senderId,
+    channelId,
+    text,
+    updatedAt,
+    bot,
+    isVoice
+  ) {
+    if (text.includes('[') && text.includes(']')) return
+    else if (text.includes('joined the layer')) {
+      const user = text.replace('joined the layer', '')
+
+      const response = await handleCustomInput(
+        '[welcome]' + user,
+        _sender,
+        this.agent.name ?? 'Agent',
+        null,
+        'xr-engine',
+        channelId,
+        true
       )
-        continue
-      else if (messages[i].text.includes('in harassment range with')) continue
-      else if (messages[i].text.includes('in range with')) continue
-      else if (messages[i].text.includes('looking at')) continue
-      else if (messages[i].text.includes('in intimate range')) continue
-      else if (
-        messages[i].text.startsWith('/') ||
-        messages[i].text.startsWith(' /')
-      )
-        continue
-      else if (
-        messages[i].senderName === bot.name ||
-        (messages[i].sender !== undefined &&
-          messages[i].sender.id === bot.userId) ||
-        (messages[i].author !== undefined &&
-          messages[i].author[1] === bot.userId)
-      ) {
-        this.addMessageToHistory(
-          messages[i].channelId,
-          messages[i].id,
-          this.agent.name,
-          messages[i].text
-        )
-        continue
-      }
-      await wasHandled(
-        messages[i].channelId,
-        messages[i].id,
-        () => {
+      await this.handleXREngineResponse(response, addPing, _sender, isVoice)
+    } else if (text.includes('left the layer') || text.length === 0) return
+    else if (text.includes('in harassment range with')) return
+    else if (text.includes('in range with')) return
+    else if (text.includes('looking at')) return
+    else if (text.includes('in intimate range')) return
+    else if (text.startsWith('/') || text.startsWith(' /')) return
+    else if (sender === bot.name || senderId === bot.userId) {
+      this.addMessageToHistory(channelId, id, this.agent.name, text)
+      return
+    }
+    await this.wasHandled(
+      channelId,
+      id,
+      () => {
+        return
+      },
+      async () => {
+        console.log('message: ', text)
+        const date = Date.now() / 1000
+        const msgDate = updatedAt
+        const diff = date - msgDate
+        const hours_diff = Math.ceil(diff / 3600)
+        const mins_diff = Math.ceil((diff - hours_diff) / 60)
+        if (mins_diff > 12 || (mins_diff <= 5 && hours_diff > 1)) {
+          const date = new Date(msgDate)
+          const utc = new Date(
+            date.getUTCFullYear(),
+            date.getUTCMonth(),
+            date.getUTCDate(),
+            date.getUTCHours(),
+            date.getUTCMinutes(),
+            date.getUTCSeconds()
+          )
+          const utcStr =
+            date.getDate() +
+            '/' +
+            (date.getMonth() + 1) +
+            '/' +
+            date.getFullYear() +
+            ' ' +
+            utc.getHours() +
+            ':' +
+            utc.getMinutes() +
+            ':' +
+            utc.getSeconds()
+          this.saveIfHandled(channelId, id, sender, text, utcStr)
           return
-        },
-        async () => {
-          const date = Date.now() / 1000
-          const msgDate = messages[i].updatedAt
-          const diff = date - msgDate
-          const hours_diff = Math.ceil(diff / 3600)
-          const mins_diff = Math.ceil((diff - hours_diff) / 60)
-          if (mins_diff > 12 || (mins_diff <= 5 && hours_diff > 1)) {
-            const date = new Date(msgDate)
-            const utc = new Date(
-              date.getUTCFullYear(),
-              date.getUTCMonth(),
-              date.getUTCDate(),
-              date.getUTCHours(),
-              date.getUTCMinutes(),
-              date.getUTCSeconds()
-            )
-            const utcStr =
-              date.getDate() +
-              '/' +
-              (date.getMonth() + 1) +
-              '/' +
-              date.getFullYear() +
-              ' ' +
-              utc.getHours() +
-              ':' +
-              utc.getMinutes() +
-              ':' +
-              utc.getSeconds()
-            this.saveIfHandled(
-              messages[i].channelId,
-              messages[i].id,
-              messages[i].senderName !== undefined
-                ? messages[i].senderName
-                : messages[i].sender.name,
-              messages[i].text,
-              utcStr
-            )
-            return
-          }
-
-          const _sender =
-            messages[i].senderName !== undefined
-              ? messages[i].senderName
-              : messages[i].sender.name
-          let content = messages[i].text
-          log('handling message: ' + content)
-          await this.addMessageToHistory(
-            messages[i].channelId,
-            messages[i].id,
-            _sender,
-            content
-          )
-          log('Message added to history')
-          let addPing = false
-          let _prev = undefined
-          _prev = this.prevMessage[messages[i].channelId]
-          this.prevMessage[messages[i].channelId] = _sender
-          if (this.prevMessageTimers[messages[i].channelId] !== undefined)
-            clearTimeout(this.prevMessageTimers[messages[i].channelId])
-          this.prevMessageTimers[messages[i].channelId] = setTimeout(
-            () => (this.prevMessage[messages[i].channelId] = ''),
-            120000
-          )
-
-          addPing =
-            (_prev !== undefined && _prev !== '' && _prev !== _sender) ||
-            this.moreThanOneInConversation()
-
-          let startConv = false
-          let startConvName = ''
-          const trimmed = content.trimStart()
-          if (trimmed.toLowerCase().startsWith('hi')) {
-            const parts = trimmed.split(' ')
-            if (parts.length > 1) {
-              if (!startsWithCapital(parts[1])) {
-                startConv = true
-              } else {
-                startConv = false
-                startConvName = parts[1]
-              }
-            } else {
-              if (trimmed.toLowerCase() === 'hi') {
-                startConv = true
-              }
-            }
-          }
-
-          if (!startConv) {
-            if (startConvName.length > 0) {
-              this.exitConversation(_sender)
-              this.exitConversation(startConvName)
-            }
-          }
-
-          const isUserNameMention = content
-            .toLowerCase()
-            .replace(',', '')
-            .replace('.', '')
-            .replace('?', '')
-            .replace('!', '')
-            .match(bot.username_regex)
-          const isInDiscussion = isInConversation(_sender)
-          if (!content.startsWith('!')) {
-            if (isUserNameMention) {
-              log('is user mention')
-              content =
-                '!ping ' + content.replace(bot.username_regex, '').trim()
-            } else if (isInDiscussion || startConv) content = '!ping ' + content
-          }
-
-          if (content.startsWith('!ping')) sentMessage(_sender)
-          else {
-            if (content === '!ping ' || !content.startsWith('!ping')) {
-              if (roomManager.instance.agentCanResponse(user, 'xrengine')) {
-                content = '!ping ' + content
-                sentMessage(_sender)
-              } else {
-                const oldChat = database.instance.getConversation(
-                  defaultAgent,
-                  _sender,
-                  'xrengine',
-                  msg.chat.id,
-                  false
-                )
-                if (oldChat !== undefined && oldChat.length > 0) {
-                  const context = await classifyText(values)
-                  const ncontext = await classifyText(content)
-                  log('c1: ' + context + ' c2: ' + ncontext)
-
-                  if (context == ncontext) {
-                    roomManager.instance.userTalkedSameTopic(
-                      _sender,
-                      'xrengine'
-                    )
-                    if (
-                      roomManager.instance.agentCanResponse(_sender, 'xrengine')
-                    ) {
-                      content = '!ping ' + content
-                      this.sentMessage(_sender)
-                    } else {
-                      return
-                    }
-                  } else {
-                    return
-                  }
-                }
-              }
-            } else {
-              roomManager.instance.userGotInConversationFromAgent(_sender)
-            }
-          }
-          log('content: ' + content + ' sender: ' + _sender)
-
-          const response = await handleInput(
-            content.replace('!ping', ''),
-            _sender,
-            this.agent.name ?? 'Agent',
-            null,
-            'xr-engine',
-            messages[i].channelId
-          )
-          await this.handleXREngineResponse(response, addPing, _sender)
         }
+
+        const _sender = sender
+        let content = text
+        log('handling message: ' + content)
+        await this.addMessageToHistory(channelId, id, _sender, content)
+        log('Message added to history')
+        let addPing = false
+        let _prev = undefined
+        _prev = this.prevMessage[channelId]
+        this.prevMessage[channelId] = _sender
+        if (this.prevMessageTimers[channelId] !== undefined)
+          clearTimeout(this.prevMessageTimers[channelId])
+        this.prevMessageTimers[channelId] = setTimeout(
+          () => (this.prevMessage[channelId] = ''),
+          120000
+        )
+
+        addPing =
+          (_prev !== undefined && _prev !== '' && _prev !== _sender) ||
+          this.moreThanOneInConversation()
+
+        let startConv = false
+        let startConvName = ''
+        const trimmed = content.trimStart()
+        if (trimmed.toLowerCase().startsWith('hi')) {
+          const parts = trimmed.split(' ')
+          if (parts.length > 1) {
+            if (!startsWithCapital(parts[1])) {
+              startConv = true
+            } else {
+              startConv = false
+              startConvName = parts[1]
+            }
+          } else {
+            if (trimmed.toLowerCase() === 'hi') {
+              startConv = true
+            }
+          }
+        }
+
+        if (!startConv) {
+          if (startConvName.length > 0) {
+            this.exitConversation(_sender)
+            this.exitConversation(startConvName)
+          }
+        }
+
+        const isUserNameMention = content
+          .toLowerCase()
+          .replace(',', '')
+          .replace('.', '')
+          .replace('?', '')
+          .replace('!', '')
+          .match(bot.username_regex)
+        const isInDiscussion = this.isInConversation(_sender)
+        if (!content.startsWith('!')) {
+          if (isUserNameMention) {
+            log('is user mention')
+            content = '!ping ' + content.replace(bot.username_regex, '').trim()
+          } else if (isInDiscussion || startConv) content = '!ping ' + content
+        }
+
+        if (content.startsWith('!ping')) this.sentMessage(_sender)
+        else {
+          if (content === '!ping ' || !content.startsWith('!ping')) {
+            // if (true) {
+            //roomManager.instance.agentCanResponse(user, 'xrengine')) {
+            content = '!ping ' + content
+            this.sentMessage(_sender)
+            // } else {
+            //   const oldChat = database.instance.getConversation(
+            //     defaultAgent,
+            //     _sender,
+            //     'xrengine',
+            //     msg.chat.id,
+            //     false
+            //   )
+            //   if (oldChat !== undefined && oldChat.length > 0) {
+            //     const context = await classifyText(values)
+            //     const ncontext = await classifyText(content)
+            //     log('c1: ' + context + ' c2: ' + ncontext)
+
+            //     if (context == ncontext) {
+            //       roomManager.instance.userTalkedSameTopic(_sender, 'xrengine')
+            //       if (
+            //         roomManager.instance.agentCanResponse(_sender, 'xrengine')
+            //       ) {
+            //         content = '!ping ' + content
+            //         this.sentMessage(_sender)
+            //       } else {
+            //         return
+            //       }
+            //     } else {
+            //       return
+            //     }
+            //   }
+            // }
+          } else {
+            // roomManager.instance.userGotInConversationFromAgent(_sender)
+          }
+        }
+        log('content: ' + content + ' sender: ' + _sender)
+
+        const response = await handleCustomInput(
+          content.replace('!ping', ''),
+          _sender,
+          this.agent.name ?? 'Agent',
+          null,
+          'xr-engine',
+          channelId,
+          isVoice
+        )
+        await this.handleXREngineResponse(response, addPing, _sender, isVoice)
+      }
+    )
+  }
+
+  async handleMessages(messages, bot) {
+    console.log('handle messages:', messages)
+    for (let i = 0; i < messages.length; i++) {
+      this.handleMessage(
+        messages[i].id,
+        messages[i].sender.name,
+        messages[i].sender.userId,
+        messages[i].channelId,
+        messages[i].text,
+        messages[i].updatedAt,
+        bot,
+        false
       )
     }
   }
 
-  async handleXREngineResponse(responses, addPing, _sender) {
+  async handleXREngineResponse(responses, addPing, _sender, isVoice) {
     log('response: ' + responses)
-    if (
-      responses !== undefined &&
-      responses.length <= 2000 &&
-      responses.length > 0
-    ) {
-      let text = responses
-      while (
-        text === undefined ||
-        text === '' ||
-        text.replace(/\s/g, '').length === 0
-      )
-        text = getRandomEmptyResponse()
-      if (addPing) text = _sender + ' ' + text
-      this.xrengineBot.sendMessage(text)
-    } else if (responses.length > 2000) {
-      const lines = []
-      let line = ''
-      for (let i = 0; i < responses.length; i++) {
-        line += responses
-        if (i >= 1980 && (line[i] === ' ' || line[i] === '')) {
-          lines.push(line)
-          line = ''
-        }
-      }
-
-      for (let i = 0; i < lines.length; i++) {
-        if (
-          lines[i] !== undefined &&
-          lines[i] !== '' &&
-          lines[i].replace(/\s/g, '').length !== 0
-        ) {
-          if (i === 0) {
-            let text = lines[1]
-            while (
-              text === undefined ||
-              text === '' ||
-              text.replace(/\s/g, '').length === 0
-            )
-              text = getRandomEmptyResponse()
-            if (addPing) {
-              text = _sender + ' ' + text
-              addPing = false
-            }
-            this.xrengineBot.sendMessage(text)
+    if (!isVoice) {
+      if (
+        responses !== undefined &&
+        responses.length <= 2000 &&
+        responses.length > 0
+      ) {
+        let text = responses
+        while (
+          text === undefined ||
+          text === '' ||
+          text.replace(/\s/g, '').length === 0
+        )
+          text = getRandomEmptyResponse()
+        if (addPing) text = _sender + ' ' + text
+        this.xrengineBot.sendMessage(text)
+      } else if (responses.length > 2000) {
+        const lines = []
+        let line = ''
+        for (let i = 0; i < responses.length; i++) {
+          line += responses
+          if (i >= 1980 && (line[i] === ' ' || line[i] === '')) {
+            lines.push(line)
+            line = ''
           }
         }
+
+        for (let i = 0; i < lines.length; i++) {
+          if (
+            lines[i] !== undefined &&
+            lines[i] !== '' &&
+            lines[i].replace(/\s/g, '').length !== 0
+          ) {
+            if (i === 0) {
+              let text = lines[1]
+              while (
+                text === undefined ||
+                text === '' ||
+                text.replace(/\s/g, '').length === 0
+              )
+                text = getRandomEmptyResponse()
+              if (addPing) {
+                text = _sender + ' ' + text
+                addPing = false
+              }
+              this.xrengineBot.sendMessage(text)
+            }
+          }
+        }
+      } else {
+        let emptyResponse = getRandomEmptyResponse()
+        while (
+          emptyResponse === undefined ||
+          emptyResponse === '' ||
+          emptyResponse.replace(/\s/g, '').length === 0
+        )
+          emptyResponse = getRandomEmptyResponse()
+        if (addPing) emptyResponse = _sender + ' ' + emptyResponse
+        this.xrengineBot.sendMessage(emptyResponse)
       }
     } else {
-      let emptyResponse = getRandomEmptyResponse()
-      while (
-        emptyResponse === undefined ||
-        emptyResponse === '' ||
-        emptyResponse.replace(/\s/g, '').length === 0
-      )
-        emptyResponse = getRandomEmptyResponse()
-      if (addPing) emptyResponse = _sender + ' ' + emptyResponse
-      this.xrengineBot.sendMessage(emptyResponse)
+      this.xrengineBot.sendAudio(5, responses)
     }
   }
 
@@ -457,27 +467,39 @@ export class xrengine_client {
   agent
   settings
 
-  async createXREngineClient(agent, settings) {
+  async createXREngineClient(agent, settings, cli) {
+    console.log('createXREngineClient', agent)
     this.agent = agent
     this.settings = settings
     //generateVoice('hello there', (buf, path) => {}, false)
     log('creating xr engine client')
+
     this.xrengineBot = new XREngineBot({
       headless: true,
       agent: agent,
-      settings,
-      settings,
+      settings: settings,
+      xrengineclient: this,
     })
 
-    log('Preparing to connect to ', getSetting(settings, 'xrEngineURL'))
-    this.xrengineBot.delay(Math.random() * 100000)
-    log('Connecting to server...')
-    await this.xrengineBot.launchBrowser()
-    const XRENGINE_URL =
-      getSetting(settings, 'xrEngineURL') ||
-      'https://localhost:3000/location/test'
-    this.xrengineBot.enterRoom(XRENGINE_URL, { name: 'TestBot' })
-    log('bot fully loaded')
+    const xvfb = new Xvfb()
+    await xvfb.start(async function (err, xvfbProcess) {
+      if (err) {
+        log(err)
+        xvfb.stop(function (_err) {
+          if (_err) log(_err)
+        })
+      }
+
+      log('started virtual window')
+      log('Preparing to connect to ', settings.url)
+      cli.xrengineBot.delay(3000 + Math.random() * 1000)
+      log('Connecting to server...')
+      await cli.xrengineBot.launchBrowser()
+      const XRENGINE_URL =
+        (settings.url as string) || 'https://n3xus.city/location/test '
+      cli.xrengineBot.enterRoom(XRENGINE_URL, { name: 'TestBot' })
+      log('bot fully loaded')
+    })
   }
 }
 
@@ -506,6 +528,7 @@ class XREngineBot {
   username_regex
   agent
   settings
+  xrengineclient: xrengine_client
   constructor({
     name = 'Bot',
     fakeMediaPath = '',
@@ -513,6 +536,7 @@ class XREngineBot {
     autoLog = true,
     agent,
     settings,
+    xrengineclient,
   } = {}) {
     this.headless = headless
     this.name = name
@@ -520,6 +544,7 @@ class XREngineBot {
     this.fakeMediaPath = fakeMediaPath
     this.agent = agent
     this.settings = settings
+    this.xrengineclient = xrengineclient
     setInterval(() => this.instanceMessages(), 1000)
   }
 
@@ -660,7 +685,17 @@ class XREngineBot {
     // }
     //#endregion
 
-    await this.updateChannelState()
+    let active = false
+
+    while (!active) {
+      try {
+        await this.updateChannelState()
+        active = true
+      } catch {
+        console.error("Trying to update but can't")
+      }
+    }
+
     if (!this.activeChannel) return log('No active channel')
     const messages = this.activeChannel.messages
     if (messages === undefined || messages === null) return
@@ -704,14 +739,15 @@ class XREngineBot {
     return -1
   }
 
-  async sendAudio(duration) {
+  async sendAudio(duration, url) {
     log('Sending audio...')
 
-    await this.evaluate(duration => {
+    await this.evaluate(url => {
       var audio = document.createElement('audio')
       audio.setAttribute(
         'src',
-        'https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3'
+        url
+        //'https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3'
       )
       audio.setAttribute('crossorigin', 'anonymous')
       audio.setAttribute('controls', '')
@@ -727,7 +763,7 @@ class XREngineBot {
 
       // }, duration)
       audio.play()
-    })
+    }, url)
     await this.clickElementById('button', 'UserAudio')
     await this.waitForTimeout(duration)
   }
@@ -763,7 +799,7 @@ class XREngineBot {
     await this.waitForTimeout(timeout)
   }
 
-  async interactObject() {}
+  async interactObject() { }
 
   /** Return screenshot
    * @param {Function} fn Function to execut _in the node context._
@@ -837,7 +873,7 @@ class XREngineBot {
 
     this.browser = await browserWindow(options)
     this.page = await this.browser.newPage()
-    this.page.on('console', message => {
+    this.page.on('console', async message => {
       if (message.text().startsWith('scene_metadata')) {
         const data = message.text().split('|', 2)
         if (data.length === 2) {
@@ -899,9 +935,46 @@ class XREngineBot {
           this.userId = data
         }
       } else if (message.text().startsWith('emotions|')) {
+      } else if (message.text().startsWith('BOT_MESSAGE|')) {
+        console.log('got new message')
+        console.log(message.text())
+        const msg = message.text().substring(message.text().indexOf('|') + 2)
+        console.log(msg)
+        const msgObj = JSON.parse(msg)
+        let isVoice = false
+        if (msgObj.text.startsWith('voice|')) {
+          msgObj.text = msgObj.text.substring(msgObj.text.indexOf('|') + 1)
+          isVoice = true
+        }
+
+        await this.xrengineclient.handleMessage(
+          msgObj.id,
+          msgObj.sender,
+          msgObj.senderId,
+          msgObj.channelId,
+          msgObj.text,
+          msgObj.updatedAt,
+          this,
+          isVoice
+        )
+      } else if (message.text().startsWith('VOICE_MESSAGE|')) {
+        const msg = message.text().substring(msgObj.text.indexOf('|') + 1)
+        const msgObj = JSON.parse(msg)
+        console.log('received voice message:', msgObj)
+        await this.xrengineclient.handleMessage(
+          randomInt(0, 1000000),
+          msgObj.sender,
+          msgObj.senderId,
+          'voice-xr-engine',
+          msgObj.text,
+          msgObj.updatedAt,
+          this,
+          true
+        )
       }
 
-      if (this.autoLog) log('>> ', message.text())
+      /*if (this.autoLog)
+      console.log('>>', message.text())*/
     })
 
     this.page.setViewport({ width: 0, height: 0 })
@@ -1017,9 +1090,9 @@ class XREngineBot {
       const activeChannelMatch = Object.entries(channels).find(
         ([key, channel]) => channels[key].channelType === 'instance'
       )
-      console.log('activeChannelMatch: ', activeChannelMatch)
+
       if (activeChannelMatch && activeChannelMatch.length > 0) {
-        const res = deepCopy(activeChannelMatch[1])
+        const res = activeChannelMatch[0]
 
         function deepCopy(obj) {
           var copy
@@ -1053,7 +1126,7 @@ class XREngineBot {
 
         return res
       } else {
-        warn("Couldn't get chat state")
+        console.log("Couldn't get chat state")
         return undefined
       }
     })
@@ -1069,11 +1142,11 @@ class XREngineBot {
   }
 
   async updateAvatar(avatar) {
+    /*
     log(`updating avatar to: ${avatar}`)
-
     await this.clickElementById('SPAN', 'Profile_0')
     await this.clickElementById('button', 'CreateIcon')
-    await this.clickSelectorByAlt('img', avatar)
+    await this.clickSelectorByAlt('img', avatar)*/
     //await this.clickElementById('button', 'confirm-avatar')
   }
 
@@ -1124,4 +1197,8 @@ class XREngineBot {
       this.browser.close()
     }
   }
+}
+
+function log(text: string) {
+  console.log(text)
 }

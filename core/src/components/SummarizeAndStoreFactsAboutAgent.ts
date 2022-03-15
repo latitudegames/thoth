@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable require-await */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import axios from 'axios'
 import Rete from 'rete'
 
 import {
@@ -73,7 +74,6 @@ export class SummarizeAndStoreFactsAboutAgent extends ThothComponent<
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    const { completion } = thoth
     const speaker = inputs['speaker'][0] as string
     const agent = inputs['agent'][0] as string
     const action = inputs['string'][0]
@@ -84,17 +84,25 @@ export class SummarizeAndStoreFactsAboutAgent extends ThothComponent<
       .replace('$agent', agent)
       .replace('$example', action as string)
 
-    const body = {
-      p,
-      stop: ['"""'],
-      temperature: 0.0,
-      max_tokens: 20,
-      top_p: 1,
-      frequency_penalty: 0.8,
-      presence_penalty: 0.3,
-    }
-    const raw = (await completion(body)) as string
-    const result = raw?.trim()
+    const resp = await axios.post(
+      `${process.env.REACT_APP_API_URL}/text_completion`,
+      {
+        params: {
+          prompt: p,
+          modelName: 'davinci',
+          temperature: 0.0,
+          maxTokens: 20,
+          topP: 1,
+          frequencyPenalty: 0.8,
+          presencePenalty: 0.3,
+          stop: ['"""'],
+        },
+      }
+    )
+
+    const { success, choice } = resp.data
+
+    const result = success ? choice?.trim() : ''
     if (!silent) node.display(result)
 
     return {

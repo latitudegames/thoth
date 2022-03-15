@@ -3,8 +3,6 @@
 //@ts-nocheck
 
 import axios from 'axios'
-import { config } from 'dotenv-flow'
-config()
 
 //Model Request using the Hugging Face API (models can be found at -> https://huggingface.co/models)
 export async function makeModelRequest(

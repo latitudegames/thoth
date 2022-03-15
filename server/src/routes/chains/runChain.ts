@@ -67,7 +67,12 @@ export function extractNodes(nodes: Record<string, Node>, map: Set<unknown>) {
 }
 
 // TODO: create a proper engine interface with the proper methods types on it.
-const engine = initSharedEngine({ name: 'demo@0.1.0', components: thothComponents, server: true, modules: {} }) as any
+const engine = initSharedEngine({
+  name: 'demo@0.1.0',
+  components: thothComponents,
+  server: true,
+  modules: {},
+}) as any
 
 export const runChain = async (
   graph: Graph,
@@ -128,6 +133,7 @@ export const runChain = async (
 
   // Defaulting to the first node trigger to start our "run"
   const triggeredNode = getFirstNodeTrigger(graph)
+  console.log('got trigger node')
   await component.run(triggeredNode)
   console.log('run component')
   // Write all the raw data that was output by the module run to an object
@@ -147,5 +153,6 @@ export const runChain = async (
         rawOutputs[node.data.socketKey as string]
     })
 
+  console.log('formated outputs:', formattedOutputs)
   return formattedOutputs
 }

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import axios from 'axios'
 import Rete from 'rete'
 
 import {
@@ -11,10 +13,8 @@ import { stringSocket, triggerSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 const fewshot = (prose: string) => {
   const prompt = `Rewrite narrative snippets as a script:
-
 1
 Original text:
-
 "I won't repeat what you're about to say," Professor Quirrell said, smiling.
 They both laughed, then Harry turned serious again. "The Sorting Hat did seem to think I was going to end up as a Dark Lord unless I went to Hufflepuff," Harry said. "But I don't want to be one."
 "Mr. Potter..." said Professor Quirrell. "Don't take this the wrong way. I promise you will not be graded on the answer. I only want to know your own, honest reply. Why not?"
@@ -24,9 +24,7 @@ Harry floundered for words and then decided to simply go with the obvious. "Firs
 "What makes something right, if not your wanting it?"
 "Ah," Harry said, "preference utilitarianism."
 "Pardon me?" said Professor Quirrell.
-
 Rewritten as a script:
-
 - Professor Quirrell: I won't repeat what you're about to say.
 - Harry: The Sorting Hat did seem to think I was going to end up as a Dark Lord unless I went to Hufflepuff. But I don't want to be one.
 - Professor Quirrell: Mr. Potter... Don't take this the wrong way. I promise you will not be graded on the answer. I only want to know your own, honest reply. Why not?
@@ -36,29 +34,21 @@ Rewritten as a script:
 - Professor Quirrell: What makes something right, if not your wanting it?
 - Harry: Ah, preference utilitarianism.
 - Professor Quirrell: Pardon me?
-
 2
 Original text:
-
 Quickly, he continued. "Nowadays, Mr. Bohlen, the hand-made article hasn't a hope. It can't possibly compete with mass-production, especially in this country — you know that. Carpets ... chairs ... shoes ...bricks ... crockery ... anything you like to mention — they're all made by machinery now. The quality may be inferior, but that doesn't matter. It's the cost of production that counts. And stories — well — they're just another product, like carpets and chairs, and no one cares how you produce them so long as you deliver the goods. We'll sell them wholesale, Mr. Bohlen! We'll undercut every writer in the country! We'll take the market!" 
 "But seriously now, Knipe. D'you really think they'd buy them?" 
 "Listen, Mr. Bohlen. Who on earth is going to want custom-made stories when they can get the other kind at half the price? It stands to reason, doesn't it?"
 "And how will you sell them? Who will you say has written them?" 
-
 Rewritten as a script:
-
 - Knipe: Nowadays, Mr. Bohlen, the hand-made article hasn't a hope. It can't possibly compete with mass-production, especially in this country — you know that. Carpets ... chairs ... shoes ...bricks ... crockery ... anything you like to mention — they're all made by machinery now. The quality may be inferior, but that doesn't matter. It's the cost of production that counts. And stories — well — they're just another product, like carpets and chairs, and no one cares how you produce them so long as you deliver the goods. We'll sell them wholesale, Mr. Bohlen! We'll undercut every writer in the country! We'll take the market!
 - Mr. Bohlen: But seriously now, Knipe. D'you really think they'd buy them?
 - Knipe: Listen, Mr. Bohlen. Who on earth is going to want custom-made stories when they can get the other kind at half the price? It stands to reason, doesn't it?
 - Mr. Bohlen: And how will you sell them? Who will you say has written them?
-
 3
 Original text:
-
 ${prose}
-
 Rewritten as a script:
-
 -`
 
   return prompt
@@ -77,7 +67,7 @@ export class ProseToScript extends ThothComponent<Promise<WorkerReturn>> {
 
     this.task = {
       outputs: { detectedItem: 'output', trigger: 'option' },
-      init: () => { },
+      init: () => {},
     }
 
     this.category = 'AI/ML'
@@ -109,27 +99,29 @@ export class ProseToScript extends ThothComponent<Promise<WorkerReturn>> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    const { completion } = thoth
     const prose = inputs['string'][0] as string
     const prompt = fewshot(prose)
 
-    const body = {
-      prompt,
-      stop: ['\n4'],
-      maxTokens: 300,
-      temperature: 0.0,
-    }
-
-    try {
-      const raw = (await completion(body)) as string
-      const result = raw?.trim()
-      if (!silent) node.display(result)
-
-      return {
-        detectedItem: result,
+    const resp = await axios.post(
+      `${process.env.REACT_APP_API_URL}/text_completion`,
+      {
+        params: {
+          prompt: prompt,
+          modelName: 'davinci',
+          temperature: 0.0,
+          maxTokens: 300,
+          stop: ['\n4'],
+        },
       }
-    } catch (err) {
-      throw new Error('Error in ProseToScript component')
+    )
+
+    const { success, choice } = resp.data
+
+    const result = success ? choice?.trim() : ''
+    if (!silent) node.display(result)
+
+    return {
+      detectedItem: result,
     }
   }
 }

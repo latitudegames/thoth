@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import axios from 'axios'
 import Rete from 'rete'
 
 import {
@@ -12,7 +14,6 @@ import { stringSocket, triggerSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 // For simplicity quests should be ONE thing not complete X and Y
 const fewshot = `Given an action, predict how long it would take to complete out of the following categories: seconds, minutes, hours, days, weeks, years.
-
 Action, Time: pick up the bucket, seconds
 Action, Time: cast a fireball spell on the goblin, seconds
 Action, Time: convince the king to give you his kingdom, minutes
@@ -33,9 +34,7 @@ Action, Time: take over the kingdom, years
 Action, Time: `
 
 const info = `The Time Detector will attempt to categorize an incoming action string into broad categories of duration, which are: 
-
 seconds, minutes, hours, days, weeks, years.
-
 You can edit the fewshot in the text editor, but be aware that you must retain the fewshots data structure so processing will work.`
 
 type WorkerReturn = {
@@ -81,28 +80,30 @@ export class TimeDetectorComponent extends ThothComponent<
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    const { completion } = thoth
     const fewshot = node.data.fewshot as string
     const action = inputs['string'][0]
     const prompt = fewshot + action + ','
 
-    const body = {
-      prompt,
-      stop: ['\n'],
-      maxTokens: 100,
-      temperature: 0.0,
-    }
-
-    try {
-      const raw = (await completion(body)) as string
-      const result = raw?.trim()
-      if (!silent) node.display(result)
-
-      return {
-        detectedTime: result,
+    const resp = await axios.post(
+      `${process.env.REACT_APP_API_URL}/text_completion`,
+      {
+        params: {
+          prompt: prompt,
+          modelName: 'davinci',
+          temperature: 0.0,
+          maxTokens: 100,
+          stop: ['\n'],
+        },
       }
-    } catch (err) {
-      throw new Error('Error in Time Detector component')
+    )
+
+    const { success, choice } = resp.data
+
+    const result = success ? choice?.trim() : ''
+    if (!silent) node.display(result)
+
+    return {
+      detectedTime: result,
     }
   }
 }

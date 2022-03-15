@@ -101,6 +101,9 @@
   border-color: var(--red) !important;
   /* backdrop-filter: blur(15px); */
 }
+.node.success {
+  border-color: var(--green) !important;
+}
 .node.selected .node-title {
   opacity: 1;
   border-bottom: 1px solid var(--dark-1);
