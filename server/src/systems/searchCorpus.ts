@@ -145,8 +145,6 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
         documents[i].keywords as string[],
         words
       )
-      console.log('metadataCount :: ', metadataCount);
-      console.log('keywordsCount :: ', keywordsCount);
 
       if (metadataCount > maxMetadata) {
         maxMetadata = metadataCount
@@ -183,9 +181,10 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
         doc.keywords = doc.keywords.join(',')
         doc.description = doc.description.join(',')
       })
+      let stringifiedDocuments = testDocs.map(doc => JSON.stringify(doc))
       const response = await axios.post(
         `https://api.openai.com/v1/engines/${searchEngine}/search`,
-        { documents: testDocs, query: question },
+        { documents: stringifiedDocuments, query: question },
         {
           headers: {
             'Content-Type': 'application/json',
@@ -198,7 +197,7 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
       let highestScoreIndex = -1
       console.log('response ::: ', response.data);
 
-      for (let i = 0; i < response.data.data; i++) {
+      for (let i = 0; i < response.data.data.length; i++) {
         if (response.data.data[i].score > highestScore) {
           highestScore = response.data.data[i].score
           highestScoreIndex = i
@@ -207,12 +206,10 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
 
       if (highestScoreIndex >= 0) {
         return (ctx.body =
-          documents[response.data.data[highestScoreIndex]])
+          testDocs[response.data.data[highestScoreIndex]['document']])
       } else {
         return (ctx.body = 'No documents where found to search from!')
       }
-
-      // return (ctx.body  = testDocs)
     } else return (ctx.body = 'No documents where found to search from!')
   })
 
