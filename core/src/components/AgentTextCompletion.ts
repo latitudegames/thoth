@@ -144,10 +144,11 @@ export class AgentTextCompletion extends ThothComponent<Promise<WorkerReturn>> {
         stop: stop,
       }
     )
+    console.log("resp.data is ", resp.data)
 
     const { success, choice } = resp.data
 
-    const res = success ? choice.text : 'Sorry i had an error!'
+    const res = success !== 'false' ? choice.text : 'Sorry i had an error!'
     console.log('success:', success, 'choice:', choice.text, 'res:', res)
 
     return {
