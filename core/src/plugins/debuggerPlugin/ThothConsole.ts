@@ -31,7 +31,8 @@ export class ThothConsole {
     this.isServer = server
 
     if (throwError) this.throwError = throwError
-    if (!editor.view) return
+    if (server) return
+
     const nodeValues = Array.from(editor.view.nodes)
     const foundNode = nodeValues.find(([, n]) => n.node.id === node.id)
 
@@ -73,6 +74,8 @@ export class ThothConsole {
   }
 
   log(_message: any) {
+    if (this.isServer) return
+
     const message =
       typeof _message !== 'string' ? JSON.stringify(_message) : _message
     this.sendToDebug(this.formatMessage(message, 'log'))
@@ -81,9 +84,12 @@ export class ThothConsole {
 
   error(error: any) {
     const message = this.formatErrorMessage(error)
-    this.sendToDebug(message)
     this.throwServerError(message)
-    this.renderError()
+
+    if (!this.isServer) {
+      this.sendToDebug(message)
+      this.renderError()
+    }
   }
 
   sendSuccess(result: any) {
