@@ -11,12 +11,11 @@ import {
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
-} from '../../types'
-import { DropdownControl } from '../controls/DropdownControl'
-import { InputControl } from '../dataControls/InputControl'
-import { EngineContext } from '../engine'
-import { triggerSocket, anySocket } from '../sockets'
-import { ThothComponent } from '../thoth-component'
+} from '../../../types'
+import { InputControl } from '../../dataControls/InputControl'
+import { EngineContext } from '../../engine'
+import { triggerSocket, anySocket } from '../../sockets'
+import { ThothComponent } from '../../thoth-component'
 
 const info = 'Archive Conversation is used to archive old conversation'
 // TODO: Update this
@@ -49,7 +48,7 @@ export class AgentManager extends ThothComponent<Promise<WorkerReturn>> {
   }
 
   builder(node: ThothNode) {
-    console.log(node,'node')
+    console.log(node, 'node')
     const outName = new Rete.Output('agent', 'Name', anySocket)
     const outPersonality = new Rete.Output(
       'personality',
@@ -69,7 +68,7 @@ export class AgentManager extends ThothComponent<Promise<WorkerReturn>> {
     const outMoral = new Rete.Output('morals and Ethics', 'Morals and Ethics', anySocket)
     const outMonologue = new Rete.Output('monologue', 'Monologue', anySocket)
     const outGreeting = new Rete.Output('greetings', 'Greetings', anySocket)
-  
+
 
     const personality = new InputControl({
       dataKey: 'personality',
@@ -81,14 +80,14 @@ export class AgentManager extends ThothComponent<Promise<WorkerReturn>> {
 
     return (
       node
-      .addOutput(outName)
-      .addOutput(outDialog)
-      .addOutput(outPersonality)
-      .addOutput(outMoral)
-      .addOutput(outMonologue)
-      .addOutput(outGreeting)
-      .addOutput(dataOutput)
-      .addControl(inputDropdown)
+        .addOutput(outName)
+        .addOutput(outDialog)
+        .addOutput(outPersonality)
+        .addOutput(outMoral)
+        .addOutput(outMonologue)
+        .addOutput(outGreeting)
+        .addOutput(dataOutput)
+        .addControl(inputDropdown)
     )
   }
 

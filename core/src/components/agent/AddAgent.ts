@@ -11,10 +11,10 @@ import {
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
-} from '../../types'
-import { EngineContext } from '../engine'
-import { triggerSocket, stringSocket } from '../sockets'
-import { ThothComponent } from '../thoth-component'
+} from '../../../types'
+import { EngineContext } from '../../engine'
+import { triggerSocket, stringSocket } from '../../sockets'
+import { ThothComponent } from '../../thoth-component'
 
 const info = 'Agent Text Completion is using OpenAI for the agent to respond.'
 
