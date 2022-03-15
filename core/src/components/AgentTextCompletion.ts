@@ -125,7 +125,9 @@ export class AgentTextCompletion extends ThothComponent<Promise<WorkerReturn>> {
     const frequencyPenalty = parseFloat(frequencyPenaltyData)
     const presencePenaltyData = node?.data?.presencePenalty as string
     const presencePenalty = parseFloat(presencePenaltyData)
-    const stop = (node?.data?.stop as string).split(',')
+    const stop = (node?.data?.stop as string)
+      ? (node?.data?.stop as string).split(',')
+      : []
     for (let i = 0; i < stop.length; i++) {
       stop[i] = stop[i].trim()
       if (stop[i] === '$speaker:') {
@@ -148,6 +150,7 @@ export class AgentTextCompletion extends ThothComponent<Promise<WorkerReturn>> {
         frequencyPenalty: frequencyPenalty,
         presencePenalty: presencePenalty,
         stop: stop,
+        sender: speaker,
       }
     )
 
