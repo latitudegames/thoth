@@ -4,6 +4,7 @@ import { Route, Routes, useNavigate } from 'react-router-dom'
 import {
   useGetSpellsQuery,
   useDeleteSpellMutation,
+  useNewSpellMutation,
 } from '../../state/api/spells'
 import { useDB } from '../../contexts/DatabaseProvider'
 import { useTabManager } from '../../contexts/TabManagerProvider'
@@ -23,6 +24,7 @@ const StartScreen = () => {
 
   const [deleteSpell] = useDeleteSpellMutation()
   const { data: spells } = useGetSpellsQuery()
+  const [newSpell] = useNewSpellMutation()
 
   const onReaderLoad = async event => {
     const spellData = JSON.parse(event.target.result)
@@ -39,6 +41,12 @@ const StartScreen = () => {
           return models.modules.updateOrCreate(module)
         })
       )
+
+    // Create new spell
+    await newSpell({
+      chain: spellData.chain,
+      name: spellData.name,
+    })
 
     await openTab({
       name: spellData.name,

@@ -10,6 +10,15 @@ type ConsoleConstructor = {
   server: boolean
   throwError?: Function
 }
+
+export type Message = {
+  from: string
+  nodeId: number
+  name: string | null
+  content?: string
+  type: 'error' | 'log'
+}
+
 export class ThothConsole {
   node: NodeData
   editor: IRunContextEditor
@@ -31,8 +40,8 @@ export class ThothConsole {
     this.isServer = server
 
     if (throwError) this.throwError = throwError
-    console.log('editor.view is ', editor.view)
-    if (!editor.view) return;
+    if (server) return
+
     const nodeValues = Array.from(editor.view.nodes)
     const foundNode = nodeValues.find(([, n]) => n.node.id === node.id)
 
@@ -47,12 +56,12 @@ export class ThothConsole {
     this.nodeView.node.update()
   }
 
-  formatMessage(_message: string, type: 'error' | 'log') {
+  formatMessage(_message: string, type: 'error' | 'log'): Message {
     return {
       from: this.node.name,
       nodeId: this.node.id,
-      name: this.node.data.name || null,
-      errorMessage: _message,
+      name: (this.node?.data?.name as string) ?? null,
+      content: _message,
       type,
     }
   }
@@ -67,21 +76,29 @@ export class ThothConsole {
     this.node.data.error = false
   }
 
-  renderSuccess() {
+  renderLog() {
     this.node.data.success = true
     this.updateNodeView()
     this.node.data.success = false
   }
 
-  log(message: any) {
-    this.sendToDebug(message)
+  log(_message: any) {
+    if (this.isServer) return
+
+    const message =
+      typeof _message !== 'string' ? JSON.stringify(_message) : _message
+    this.sendToDebug(this.formatMessage(message, 'log'))
+    this.renderLog()
   }
 
   error(error: any) {
     const message = this.formatErrorMessage(error)
-    this.sendToDebug(message)
     this.throwServerError(message)
-    this.renderError()
+
+    if (!this.isServer) {
+      this.sendToDebug(message)
+      this.renderError()
+    }
   }
 
   sendSuccess(result: any) {
@@ -89,7 +106,8 @@ export class ThothConsole {
   }
 
   sendToDebug(message: any) {
-    if (this.editor && this.editor.thoth && this.editor.thoth.sendToDebug) this.editor.thoth.sendToDebug(message)
+    if (this.editor && this.editor.thoth && this.editor.thoth.sendToDebug)
+      this.editor.thoth.sendToDebug(message)
   }
 
   throwServerError(message: any) {
