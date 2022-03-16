@@ -12,7 +12,7 @@ import {
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../types'
-// import { DropdownControl } from '../controls/DropdownControl'
+import { DropdownControl } from '../controls/DropdownControl'
 import { InputControl } from '../dataControls/InputControl'
 import { EngineContext } from '../engine'
 import { triggerSocket, anySocket } from '../sockets'
@@ -50,29 +50,25 @@ export class AgentManager extends ThothComponent<Promise<WorkerReturn>> {
   }
 
   builder(node: ThothNode) {
+    console.log(node,'node')
     const outName = new Rete.Output('agent', 'Name', anySocket)
     const outPersonality = new Rete.Output(
       'personality',
       'Personality',
       anySocket
     )
-    //const value = node.data.text ? node.data.text : 'Select Value'
-    // const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
+    const value = node.data.text ? node.data.text : 'Select Value'
 
-    // const inputDropdown = new DropdownControl({
-    //   editor: this.editor,
-    //   key: 'text',
-    //   value,
-    // })
+    const inputDropdown = new DropdownControl({
+      editor: this.editor,
+      key: 'Personality',
+      value,
+    })
 
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
-    // const agentInput = new Rete.Input('agent', 'Agent', stringSocket)
-    // const speakerInput = new Rete.Input('speaker', 'Speaker', stringSocket)
-    // const inp = new Rete.Input('string', 'Fact', stringSocket)
     const outDialog = new Rete.Output('dialog', 'Dialog', anySocket)
     const outMoral = new Rete.Output('morals and Ethics', 'Morals and Ethics', anySocket)
     const outMonologue = new Rete.Output('monologue', 'Monologue', anySocket)
-    // const outFact = new Rete.Output('fact', 'Fact', anySocket)
     const outGreeting = new Rete.Output('greetings', 'Greetings', anySocket)
   
 
@@ -86,18 +82,14 @@ export class AgentManager extends ThothComponent<Promise<WorkerReturn>> {
 
     return (
       node
-      // .addInput(inp)
-      // .addInput(agentInput)
-      // .addInput(speakerInput)
-      // .addSelect(inputDropdown)
       .addOutput(outName)
       .addOutput(outDialog)
       .addOutput(outPersonality)
       .addOutput(outMoral)
       .addOutput(outMonologue)
-      // .addOutput(outFact)
       .addOutput(outGreeting)
       .addOutput(dataOutput)
+      .addControl(inputDropdown)
     )
   }
 
