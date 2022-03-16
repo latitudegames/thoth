@@ -13,7 +13,10 @@ import LoadingScreen from '../../components/LoadingScreen/LoadingScreen'
 import { MyNode } from '../../components/Node/Node'
 import gridimg from '@/grid.png'
 import { usePubSub } from '../../contexts/PubSubProvider'
-import { useRete, ReteContext } from './InterfaceProvider'
+import {
+  useThothInterface,
+  ThothInterfaceContext,
+} from './ThothInterfaceProvider'
 // import { ThothTab } from './TabManagerProvider'
 
 export type ThothTab = {
@@ -36,7 +39,7 @@ const Context = createContext({
     // todo update this to use proper spell type
     spell: Spell | undefined,
     tab: ThothTab,
-    reteInterface: ReteContext
+    thothInterface: ThothInterfaceContext
   ) => {},
   setEditor: (editor: any) => {},
   getNodeMap: () => {},
@@ -152,7 +155,7 @@ const RawEditor = ({ tab, children }) => {
   const [loaded, setLoaded] = useState(false)
   const { buildEditor } = useEditor()
   // This will be the main interface between thoth and rete
-  const reteInterface = useRete()
+  const thothInterface = useThothInterface()
 
   useEffect(() => {
     if (!tab) return
@@ -182,7 +185,7 @@ const RawEditor = ({ tab, children }) => {
         <div
           ref={el => {
             if (el && !loaded) {
-              buildEditor(el, spell, tab, reteInterface)
+              buildEditor(el, spell, tab, thothInterface)
               setLoaded(true)
             }
           }}

@@ -22,7 +22,7 @@ Some notes here.  The new rete provider, not to be confused with the old rete pr
 Not all functions will be needed on the server, and functions which are not will be labeled as such.
 */
 
-export interface ReteContext extends EngineContext {
+export interface ThothInterfaceContext extends EngineContext {
   onInspector: (node, callback) => void
   onPlaytest: (callback) => void
   sendToPlaytest: (data) => void
@@ -38,11 +38,11 @@ export interface ReteContext extends EngineContext {
   readFromImageCache: (caption, cacheTag, topK) => Promise<Record<string, any>>
 }
 
-const Context = createContext<ReteContext>(undefined!)
+const Context = createContext<ThothInterfaceContext>(undefined!)
 
-export const useRete = () => useContext(Context)
+export const useThothInterface = () => useContext(Context)
 
-const ReteProvider = ({ children, tab }) => {
+const ThothInterfaceProvider = ({ children, tab }) => {
   const { events, publish, subscribe } = usePubSub()
   const dispatch = useDispatch()
   const [fetchFromImageCache] = useFetchFromImageCacheMutation()
@@ -187,4 +187,4 @@ const ReteProvider = ({ children, tab }) => {
   return <Context.Provider value={publicInterface}>{children}</Context.Provider>
 }
 
-export default ReteProvider
+export default ThothInterfaceProvider
