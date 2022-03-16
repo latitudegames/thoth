@@ -95,20 +95,8 @@ export class Code extends ThothComponent<unknown> {
       thoth,
     }: { silent: boolean; thoth: EngineContext; data: { code: unknown } }
   ) {
-    function runCodeWithArguments(obj: unknown) {
-      const flattenedInputs = Object.entries(inputs).reduce(
-        (acc, [key, value]) => {
-          acc[key as string] = value[0]
-          return acc
-        },
-        {} as Record<string, any>
-      )
-      // eslint-disable-next-line no-new-func
-      return Function('"use strict";return (' + obj + ')')()(
-        flattenedInputs,
-        data
-      )
-    }
+    const { processCode } = thoth
+    if (!processCode) return
 
     try {
       const value = runCodeWithArguments(node.data.code)
