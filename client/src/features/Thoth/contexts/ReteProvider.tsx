@@ -144,6 +144,21 @@ const ReteProvider = ({ children, tab }) => {
     return result
   }
 
+  const processCode = (code, inputs, data) => {
+    const flattenedInputs = Object.entries(inputs as ThothWorkerInputs).reduce(
+      (acc, [key, value]) => {
+        acc[key as string] = value[0]
+        return acc
+      },
+      {} as Record<string, any>
+    )
+    // eslint-disable-next-line no-new-func
+    return Function('"use strict";return (' + code + ')')()(
+      flattenedInputs,
+      data
+    )
+  }
+
   const clearTextEditor = () => {
     publish($TEXT_EDITOR_CLEAR(tab.id))
   }
