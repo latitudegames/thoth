@@ -35,6 +35,11 @@ export interface ReteContext extends EngineContext {
   getCurrentGameState: () => Record<string, unknown>
   updateCurrentGameState: (update) => void
   readFromImageCache: (caption, cacheTag, topK) => Promise<Record<string, any>>
+  processCode: (
+    code: unknown,
+    inputs: ThothWorkerInputs,
+    data: Record<string, any>
+  ) => void
 }
 
 const Context = createContext<ReteContext>(undefined!)
