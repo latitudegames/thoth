@@ -13,7 +13,7 @@ import LoadingScreen from '../../components/LoadingScreen/LoadingScreen'
 import { MyNode } from '../../components/Node/Node'
 import gridimg from '@/grid.png'
 import { usePubSub } from '../../contexts/PubSubProvider'
-import { useRete, ReteContext } from './ReteProvider'
+import { useRete, ReteContext } from './InterfaceProvider'
 // import { ThothTab } from './TabManagerProvider'
 
 export type ThothTab = {

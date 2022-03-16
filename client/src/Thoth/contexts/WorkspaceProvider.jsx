@@ -1,6 +1,6 @@
 import EditorProvider from './EditorProvider'
 import LayoutProvider from './LayoutProvider'
-import ReteProvider from './ReteProvider'
+import ReteProvider from './InterfaceProvider'
 
 const providers = [ReteProvider, EditorProvider, LayoutProvider]
 
