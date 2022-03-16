@@ -11,3 +11,4 @@ build
 # Generated Styles for AreaPlugin
 core/src/plugins/areaPlugin/style.css.d.ts
 .idea
+server/.env
