@@ -53,18 +53,6 @@ export class AddAgent extends ThothComponent<Promise<WorkerReturn>> {
       .addOutput(outp)
   }
 
-  /*for text completion:
-  const data = {
-    "prompt": context,
-    "temperature": 0.9,
-    "max_tokens": 100,
-    "top_p": 1,
-    "frequency_penalty": dialogFrequencyPenality,
-    "presence_penalty": dialogPresencePenality,
-    "stop": ["\"\"\"", `${speaker}:`, '\n']
-  };
-  */
-
   async worker(
     node: NodeData,
     inputs: ThothWorkerInputs,
