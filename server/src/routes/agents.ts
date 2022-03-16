@@ -226,6 +226,7 @@ const getAgentInstanceHandler = async (ctx: Koa.Context) => {
 
 const addAgentInstanceHandler = async (ctx: Koa.Context) => {
   const data = ctx.request.body.data
+  console.log('saving agent instance data:', data)
   let instanceId = ctx.request.body.id ?? ctx.request.body.instanceId
 
   if (!instanceId || instanceId === undefined || instanceId <= 0) {
@@ -643,8 +644,9 @@ const requestInformationAboutVideo = async (
   question: string
 ): Promise<string> => {
   const videoInformation = ``
-  const prompt = `Information: ${videoInformation} \n ${sender}: ${question.trim().endsWith('?') ? question.trim() : question.trim() + '?'
-    }\n${agent}:`
+  const prompt = `Information: ${videoInformation} \n ${sender}: ${
+    question.trim().endsWith('?') ? question.trim() : question.trim() + '?'
+  }\n${agent}:`
 
   const modelName = 'davinci'
   const temperature = 0.9

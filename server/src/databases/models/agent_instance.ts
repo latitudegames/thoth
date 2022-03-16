@@ -10,6 +10,9 @@ export interface agent_instanceAttributes {
   dirty?: boolean
   discord_enabled?: boolean
   discord_api_key?: string
+  discord_starting_words?: string
+  discord_bot_name_regex?: string
+  discord_bot_name?: string
   discord_spell_handler_incoming?: string
   discord_spell_handler_update?: string
   discord_spell_handler_feed?: string
@@ -25,6 +28,9 @@ export type agent_instanceId = agent_instance[agent_instancePk]
 export type agent_instanceOptionalAttributes =
   | 'discord_enabled'
   | 'discord_api_key'
+  | 'discord_starting_words'
+  | 'discord_bot_name_regex'
+  | 'discord_bot_name'
   | 'discord_spell_handler_incoming'
   | 'discord_spell_handler_update'
   | 'discord_spell_handler_feed'
@@ -42,7 +48,8 @@ export type agent_instanceCreationAttributes = Optional<
 
 export class agent_instance
   extends Model<agent_instanceAttributes, agent_instanceCreationAttributes>
-  implements agent_instanceAttributes {
+  implements agent_instanceAttributes
+{
   id?: number
   instanceId?: number
   personality?: string
@@ -50,6 +57,9 @@ export class agent_instance
   updated_at?: string
   discord_enabled?: boolean
   discord_api_key?: string
+  discord_starting_words?: string
+  discord_bot_name_regex?: string
+  discord_bot_name?: string
   discord_spell_handler_incoming?: string
   discord_spell_handler_update?: string
   discord_spell_handler_feed?: string
@@ -91,6 +101,18 @@ export class agent_instance
           type: DataTypes.TEXT,
           allowNull: true,
         },
+        discord_starting_words: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
+        discord_bot_name_regex: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
+        discord_bot_name: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
         discord_spell_handler_incoming: {
           type: DataTypes.TEXT,
           allowNull: true,
@@ -122,7 +144,7 @@ export class agent_instance
         xrengine_spell_handler_feed: {
           type: DataTypes.TEXT,
           allowNull: true,
-        }
+        },
       },
       {
         sequelize,
