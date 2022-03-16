@@ -118,12 +118,8 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
 
     return (ctx.body = 'ok')
   })
-  router.post('/search', async function (ctx: Koa.Context) {
-    const agent = ctx.request.body?.agent
-    const question = ctx.request.body?.question as string
-    const sameTopicOnly =
-      (ctx.request.body?.sameTopicOnly as string).toLowerCase().trim() ===
-      'true'
+  router.get('/search', async function (ctx: Koa.Context) {
+    const question = ctx.request.query?.question as string
     const cleanQuestion = removePanctuationalMarks(question)
     const words = simplifyWords(cleanQuestion.split(' '))
     const topic = await classifyText(question)
