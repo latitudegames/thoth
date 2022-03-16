@@ -2,7 +2,7 @@
 //@ts-nocheck
 import axios from 'axios'
 
-import { database } from '../connectors/database'
+import { database } from '../../connectors/database'
 import { makeModelRequest } from './MakeModelRequest'
 
 export async function makeCompletionRequest(
