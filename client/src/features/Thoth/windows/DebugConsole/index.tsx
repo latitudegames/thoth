@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { renderToString } from 'react-dom/server'
 import Terminal from 'react-console-emulator'
 import { useAuth } from '@/contexts/AuthProvider'
 import { usePubSub } from '@/contexts/PubSubProvider'
@@ -32,16 +33,47 @@ const DebugConsole = ({ tab }) => {
     setScrollToBottom(true)
   }
 
-  const printToDebugger = useCallback((_, data) => {
+  const formatErrorMessage = message =>
+    `> Node ${message.nodeId}: Error in ${message.from} component ${
+      message.name ?? 'unnamed'
+    }.`
+
+  const formatLogMessage = message =>
+    `> Node ${message.nodeId}: Message from ${message.from} component ${
+      message.name ?? 'unnamed'
+    }.`
+
+  const Message = (message, type) => (
+    <div
+      style={{
+        lineHeight: '21px',
+        color: type === 'error' ? 'var(--red)' : 'var(--green)',
+      }}
+    >
+      <p style={{ margin: 0 }}>
+        {type === 'error'
+          ? formatErrorMessage(message)
+          : formatLogMessage(message)}
+      </p>
+      <p style={{ margin: 0 }}>${message.content}</p>
+      <br />
+    </div>
+  )
+
+  const getMessage = message => {
+    if (message.type === 'error')
+      return renderToString(Message(message, message.type))
+    if (message.type === 'log')
+      return renderToString(Message(message, message.type))
+  }
+
+  const printToDebugger = useCallback((_, message) => {
     const terminal = terminalRef.current
     if (!terminal) return
 
-    terminal.pushToStdout(
-      `
-      > Error in ${data.errorIn} component.
-      > ${data.errorMessage}
-      `
-    )
+    const msg = getMessage(message)
+
+    terminal.pushToStdout(msg)
 
     scroll()
   }, [])
@@ -75,7 +107,9 @@ const DebugConsole = ({ tab }) => {
       <Terminal
         ref={terminalRef}
         commands={commands}
+        dangerMode={true}
         commandCallback={commandCallback}
+        noNewlineParsing={true}
         promptLabel={`${user?.id}@Thoth:~$`}
         // readOnly={true}
         style={{

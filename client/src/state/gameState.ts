@@ -21,6 +21,19 @@ const gameStateSlice = createSlice({
   name: 'gameState',
   initialState,
   reducers: {
+    setGameState: (state, action) => {
+      const gameState = selectGameStateBySpellId(state, action.payload.spellId)
+
+      if (!gameState) {
+        gameStateAdapater.addOne(state, { id: uuidv4(), ...action.payload })
+      } else {
+        const payload = {
+          id: gameState.id,
+          ...action.payload.state,
+        }
+        gameStateAdapater.setOne(state, payload)
+      }
+    },
     updateGameState: (state, action) => {
       const gameState = selectGameStateBySpellId(state, action.payload.spellId)
 
@@ -58,5 +71,6 @@ export const selectGameStateBySpellId = createDraftSafeSelector(
 )
 
 export const { selectById } = gameStateSelectors
-export const { updateGameState, createGameState } = gameStateSlice.actions
+export const { updateGameState, createGameState, setGameState } =
+  gameStateSlice.actions
 export default gameStateSlice.reducer

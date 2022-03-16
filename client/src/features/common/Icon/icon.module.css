@@ -129,3 +129,10 @@
 .tiles {
   background-image: url('tiles.svg');
 }
+.trash {
+  background-image: url('trash.svg');
+}
+
+.trash:hover {
+  background-image: url('dangerTrash.svg');
+}
