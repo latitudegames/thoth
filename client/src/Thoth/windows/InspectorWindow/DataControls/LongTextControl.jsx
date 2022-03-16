@@ -1,4 +1,4 @@
-import { useLayout } from '@thoth/contexts/LayoutProvider'
+import { useLayout } from '@/Thoth/contexts/LayoutProvider'
 
 const LongText = () => {
   const { createOrFocus, windowTypes } = useLayout()

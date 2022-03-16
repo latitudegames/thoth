@@ -5,18 +5,18 @@ import { EngineContext } from '@latitudegames/thoth-core'
 import { useContext, createContext } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { postEnkiCompletion } from '../../../services/game-api/enki'
-import { completion as _completion } from '../../../services/game-api/text'
+import { postEnkiCompletion } from '../../services/game-api/enki'
+import { completion as _completion } from '../../services/game-api/text'
 import {
   selectGameStateBySpellId,
   updateGameState,
-} from '../../../state/gameState'
-import { store } from '../../../state/store'
-import { invokeInference } from '../../../utils/huggingfaceHelper'
-import { useDB } from '../../../contexts/DatabaseProvider'
-import { usePubSub } from '../../../contexts/PubSubProvider'
+} from '../../state/gameState'
+import { store } from '../../state/store'
+import { invokeInference } from '../../utils/huggingfaceHelper'
+import { useDB } from '../../contexts/DatabaseProvider'
+import { usePubSub } from '../../contexts/PubSubProvider'
 import { useFetchFromImageCacheMutation } from '@/state/api/visualGenerationsApi'
-import { ModelsType } from '../../../types'
+import { ModelsType } from '../../types'
 /*
 Some notes here.  The new rete provider, not to be confused with the old rete provider renamed to the editor provider, is designed to serve as the single source of truth for interfacing with the rete internal system.  This unified interface will also allow us to replicate the same API in the server, where rete expects certain functions to exist but doesn't care what is behind these functions so long as they work.
 Not all functions will be needed on the server, and functions which are not will be labeled as such.

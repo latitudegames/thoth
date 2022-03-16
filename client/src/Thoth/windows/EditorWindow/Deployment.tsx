@@ -18,7 +18,7 @@ import {
   useLazyGetDeploymentQuery,
   useSaveSpellMutation,
 } from '@/state/api/spells'
-import { useEditor } from '@thoth/contexts/EditorProvider'
+import { useEditor } from '@/Thoth/contexts/EditorProvider'
 import { thothApiRootUrl } from '@/config'
 
 const DeploymentView = ({ open, setOpen, spellId, close }) => {
@@ -31,7 +31,7 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
   const [saveSpell] = useSaveSpellMutation()
   const [getDeplopyment, { data: deploymentData }] = useLazyGetDeploymentQuery()
   // const spell = useSelector(state => selectSpellById(spellId))
-  const spell = spellId;
+  const spell = spellId
   const { data: deployments, isLoading } = useGetDeploymentsQuery(spellId, {
     skip: !spell,
   })
@@ -66,15 +66,15 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
 
   useEffect(() => {
     if (!deploymentData || !loadingVersion) return
-      ; (async () => {
-        close()
-        await saveSpell({ ...spell, chain: deploymentData.chain })
-        enqueueSnackbar(`version ${deploymentData.version} loaded!`, {
-          variant: 'success',
-        })
-        setLoadingVersion(false)
-        loadChain(deploymentData.chain)
-      })()
+    ;(async () => {
+      close()
+      await saveSpell({ ...spell, chain: deploymentData.chain })
+      enqueueSnackbar(`version ${deploymentData.version} loaded!`, {
+        variant: 'success',
+      })
+      setLoadingVersion(false)
+      loadChain(deploymentData.chain)
+    })()
   }, [deploymentData, loadingVersion])
 
   const copy = url => {
@@ -125,7 +125,7 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
                   title: 'Deploy',
                   options: {
                     // todo find better way to get next version here
-                    version: (deployments ? deployments?.length + 1 : 0),
+                    version: deployments ? deployments?.length + 1 : 0,
                   },
                   onClose: data => {
                     closeModal()
@@ -150,8 +150,9 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
                 return (
                   <SimpleAccordion
                     key={deploy.version}
-                    heading={`${deploy.version}${deploy.versionName ? ' - ' + deploy.versionName : ''
-                      }`}
+                    heading={`${deploy.version}${
+                      deploy.versionName ? ' - ' + deploy.versionName : ''
+                    }`}
                     defaultExpanded={true}
                   >
                     <button

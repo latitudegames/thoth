@@ -5,18 +5,15 @@ import jsonFormat from 'json-format'
 import { useSnackbar } from 'notistack'
 import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import {
-  selectSpellById,
-  useSaveSpellMutation,
-} from '../../../state/api/spells'
+import { selectSpellById, useSaveSpellMutation } from '../../state/api/spells'
 import {
   selectGameStateBySpellId,
   // updateGameState,
-} from '../../../state/gameState'
-import Window from '../../common/Window/Window'
+} from '../../state/gameState'
+import Window from '../../features/common/Window/Window'
 
 import '../thoth.module.css'
-import { RootState } from '../../../state/store'
+import { RootState } from '../../state/store'
 import WindowMessage from '../components/WindowMessage'
 
 const StateManager = ({ tab, ...props }) => {

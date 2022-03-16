@@ -11,10 +11,10 @@ import {
   useSaveSpellMutation,
   useGetSpellsQuery,
   selectSpellById,
-} from '../../../state/api/spells'
+} from '../../state/api/spells'
 import { useEditor } from '../contexts/EditorProvider'
 import { useLayout } from '../contexts/LayoutProvider'
-import { useModule } from '../../../contexts/ModuleProvider'
+import { useModule } from '../../contexts/ModuleProvider'
 
 // Config for unique name generator
 const customConfig = {

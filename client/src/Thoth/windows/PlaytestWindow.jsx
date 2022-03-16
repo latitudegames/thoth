@@ -2,10 +2,10 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars-2'
 import { useHotkeys } from 'react-hotkeys-hook'
 
-import { usePubSub } from '../../../contexts/PubSubProvider'
-import Window from '../../common/Window/Window'
+import { usePubSub } from '../../contexts/PubSubProvider'
+import Window from '../../features/common/Window/Window'
 import css from '../thoth.module.css'
-import singleton from '../../../speechUtils'
+import singleton from '../../speechUtils'
 
 const Input = props => {
   const ref = useRef()

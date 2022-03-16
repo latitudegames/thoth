@@ -2,10 +2,10 @@ import { useEffect } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import { usePubSub } from '../../contexts/PubSubProvider'
-import { useTabManager } from '../../contexts/TabManagerProvider'
-import LoadingScreen from '../common/LoadingScreen/LoadingScreen'
-import TabLayout from '../common/TabLayout/TabLayout'
+import { usePubSub } from '../contexts/PubSubProvider'
+import { useTabManager } from '../contexts/TabManagerProvider'
+import LoadingScreen from '../features/common/LoadingScreen/LoadingScreen'
+import TabLayout from '../features/common/TabLayout/TabLayout'
 import Workspaces from './workspaces'
 
 const Thoth = ({ empty = false }) => {
