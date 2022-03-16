@@ -413,7 +413,11 @@ export class xrengine_client {
           text = getRandomEmptyResponse()
         if (addPing) text = _sender + ' ' + text
         this.xrengineBot.sendMessage(text)
-      } else if (responses.length > 2000) {
+      } else if (
+        responses &&
+        responses !== undefined &&
+        responses.length > 2000
+      ) {
         const lines = []
         let line = ''
         for (let i = 0; i < responses.length; i++) {
@@ -799,7 +803,7 @@ class XREngineBot {
     await this.waitForTimeout(timeout)
   }
 
-  async interactObject() { }
+  async interactObject() {}
 
   /** Return screenshot
    * @param {Function} fn Function to execut _in the node context._

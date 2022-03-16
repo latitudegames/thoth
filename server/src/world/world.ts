@@ -4,7 +4,6 @@ import agent from './agent'
 import gameObject from './gameObject'
 import time from './time'
 import { initAgentsLoop } from './agentsLoop'
-import { xrEngineAgent } from './xrEngineAgent'
 
 export class world extends gameObject {
   static instance: world
@@ -12,7 +11,6 @@ export class world extends gameObject {
   objects: { [id: number]: any } = {}
   oldAgents: any
   newAgents: any
-  _xrEngineAgent: xrEngineAgent
 
   constructor() {
     super(0)
