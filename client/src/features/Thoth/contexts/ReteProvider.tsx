@@ -197,6 +197,7 @@ const ReteProvider = ({ children, tab }) => {
     readFromImageCache,
     getCurrentGameState,
     updateCurrentGameState,
+    processCode,
     ...models.modules,
 
     // going to need to manuall create theses
