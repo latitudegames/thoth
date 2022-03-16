@@ -1,6 +1,6 @@
 import { useContext, createContext, useState, useEffect } from 'react'
 import { initDB } from '../database'
-import LoadingScreen from '../features/common/LoadingScreen/LoadingScreen'
+import LoadingScreen from '../screens/common/LoadingScreen/LoadingScreen'
 
 const Context = createContext(!undefined)
 

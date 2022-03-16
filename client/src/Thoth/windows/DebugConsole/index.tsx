@@ -3,7 +3,7 @@ import { renderToString } from 'react-dom/server'
 import Terminal from 'react-console-emulator'
 import { useAuth } from '@/contexts/AuthProvider'
 import { usePubSub } from '@/contexts/PubSubProvider'
-import Window from '@/features/common/Window/Window'
+import Window from '@/screens/common/Window/Window'
 
 export type DebugMessage = {
   message: string

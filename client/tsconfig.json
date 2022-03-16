@@ -17,7 +17,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@common/*": ["src/features/common/*"],
+      "@common/*": ["src/screens/common/*"],
       "@thoth/*": ["src/Thoth/*"]
     }
   },

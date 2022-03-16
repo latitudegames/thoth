@@ -10,8 +10,8 @@ import { useNavigate } from 'react-router-dom'
 
 import { useNewSpellMutation } from '@/state/api/spells'
 import { useTabManager } from '@/contexts/TabManagerProvider'
-import Panel from '@common/Panel/Panel'
-import Input from '@common/Input/Input'
+import Panel from '@/screens/common/Panel/Panel'
+import Input from '@/screens/common/Input/Input'
 import emptyImg from '../empty.png'
 import enkiImg from '../enki.png'
 import langImg from '../lang.png'
@@ -49,7 +49,7 @@ const CreateNew = () => {
   const onCreate = handleSubmit(async data => {
     const placeholderName = uniqueNamesGenerator(customConfig)
     const name = data.name || placeholderName
-    console.log("selectedTemplate is", selectedTemplate)
+    console.log('selectedTemplate is', selectedTemplate)
     const response = await newSpell({
       chain: selectedTemplate.chain,
       name,

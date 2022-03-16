@@ -10,7 +10,7 @@ import {
   selectGameStateBySpellId,
   // updateGameState,
 } from '../../state/gameState'
-import Window from '../../features/common/Window/Window'
+import Window from '../../screens/common/Window/Window'
 
 import '../thoth.module.css'
 import { RootState } from '../../state/store'

@@ -4,8 +4,8 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 import { usePubSub } from '../contexts/PubSubProvider'
 import { useTabManager } from '../contexts/TabManagerProvider'
-import LoadingScreen from '../features/common/LoadingScreen/LoadingScreen'
-import TabLayout from '../features/common/TabLayout/TabLayout'
+import LoadingScreen from '../screens/common/LoadingScreen/LoadingScreen'
+import TabLayout from '../screens/common/TabLayout/TabLayout'
 import Workspaces from './workspaces'
 
 const Thoth = ({ empty = false }) => {

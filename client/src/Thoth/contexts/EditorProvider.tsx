@@ -9,8 +9,8 @@ import React, {
 
 import { useLazyGetSpellQuery, Spell } from '../../state/api/spells'
 
-import LoadingScreen from '../../features/common/LoadingScreen/LoadingScreen'
-import { MyNode } from '../../features/common/Node/Node'
+import LoadingScreen from '../../screens/common/LoadingScreen/LoadingScreen'
+import { MyNode } from '../../screens/common/Node/Node'
 import gridimg from '@/grid.png'
 import { usePubSub } from '../../contexts/PubSubProvider'
 import { useRete, ReteContext } from './ReteProvider'

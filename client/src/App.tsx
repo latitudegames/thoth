@@ -1,9 +1,9 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 
 import { useTabManager } from './contexts/TabManagerProvider'
-import RequireAuth from './features/common/RequireAuth/RequireAuth'
-import ThothPageWrapper from './features/common/ThothPage/ThothPageWrapper'
-import HomeScreen from './features/HomeScreen/HomeScreen'
+import RequireAuth from './screens/common/RequireAuth/RequireAuth'
+import ThothPageWrapper from './screens/common/ThothPage/ThothPageWrapper'
+import HomeScreen from './screens/HomeScreen/HomeScreen'
 import Thoth from './Thoth/Thoth'
 import { useAuth } from './contexts/AuthProvider'
 

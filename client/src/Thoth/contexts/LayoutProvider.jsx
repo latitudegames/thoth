@@ -8,7 +8,7 @@ import {
 } from 'flexlayout-react'
 import { useContext, createContext, useEffect, useState, useRef } from 'react'
 
-import LoadingScreen from '@common/LoadingScreen/LoadingScreen'
+import LoadingScreen from '@/screens/common/LoadingScreen/LoadingScreen'
 import { usePubSub } from '@/contexts/PubSubProvider'
 import { useTabManager } from '@/contexts/TabManagerProvider'
 import { useGetSpellQuery, useSaveSpellMutation } from '@/state/api/spells'
@@ -32,17 +32,17 @@ const windowTypes = {
 const Context = createContext({
   inspectorData: {},
   textEditorData: {},
-  createModel: () => { },
+  createModel: () => {},
   currentModel: {},
   currentRef: {},
-  setCurrentRef: () => { },
-  saveInspector: () => { },
-  saveTextEditor: () => { },
-  createOrFocus: () => { },
-  addWindow: () => { },
+  setCurrentRef: () => {},
+  saveInspector: () => {},
+  saveTextEditor: () => {},
+  createOrFocus: () => {},
+  addWindow: () => {},
   windowTypes: {},
   workspaceMap: {},
-  getWorkspace: () => { },
+  getWorkspace: () => {},
 })
 
 export const useLayout = () => useContext(Context)

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import Switch from '../../../../features/common/Switch/Switch'
+import Switch from '../../../../screens/common/Switch/Switch'
 
 const SwitchControl = ({ control, updateData, initialValue }) => {
   const { dataKey, data } = control

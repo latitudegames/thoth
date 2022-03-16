@@ -5,10 +5,10 @@ import { useSnackbar } from 'notistack'
 
 import css from './editorwindow.module.css'
 
-import WindowToolbar from '@common/Window/WindowToolbar'
-import { SimpleAccordion } from '@common/Accordion'
-import Input from '@common/Input/Input'
-import Panel from '@common/Panel/Panel'
+import WindowToolbar from '@/screens/common/Window/WindowToolbar'
+import { SimpleAccordion } from '@/screens/common/Accordion'
+import Input from '@/screens/common/Input/Input'
+import Panel from '@/screens/common/Panel/Panel'
 import { useModal } from '@/contexts/ModalProvider'
 
 import {
