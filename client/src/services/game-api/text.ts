@@ -5,7 +5,6 @@ export const completion = async body => {
   try {
     const response = await fetch(latitudeApiRootUrl + '/text/completions', {
       method: 'POST',
-      mode: 'cors',
       headers: {
         'Content-Type': 'application/json',
         ...(await getAuthHeader()),

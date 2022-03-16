@@ -9,6 +9,7 @@ import {
 } from '../../types'
 import { FewshotControl } from '../dataControls/FewshotControl'
 import { InputControl } from '../dataControls/InputControl'
+import { DropdownControl } from '../dataControls/DropdownControl'
 import { SocketGeneratorControl } from '../dataControls/SocketGenerator'
 import { EngineContext } from '../engine'
 import { triggerSocket, stringSocket } from '../sockets'
@@ -55,6 +56,14 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       name: 'Component Name',
     })
 
+    console.log('building generator')
+    const modelControl = new DropdownControl({
+      dataKey: 'model',
+      name: 'Model',
+      defaultValue: 'davinci',
+      values: ['davinci', 'curie']
+    })
+
     const inputGenerator = new SocketGeneratorControl({
       connectionType: 'input',
       name: 'Input Sockets',
@@ -90,6 +99,7 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
 
     node.inspector
       .add(nameControl)
+      .add(modelControl)
       .add(inputGenerator)
       .add(fewshotControl)
       .add(stopControl)
@@ -112,6 +122,8 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       return acc
     }, {} as Record<string, unknown>)
 
+    // const model = node.data.model || 'davinci'
+
     const fewshot = (node.data.fewshot as string) || ''
     const stopSequence = node.data.stop as string
     const template = Handlebars.compile(fewshot)
@@ -131,6 +143,7 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       : 0
 
     const body = {
+      model: '',
       prompt,
       stop,
       maxTokens,

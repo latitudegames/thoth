@@ -11,6 +11,7 @@ import OutputGenerator from './OutputGenerator'
 import SocketGenerator from './SocketGenerator'
 import PlaytestControl from './PlaytestControl'
 import SwitchControl from './SwitchControl'
+import DropdownSelect from './DropdownSelect'
 
 const StubComponent = props => <div>{props.name}</div>
 
@@ -28,6 +29,7 @@ const controlMap = {
   socketGenerator: SocketGenerator,
   playtest: PlaytestControl,
   switch: SwitchControl,
+  dropdownSelect: DropdownSelect,
 }
 
 const DataControls = ({
