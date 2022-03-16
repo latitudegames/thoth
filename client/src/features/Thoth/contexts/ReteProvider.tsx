@@ -14,6 +14,8 @@ import { useDB } from '../../../contexts/DatabaseProvider'
 import { usePubSub } from '../../../contexts/PubSubProvider'
 import { useFetchFromImageCacheMutation } from '@/state/api/visualGenerationsApi'
 import { ModelsType } from '../../../types'
+import { ThothWorkerInputs } from '@latitudegames/thoth-core/types'
+
 /*
 Some notes here.  The new rete provider, not to be confused with the old rete provider renamed to the editor provider, is designed to serve as the single source of truth for interfacing with the rete internal system.  This unified interface will also allow us to replicate the same API in the server, where rete expects certain functions to exist but doesn't care what is behind these functions so long as they work.
 Not all functions will be needed on the server, and functions which are not will be labeled as such.
@@ -33,6 +35,11 @@ export interface ReteContext extends EngineContext {
   getCurrentGameState: () => Record<string, unknown>
   updateCurrentGameState: (update) => void
   readFromImageCache: (caption, cacheTag, topK) => Promise<Record<string, any>>
+  processCode: (
+    code: unknown,
+    inputs: ThothWorkerInputs,
+    data: Record<string, any>
+  ) => void
 }
 
 const Context = createContext<ReteContext>(undefined!)
@@ -137,6 +144,21 @@ const ReteProvider = ({ children, tab }) => {
     return result
   }
 
+  const processCode = (code, inputs, data) => {
+    const flattenedInputs = Object.entries(inputs as ThothWorkerInputs).reduce(
+      (acc, [key, value]) => {
+        acc[key as string] = value[0]
+        return acc
+      },
+      {} as Record<string, any>
+    )
+    // eslint-disable-next-line no-new-func
+    return Function('"use strict";return (' + code + ')')()(
+      flattenedInputs,
+      data
+    )
+  }
+
   const clearTextEditor = () => {
     publish($TEXT_EDITOR_CLEAR(tab.id))
   }
@@ -175,6 +197,7 @@ const ReteProvider = ({ children, tab }) => {
     readFromImageCache,
     getCurrentGameState,
     updateCurrentGameState,
+    processCode,
     ...models.modules,
 
     // going to need to manuall create theses
