@@ -14,7 +14,7 @@ import { EngineContext } from '../../engine'
 import { triggerSocket, stringSocket, anySocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
-const info = 'Opinion About Speaker Set'
+const info = 'Form Opinion About Speaker'
 
 type InputReturn = {
   output: unknown
@@ -37,7 +37,7 @@ export class OpinionAboutSpeakerSet extends ThothComponent<
   Promise<InputReturn>
 > {
   constructor() {
-    super('Opinion About Speaker Set')
+    super('Form Opinion About Speaker')
 
     this.task = {
       outputs: {
@@ -46,7 +46,7 @@ export class OpinionAboutSpeakerSet extends ThothComponent<
       },
     }
 
-    this.category = 'Database'
+    this.category = 'Agents'
     this.display = true
     this.info = info
   }

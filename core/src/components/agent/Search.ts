@@ -39,7 +39,7 @@ export class Search extends ThothComponent<Promise<WorkerReturn>> {
       },
     }
 
-    this.category = 'AI/ML'
+    this.category = 'Database'
     this.display = true
     this.info = info
   }
@@ -92,10 +92,10 @@ export class Search extends ThothComponent<Promise<WorkerReturn>> {
         },
       }
     )
-    if(typeof(resp.data) === 'object') {
+    if (typeof resp.data === 'object') {
       documents.push({
         keywords: resp.data.keywords,
-        description: resp.data.description
+        description: resp.data.description,
       })
     }
     node.display(documents)

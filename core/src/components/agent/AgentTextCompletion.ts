@@ -35,14 +35,13 @@ export class AgentTextCompletion extends ThothComponent<Promise<WorkerReturn>> {
       },
     }
 
-    this.category = 'AI/ML'
+    this.category = 'Agents'
     this.display = true
     this.info = info
   }
 
   builder(node: ThothNode) {
     const inp = new Rete.Input('string', 'Text', stringSocket)
-    const speaker = new Rete.Input('speaker', 'Speaker', stringSocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
     const outp = new Rete.Output('output', 'output', stringSocket)
@@ -100,7 +99,6 @@ export class AgentTextCompletion extends ThothComponent<Promise<WorkerReturn>> {
 
     return node
       .addInput(inp)
-      .addInput(speaker)
       .addInput(dataInput)
       .addOutput(dataOutput)
       .addOutput(outp)
@@ -113,7 +111,6 @@ export class AgentTextCompletion extends ThothComponent<Promise<WorkerReturn>> {
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
     const action = inputs['string'][0]
-    const speaker = (inputs['speaker'][0] as string) ?? 'user'
     const modelName = node?.data?.modelName as string
     const temperatureData = node?.data?.temperature as string
     const temperature = parseFloat(temperatureData)
@@ -125,14 +122,9 @@ export class AgentTextCompletion extends ThothComponent<Promise<WorkerReturn>> {
     const frequencyPenalty = parseFloat(frequencyPenaltyData)
     const presencePenaltyData = node?.data?.presencePenalty as string
     const presencePenalty = parseFloat(presencePenaltyData)
-    const stop = (node?.data?.stop as string)
-      ? (node?.data?.stop as string).split(',')
-      : []
+    const stop = (node?.data?.stop as string).split(',')
     for (let i = 0; i < stop.length; i++) {
       stop[i] = stop[i].trim()
-      if (stop[i] === '$speaker:') {
-        stop[i] = '$' + speaker + ':'
-      }
     }
 
     console.log(
@@ -150,14 +142,16 @@ export class AgentTextCompletion extends ThothComponent<Promise<WorkerReturn>> {
         frequencyPenalty: frequencyPenalty,
         presencePenalty: presencePenalty,
         stop: stop,
-        sender: speaker,
       }
     )
     console.log('resp.data is ', resp.data)
 
     const { success, choice } = resp.data
 
-    const res = success !== 'false' ? choice.text : 'Sorry i had an error!'
+    const res =
+      success !== 'false' && success !== false
+        ? choice.text
+        : 'Sorry i had an error!'
     console.log('success:', success, 'choice:', choice.text, 'res:', res)
 
     return {

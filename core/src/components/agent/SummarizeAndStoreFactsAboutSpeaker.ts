@@ -38,7 +38,7 @@ export class SummarizeAndStoreFactsAboutSpeaker extends ThothComponent<
       },
     }
 
-    this.category = 'AI/ML'
+    this.category = 'Agents'
     this.display = true
     this.info = info
   }

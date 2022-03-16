@@ -22,3 +22,37 @@ Questions
 NEEDS
 
 - way for plugins to also provide their own interfaces to compose them all together for client and server runtime usage?
+
+Modularization
+
+We will need to have a way for an individual app load the different pieces of itself into the main application. A package would need to provide code for the client, core, and the server.
+
+One proposed pattern, which reflect the data needs of each part of the application to function properly.
+
+{
+appName: 'myApp',
+icon: ".../path/to/icon",
+assets: "../path/to/assets",
+fileType: "\*.agent",
+core: {
+components: Record<string, ThothComponent>,
+inspectorControls: Record<string, InspectorControl>,
+plugins: ThothPlugin[],
+connectors: Recird<string, Connector>
+},
+client: {
+windows: Record<string, WindowComponent>
+events: Record<string, Event>
+inspectorComponents: Record<string, InspectorComponent>,
+interface: ThothInterface,
+menuBar: Record<string, MenuBar>
+// or maybe this, which would load in all the above itself ands expose a single component.
+// Perhaps our client library (or client-core) gives a provider that lets people load these things into thoth from their individual app.
+appRoot: MyAppThothRootComponent
+}
+server: {
+interface: ThothInterface,
+// Good for custom routes for the app
+routes: Record<string, RouteDefinition>
+}
+}

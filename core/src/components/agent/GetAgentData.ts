@@ -35,7 +35,7 @@ export class GetAgentData extends ThothComponent<Promise<WorkerReturn>> {
       },
     }
 
-    this.category = 'Database'
+    this.category = 'Agents'
     this.display = true
     this.info = info
   }

@@ -44,7 +44,7 @@ export class MLQuestionDetector extends ThothComponent<Promise<InputReturn>> {
       },
     }
 
-    this.category = 'AI/ML'
+    this.category = 'Conversation'
     this.display = true
     this.info = info
   }

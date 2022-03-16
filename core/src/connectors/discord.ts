@@ -436,18 +436,20 @@ export class discord_client {
     //it works with the word hi and the next word should either not exist or start with a lower letter to start the conversation
     if (!isMention && !isDM && !otherMention) {
       const trimmed = content.trimStart()
-      if (trimmed.toLowerCase().startsWith('hi')) {
-        const parts = trimmed.split(' ')
-        if (parts.length > 1) {
-          if (!startsWithCapital(parts[1])) {
-            startConv = true
+      for (let i = 0; i < this.discord_starting_words.length; i++) {
+        if (trimmed.toLowerCase().startsWith(this.discord_starting_words[i])) {
+          const parts = trimmed.split(' ')
+          if (parts.length > 1) {
+            if (!startsWithCapital(parts[1])) {
+              startConv = true
+            } else {
+              startConv = false
+              startConvName = parts[1]
+            }
           } else {
-            startConv = false
-            startConvName = parts[1]
-          }
-        } else {
-          if (trimmed.toLowerCase() === 'hi') {
-            startConv = true
+            if (trimmed.toLowerCase() === this.discord_starting_words[i]) {
+              startConv = true
+            }
           }
         }
       }
@@ -1361,15 +1363,30 @@ export class discord_client {
   client = Discord.Client
   messageEvent = undefined
   agent = undefined
+  discord_starting_words: string[] = []
+  discord_bot_name_regex: string = ''
+  discord_bot_name: string = 'Bot'
 
   createDiscordClient = async (
     agent,
     discord_api_token,
+    discord_starting_words,
+    discord_bot_name_regex,
+    discord_bot_name,
     spell_handler,
-    spell_version = 'latest',
-    bot_name = 'Cat'
+    spell_version = 'latest'
   ) => {
     this.agent = agent
+    if (!discord_starting_words || discord_starting_words?.length <= 0) {
+      this.discord_starting_words = ['hi', 'hey']
+    } else {
+      this.discord_starting_words = discord_starting_words?.split(',')
+      for (let i = 0; i < this.discord_starting_words.length; i++) {
+        this.discord_starting_words[i] = this.discord_starting_words[i].trim()
+      }
+    }
+    this.discord_bot_name_regex = discord_bot_name_regex
+    this.discord_bot_name = discord_bot_name
     this.spell_handler = spell_handler
     this.spell_version = spell_version
 
@@ -1385,7 +1402,7 @@ export class discord_client {
         Intents.FLAGS.GUILD_MESSAGES,
       ],
     })
-    this.bot_name = bot_name
+    this.bot_name = discord_bot_name
     this.client.prefix = '!'
     this.client.prefixOptionalWhenMentionOrDM = true
 
@@ -1394,9 +1411,9 @@ export class discord_client {
     this.client.helpFields = this.helpFields
     this.client._findCommand = this._findCommand
     this.client._parseWords = this._parseWords
-    this.client.name_regex = new RegExp(bot_name, 'ig')
+    this.client.name_regex = new RegExp(discord_bot_name, 'ig')
 
-    this.client.username_regex = new RegExp('((?:digital|being)(?: |$))', 'ig')
+    this.client.username_regex = new RegExp(this.discord_bot_name_regex, 'ig') //'((?:digital|being)(?: |$))'
     this.client.edit_messages_max_count = 5
 
     const embed = new Discord.MessageEmbed().setColor(0x00ae86)

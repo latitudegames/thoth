@@ -40,7 +40,7 @@ export class FactsRecall extends ThothComponent<Promise<InputReturn>> {
       },
     }
 
-    this.category = 'Database'
+    this.category = 'Agents'
     this.display = true
     this.info = info
   }

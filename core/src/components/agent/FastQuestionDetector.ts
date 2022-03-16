@@ -67,7 +67,7 @@ export class FastQuestionDetector extends ThothComponent<Promise<InputReturn>> {
       outputs: { true: 'option', false: 'option', output: 'output' },
     }
 
-    this.category = 'AI/ML'
+    this.category = 'Conversation'
     this.display = true
     this.info = info
   }

@@ -14,7 +14,7 @@ import { EngineContext } from '../../engine'
 import { triggerSocket, stringSocket, anySocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
-const info = 'Opinion About Speaker Get'
+const info = 'Get Opinion About Speaker'
 
 type InputReturn = {
   output: unknown
@@ -42,7 +42,7 @@ export class OpinionAboutSpeakerGet extends ThothComponent<
       },
     }
 
-    this.category = 'Database'
+    this.category = 'Agents'
     this.display = true
     this.info = info
   }

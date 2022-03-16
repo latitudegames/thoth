@@ -90,7 +90,7 @@ export class FastGreetingDetector extends ThothComponent<
       outputs: { true: 'option', false: 'option', output: 'output' },
     }
 
-    this.category = 'AI/ML'
+    this.category = 'Conversation'
     this.display = true
     this.info = info
   }

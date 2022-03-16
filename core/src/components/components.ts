@@ -6,11 +6,9 @@ import { ArchiveConversation } from './agent/ArchiveConversation'
 import { CacheManagerDelete } from './agent/CacheManagerDelete'
 import { CacheManagerGet } from './agent/CacheManagerGet'
 import { CacheManagerSet } from './agent/CacheManagerSet'
-import { ConversationCount } from './agent/ConversationCount'
 import { ConversationRecall } from './agent/ConversationRecall'
 import { ConversationStore } from './agent/ConversationStore'
 import { CreateOrGetAgent } from './agent/CreateOrGetAgent'
-// import { EnkiTask } from './EnkiTask'
 import { DocumentDelete } from './agent/DocumentDelete'
 import { DocumentGet } from './agent/DocumentGet'
 import { DocumentSet } from './agent/DocumentSet'
@@ -21,22 +19,19 @@ import { FactsStore } from './agent/FactsStore'
 import { FastGreetingDetector } from './agent/FastGreetingDetector'
 import { FastProfanityDetector } from './agent/FastProfanityDetector'
 import { FastQuestionDetector } from './agent/FastQuestionDetector'
-import { FormOpinionAboutSpeaker } from './agent/FormOpinionAboutSpeaker'
 import { GenerateContext } from './agent/GenerateContext'
 import { GetAgentData } from './agent/GetAgentData'
-import { GetAgentsFacts } from './agent/GetAgentsFacts'
+import { GetAgentFacts } from './agent/GetAgentFacts'
 import { InputsToJSON } from './agent/InputsToJSON'
 import { IsNullOrUndefined } from './agent/IsNullOrUndefined'
 import { IsVariableTrue } from './agent/IsVariableTrue'
-import { KeywordExtractor } from './agent/keywordExtractor'
+import { KeywordExtractor } from './agent/KeywordExtractor'
 import { LogicalOperator } from './agent/LogicalOperator'
 import { MLGreetingDetector } from './agent/MLGreetingDetector'
 import { MLProfanityDetector } from './agent/MLProfanityDetector'
 import { MLQuestionDetector } from './agent/MLQuestionDetector'
-import { NamedEntityRecognition } from './agent/namedEntityRecognition'
+import { NamedEntityRecognition } from './agent/NamedEntityRecognition'
 import { NumberVariable } from './agent/NumberVariable'
-import { OpinionAboutSpeakerGet } from './agent/OpinionAboutSpeakerGet'
-import { OpinionAboutSpeakerSet } from './agent/OpinionAboutSpeakerSet'
 import { RandomGreetingResponse } from './agent/RandomGreetingResponse'
 import { RandomProfanityResponse } from './agent/RandomProfanityResponse'
 import { RandomStringFromList } from './agent/RandomStringFromList'
@@ -65,6 +60,7 @@ import { ForEach } from './ForEach'
 import { Generator } from './Generator'
 import { HuggingfaceComponent } from './Huggingface'
 import { InputComponent } from './Input'
+import { InputDestructureComponent } from './agent/InputDestructure'
 import { ItemTypeComponent } from './ItemDetector'
 import { JoinListComponent } from './JoinList'
 import { ModuleComponent } from './Module'
@@ -117,15 +113,11 @@ export const components = {
   factsRecall: () => new FactsRecall(),
   factsCount: () => new FactsCount(),
   getAgentData: () => new GetAgentData(),
-  getAgentsFacts: () => new GetAgentsFacts(),
+  getAgentFacts: () => new GetAgentFacts(),
   isNullOrUndefined: () => new IsNullOrUndefined(),
   isVariableTrue: () => new IsVariableTrue(),
   conversationStore: () => new ConversationStore(),
   conversationRecall: () => new ConversationRecall(),
-  conversationCount: () => new ConversationCount(),
-  formOpinionAboutSpeaker: () => new FormOpinionAboutSpeaker(),
-  opinionAboutSpeakerSet: () => new OpinionAboutSpeakerSet(),
-  opinionAboutSpeakerGet: () => new OpinionAboutSpeakerGet(),
   search: () => new Search(),
   documentGet: () => new DocumentGet(),
   documentDelete: () => new DocumentDelete(),
@@ -151,6 +143,7 @@ export const components = {
   generator: () => new Generator(),
   huggingfaceComponent: () => new HuggingfaceComponent(),
   inputComponent: () => new InputComponent(),
+  inputDestructureComponent: () => new InputDestructureComponent(),
   inputFieldComponent: () => new InputFieldComponent(),
   inputsToJson: () => new InputsToJSON(),
   itemTypeComponent: () => new ItemTypeComponent(),
