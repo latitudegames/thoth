@@ -141,7 +141,8 @@ const ReteProvider = ({ children, tab }) => {
       cacheTag,
       topK,
     })
-    return result
+    if ('error' in result) return {}
+    return { outputs: [result.data] }
   }
 
   const processCode = (code, inputs, data) => {
