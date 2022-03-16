@@ -20,10 +20,6 @@ const info = `The input component allows you to pass a single value to your chai
 
 type InputReturn = {
   output: unknown
-  speaker: string
-  agent: string
-  client: string
-  channelId: string
 }
 
 export class InputComponent extends ThothComponent<InputReturn> {
@@ -36,10 +32,6 @@ export class InputComponent extends ThothComponent<InputReturn> {
     this.task = {
       outputs: {
         output: 'output',
-        speaker: 'output',
-        agent: 'output',
-        client: 'output',
-        channelId: 'output',
         trigger: 'option',
       },
       init: (task = {} as Task, node: ThothNode) => {
@@ -102,10 +94,6 @@ export class InputComponent extends ThothComponent<InputReturn> {
     this.subscribeToPlaytest(node)
 
     const out = new Rete.Output('output', 'output', anySocket)
-    const speaker = new Rete.Output('speaker', 'speaker', anySocket)
-    const agent = new Rete.Output('agent', 'agent', anySocket)
-    const client = new Rete.Output('client', 'client', anySocket)
-    const channelId = new Rete.Output('channelId', 'channelId', anySocket)
 
     const nameInput = new InputControl({
       dataKey: 'name',
@@ -114,9 +102,9 @@ export class InputComponent extends ThothComponent<InputReturn> {
 
     const data = node?.data?.playtestToggle as
       | {
-          receivePlaytest: boolean
-          outputs: []
-        }
+        receivePlaytest: boolean
+        outputs: []
+      }
       | undefined
 
     const togglePlaytest = new PlaytestControl({
@@ -151,13 +139,7 @@ export class InputComponent extends ThothComponent<InputReturn> {
     // todo add this somewhere automated? Maybe wrap the modules builder in the plugin
     node.data.socketKey = node?.data?.socketKey || uuidv4()
 
-    return node
-      .addOutput(out)
-      .addOutput(speaker)
-      .addOutput(agent)
-      .addOutput(client)
-      .addOutput(channelId)
-      .addControl(input)
+    return node.addOutput(out).addControl(input)
   }
 
   worker(
@@ -179,10 +161,6 @@ export class InputComponent extends ThothComponent<InputReturn> {
       if (!silent) node.display(data)
       return {
         output: data,
-        speaker: 'Test',
-        agent: 'Bot',
-        client: 'Test',
-        channelId: '0',
       }
     }
 
@@ -190,31 +168,17 @@ export class InputComponent extends ThothComponent<InputReturn> {
     if (node.data.useDefault) {
       return {
         output: node.data.text as string,
-        speaker: 'Test',
-        agent: 'Bot',
-        client: 'Test',
-        channelId: '0',
       }
     }
 
     // If there are outputs, we are running as a module input and we use that value
     if (outputs.output && !outputs?.output.task) {
-      return {
-        output: (outputs.output as any).Input,
-        speaker: (outputs.output as any).Speaker,
-        agent: (outputs.output as any).Agent,
-        client: (outputs.output as any).Client,
-        channelId: (outputs.output as any).ChannelID,
-      }
+      return outputs as { output: unknown }
     }
 
     // fallback to default value at the end
     return {
       output: node.data.text as string,
-      speaker: 'Test',
-      agent: 'Bot',
-      client: 'Test',
-      channelId: '0',
     }
   }
 }
