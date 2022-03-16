@@ -39,7 +39,7 @@ export class Search extends ThothComponent<Promise<WorkerReturn>> {
       },
     }
 
-    this.category = 'AI/ML'
+    this.category = 'Database'
     this.display = true
     this.info = info
   }
@@ -58,14 +58,14 @@ export class Search extends ThothComponent<Promise<WorkerReturn>> {
     )
     const dataOutput = new Rete.Output('trigger', 'Trigger Out', triggerSocket)
     const output = new Rete.Output('results', 'Results []', anySocket)
-    
+
     const switchControl = new SwitchControl({
       dataKey: 'sendToPlaytest',
       name: 'Send to Playtest',
       label: 'Playtest',
       defaultValue: node.data.sendToPlaytest || false,
     })
-    
+
     node.inspector.add(switchControl)
 
     return node
@@ -92,14 +92,14 @@ export class Search extends ThothComponent<Promise<WorkerReturn>> {
         },
       }
     )
-    if(typeof(resp.data) === 'object') {
+    if (typeof resp.data === 'object') {
       documents.push({
         keywords: resp.data.keywords,
-        description: resp.data.description
+        description: resp.data.description,
       })
     }
     node.display(documents)
-    
+
     return {
       documents,
     }

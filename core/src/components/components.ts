@@ -11,7 +11,6 @@ import { CacheManagerDelete } from './CacheManagerDelete'
 import { CacheManagerGet } from './CacheManagerGet'
 import { CacheManagerSet } from './CacheManagerSet'
 import { Code } from './Code'
-import { ConversationCount } from './ConversationCount'
 import { ConversationRecall } from './ConversationRecall'
 import { ConversationStore } from './ConversationStore'
 import { CreateOrGetAgent } from './CreateOrGetAgent'
@@ -39,7 +38,7 @@ import { FormOpinionAboutSpeaker } from './FormOpinionAboutSpeaker'
 import { GenerateContext } from './GenerateContext'
 import { Generator } from './Generator'
 import { GetAgentData } from './GetAgentData'
-import { GetAgentsFacts } from './GetAgentsFacts'
+import { GetAgentFacts } from './GetAgentFacts'
 import { HuggingfaceComponent } from './Huggingface'
 import { InputComponent } from './Input'
 import { InputsToJSON } from './InputsToJSON'
@@ -47,13 +46,13 @@ import { IsNullOrUndefined } from './IsNullOrUndefined'
 import { IsVariableTrue } from './IsVariableTrue'
 import { ItemTypeComponent } from './ItemDetector'
 import { JoinListComponent } from './JoinList'
-import { KeywordExtractor } from './keywordExtractor'
+import { KeywordExtractor } from './KeywordExtractor'
 import { LogicalOperator } from './LogicalOperator'
 import { MLGreetingDetector } from './MLGreetingDetector'
 import { MLProfanityDetector } from './MLProfanityDetector'
 import { MLQuestionDetector } from './MLQuestionDetector'
 import { ModuleComponent } from './Module'
-import { NamedEntityRecognition } from './namedEntityRecognition'
+import { NamedEntityRecognition } from './NamedEntityRecognition'
 import { NumberVariable } from './NumberVariable'
 import { OpinionAboutSpeakerGet } from './OpinionAboutSpeakerGet'
 import { OpinionAboutSpeakerSet } from './OpinionAboutSpeakerSet'
@@ -114,12 +113,11 @@ export const components = {
   factsRecall: () => new FactsRecall(),
   factsCount: () => new FactsCount(),
   getAgentData: () => new GetAgentData(),
-  getAgentsFacts: () => new GetAgentsFacts(),
+  getAgentFacts: () => new GetAgentFacts(),
   isNullOrUndefined: () => new IsNullOrUndefined(),
   isVariableTrue: () => new IsVariableTrue(),
   conversationStore: () => new ConversationStore(),
   conversationRecall: () => new ConversationRecall(),
-  conversationCount: () => new ConversationCount(),
   formOpinionAboutSpeaker: () => new FormOpinionAboutSpeaker(),
   opinionAboutSpeakerSet: () => new OpinionAboutSpeakerSet(),
   opinionAboutSpeakerGet: () => new OpinionAboutSpeakerGet(),

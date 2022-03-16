@@ -20,8 +20,9 @@ async function getConversation(
   client: string,
   channel: string
 ) {
-  const url = `${process.env.REACT_APP_API_ROOT_URL ?? 'http://localhost:8001'
-    }/conversation?agent=${agent}&speaker=${speaker}&client=${client}&channel=${channel}`
+  console.log("Encoding URI")
+  const url = encodeURI(`${process.env.REACT_APP_API_ROOT_URL ?? 'http://localhost:8001'
+    }/conversation?agent=${agent}&speaker=${speaker}&client=${client}&channel=${channel}`)
   console.log('get url', url)
 
   const response = await axios.get(url)
@@ -48,7 +49,7 @@ export class ConversationRecall extends ThothComponent<Promise<InputReturn>> {
       },
     }
 
-    this.category = 'Database'
+    this.category = 'Agents'
     this.display = true
     this.info = info
   }
