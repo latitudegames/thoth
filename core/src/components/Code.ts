@@ -89,7 +89,11 @@ export class Code extends ThothComponent<unknown> {
     node: NodeData,
     inputs: ThothWorkerInputs,
     outputs: ThothWorkerOutputs,
-    { silent, data }: { silent: boolean; data: { code: unknown } }
+    {
+      silent,
+      data,
+      thoth,
+    }: { silent: boolean; thoth: EngineContext; data: { code: unknown } }
   ) {
     function runCodeWithArguments(obj: unknown) {
       const flattenedInputs = Object.entries(inputs).reduce(
