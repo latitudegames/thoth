@@ -1,21 +1,11 @@
-import { isEmpty } from 'lodash'
 import Rete from 'rete'
 import { v4 as uuidv4 } from 'uuid'
 
-import {
-  NodeData,
-  ThothNode,
-  ThothWorkerInputs,
-  ThothWorkerOutputs,
-} from '../../types'
-import { TextInputControl } from '../controls/TextInputControl'
-import { InputControl } from '../dataControls/InputControl'
-import { PlaytestControl } from '../dataControls/PlaytestControl'
-import { SwitchControl } from '../dataControls/SwitchControl'
-import { EngineContext } from '../engine'
+import { NodeData, ThothNode, ThothWorkerInputs } from '../../types'
 import { Task } from '../plugins/taskPlugin/task'
 import { anySocket } from '../sockets'
 import { ThothComponent, ThothTask } from '../thoth-component'
+
 const info = `The input component allows you to pass a single value to your chain.  You can set a default value to fall back to if no value is provided at runtime.  You can also turn the input on to receive data from the playtest input.`
 
 type InputReturn = {
@@ -26,7 +16,7 @@ type InputReturn = {
   channelId: string
 }
 
-export class InputComponent extends ThothComponent<InputReturn> {
+export class InputDestructureComponent extends ThothComponent<InputReturn> {
   nodeTaskMap: Record<number, ThothTask> = {}
 
   constructor() {
@@ -47,174 +37,43 @@ export class InputComponent extends ThothComponent<InputReturn> {
       },
     }
 
-    this.module = {
-      nodeType: 'input',
-      socket: anySocket,
-    }
-
-    this.category = 'I/O'
+    this.category = 'Agents'
     this.info = info
     this.display = true
-    this.contextMenuName = 'Input'
-    this.displayName = 'Input'
-  }
-
-  subscriptionMap: Record<string, Function> = {}
-
-  unsubscribe?: () => void
-
-  subscribeToPlaytest(node: ThothNode) {
-    const { onPlaytest } = this.editor?.thoth as EngineContext
-
-    // check node for the right data attribute
-    if (onPlaytest) {
-      // store the unsubscribe function in our node map
-      this.subscriptionMap[node.id] = onPlaytest((text: string) => {
-        // if the node doesnt have playtest toggled on, do nothing
-        const playtestToggle = node.data.playtestToggle as unknown as {
-          receivePlaytest: boolean
-        }
-        if (!playtestToggle.receivePlaytest) return
-
-        // attach the text to the nodes data for access in worker
-        node.data.text = text
-
-        const task = this.nodeTaskMap[node.id]
-
-        // will need to run this here with the stater rather than the text
-        task?.run(text)
-        task?.reset()
-        this.editor?.trigger('process')
-      })
-    }
-  }
-
-  destroyed(node: ThothNode) {
-    if (this.subscriptionMap[node.id]) this.subscriptionMap[node.id]()
-    delete this.subscriptionMap[node.id]
   }
 
   builder(node: ThothNode) {
-    if (this.subscriptionMap[node.id]) this.subscriptionMap[node.id]()
-    delete this.subscriptionMap[node.id]
+    // module components need to have a socket key.
+    // todo add this somewhere automated? Maybe wrap the modules builder in the plugin
+    node.data.socketKey = node?.data?.socketKey || uuidv4()
 
-    // subscribe the node to the playtest input data stream
-    this.subscribeToPlaytest(node)
-
+    const inp = new Rete.Input('input', 'Input', anySocket)
     const out = new Rete.Output('output', 'output', anySocket)
     const speaker = new Rete.Output('speaker', 'speaker', anySocket)
     const agent = new Rete.Output('agent', 'agent', anySocket)
     const client = new Rete.Output('client', 'client', anySocket)
     const channelId = new Rete.Output('channelId', 'channelId', anySocket)
 
-    const nameInput = new InputControl({
-      dataKey: 'name',
-      name: 'Input name',
-    })
-
-    const data = node?.data?.playtestToggle as
-      | {
-        receivePlaytest: boolean
-        outputs: []
-      }
-      | undefined
-
-    const togglePlaytest = new PlaytestControl({
-      dataKey: 'playtestToggle',
-      name: 'Receive from playtest input',
-      defaultValue: {
-        receivePlaytest: data?.receivePlaytest || false,
-        outputs: data?.outputs || [],
-      },
-      ignored: ['output'],
-      label: 'Toggle playtest',
-    })
-
-    const toggleDefault = new SwitchControl({
-      dataKey: 'useDefault',
-      name: 'Use Default',
-      label: 'Use Default',
-      defaultValue: false,
-    })
-
-    node.inspector.add(nameInput).add(togglePlaytest).add(toggleDefault)
-
-    const value = node.data.text ? node.data.text : 'Input text here'
-    const input = new TextInputControl({
-      editor: this.editor,
-      key: 'text',
-      value,
-      label: 'Default value',
-    })
-
-    // module components need to have a socket key.
-    // todo add this somewhere automated? Maybe wrap the modules builder in the plugin
-    node.data.socketKey = node?.data?.socketKey || uuidv4()
-
     return node
-      .addOutput(out)
+      .addInput(inp)
       .addOutput(speaker)
       .addOutput(agent)
       .addOutput(client)
       .addOutput(channelId)
-      .addControl(input)
+      .addOutput(out)
   }
 
-  worker(
-    node: NodeData,
-    inputs: ThothWorkerInputs,
-    outputs: ThothWorkerOutputs,
-    { silent, data }: { silent: boolean; data: string | undefined }
-  ) {
+  worker(_node: NodeData, inputs: ThothWorkerInputs) {
     this._task.closed = ['trigger']
-
-    const nodeData = node.data as {
-      playtestToggle: { receivePlaytest: boolean }
-    }
-
-    // handle data subscription.  If there is data, this is from playtest
-    if (data && !isEmpty(data) && nodeData.playtestToggle.receivePlaytest) {
-      this._task.closed = []
-
-      if (!silent) node.display(data)
-      return {
-        output: data,
-        speaker: 'Test',
-        agent: 'Bot',
-        client: 'Test',
-        channelId: '0',
-      }
-    }
-
-    // send default value if use default is explicity toggled on
-    if (node.data.useDefault) {
-      return {
-        output: node.data.text as string,
-        speaker: 'Test',
-        agent: 'Bot',
-        client: 'Test',
-        channelId: '0',
-      }
-    }
+    console.log('inputs is', inputs)
 
     // If there are outputs, we are running as a module input and we use that value
-    if (outputs.output && !outputs?.output.task) {
-      return {
-        output: (outputs.output as any).Input,
-        speaker: (outputs.output as any).Speaker,
-        agent: (outputs.output as any).Agent,
-        client: (outputs.output as any).Client,
-        channelId: (outputs.output as any).ChannelID,
-      }
-    }
-
-    // fallback to default value at the end
     return {
-      output: node.data.text as string,
-      speaker: 'Test',
-      agent: 'Bot',
-      client: 'Test',
-      channelId: '0',
+      output: (inputs.inp as any).Input,
+      speaker: (inputs.inp as any).Speaker ?? 'Speaker',
+      agent: (inputs.inp as any).Agent ?? 'Agent',
+      client: (inputs.inp as any).Client ?? 'Client',
+      channelId: (inputs.inp as any).ChannelID ?? '0',
     }
   }
 }
