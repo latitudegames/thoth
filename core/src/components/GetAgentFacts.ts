@@ -20,7 +20,7 @@ type InputReturn = {
   output: unknown
   facts: unknown
 }
-export class GetAgentsFacts extends ThothComponent<Promise<InputReturn>> {
+export class GetAgentFacts extends ThothComponent<Promise<InputReturn>> {
   constructor() {
     super('Get Agents Facts')
 
@@ -32,7 +32,7 @@ export class GetAgentsFacts extends ThothComponent<Promise<InputReturn>> {
       },
     }
 
-    this.category = 'Database'
+    this.category = 'Agents'
     this.display = true
     this.info = info
   }

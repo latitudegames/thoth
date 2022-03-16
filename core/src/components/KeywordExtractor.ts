@@ -36,7 +36,7 @@ export class KeywordExtractor extends ThothComponent<Promise<WorkerReturn>> {
       },
     }
 
-    this.category = 'AI/ML'
+    this.category = 'Conversation'
     this.display = true
     this.info = info
   }

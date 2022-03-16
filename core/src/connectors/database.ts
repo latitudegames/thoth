@@ -184,7 +184,6 @@ export class database {
     text: string | any[],
     archive: any
   ) {
-    if (!text || text.length <= 0) return
     const query =
       'INSERT INTO conversation(agent, client, channel, sender, text, archive, date) VALUES($1, $2, $3, $4, $5, $6, $7)'
     const values = [
