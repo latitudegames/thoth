@@ -1,4 +1,4 @@
-import { useModal } from '../../../contexts/ModalProvider'
+import { useModal } from '../../contexts/ModalProvider'
 import Modal from '../Modal/Modal'
 
 const ExampleModal = ({ content }) => {

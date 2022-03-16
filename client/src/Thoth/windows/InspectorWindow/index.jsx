@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 
 import { useLayout } from '@/Thoth/contexts/LayoutProvider'
 import { useModal } from '@/contexts/ModalProvider'
-import Icon, { componentCategories } from '@/screens/common/Icon/Icon'
-import Window from '@/screens/common/Window/Window'
+import Icon, { componentCategories } from '@/components/Icon/Icon'
+import Window from '@/components/Window/Window'
 import DataControls from './DataControls'
 import WindowMessage from '@/Thoth/components/WindowMessage'
 

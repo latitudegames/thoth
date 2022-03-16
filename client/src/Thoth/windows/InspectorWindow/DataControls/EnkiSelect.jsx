@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 
 import { getEnkiPrompt, getEnkis } from '../../../../services/game-api/enki'
-import Chip from '../../../../screens/common/Chip/Chip'
-import Select from '../../../../screens/common/Select/Select'
+import Chip from '../../../../components/Chip/Chip'
+import Select from '../../../../components/Select/Select'
 
 const EnkiDetails = ({ initialTask, addThroughput, update }) => {
   const [activeEnki, selectEnki] = useState(initialTask)

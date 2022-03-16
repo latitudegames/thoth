@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom'
 
 import { useTabManager } from '../../../contexts/TabManagerProvider'
-import Icon from '../../common/Icon/Icon'
-import Panel from '../../common/Panel/Panel'
+import Icon from '../../../components/Icon/Icon'
+import Panel from '../../../components/Panel/Panel'
 import css from '../homeScreen.module.css'
 import thothBanner from '../version-banner-0.0.0beta.jpg'
 import FileInput from '../components/FileInput'

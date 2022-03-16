@@ -12,7 +12,7 @@ import AllProjects from './screens/AllProjects'
 import CreateNew from './screens/CreateNew'
 import OpenProject from './screens/OpenProject'
 import css from './homeScreen.module.css'
-import LoadingScreen from '../common/LoadingScreen/LoadingScreen'
+import LoadingScreen from '../../components/LoadingScreen/LoadingScreen'
 import { ModelsType } from '../../types'
 
 //MAIN

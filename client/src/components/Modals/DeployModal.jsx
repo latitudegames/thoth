@@ -1,6 +1,6 @@
 import { SettingsRemoteSharp } from '@material-ui/icons'
 import { useState } from 'react'
-import { useModal } from '../../../contexts/ModalProvider'
+import { useModal } from '../../contexts/ModalProvider'
 import Input from '../Input/Input'
 import Modal from '../Modal/Modal'
 

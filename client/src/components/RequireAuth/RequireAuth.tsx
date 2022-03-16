@@ -1,6 +1,6 @@
 import { useLatitude } from '@/config'
 import { Outlet } from 'react-router-dom'
-import { useAuth } from '../../../contexts/AuthProvider'
+import { useAuth } from '../../contexts/AuthProvider'
 
 const defaultGroups = ['internal', 'thoth', 'creator-tester']
 

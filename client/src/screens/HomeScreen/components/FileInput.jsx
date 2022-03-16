@@ -1,6 +1,6 @@
 import React from 'react'
 
-import Icon from '../../common/Icon/Icon'
+import Icon from '../../../components/Icon/Icon'
 
 const FileInput = ({ loadFile }) => {
   const hiddenFileInput = React.useRef(null)

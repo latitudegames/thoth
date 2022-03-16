@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 
-import { useModal } from '../../../contexts/ModalProvider'
+import { useModal } from '../../contexts/ModalProvider'
 import Icon from '../Icon/Icon'
 import css from './modal.module.css'
 
@@ -29,7 +29,7 @@ const Modal = ({ options = [], title, icon, onClose = () => {}, ...props }) => {
             </div>
             <div
               style={{
-                padding: '1rem'
+                padding: '1rem',
               }}
             >
               {props.children}
@@ -51,7 +51,9 @@ const Modal = ({ options = [], title, icon, onClose = () => {}, ...props }) => {
                     key={item.label}
                     disabled={item.disabled || false}
                     onClick={item.onClick}
-                    className={`${item.className} ${item.disabled && 'disabled'}`}
+                    className={`${item.className} ${
+                      item.disabled && 'disabled'
+                    }`}
                   >
                     {item.label}
                   </button>

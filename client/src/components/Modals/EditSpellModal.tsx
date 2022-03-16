@@ -1,22 +1,17 @@
 import { useState } from 'react'
 import { useSnackbar } from 'notistack'
-import {
-  useGetSpellQuery,
-  useSaveSpellMutation,
-} from '../../../state/api/spells'
-import { useTabManager } from '../../../contexts/TabManagerProvider'
+import { usePatchSpellMutation } from '../../state/api/spells'
+import { useTabManager } from '../../contexts/TabManagerProvider'
 import { useForm } from 'react-hook-form'
 import Modal from '../Modal/Modal'
 import css from './modalForms.module.css'
 
-const EditSpellModal = ({ tab, closeModal }) => {
+const EditSpellModal = ({ closeModal, spellId, name, tab }) => {
   const [error, setError] = useState('')
-  const [saveSpell, { isLoading }] = useSaveSpellMutation()
-  const { data: spell } = useGetSpellQuery(tab.spell, {
-    skip: !tab.spell,
-  })
-  const { openTab } = useTabManager()
+  const [patchSpell, { isLoading }] = usePatchSpellMutation()
   const { enqueueSnackbar } = useSnackbar()
+
+  const { updateTab } = useTabManager()
 
   const {
     register,
@@ -25,37 +20,31 @@ const EditSpellModal = ({ tab, closeModal }) => {
   } = useForm()
 
   const onSubmit = handleSubmit(async data => {
-    const saveResponse: any = await saveSpell({
-      ...spell,
-      name: data.name,
-    })
+    const response: any = await patchSpell({ spellId, update: data })
 
-    if (saveResponse.error) {
-      // show snackbar
+    if (response.error) {
+      setError(response.error.data.error.message)
       enqueueSnackbar('Error saving spell', {
         variant: 'error',
       })
-      setError(saveResponse.error.message)
       return
     }
 
     enqueueSnackbar('Spell saved', { variant: 'success' })
 
-    // show snackbar
-    // open a new tab to the new spell
-    await openTab({
-      name: data.name,
-      spellId: data.name,
-      type: 'spell',
-    })
+    if (data.name)
+      await updateTab(tab.id, { name: data.name, spell: data.name })
 
     closeModal()
   })
 
+  // notes
+  // after you save the spell, you need to refetch it?a
+
   const options = [
     {
       className: `${css['loginButton']} primary`,
-      label: 'Save spell as',
+      label: 'save',
       onClick: onSubmit,
       disabled: isLoading,
     },
@@ -65,6 +54,11 @@ const EditSpellModal = ({ tab, closeModal }) => {
     <Modal title="Edit Spell" options={options} icon="info">
       <div className={css['login-container']}>
         {error && <span className={css['error-message']}>{error}</span>}
+        <p>
+          Warning: Changing the name of your spell currently will break the url
+          of your spell deployment. If you rename your spell, please change the
+          url for any urls you are using in production.
+        </p>
         <form>
           {/* register your input into the hook by invoking the "register" function */}
           <div className={css['input-container']}>
@@ -74,7 +68,7 @@ const EditSpellModal = ({ tab, closeModal }) => {
             <input
               type="text"
               className={css['input']}
-              defaultValue={tab.spell}
+              defaultValue={name}
               {...register('name')}
             />
           </div>

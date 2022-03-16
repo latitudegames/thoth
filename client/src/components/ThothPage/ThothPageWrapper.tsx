@@ -1,4 +1,4 @@
-import ModalProvider from '../../../contexts/ModalProvider'
+import ModalProvider from '../../contexts/ModalProvider'
 import TabBar from '../TabBar/TabBar'
 import css from './pagewrapper.module.css'
 

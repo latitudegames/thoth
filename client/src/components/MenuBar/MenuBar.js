@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
 
-import { useModal } from '../../../contexts/ModalProvider'
-import { usePubSub } from '../../../contexts/PubSubProvider'
-import { useTabManager } from '../../../contexts/TabManagerProvider'
+import { useModal } from '../../contexts/ModalProvider'
+import { usePubSub } from '../../contexts/PubSubProvider'
+import { useTabManager } from '../../contexts/TabManagerProvider'
 import css from './menuBar.module.css'
 import thothlogo from './thoth.png'
 import { useNavigate, useLocation } from 'react-router-dom'

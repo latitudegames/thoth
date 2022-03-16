@@ -1,4 +1,4 @@
-import Icon from '../../common/Icon/Icon'
+import Icon from '../../../components/Icon/Icon'
 import css from '../homeScreen.module.css'
 
 const ProjectRow = ({

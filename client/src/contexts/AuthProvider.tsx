@@ -11,7 +11,7 @@ import { useQuery } from '../hooks/useQuery'
 import { useLocation } from 'react-router-dom'
 import { oAuthClientId, latitudeApiRootUrl, appRootUrl } from '../config'
 import { callExpire } from '../helpers/Expire'
-import LoadingScreen from '../screens/common/LoadingScreen/LoadingScreen'
+import LoadingScreen from '../components/LoadingScreen/LoadingScreen'
 
 interface SessionInfoType {
   id: number

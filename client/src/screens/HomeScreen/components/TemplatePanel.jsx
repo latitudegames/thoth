@@ -1,4 +1,4 @@
-import Panel from '../../common/Panel/Panel'
+import Panel from '../../../components/Panel/Panel'
 import css from '../homeScreen.module.css'
 
 const TemplatePanel = ({ template, setSelectedTemplate, selectedTemplate }) => {

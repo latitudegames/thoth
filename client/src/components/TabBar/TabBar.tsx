@@ -2,7 +2,7 @@ import classnames from 'classnames'
 import { VscClose } from 'react-icons/vsc'
 import { useNavigate } from 'react-router-dom'
 
-import { useTabManager } from '../../../contexts/TabManagerProvider'
+import { useTabManager } from '../../contexts/TabManagerProvider'
 import Icon from '../Icon/Icon'
 import MenuBar from '../MenuBar/MenuBar'
 import css from './tabBar.module.css'

@@ -1,7 +1,7 @@
 import { Scrollbars } from 'react-custom-scrollbars-2'
 
-import Icon from '../../common/Icon/Icon'
-import Panel from '../../common/Panel/Panel'
+import Icon from '../../../components/Icon/Icon'
+import Panel from '../../../components/Panel/Panel'
 import css from '../homeScreen.module.css'
 import FileInput from '../components/FileInput'
 import ProjectRow from '../components/ProjectRow'

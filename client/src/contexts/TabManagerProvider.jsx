@@ -2,7 +2,7 @@ import { useContext, createContext, useEffect, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { useNavigate } from 'react-router-dom'
 
-import LoadingScreen from '../screens/common/LoadingScreen/LoadingScreen'
+import LoadingScreen from '../components/LoadingScreen/LoadingScreen'
 import { useDB } from './DatabaseProvider'
 import defaultJson from './layouts/defaultLayout.json'
 import { usePubSub } from './PubSubProvider'
