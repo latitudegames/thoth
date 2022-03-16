@@ -1,7 +1,7 @@
 import { ActionTypeComponent } from './ActionType'
 import { AddAgent } from './AddAgent'
+import { AgentManager } from './AgentManager'
 import { AgentTextCompletion } from './AgentTextCompletion'
-import { AgentManager } from "./AgentManager"
 import { Alert } from './AlertMessage'
 import { ArchiveConversation } from './ArchiveConversation'
 import { ArrayVariable } from './ArrayVariable'
@@ -34,13 +34,13 @@ import { FastGreetingDetector } from './FastGreetingDetector'
 import { FastProfanityDetector } from './FastProfanityDetector'
 import { FastQuestionDetector } from './FastQuestionDetector'
 import { ForEach } from './ForEach'
-import { FormOpinionAboutSpeaker } from './FormOpinionAboutSpeaker'
 import { GenerateContext } from './GenerateContext'
 import { Generator } from './Generator'
 import { GetAgentData } from './GetAgentData'
 import { GetAgentFacts } from './GetAgentFacts'
 import { HuggingfaceComponent } from './Huggingface'
 import { InputComponent } from './Input'
+import { InputDestructureComponent } from './InputDestructure'
 import { InputsToJSON } from './InputsToJSON'
 import { IsNullOrUndefined } from './IsNullOrUndefined'
 import { IsVariableTrue } from './IsVariableTrue'
@@ -54,8 +54,6 @@ import { MLQuestionDetector } from './MLQuestionDetector'
 import { ModuleComponent } from './Module'
 import { NamedEntityRecognition } from './NamedEntityRecognition'
 import { NumberVariable } from './NumberVariable'
-import { OpinionAboutSpeakerGet } from './OpinionAboutSpeakerGet'
-import { OpinionAboutSpeakerSet } from './OpinionAboutSpeakerSet'
 import { Output } from './Output'
 import { ProseToScript } from './ProseToScript'
 import { RandomGreetingResponse } from './RandomGreetingResponse'
@@ -118,9 +116,6 @@ export const components = {
   isVariableTrue: () => new IsVariableTrue(),
   conversationStore: () => new ConversationStore(),
   conversationRecall: () => new ConversationRecall(),
-  formOpinionAboutSpeaker: () => new FormOpinionAboutSpeaker(),
-  opinionAboutSpeakerSet: () => new OpinionAboutSpeakerSet(),
-  opinionAboutSpeakerGet: () => new OpinionAboutSpeakerGet(),
   search: () => new Search(),
   documentGet: () => new DocumentGet(),
   documentDelete: () => new DocumentDelete(),
@@ -146,6 +141,7 @@ export const components = {
   generator: () => new Generator(),
   huggingfaceComponent: () => new HuggingfaceComponent(),
   inputComponent: () => new InputComponent(),
+  inputDestructureComponent: () => new InputDestructureComponent(),
   inputFieldComponent: () => new InputFieldComponent(),
   inputsToJson: () => new InputsToJSON(),
   itemTypeComponent: () => new ItemTypeComponent(),
