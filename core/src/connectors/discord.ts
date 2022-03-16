@@ -14,7 +14,7 @@ import emoji from 'emoji-dictionary'
 import emojiRegex from 'emoji-regex'
 import { EventEmitter } from 'events'
 
-import roomManager from '../components/roomManager'
+import roomManager from '../components/agent/roomManager'
 import { classifyText } from '../utils/textClassifier'
 import { database } from './database'
 import { handleInput } from './handleInput'

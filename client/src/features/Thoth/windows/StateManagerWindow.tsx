@@ -1,10 +1,10 @@
 // @ts-nocheck
 import Editor from '@monaco-editor/react'
 import jsonFormat from 'json-format'
+// import debounce from 'lodash.debounce'
 import { useSnackbar } from 'notistack'
 import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-
 import {
   selectSpellById,
   useSaveSpellMutation,
@@ -73,7 +73,7 @@ const StateManager = ({ tab, ...props }) => {
       // Send Axios request here
       onSave()
       setTyping(false)
-    }, 2000)
+    }, 1000)
 
     return () => clearTimeout(delayDebounceFn)
   }, [code])
@@ -94,14 +94,17 @@ const StateManager = ({ tab, ...props }) => {
     setTyping(true)
   }
 
-  const onSave = () => {
+  const onSave = async () => {
     if (!gameState) return
     const parsedState = JSON.parse(code)
     const spellUpdate = {
       ...spell,
       gameState: parsedState,
     }
-    saveSpell(spellUpdate)
+    const res = await saveSpell(spellUpdate)
+    if ('error' in res) return
+    res.data.gameState && setCode(JSON.stringify(res.data.gameState?.state))
+
     enqueueSnackbar('State saved', {
       preventDuplicate: true,
       variant: 'success',
@@ -110,7 +113,9 @@ const StateManager = ({ tab, ...props }) => {
 
   const toolbar = (
     <>
-      <button className="small">History</button>
+      <button className="small" onClick={onSave}>
+        Save
+      </button>
       <button className="small" onClick={onClear}>
         Clear
       </button>

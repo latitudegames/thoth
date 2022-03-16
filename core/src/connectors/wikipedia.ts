@@ -7,7 +7,7 @@ import glob from 'glob'
 import weaviate from 'weaviate-client'
 import wiki from 'wikipedia'
 
-import { makeCompletionRequest } from '../components/MakeCompletionRequest'
+import { makeCompletionRequest } from '../components/agent/makeCompletionRequest'
 import { database } from './database'
 
 const client = weaviate.client({

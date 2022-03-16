@@ -38,6 +38,18 @@
   bottom: 0;
   opacity: 0.2;
 }
+.node-id {
+  position: absolute;
+  top: -5px;
+  right: 10px;
+  color: var(--dark-4);
+}
+.node-id.error {
+  color: var(--red);
+}
+.node-id.success {
+  color: var(--green);
+}
 .node-title {
   /* font-family: 'IBM Plex Mono', monospace !important; */
   /* text-transform: uppercase; */

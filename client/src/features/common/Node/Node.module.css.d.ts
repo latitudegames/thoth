@@ -10,6 +10,7 @@ interface CssExports {
   'input': string;
   'node': string;
   'node-depricated': string;
+  'node-id': string;
   'node-title': string;
   'nodeGenesis': string;
   'out': string;
