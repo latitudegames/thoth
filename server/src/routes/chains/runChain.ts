@@ -85,7 +85,7 @@ export const runChain = async (
   // TODO: Test runing nested modules and watch out for unexpected behaviour
   // when child modules overwrite this with their own.
 
-  console.log("Running graph ", graph, " with inputs ", inputs)
+  console.log('Running graph ', graph, ' with inputs ', inputs)
 
   const module = new Module()
   // Parse array of modules into a map of modules by module name
@@ -130,6 +130,7 @@ export const runChain = async (
     'Module Trigger In'
   ) as ModuleComponent
 
+  console.log('graph:', graph)
   // Defaulting to the first node trigger to start our "run"
   const triggeredNode = getFirstNodeTrigger(graph)
   await component.run(triggeredNode)

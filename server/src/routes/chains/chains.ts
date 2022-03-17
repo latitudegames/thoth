@@ -21,7 +21,7 @@ export const modules: Record<string, unknown> = {}
 const chainsHandler = async (ctx: Koa.Context) => {
   const { spell, version } = ctx.params
   const { isTest, userGameState = {} } = ctx.request.body
-  console.log('body: ', ctx.request.body)
+  console.log('body: ', ctx.request.body, 'chain&spell:', spell, version)
 
   let rootSpell
 
@@ -110,15 +110,15 @@ const chainsHandler = async (ctx: Koa.Context) => {
   if (error) {
     return (ctx.body = { error })
   }
-  console.log("Running chain")
-  console.log("Inputs are", inputs)
+  console.log('Running chain')
+  console.log('Inputs are', inputs)
   const outputs = await runChain(chain, (inputs as any) ?? [], thoth, modules)
 
-  console.log("outputs are", outputs)
+  console.log('outputs are', outputs)
 
   const newGameState = thoth.getCurrentGameState()
-  const body = { spell: activeSpell.name, outputs, gameState: newGameState };
-  console.log("body is", body)
+  const body = { spell: activeSpell.name, outputs, gameState: newGameState }
+  console.log('body is', body)
   ctx.body = body
 }
 
