@@ -10,7 +10,8 @@ export async function makeCompletionRequest(
   speaker,
   agent,
   type,
-  engine
+  engine,
+  log = true
 ) {
   if ((await database.instance.getConfig())['use_gptj']) {
     const params = {

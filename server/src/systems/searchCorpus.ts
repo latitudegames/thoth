@@ -145,7 +145,7 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
         documents[i].keywords as string[],
         words
       )
-      
+
       if (metadataCount > maxMetadata) {
         maxMetadata = metadataCount
         maxIdMetadata = i
@@ -157,7 +157,7 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
     }
     console.log('maxIdMetadata ::: ', maxIdMetadata);
     console.log('maxIdKeywords ::: ', maxIdKeywords);
-    
+
     const testDocs = []
     if (maxIdKeywords === maxIdMetadata && maxIdKeywords !== -1) {
       return (ctx.body = documents[maxIdKeywords])
@@ -196,7 +196,7 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
       let highestScore = 0
       let highestScoreIndex = -1
       console.log('response ::: ', response.data);
-      
+
       for (let i = 0; i < response.data.data.length; i++) {
         if (response.data.data[i].score > highestScore) {
           highestScore = response.data.data[i].score
