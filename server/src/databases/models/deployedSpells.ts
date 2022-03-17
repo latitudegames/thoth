@@ -9,7 +9,7 @@ export interface deployedSpellsAttributes {
   updatedAt?: Date;
   deletedAt?: Date;
   userId: number;
-  version: string;
+  version: number;
   message?: string;
   modules?: object;
   versionName?: string;
@@ -28,7 +28,7 @@ export class deployedSpells extends Model<deployedSpellsAttributes, deployedSpel
   updatedAt?: Date;
   deletedAt?: Date;
   userId!: number;
-  version!: string;
+  version!: number;
   message?: string;
   modules?: object;
   versionName?: string;
@@ -73,9 +73,9 @@ export class deployedSpells extends Model<deployedSpellsAttributes, deployedSpel
         field: 'user_id'
       },
       version: {
-        type: DataTypes.TEXT,
+        type: DataTypes.INTEGER,
         allowNull: false,
-        defaultValue: "1"
+        defaultValue: 0
       },
       message: {
         type: DataTypes.TEXT,

@@ -39,7 +39,8 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
   const deploy = data => {
     console.log(spell, data, 'data')
     if (!spell) return
-    deploySpell({ spellId: spell, ...data })
+    console.log("Version is", data.version)
+    deploySpell({ spellId: spell, version: data.version, ...data })
     enqueueSnackbar('Spell deployed', { variant: 'success' })
   }
 
@@ -120,14 +121,16 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
             <button
               className="primary"
               onClick={() => {
+                const v = deployments ? deployments?.length + 1 : 0;
                 openModal({
                   modal: 'deployModal',
                   title: 'Deploy',
                   options: {
                     // todo find better way to get next version here
-                    version: deployments ? deployments?.length + 1 : 0,
+                    version: v,
                   },
                   onClose: data => {
+                    data.version = v
                     closeModal()
                     deploy(data)
                   },

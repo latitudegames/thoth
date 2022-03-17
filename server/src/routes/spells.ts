@@ -236,9 +236,8 @@ const deploySpellHandler = async (ctx: Koa.Context) => {
     order: [['version', 'desc']],
   })
 
-  const newVersion: string = lastDeployedSpell
-    ? (parseInt(lastDeployedSpell.version) + 1).toString()
-    : '1'
+  const newVersion: number = lastDeployedSpell
+    ? lastDeployedSpell.version + 1 : 1
 
   const newDeployedSpell = await creatorToolsDatabase.deployedSpells.create({
     name: spell.name,
