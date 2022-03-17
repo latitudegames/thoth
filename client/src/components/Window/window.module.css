@@ -15,7 +15,7 @@
   background-color: var(--dark-1);
 }
 .window.grid .window-layout {
-  background-image: url('../../../grid.png');
+  background-image: url('../../grid.png');
   background-color: var(--dark-1);
 }
 .window-layout {
@@ -40,12 +40,11 @@
   padding: 0;
   padding-bottom: var(--c1);
 }
-.window.unpadded .window-toolbar{
+.window.unpadded .window-toolbar {
   padding: var(--c1);
 }
-.window.unpadded .window-layout{
+.window.unpadded .window-layout {
   border-radius: 0;
   border-left: 0;
   border-right: 0;
 }
-
