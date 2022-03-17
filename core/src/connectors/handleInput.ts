@@ -11,7 +11,9 @@ export async function handleInput(
   spell_handler = 'default',
   spell_version = 'latest'
 ) {
-  const url = `http://localhost:8001/chains/${spell_handler}/${spell_version}`
+  console.log("sending message", message)
+  console.log("speaker agent client", speaker, agent, client)
+  const url = encodeURI(`http://localhost:8001/chains/${spell_handler}/${spell_version}`)
   console.log("url is", url)
   const response = await axios.post(
     `${url}`,

@@ -111,7 +111,7 @@ export class Task {
         We assume here that his nodes worker does not need to access ALL values simultaneously, but is only interested in one. There is a task option which enables this functionality just in case we have use cases that don't want this behaviour.
       */
       await Promise.all(
-        this.getInputs('output').map(async key => {
+        this.getInputs('output')?.map(async key => {
           const inputPromises = this.inputs[key]
             .filter((con: ThothReteInput) => {
               // only filter inputs to remove ones that are not the origin if a task option is true

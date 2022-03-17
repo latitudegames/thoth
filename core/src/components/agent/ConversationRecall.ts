@@ -21,11 +21,13 @@ async function getConversation(
   channel: string
 ) {
   const url = encodeURI(
-    `${process.env.REACT_APP_API_ROOT_URL ?? 'http://localhost:8001'
+    `${process.env.REACT_APP_API_ROOT_URL ?? process.env.API_ROOT_URL ?? 'http://localhost:8001'
     }/conversation?agent=${agent}&speaker=${speaker}&client=${client}&channel=${channel}`
-  )
+  ).replace(' ', '%20')
 
+  console.log("url is", url)
   const response = await axios.get(url)
+  console.log("response is, ", response)
   return response.data
 }
 
@@ -33,7 +35,6 @@ const info =
   'Conversation Recall is used to get conversation for an agent and user'
 
 type InputReturn = {
-  output: unknown
   conv: unknown
 }
 
@@ -43,7 +44,6 @@ export class ConversationRecall extends ThothComponent<Promise<InputReturn>> {
 
     this.task = {
       outputs: {
-        output: 'output',
         conv: 'output',
         trigger: 'option',
       },
@@ -61,7 +61,6 @@ export class ConversationRecall extends ThothComponent<Promise<InputReturn>> {
     const channelInput = new Rete.Input('channel', 'Channel', stringSocket)
     const out = new Rete.Output('output', 'Input String', anySocket)
     const inp = new Rete.Input('string', 'Input String', stringSocket)
-    const factsOut = new Rete.Output('facts', 'Output', stringSocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
 
@@ -74,7 +73,6 @@ export class ConversationRecall extends ThothComponent<Promise<InputReturn>> {
       .addInput(channelInput)
       .addOutput(dataOutput)
       .addOutput(out)
-      .addOutput(factsOut)
   }
 
   async worker(
@@ -85,7 +83,6 @@ export class ConversationRecall extends ThothComponent<Promise<InputReturn>> {
   ) {
     const speaker = inputs['speaker'][0] as string
     const agent = inputs['agent'][0] as string
-    const action = inputs['string'][0]
     const client = inputs['client'][0] as string
     const channel = inputs['channel'][0] as string
     console.log('inputs are', inputs)
@@ -93,8 +90,7 @@ export class ConversationRecall extends ThothComponent<Promise<InputReturn>> {
     console.log('conv is', conv)
 
     return {
-      output: action as string,
-      conv: conv,
+      conv: conv ?? '',
     }
   }
 }
