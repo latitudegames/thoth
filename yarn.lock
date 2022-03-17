@@ -1854,10 +1854,10 @@
     methods "^1.1.2"
     path-to-regexp "^6.1.0"
 
-"@latitudegames/thoth-core@0.0.63":
-  version "0.0.63"
-  resolved "https://npm.pkg.github.com/download/@latitudegames/thoth-core/0.0.63/5988af56490f1c09d18e9c0397c84fd817c0b34967f4d10fc08b5ab11acd0d39#e543c0120b14911fcb89a703ca4b012744166370"
-  integrity sha512-ZkqyFlV/UU+CrbP4iISwYiVGXdiWkk9A9CnnZifkgXTMriQ5hH9twQqACr2H1OEvS7uLthX+7YtCT5VJNDYs0g==
+"@latitudegames/thoth-core@0.0.65":
+  version "0.0.65"
+  resolved "https://npm.pkg.github.com/download/@latitudegames/thoth-core/0.0.65/5f38b6af91b27e4285a0b665b572209754c81f865bb988b2dae14f02913d8d4b#10eceb4003a9abcd6e81115203d422ab7cc3bc06"
+  integrity sha512-YRoyD29A6n8vFwj3jACTOq9q+uwMV3PogQoftTJBb8CuUcA3AbKgMhHyNg7z1XDwMyzoOjJ0TMTBhFpInO8nsA==
   dependencies:
     deep-equal "^2.0.5"
     handlebars "^4.7.7"
@@ -20604,8 +20604,10 @@ watchpack@^1.7.4:
   resolved "https://registry.yarnpkg.com/watchpack/-/watchpack-1.7.5.tgz#1267e6c55e0b9b5be44c2023aed5437a2c26c453"
   integrity sha512-9P3MWk6SrKjHsGkLT2KHXdQ/9SNkyoJbabxnKOoJepsvJjJG8uYTR3yTPxPQvNDI3w4Nz1xnE0TLHK4RIVe/MQ==
   dependencies:
+    chokidar "^3.4.1"
     graceful-fs "^4.1.2"
     neo-async "^2.5.0"
+    watchpack-chokidar2 "^2.0.1"
   optionalDependencies:
     chokidar "^3.4.1"
     watchpack-chokidar2 "^2.0.1"

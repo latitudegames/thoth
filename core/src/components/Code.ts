@@ -12,6 +12,7 @@ import { CodeControl } from '../dataControls/CodeControl'
 //@ts-ignore
 import { InputControl } from '../dataControls/InputControl'
 import { SocketGeneratorControl } from '../dataControls/SocketGenerator'
+import { EngineContext } from '../engine'
 import { triggerSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 
@@ -88,25 +89,19 @@ export class Code extends ThothComponent<unknown> {
     node: NodeData,
     inputs: ThothWorkerInputs,
     outputs: ThothWorkerOutputs,
-    { silent, data }: { silent: boolean; data: { code: unknown } }
+    {
+      silent,
+      data,
+      thoth,
+    }: { silent: boolean; thoth: EngineContext; data: { code: unknown } }
   ) {
-    function runCodeWithArguments(obj: unknown) {
-      const flattenedInputs = Object.entries(inputs).reduce(
-        (acc, [key, value]) => {
-          acc[key as string] = value[0]
-          return acc
-        },
-        {} as Record<string, any>
-      )
-      // eslint-disable-next-line no-new-func
-      return Function('"use strict";return (' + obj + ')')()(
-        flattenedInputs,
-        data
-      )
-    }
+    const { processCode } = thoth
+    if (!processCode) return
 
     try {
-      const value = runCodeWithArguments(node.data.code)
+      // const value = runCodeWithArguments(node.data.code)
+      const value = processCode(node.data.code, inputs, data)
+
       if (!silent) node.display(`${JSON.stringify(value)}`)
 
       return value
