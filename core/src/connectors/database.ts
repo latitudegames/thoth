@@ -207,8 +207,8 @@ export class database {
     asString: boolean = true
   ) {
     const query =
-      'SELECT * FROM conversation WHERE agent=$1 AND client=$2 AND channel=$3 AND archive=$4'
-    const values = [agent, client, channel, archive]
+      'SELECT * FROM conversation WHERE agent=$1 AND client=$2 AND channel=$3 AND sender=$4'
+    const values = [agent, client, channel, sender]
 
     const row = await this.client.query(query, values)
     if (row && row.rows && row.rows.length > 0) {
@@ -220,7 +220,7 @@ export class database {
       })
       const now = new Date()
       const max_length = parseInt(
-        (await getConfig())['chatHistoryMessagesCount']
+        (await this.getConfig())['chatHistoryMessagesCount']
       )
       let data = ''
       let count = 0

@@ -3,13 +3,13 @@ import { v4 as uuidv4 } from 'uuid'
 
 import { NodeData, ThothNode, ThothWorkerInputs } from '../../../types'
 import { Task } from '../../plugins/taskPlugin/task'
-import { anySocket } from '../../sockets'
+import { anySocket, triggerSocket } from '../../sockets'
 import { ThothComponent, ThothTask } from '../../thoth-component'
 
 const info = `The input component allows you to pass a single value to your chain.  You can set a default value to fall back to if no value is provided at runtime.  You can also turn the input on to receive data from the playtest input.`
 
 type InputReturn = {
-  output: unknown
+  output: string
   speaker: string
   agent: string
   client: string
@@ -53,27 +53,30 @@ export class InputDestructureComponent extends ThothComponent<InputReturn> {
     const agent = new Rete.Output('agent', 'agent', anySocket)
     const client = new Rete.Output('client', 'client', anySocket)
     const channelId = new Rete.Output('channelId', 'channelId', anySocket)
+    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
+    const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
 
     return node
       .addInput(inp)
-      .addOutput(speaker)
+      .addInput(dataInput)
+      .addOutput(out)
       .addOutput(agent)
       .addOutput(client)
+      .addOutput(speaker)
       .addOutput(channelId)
-      .addOutput(out)
+      .addOutput(dataOutput)
   }
 
   worker(_node: NodeData, inputs: ThothWorkerInputs) {
-    this._task.closed = ['trigger']
     console.log('inputs is', inputs)
 
     // If there are outputs, we are running as a module input and we use that value
     return {
-      output: (inputs.inp as any).Input,
-      speaker: (inputs.inp as any).Speaker ?? 'Speaker',
-      agent: (inputs.inp as any).Agent ?? 'Agent',
-      client: (inputs.inp as any).Client ?? 'Client',
-      channelId: (inputs.inp as any).ChannelID ?? '0',
+      output: inputs?.input ? inputs['input'][0] as string : 'text',
+      speaker: inputs?.Speaker ? inputs['Speaker'][0] as string : 'Speaker',
+      agent: inputs?.Agent ? inputs['Agent'][0] as string : 'Agent',
+      client: inputs?.Client ? inputs['Client'][0] as string : 'Client',
+      channelId: inputs?.ChannelID ? inputs['ChannelID'][0] as string : '0',
     }
   }
 }
