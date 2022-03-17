@@ -17,7 +17,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@components/*": ["src/components/*"],
+      "@common/*": ["src/screens/common/*"],
       "@thoth/*": ["src/Thoth/*"]
     }
   },
@@ -27,5 +27,9 @@
       "path": "../core"
     }
   ],
-  "include": ["src"]
+  "include": [
+    "src",
+    "src/contexts/layouts/defaultLayout.json",
+    "../server/src/googleSpeechToText.ts"
+  ]
 }
