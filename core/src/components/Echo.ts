@@ -1,8 +1,8 @@
+/* eslint-disable camelcase */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 /* eslint-disable no-console */
 /* eslint-disable require-await */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import axios from 'axios'
 import Rete from 'rete'
 
 import {
@@ -15,35 +15,39 @@ import { EngineContext } from '../engine'
 import { triggerSocket, stringSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 
-const info =
-  'Document Delete is used to delete a document from the search corpus'
+const info = 'Returns the same output as the input'
 
-export class DocumentDelete extends ThothComponent<void> {
+type WorkerReturn = {
+  output: string
+}
+
+export class Echo extends ThothComponent<Promise<WorkerReturn>> {
   constructor() {
-    super('Document Delete')
+    super('Echo')
 
     this.task = {
       outputs: {
+        output: 'output',
         trigger: 'option',
       },
     }
 
-    this.category = 'Database'
+    this.category = 'I/O'
     this.display = true
     this.info = info
   }
 
   builder(node: ThothNode) {
-    const keyInput = new Rete.Input('key', 'Key', stringSocket)
-    const agentInput = new Rete.Input('agent', 'Agent', stringSocket)
+    const inp = new Rete.Input('string', 'String', stringSocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
+    const outp = new Rete.Output('output', 'String', stringSocket)
 
     return node
-      .addInput(keyInput)
-      .addInput(agentInput)
       .addInput(dataInput)
+      .addInput(inp)
       .addOutput(dataOutput)
+      .addOutput(outp)
   }
 
   async worker(
@@ -52,12 +56,10 @@ export class DocumentDelete extends ThothComponent<void> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    const id = inputs['id'][0] as string
+    const input = inputs.string[0] as string
 
-    await axios.delete(`${process.env.VITE_SEARCH_SERVER_URL}/document`, {
-      params: {
-        documentId: id,
-      },
-    })
+    return {
+      output: input,
+    }
   }
 }

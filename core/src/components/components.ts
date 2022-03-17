@@ -1,5 +1,6 @@
 import { ActionTypeComponent } from './ActionType'
 import { AddAgent } from './AddAgent'
+import { AgentManager } from './AgentManager'
 import { AgentTextCompletion } from './AgentTextCompletion'
 import { Alert } from './AlertMessage'
 import { ArchiveConversation } from './ArchiveConversation'
@@ -10,9 +11,9 @@ import { CacheManagerDelete } from './CacheManagerDelete'
 import { CacheManagerGet } from './CacheManagerGet'
 import { CacheManagerSet } from './CacheManagerSet'
 import { Code } from './Code'
-import { ConversationCount } from './ConversationCount'
 import { ConversationRecall } from './ConversationRecall'
 import { ConversationStore } from './ConversationStore'
+import { CreateOrGetAgent } from './CreateOrGetAgent'
 // import { EnkiTask } from './EnkiTask'
 import { InputFieldComponent } from './deprecated/InputField'
 import { ModuleInput } from './deprecated/ModuleInput'
@@ -24,6 +25,7 @@ import { DifficultyDetectorComponent } from './DifficultyDetector'
 import { DocumentDelete } from './DocumentDelete'
 import { DocumentGet } from './DocumentGet'
 import { DocumentSet } from './DocumentSet'
+import { Echo } from './Echo'
 import { EntityDetector } from './EntityDetector'
 import { FactsCount } from './FactsCount'
 import { FactsRecall } from './FactsRecall'
@@ -32,28 +34,26 @@ import { FastGreetingDetector } from './FastGreetingDetector'
 import { FastProfanityDetector } from './FastProfanityDetector'
 import { FastQuestionDetector } from './FastQuestionDetector'
 import { ForEach } from './ForEach'
-import { FormOpinionAboutSpeaker } from './FormOpinionAboutSpeaker'
 import { GenerateContext } from './GenerateContext'
 import { Generator } from './Generator'
 import { GetAgentData } from './GetAgentData'
-import { GetAgentsFacts } from './GetAgentsFacts'
+import { GetAgentFacts } from './GetAgentFacts'
 import { HuggingfaceComponent } from './Huggingface'
 import { InputComponent } from './Input'
+import { InputDestructureComponent } from './InputDestructure'
 import { InputsToJSON } from './InputsToJSON'
 import { IsNullOrUndefined } from './IsNullOrUndefined'
 import { IsVariableTrue } from './IsVariableTrue'
 import { ItemTypeComponent } from './ItemDetector'
 import { JoinListComponent } from './JoinList'
-import { KeywordExtractor } from './keywordExtractor'
+import { KeywordExtractor } from './KeywordExtractor'
 import { LogicalOperator } from './LogicalOperator'
 import { MLGreetingDetector } from './MLGreetingDetector'
 import { MLProfanityDetector } from './MLProfanityDetector'
 import { MLQuestionDetector } from './MLQuestionDetector'
 import { ModuleComponent } from './Module'
-import { NamedEntityRecognition } from './namedEntityRecognition'
+import { NamedEntityRecognition } from './NamedEntityRecognition'
 import { NumberVariable } from './NumberVariable'
-import { OpinionAboutSpeakerGet } from './OpinionAboutSpeakerGet'
-import { OpinionAboutSpeakerSet } from './OpinionAboutSpeakerSet'
 import { Output } from './Output'
 import { ProseToScript } from './ProseToScript'
 import { RandomGreetingResponse } from './RandomGreetingResponse'
@@ -95,28 +95,27 @@ export const components = {
   mlGreetingDetector: () => new MLGreetingDetector(),
   mlProfanityDetector: () => new MLProfanityDetector(),
   mlQuestionDetector: () => new MLQuestionDetector(),
+  echo: () => new Echo(),
   summarizeAndStoreFactsAboutAgent: () =>
     new SummarizeAndStoreFactsAboutAgent(),
   summarizeAndStoreFactsAboutSpeaker: () =>
     new SummarizeAndStoreFactsAboutSpeaker(),
   textToSpeech: () => new TextToSpeech(),
   agentTextCompletion: () => new AgentTextCompletion(),
+  agentManager: () => new AgentManager(),
   keywordExtractor: () => new KeywordExtractor(),
   namedEntityRecognition: () => new NamedEntityRecognition(),
   generateContext: () => new GenerateContext(),
+  createOrGetAgent: () => new CreateOrGetAgent(),
   factsStore: () => new FactsStore(),
   factsRecall: () => new FactsRecall(),
   factsCount: () => new FactsCount(),
   getAgentData: () => new GetAgentData(),
-  getAgentsFacts: () => new GetAgentsFacts(),
+  getAgentFacts: () => new GetAgentFacts(),
   isNullOrUndefined: () => new IsNullOrUndefined(),
   isVariableTrue: () => new IsVariableTrue(),
   conversationStore: () => new ConversationStore(),
   conversationRecall: () => new ConversationRecall(),
-  conversationCount: () => new ConversationCount(),
-  formOpinionAboutSpeaker: () => new FormOpinionAboutSpeaker(),
-  opinionAboutSpeakerSet: () => new OpinionAboutSpeakerSet(),
-  opinionAboutSpeakerGet: () => new OpinionAboutSpeakerGet(),
   search: () => new Search(),
   documentGet: () => new DocumentGet(),
   documentDelete: () => new DocumentDelete(),
@@ -142,6 +141,7 @@ export const components = {
   generator: () => new Generator(),
   huggingfaceComponent: () => new HuggingfaceComponent(),
   inputComponent: () => new InputComponent(),
+  inputDestructureComponent: () => new InputDestructureComponent(),
   inputFieldComponent: () => new InputFieldComponent(),
   inputsToJson: () => new InputsToJSON(),
   itemTypeComponent: () => new ItemTypeComponent(),

@@ -46,8 +46,12 @@ export class TriggerIn extends ThothComponent<void> {
   }
 
   async run(node: ThothNode, data: NodeData) {
-    const task = this.nodeTaskMap[node.id]
-    await task.run(data)
+    console.log('---------node--------')
+    console.log(node)
+    console.log('---------data--------')
+    console.log(data)
+    const task = this.nodeTaskMap[node?.id]
+    if (task) await task.run(data)
   }
 
   // the builder is used to "assemble" the node component.

@@ -23,6 +23,7 @@ const { Client } = pg
 const rootDir = path.resolve(path.dirname(''))
 
 const useLatitude = process.env.USE_LATITUDE_API === 'true'
+const PGSSL = process.env.PGSSL === 'true'
 export class database {
   static instance: database
 
@@ -40,10 +41,10 @@ export class database {
       database: process.env.PGDATABASE,
       port: process.env.PGPORT,
       host: process.env.PGHOST,
-      ssl: useLatitude
+      ssl: PGSSL
         ? {
-            rejectUnauthorized: false,
-          }
+          rejectUnauthorized: false,
+        }
         : false,
     })
     this.client.connect()
@@ -183,7 +184,6 @@ export class database {
     text: string | any[],
     archive: any
   ) {
-    if (!text || text.length <= 0) return
     const query =
       'INSERT INTO conversation(agent, client, channel, sender, text, archive, date) VALUES($1, $2, $3, $4, $5, $6, $7)'
     const values = [
@@ -784,8 +784,8 @@ export class database {
       return []
     }
   }
-  async getAllDocuments(): Promise<any[]> {
-    const query = 'SELECT * FROM documents'
+  async getAllDocumentsForSearch(): Promise<any[]> {
+    const query = 'SELECT * FROM documents WHERE is_included = true'
 
     const rows = await this.client.query(query)
     if (rows && rows.rows && rows.rows.length > 0) {

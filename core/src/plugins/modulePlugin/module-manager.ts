@@ -218,12 +218,7 @@ export class ModuleManager {
   ) {
     if (!module) return
     const socketKey = node.data.socketKey as string
-    console.log(
-      'setting output',
-      inputs,
-      "inputs['input'][0]",
-      inputs['input'][0]
-    )
+    console.log('setting output', inputs, "inputs['input']", inputs['input'])
     module.setOutput(socketKey, outputs['trigger'])
   }
 

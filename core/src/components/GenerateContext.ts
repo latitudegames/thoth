@@ -4,6 +4,7 @@
 /* eslint-disable no-console */
 /* eslint-disable require-await */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import axios from 'axios'
 import Rete from 'rete'
 
 import {
@@ -48,7 +49,7 @@ export class GenerateContext extends ThothComponent<Promise<WorkerReturn>> {
       },
     }
 
-    this.category = 'AI/ML'
+    this.category = 'Agents'
     this.display = true
     this.info = info
   }
@@ -100,8 +101,17 @@ export class GenerateContext extends ThothComponent<Promise<WorkerReturn>> {
     const keywords = inputs['keywords'][0] as any[]
     const speakersFacts = inputs['speakersFacts'][0] as string
     const agentFacts = inputs['agentFacts'][0] as string
-    const agent = JSON.parse(inputs['agent'][0] as string)
+    const agent = inputs['agent'][0] as string
     const speaker = inputs['speaker'][0] as string
+
+    const agentDataResp = await axios.get(
+      `${process.env.REACT_APP_API_URL}/agent_data`,
+      {
+        params: { agent: agent },
+      }
+    )
+
+    const agentData = agentDataResp.data.agent
 
     const fewshot = node.data.fewshot as string
 
@@ -119,18 +129,22 @@ export class GenerateContext extends ThothComponent<Promise<WorkerReturn>> {
       kdata += '\n'
     }
 
+    console.log('agentData:', agentData)
+
     const res = fewshot
-      .replace(/$morals/g, agent.morals)
-      .replace(/$personality/g, agent.perseonality)
-      .replace(/$exampleDialog/g, agent.dialog)
-      .replace(/$monologue/g, agent.monologue)
-      .replace(/$facts/g, agent.facts)
-      .replace(/$speakerFacts/g, speakersFacts)
-      .replace(/$agentFacts/g, agentFacts)
-      .replace(/$keywords/g, kdata)
-      .replace(/$agent/g, agent.agent)
-      .replace(/$speaker/g, speaker)
-      .replace(/$conversation/g, conversation)
+      .replace('$morals', agentData.morals ?? '')
+      .replace('$personality', agentData.perseonality ?? '')
+      .replace('$exampleDialog', agentData.dialog ?? '')
+      .replace('$monologue', agentData.monologue ?? '')
+      .replace('$ethics', agentData.ethics ?? '')
+      .replace('$facts', agentData.facts ?? '')
+      .replace('$needsAndMotivations', agentData.needsAndMotivations ?? '')
+      .replace('$speakerFacts', speakersFacts ?? '')
+      .replace('$agentFacts', agentFacts ?? '')
+      .replace('$keywords', kdata)
+      .replace('$agent', agent)
+      .replace('$speaker', speaker)
+      .replace('$conversation', conversation)
 
     return {
       output: res,

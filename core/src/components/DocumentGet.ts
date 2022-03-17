@@ -32,7 +32,7 @@ export class DocumentGet extends ThothComponent<Promise<WorkerReturn>> {
       },
     }
 
-    this.category = 'I/O'
+    this.category = 'Database'
     this.display = true
     this.info = info
   }

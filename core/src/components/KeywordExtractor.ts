@@ -36,7 +36,7 @@ export class KeywordExtractor extends ThothComponent<Promise<WorkerReturn>> {
       },
     }
 
-    this.category = 'AI/ML'
+    this.category = 'Conversation'
     this.display = true
     this.info = info
   }
@@ -130,7 +130,7 @@ async function keywordExtractor(input: string, onlyKeywords: boolean) {
     )
 
     const weaviateResponse = _resp.data
-    if (weaviateResponse.length === 0) {
+    if (weaviateResponse.length === 0 || !weaviateResponse.Paragraph) {
       continue
     }
 

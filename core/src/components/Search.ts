@@ -11,6 +11,7 @@ import {
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../types'
+import { SwitchControl } from '../dataControls/SwitchControl'
 import { EngineContext } from '../engine'
 import { triggerSocket, anySocket, stringSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
@@ -18,39 +19,60 @@ import { ThothComponent } from '../thoth-component'
 const info =
   'Search is used to do neural search in the search corpus and return a document'
 
+type Document = {
+  keywords: string
+  description: string
+}
+
 type WorkerReturn = {
-  output: string
+  documents: Document[]
 }
 
 export class Search extends ThothComponent<Promise<WorkerReturn>> {
   constructor() {
-    super('Search')
+    super('Search Documents')
 
     this.task = {
       outputs: {
-        output: 'output',
+        output: 'results',
         trigger: 'option',
       },
     }
 
-    this.category = 'AI/ML'
+    this.category = 'Database'
     this.display = true
     this.info = info
   }
 
   builder(node: ThothNode) {
-    const agentInput = new Rete.Input('agent', 'Agent', stringSocket)
-    const questionInput = new Rete.Input('question', 'Question', stringSocket)
-    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
-    const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
-    const output = new Rete.Output('output', 'Output', anySocket)
+    const searchStrInput = new Rete.Input(
+      'searchStr',
+      'Search String',
+      stringSocket
+    )
+    const dataInput = new Rete.Input(
+      'trigger',
+      'Trigger In',
+      triggerSocket,
+      true
+    )
+    const dataOutput = new Rete.Output('trigger', 'Trigger Out', triggerSocket)
+    const output = new Rete.Output('results', 'Results []', anySocket)
+
+    const switchControl = new SwitchControl({
+      dataKey: 'sendToPlaytest',
+      name: 'Send to Playtest',
+      label: 'Playtest',
+      defaultValue: node.data.sendToPlaytest || false,
+    })
+
+    node.inspector.add(switchControl)
 
     return node
-      .addInput(agentInput)
-      .addInput(questionInput)
+      .addInput(searchStrInput)
       .addInput(dataInput)
-      .addOutput(dataOutput)
       .addOutput(output)
+      .addOutput(dataOutput)
   }
 
   async worker(
@@ -59,22 +81,27 @@ export class Search extends ThothComponent<Promise<WorkerReturn>> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    const agent = inputs['agent'][0] as string
-    const question = inputs['question'][0] as string
+    const searchStr = inputs['searchStr'][0] as string
+    const documents: Document[] = []
 
     const resp = await axios.get(
-      `${process.env.VITE_SEARCH_SERVER_URL}/search`,
+      `${process.env.REACT_APP_SEARCH_SERVER_URL}/search`,
       {
         params: {
-          agent: agent,
-          question: question,
-          sameTopicOnly: false,
+          question: searchStr,
         },
       }
     )
+    if (typeof resp.data === 'object') {
+      documents.push({
+        keywords: resp.data.keywords,
+        description: resp.data.description,
+      })
+    }
+    node.display(documents)
 
     return {
-      output: resp.data,
+      documents,
     }
   }
 }
