@@ -236,9 +236,8 @@ const deploySpellHandler = async (ctx: Koa.Context) => {
     order: [['version', 'desc']],
   })
 
-  const newVersion: string = lastDeployedSpell
-    ? (parseInt(lastDeployedSpell.version) + 1).toString()
-    : '1'
+  const newVersion: number = lastDeployedSpell
+    ? lastDeployedSpell.version + 1 : 1
 
   const newDeployedSpell = await creatorToolsDatabase.deployedSpells.create({
     name: spell.name,
@@ -276,6 +275,8 @@ const getdeployedSpellsHandler = async (ctx: Koa.Context) => {
 
 const getDeployedSpellHandler = async (ctx: Koa.Context) => {
   console.log('handling')
+  console.log("ctx.request", ctx.request.body)
+  console.log("ctx.params", ctx.params)
   const name = ctx.params.name
   const version = ctx.params.version
   if (latitudeApiKey) {

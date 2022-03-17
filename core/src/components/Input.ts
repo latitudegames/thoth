@@ -102,9 +102,9 @@ export class InputComponent extends ThothComponent<InputReturn> {
 
     const data = node?.data?.playtestToggle as
       | {
-          receivePlaytest: boolean
-          outputs: []
-        }
+        receivePlaytest: boolean
+        outputs: []
+      }
       | undefined
 
     const togglePlaytest = new PlaytestControl({

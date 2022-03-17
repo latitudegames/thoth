@@ -614,6 +614,7 @@ export class discord_client {
       channel.sendTyping()
     }, message.content.length)
 
+    console.log('discord spell_handler:', this.spell_handler)
     const response = await handleInput(
       message.content,
       message.author.username,
@@ -661,7 +662,7 @@ export class discord_client {
 
     const oldResponse = this.getResponse(channel.id, id)
     if (oldResponse === undefined) {
-      await channel.messages.fetch(id).then(async msg => { })
+      await channel.messages.fetch(id).then(async msg => {})
       log('message not found')
       return
     }

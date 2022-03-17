@@ -644,9 +644,8 @@ const requestInformationAboutVideo = async (
   question: string
 ): Promise<string> => {
   const videoInformation = ``
-  const prompt = `Information: ${videoInformation} \n ${sender}: ${
-    question.trim().endsWith('?') ? question.trim() : question.trim() + '?'
-  }\n${agent}:`
+  const prompt = `Information: ${videoInformation} \n ${sender}: ${question.trim().endsWith('?') ? question.trim() : question.trim() + '?'
+    }\n${agent}:`
 
   const modelName = 'davinci'
   const temperature = 0.9
@@ -799,7 +798,7 @@ export const agents: Route[] = [
     get: getConversationCount,
   },
   {
-    path: '/archive_conversation',
+    path: '/archiveConversation',
     access: noAuth,
     post: archiveConversation,
   },

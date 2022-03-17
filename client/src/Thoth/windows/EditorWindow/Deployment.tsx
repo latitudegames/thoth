@@ -18,7 +18,7 @@ import {
   useLazyGetDeploymentQuery,
   useSaveSpellMutation,
 } from '@/state/api/spells'
-import { useEditor } from '@/Thoth/contexts/EditorProvider'
+import { useEditor } from '@thoth/contexts/EditorProvider'
 import { thothApiRootUrl } from '@/config'
 
 const DeploymentView = ({ open, setOpen, spellId, close }) => {
@@ -39,7 +39,8 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
   const deploy = data => {
     console.log(spell, data, 'data')
     if (!spell) return
-    deploySpell({ spellId: spell, ...data })
+    console.log("Version is", data.version)
+    deploySpell({ spellId: spell, version: data.version, ...data })
     enqueueSnackbar('Spell deployed', { variant: 'success' })
   }
 
@@ -66,15 +67,15 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
 
   useEffect(() => {
     if (!deploymentData || !loadingVersion) return
-    ;(async () => {
-      close()
-      await saveSpell({ ...spell, chain: deploymentData.chain })
-      enqueueSnackbar(`version ${deploymentData.version} loaded!`, {
-        variant: 'success',
-      })
-      setLoadingVersion(false)
-      loadChain(deploymentData.chain)
-    })()
+      ; (async () => {
+        close()
+        await saveSpell({ ...spell, chain: deploymentData.chain })
+        enqueueSnackbar(`version ${deploymentData.version} loaded!`, {
+          variant: 'success',
+        })
+        setLoadingVersion(false)
+        loadChain(deploymentData.chain)
+      })()
   }, [deploymentData, loadingVersion])
 
   const copy = url => {
@@ -120,14 +121,16 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
             <button
               className="primary"
               onClick={() => {
+                const v = deployments ? deployments?.length + 1 : 0;
                 openModal({
                   modal: 'deployModal',
                   title: 'Deploy',
                   options: {
                     // todo find better way to get next version here
-                    version: deployments ? deployments?.length + 1 : 0,
+                    version: v,
                   },
                   onClose: data => {
+                    data.version = v
                     closeModal()
                     deploy(data)
                   },
@@ -150,9 +153,8 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
                 return (
                   <SimpleAccordion
                     key={deploy.version}
-                    heading={`${deploy.version}${
-                      deploy.versionName ? ' - ' + deploy.versionName : ''
-                    }`}
+                    heading={`${deploy.version}${deploy.versionName ? ' - ' + deploy.versionName : ''
+                      }`}
                     defaultExpanded={true}
                   >
                     <button

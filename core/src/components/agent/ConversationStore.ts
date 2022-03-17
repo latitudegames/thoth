@@ -28,13 +28,13 @@ export async function setConversation(
   channel: string
 ) {
   const response = await axios.post(
-    `${process.env.REACT_APP_API_URL ?? 'http://localhost:8001'}/conversation`,
+    `${process.env.REACT_APP_API_ROOT_URL ?? 'http://localhost:8001'}/conversation`,
     {
-      agent: agent,
-      speaker: speaker,
-      conversation: conv,
-      client: client,
-      channel: channel,
+      agent,
+      speaker,
+      conv,
+      client,
+      channel,
     }
   )
   console.log('response is', response)
@@ -108,30 +108,22 @@ export class ConversationStore extends ThothComponent<Promise<InputReturn>> {
 
     // B Slice and move any conversation to the archive if it's too long
     // Make sure on the other side that we're appending to existing conversation
-    await axios.post(`${process.env.REACT_APP_API_URL}/archiveConversation`, {
+    await axios.post(`${process.env.REACT_APP_API_ROOT_URL}/archive_conversation`, {
       agent: agent,
       speaker: speaker,
       client: client,
       channel: channel,
     })
 
-    const resp1 = await setConversation(
+    const resp = await setConversation(
       agent,
       speaker,
       convSpeaker,
       client,
       channel
     )
-    const resp2 = await setConversation(
-      agent,
-      speaker,
-      convAgent,
-      client,
-      channel
-    )
     console.log('Setting conversation store...')
-    console.log(resp1)
-    console.log(resp2)
+    node.display(resp)
 
     return {}
   }

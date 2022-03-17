@@ -3,8 +3,8 @@
 import { useEffect } from 'react'
 
 import { store } from '@/state/store'
-import { useEditor } from '@/Thoth/contexts/EditorProvider'
-import { Layout } from '@/Thoth/contexts/LayoutProvider'
+import { useEditor } from '@thoth/contexts/EditorProvider'
+import { Layout } from '@thoth/contexts/LayoutProvider'
 import { useModule } from '@/contexts/ModuleProvider'
 import {
   useLazyGetSpellQuery,
@@ -12,18 +12,18 @@ import {
   selectSpellById,
 } from '@/state/api/spells'
 import { debounce } from '@/utils/debounce'
-import EditorWindow from '@/Thoth/windows/EditorWindow'
-import EventHandler from '@/Thoth/components/EventHandler'
-import Inspector from '@/Thoth/windows/InspectorWindow'
-import Playtest from '@/Thoth/windows/PlaytestWindow'
-import StateManager from '@/Thoth/windows/StateManagerWindow'
-import AgentManager from '@/Thoth/windows/AgentManagerWindow'
-import EntManager from '@/Thoth/windows/EntManagerWindow'
-import ConfigManager from '@/Thoth/windows/ConfigManagerWindow'
-import TextEditor from '@/Thoth/windows/TextEditorWindow'
-import DebugConsole from '@/Thoth/windows/DebugConsole'
+import EditorWindow from '@thoth/windows/EditorWindow'
+import EventHandler from '@thoth/components/EventHandler'
+import Inspector from '@thoth/windows/InspectorWindow'
+import Playtest from '@thoth/windows/PlaytestWindow'
+import StateManager from '@thoth/windows/StateManagerWindow'
+import AgentManager from '@thoth/windows/AgentManagerWindow'
+import EntManager from '@thoth/windows/EntManagerWindow'
+import ConfigManager from '@thoth/windows/ConfigManagerWindow'
+import TextEditor from '@thoth/windows/TextEditorWindow'
+import DebugConsole from '@thoth/windows/DebugConsole'
 import SearchCorpus from '../../windows/SearchCorpusWindow'
-import DebugConsole from '@/Thoth/windows/DebugConsole'
+import DebugConsole from '@thoth/windows/DebugConsole'
 
 const Workspace = ({ tab, tabs, pubSub }) => {
   const [loadSpell, { data: spellData }] = useLazyGetSpellQuery()
