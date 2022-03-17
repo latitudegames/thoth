@@ -13,7 +13,7 @@ Thoth is a multishot system builder. It leverages a visual coding style interfac
 
 ## Core Local Setup
 
-1. Core the contents of `core/.env.example` to `core/.env`
+1. Core the contents of `core/.env.default` to `core/.env` and modify the secrets as necessary
 1. Step 2 in Monorepo Development Setup
 
 ## Monorepo Development
