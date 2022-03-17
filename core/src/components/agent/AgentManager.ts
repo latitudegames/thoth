@@ -48,27 +48,14 @@ export class AgentManager extends ThothComponent<Promise<WorkerReturn>> {
   }
 
   builder(node: ThothNode) {
-    console.log(node, 'node')
     const outName = new Rete.Output('agent', 'Name', anySocket)
     const outPersonality = new Rete.Output(
       'personality',
       'Personality',
       anySocket
     )
-    const value = node.data.text ? node.data.text : 'Select Value'
-
-    const inputDropdown = new DropdownControl({
-      editor: this.editor,
-      key: 'Personality',
-      value,
-    })
-
+    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
-    const outDialog = new Rete.Output('dialog', 'Dialog', anySocket)
-    const outMoral = new Rete.Output('morals and Ethics', 'Morals and Ethics', anySocket)
-    const outMonologue = new Rete.Output('monologue', 'Monologue', anySocket)
-    const outGreeting = new Rete.Output('greetings', 'Greetings', anySocket)
-
 
     const personality = new InputControl({
       dataKey: 'personality',
@@ -81,13 +68,14 @@ export class AgentManager extends ThothComponent<Promise<WorkerReturn>> {
     return (
       node
         .addOutput(outName)
-        .addOutput(outDialog)
+        // .addOutput(outDialog)
         .addOutput(outPersonality)
-        .addOutput(outMoral)
-        .addOutput(outMonologue)
-        .addOutput(outGreeting)
+        // .addOutput(outMoral)
+        // .addOutput(outMonologue)
+        // .addOutput(outFact)
+        // .addOutput(outGreeting)
+        .addInput(dataInput)
         .addOutput(dataOutput)
-        .addControl(inputDropdown)
     )
   }
 

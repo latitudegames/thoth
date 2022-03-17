@@ -10,6 +10,15 @@ type ConsoleConstructor = {
   server: boolean
   throwError?: Function
 }
+
+export type Message = {
+  from: string
+  nodeId: number
+  name: string | null
+  content?: string
+  type: 'error' | 'log'
+}
+
 export class ThothConsole {
   node: NodeData
   editor: IRunContextEditor
@@ -97,7 +106,8 @@ export class ThothConsole {
   }
 
   sendToDebug(message: any) {
-    if (this.editor && this.editor.thoth && this.editor.thoth.sendToDebug) this.editor.thoth.sendToDebug(message)
+    if (this.editor && this.editor.thoth && this.editor.thoth.sendToDebug)
+      this.editor.thoth.sendToDebug(message)
   }
 
   throwServerError(message: any) {

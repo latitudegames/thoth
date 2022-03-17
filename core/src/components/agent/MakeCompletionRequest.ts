@@ -3,7 +3,7 @@
 import axios from 'axios'
 
 import { database } from '../../connectors/database'
-import { makeModelRequest } from './makeModelRequest'
+import { makeModelRequest } from './MakeModelRequest'
 
 export async function makeCompletionRequest(
   data,
