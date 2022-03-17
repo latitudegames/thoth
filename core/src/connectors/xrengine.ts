@@ -696,7 +696,7 @@ class XREngineBot {
         await this.updateChannelState()
         active = true
       } catch {
-        console.error("Trying to update but can't")
+        // console.error("Trying to update but can't")
       }
     }
 
@@ -803,7 +803,7 @@ class XREngineBot {
     await this.waitForTimeout(timeout)
   }
 
-  async interactObject() {}
+  async interactObject() { }
 
   /** Return screenshot
    * @param {Function} fn Function to execut _in the node context._

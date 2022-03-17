@@ -275,6 +275,8 @@ const getdeployedSpellsHandler = async (ctx: Koa.Context) => {
 
 const getDeployedSpellHandler = async (ctx: Koa.Context) => {
   console.log('handling')
+  console.log("ctx.request", ctx.request.body)
+  console.log("ctx.params", ctx.params)
   const name = ctx.params.name
   const version = ctx.params.version
   if (latitudeApiKey) {
