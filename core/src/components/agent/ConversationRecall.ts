@@ -20,8 +20,10 @@ async function getConversation(
   client: string,
   channel: string
 ) {
-  const url = encodeURI(`${process.env.REACT_APP_API_ROOT_URL ?? 'http://localhost:8001'
-    }/conversation?agent=${agent}&speaker=${speaker}&client=${client}&channel=${channel}`)
+  const url = encodeURI(
+    `${process.env.REACT_APP_API_ROOT_URL ?? 'http://localhost:8001'
+    }/conversation?agent=${agent}&speaker=${speaker}&client=${client}&channel=${channel}`
+  )
 
   const response = await axios.get(url)
   return response.data

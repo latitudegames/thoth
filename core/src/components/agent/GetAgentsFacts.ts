@@ -1,6 +1,3 @@
-/* eslint-disable no-async-promise-executor */
-/* eslint-disable camelcase */
-/* eslint-disable @typescript-eslint/no-inferrable-types */
 /* eslint-disable no-console */
 /* eslint-disable require-await */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -11,47 +8,50 @@ import {
   NodeData,
   ThothNode,
   ThothWorkerInputs,
-  ThothWorkerOutputs
+  ThothWorkerOutputs,
 } from '../../../types'
 import { EngineContext } from '../../engine'
-import { stringSocket, triggerSocket } from '../../sockets'
+import { triggerSocket, stringSocket, anySocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
-const info = 'Returns the input string as voice'
+const info = "Get Agents Facts returns the select agent's facts"
 
-type WorkerReturn = {
-  output: string
+type InputReturn = {
+  output: unknown
+  facts: unknown
 }
-
-export class TextToSpeech extends ThothComponent<Promise<WorkerReturn>> {
+export class GetAgentFacts extends ThothComponent<Promise<InputReturn>> {
   constructor() {
-    super('Text to Speech')
+    super('Get Agents Facts')
 
     this.task = {
       outputs: {
         output: 'output',
+        facts: 'output',
         trigger: 'option',
       },
     }
 
-    this.category = 'AI/ML'
+    this.category = 'Agents'
     this.display = true
     this.info = info
   }
 
   builder(node: ThothNode) {
-    const inp = new Rete.Input('string', 'Text', stringSocket)
-    const characterInp = new Rete.Input('character', 'Character', stringSocket)
+    const agentInput = new Rete.Input('agent', 'Agent', stringSocket)
+    const out = new Rete.Output('output', 'Input String', anySocket)
+    const inp = new Rete.Input('string', 'Input String', stringSocket)
+    const factsOut = new Rete.Output('facts', 'Output', stringSocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
-    const outp = new Rete.Output('Voice', 'String', stringSocket)
 
     return node
       .addInput(inp)
       .addInput(dataInput)
-      .addInput(characterInp)
+      .addInput(agentInput)
       .addOutput(dataOutput)
-      .addOutput(outp)
+      .addOutput(out)
+      .addOutput(factsOut)
   }
 
   async worker(
@@ -60,21 +60,21 @@ export class TextToSpeech extends ThothComponent<Promise<WorkerReturn>> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
+    const agent = inputs['agent'][0] as string
     const action = inputs['string'][0]
-    const character = inputs['character']?.[0] as string
 
-    const url = await axios.get(
-      `${process.env.REACT_APP_API_ROOT_URL}/speech_to_text`,
+    const response = await axios.get(
+      `${process.env.REACT_APP_API_URL}/agent_facts`,
       {
         params: {
-          text: action,
-          character: character,
+          agent: agent,
         },
       }
     )
 
     return {
-      output: (url.data as any).path as string,
+      output: action as string,
+      facts: response.data.facts,
     }
   }
 }

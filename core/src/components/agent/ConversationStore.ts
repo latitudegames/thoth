@@ -9,12 +9,11 @@ import {
   NodeData,
   ThothNode,
   ThothWorkerInputs,
-  ThothWorkerOutputs
+  ThothWorkerOutputs,
 } from '../../../types'
 import { EngineContext } from '../../engine'
-import { stringSocket, triggerSocket } from '../../sockets'
+import { triggerSocket, stringSocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
-
 
 const info =
   'Conversation Store is used to store conversation for an agent and user'

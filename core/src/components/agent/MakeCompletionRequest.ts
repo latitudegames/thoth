@@ -41,14 +41,7 @@ export async function makeCompletionRequest(
   }
 }
 const useDebug = false
-async function makeOpenAIGPT3Request(
-  data,
-  speaker,
-  agent,
-  type,
-  engine,
-  log = true
-) {
+async function makeOpenAIGPT3Request(data, speaker, agent, type, engine) {
   if (useDebug) return { success: true, choice: { text: 'Default response' } }
   const API_KEY =
     process.env.OPENAI_API_KEY ??
