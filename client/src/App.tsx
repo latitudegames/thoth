@@ -1,10 +1,10 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 
 import { useTabManager } from './contexts/TabManagerProvider'
-import RequireAuth from './features/common/RequireAuth/RequireAuth'
-import ThothPageWrapper from './features/common/ThothPage/ThothPageWrapper'
-import HomeScreen from './features/HomeScreen/HomeScreen'
-import Thoth from './features/Thoth/Thoth'
+import RequireAuth from './components/RequireAuth/RequireAuth'
+import ThothPageWrapper from './components/ThothPage/ThothPageWrapper'
+import HomeScreen from './screens/HomeScreen/HomeScreen'
+import Thoth from './Thoth/Thoth'
 import { useAuth } from './contexts/AuthProvider'
 
 import 'flexlayout-react/style/dark.css'
@@ -23,7 +23,11 @@ function App() {
       return <Navigate to="/thoth" />
     }
 
-    return !useLatitude || user ? <Navigate to="/home" /> : <Navigate to="/login" />
+    return !useLatitude || user ? (
+      <Navigate to="/home" />
+    ) : (
+      <Navigate to="/login" />
+    )
   }
 
   return (

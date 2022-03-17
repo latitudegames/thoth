@@ -17,8 +17,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@common/*": ["src/features/common/*"],
-      "@thoth/*": ["src/features/Thoth/*"]
+      "@common/*": ["src/screens/common/*"],
+      "@thoth/*": ["src/Thoth/*"]
     }
   },
   "typeRoots": ["@types/@thoth"],

@@ -1,5 +1,5 @@
-import ExampleModal from '../features/common/Modals/ExampleModal'
-import InfoModal from '../features/common/Modals/InfoModal'
+import ExampleModal from '../components/Modals/ExampleModal'
+import InfoModal from '../components/Modals/InfoModal'
 
 const modals = { example: ExampleModal, infoModal: InfoModal }
 
