@@ -25,7 +25,7 @@ export async function handleInput(
   const url = encodeURI(
     `http://localhost:8001/chains/${spell_handler}/${spell_version}`
   )
-  console.log('url is', url)
+
   const response = await axios.post(`${url}`, {
     Input: {
       Input: message,
@@ -35,8 +35,6 @@ export async function handleInput(
       ChannelID: channelId,
     },
   })
-  console.log('data:', response.data)
-  console.log('response:', response.data.outputs)
   let index = undefined
 
   for (const x in response.data.outputs) {

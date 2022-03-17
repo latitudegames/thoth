@@ -31,7 +31,6 @@ const getAgentHandler = async (ctx: Koa.Context) => {
 }
 
 const createOrUpdateAgentHandler = async (ctx: Koa.Context) => {
-  console.log('ctx.request.body is ', ctx.request.body)
   const { agent, data } = ctx.request.body
   if (!agent || agent == undefined || agent.length <= 0) {
     ctx.status = 404
@@ -226,7 +225,6 @@ const getAgentInstanceHandler = async (ctx: Koa.Context) => {
 
 const addAgentInstanceHandler = async (ctx: Koa.Context) => {
   const data = ctx.request.body.data
-  console.log('saving agent instance data:', data)
   let instanceId = ctx.request.body.id ?? ctx.request.body.instanceId
 
   if (!instanceId || instanceId === undefined || instanceId <= 0) {
@@ -301,14 +299,19 @@ const getConversation = async (ctx: Koa.Context) => {
   const speaker = ctx.request.query.speaker
   const client = ctx.request.query.client
   const channel = ctx.request.query.channel
+  const maxCount = parseInt(ctx.request.query.maxCount as string)
 
   const conversation = await database.instance.getConversation(
     agent,
     speaker,
     client,
     channel,
-    false
+    false,
+    true,
+    maxCount
   )
+
+  console.log('conversation, query:', ctx.request.query, 'conv:', conversation)
 
   return (ctx.body = conversation)
 }
@@ -342,6 +345,12 @@ const getConversationCount = async (ctx: Koa.Context) => {
     client,
     channel,
     false
+  )
+  console.log(
+    'got conversation for query:',
+    ctx.request.query.agent,
+    'data:',
+    conversation
   )
 
   return (ctx.body = conversation.length)
@@ -644,8 +653,9 @@ const requestInformationAboutVideo = async (
   question: string
 ): Promise<string> => {
   const videoInformation = ``
-  const prompt = `Information: ${videoInformation} \n ${sender}: ${question.trim().endsWith('?') ? question.trim() : question.trim() + '?'
-    }\n${agent}:`
+  const prompt = `Information: ${videoInformation} \n ${sender}: ${
+    question.trim().endsWith('?') ? question.trim() : question.trim() + '?'
+  }\n${agent}:`
 
   const modelName = 'davinci'
   const temperature = 0.9
@@ -864,10 +874,5 @@ export const agents: Route[] = [
     path: '/chat_agent',
     access: noAuth,
     post: chatAgent,
-  },
-  {
-    path: '/save_conv',
-    access: noAuth,
-    post: saveConversation,
   },
 ]

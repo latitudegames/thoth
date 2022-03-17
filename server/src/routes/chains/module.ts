@@ -13,8 +13,6 @@ export class Module {
   }
 
   write(outputs: Record<string, unknown>) {
-    console.log('outputs are', outputs)
-    console.log('this.outputs is', this.outputs)
     Object.keys(this.outputs).forEach(key => {
       outputs[key] = this.outputs[key]
     })
@@ -25,7 +23,6 @@ export class Module {
   }
 
   setOutput(key: string, value: unknown) {
-    console.log('key, value', key, value)
     this.outputs[key] = value
   }
 }

@@ -35,6 +35,7 @@ export class agent extends gameObject {
     spell_handler: string,
     spell_version: string
   ) {
+    console.log('initializing discord, spell_handler:', spell_handler)
     if (this.discord)
       throw new Error('Discord already running for this agent on this instance')
     this.discord = new discord_client()

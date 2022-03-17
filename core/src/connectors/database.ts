@@ -43,8 +43,8 @@ export class database {
       host: process.env.PGHOST,
       ssl: PGSSL
         ? {
-          rejectUnauthorized: false,
-        }
+            rejectUnauthorized: false,
+          }
         : false,
     })
     this.client.connect()
@@ -204,14 +204,16 @@ export class database {
     client: any,
     channel: any,
     archive: any,
-    asString: boolean = true
+    asString: boolean = true,
+    maxCount: number = 10
   ) {
     const query =
-      'SELECT * FROM conversation WHERE agent=$1 AND client=$2 AND channel=$3 AND sender=$4'
-    const values = [agent, client, channel, sender]
+      'SELECT * FROM conversation WHERE agent=$1 AND client=$2 AND channel=$3 AND archive=$4'
+    const values = [agent, client, channel, archive]
 
     const row = await this.client.query(query, values)
     if (row && row.rows && row.rows.length > 0) {
+      console.log('got ' + row.rows.length + ' rows')
       row.rows.sort(function (
         a: { date: string | number | Date },
         b: { date: string | number | Date }
@@ -219,9 +221,7 @@ export class database {
         return new Date(b.date) - new Date(a.date)
       })
       const now = new Date()
-      const max_length = parseInt(
-        (await this.getConfig())['chatHistoryMessagesCount']
-      )
+      const max_length = maxCount
       let data = ''
       let count = 0
       for (let i = 0; i < row.rows.length; i++) {

@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable no-console */
 /* eslint-disable require-await */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -10,6 +11,7 @@ import {
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../../types'
+import { InputControl } from '../../dataControls/InputControl'
 import { EngineContext } from '../../engine'
 import { triggerSocket, stringSocket, anySocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
@@ -18,16 +20,26 @@ async function getConversation(
   agent: string,
   speaker: string,
   client: string,
-  channel: string
+  channel: string,
+  maxCount = 10
 ) {
-  const url = encodeURI(
-    `${process.env.REACT_APP_API_ROOT_URL ?? process.env.API_ROOT_URL ?? 'http://localhost:8001'
-    }/conversation?agent=${agent}&speaker=${speaker}&client=${client}&channel=${channel}`
-  ).replace(' ', '%20')
-
-  console.log("url is", url)
-  const response = await axios.get(url)
-  console.log("response is, ", response)
+  const response = await axios.get(
+    `${
+      process.env.REACT_APP_API_ROOT_URL ??
+      process.env.API_ROOT_URL ??
+      'http://localhost:8001'
+    }/conversation`,
+    {
+      params: {
+        agent: agent,
+        speaker: speaker,
+        client: client,
+        channel: channel,
+        maxCount: maxCount,
+      },
+    }
+  )
+  console.log('response.data:', response.data)
   return response.data
 }
 
@@ -64,6 +76,14 @@ export class ConversationRecall extends ThothComponent<Promise<InputReturn>> {
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
 
+    const max_count = new InputControl({
+      dataKey: 'max_count',
+      name: 'Max Count',
+      icon: 'moon',
+    })
+
+    node.inspector.add(max_count)
+
     return node
       .addInput(inp)
       .addInput(agentInput)
@@ -85,9 +105,18 @@ export class ConversationRecall extends ThothComponent<Promise<InputReturn>> {
     const agent = inputs['agent'][0] as string
     const client = inputs['client'][0] as string
     const channel = inputs['channel'][0] as string
-    console.log('inputs are', inputs)
-    const conv = await getConversation(agent, speaker, client, channel)
-    node.display(conv || 'Not found')
+
+    const maxCountData = node.data?.max_count as string
+    const maxCount = maxCountData ? parseInt(maxCountData) : 10
+
+    const conv = await getConversation(
+      agent,
+      speaker,
+      client,
+      channel,
+      maxCount
+    )
+    if (!silent) node.display(conv || 'Not found')
 
     return {
       conv: conv ?? '',

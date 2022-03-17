@@ -28,7 +28,9 @@ export async function setConversation(
   channel: string
 ) {
   const response = await axios.post(
-    `${process.env.REACT_APP_API_ROOT_URL ?? 'http://localhost:8001'}/conversation`,
+    `${
+      process.env.REACT_APP_API_ROOT_URL ?? 'http://localhost:8001'
+    }/conversation`,
     {
       agent,
       speaker,
@@ -37,7 +39,6 @@ export async function setConversation(
       channel,
     }
   )
-  console.log('response is', response)
   return response.data
 }
 
@@ -95,35 +96,23 @@ export class ConversationStore extends ThothComponent<Promise<InputReturn>> {
     const client = inputs['client'][0] as string
     const channel = inputs['channel'][0] as string
 
-    console.log('convSpeaker is', convSpeaker)
-    console.log('convAgent is', convAgent)
-
-    // 1. Get conversation input (to speed things up)
-    // 2. If no conversation input, get from db
-    // 4. Add a conversation length limit
-    // 5. Delete archive node if there is one
-    // 6. Append new conversation and log to test
-    // 7. Pack JSON to string and save to db 
-
-
-    // B Slice and move any conversation to the archive if it's too long
-    // Make sure on the other side that we're appending to existing conversation
-    await axios.post(`${process.env.REACT_APP_API_ROOT_URL}/archive_conversation`, {
-      agent: agent,
-      speaker: speaker,
-      client: client,
-      channel: channel,
-    })
-
-    const resp = await setConversation(
+    const respUser = await setConversation(
       agent,
       speaker,
       convSpeaker,
       client,
       channel
     )
-    console.log('Setting conversation store...')
-    node.display(resp)
+
+    if (!silent) node.display(respUser.data)
+    const respAgent = await setConversation(
+      agent,
+      agent,
+      convAgent,
+      client,
+      channel
+    )
+    if (!silent) node.display(respAgent.data)
 
     return {}
   }

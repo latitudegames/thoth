@@ -85,8 +85,6 @@ export class AgentManager extends ThothComponent<Promise<WorkerReturn>> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    console.log('Handling ', node?.data)
-    console.log('serverUrl is', serverUrl)
     const personality = node?.data?.personality as string
     console.log('personality is', personality)
 

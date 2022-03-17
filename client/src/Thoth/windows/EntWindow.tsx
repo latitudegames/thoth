@@ -114,7 +114,6 @@ const Ent = ({ id, updateCallback }) => {
       xrengine_spell_handler_update,
       xrengine_spell_handler_feed,
     }
-    console.log('sending save data:', _data)
     axios
       .post(`${process.env.REACT_APP_API_ROOT_URL}/agentInstance`, {
         id,

@@ -129,8 +129,6 @@ export class GenerateContext extends ThothComponent<Promise<WorkerReturn>> {
       kdata += '\n'
     }
 
-    console.log('agentData:', agentData)
-
     const res = fewshot
       .replace('$morals', agentData.morals ?? '')
       .replace('$personality', agentData.perseonality ?? '')

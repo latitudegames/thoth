@@ -6,6 +6,7 @@ import { ArchiveConversation } from './agent/ArchiveConversation'
 import { CacheManagerDelete } from './agent/CacheManagerDelete'
 import { CacheManagerGet } from './agent/CacheManagerGet'
 import { CacheManagerSet } from './agent/CacheManagerSet'
+import { ChatClassification } from './agent/ChatClassification'
 import { ConversationRecall } from './agent/ConversationRecall'
 import { ConversationStore } from './agent/ConversationStore'
 import { CreateOrGetAgent } from './agent/CreateOrGetAgent'
@@ -19,9 +20,11 @@ import { FactsStore } from './agent/FactsStore'
 import { FastGreetingDetector } from './agent/FastGreetingDetector'
 import { FastProfanityDetector } from './agent/FastProfanityDetector'
 import { FastQuestionDetector } from './agent/FastQuestionDetector'
+import { FewshotVariable } from './agent/FewshotVariable'
 import { GenerateContext } from './agent/GenerateContext'
 import { GetAgentData } from './agent/GetAgentData'
 import { GetAgentFacts } from './agent/GetAgentFacts'
+import { InputClassification } from './agent/InputClassification'
 import { InputDestructureComponent } from './agent/InputDestructure'
 import { InputsToJSON } from './agent/InputsToJSON'
 import { IsNullOrUndefined } from './agent/IsNullOrUndefined'
@@ -112,6 +115,8 @@ export const components = {
   factsStore: () => new FactsStore(),
   factsRecall: () => new FactsRecall(),
   factsCount: () => new FactsCount(),
+  chatClassification: () => new ChatClassification(),
+  inputClassification: () => new InputClassification(),
   getAgentData: () => new GetAgentData(),
   getAgentFacts: () => new GetAgentFacts(),
   isNullOrUndefined: () => new IsNullOrUndefined(),
@@ -133,6 +138,7 @@ export const components = {
   randomGreetingResponse: () => new RandomGreetingResponse(),
   randomProfanityResponse: () => new RandomProfanityResponse(),
   stringVariable: () => new StringVariable(),
+  fewshotVariable: () => new FewshotVariable(),
   stringAdder: () => new StringAdder(),
   numberVariable: () => new NumberVariable(),
   booleanVariable: () => new BooleanVariable(),

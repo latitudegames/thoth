@@ -1,4 +1,5 @@
 import Rete from 'rete'
+
 import {
   NodeData,
   ThothNode,

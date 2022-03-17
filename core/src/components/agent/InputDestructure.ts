@@ -68,8 +68,6 @@ export class InputDestructureComponent extends ThothComponent<InputReturn> {
   }
 
   worker(_node: NodeData, inputs: ThothWorkerInputs) {
-    console.log('input is', inputs)
-
     const input = inputs.input != null ? inputs.input[0] : inputs
 
     // If there are outputs, we are running as a module input and we use that value
