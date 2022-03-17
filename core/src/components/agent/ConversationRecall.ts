@@ -59,18 +59,18 @@ export class ConversationRecall extends ThothComponent<Promise<InputReturn>> {
     const speakerInput = new Rete.Input('speaker', 'Speaker', stringSocket)
     const clientInput = new Rete.Input('client', 'Client', stringSocket)
     const channelInput = new Rete.Input('channel', 'Channel', stringSocket)
-    const out = new Rete.Output('output', 'Input String', anySocket)
+    const out = new Rete.Output('output', 'Output String', anySocket)
     const inp = new Rete.Input('string', 'Input String', stringSocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
 
     return node
       .addInput(inp)
-      .addInput(dataInput)
       .addInput(agentInput)
       .addInput(speakerInput)
       .addInput(clientInput)
       .addInput(channelInput)
+      .addInput(dataInput)
       .addOutput(dataOutput)
       .addOutput(out)
   }
@@ -87,7 +87,7 @@ export class ConversationRecall extends ThothComponent<Promise<InputReturn>> {
     const channel = inputs['channel'][0] as string
     console.log('inputs are', inputs)
     const conv = await getConversation(agent, speaker, client, channel)
-    console.log('conv is', conv)
+    node.display(conv || 'Not found')
 
     return {
       conv: conv ?? '',
