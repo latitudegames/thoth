@@ -41,7 +41,7 @@ const TextEditor = props => {
       },
       wordWrap: 'bounded',
       fontSize: 14,
-      fontFamily: '"IBM Plex Mono", sans-serif !important',
+      // fontFamily: '"IBM Plex Mono", sans-serif !important',
     }
 
     setEditorOptions(options)
