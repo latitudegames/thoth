@@ -8,6 +8,7 @@ import InputGenerator from './InputGenerator'
 import LongText from './LongTextControl'
 import ModuleSelect from './ModuleSelect'
 import OutputGenerator from './OutputGenerator'
+import DropdownSelect from './DropdownSelect'
 import SocketGenerator from './SocketGenerator'
 import PlaytestControl from './PlaytestControl'
 import SwitchControl from './SwitchControl'
@@ -28,6 +29,7 @@ const controlMap = {
   socketGenerator: SocketGenerator,
   playtest: PlaytestControl,
   switch: SwitchControl,
+  dropdownSelect: DropdownSelect,
 }
 
 const DataControls = ({
