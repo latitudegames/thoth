@@ -22,7 +22,7 @@ import roomManager from '../components/agent/roomManager'
 import { classifyText } from '../utils/textClassifier'
 import { browserWindow, PageUtils } from './browser'
 import { database } from './database'
-import { handleCustomInput } from './handleInput'
+import { handleCustomInput, handleInput } from './handleInput'
 import {
   detectOsOption,
   getRandomEmptyResponse,
@@ -201,6 +201,7 @@ export class xrengine_client {
     bot,
     isVoice
   ) {
+    console.log('handling message:', text)
     if (text.includes('[') && text.includes(']')) return
     else if (text.includes('joined the layer')) {
       const user = text.replace('joined the layer', '')
@@ -208,7 +209,7 @@ export class xrengine_client {
       const response = await handleCustomInput(
         '[welcome]' + user,
         _sender,
-        this.agent.name ?? 'Agent',
+        this.settings.xrengine_bot_name ?? 'Agent',
         null,
         'xr-engine',
         channelId,
@@ -222,7 +223,12 @@ export class xrengine_client {
     else if (text.includes('in intimate range')) return
     else if (text.startsWith('/') || text.startsWith(' /')) return
     else if (sender === bot.name || senderId === bot.userId) {
-      this.addMessageToHistory(channelId, id, this.agent.name, text)
+      this.addMessageToHistory(
+        channelId,
+        id,
+        this.settings.xrengine_bot_name,
+        text
+      )
       return
     }
     await this.wasHandled(
@@ -366,14 +372,14 @@ export class xrengine_client {
         }
         log('content: ' + content + ' sender: ' + _sender)
 
-        const response = await handleCustomInput(
+        const response = await handleInput(
           content.replace('!ping', ''),
           _sender,
-          this.agent.name ?? 'Agent',
-          null,
+          this.settings.xrengine_bot_name ?? 'Agent',
           'xr-engine',
           channelId,
-          isVoice
+          this.spell_handler,
+          this.spell_version
         )
         await this.handleXREngineResponse(response, addPing, _sender, isVoice)
       }
@@ -476,7 +482,7 @@ export class xrengine_client {
     this.agent = agent
     this.settings = settings
     //generateVoice('hello there', (buf, path) => {}, false)
-    log('creating xr engine client')
+    console.log('creating xr engine client', settings)
 
     this.xrengineBot = new XREngineBot({
       headless: true,
@@ -500,8 +506,8 @@ export class xrengine_client {
       log('Connecting to server...')
       await cli.xrengineBot.launchBrowser()
       const XRENGINE_URL =
-        (settings.url as string) || 'https://n3xus.city/location/test '
-      cli.xrengineBot.enterRoom(XRENGINE_URL, { name: 'TestBot' })
+        (settings.url as string) || 'https://n3xus.city/location/test'
+      cli.xrengineBot.enterRoom(XRENGINE_URL, settings.xrengine_bot_name)
       log('bot fully loaded')
     })
   }
@@ -803,7 +809,7 @@ class XREngineBot {
     await this.waitForTimeout(timeout)
   }
 
-  async interactObject() { }
+  async interactObject() {}
 
   /** Return screenshot
    * @param {Function} fn Function to execut _in the node context._
@@ -1040,7 +1046,8 @@ class XREngineBot {
    * @param {Object} opts
    * @param {string} opts.name Name to set as the bot name when joining the room
    */
-  async enterRoom(roomUrl, { name = 'bot' } = {}) {
+  async enterRoom(roomUrl, name) {
+    console.log('bot name:', name)
     await this.navigate(roomUrl)
     await this.page.waitForSelector('div[class*="instance-chat-container"]', {
       timeout: 100000,
@@ -1052,7 +1059,10 @@ class XREngineBot {
       name = this.name
     }
 
-    this.username_regex = new RegExp(this.agent.name, 'ig')
+    this.username_regex = new RegExp(
+      this.settings.xrengine_bot_name_regex,
+      'ig'
+    )
 
     if (this.headless) {
       // Disable rendering for headless, otherwise chromium uses a LOT of CPU

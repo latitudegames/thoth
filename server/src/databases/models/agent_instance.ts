@@ -21,6 +21,8 @@ export interface agent_instanceAttributes {
   xrengine_spell_handler_incoming?: string
   xrengine_spell_handler_update?: string
   xrengine_spell_handler_feed?: string
+  xrengine_bot_name?: string
+  xrengine_bot_name_regex?: string
 }
 
 export type agent_instancePk = 'id'
@@ -39,6 +41,8 @@ export type agent_instanceOptionalAttributes =
   | 'xrengine_spell_handler_incoming'
   | 'xrengine_spell_handler_update'
   | 'xrengine_spell_handler_feed'
+  | 'xrengine_bot_name'
+  | 'xrengine_bot_name_regex'
   | 'enabled'
   | 'updated_at'
 export type agent_instanceCreationAttributes = Optional<
@@ -68,6 +72,8 @@ export class agent_instance
   xrengine_spell_handler_incoming?: string
   xrengine_spell_handler_update?: string
   xrengine_spell_handler_feed?: string
+  xrengine_bot_name?: string
+  xrengine_bot_name_regex?: string
   static initModel(sequelize: Sequelize.Sequelize): typeof agent_instance {
     return agent_instance.init(
       {
@@ -142,6 +148,14 @@ export class agent_instance
           allowNull: true,
         },
         xrengine_spell_handler_feed: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
+        xrengine_bot_name: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
+        xrengine_bot_name_regex: {
           type: DataTypes.TEXT,
           allowNull: true,
         },
