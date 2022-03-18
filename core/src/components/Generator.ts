@@ -56,20 +56,11 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       name: 'Component Name',
     })
 
-<<<<<<< HEAD
     const modelControl = new DropdownControl({
       dataKey: 'model',
       name: 'Model',
       defaultValue: (node.data?.model as string) || 'davinci',
       values: ['vanilla-davinci', 'aid-jumbo', 'vanilla-jumbo', 'aid-griffin']
-=======
-    console.log('building generator')
-    const modelControl = new DropdownControl({
-      dataKey: 'model',
-      name: 'Model',
-      defaultValue: 'davinci',
-      values: ['davinci', 'curie']
->>>>>>> 23c66ef2 (fix merge conflicts)
     })
 
     const inputGenerator = new SocketGeneratorControl({
@@ -130,13 +121,9 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       return acc
     }, {} as Record<string, unknown>)
 
-<<<<<<< HEAD
     const model = (node.data.model as string) ?? 'vanilla-davinci'
-    console.log({model, nodeData: node.data.model})
-=======
     // const model = node.data.model || 'davinci'
 
->>>>>>> 23c66ef2 (fix merge conflicts)
     const fewshot = (node.data.fewshot as string) || ''
     const stopSequence = node.data.stop as string
     const template = Handlebars.compile(fewshot)
@@ -159,11 +146,7 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       : 0
 
     const body = {
-<<<<<<< HEAD
       model,
-=======
-      model: '',
->>>>>>> 23c66ef2 (fix merge conflicts)
       prompt,
       stop,
       maxTokens,
