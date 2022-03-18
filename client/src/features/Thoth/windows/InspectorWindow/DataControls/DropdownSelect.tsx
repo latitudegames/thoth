@@ -2,7 +2,6 @@ import Select from '../../../../common/Select/Select'
 
 const DropdownSelect = ({ control, updateData, initialValue }) => {
   const { dataKey, data } = control
-  console.log({data})
 
   const {values, defaultValue} = data
 
@@ -15,14 +14,11 @@ const DropdownSelect = ({ control, updateData, initialValue }) => {
 
   const defaultVal = {value, label: value}
 
-  console.log({value, initialValue, defaultValue})
-
   const onChange = async ({ value }) => {
     update(value)
   }
 
   const update = update => {
-    console.log({update, dataKey})
     updateData({ [dataKey]: update })
   }
 

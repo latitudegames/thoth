@@ -56,12 +56,11 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       name: 'Component Name',
     })
 
-    console.log('building generator')
     const modelControl = new DropdownControl({
       dataKey: 'model',
       name: 'Model',
       defaultValue: (node.data?.model as string) || 'davinci',
-      values: ['davinci', 'curie']
+      values: ['vanilla-davinci', 'aid-jumbo', 'vanilla-jumbo', 'aid-griffin']
     })
 
     const inputGenerator = new SocketGeneratorControl({
@@ -122,7 +121,7 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       return acc
     }, {} as Record<string, unknown>)
 
-    const model = (node.data.model as string) ?? 'davinci'
+    const model = (node.data.model as string) ?? 'vanilla-davinci'
     console.log({model, nodeData: node.data.model})
     const fewshot = (node.data.fewshot as string) || ''
     const stopSequence = node.data.stop as string
@@ -131,7 +130,7 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
 
     const stop = node?.data?.stop
       ? stopSequence.split(',').map(i => i.trim())
-      : ['\n']
+      : ''
 
     const tempData = node.data.temp as string
     const temperature = tempData ? parseFloat(tempData) : 0.7
