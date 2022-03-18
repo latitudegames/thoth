@@ -8,22 +8,14 @@ import {
   selectSpellById,
   useSaveSpellMutation,
 } from '../../../state/api/spells'
-import {
-  selectGameStateBySpellId,
-  // updateGameState,
-} from '../../../state/gameState'
 import Window from '../../common/Window/Window'
 
 import '../thoth.module.css'
-import { RootState } from '../../../state/store'
 import WindowMessage from '../components/WindowMessage'
 
 const StateManager = ({ tab, ...props }) => {
   // const dispatch = useDispatch()
   const [saveSpell] = useSaveSpellMutation()
-  const gameState = useSelector((state: RootState) => {
-    return selectGameStateBySpellId(state.gameState, tab.spell)
-  })
   const spell = useSelector(state => selectSpellById(state, tab.spell))
 
   const { enqueueSnackbar } = useSnackbar()
@@ -79,9 +71,9 @@ const StateManager = ({ tab, ...props }) => {
 
   // update code when game state changes
   useEffect(() => {
-    if (!gameState) return
-    setCode(jsonFormat(gameState.state))
-  }, [gameState])
+    if (!spell?.gameState) return
+    setCode(jsonFormat(spell.gameState))
+  }, [spell])
 
   const onClear = () => {
     const reset = `{}`
@@ -94,7 +86,7 @@ const StateManager = ({ tab, ...props }) => {
   }
 
   const onSave = async () => {
-    if (!gameState) return
+    if (!spell?.gameState) return
     const parsedState = JSON.parse(code)
     const spellUpdate = {
       ...spell,
