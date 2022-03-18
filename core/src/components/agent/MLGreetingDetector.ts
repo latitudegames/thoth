@@ -12,15 +12,11 @@ import {
 } from '../../../types'
 import { InputControl } from '../../dataControls/InputControl'
 import { EngineContext } from '../../engine'
-import { triggerSocket, stringSocket, anySocket } from '../../sockets'
+import { triggerSocket, stringSocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
 const info =
   'ML Greeting Detector can detect whether or not a phrase is a greeting, using Hugging Face'
-
-type InputReturn = {
-  output: unknown
-}
 
 function getValue(labels: any, scores: any, key: string) {
   for (let i = 0; i < labels.length; i++) {
@@ -32,12 +28,12 @@ function getValue(labels: any, scores: any, key: string) {
   return 0
 }
 
-export class MLGreetingDetector extends ThothComponent<Promise<InputReturn>> {
+export class MLGreetingDetector extends ThothComponent<Promise<void>> {
   constructor() {
     super('ML Greeting Detector')
 
     this.task = {
-      outputs: { true: 'option', false: 'option', output: 'output' },
+      outputs: { true: 'option', false: 'option' },
     }
 
     this.category = 'Conversation'
@@ -50,7 +46,6 @@ export class MLGreetingDetector extends ThothComponent<Promise<InputReturn>> {
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const isTrue = new Rete.Output('true', 'True', triggerSocket)
     const isFalse = new Rete.Output('false', 'False', triggerSocket)
-    const out = new Rete.Output('output', 'output', anySocket)
 
     const minDiff = new InputControl({
       dataKey: 'minDiff',
@@ -65,7 +60,6 @@ export class MLGreetingDetector extends ThothComponent<Promise<InputReturn>> {
       .addInput(dataInput)
       .addOutput(isTrue)
       .addOutput(isFalse)
-      .addOutput(out)
   }
 
   async worker(
@@ -102,8 +96,5 @@ export class MLGreetingDetector extends ThothComponent<Promise<InputReturn>> {
     const is = diff > minDiff && greeting > notGreeting
 
     this._task.closed = success && is ? ['false'] : ['true']
-    return {
-      output: action as string,
-    }
   }
 }

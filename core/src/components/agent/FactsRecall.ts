@@ -11,14 +11,13 @@ import {
   ThothWorkerOutputs,
 } from '../../../types'
 import { EngineContext } from '../../engine'
-import { triggerSocket, stringSocket, anySocket } from '../../sockets'
+import { triggerSocket, stringSocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
 const info = 'Facts Recall is used to get facts for an agent and user'
 
 type InputReturn = {
   output: unknown
-  facts: unknown
 }
 
 export async function getFacts(agent: string, speaker: string) {
@@ -48,19 +47,15 @@ export class FactsRecall extends ThothComponent<Promise<InputReturn>> {
   builder(node: ThothNode) {
     const agentInput = new Rete.Input('agent', 'Agent', stringSocket)
     const speakerInput = new Rete.Input('speaker', 'Speaker', stringSocket)
-    const out = new Rete.Output('output', 'Input String', anySocket)
-    const inp = new Rete.Input('string', 'Input String', stringSocket)
-    const factsOut = new Rete.Output('facts', 'Output', stringSocket)
+    const factsOut = new Rete.Output('output', 'Output', stringSocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
 
     return node
-      .addInput(inp)
       .addInput(dataInput)
       .addInput(agentInput)
       .addInput(speakerInput)
       .addOutput(dataOutput)
-      .addOutput(out)
       .addOutput(factsOut)
   }
 
@@ -72,13 +67,11 @@ export class FactsRecall extends ThothComponent<Promise<InputReturn>> {
   ) {
     const speaker = inputs['speaker'][0] as string
     const agent = inputs['agent'][0] as string
-    const action = inputs['string'][0]
 
     const facts = await getFacts(agent, speaker)
 
     return {
-      output: action as string,
-      facts: facts,
+      output: facts,
     }
   }
 }

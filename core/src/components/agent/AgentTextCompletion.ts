@@ -125,7 +125,13 @@ export class AgentTextCompletion extends ThothComponent<Promise<WorkerReturn>> {
     const stop = (node?.data?.stop as string).split(',')
     for (let i = 0; i < stop.length; i++) {
       stop[i] = stop[i].trim()
+      if (stop[i] === '\\n') {
+        stop[i] = '\n'
+      }
     }
+    const filteredStop = stop.filter(function (el) {
+      return el != null && el !== undefined && el.length > 0
+    })
 
     console.log(
       'sending completion to:',
@@ -141,7 +147,7 @@ export class AgentTextCompletion extends ThothComponent<Promise<WorkerReturn>> {
         topP: topP,
         frequencyPenalty: frequencyPenalty,
         presencePenalty: presencePenalty,
-        stop: stop,
+        stop: filteredStop,
       }
     )
     console.log('resp.data is ', resp.data)

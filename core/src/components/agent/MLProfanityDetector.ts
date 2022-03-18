@@ -12,7 +12,7 @@ import {
 } from '../../../types'
 import { InputControl } from '../../dataControls/InputControl'
 import { EngineContext } from '../../engine'
-import { triggerSocket, stringSocket, anySocket } from '../../sockets'
+import { triggerSocket, stringSocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
 const info =
@@ -20,7 +20,6 @@ const info =
 
 type InputReturn = {
   output: unknown
-  type: string
 }
 
 function getValue(labels: any, scores: any, key: string) {
@@ -42,7 +41,6 @@ export class MLProfanityDetector extends ThothComponent<Promise<InputReturn>> {
         true: 'option',
         false: 'option',
         output: 'output',
-        type: 'output',
       },
     }
 
@@ -56,8 +54,7 @@ export class MLProfanityDetector extends ThothComponent<Promise<InputReturn>> {
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const isTrue = new Rete.Output('true', 'True', triggerSocket)
     const isFalse = new Rete.Output('false', 'False', triggerSocket)
-    const out = new Rete.Output('output', 'output', anySocket)
-    const typeOut = new Rete.Output('type', 'type', stringSocket)
+    const typeOut = new Rete.Output('output', 'Ttype', stringSocket)
 
     const minDiff = new InputControl({
       dataKey: 'minDiff',
@@ -72,7 +69,6 @@ export class MLProfanityDetector extends ThothComponent<Promise<InputReturn>> {
       .addInput(dataInput)
       .addOutput(isTrue)
       .addOutput(isFalse)
-      .addOutput(out)
       .addOutput(typeOut)
   }
 
@@ -148,8 +144,7 @@ export class MLProfanityDetector extends ThothComponent<Promise<InputReturn>> {
     this._task.closed = success && type.length > 0 ? ['false'] : ['true']
 
     return {
-      output: action as string,
-      type: type,
+      output: type,
     }
   }
 }

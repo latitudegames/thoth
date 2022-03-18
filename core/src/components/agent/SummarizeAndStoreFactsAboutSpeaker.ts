@@ -12,7 +12,7 @@ import {
 } from '../../../types'
 import { FewshotControl } from '../../dataControls/FewshotControl'
 import { EngineContext } from '../../engine'
-import { triggerSocket, stringSocket, anySocket } from '../../sockets'
+import { triggerSocket, stringSocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
 const info = 'Summarize And Store Facts About Speaker'
@@ -21,7 +21,6 @@ const fewshot = ``
 
 type InputReturn = {
   output: unknown
-  facts: unknown
 }
 
 export class SummarizeAndStoreFactsAboutSpeaker extends ThothComponent<
@@ -33,7 +32,6 @@ export class SummarizeAndStoreFactsAboutSpeaker extends ThothComponent<
     this.task = {
       outputs: {
         output: 'output',
-        facts: 'output',
         trigger: 'option',
       },
     }
@@ -48,9 +46,8 @@ export class SummarizeAndStoreFactsAboutSpeaker extends ThothComponent<
 
     const agentInput = new Rete.Input('agent', 'Agent', stringSocket)
     const speakerInput = new Rete.Input('speaker', 'Speaker', stringSocket)
-    const out = new Rete.Output('output', 'Input String', anySocket)
     const inp = new Rete.Input('string', 'Input String', stringSocket)
-    const factsOut = new Rete.Output('facts', 'Output', stringSocket)
+    const factsOut = new Rete.Output('output', 'Facts', stringSocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
 
@@ -64,7 +61,6 @@ export class SummarizeAndStoreFactsAboutSpeaker extends ThothComponent<
       .addInput(agentInput)
       .addInput(speakerInput)
       .addOutput(dataOutput)
-      .addOutput(out)
       .addOutput(factsOut)
   }
 
@@ -107,8 +103,7 @@ export class SummarizeAndStoreFactsAboutSpeaker extends ThothComponent<
     if (!silent) node.display(result)
 
     return {
-      output: action as string,
-      facts: result,
+      output: result,
     }
   }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 /* eslint-disable no-console */
 /* eslint-disable no-param-reassign */
 /* eslint-disable prefer-const */
@@ -390,7 +391,9 @@ export class discord_client {
             if (user !== undefined) {
               //const u = '@' + user.username + '#' + user.discriminator
               const u =
-                user.id == this.client.user ? this.agent.name : user.username
+                user.id == this.client.user
+                  ? this.discord_bot_name
+                  : user.username
               content = content.replace(data[i], u)
             }
           } catch (err) {
@@ -618,7 +621,7 @@ export class discord_client {
     const response = await handleInput(
       message.content,
       message.author.username,
-      this.agent.name ?? 'Thales',
+      this.discord_bot_name ?? 'Thales',
       'discord',
       message.channel.id,
       this.spell_handler,
@@ -831,7 +834,7 @@ export class discord_client {
                   msg.author.isBot ||
                   msg.author.username.toLowerCase().includes('digital being')
                 )
-                  _author = this.agent.name
+                  _author = this.discord_bot_name
 
                 if (msg.deleted === true) {
                   // await deleteMessageFromHistory(channel.id, msg.id)
@@ -1573,7 +1576,7 @@ export class discord_client {
           // const resp = await handleInput(
           //   'Tell me about ' + 'butterlifes',
           //   'bot',
-          //   this.agent.name ?? 'Agent',
+          //    this.discord_bot_name ?? 'Agent',
           //   'discord',
           //   message.channel.id,
           //   this.spell_handler,

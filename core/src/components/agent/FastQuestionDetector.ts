@@ -11,7 +11,7 @@ import {
 } from '../../../types'
 import { FewshotControl } from '../../dataControls/FewshotControl'
 import { EngineContext } from '../../engine'
-import { triggerSocket, stringSocket, anySocket } from '../../sockets'
+import { triggerSocket, stringSocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
 /* eslint-disable no-param-reassign */
@@ -36,7 +36,6 @@ function isQuestion(input: string, data: string) {
   return false
 }
 
-
 const info =
   'Fast Question Detector can detect whether or not a phrase is a question'
 
@@ -55,16 +54,12 @@ is it
 am i
 how`
 
-type InputReturn = {
-  output: unknown
-}
-
-export class FastQuestionDetector extends ThothComponent<Promise<InputReturn>> {
+export class FastQuestionDetector extends ThothComponent<Promise<void>> {
   constructor() {
     super('Fast Question Detector')
 
     this.task = {
-      outputs: { true: 'option', false: 'option', output: 'output' },
+      outputs: { true: 'option', false: 'option' },
     }
 
     this.category = 'Conversation'
@@ -79,7 +74,6 @@ export class FastQuestionDetector extends ThothComponent<Promise<InputReturn>> {
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const isTrue = new Rete.Output('true', 'True', triggerSocket)
     const isFalse = new Rete.Output('false', 'False', triggerSocket)
-    const out = new Rete.Output('output', 'output', anySocket)
 
     const fewshotControl = new FewshotControl({})
 
@@ -90,7 +84,6 @@ export class FastQuestionDetector extends ThothComponent<Promise<InputReturn>> {
       .addInput(dataInput)
       .addOutput(isTrue)
       .addOutput(isFalse)
-      .addOutput(out)
   }
 
   async worker(
@@ -105,8 +98,5 @@ export class FastQuestionDetector extends ThothComponent<Promise<InputReturn>> {
     const is = isQuestion(action as string, fewshot)
 
     this._task.closed = is ? ['false'] : ['true']
-    return {
-      output: action as string,
-    }
   }
 }

@@ -568,6 +568,12 @@ const textCompletion = async (ctx: Koa.Context) => {
 
   if (!stop || stop.length === undefined || stop.length <= 0) {
     stop = ['"""', `${sender}:`, '\n']
+  } else {
+    for (let i = 0; i < stop.length; i++) {
+      if (stop[i] === '$speaker:') {
+        stop[i] = `${sender}:`
+      }
+    }
   }
 
   console.log('textCompletion for prompt:', prompt)

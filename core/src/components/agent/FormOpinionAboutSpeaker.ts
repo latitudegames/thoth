@@ -12,7 +12,7 @@ import {
 } from '../../../types'
 import { FewshotControl } from '../../dataControls/FewshotControl'
 import { EngineContext } from '../../engine'
-import { triggerSocket, stringSocket, anySocket } from '../../sockets'
+import { triggerSocket, stringSocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
 const info = 'Form Opinion About Speaker'
@@ -28,7 +28,6 @@ Manipulative`
 
 type InputReturn = {
   output: unknown
-  matrix: unknown
 }
 
 export class FormOpinionAboutSpeaker extends ThothComponent<
@@ -40,7 +39,6 @@ export class FormOpinionAboutSpeaker extends ThothComponent<
     this.task = {
       outputs: {
         output: 'output',
-        matrix: 'output',
         trigger: 'option',
       },
     }
@@ -53,10 +51,9 @@ export class FormOpinionAboutSpeaker extends ThothComponent<
   builder(node: ThothNode) {
     node.data.fewshot = fewshot
 
-    const out = new Rete.Output('output', 'Input String', anySocket)
     const inp = new Rete.Input('string', 'Input String', stringSocket)
     const inpMatrix = new Rete.Input('matrix', 'Input Matrix', stringSocket)
-    const matrixOut = new Rete.Output('matrix', 'Output', stringSocket)
+    const matrixOut = new Rete.Output('output', 'Output Matrix', stringSocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
 
@@ -69,7 +66,6 @@ export class FormOpinionAboutSpeaker extends ThothComponent<
       .addInput(inpMatrix)
       .addInput(dataInput)
       .addOutput(dataOutput)
-      .addOutput(out)
       .addOutput(matrixOut)
   }
 
@@ -86,22 +82,22 @@ export class FormOpinionAboutSpeaker extends ThothComponent<
     const _matrix =
       matrix.length <= 0 || matrix === 'internal error'
         ? {
-          Enemy: 0,
-          Friend: 0,
-          Student: 0,
-          Teacher: 0,
-          Repulsed: 0,
-          Attracted: 0,
-          Honest: 0,
-          Manipulative: 0,
+            Enemy: 0,
+            Friend: 0,
+            Student: 0,
+            Teacher: 0,
+            Repulsed: 0,
+            Attracted: 0,
+            Honest: 0,
+            Manipulative: 0,
 
-          EnemyLimit: 1,
-          FriendLimit: 1,
-          StudentLimit: 1,
-          TeacherLimit: 1,
-          RepulsedLimit: 1,
-          AttractedLimit: 1,
-        }
+            EnemyLimit: 1,
+            FriendLimit: 1,
+            StudentLimit: 1,
+            TeacherLimit: 1,
+            RepulsedLimit: 1,
+            AttractedLimit: 1,
+          }
         : JSON.parse(matrix)
 
     const alpha = 0.01 // how much better or worse does the bot start to feel about someone?
@@ -142,8 +138,7 @@ export class FormOpinionAboutSpeaker extends ThothComponent<
     }
 
     return {
-      output: action as string,
-      matrix: JSON.stringify(_matrix),
+      output: JSON.stringify(_matrix),
     }
   }
 }

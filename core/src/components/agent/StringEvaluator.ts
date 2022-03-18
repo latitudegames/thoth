@@ -21,11 +21,7 @@ const fewshot = ``
 const info =
   'String Evaluator - options: includes, not includes, equals, not equals, starts with, not starts with, ends with, not ends with'
 
-type WorkerReturn = {
-  output: string
-}
-
-export class StringEvaluator extends ThothComponent<Promise<WorkerReturn>> {
+export class StringEvaluator extends ThothComponent<Promise<void>> {
   constructor() {
     super('String Evaluator')
 
@@ -45,7 +41,6 @@ export class StringEvaluator extends ThothComponent<Promise<WorkerReturn>> {
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const isTrue = new Rete.Output('true', 'True', triggerSocket)
     const isFalse = new Rete.Output('false', 'False', triggerSocket)
-    const outp = new Rete.Output('output', 'String', stringSocket)
 
     const operationType = new InputControl({
       dataKey: 'operationType',
@@ -62,7 +57,6 @@ export class StringEvaluator extends ThothComponent<Promise<WorkerReturn>> {
       .addInput(dataInput)
       .addOutput(isTrue)
       .addOutput(isFalse)
-      .addOutput(outp)
   }
 
   async worker(
@@ -99,8 +93,5 @@ export class StringEvaluator extends ThothComponent<Promise<WorkerReturn>> {
     }
 
     this._task.closed = is ? ['false'] : ['true']
-    return {
-      output: action,
-    }
   }
 }

@@ -18,8 +18,6 @@ import { ThothComponent } from '../../thoth-component'
 const info =
   'Conversation Store is used to store conversation for an agent and user'
 
-type InputReturn = {}
-
 export async function setConversation(
   agent: string,
   speaker: string,
@@ -42,7 +40,7 @@ export async function setConversation(
   return response.data
 }
 
-export class ConversationStore extends ThothComponent<Promise<InputReturn>> {
+export class ConversationStore extends ThothComponent<Promise<void>> {
   constructor() {
     super('Conversation Store')
 
@@ -113,7 +111,5 @@ export class ConversationStore extends ThothComponent<Promise<InputReturn>> {
       channel
     )
     if (!silent) node.display(respAgent.data)
-
-    return {}
   }
 }
