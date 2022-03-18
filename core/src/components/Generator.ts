@@ -129,8 +129,11 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
     const prompt = template(inputs)
 
     const stop = node?.data?.stop
-      ? stopSequence.split(',').map(i => i.trim())
-      : ''
+      ? stopSequence.split(',').map(i => {
+          if (i === '\n') return i
+          return i.trim()
+        })
+      : []
 
     const tempData = node.data.temp as string
     const temperature = tempData ? parseFloat(tempData) : 0.7
