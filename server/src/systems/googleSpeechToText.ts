@@ -25,6 +25,7 @@ const request = {
 
 export async function initSpeechServer(ignoreDotEnv: boolean) {
   if (ignoreDotEnv === false && process.env.ENABLE_SPEECH_SERVER === 'false') {
+    console.log('Speech server disabled')
     return
   }
 
@@ -32,7 +33,7 @@ export async function initSpeechServer(ignoreDotEnv: boolean) {
   const io = new Server(PORT, {
     cors: { origin: '*', methods: ['GET', 'POST'] },
   })
-  console.log('speech server started on port', process.env.SPEECH_SERVER_PORT)
+  console.log('speech server started on port', PORT)
 
   speechClient = new SpeechClient()
 
