@@ -7,7 +7,11 @@ export class DropdownControl extends DataControl {
     values,
     defaultValue,
     icon = 'properties',
+<<<<<<< HEAD
     write = true,
+=======
+    write = false,
+>>>>>>> 23c66ef2 (fix merge conflicts)
 
   }: {
     name: string

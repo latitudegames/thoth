@@ -136,6 +136,7 @@ const BasicSelect = ({
     return isValidNewOption(...args)
   }
 
+  console.log({options})
   return (
     <span className={css['select-dropdown-container']} style={style}>
 

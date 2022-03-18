@@ -22,10 +22,17 @@
   "dependencies": {
     "@callstack/async-storage": "^2.0.3",
 <<<<<<< HEAD
+<<<<<<< HEAD
     "@latitudegames/thoth-core": "0.0.64",
 =======
     "@latitudegames/thoth-core": "0.0.65",
 >>>>>>> 234778df (Target  "@latitudegames/thoth-core": "0.0.65")
+=======
+    "@latitudegames/thoth-core": "0.0.65",
+=======
+    "@latitudegames/thoth-core": "0.0.64",
+>>>>>>> c2ff678f (start adding ability for generators to change model)
+>>>>>>> 23c66ef2 (fix merge conflicts)
     "@material-ui/core": "^4.12.1",
     "@material-ui/icons": "^4.11.2",
     "@monaco-editor/react": "^4.2.1",
