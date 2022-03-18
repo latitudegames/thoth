@@ -24,10 +24,9 @@ async function getConversation(
   maxCount = 10
 ) {
   const response = await axios.get(
-    `${
-      process.env.REACT_APP_API_ROOT_URL ??
-      process.env.API_ROOT_URL ??
-      'http://localhost:8001'
+    `${process.env.REACT_APP_API_ROOT_URL ??
+    process.env.API_ROOT_URL ??
+    'http://localhost:8001'
     }/conversation`,
     {
       params: {
@@ -47,7 +46,7 @@ const info =
   'Conversation Recall is used to get conversation for an agent and user'
 
 type InputReturn = {
-  conv: unknown
+  output: unknown
 }
 
 export class ConversationRecall extends ThothComponent<Promise<InputReturn>> {
@@ -56,7 +55,7 @@ export class ConversationRecall extends ThothComponent<Promise<InputReturn>> {
 
     this.task = {
       outputs: {
-        conv: 'output',
+        output: 'output',
         trigger: 'option',
       },
     }
@@ -71,8 +70,7 @@ export class ConversationRecall extends ThothComponent<Promise<InputReturn>> {
     const speakerInput = new Rete.Input('speaker', 'Speaker', stringSocket)
     const clientInput = new Rete.Input('client', 'Client', stringSocket)
     const channelInput = new Rete.Input('channel', 'Channel', stringSocket)
-    const out = new Rete.Output('output', 'Output String', anySocket)
-    const inp = new Rete.Input('string', 'Input String', stringSocket)
+    const out = new Rete.Output('output', 'Conversation', anySocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
 
@@ -85,7 +83,6 @@ export class ConversationRecall extends ThothComponent<Promise<InputReturn>> {
     node.inspector.add(max_count)
 
     return node
-      .addInput(inp)
       .addInput(agentInput)
       .addInput(speakerInput)
       .addInput(clientInput)
@@ -119,7 +116,7 @@ export class ConversationRecall extends ThothComponent<Promise<InputReturn>> {
     if (!silent) node.display(conv || 'Not found')
 
     return {
-      conv: conv ?? '',
+      output: conv ?? '',
     }
   }
 }
