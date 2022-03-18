@@ -2,35 +2,38 @@ import Select from '../../../../common/Select/Select'
 
 const DropdownSelect = ({ control, updateData, initialValue }) => {
   const { dataKey, data } = control
+  console.log({data})
 
   const {values, defaultValue} = data
-
-  console.log({values, initialValue, defaultValue})
-  const shownValue = defaultValue ?? initialValue
 
   const options = values.map((value, index) => ({
       value: value,
       label: value,
     }))
 
+  const value = initialValue?.length > 0 ? initialValue : defaultValue
+
+  const defaultVal = {value, label: value}
+
+  console.log({value, initialValue, defaultValue})
+
   const onChange = async ({ value }) => {
     update(value)
   }
 
   const update = update => {
+    console.log({update, dataKey})
     updateData({ [dataKey]: update })
   }
-
-
 
   return (
     <div style={{ flex: 1 }}>
       <Select
-        createOptionPosition="top"
         options={options}
         onChange={onChange}
-        defaultInputValue={shownValue}
+        defaultValue={defaultVal}
         placeholder="select value"
+        creatable={false}
       />
     </div>
   )

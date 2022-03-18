@@ -190,6 +190,7 @@ export class Inspector {
     for (const [key, control] of dataControlArray) {
       const isEqual = deepEqual(this.cache[key], data[key])
 
+      console.log({key,control, data})
       // compare agains the cache to see if it has changed
       if (isEqual) continue
 
@@ -229,6 +230,7 @@ export class Inspector {
       control.onData(data[key])
     }
 
+    console.log("Node data: ", this.node.data)
     this.cache = data
 
     // update the node at the end ofthid

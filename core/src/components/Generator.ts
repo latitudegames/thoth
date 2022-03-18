@@ -60,7 +60,7 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
     const modelControl = new DropdownControl({
       dataKey: 'model',
       name: 'Model',
-      defaultValue: 'davinci',
+      defaultValue: (node.data?.model as string) || 'davinci',
       values: ['davinci', 'curie']
     })
 
@@ -122,8 +122,8 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       return acc
     }, {} as Record<string, unknown>)
 
-    // const model = node.data.model || 'davinci'
-
+    const model = (node.data.model as string) ?? 'davinci'
+    console.log({model, nodeData: node.data.model})
     const fewshot = (node.data.fewshot as string) || ''
     const stopSequence = node.data.stop as string
     const template = Handlebars.compile(fewshot)
@@ -143,7 +143,7 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       : 0
 
     const body = {
-      model: '',
+      model,
       prompt,
       stop,
       maxTokens,
