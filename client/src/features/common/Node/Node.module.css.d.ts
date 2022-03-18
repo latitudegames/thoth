@@ -10,11 +10,13 @@ interface CssExports {
   'input': string;
   'node': string;
   'node-depricated': string;
+  'node-id': string;
   'node-title': string;
   'nodeGenesis': string;
   'out': string;
   'output': string;
   'selected': string;
+  'success': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

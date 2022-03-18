@@ -63,6 +63,11 @@ export type EngineContext = {
   onInspector?: Function
   sendToInspector?: Function
   clearTextEditor?: Function
+  processCode?: (
+    code: unknown,
+    inputs: ThothWorkerInputs,
+    data: Record<string, any>
+  ) => void
 }
 
 export type InitEngineArguments = {
