@@ -177,7 +177,10 @@ const ReteProvider = ({ children, tab }) => {
 
     const newSpell = {
       ...spell,
-      gameState: update,
+      gameState: {
+        ...spell.gameState,
+        ...update,
+      },
     }
 
     saveSpell(newSpell as Spell)
