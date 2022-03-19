@@ -16,6 +16,7 @@
 // i.e. text classification and such
 
 import { random } from 'lodash'
+import { Url } from 'url'
 import Xvfb from 'xvfb'
 
 import roomManager from '../components/agent/roomManager'
@@ -30,6 +31,18 @@ import {
   randomInt,
   startsWithCapital,
 } from './utils'
+
+function isUrl(url: string): boolean {
+  if (!url || url === undefined || url.length <= 0 || !url.startsWith('http'))
+    return false
+
+  try {
+    const _url = new Url(url)
+    return true
+  } catch (e) {
+    return false
+  }
+}
 
 export class xrengine_client {
   UsersInRange = {}
@@ -208,7 +221,7 @@ export class xrengine_client {
 
       const response = await handleCustomInput(
         '[welcome]' + user,
-        _sender,
+        sender,
         this.settings.xrengine_bot_name ?? 'Agent',
         null,
         'xr-engine',
@@ -381,6 +394,9 @@ export class xrengine_client {
           this.spell_handler,
           this.spell_version
         )
+
+        console.log('got response:', response)
+
         await this.handleXREngineResponse(response, addPing, _sender, isVoice)
       }
     )
@@ -749,11 +765,31 @@ class XREngineBot {
     return -1
   }
 
+  audioClear: any = undefined
   async sendAudio(duration, url) {
-    log('Sending audio...')
+    if (isUrl(url) === false) {
+      return
+    }
+
+    console.log('Sending audio...')
+
+    await this.page.screenshot({ path: './screenshot1.png' })
+    //await this.clickElementById('button', 'UserAudio')
+
+    if (this.audioClear != null) {
+      clearTimeout(this.audioClear)
+      this.audioClear = null
+    }
+
+    await this.page.click('button#UserAudio')
+    this.audioClear = setTimeout(async () => {
+      await this.page.click('button#UserAudio')
+      this.audioClear = null
+    }, 8000)
 
     await this.evaluate(url => {
       var audio = document.createElement('audio')
+      console.log('setting url to:', url)
       audio.setAttribute(
         'src',
         url
@@ -768,13 +804,14 @@ class XREngineBot {
         }
       }
       document.querySelector('body').appendChild(audio)
-      // setTimeout(() => {
-      //     document.querySelector("body").removeChild(audio);
-
-      // }, duration)
+      /*setTimeout(() => {
+        document.querySelector('body').removeChild(audio)
+      }, 10)*/
       audio.play()
     }, url)
-    await this.clickElementById('button', 'UserAudio')
+
+    //  await this.page.click('button#VoiceButton')
+    await this.page.screenshot({ path: './screenshot2.png' })
     await this.waitForTimeout(duration)
   }
 
@@ -866,10 +903,7 @@ class XREngineBot {
       ignoreHTTPSErrors: true,
       args: [
         '--disable-gpu',
-        '--use-fake-ui-for-media-stream=1',
-        '--use-fake-device-for-media-stream=1',
-        `--use-file-for-fake-video-capture=${this.fakeMediaPath}/video.y4m`,
-        `--use-file-for-fake-audio-capture=${this.fakeMediaPath}/audio.wav`,
+        '--use-fake-ui-for-media-stream',
         '--disable-web-security=1',
         '--ignoreHTTPSErrors: true',
         //     '--use-fake-device-for-media-stream',
@@ -927,10 +961,17 @@ class XREngineBot {
             }
           } else {
             if (mode == 'inRange') {
+              if (UsersInRange[player] === undefined) {
+                this.playEmote('Wave')
+              }
               UsersInRange[player] = value
             } else if (mode == 'intimate') {
+              if (UsersInIntimateRange[player] === undefined) {
+              }
               UsersInIntimateRange[player] = value
             } else if (mode == 'harassment') {
+              if (UsersInHarassmentRange[player] === undefined) {
+              }
               UsersInHarassmentRange[player] = value
             } else if (mode == 'lookAt') {
               UsersLookingAt[player] = value
@@ -954,7 +995,7 @@ class XREngineBot {
         let isVoice = false
         if (msgObj.text.startsWith('voice|')) {
           msgObj.text = msgObj.text.substring(msgObj.text.indexOf('|') + 1)
-          isVoice = true
+          isVoice = false // true
         }
 
         await this.xrengineclient.handleMessage(
@@ -971,6 +1012,7 @@ class XREngineBot {
         const msg = message.text().substring(msgObj.text.indexOf('|') + 1)
         const msgObj = JSON.parse(msg)
         console.log('received voice message:', msgObj)
+
         await this.xrengineclient.handleMessage(
           randomInt(0, 1000000),
           msgObj.sender,
@@ -983,8 +1025,8 @@ class XREngineBot {
         )
       }
 
-      /*if (this.autoLog)
-      console.log('>>', message.text())*/
+      /*if (this.autoLog)*/
+      //console.log('>>', message.text())
     })
 
     this.page.setViewport({ width: 0, height: 0 })

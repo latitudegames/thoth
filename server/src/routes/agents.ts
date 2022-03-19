@@ -487,13 +487,14 @@ const customMessage = async (ctx: Koa.Context) => {
   const sender = ctx.request.body?.sender as string
   const agent = ctx.request.body?.agent as string
   const message = (ctx.request.body?.message as string).trim().toLowerCase()
-  const isVoice = ctx.request.body?.isVoice as boolean
+  let isVoice = ctx.request.body?.isVoice as boolean
   let url: any = ''
-  let response = ''
+  let response = message
 
   if (message.startsWith('[welcome]')) {
     const user = message.replace('[welcome]', '').trim()
     response = 'Welcome ' + user + '!'
+    isVoice = true
   }
   let cmd = message.trim().toLowerCase()
 
@@ -507,6 +508,7 @@ const customMessage = async (ctx: Koa.Context) => {
   }
 
   if (isVoice) {
+    console.log('generating voice')
     const character = 'kurzgesagt'
     const cache = cacheManager.instance.get(
       'global',
@@ -712,25 +714,6 @@ const chatAgent = async (ctx: Koa.Context) => {
   }
 
   return (ctx.body = out)
-}
-
-const saveConversation = async (ctx: Koa.Context) => {
-  const agent = ctx.request.body.agent as string
-  const speaker = ctx.request.body.speaker as string
-  const conversation = ctx.request.body.conv as string
-  const client = ctx.request.body.client as string
-  const channel = ctx.request.body.channel as string
-
-  await database.instance.setConversation(
-    agent,
-    client,
-    channel,
-    speaker,
-    conversation,
-    false
-  )
-
-  return (ctx.body = 'ok')
 }
 
 export const agents: Route[] = [
