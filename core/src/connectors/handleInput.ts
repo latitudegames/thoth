@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable no-param-reassign */
 /* eslint-disable camelcase */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import axios from 'axios'
@@ -11,22 +13,28 @@ export async function handleInput(
   spell_handler = 'default',
   spell_version = 'latest'
 ) {
-  const url = `http://localhost:8001/chains/${spell_handler}/${spell_version}`
-  console.log("url is", url)
-  const response = await axios.post(
-    `${url}`,
-    {
-      Input: {
-        Input: message,
-        Speaker: speaker,
-        Agent: agent,
-        Client: client,
-        ChannelID: channelId,
-      },
-    }
+  if (!spell_handler || spell_handler === undefined) {
+    spell_handler = 'default'
+  }
+  if (!spell_version || spell_version === undefined) {
+    spell_version = 'latest'
+  }
+
+  console.log('sending message', message)
+  console.log('speaker agent client', speaker, agent, client)
+  const url = encodeURI(
+    `http://localhost:8001/chains/${spell_handler}/${spell_version}`
   )
-  console.log('data:', response.data)
-  console.log('response:', response.data.outputs)
+
+  const response = await axios.post(`${url}`, {
+    Input: {
+      Input: message,
+      Speaker: speaker,
+      Agent: agent,
+      Client: client,
+      ChannelID: channelId,
+    },
+  })
   let index = undefined
 
   for (const x in response.data.outputs) {

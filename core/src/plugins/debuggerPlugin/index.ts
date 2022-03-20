@@ -36,7 +36,7 @@ function install(
           ...args,
         ])
 
-        node.console.renderSuccess()
+        node.console.log(result)
 
         return result
       } catch (error: any) {

@@ -9,6 +9,7 @@ import { EventsTypes, ModuleType } from '../types'
 import { getComponents } from './components/components'
 import { EngineContext, initSharedEngine } from './engine'
 import AreaPlugin from './plugins/areaPlugin'
+import DebuggerPlugin from './plugins/debuggerPlugin'
 import DisplayPlugin from './plugins/displayPlugin'
 import HistoryPlugin from './plugins/historyPlugin'
 import InspectorPlugin from './plugins/inspectorPlugin'
@@ -18,7 +19,6 @@ import { ModuleManager } from './plugins/modulePlugin/module-manager'
 import SocketGenerator from './plugins/socketGenerator'
 import TaskPlugin from './plugins/taskPlugin'
 import { PubSubContext, ThothComponent } from './thoth-component'
-import DebuggerPlugin from './plugins/debuggerPlugin'
 export class ThothEditor extends NodeEditor<EventsTypes> {
   pubSub: PubSubContext
   thoth: EngineContext
@@ -112,7 +112,7 @@ export const initEditor = async function ({
   const moduleDocs = await thoth.getModules()
 
   // Parse modules into dictionary of all modules and JSON values
-  let modules: Record<string, ModuleType> = moduleDocs
+  const modules: Record<string, ModuleType> = moduleDocs
     .map((doc: { toJSON: Function }) => doc.toJSON())
     .reduce((acc: Record<string, ModuleType>, module: ModuleType) => {
       // todo handle better mapping

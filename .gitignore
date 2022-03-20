@@ -19,3 +19,4 @@ google_credentials.json
 # Ignore lockfiles
 yarn.lock
 package-lock.json
+.idea

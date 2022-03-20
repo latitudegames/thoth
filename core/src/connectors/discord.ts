@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 /* eslint-disable no-console */
 /* eslint-disable no-param-reassign */
 /* eslint-disable prefer-const */
@@ -14,7 +15,7 @@ import emoji from 'emoji-dictionary'
 import emojiRegex from 'emoji-regex'
 import { EventEmitter } from 'events'
 
-import roomManager from '../components/roomManager'
+import roomManager from '../components/agent/roomManager'
 import { classifyText } from '../utils/textClassifier'
 import { database } from './database'
 import { handleInput } from './handleInput'
@@ -390,7 +391,9 @@ export class discord_client {
             if (user !== undefined) {
               //const u = '@' + user.username + '#' + user.discriminator
               const u =
-                user.id == this.client.user ? this.agent.name : user.username
+                user.id == this.client.user
+                  ? this.discord_bot_name
+                  : user.username
               content = content.replace(data[i], u)
             }
           } catch (err) {
@@ -436,18 +439,20 @@ export class discord_client {
     //it works with the word hi and the next word should either not exist or start with a lower letter to start the conversation
     if (!isMention && !isDM && !otherMention) {
       const trimmed = content.trimStart()
-      if (trimmed.toLowerCase().startsWith('hi')) {
-        const parts = trimmed.split(' ')
-        if (parts.length > 1) {
-          if (!startsWithCapital(parts[1])) {
-            startConv = true
+      for (let i = 0; i < this.discord_starting_words.length; i++) {
+        if (trimmed.toLowerCase().startsWith(this.discord_starting_words[i])) {
+          const parts = trimmed.split(' ')
+          if (parts.length > 1) {
+            if (!startsWithCapital(parts[1])) {
+              startConv = true
+            } else {
+              startConv = false
+              startConvName = parts[1]
+            }
           } else {
-            startConv = false
-            startConvName = parts[1]
-          }
-        } else {
-          if (trimmed.toLowerCase() === 'hi') {
-            startConv = true
+            if (trimmed.toLowerCase() === this.discord_starting_words[i]) {
+              startConv = true
+            }
           }
         }
       }
@@ -612,10 +617,11 @@ export class discord_client {
       channel.sendTyping()
     }, message.content.length)
 
+    console.log('discord spell_handler:', this.spell_handler)
     const response = await handleInput(
       message.content,
       message.author.username,
-      this.agent.name ?? 'Thales',
+      this.discord_bot_name ?? 'Thales',
       'discord',
       message.channel.id,
       this.spell_handler,
@@ -659,7 +665,7 @@ export class discord_client {
 
     const oldResponse = this.getResponse(channel.id, id)
     if (oldResponse === undefined) {
-      await channel.messages.fetch(id).then(async msg => { })
+      await channel.messages.fetch(id).then(async msg => {})
       log('message not found')
       return
     }
@@ -828,7 +834,7 @@ export class discord_client {
                   msg.author.isBot ||
                   msg.author.username.toLowerCase().includes('digital being')
                 )
-                  _author = this.agent.name
+                  _author = this.discord_bot_name
 
                 if (msg.deleted === true) {
                   // await deleteMessageFromHistory(channel.id, msg.id)
@@ -1361,15 +1367,30 @@ export class discord_client {
   client = Discord.Client
   messageEvent = undefined
   agent = undefined
+  discord_starting_words: string[] = []
+  discord_bot_name_regex: string = ''
+  discord_bot_name: string = 'Bot'
 
   createDiscordClient = async (
     agent,
     discord_api_token,
+    discord_starting_words,
+    discord_bot_name_regex,
+    discord_bot_name,
     spell_handler,
-    spell_version = 'latest',
-    bot_name = 'Cat'
+    spell_version = 'latest'
   ) => {
     this.agent = agent
+    if (!discord_starting_words || discord_starting_words?.length <= 0) {
+      this.discord_starting_words = ['hi', 'hey']
+    } else {
+      this.discord_starting_words = discord_starting_words?.split(',')
+      for (let i = 0; i < this.discord_starting_words.length; i++) {
+        this.discord_starting_words[i] = this.discord_starting_words[i].trim()
+      }
+    }
+    this.discord_bot_name_regex = discord_bot_name_regex
+    this.discord_bot_name = discord_bot_name
     this.spell_handler = spell_handler
     this.spell_version = spell_version
 
@@ -1385,7 +1406,7 @@ export class discord_client {
         Intents.FLAGS.GUILD_MESSAGES,
       ],
     })
-    this.bot_name = bot_name
+    this.bot_name = discord_bot_name
     this.client.prefix = '!'
     this.client.prefixOptionalWhenMentionOrDM = true
 
@@ -1394,9 +1415,9 @@ export class discord_client {
     this.client.helpFields = this.helpFields
     this.client._findCommand = this._findCommand
     this.client._parseWords = this._parseWords
-    this.client.name_regex = new RegExp(bot_name, 'ig')
+    this.client.name_regex = new RegExp(discord_bot_name, 'ig')
 
-    this.client.username_regex = new RegExp('((?:digital|being)(?: |$))', 'ig')
+    this.client.username_regex = new RegExp(this.discord_bot_name_regex, 'ig') //'((?:digital|being)(?: |$))'
     this.client.edit_messages_max_count = 5
 
     const embed = new Discord.MessageEmbed().setColor(0x00ae86)
@@ -1555,7 +1576,7 @@ export class discord_client {
           // const resp = await handleInput(
           //   'Tell me about ' + 'butterlifes',
           //   'bot',
-          //   this.agent.name ?? 'Agent',
+          //    this.discord_bot_name ?? 'Agent',
           //   'discord',
           //   message.channel.id,
           //   this.spell_handler,

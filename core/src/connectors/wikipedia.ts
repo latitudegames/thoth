@@ -7,7 +7,7 @@ import glob from 'glob'
 import weaviate from 'weaviate-client'
 import wiki from 'wikipedia'
 
-import { makeCompletionRequest } from '../components/MakeCompletionRequest'
+import { makeCompletionRequest } from '../components/agent/MakeCompletionRequest'
 import { database } from './database'
 
 const client = weaviate.client({
@@ -30,8 +30,7 @@ export async function createWikipediaAgent(speaker, name, personality, facts) {
 
     let stop = Date.now()
     console.log(
-      `Time Taken to execute loaded data from wikipedia = ${
-        (stop - start) / 1000
+      `Time Taken to execute loaded data from wikipedia = ${(stop - start) / 1000
       } seconds`
     )
     start = Date.now()
@@ -118,8 +117,7 @@ export async function createWikipediaAgent(speaker, name, personality, facts) {
 
     stop = Date.now()
     console.log(
-      `Time Taken to execute openai request 2 = ${
-        (stop - start) / 1000
+      `Time Taken to execute openai request 2 = ${(stop - start) / 1000
       } seconds`
     )
     start = Date.now()

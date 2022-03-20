@@ -16,13 +16,14 @@
 // i.e. text classification and such
 
 import { random } from 'lodash'
+import { Url } from 'url'
 import Xvfb from 'xvfb'
 
-import roomManager from '../components/roomManager'
+import roomManager from '../components/agent/roomManager'
 import { classifyText } from '../utils/textClassifier'
 import { browserWindow, PageUtils } from './browser'
 import { database } from './database'
-import { handleCustomInput } from './handleInput'
+import { handleCustomInput, handleInput } from './handleInput'
 import {
   detectOsOption,
   getRandomEmptyResponse,
@@ -30,6 +31,18 @@ import {
   randomInt,
   startsWithCapital,
 } from './utils'
+
+function isUrl(url: string): boolean {
+  if (!url || url === undefined || url.length <= 0 || !url.startsWith('http'))
+    return false
+
+  try {
+    const _url = new Url(url)
+    return true
+  } catch (e) {
+    return false
+  }
+}
 
 export class xrengine_client {
   UsersInRange = {}
@@ -201,14 +214,15 @@ export class xrengine_client {
     bot,
     isVoice
   ) {
+    console.log('handling message:', text)
     if (text.includes('[') && text.includes(']')) return
     else if (text.includes('joined the layer')) {
       const user = text.replace('joined the layer', '')
 
       const response = await handleCustomInput(
         '[welcome]' + user,
-        _sender,
-        this.agent.name ?? 'Agent',
+        sender,
+        this.settings.xrengine_bot_name ?? 'Agent',
         null,
         'xr-engine',
         channelId,
@@ -222,7 +236,12 @@ export class xrengine_client {
     else if (text.includes('in intimate range')) return
     else if (text.startsWith('/') || text.startsWith(' /')) return
     else if (sender === bot.name || senderId === bot.userId) {
-      this.addMessageToHistory(channelId, id, this.agent.name, text)
+      this.addMessageToHistory(
+        channelId,
+        id,
+        this.settings.xrengine_bot_name,
+        text
+      )
       return
     }
     await this.wasHandled(
@@ -366,15 +385,18 @@ export class xrengine_client {
         }
         log('content: ' + content + ' sender: ' + _sender)
 
-        const response = await handleCustomInput(
+        const response = await handleInput(
           content.replace('!ping', ''),
           _sender,
-          this.agent.name ?? 'Agent',
-          null,
+          this.settings.xrengine_bot_name ?? 'Agent',
           'xr-engine',
           channelId,
-          isVoice
+          this.spell_handler,
+          this.spell_version
         )
+
+        console.log('got response:', response)
+
         await this.handleXREngineResponse(response, addPing, _sender, isVoice)
       }
     )
@@ -413,7 +435,11 @@ export class xrengine_client {
           text = getRandomEmptyResponse()
         if (addPing) text = _sender + ' ' + text
         this.xrengineBot.sendMessage(text)
-      } else if (responses.length > 2000) {
+      } else if (
+        responses &&
+        responses !== undefined &&
+        responses.length > 2000
+      ) {
         const lines = []
         let line = ''
         for (let i = 0; i < responses.length; i++) {
@@ -472,7 +498,7 @@ export class xrengine_client {
     this.agent = agent
     this.settings = settings
     //generateVoice('hello there', (buf, path) => {}, false)
-    log('creating xr engine client')
+    console.log('creating xr engine client', settings)
 
     this.xrengineBot = new XREngineBot({
       headless: true,
@@ -496,8 +522,8 @@ export class xrengine_client {
       log('Connecting to server...')
       await cli.xrengineBot.launchBrowser()
       const XRENGINE_URL =
-        (settings.url as string) || 'https://n3xus.city/location/test '
-      cli.xrengineBot.enterRoom(XRENGINE_URL, { name: 'TestBot' })
+        (settings.url as string) || 'https://n3xus.city/location/test'
+      cli.xrengineBot.enterRoom(XRENGINE_URL, settings.xrengine_bot_name)
       log('bot fully loaded')
     })
   }
@@ -692,7 +718,7 @@ class XREngineBot {
         await this.updateChannelState()
         active = true
       } catch {
-        console.error("Trying to update but can't")
+        // console.error("Trying to update but can't")
       }
     }
 
@@ -739,11 +765,31 @@ class XREngineBot {
     return -1
   }
 
+  audioClear: any = undefined
   async sendAudio(duration, url) {
-    log('Sending audio...')
+    if (isUrl(url) === false) {
+      return
+    }
+
+    console.log('Sending audio...')
+
+    await this.page.screenshot({ path: './screenshot1.png' })
+    //await this.clickElementById('button', 'UserAudio')
+
+    if (this.audioClear != null) {
+      clearTimeout(this.audioClear)
+      this.audioClear = null
+    }
+
+    await this.page.click('button#UserAudio')
+    this.audioClear = setTimeout(async () => {
+      await this.page.click('button#UserAudio')
+      this.audioClear = null
+    }, 8000)
 
     await this.evaluate(url => {
       var audio = document.createElement('audio')
+      console.log('setting url to:', url)
       audio.setAttribute(
         'src',
         url
@@ -758,13 +804,14 @@ class XREngineBot {
         }
       }
       document.querySelector('body').appendChild(audio)
-      // setTimeout(() => {
-      //     document.querySelector("body").removeChild(audio);
-
-      // }, duration)
+      /*setTimeout(() => {
+        document.querySelector('body').removeChild(audio)
+      }, 10)*/
       audio.play()
     }, url)
-    await this.clickElementById('button', 'UserAudio')
+
+    //  await this.page.click('button#VoiceButton')
+    await this.page.screenshot({ path: './screenshot2.png' })
     await this.waitForTimeout(duration)
   }
 
@@ -799,7 +846,7 @@ class XREngineBot {
     await this.waitForTimeout(timeout)
   }
 
-  async interactObject() { }
+  async interactObject() {}
 
   /** Return screenshot
    * @param {Function} fn Function to execut _in the node context._
@@ -856,10 +903,7 @@ class XREngineBot {
       ignoreHTTPSErrors: true,
       args: [
         '--disable-gpu',
-        '--use-fake-ui-for-media-stream=1',
-        '--use-fake-device-for-media-stream=1',
-        `--use-file-for-fake-video-capture=${this.fakeMediaPath}/video.y4m`,
-        `--use-file-for-fake-audio-capture=${this.fakeMediaPath}/audio.wav`,
+        '--use-fake-ui-for-media-stream',
         '--disable-web-security=1',
         '--ignoreHTTPSErrors: true',
         //     '--use-fake-device-for-media-stream',
@@ -917,10 +961,17 @@ class XREngineBot {
             }
           } else {
             if (mode == 'inRange') {
+              if (UsersInRange[player] === undefined) {
+                this.playEmote('Wave')
+              }
               UsersInRange[player] = value
             } else if (mode == 'intimate') {
+              if (UsersInIntimateRange[player] === undefined) {
+              }
               UsersInIntimateRange[player] = value
             } else if (mode == 'harassment') {
+              if (UsersInHarassmentRange[player] === undefined) {
+              }
               UsersInHarassmentRange[player] = value
             } else if (mode == 'lookAt') {
               UsersLookingAt[player] = value
@@ -944,7 +995,7 @@ class XREngineBot {
         let isVoice = false
         if (msgObj.text.startsWith('voice|')) {
           msgObj.text = msgObj.text.substring(msgObj.text.indexOf('|') + 1)
-          isVoice = true
+          isVoice = false // true
         }
 
         await this.xrengineclient.handleMessage(
@@ -961,6 +1012,7 @@ class XREngineBot {
         const msg = message.text().substring(msgObj.text.indexOf('|') + 1)
         const msgObj = JSON.parse(msg)
         console.log('received voice message:', msgObj)
+
         await this.xrengineclient.handleMessage(
           randomInt(0, 1000000),
           msgObj.sender,
@@ -973,8 +1025,8 @@ class XREngineBot {
         )
       }
 
-      /*if (this.autoLog)
-      console.log('>>', message.text())*/
+      /*if (this.autoLog)*/
+      //console.log('>>', message.text())
     })
 
     this.page.setViewport({ width: 0, height: 0 })
@@ -1036,7 +1088,8 @@ class XREngineBot {
    * @param {Object} opts
    * @param {string} opts.name Name to set as the bot name when joining the room
    */
-  async enterRoom(roomUrl, { name = 'bot' } = {}) {
+  async enterRoom(roomUrl, name) {
+    console.log('bot name:', name)
     await this.navigate(roomUrl)
     await this.page.waitForSelector('div[class*="instance-chat-container"]', {
       timeout: 100000,
@@ -1048,7 +1101,10 @@ class XREngineBot {
       name = this.name
     }
 
-    this.username_regex = new RegExp(this.agent.name, 'ig')
+    this.username_regex = new RegExp(
+      this.settings.xrengine_bot_name_regex,
+      'ig'
+    )
 
     if (this.headless) {
       // Disable rendering for headless, otherwise chromium uses a LOT of CPU

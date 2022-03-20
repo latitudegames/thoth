@@ -46,10 +46,10 @@ export class TriggerIn extends ThothComponent<void> {
   }
 
   async run(node: ThothNode, data: NodeData) {
-    console.log('---------node--------')
-    console.log(node)
-    console.log('---------data--------')
-    console.log(data)
+    if (!node || node === undefined) {
+      throw new Error('node is undefined')
+    }
+
     const task = this.nodeTaskMap[node?.id]
     if (task) await task.run(data)
   }
