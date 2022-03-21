@@ -1,20 +1,19 @@
 import { EngineContext } from '@latitudegames/thoth-core'
 import { useContext, createContext } from 'react'
-import { useDispatch } from 'react-redux'
 
 import { postEnkiCompletion } from '../../../services/game-api/enki'
 import { completion as _completion } from '../../../services/game-api/text'
-import {
-  selectGameStateBySpellId,
-  updateGameState,
-} from '../../../state/gameState'
-import { store } from '../../../state/store'
 import { invokeInference } from '../../../utils/huggingfaceHelper'
 import { useDB } from '../../../contexts/DatabaseProvider'
 import { usePubSub } from '../../../contexts/PubSubProvider'
 import { useFetchFromImageCacheMutation } from '@/state/api/visualGenerationsApi'
 import { ModelsType } from '../../../types'
 import { ThothWorkerInputs } from '@latitudegames/thoth-core/types'
+import {
+  Spell,
+  useGetSpellQuery,
+  useSaveSpellMutation,
+} from '@/state/api/spells'
 
 /*
 Some notes here.  The new rete provider, not to be confused with the old rete provider renamed to the editor provider, is designed to serve as the single source of truth for interfacing with the rete internal system.  This unified interface will also allow us to replicate the same API in the server, where rete expects certain functions to exist but doesn't care what is behind these functions so long as they work.
@@ -48,8 +47,11 @@ export const useRete = () => useContext(Context)
 
 const ReteProvider = ({ children, tab }) => {
   const { events, publish, subscribe } = usePubSub()
-  const dispatch = useDispatch()
   const [fetchFromImageCache] = useFetchFromImageCacheMutation()
+  const [saveSpell] = useSaveSpellMutation()
+  const { data: spell } = useGetSpellQuery(tab.spell, {
+    skip: !tab.spell,
+  })
 
   const { models } = useDB() as unknown as ModelsType
 
@@ -165,19 +167,23 @@ const ReteProvider = ({ children, tab }) => {
   }
 
   const getCurrentGameState = () => {
-    const currentGameState = selectGameStateBySpellId(
-      store.getState().gameState,
-      tab.spell
-    )
-    return currentGameState?.state ?? {}
+    if (!spell) return {}
+
+    return spell?.gameState ?? {}
   }
 
   const updateCurrentGameState = update => {
-    const newState = {
-      spellId: tab.spell,
-      state: update,
+    if (!spell) return
+
+    const newSpell = {
+      ...spell,
+      gameState: {
+        ...spell.gameState,
+        ...update,
+      },
     }
-    dispatch(updateGameState(newState))
+
+    saveSpell(newSpell as Spell)
   }
 
   const publicInterface = {

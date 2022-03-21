@@ -4,7 +4,6 @@ import { Spell as SpellType } from '@latitudegames/thoth-core/types'
 
 import { initDB } from '../../database'
 import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes'
-import { setGameState, updateGameState } from '../gameState'
 import { Module } from '../../database/schemas/module'
 import { rootApi } from './api'
 // function camelize(str) {
@@ -68,26 +67,13 @@ export const spellApi = rootApi.injectEndpoints({
           url: `game/spells/${spellId}`,
         }
       },
-      async onQueryStarted(id, { dispatch, queryFulfilled }) {
-        const { data: spell } = await queryFulfilled
-
-        dispatch(
-          updateGameState({ state: spell.gameState, spellId: spell.name })
-        )
-      },
     }),
-    saveSpell: builder.mutation<Partial<Spell>, Partial<Spell>>({
+    saveSpell: builder.mutation<Partial<Spell>, Partial<Spell> | Spell>({
       invalidatesTags: ['Spell'],
       // needed to use queryFn as query option didnt seem to allow async functions.
       async queryFn(spell, { dispatch }, extraOptions, baseQuery) {
         const moduleModel = await _moduleModel()
         const modules = await moduleModel.getSpellModules(spell)
-
-        if (spell.gameState)
-          dispatch(
-            setGameState({ state: spell.gameState, spellId: spell.name })
-          )
-
         spell.modules = modules
 
         const baseQueryOptions = {

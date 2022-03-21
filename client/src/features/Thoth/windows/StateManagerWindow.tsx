@@ -3,28 +3,21 @@ import jsonFormat from 'json-format'
 // import debounce from 'lodash.debounce'
 import { useSnackbar } from 'notistack'
 import { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
 import {
-  selectSpellById,
+  useGetSpellQuery,
   useSaveSpellMutation,
 } from '../../../state/api/spells'
-import {
-  selectGameStateBySpellId,
-  // updateGameState,
-} from '../../../state/gameState'
 import Window from '../../common/Window/Window'
 
 import '../thoth.module.css'
-import { RootState } from '../../../state/store'
 import WindowMessage from '../components/WindowMessage'
 
 const StateManager = ({ tab, ...props }) => {
   // const dispatch = useDispatch()
   const [saveSpell] = useSaveSpellMutation()
-  const gameState = useSelector((state: RootState) => {
-    return selectGameStateBySpellId(state.gameState, tab.spell)
+  const { data: spell } = useGetSpellQuery(tab.spell, {
+    skip: !tab.spell,
   })
-  const spell = useSelector(state => selectSpellById(state, tab.spell))
 
   const { enqueueSnackbar } = useSnackbar()
   const [typing, setTyping] = useState<boolean>(false)
@@ -72,16 +65,17 @@ const StateManager = ({ tab, ...props }) => {
       // Send Axios request here
       onSave()
       setTyping(false)
-    }, 1000)
+    }, 3000)
 
     return () => clearTimeout(delayDebounceFn)
   }, [code])
 
   // update code when game state changes
   useEffect(() => {
-    if (!gameState) return
-    setCode(jsonFormat(gameState.state))
-  }, [gameState])
+    console.log('SPELL LOADED', spell)
+    if (!spell?.gameState) return
+    setCode(jsonFormat(spell.gameState))
+  }, [spell])
 
   const onClear = () => {
     const reset = `{}`
@@ -94,20 +88,23 @@ const StateManager = ({ tab, ...props }) => {
   }
 
   const onSave = async () => {
-    if (!gameState) return
-    const parsedState = JSON.parse(code)
-    const spellUpdate = {
-      ...spell,
-      gameState: parsedState,
-    }
-    const res = await saveSpell(spellUpdate)
-    if ('error' in res) return
-    res.data.gameState && setCode(JSON.stringify(res.data.gameState?.state))
+    try {
+      const parsedState = JSON.parse(code)
+      const spellUpdate = {
+        ...spell,
+        gameState: parsedState,
+      }
+      const res = await saveSpell(spellUpdate)
+      if ('error' in res) return
+      res.data.gameState && setCode(JSON.stringify(res.data.gameState?.state))
 
-    enqueueSnackbar('State saved', {
-      preventDuplicate: true,
-      variant: 'success',
-    })
+      enqueueSnackbar('State saved', {
+        preventDuplicate: true,
+        variant: 'success',
+      })
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   const toolbar = (

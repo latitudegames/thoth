@@ -250,9 +250,9 @@ button.disabled {
 .flexlayout__splitter {
   background-color: transparent;
 }
-.view-line span {
+/* .view-line span {
   font-family: 'IBM Plex Mono', sans-serif;
-}
+} */
 input[type='text'] {
   box-sizing: border-box;
   padding: var(
