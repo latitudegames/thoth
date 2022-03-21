@@ -1,15 +1,16 @@
+import { closeTab } from '@/state/tabs'
 import classnames from 'classnames'
 import { VscClose } from 'react-icons/vsc'
+import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-import { useTabManager } from '../../../contexts/TabManagerProvider'
 import Icon from '../Icon/Icon'
 import MenuBar from '../MenuBar/MenuBar'
 import css from './tabBar.module.css'
 
 const Tab = ({ tab, activeTab }) => {
+  const dispatch = useDispatch()
   const navigate = useNavigate()
-  const { closeTab } = useTabManager()
   const active = tab.id === activeTab?.id
 
   const title = `${tab.type}- ${tab.name}`
@@ -20,13 +21,14 @@ const Tab = ({ tab, activeTab }) => {
   })
 
   const onClick = () => {
-    navigate(`/thoth/${tab.spell}`)
+    navigate(`/thoth/${tab.spellId}`)
   }
 
   // Handle selecting the next tab down is none are active.
   const onClose = e => {
     e.stopPropagation()
-    closeTab(tab.id)
+    navigate('/thoth')
+    dispatch(closeTab(tab.id))
   }
 
   return (
