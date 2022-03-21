@@ -23,9 +23,9 @@ const AgentManager = () => {
   const {
     handleSubmit,
   } = useForm()
-  let versionName = localStorage.getItem("agentName")
+  let name = localStorage.getItem("agentName")
   const createNew = async () => {
-    const agent = !versionName ? 'New Agent' : versionName
+    const agent = !name ? 'New Agent' : name
     await getAgents()
     await update(agent as any)
   }

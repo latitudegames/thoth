@@ -36,7 +36,7 @@ export class AgentManager extends ThothComponent<Promise<WorkerReturn>> {
 
     this.task = {
       outputs: {
-        // output: 'output',
+        output: 'output',
         trigger: 'option',
         name: 'name',
         personality: 'personality',
