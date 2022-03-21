@@ -1,5 +1,5 @@
 import { useSnackbar } from 'notistack'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import {
   uniqueNamesGenerator,
@@ -9,20 +9,25 @@ import {
 import { useNavigate } from 'react-router-dom'
 
 import { useNewSpellMutation } from '@/state/api/spells'
-import { useTabManager } from '@/contexts/TabManagerProvider'
 import Panel from '@common/Panel/Panel'
-import Input from '@common/Input/Input'
 import emptyImg from '../empty.png'
 import enkiImg from '../enki.png'
 import langImg from '../lang.png'
 import css from '../homeScreen.module.css'
 import TemplatePanel from '../components/TemplatePanel'
 import defaultChain from './chains/default'
+import { Spell } from '@latitudegames/thoth-core/types'
 
 const customConfig = {
   dictionaries: [adjectives, colors],
   separator: ' ',
   length: 2,
+}
+
+type Template = {
+  label: string
+  bg: string
+  chain: Spell
 }
 
 const templates = [
@@ -32,12 +37,13 @@ const templates = [
 ]
 
 const CreateNew = () => {
-  const [selectedTemplate, setSelectedTemplate] = useState(null)
-  const [error, setError] = useState(null)
+  const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(
+    null
+  )
+  const [error, setError] = useState<string | null>(null)
 
   const { enqueueSnackbar } = useSnackbar()
   const navigate = useNavigate()
-  const { openTab, clearTabs } = useTabManager()
   const [newSpell] = useNewSpellMutation()
 
   const {
@@ -47,29 +53,40 @@ const CreateNew = () => {
   } = useForm()
 
   const onCreate = handleSubmit(async data => {
-    const placeholderName = uniqueNamesGenerator(customConfig)
-    const name = data.name || placeholderName
-    const response = await newSpell({
-      chain: selectedTemplate.chain,
-      name,
-    })
-
-    if (response.error) {
-      const message = response.error.data.error.message
-      setError(message)
-      enqueueSnackbar(`Error saving spell. ${message}.`, {
-        variant: 'error',
+    try {
+      const placeholderName = uniqueNamesGenerator(customConfig)
+      const name = data.name || placeholderName
+      const response = await newSpell({
+        chain: selectedTemplate?.chain,
+        name,
       })
-      return
+
+      if ('error' in response) {
+        console.log('error in response', response.error)
+        if ('status' in response.error) {
+          const err = response.error
+          // I am annoyed by RTK error typing.
+          // @ts-expect-error
+          const errMsg = err.data.error.message
+          setError(errMsg as string)
+          enqueueSnackbar(`Error saving spell. ${errMsg}.`, {
+            variant: 'error',
+          })
+          return
+        }
+      }
+
+      navigate(`/thoth/${name}`)
+      // dispatch(
+      //   openTab({
+      //     name: name,
+      //     spellId: name,
+      //     type: 'spell',
+      //   })
+      // )
+    } catch (err) {
+      console.log('ERROR!!', err)
     }
-
-    await openTab({
-      name: name,
-      spellId: name,
-      type: 'spell',
-    })
-
-    setTimeout(() => navigate('/thoth'), 500)
   })
 
   return (
