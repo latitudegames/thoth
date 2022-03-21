@@ -21,6 +21,7 @@ export interface Tab {
   type?: 'spell' | 'module'
   // probably going to need to insert a proper spell type in here
   spell?: string
+  spellId: string
   // this will also be a ref to a property somewhere else
   module: string
 }
