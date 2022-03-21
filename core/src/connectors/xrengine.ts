@@ -846,7 +846,7 @@ class XREngineBot {
     await this.waitForTimeout(timeout)
   }
 
-  async interactObject() { }
+  async interactObject() {}
 
   /** Return screenshot
    * @param {Function} fn Function to execut _in the node context._
@@ -943,7 +943,7 @@ class XREngineBot {
         log(`Messages: ${data}`)
       } else if (message.text().startsWith('proximity|')) {
         const data = message.text().split('|')
-        //log('Proximity Data: ' + data)
+        log('Proximity Data: ' + data)
         if (data.length === 4) {
           const mode = data[1]
           const player = data[2]
@@ -951,30 +951,34 @@ class XREngineBot {
 
           if (value === 'left') {
             if (mode == 'inRange') {
-              UsersInRange[player] = undefined
+              this.xrengineclient.UsersInRange[player] = undefined
             } else if (mode == 'intimate') {
-              UsersInIntimateRange[player] = undefined
+              this.xrengineclient.UsersInIntimateRange[player] = undefined
             } else if (mode == 'harassment') {
-              UsersInHarassmentRange[player] = undefined
+              this.xrengineclient.UsersInHarassmentRange[player] = undefined
             } else if (mode == 'lookAt') {
-              UsersLookingAt[player] = undefined
+              this.xrengineclient.UsersLookingAt[player] = undefined
             }
           } else {
             if (mode == 'inRange') {
-              if (UsersInRange[player] === undefined) {
-                this.playEmote('Wave')
+              if (this.xrengineclient.UsersInRange[player] === undefined) {
+                this.playEmote('wave')
               }
-              UsersInRange[player] = value
+              this.xrengineclient.UsersInRange[player] = value
             } else if (mode == 'intimate') {
-              if (UsersInIntimateRange[player] === undefined) {
+              if (
+                this.xrengineclient.UsersInIntimateRange[player] === undefined
+              ) {
               }
-              UsersInIntimateRange[player] = value
+              this.xrengineclient.UsersInIntimateRange[player] = value
             } else if (mode == 'harassment') {
-              if (UsersInHarassmentRange[player] === undefined) {
+              if (
+                this.xrengineclient.UsersInHarassmentRange[player] === undefined
+              ) {
               }
-              UsersInHarassmentRange[player] = value
+              this.xrengineclient.UsersInHarassmentRange[player] = value
             } else if (mode == 'lookAt') {
-              UsersLookingAt[player] = value
+              this.xrengineclient.UsersLookingAt[player] = value
             }
           }
         }
