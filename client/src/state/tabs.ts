@@ -41,6 +41,12 @@ const _activeTabSelector = createDraftSafeSelector(
   }
 )
 
+const selectTabBySpellId = createDraftSafeSelector(
+  [tabSelectors.selectAll, (_, spellId) => spellId],
+  (tabs: Tab[], spellId) =>
+    Object.values(tabs).find(tab => tab.spellId === spellId)
+)
+
 // Used to build a tab with various defaults set, as well as workspace json and UUID
 const buildTab = (tab, properties = {}) => ({
   ...tab,
