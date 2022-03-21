@@ -102,7 +102,7 @@ const EditorWindow = ({ tab }) => {
         open={deployOpen}
         setOpen={setDeployOpen}
         close={closeDeploy}
-        spellId={tab.spell}
+        spellId={tab.spellId}
       />
     </div>
   )
