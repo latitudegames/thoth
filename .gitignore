@@ -14,7 +14,7 @@ yarn-error.log
 client/.env
 server/.env
 core/.env
-google_credentials.json
+server/google_credentials.json
 
 # Ignore lockfiles
 yarn.lock
