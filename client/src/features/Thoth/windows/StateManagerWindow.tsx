@@ -15,8 +15,8 @@ import WindowMessage from '../components/WindowMessage'
 const StateManager = ({ tab, ...props }) => {
   // const dispatch = useDispatch()
   const [saveSpell] = useSaveSpellMutation()
-  const { data: spell } = useGetSpellQuery(tab.spell, {
-    skip: !tab.spell,
+  const { data: spell } = useGetSpellQuery(tab.spellId, {
+    skip: !tab.spellId,
   })
 
   const { enqueueSnackbar } = useSnackbar()
