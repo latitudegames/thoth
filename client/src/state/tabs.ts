@@ -64,7 +64,7 @@ export const tabSlice = createSlice({
   name: 'tabs',
   initialState,
   reducers: {
-    tabOpened: (state, action) => {
+    openTab: (state, action) => {
       const activeTab = _activeTabSelector(state) as Tab
       if (activeTab)
         tabAdapater.updateOne(state, {
@@ -75,21 +75,16 @@ export const tabSlice = createSlice({
       const tab = buildTab(action.payload, { active: true })
       tabAdapater.addOne(state, tab)
     },
-    tabClosed: tabAdapater.removeOne,
-    tabSwitched: tabAdapater.updateOne,
-    tabsCleared: tabAdapater.removeAll,
-    tabLayoutSaved: () => {},
+    closeTab: tabAdapater.removeOne,
+    switchTab: tabAdapater.updateOne,
+    clearTabs: tabAdapater.removeAll,
+    saveTabLayout: (state, action) => {},
   },
 })
 
 // actions
-export const {
-  tabOpened,
-  tabClosed,
-  tabSwitched,
-  tabsCleared,
-  tabLayoutSaved,
-} = tabSlice.actions
+export const { openTab, closeTab, switchTab, clearTabs, saveTabLayout } =
+  tabSlice.actions
 
 // selectors
 export const activeTabSelector = (state: RootState) =>
