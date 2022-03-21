@@ -95,4 +95,6 @@ export const {
 export const activeTabSelector = (state: RootState) =>
   _activeTabSelector(state.tabs)
 
+export const { selectAll: selectAllTabs } = tabSelectors
+
 export default tabSlice.reducer
