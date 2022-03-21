@@ -42,10 +42,10 @@ const Workspace = ({ tab, tabs, pubSub }) => {
           tabs
             .filter(tab => tab.type === 'spell')
             .forEach(filteredTab => {
-              if (filteredTab.spell) {
+              if (filteredTab.spellId) {
                 const spell = selectSpellById(
                   store.getState(),
-                  filteredTab.spell
+                  filteredTab.spellId
                 )
                 if (
                   spell?.modules &&
@@ -65,8 +65,8 @@ const Workspace = ({ tab, tabs, pubSub }) => {
   }, [spellData])
 
   useEffect(() => {
-    if (!tab || !tab.spell) return
-    loadSpell(tab.spell)
+    if (!tab || !tab.spellId) return
+    loadSpell(tab.spellId)
   }, [tab])
 
   const factory = tab => {
