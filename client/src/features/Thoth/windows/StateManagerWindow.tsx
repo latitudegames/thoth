@@ -72,7 +72,6 @@ const StateManager = ({ tab, ...props }) => {
 
   // update code when game state changes
   useEffect(() => {
-    console.log('SPELL LOADED', spell)
     if (!spell?.gameState) return
     setCode(jsonFormat(spell.gameState))
   }, [spell])
