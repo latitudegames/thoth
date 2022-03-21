@@ -72,6 +72,20 @@ export const tabSlice = createSlice({
           changes: { active: false },
         })
 
+      // Check if the tab is already open.
+      const existingTab = selectTabBySpellId(state, action.payload.spellId)
+
+      if (existingTab && !action.payload.openNew) {
+        tabAdapater.updateOne(state, {
+          id: existingTab.id,
+          changes: {
+            active: true,
+          },
+        })
+        return
+      }
+      //
+
       const tab = buildTab(action.payload, { active: true })
       tabAdapater.addOne(state, tab)
     },
