@@ -1,12 +1,14 @@
 import { useNavigate } from 'react-router-dom'
 
-import { useTabManager } from '../../../contexts/TabManagerProvider'
 import Icon from '../../common/Icon/Icon'
 import Panel from '../../common/Panel/Panel'
 import css from '../homeScreen.module.css'
 import thothBanner from '../version-banner-0.0.0beta.jpg'
 import FileInput from '../components/FileInput'
 import ProjectRow from '../components/ProjectRow'
+import { useSelector } from 'react-redux'
+import { selectAllTabs } from '@/state/tabs'
+import { RootState } from '@/state/store'
 
 const getThothVersion = () => '0.0.1'
 
@@ -17,7 +19,7 @@ const OpenProject = ({
   loadFile,
   openSpell,
 }) => {
-  const { tabs } = useTabManager()
+  const tabs = useSelector((state: RootState) => selectAllTabs(state.tabs))
   const navigate = useNavigate()
 
   return (
@@ -46,6 +48,7 @@ const OpenProject = ({
                 key={i}
                 selectedSpell={selectedSpell}
                 label={spell.name}
+                spell={spell}
                 onClick={() => {
                   setSelectedSpell(spell)
                 }}
