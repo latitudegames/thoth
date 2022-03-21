@@ -119,6 +119,7 @@ const executeHandler = async (ctx: Koa.Context) => {
   const agent = ctx.request.body.agent
   const id = ctx.request.body.id
   const msg = database.instance.getRandomGreeting(agent)
+  const spell_handler = ctx.request.body.handler ?? 'default'
   if (message.includes('/become')) {
     let out: any = {}
     if (!(await database.instance.getAgentExists(agent))) {
@@ -140,7 +141,7 @@ const executeHandler = async (ctx: Koa.Context) => {
     )
     return (ctx.body = out)
   }
-  ctx.body = await handleInput(message, speaker, agent, 'web', id)
+  ctx.body = await handleInput(message, speaker, agent, 'web', id, spell_handler)
 }
 
 const getPromptsHandler = async (ctx: Koa.Context) => {
@@ -572,7 +573,7 @@ const textCompletion = async (ctx: Koa.Context) => {
     stop = ['"""', `${sender}:`, '\n']
   } else {
     for (let i = 0; i < stop.length; i++) {
-      if (stop[i] === '$speaker:') {
+      if (stop[i] === '#speaker:') {
         stop[i] = `${sender}:`
       }
     }
@@ -600,7 +601,7 @@ const hfRequest = async (ctx: Koa.Context) => {
     use_cache: false,
     wait_for_model: true,
   }
-
+  console.log("Handling request with", ctx.request.body)
   const { success, data } = await makeModelRequest(
     inputs,
     model,
@@ -661,9 +662,8 @@ const requestInformationAboutVideo = async (
   question: string
 ): Promise<string> => {
   const videoInformation = ``
-  const prompt = `Information: ${videoInformation} \n ${sender}: ${
-    question.trim().endsWith('?') ? question.trim() : question.trim() + '?'
-  }\n${agent}:`
+  const prompt = `Information: ${videoInformation} \n ${sender}: ${question.trim().endsWith('?') ? question.trim() : question.trim() + '?'
+    }\n${agent}:`
 
   const modelName = 'davinci'
   const temperature = 0.9

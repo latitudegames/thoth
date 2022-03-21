@@ -14,14 +14,14 @@ import { EngineContext } from '../../engine'
 import { triggerSocket, stringSocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
-const info = "Get Agents Facts returns the select agent's facts"
+const info = "Recall facts from the agent's memory"
 
 type InputReturn = {
   output: unknown
 }
 export class GetAgentFacts extends ThothComponent<Promise<InputReturn>> {
   constructor() {
-    super('Get Agents Facts')
+    super('Recall Facts')
 
     this.task = {
       outputs: {
@@ -37,6 +37,7 @@ export class GetAgentFacts extends ThothComponent<Promise<InputReturn>> {
 
   builder(node: ThothNode) {
     const agentInput = new Rete.Input('agent', 'Agent', stringSocket)
+    // const speakerInput = new Rete.Input('speaker', 'Speaker', stringSocket)
     const inp = new Rete.Input('string', 'Input String', stringSocket)
     const factsOut = new Rete.Output('output', 'Facts', stringSocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)

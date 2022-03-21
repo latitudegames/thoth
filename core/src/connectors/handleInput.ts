@@ -10,16 +10,9 @@ export async function handleInput(
   agent: string,
   client: string,
   channelId: string,
-  spell_handler = 'default',
-  spell_version = 'latest'
+  spell_handler: string,
+  spell_version: string = 'latest'
 ) {
-  if (!spell_handler || spell_handler === undefined) {
-    spell_handler = 'default'
-  }
-  if (!spell_version || spell_version === undefined) {
-    spell_version = 'latest'
-  }
-
   console.log('sending message', message)
   console.log('speaker agent client', speaker, agent, client)
   const url = encodeURI(

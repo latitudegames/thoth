@@ -6,7 +6,7 @@ import { ArchiveConversation } from './agent/ArchiveConversation'
 import { CacheManagerDelete } from './agent/CacheManagerDelete'
 import { CacheManagerGet } from './agent/CacheManagerGet'
 import { CacheManagerSet } from './agent/CacheManagerSet'
-import { ChatClassification } from './agent/ChatClassification'
+import { Classifier } from './agent/Classifier'
 import { ConversationRecall } from './agent/ConversationRecall'
 import { ConversationStore } from './agent/ConversationStore'
 import { CreateOrGetAgent } from './agent/CreateOrGetAgent'
@@ -24,16 +24,12 @@ import { FewshotVariable } from './agent/FewshotVariable'
 import { GenerateContext } from './agent/GenerateContext'
 import { GetAgentData } from './agent/GetAgentData'
 import { GetAgentFacts } from './agent/GetAgentFacts'
-import { InputClassification } from './agent/InputClassification'
 import { InputDestructureComponent } from './agent/InputDestructure'
 import { InputsToJSON } from './agent/InputsToJSON'
 import { IsNullOrUndefined } from './agent/IsNullOrUndefined'
 import { IsVariableTrue } from './agent/IsVariableTrue'
 import { KeywordExtractor } from './agent/KeywordExtractor'
 import { LogicalOperator } from './agent/LogicalOperator'
-import { MLGreetingDetector } from './agent/MLGreetingDetector'
-import { MLProfanityDetector } from './agent/MLProfanityDetector'
-import { MLQuestionDetector } from './agent/MLQuestionDetector'
 import { NamedEntityRecognition } from './agent/NamedEntityRecognition'
 import { NumberVariable } from './agent/NumberVariable'
 import { RandomGreetingResponse } from './agent/RandomGreetingResponse'
@@ -45,8 +41,7 @@ import { StringCombiner } from './agent/StringCombiner'
 import { StringEvaluator } from './agent/StringEvaluator'
 import { StringProcessor } from './agent/StringProcessor'
 import { StringVariable } from './agent/StringVariable'
-import { SummarizeAndStoreFactsAboutAgent } from './agent/SummarizeAndStoreFactsAboutAgent'
-import { SummarizeAndStoreFactsAboutSpeaker } from './agent/SummarizeAndStoreFactsAboutSpeaker'
+import { SummarizeFacts } from './agent/SummarizeFacts'
 import { Alert } from './AlertMessage'
 import { ArrayVariable } from './ArrayVariable'
 import { BooleanGate } from './BooleanGate'
@@ -97,14 +92,8 @@ export const components = {
   fastQuestionDetector: () => new FastQuestionDetector(),
   fastGreetingDetector: () => new FastGreetingDetector(),
   fastProfanityDetector: () => new FastProfanityDetector(),
-  mlGreetingDetector: () => new MLGreetingDetector(),
-  mlProfanityDetector: () => new MLProfanityDetector(),
-  mlQuestionDetector: () => new MLQuestionDetector(),
   echo: () => new Echo(),
-  summarizeAndStoreFactsAboutAgent: () =>
-    new SummarizeAndStoreFactsAboutAgent(),
-  summarizeAndStoreFactsAboutSpeaker: () =>
-    new SummarizeAndStoreFactsAboutSpeaker(),
+  SummarizeFacts: () => new SummarizeFacts(),
   textToSpeech: () => new TextToSpeech(),
   agentTextCompletion: () => new AgentTextCompletion(),
   agentManager: () => new AgentManager(),
@@ -115,8 +104,7 @@ export const components = {
   factsStore: () => new FactsStore(),
   factsRecall: () => new FactsRecall(),
   factsCount: () => new FactsCount(),
-  chatClassification: () => new ChatClassification(),
-  inputClassification: () => new InputClassification(),
+  Classifier: () => new Classifier(),
   getAgentData: () => new GetAgentData(),
   getAgentFacts: () => new GetAgentFacts(),
   isNullOrUndefined: () => new IsNullOrUndefined(),

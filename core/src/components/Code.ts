@@ -107,7 +107,7 @@ export class Code extends ThothComponent<unknown> {
 
     try {
       const value = runCodeWithArguments(node.data.code)
-      if (!silent) node.display(`${JSON.stringify(value)}`)
+      if (!silent) node.display(`${JSON.stringify(value).substring(0, 100)}`)
 
       return value
     } catch (err) {

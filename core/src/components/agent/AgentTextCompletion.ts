@@ -133,10 +133,6 @@ export class AgentTextCompletion extends ThothComponent<Promise<WorkerReturn>> {
       return el != null && el !== undefined && el.length > 0
     })
 
-    console.log(
-      'sending completion to:',
-      `${process.env.REACT_APP_API_URL}/text_completion`
-    )
     const resp = await axios.post(
       `${process.env.REACT_APP_API_URL}/text_completion`,
       {
