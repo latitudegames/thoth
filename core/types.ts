@@ -18,6 +18,8 @@ import { EngineContext } from './src/engine'
 import { ThothTask } from './src/thoth-component'
 import { ThothConsole } from './src/plugins/debuggerPlugin/ThothConsole'
 
+export type { InspectorData } from './src/plugins/inspectorPlugin/Inspector'
+
 export type EventsTypes = {
   run: void
   save: void
