@@ -1,16 +1,21 @@
+import { RootState } from '@/state/store'
+import { activeTabSelector, selectAllTabs, openTab } from '@/state/tabs'
 import { useEffect } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { usePubSub } from '../../contexts/PubSubProvider'
-import { useTabManager } from '../../contexts/TabManagerProvider'
 import LoadingScreen from '../common/LoadingScreen/LoadingScreen'
 import TabLayout from '../common/TabLayout/TabLayout'
 import Workspaces from './workspaces'
 
 const Thoth = ({ empty = false }) => {
+  const dispatch = useDispatch()
   const navigate = useNavigate()
-  const { activeTab, tabs, openTab } = useTabManager()
+  const tabs = useSelector((state: RootState) => selectAllTabs(state.tabs))
+  const activeTab = useSelector(activeTabSelector)
+
   const pubSub = usePubSub()
   const { spellName } = useParams()
 
@@ -19,18 +24,26 @@ const Thoth = ({ empty = false }) => {
   useEffect(() => {
     if (!tabs) return
 
-    if (!activeTab && !spellName) navigate('/home')
+    // If there are still tabs, grab one at random to open to for now.
+    // We should do better at this.  Probably with some kind of tab ordering.
+    // Could fit in well with drag and drop for tabs
+    if (tabs.length > 0 && !activeTab && !spellName)
+      navigate(`/thoth/${tabs[0].spellId}`)
+
+    if (tabs.length === 0 && !activeTab && !spellName) navigate('/home')
   }, [tabs])
 
   useEffect(() => {
     if (!spellName) return
 
-    openTab({
-      spellId: spellName,
-      name: spellName,
-      openNew: false,
-      type: 'spell',
-    })
+    dispatch(
+      openTab({
+        spellId: spellName,
+        name: spellName,
+        openNew: false,
+        type: 'spell',
+      })
+    )
   }, [spellName])
 
   useHotkeys(
