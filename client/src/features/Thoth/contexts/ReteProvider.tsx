@@ -49,8 +49,8 @@ const ReteProvider = ({ children, tab }) => {
   const { events, publish, subscribe } = usePubSub()
   const [fetchFromImageCache] = useFetchFromImageCacheMutation()
   const [saveSpell] = useSaveSpellMutation()
-  const { data: spell } = useGetSpellQuery(tab.spell, {
-    skip: !tab.spell,
+  const { data: spell } = useGetSpellQuery(tab.spellId, {
+    skip: !tab.spellId,
   })
 
   const { models } = useDB() as unknown as ModelsType
