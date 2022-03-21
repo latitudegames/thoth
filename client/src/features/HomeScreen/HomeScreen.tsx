@@ -7,19 +7,21 @@ import {
   useNewSpellMutation,
 } from '../../state/api/spells'
 import { useDB } from '../../contexts/DatabaseProvider'
-import { useTabManager } from '../../contexts/TabManagerProvider'
 import AllProjects from './screens/AllProjects'
 import CreateNew from './screens/CreateNew'
 import OpenProject from './screens/OpenProject'
 import css from './homeScreen.module.css'
 import LoadingScreen from '../common/LoadingScreen/LoadingScreen'
 import { ModelsType } from '../../types'
+import { closeTab, openTab } from '@/state/tabs'
+import { useDispatch } from 'react-redux'
 
 //MAIN
 
 const StartScreen = () => {
   const { models } = useDB() as unknown as ModelsType
-  const { openTab, closeTabBySpellId } = useTabManager()
+  const dispatch = useDispatch()
+
   const navigate = useNavigate()
 
   const [deleteSpell] = useDeleteSpellMutation()
@@ -48,11 +50,13 @@ const StartScreen = () => {
       name: spellData.name,
     })
 
-    await openTab({
-      name: spellData.name,
-      spellId: spellData.name,
-      type: 'spell',
-    })
+    dispatch(
+      openTab({
+        name: spellData.name,
+        spellId: spellData.name,
+        type: 'spell',
+      })
+    )
 
     navigate('/thoth')
   }
@@ -66,7 +70,7 @@ const StartScreen = () => {
   const onDelete = async spellId => {
     try {
       await deleteSpell(spellId)
-      await closeTabBySpellId(spellId)
+      dispatch(closeTab(spellId))
     } catch (err) {
       console.log('Error deleting spell', err)
     }
