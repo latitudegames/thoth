@@ -15,16 +15,12 @@ import { ThothComponent } from '../../thoth-component'
 
 const info = 'Is Null Or Undefined checks if the input is null or undefined'
 
-type WorkerReturn = {
-  output: string
-}
-
-export class IsNullOrUndefined extends ThothComponent<Promise<WorkerReturn>> {
+export class IsNullOrUndefined extends ThothComponent<Promise<void>> {
   constructor() {
     super('Is Null Or Undefined')
 
     this.task = {
-      outputs: { true: 'option', false: 'option', output: 'output' },
+      outputs: { true: 'option', false: 'option' },
     }
 
     this.category = 'Logic'
@@ -37,14 +33,12 @@ export class IsNullOrUndefined extends ThothComponent<Promise<WorkerReturn>> {
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const isTrue = new Rete.Output('true', 'True', triggerSocket)
     const isFalse = new Rete.Output('false', 'False', triggerSocket)
-    const outp = new Rete.Output('output', 'String', stringSocket)
 
     return node
       .addInput(inp)
       .addInput(dataInput)
       .addOutput(isTrue)
       .addOutput(isFalse)
-      .addOutput(outp)
   }
 
   async worker(
@@ -59,8 +53,5 @@ export class IsNullOrUndefined extends ThothComponent<Promise<WorkerReturn>> {
     console.log('found null or empty input:', is)
 
     this._task.closed = is ? ['false'] : ['true']
-    return {
-      output: action as string,
-    }
   }
 }

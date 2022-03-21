@@ -88,7 +88,6 @@ export async function makeCompletion(
     stop: string[]
   }
 ): Promise<any> {
-  console.log('maging completion, engine:', engine, 'data:', data)
   const API_KEY =
     process.env.OPENAI_API_KEY ??
     (await database.instance.getConfig())['openai_api_key']

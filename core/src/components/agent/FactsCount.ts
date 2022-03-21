@@ -17,8 +17,7 @@ import { ThothComponent } from '../../thoth-component'
 const info = 'Facts Count is used to count of facts for an agent and user'
 
 type InputReturn = {
-  output: string
-  count: number
+  output: number
 }
 
 export async function getFactsCount(agent: string, speaker: string) {
@@ -44,7 +43,6 @@ export class FactsCount extends ThothComponent<Promise<InputReturn>> {
     this.task = {
       outputs: {
         output: 'output',
-        count: 'output',
         trigger: 'option',
       },
     }
@@ -57,19 +55,15 @@ export class FactsCount extends ThothComponent<Promise<InputReturn>> {
   builder(node: ThothNode) {
     const agentInput = new Rete.Input('agent', 'Agent', stringSocket)
     const speakerInput = new Rete.Input('speaker', 'Speaker', stringSocket)
-    const out = new Rete.Output('output', 'Output', anySocket)
-    const inp = new Rete.Input('string', 'Input String', stringSocket)
-    const countOut = new Rete.Output('count', 'Count', anySocket)
+    const countOut = new Rete.Output('output', 'Count', anySocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
 
     return node
-      .addInput(inp)
       .addInput(dataInput)
       .addInput(agentInput)
       .addInput(speakerInput)
       .addOutput(dataOutput)
-      .addOutput(out)
       .addOutput(countOut)
   }
 
@@ -81,14 +75,12 @@ export class FactsCount extends ThothComponent<Promise<InputReturn>> {
   ) {
     const speaker = inputs['speaker'][0] as string
     const agent = inputs['agent'][0] as string
-    const action = inputs['string'][0]
 
     const count = await getFactsCount(agent, speaker)
 
     console.log('count returned: ' + count)
     return {
-      output: action as string,
-      count: count,
+      output: count,
     }
   }
 }

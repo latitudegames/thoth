@@ -11,14 +11,10 @@ import {
   ThothWorkerOutputs,
 } from '../../../types'
 import { EngineContext } from '../../engine'
-import { triggerSocket, stringSocket, anySocket } from '../../sockets'
+import { triggerSocket, stringSocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
 const info = 'Form Opinion About Speaker'
-
-type InputReturn = {
-  output: unknown
-}
 
 async function storeMatrix(agent: string, speaker: string, matrix: string) {
   const response = await axios.post(
@@ -33,9 +29,7 @@ async function storeMatrix(agent: string, speaker: string, matrix: string) {
   console.log(response.data)
 }
 
-export class OpinionAboutSpeakerSet extends ThothComponent<
-  Promise<InputReturn>
-> {
+export class OpinionAboutSpeakerSet extends ThothComponent<Promise<void>> {
   constructor() {
     super('Form Opinion About Speaker')
 
@@ -59,19 +53,15 @@ export class OpinionAboutSpeakerSet extends ThothComponent<
       'Relationship Matrix',
       stringSocket
     )
-    const inp = new Rete.Input('string', 'Input', stringSocket)
-    const out = new Rete.Output('output', 'Output', anySocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
 
     return node
-      .addInput(inp)
       .addInput(matrixInp)
       .addInput(agentInput)
       .addInput(speakerInput)
       .addInput(dataInput)
       .addOutput(dataOutput)
-      .addOutput(out)
   }
 
   async worker(
@@ -82,14 +72,9 @@ export class OpinionAboutSpeakerSet extends ThothComponent<
   ) {
     const speaker = inputs['speaker'][0] as string
     const agent = inputs['agent'][0] as string
-    const action = inputs['string'][0]
     const matrix = inputs['matrix'][0] as string
 
     const resp = await storeMatrix(agent, speaker, matrix)
     console.log(resp)
-
-    return {
-      output: action as string,
-    }
   }
 }

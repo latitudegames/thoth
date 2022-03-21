@@ -35,6 +35,7 @@ export class agent extends gameObject {
     spell_handler: string,
     spell_version: string
   ) {
+    console.log('initializing discord, spell_handler:', spell_handler)
     if (this.discord)
       throw new Error('Discord already running for this agent on this instance')
     this.discord = new discord_client()
@@ -57,7 +58,13 @@ export class agent extends gameObject {
     console.log('Stopped discord client for agent ' + this.name)
   }
 
-  startXREngine(settings: { url: string }) {
+  startXREngine(settings: {
+    url: string
+    spell_handler: string
+    spell_version: string
+    xrengine_bot_name: string
+    xrengine_bot_name_regex: string
+  }) {
     if (this.xrengine)
       throw new Error(
         'XREngine already running for this agent on this instance'
@@ -69,7 +76,7 @@ export class agent extends gameObject {
 
   stopXREngine() {
     if (!this.xrengine) throw new Error("XREngine isn't running, can't stop it")
-    ;(this.xrengine as any) = null
+      ; (this.xrengine as any) = null
     console.log('Stopped xrengine client for agent ' + this.name)
   }
 
@@ -96,7 +103,13 @@ export class agent extends gameObject {
     }
 
     if (data.xrengine_enabled) {
-      this.startXREngine({ url: data.xrengine_url })
+      this.startXREngine({
+        url: data.xrengine_url,
+        spell_handler: data.xrengine_spell_handler_incoming,
+        spell_version: data.spell_version,
+        xrengine_bot_name: data.xrengine_bot_name,
+        xrengine_bot_name_regex: data.xrengine_bot_name_regex,
+      })
     }
   }
 

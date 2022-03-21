@@ -10,24 +10,26 @@ import {
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../../types'
+import { FewshotControl } from '../../dataControls/FewshotControl'
 import { EngineContext } from '../../engine'
-import { triggerSocket, stringSocket, anySocket } from '../../sockets'
+import { triggerSocket, stringSocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
-const info = "Get Agents Facts returns the select agent's facts"
+const info = 'Summarize And Store Facts About Agent'
+
+const fewshot = ``
 
 type InputReturn = {
   output: unknown
-  facts: unknown
 }
-export class GetAgentFacts extends ThothComponent<Promise<InputReturn>> {
+
+export class SummarizeFacts extends ThothComponent<Promise<InputReturn>> {
   constructor() {
-    super('Get Agents Facts')
+    super('Summarize Facts')
 
     this.task = {
       outputs: {
         output: 'output',
-        facts: 'output',
         trigger: 'option',
       },
     }
@@ -38,19 +40,21 @@ export class GetAgentFacts extends ThothComponent<Promise<InputReturn>> {
   }
 
   builder(node: ThothNode) {
-    const agentInput = new Rete.Input('agent', 'Agent', stringSocket)
-    const out = new Rete.Output('output', 'Input String', anySocket)
-    const inp = new Rete.Input('string', 'Input String', stringSocket)
-    const factsOut = new Rete.Output('facts', 'Output', stringSocket)
+    node.data.fewshot = fewshot
+
+    const inp = new Rete.Input('string', 'Input', stringSocket)
+    const factsOut = new Rete.Output('output', 'Facts', stringSocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
+
+    const fewshotControl = new FewshotControl({})
+
+    node.inspector.add(fewshotControl)
 
     return node
       .addInput(inp)
       .addInput(dataInput)
-      .addInput(agentInput)
       .addOutput(dataOutput)
-      .addOutput(out)
       .addOutput(factsOut)
   }
 
@@ -60,21 +64,24 @@ export class GetAgentFacts extends ThothComponent<Promise<InputReturn>> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    const agent = inputs['agent'][0] as string
-    const action = inputs['string'][0]
+    const prompt = node.data.fewshot as string
 
-    const response = await axios.get(
-      `${process.env.REACT_APP_API_URL}/agent_facts`,
+    const response = await axios.post(
+      `${process.env.REACT_APP_API_URL}/hf_request`,
       {
-        params: {
-          agent: agent,
-        },
+        inputs: prompt,
+        model: 'toloka/t5-large-for-text-aggregation',
       }
     )
 
+    const result = await response.data
+
+    console.log('result is', result)
+
+    if (!silent) node.display(result)
+
     return {
-      output: action as string,
-      facts: response.data.facts,
+      output: result,
     }
   }
 }

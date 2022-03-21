@@ -76,18 +76,12 @@ it's nice to be here
 yo
 howdy`
 
-type WorkerReturn = {
-  output: string
-}
-
-export class FastGreetingDetector extends ThothComponent<
-  Promise<WorkerReturn>
-> {
+export class FastGreetingDetector extends ThothComponent<Promise<void>> {
   constructor() {
     super('Fast Greeting Detector')
 
     this.task = {
-      outputs: { true: 'option', false: 'option', output: 'output' },
+      outputs: { true: 'option', false: 'option' },
     }
 
     this.category = 'Conversation'
@@ -102,7 +96,6 @@ export class FastGreetingDetector extends ThothComponent<
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const isTrue = new Rete.Output('true', 'True', triggerSocket)
     const isFalse = new Rete.Output('false', 'False', triggerSocket)
-    const outp = new Rete.Output('output', 'String', stringSocket)
 
     const maxLength = new InputControl({
       dataKey: 'maxLength',
@@ -119,7 +112,6 @@ export class FastGreetingDetector extends ThothComponent<
       .addInput(dataInput)
       .addOutput(isTrue)
       .addOutput(isFalse)
-      .addOutput(outp)
   }
 
   async worker(
@@ -139,8 +131,5 @@ export class FastGreetingDetector extends ThothComponent<
       detectFastGreeting(action as string, maxLength, fewshot as string)
 
     this._task.closed = is ? ['false'] : ['true']
-    return {
-      output: action as string,
-    }
   }
 }

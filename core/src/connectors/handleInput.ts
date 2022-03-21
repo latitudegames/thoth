@@ -10,22 +10,14 @@ export async function handleInput(
   agent: string,
   client: string,
   channelId: string,
-  spell_handler = 'default',
-  spell_version = 'latest'
+  entityId: number, // ADD THIS
+  spell_handler: string,
+  spell_version: string = 'latest'
 ) {
-  if (!spell_handler || spell_handler === undefined) {
-    spell_handler = 'default'
-  }
-  if (!spell_version || spell_version === undefined) {
-    spell_version = 'latest'
-  }
-
-  console.log('sending message', message)
-  console.log('speaker agent client', speaker, agent, client)
   const url = encodeURI(
     `http://localhost:8001/chains/${spell_handler}/${spell_version}`
   )
-  console.log('url is', url)
+
   const response = await axios.post(`${url}`, {
     Input: {
       Input: message,
@@ -33,10 +25,9 @@ export async function handleInput(
       Agent: agent,
       Client: client,
       ChannelID: channelId,
+      EntityID: entityId, // ADD THIS
     },
   })
-  console.log('data:', response.data)
-  console.log('response:', response.data.outputs)
   let index = undefined
 
   for (const x in response.data.outputs) {

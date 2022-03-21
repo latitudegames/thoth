@@ -44,6 +44,8 @@ const Ent = ({ id, updateCallback }) => {
     useState('')
   const [xrengine_enabled, setxrengine_enabled] = useState(false)
   const [xrengine_url, setXREngineUrl] = useState('')
+  const [xrengine_bot_name, setXREngineBotName] = useState('')
+  const [xrengine_bot_name_regex, setXREngineBotNameRegex] = useState('')
 
   const [spellList, setSpellList] = useState('')
   useEffect(() => {
@@ -71,6 +73,8 @@ const Ent = ({ id, updateCallback }) => {
         )
         setXREngineSpellHandlerUpdate(res.data.xrengine_spell_handler_update)
         setXREngineSpellHandlerFeed(res.data.xrengine_spell_handler_feed)
+        setXREngineBotName(res.data.xrengine_bot_name)
+        setXREngineBotNameRegex(res.data.xrengine_bot_name_regex)
         setLoaded(true)
       })()
     }
@@ -113,8 +117,9 @@ const Ent = ({ id, updateCallback }) => {
       xrengine_spell_handler_incoming,
       xrengine_spell_handler_update,
       xrengine_spell_handler_feed,
+      xrengine_bot_name,
+      xrengine_bot_name_regex,
     }
-    console.log('sending save data:', _data)
     axios
       .post(`${process.env.REACT_APP_API_ROOT_URL}/agentInstance`, {
         id,
@@ -142,6 +147,8 @@ const Ent = ({ id, updateCallback }) => {
           responseData.xrengine_spell_handler_update
         )
         setXREngineSpellHandlerFeed(responseData.xrengine_spell_handler_feed)
+        setXREngineBotName(responseData.xrengine_bot_name)
+        setXREngineBotNameRegex(responseData.xrengine_bot_name_regex)
         updateCallback()
       })
   }
@@ -311,6 +318,26 @@ const Ent = ({ id, updateCallback }) => {
                   defaultValue={xrengine_url}
                   onChange={e => {
                     setXREngineUrl(e.target.value)
+                  }}
+                />
+              </div>
+              <div className="form-item">
+                <span className="form-item-label">Bot Name</span>
+                <input
+                  type="text"
+                  defaultValue={xrengine_bot_name}
+                  onChange={e => {
+                    setXREngineBotName(e.target.value)
+                  }}
+                />
+              </div>
+              <div className="form-item">
+                <span className="form-item-label">Bot Name Regex</span>
+                <input
+                  type="text"
+                  defaultValue={xrengine_bot_name_regex}
+                  onChange={e => {
+                    setXREngineBotNameRegex(e.target.value)
                   }}
                 />
               </div>

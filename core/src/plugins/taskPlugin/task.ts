@@ -127,7 +127,7 @@ export class Task {
               })
               const outputData = con.task.outputData as Record<string, unknown>
 
-              return outputData[con.key]
+              return outputData ? outputData[con.key] : ''
             })
 
           const thothWorkerinputs = await Promise.all(inputPromises)

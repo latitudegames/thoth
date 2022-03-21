@@ -18,8 +18,7 @@ const info =
   'Conversation Count is used to count of conversation for an agent and user'
 
 type InputReturn = {
-  output: string
-  count: number
+  output: number
 }
 
 export async function getConversationCount(
@@ -50,7 +49,6 @@ export class ConversationCount extends ThothComponent<Promise<InputReturn>> {
     this.task = {
       outputs: {
         output: 'output',
-        count: 'output',
         trigger: 'option',
       },
     }
@@ -65,21 +63,17 @@ export class ConversationCount extends ThothComponent<Promise<InputReturn>> {
     const speakerInput = new Rete.Input('speaker', 'Speaker', stringSocket)
     const clientInput = new Rete.Input('client', 'Client', stringSocket)
     const channelInput = new Rete.Input('channel', 'Channel', stringSocket)
-    const out = new Rete.Output('output', 'Output', anySocket)
-    const inp = new Rete.Input('string', 'Input String', stringSocket)
-    const countOut = new Rete.Output('count', 'Count', anySocket)
+    const countOut = new Rete.Output('output', 'Count', anySocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
 
     return node
-      .addInput(inp)
       .addInput(dataInput)
       .addInput(agentInput)
       .addInput(speakerInput)
       .addInput(clientInput)
       .addInput(channelInput)
       .addOutput(dataOutput)
-      .addOutput(out)
       .addOutput(countOut)
   }
 
@@ -93,14 +87,12 @@ export class ConversationCount extends ThothComponent<Promise<InputReturn>> {
     const agent = inputs['agent'][0] as string
     const client = inputs['client'][0] as string
     const channel = inputs['channel'][0] as string
-    const action = inputs['string'][0]
 
     const count = await getConversationCount(agent, speaker, client, channel)
 
     console.log('count returned: ' + count)
     return {
-      output: action as string,
-      count: count,
+      output: count,
     }
   }
 }

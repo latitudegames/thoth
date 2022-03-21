@@ -11,7 +11,7 @@ import {
 } from '../../../types'
 import { FewshotControl } from '../../dataControls/FewshotControl'
 import { EngineContext } from '../../engine'
-import { triggerSocket, stringSocket, anySocket } from '../../sockets'
+import { triggerSocket, stringSocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
 /* eslint-disable no-param-reassign */
@@ -57,13 +57,11 @@ function nazi(text: string) {
   return r.test(text)
 }
 
-
 const info =
   'Fast Profaniuty Detector can detect whether or not a phrase is a prophane'
 
 type InputReturn = {
-  output: unknown
-  type: string
+  output: string
 }
 
 const fewshot = `
@@ -105,8 +103,7 @@ export class FastProfanityDetector extends ThothComponent<
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const isTrue = new Rete.Output('true', 'True', triggerSocket)
     const isFalse = new Rete.Output('false', 'False', triggerSocket)
-    const out = new Rete.Output('output', 'output', anySocket)
-    const typeOut = new Rete.Output('type', 'type', stringSocket)
+    const typeOut = new Rete.Output('output', 'Type', stringSocket)
 
     const fewshotControl = new FewshotControl({})
 
@@ -117,7 +114,6 @@ export class FastProfanityDetector extends ThothComponent<
       .addInput(dataInput)
       .addOutput(isTrue)
       .addOutput(isFalse)
-      .addOutput(out)
       .addOutput(typeOut)
   }
 
@@ -134,8 +130,7 @@ export class FastProfanityDetector extends ThothComponent<
 
     this._task.closed = is.res ? ['false'] : ['true']
     return {
-      output: action as string,
-      type: is.res ? is.type : '',
+      output: is.res ? is.type : '',
     }
   }
 }

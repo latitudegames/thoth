@@ -11,7 +11,7 @@ const DatabaseProvider = ({ children }) => {
   const [models, setModels] = useState(false)
 
   useEffect(() => {
-    ;(async () => {
+    ; (async () => {
       if (db) return
 
       const { database, models } = await initDB()

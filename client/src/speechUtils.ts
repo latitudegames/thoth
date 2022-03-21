@@ -37,7 +37,15 @@ class speechUtils {
   socket
 
   constructor() {
-    this.socket = socketIOClient(process.env.VITE_SPEECH_SERVER_URL as string)
+    this.socket = socketIOClient(
+      process.env.REACT_APP_SPEECH_SERVER_URL as string
+    )
+    console.log(
+      'connected to speach server at:',
+      process.env.REACT_APP_SPEECH_SERVER_URL,
+      ':',
+      this.socket.connected
+    )
   }
 
   initRecording = (newMessageCallback: Function) => {
@@ -64,10 +72,12 @@ class speechUtils {
     navigator.mediaDevices.getUserMedia(this.constraints).then(handleSuccess)
 
     this.socket.on('connect', () => {
+      console.log('connected to speech server')
       this.socket.emit('join', 'connected')
     })
 
     this.socket.on('messages', (data: any) => {
+      console.log('messages', data)
       console.log('messages: ', data)
     })
 

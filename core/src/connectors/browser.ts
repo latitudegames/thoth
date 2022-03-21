@@ -57,9 +57,10 @@ export class PageUtils {
     await this.page.evaluate(
       (selector: any, id: any) => {
         const matches = Array.from(document.querySelectorAll(selector))
+        console.log('matches length:', matches.length)
         const singleMatch = matches.find(button => button.id === id)
         if (singleMatch && singleMatch.click) {
-          console.log('normal click')
+          console.log('normal click, singleMath:', singleMatch)
           singleMatch.click()
         }
         if (singleMatch && !singleMatch.click) {

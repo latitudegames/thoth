@@ -6,11 +6,11 @@ import {
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
-} from '../../types'
-import { BooleanControl } from '../dataControls/BooleanControl'
-import { InputControl } from '../dataControls/InputControl'
-import { arraySocket } from '../sockets'
-import { ThothComponent } from '../thoth-component'
+} from '../../../types'
+import { BooleanControl } from '../../dataControls/BooleanControl'
+import { InputControl } from '../../dataControls/InputControl'
+import { arraySocket } from '../../sockets'
+import { ThothComponent } from '../../thoth-component'
 
 const info = `Array Variable`
 

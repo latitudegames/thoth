@@ -53,7 +53,7 @@ export type EngineContext = {
   huggingface: (
     model: string,
     request: string
-  ) => Promise<{ error: unknown; [key: string]: unknown }>
+  ) => Promise<{ error: unknown;[key: string]: unknown }>
   readFromImageCache: Function
   onPlaytest?: Function
   sendToDebug?: Function

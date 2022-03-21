@@ -9,14 +9,14 @@ import {
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
-} from '../../../types'
-import { SocketGeneratorControl } from '../../dataControls/SocketGenerator'
-import { EngineContext } from '../../engine'
-import { triggerSocket, stringSocket } from '../../sockets'
-import { ThothComponent } from '../../thoth-component'
+} from '../../types'
+import { SocketGeneratorControl } from '../dataControls/SocketGenerator'
+import { EngineContext } from '../engine'
+import { triggerSocket, stringSocket } from '../sockets'
+import { ThothComponent } from '../thoth-component'
 
 const info =
-  'String Combiner is used to replace a value in the string with something else - Add a new socket with the string and the value like this - Agent Replacer (will replace all the #agent from the input with the input assigned)'
+  'String Combiner is used to replace a value in the string with something else - Add a new socket with the string and the value like this - Agent Replacer (will replace all the $agent from the input with the input assigned)'
 
 type WorkerReturn = {
   output: string
