@@ -3,20 +3,23 @@ import { useHotkeys } from 'react-hotkeys-hook'
 
 import { useModal } from '../../../contexts/ModalProvider'
 import { usePubSub } from '../../../contexts/PubSubProvider'
-import { useTabManager } from '../../../contexts/TabManagerProvider'
 import css from './menuBar.module.css'
 import thothlogo from './thoth.png'
 import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { activeTabSelector, Tab } from '@/state/tabs'
 
 const MenuBar = () => {
   const navigate = useNavigate()
   const { publish, events } = usePubSub()
-  const { activeTab } = useTabManager()
+  const activeTab = useSelector(activeTabSelector)
+
   const { openModal } = useModal()
 
-  const activeTabRef = useRef(null)
+  const activeTabRef = useRef<Tab | null>(null)
 
   useEffect(() => {
+    if (!activeTab) return
     activeTabRef.current = activeTab
   }, [activeTab])
 
@@ -36,11 +39,12 @@ const MenuBar = () => {
     const toggle = React.useCallback(() => {
       setValue(v => !v)
     }, [])
-    return [value, toggle]
+    return [value, toggle as () => void]
   }
   const [menuVisibility, togglemenuVisibility] = useToggle()
 
   const onSave = () => {
+    if (!activeTabRef.current) return
     publish($SAVE_SPELL(activeTabRef.current.id))
   }
 
@@ -52,6 +56,7 @@ const MenuBar = () => {
   }
 
   const onEdit = () => {
+    if (!activeTabRef.current) return
     openModal({
       modal: 'editSpellModal',
       content: 'This is an example modal',
@@ -69,26 +74,32 @@ const MenuBar = () => {
   }
 
   const onSerialize = () => {
+    if (!activeTabRef.current) return
     publish($SERIALIZE(activeTabRef.current.id))
   }
 
   const onStateManagerCreate = () => {
+    if (!activeTabRef.current) return
     publish($CREATE_STATE_MANAGER(activeTabRef.current.id))
   }
 
   const onPlaytestCreate = () => {
+    if (!activeTabRef.current) return
     publish($CREATE_PLAYTEST(activeTabRef.current.id))
   }
 
   const onInspectorCreate = () => {
+    if (!activeTabRef.current) return
     publish($CREATE_INSPECTOR(activeTabRef.current.id))
   }
 
   const onTextEditorCreate = () => {
+    if (!activeTabRef.current) return
     publish($CREATE_TEXT_EDITOR(activeTabRef.current.id))
   }
 
   const onExport = () => {
+    if (!activeTabRef.current) return
     publish($EXPORT(activeTabRef.current.id))
   }
 
@@ -103,7 +114,7 @@ const MenuBar = () => {
       event.preventDefault()
       onSave()
     },
-    { enableOnTags: 'INPUT' },
+    { enableOnTags: ['INPUT'] },
     [onSave]
   )
 
@@ -113,7 +124,7 @@ const MenuBar = () => {
       event.preventDefault()
       onNew()
     },
-    { enableOnTags: 'INPUT' },
+    { enableOnTags: ['INPUT'] },
     [onNew]
   )
 
@@ -206,7 +217,7 @@ const MenuBar = () => {
   //Menu bar rendering
   const ListItem = ({ item, label, topLevel, onClick }) => {
     label = label ? label.replace(/_/g, ' ') : label
-    let children = null
+    let children
     if (item.items && Object.keys(item.items)) {
       children = (
         <ul className={css['menu-panel']}>
@@ -233,7 +244,7 @@ const MenuBar = () => {
         {label}
         {children && <div className={css['folder-arrow']}> ❯ </div>}
         {!topLevel && <br />}
-        {children}
+        {children || null}
       </li>
     )
   }
@@ -241,7 +252,7 @@ const MenuBar = () => {
   const handleClick = func => {
     //Initially intended to control the visibility with a state, but this triggers a re-render and hides the menu anyway! :D
     //Keeping this intact just in case.
-    togglemenuVisibility(menuVisibility)
+    ;(togglemenuVisibility as Function)(menuVisibility)
     // eslint-disable-next-line no-eval
     eval(func)
   }
