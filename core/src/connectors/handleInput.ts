@@ -10,11 +10,10 @@ export async function handleInput(
   agent: string,
   client: string,
   channelId: string,
+  entityId: number, // ADD THIS
   spell_handler: string,
   spell_version: string = 'latest'
 ) {
-  console.log('sending message', message)
-  console.log('speaker agent client', speaker, agent, client)
   const url = encodeURI(
     `http://localhost:8001/chains/${spell_handler}/${spell_version}`
   )
@@ -26,6 +25,7 @@ export async function handleInput(
       Agent: agent,
       Client: client,
       ChannelID: channelId,
+      EntityID: entityId, // ADD THIS
     },
   })
   let index = undefined

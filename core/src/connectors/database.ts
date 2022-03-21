@@ -43,8 +43,8 @@ export class database {
       host: process.env.PGHOST,
       ssl: PGSSL
         ? {
-            rejectUnauthorized: false,
-          }
+          rejectUnauthorized: false,
+        }
         : false,
     })
     this.client.connect()

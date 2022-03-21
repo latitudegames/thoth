@@ -52,8 +52,7 @@ export type agent_instanceCreationAttributes = Optional<
 
 export class agent_instance
   extends Model<agent_instanceAttributes, agent_instanceCreationAttributes>
-  implements agent_instanceAttributes
-{
+  implements agent_instanceAttributes {
   id?: number
   instanceId?: number
   personality?: string

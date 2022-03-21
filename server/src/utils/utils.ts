@@ -22,7 +22,7 @@ export function includeInFields(arr: string[], words: string[]): number {
   let count = 0
   for (let i = 0; i < words.length; i++) {
     let filtered = arr.filter(el => el.includes(words[i]))
-    if(filtered.length) count++
+    if (filtered.length) count++
   }
   return count
 }

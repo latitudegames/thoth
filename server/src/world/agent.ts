@@ -76,7 +76,7 @@ export class agent extends gameObject {
 
   stopXREngine() {
     if (!this.xrengine) throw new Error("XREngine isn't running, can't stop it")
-    ;(this.xrengine as any) = null
+      ; (this.xrengine as any) = null
     console.log('Stopped xrengine client for agent ' + this.name)
   }
 

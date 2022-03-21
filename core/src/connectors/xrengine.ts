@@ -846,7 +846,7 @@ class XREngineBot {
     await this.waitForTimeout(timeout)
   }
 
-  async interactObject() {}
+  async interactObject() { }
 
   /** Return screenshot
    * @param {Function} fn Function to execut _in the node context._
@@ -1012,7 +1012,6 @@ class XREngineBot {
         const msg = message.text().substring(msgObj.text.indexOf('|') + 1)
         const msgObj = JSON.parse(msg)
         console.log('received voice message:', msgObj)
-
         await this.xrengineclient.handleMessage(
           randomInt(0, 1000000),
           msgObj.sender,
