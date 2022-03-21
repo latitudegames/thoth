@@ -67,13 +67,6 @@ export const spellApi = rootApi.injectEndpoints({
           url: `game/spells/${spellId}`,
         }
       },
-      async onQueryStarted(id, { dispatch, queryFulfilled }) {
-        const { data: spell } = await queryFulfilled
-
-        dispatch(
-          updateGameState({ state: spell?.gameState, spellId: spell?.name })
-        )
-      },
     }),
     saveSpell: builder.mutation<Partial<Spell>, Partial<Spell> | Spell>({
       invalidatesTags: ['Spell'],
@@ -81,15 +74,11 @@ export const spellApi = rootApi.injectEndpoints({
       async queryFn(spell, { dispatch }, extraOptions, baseQuery) {
         const moduleModel = await _moduleModel()
         const modules = await moduleModel.getSpellModules(spell)
-
-        if (spell.gameState)
-          dispatch(
-            setGameState({ state: spell.gameState, spellId: spell.name })
-          )
+        spell.modules = modules
 
         const baseQueryOptions = {
           url: 'game/spells/save',
-          body: { ...spell, modules },
+          body: spell,
           method: 'POST',
         }
 
@@ -195,8 +184,6 @@ export const {
   useGetDeploymentsQuery,
   useLazyGetDeploymentQuery,
 } = spellApi
-
-console.log("spellApi is", spellApi)
 
 export const useGetSpellSubscription =
   spellApi.endpoints.getSpell.useLazyQuerySubscription

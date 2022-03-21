@@ -12,10 +12,10 @@ import {
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
-} from '../../types'
-import { EngineContext } from '../engine'
-import { triggerSocket, stringSocket } from '../sockets'
-import { ThothComponent } from '../thoth-component'
+} from '../../../types'
+import { EngineContext } from '../../engine'
+import { triggerSocket, stringSocket } from '../../sockets'
+import { ThothComponent } from '../../thoth-component'
 
 const info = 'Returns the input string as voice'
 
