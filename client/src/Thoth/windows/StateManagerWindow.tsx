@@ -2,15 +2,14 @@ import Editor from '@monaco-editor/react'
 import jsonFormat from 'json-format'
 // import debounce from 'lodash.debounce'
 import { useSnackbar } from 'notistack'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import Window from '../../components/Window/Window'
 import {
   useGetSpellQuery,
-  useSaveSpellMutation,
+  useSaveSpellMutation
 } from '../../state/api/spells'
-import Window from '../../components/Window/Window'
-
-import '../thoth.module.css'
 import WindowMessage from '../components/WindowMessage'
+import '../thoth.module.css'
 
 const StateManager = ({ tab, ...props }) => {
   // const dispatch = useDispatch()
