@@ -3,7 +3,6 @@
 
 import { EngineContext } from '@latitudegames/thoth-core'
 import { useContext, createContext } from 'react'
-import { useDispatch } from 'react-redux'
 
 import { postEnkiCompletion } from '../../services/game-api/enki'
 import { completion as _completion } from '../../services/game-api/text'
@@ -18,6 +17,11 @@ import { usePubSub } from '../../contexts/PubSubProvider'
 import { useFetchFromImageCacheMutation } from '@/state/api/visualGenerationsApi'
 import { ModelsType } from '../../../types'
 import { ThothWorkerInputs } from '@latitudegames/thoth-core/types'
+import {
+  Spell,
+  useGetSpellQuery,
+  useSaveSpellMutation,
+} from '@/state/api/spells'
 
 import { ModelsType } from '../../types'
 /*
@@ -52,8 +56,11 @@ export const useThothInterface = () => useContext(Context)
 
 const ThothInterfaceProvider = ({ children, tab }) => {
   const { events, publish, subscribe } = usePubSub()
-  const dispatch = useDispatch()
   const [fetchFromImageCache] = useFetchFromImageCacheMutation()
+  const [saveSpell] = useSaveSpellMutation()
+  const { data: spell } = useGetSpellQuery(tab.spell, {
+    skip: !tab.spell,
+  })
 
   const { models } = useDB() as unknown as ModelsType
 
@@ -169,19 +176,23 @@ const ThothInterfaceProvider = ({ children, tab }) => {
   }
 
   const getCurrentGameState = () => {
-    const currentGameState = selectGameStateBySpellId(
-      store.getState().gameState,
-      tab.spell
-    )
-    return currentGameState?.state ?? {}
+    if (!spell) return {}
+
+    return spell?.gameState ?? {}
   }
 
   const updateCurrentGameState = update => {
-    const newState = {
-      spellId: tab.spell,
-      state: update,
+    if (!spell) return
+
+    const newSpell = {
+      ...spell,
+      gameState: {
+        ...spell.gameState,
+        ...update,
+      },
     }
-    dispatch(updateGameState(newState))
+
+    saveSpell(newSpell as Spell)
   }
 
   const publicInterface = {
