@@ -9,6 +9,7 @@ import {
 } from '../../types'
 import { FewshotControl } from '../dataControls/FewshotControl'
 import { InputControl } from '../dataControls/InputControl'
+import { DropdownControl } from '../dataControls/DropdownControl'
 import { SocketGeneratorControl } from '../dataControls/SocketGenerator'
 import { EngineContext } from '../engine'
 import { triggerSocket, stringSocket } from '../sockets'
@@ -55,6 +56,13 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       name: 'Component Name',
     })
 
+    const modelControl = new DropdownControl({
+      dataKey: 'model',
+      name: 'Model',
+      defaultValue: (node.data?.model as string) || 'davinci',
+      values: ['vanilla-davinci', 'aid-jumbo', 'vanilla-jumbo']
+    })
+
     const inputGenerator = new SocketGeneratorControl({
       connectionType: 'input',
       name: 'Input Sockets',
@@ -90,6 +98,7 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
 
     node.inspector
       .add(nameControl)
+      .add(modelControl)
       .add(inputGenerator)
       .add(fewshotControl)
       .add(stopControl)
@@ -112,6 +121,9 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       return acc
     }, {} as Record<string, unknown>)
 
+    const model = (node.data.model as string) ?? 'vanilla-davinci'
+    // const model = node.data.model || 'davinci'
+
     const fewshot = (node.data.fewshot as string) || ''
     const stopSequence = node.data.stop as string
     const template = Handlebars.compile(fewshot)
@@ -119,10 +131,10 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
 
     const stop = node?.data?.stop
       ? stopSequence.split(',').map(i => {
-          if (i === '\n') return i
+          if (i.includes('\n')) return i
           return i.trim()
         })
-      : ['\n']
+      : ""
 
     const tempData = node.data.temp as string
     const temperature = tempData ? parseFloat(tempData) : 0.7
@@ -134,6 +146,7 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       : 0
 
     const body = {
+      model,
       prompt,
       stop,
       maxTokens,

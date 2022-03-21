@@ -1,6 +1,7 @@
 import React, { useRef } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
 import Creatable from 'react-select/creatable'
+import Select from 'react-select'
 
 import Chip from '../Chip/Chip'
 import Icon, { componentCategories } from '../Icon/Icon'
@@ -12,6 +13,7 @@ const BasicSelect = ({
   placeholder,
   style = {},
   focusKey = '',
+  creatable=true,
   nested = false,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   isValidNewOption = (inputValue, selectValue, selectOptions, accessors) =>
@@ -125,7 +127,7 @@ const BasicSelect = ({
       alignItems: 'center',
     }),
     singleValue: () => ({
-      color: 'rgba(255,255,255,0.5)',
+      color: 'rgba(255,255,255)',
     }),
   }
 
@@ -133,11 +135,13 @@ const BasicSelect = ({
     if (!props.creatable) return false
     return isValidNewOption(...args)
   }
-
   return (
     <span className={css['select-dropdown-container']} style={style}>
+
       {options ? (
-        <Creatable
+        <>
+        {creatable && (
+          <Creatable
           isValidNewOption={_isValidNewOption}
           options={options}
           onChange={onChange}
@@ -149,6 +153,20 @@ const BasicSelect = ({
           formatGroupLabel={formatGroupLabel}
           {...props}
         />
+        )}
+        {!creatable && (
+          <Select
+          options={options}
+          onChange={onChange}
+          styles={styles}
+          placeholder={placeholder}
+          components={{ DropdownIndicator }}
+          ref={selectRef}
+          {...props}
+        />
+        )}
+        
+        </>
       ) : (
         <Chip noEvents label={'No options available...'} />
       )}
