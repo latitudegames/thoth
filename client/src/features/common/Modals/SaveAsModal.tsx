@@ -4,18 +4,19 @@ import {
   useGetSpellQuery,
   useSaveSpellMutation,
 } from '../../../state/api/spells'
-import { useTabManager } from '../../../contexts/TabManagerProvider'
 import { useForm } from 'react-hook-form'
 import Modal from '../Modal/Modal'
 import css from './modalForms.module.css'
+import { openTab } from '@/state/tabs'
+import { useDispatch } from 'react-redux'
 
 const EditSpellModal = ({ tab, closeModal }) => {
+  const dispatch = useDispatch()
   const [error, setError] = useState('')
   const [saveSpell, { isLoading }] = useSaveSpellMutation()
   const { data: spell } = useGetSpellQuery(tab.spell, {
-    skip: !tab.spell,
+    skip: !tab.spellId,
   })
-  const { openTab } = useTabManager()
   const { enqueueSnackbar } = useSnackbar()
 
   const {
@@ -43,11 +44,13 @@ const EditSpellModal = ({ tab, closeModal }) => {
 
     // show snackbar
     // open a new tab to the new spell
-    await openTab({
-      name: data.name,
-      spellId: data.name,
-      type: 'spell',
-    })
+    dispatch(
+      openTab({
+        name: data.name,
+        spellId: data.name,
+        type: 'spell',
+      })
+    )
 
     closeModal()
   })
@@ -74,7 +77,7 @@ const EditSpellModal = ({ tab, closeModal }) => {
             <input
               type="text"
               className={css['input']}
-              defaultValue={tab.spell}
+              defaultValue={tab.spellId}
               {...register('name')}
             />
           </div>
