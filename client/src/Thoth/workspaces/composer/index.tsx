@@ -1,12 +1,6 @@
-<<<<<<< HEAD:client/src/Thoth/workspaces/composer/index.tsx
-// @ts-nocheck
-
-import { useEffect } from 'react'
-=======
 import { useEffect, useRef } from 'react'
->>>>>>> 5877e541b06f80bf5eb248d0c98bd82f6d69e2f8:client/src/features/Thoth/workspaces/composer/index.tsx
 
-import { store } from '@/state/store'
+// import { store } from '@/state/store'
 import { useEditor } from '@thoth/contexts/EditorProvider'
 import { Layout } from '@thoth/contexts/LayoutProvider'
 import { useModule } from '@/contexts/ModuleProvider'
@@ -21,17 +15,9 @@ import EventHandler from '@thoth/components/EventHandler'
 import Inspector from '@thoth/windows/InspectorWindow'
 import Playtest from '@thoth/windows/PlaytestWindow'
 import StateManager from '@thoth/windows/StateManagerWindow'
-import AgentManager from '@thoth/windows/AgentManagerWindow'
-import EntManager from '@thoth/windows/EntManagerWindow'
-import ConfigManager from '@thoth/windows/ConfigManagerWindow'
 import TextEditor from '@thoth/windows/TextEditorWindow'
 import DebugConsole from '@thoth/windows/DebugConsole'
-<<<<<<< HEAD:client/src/Thoth/workspaces/composer/index.tsx
-import SearchCorpus from '../../windows/SearchCorpusWindow'
-import DebugConsole from '@thoth/windows/DebugConsole'
-=======
-import { Spell } from '../../../../state/api/spells'
->>>>>>> 5877e541b06f80bf5eb248d0c98bd82f6d69e2f8:client/src/features/Thoth/workspaces/composer/index.tsx
+import { Spell } from '../../../state/api/spells'
 
 const Workspace = ({ tab, tabs, pubSub }) => {
   const spellRef = useRef<Spell>()
@@ -44,7 +30,7 @@ const Workspace = ({ tab, tabs, pubSub }) => {
   useEffect(() => {
     if (!editor?.on) return
     return editor.on(
-      'save nodecreated noderemoved',
+      'save nodecreated noderemoved connectioncreated connectionremoved nodetranslated',
       debounce(() => {
         if (tab.type === 'spell') {
           saveSpell({ ...spellRef.current, chain: editor.toJSON() })
@@ -58,7 +44,7 @@ const Workspace = ({ tab, tabs, pubSub }) => {
             .forEach(filteredTab => {
               if (filteredTab.spell) {
                 const spell = selectSpellById(
-                  store.getState(),
+                  // store.getState(),
                   filteredTab.spell
                 )
                 if (
@@ -93,14 +79,6 @@ const Workspace = ({ tab, tabs, pubSub }) => {
       switch (component) {
         case 'stateManager':
           return <StateManager {...props} />
-        case 'agentManager':
-          return <AgentManager />
-        case 'searchCorpus':
-          return <SearchCorpus />
-        case 'configManager':
-          return <ConfigManager />
-        case 'entManager':
-          return <EntManager />
         case 'playtest':
           return <Playtest {...props} />
         case 'inspector':
