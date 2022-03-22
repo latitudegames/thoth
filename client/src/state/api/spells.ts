@@ -1,11 +1,11 @@
 import { createSelector } from '@reduxjs/toolkit'
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
-import { Spell as SpellType } from '@latitudegames/thoth-core/types'
 
 import { initDB } from '../../database'
 import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes'
 import { Module } from '../../database/schemas/module'
 import { rootApi } from './api'
+import { ChainData } from '@latitudegames/thoth-core/types'
 // function camelize(str) {
 //   return str
 //     .replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
@@ -24,7 +24,7 @@ export interface Spell {
   id?: string
   user?: Record<string, unknown> | null | undefined
   name: string
-  chain: SpellType
+  chain: ChainData
   modules: Module[]
   gameState: Record<string, unknown>
   createdAt?: number
@@ -37,7 +37,7 @@ export interface DeployedSpellVersion {
   message?: string
   versionName?: string
   url?: string
-  chain?: SpellType
+  chain?: ChainData
 }
 
 export interface DeployArgs {
@@ -148,19 +148,6 @@ const emptySpells = []
 export const selectAllSpells = createSelector(
   selectSpellResults,
   spellResult => spellResult?.data || emptySpells
-)
-
-export const selectSpellById = createSelector(
-  [
-    selectAllSpells,
-    (state, spellId) => {
-      return spellId
-    },
-  ],
-  (spells, spellId) =>
-    spells.find(spell => {
-      return spell.name === spellId
-    })
 )
 
 export const selectSpellsByModuleName = createSelector(
