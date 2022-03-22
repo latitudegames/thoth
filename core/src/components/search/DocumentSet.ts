@@ -28,7 +28,7 @@ export class DocumentSet extends ThothComponent<void> {
       },
     }
 
-    this.category = 'Database'
+    this.category = 'Search'
     this.display = true
     this.info = info
   }
