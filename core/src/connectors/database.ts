@@ -94,7 +94,7 @@ export class database {
     maxCount: number = 10
   ) {
     const query =
-      'SELECT * FROM events WHERE agent=$1 AND sender=$2 AND client=$3 AND channel=$4 AND type=$6'
+      'SELECT * FROM events WHERE agent=$1 AND sender=$2 AND client=$3 AND channel=$4 AND type=$5'
     const values = [agent, sender, client, channel, type]
 
     const row = await this.client.query(query, values)
