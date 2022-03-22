@@ -117,6 +117,7 @@ const executeHandler = async (ctx: Koa.Context) => {
   const message = ctx.request.body.command
   const speaker = ctx.request.body.sender
   const agent = ctx.request.body.agent
+  const entityId = ctx.request.body.entityId
   const id = ctx.request.body.id
   const msg = database.instance.getRandomGreeting(agent)
   const spell_handler = ctx.request.body.handler ?? 'default'
@@ -147,7 +148,8 @@ const executeHandler = async (ctx: Koa.Context) => {
     agent,
     'web',
     id,
-    spell_handler
+    spell_handler,
+    entityId
   )
 }
 
