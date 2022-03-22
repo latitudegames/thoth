@@ -1,4 +1,5 @@
 import { initEditor } from '@latitudegames/thoth-core'
+import { ChainData, IRunContextEditor } from '@latitudegames/thoth-core/types'
 import React, {
   useRef,
   useContext,
@@ -14,7 +15,6 @@ import { MyNode } from '../../common/Node/Node'
 import gridimg from '@/grid.png'
 import { usePubSub } from '../../../contexts/PubSubProvider'
 import { useRete, ReteContext } from './ReteProvider'
-// import { ThothTab } from './TabManagerProvider'
 
 export type ThothTab = {
   layoutJson: string
@@ -26,11 +26,12 @@ export type ThothTab = {
   active: boolean
 }
 
+// TODO give better typing to the editor
 const Context = createContext({
   run: () => {},
-  getEditor: () => {},
-  editor: {} as any,
-  serialize: () => {},
+  getEditor: (): IRunContextEditor | null => null,
+  editor: {} as Record<string, any>,
+  serialize: (): ChainData | undefined => undefined,
   buildEditor: (
     el: HTMLDivElement,
     // todo update this to use proper spell type
@@ -54,10 +55,7 @@ const EditorProvider = ({ children }) => {
     components: [],
     loadGraph: (chain: any) => {},
   })
-  const editorRef = useRef({
-    trigger: (event: string) => {},
-    toJSON: () => {},
-  })
+  const editorRef = useRef<IRunContextEditor | null>(null)
   const pubSub = usePubSub()
 
   const setEditor = editor => {
@@ -66,6 +64,7 @@ const EditorProvider = ({ children }) => {
   }
 
   const getEditor = () => {
+    if (!editorRef.current) return null
     return editorRef.current
   }
 
@@ -101,14 +100,17 @@ const EditorProvider = ({ children }) => {
   }
 
   const undo = () => {
+    if (!editorRef.current) return
     editorRef.current.trigger('undo')
   }
 
   const redo = () => {
+    if (!editorRef.current) return
     editorRef.current.trigger('redo')
   }
 
   const serialize = () => {
+    if (!editorRef.current) return
     return editorRef.current.toJSON()
   }
 
