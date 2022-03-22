@@ -12,6 +12,7 @@ import {
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../../types'
+import { DropdownControl } from '../../controls/DropdownControl'
 import { InputControl } from '../../dataControls/InputControl'
 import { EngineContext } from '../../engine'
 import { triggerSocket, anySocket } from '../../sockets'
@@ -35,14 +36,14 @@ export class AgentManager extends ThothComponent<Promise<WorkerReturn>> {
 
     this.task = {
       outputs: {
-        // output: 'output',
+        output: 'output',
         trigger: 'option',
         name: 'name',
         personality: 'personality',
       },
     }
 
-    this.category = 'Agents'
+    this.category = 'I/O'
     this.display = true
     this.info = info
   }
@@ -54,8 +55,21 @@ export class AgentManager extends ThothComponent<Promise<WorkerReturn>> {
       'Personality',
       anySocket
     )
-    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
-    const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
+    const value = node.data.text ? node.data.text : 'Select Value'
+
+    const inputDropdown = new DropdownControl({
+      editor: this.editor,
+      key: 'Personality',
+      value,
+    })
+
+    const dataInput = new Rete.Input('trigger', 'Trigger In', triggerSocket,true)
+    const dataOutput = new Rete.Output('trigger', 'Trigger Out', triggerSocket)
+    const outDialog = new Rete.Output('dialog', 'Dialog', anySocket)
+    const outMoral = new Rete.Output('morals and Ethics', 'Morals and Ethics', anySocket)
+    const outMonologue = new Rete.Output('monologue', 'Monologue', anySocket)
+    const outGreeting = new Rete.Output('greetings', 'Greetings []', anySocket)
+  
 
     const personality = new InputControl({
       dataKey: 'personality',
@@ -67,15 +81,15 @@ export class AgentManager extends ThothComponent<Promise<WorkerReturn>> {
 
     return (
       node
-        .addOutput(outName)
-        // .addOutput(outDialog)
-        .addOutput(outPersonality)
-        // .addOutput(outMoral)
-        // .addOutput(outMonologue)
-        // .addOutput(outFact)
-        // .addOutput(outGreeting)
-        .addInput(dataInput)
-        .addOutput(dataOutput)
+      .addOutput(outName)
+      .addOutput(outDialog)
+      .addOutput(outPersonality)
+      .addOutput(outMoral)
+      .addOutput(outMonologue)
+      .addOutput(outGreeting)
+      .addOutput(dataOutput)
+      .addControl(inputDropdown)
+      .addInput(dataInput)
     )
   }
 
@@ -85,13 +99,21 @@ export class AgentManager extends ThothComponent<Promise<WorkerReturn>> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    const personality = node?.data?.personality as string
-    console.log('personality is', personality)
+    console.log('Handling ', node?.data)
+    console.log("serverUrl is", serverUrl)
 
-    const res = await axios.get(`${serverUrl}/agent?agent=${personality}`)
-    console.log('res is', res)
+    const pernalityName = localStorage.getItem("pernalityName")
+    console.log('personality is', pernalityName)
+
+
+    // const res = await axios.get(`${serverUrl}/agent?agent=${personality}`)
+
+    const res = await axios.get(`${serverUrl}/agent_data`, {
+      params: { agent: pernalityName },
+    })
+   
+    node.display(res && res.data && res.data.agent)
     const agent = res.data.agent
-
     return {
       name: agent ?? res.data.name ?? res.data.personality ?? 'testestest',
       agent: agent,
