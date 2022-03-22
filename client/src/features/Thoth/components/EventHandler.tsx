@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { useSelector } from 'react-redux'
+import { Spell as SpellType } from '@latitudegames/thoth-core/types'
 
 import {
   uniqueNamesGenerator,
@@ -9,8 +9,8 @@ import {
 
 import {
   useSaveSpellMutation,
-  useGetSpellsQuery,
-  selectSpellById,
+  useGetSpellQuery,
+  Spell,
 } from '../../../state/api/spells'
 import { useEditor } from '../contexts/EditorProvider'
 import { useLayout } from '../contexts/LayoutProvider'
@@ -28,11 +28,12 @@ const EventHandler = ({ pubSub, tab }) => {
   const { createOrFocus, windowTypes } = useLayout()
 
   const [saveSpellMutation] = useSaveSpellMutation()
-  const { data: spellsData } = useGetSpellsQuery()
-  const spell = useSelector(state => selectSpellById(state, tab?.spell))
+  const { data: spell } = useGetSpellQuery(tab.spellId, {
+    skip: !tab.spellId,
+  })
 
   // Spell ref because callbacks cant hold values from state without them
-  const spellRef = useRef(null)
+  const spellRef = useRef<Spell | null>(null)
   useEffect(() => {
     if (!spell) return
     spellRef.current = spell
@@ -47,7 +48,6 @@ const EventHandler = ({ pubSub, tab }) => {
     $UNDO,
     $REDO,
     $SAVE_SPELL,
-    $SAVE_SPELL_AS,
     $CREATE_STATE_MANAGER,
     $CREATE_PLAYTEST,
     $CREATE_INSPECTOR,
@@ -59,13 +59,9 @@ const EventHandler = ({ pubSub, tab }) => {
 
   const saveSpell = async () => {
     const currentSpell = spellRef.current
-    const chain = serialize(currentSpell)
+    const chain = serialize() as SpellType
 
     await saveSpellMutation({ ...currentSpell, chain })
-  }
-
-  const saveSpellAs = async () => {
-    console.log('Save spell as')
   }
 
   const createStateManager = () => {
@@ -100,7 +96,7 @@ const EventHandler = ({ pubSub, tab }) => {
   const onExport = async () => {
     // refetch spell from local DB to ensure it is the most up to date
     const spell = { ...spellRef.current }
-    spell.chain = serialize()
+    spell.chain = serialize() as SpellType
     const modules = await getSpellModules(spell)
     // attach modules to spell to be exported
     spell.modules = modules
@@ -120,6 +116,8 @@ const EventHandler = ({ pubSub, tab }) => {
     // Start download
     link.click()
 
+    if (!link.parentNode) return
+
     // Clean up and remove the link
     link.parentNode.removeChild(link)
   }
@@ -127,7 +125,7 @@ const EventHandler = ({ pubSub, tab }) => {
   // clean up anything inside the editor which we need to shut down.
   // mainly subscriptions, etc.
   const onCloseEditor = () => {
-    const editor = getEditor()
+    const editor = getEditor() as Record<string, any>
     if (editor.moduleSubscription) editor.moduleSubscription.unsubscribe()
   }
 
