@@ -1,16 +1,14 @@
 import { useSnackbar } from 'notistack'
 
 import { useAppDispatch } from '../../../../../state/hooks'
-import { tabOpened } from '../../../../../state/tabs'
+import { openTab } from '../../../../../state/tabs'
 import { useModule } from '../../../../../contexts/ModuleProvider'
-import { useTabManager } from '../../../../../contexts/TabManagerProvider'
 import Select from '../../../../common/Select/Select'
 
 const ModuleSelect = ({ control, updateData, initialValue }) => {
   const dispatch = useAppDispatch()
 
   const { modules, newModule, findOneModule } = useModule()
-  const { openTab } = useTabManager()
   const { enqueueSnackbar } = useSnackbar()
   const { dataKey } = control
 
@@ -29,8 +27,8 @@ const ModuleSelect = ({ control, updateData, initialValue }) => {
       openNew: false,
     }
 
-    dispatch(tabOpened(tab))
-    await openTab(tab)
+    dispatch(openTab(tab))
+    // await openTab(tab)
   }
 
   const onChange = async ({ value }) => {
@@ -46,13 +44,6 @@ const ModuleSelect = ({ control, updateData, initialValue }) => {
     const module = _module.toJSON()
 
     await _openTab(module)
-
-    // await openTab({
-    //   name: value,
-    //   type: 'module',
-    //   moduleName: module.name,
-    //   openNew: false,
-    // })
   }
 
   const update = update => {
@@ -64,13 +55,6 @@ const ModuleSelect = ({ control, updateData, initialValue }) => {
       const module = await newModule({ name: value })
 
       await _openTab(module)
-
-      // await openTab({
-      //   name: value,
-      //   type: 'module',
-      //   moduleName: module.name,
-      //   openNew: false,
-      // })
 
       // todo better naming for rete modules.
       // Handle displaying name as using ID for internal mapping
