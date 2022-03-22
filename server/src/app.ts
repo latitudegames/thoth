@@ -62,7 +62,6 @@ export async function init() {
     force: process.env.REFRESH_DB?.toLowerCase().trim() === 'true',
   })
   await database.instance.firstInit()
-  await database.instance.initData()
   console.log('Database synced, starting loop')
 
   process.on('unhandledRejection', (err: Error) => {

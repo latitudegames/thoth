@@ -271,7 +271,7 @@ export class telegram_client {
     const resp = handleInput(
       msg.text,
       msg.from.first_name,
-      (await database.instance.getConfig())['agent'] ?? 'Agent',
+      'Agent',
       'telegram',
       msg.chat.id
     )
@@ -447,7 +447,7 @@ export class telegram_client {
     const resp = handleInput(
       msg.text,
       msg.from.first_name,
-      (await database.instance.getConfig())['agent'] ?? 'Agent',
+      'Agent',
       'telegram',
       msg.chat.id
     )
@@ -594,7 +594,7 @@ export class telegram_client {
 
     if (!token) return console.warn('No API token for Telegram bot, skipping')
     const username_regex = new RegExp(
-      (await database.instance.getConfig())['botNameRegex'],
+      'botNameRegex',
       'ig'
     )
     let botName = ''

@@ -10,41 +10,6 @@ module.exports = {
       },
       ['id']
     )
-    const configs = await queryInterface.rawSelect(
-      'config',
-      {
-        where: {},
-        plain: false,
-      },
-      ['id']
-    )
-
-    if (configs.length <= 0) {
-      await queryInterface.bulkInsert(
-        'config',
-        [
-          { key: 'agent', value: 'Thales' },
-          { key: 'openai_api_key', value: '' },
-          { key: 'google_project_id', value: '' },
-          { key: 'hf_api_token', value: '' },
-          { key: 'use_gptj', value: '' },
-          { key: 'editMessageMaxCount', value: '10' },
-          { key: 'botNameRegex', value: '((?:digital|being)(?: |$))' },
-          { key: 'chatHistoryMessagesCount', value: '20' },
-          { key: 'botName', value: 'thoth' },
-          { key: 'botNameHandler', value: 'thoth' },
-          { key: 'digitalBeingsOnly', value: 'false' },
-          { key: 'fastMode', value: 'false' },
-          { key: 'discord_calendar_channel', value: '' },
-          { key: 'initCalendar', value: 'false' },
-          { key: 'discussion_channel_topics', value: '' },
-          { key: 'use_logtail', value: 'false' },
-          { key: 'logtail_key', value: '' },
-          { key: 'fps', value: '60' },
-        ],
-        { fields: 'Array of all fields except id' }
-      )
-    }
 
     // eslint-disable-next-line camelcase
     const agents = await queryInterface.rawSelect(

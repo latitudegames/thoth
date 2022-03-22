@@ -37,7 +37,7 @@ export class NamedEntityRecognition extends ThothComponent<
       },
     }
 
-    this.category = 'Conversation'
+    this.category = 'AI/ML'
     this.display = true
     this.info = info
   }

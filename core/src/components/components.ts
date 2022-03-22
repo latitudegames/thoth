@@ -1,17 +1,14 @@
 import { AddAgent } from './agent/AddAgent'
 import { AgentManager } from './agent/AgentManager'
 import { AgentTextCompletion } from './agent/AgentTextCompletion'
-import { ArchiveConversation } from './agent/ArchiveConversation'
 import { CacheManagerDelete } from './agent/CacheManagerDelete'
 import { CacheManagerGet } from './agent/CacheManagerGet'
 import { CacheManagerSet } from './agent/CacheManagerSet'
 import { ConversationRecall } from './agent/ConversationRecall'
 import { ConversationStore } from './agent/ConversationStore'
 import { CreateOrGetAgent } from './agent/CreateOrGetAgent'
-import { FactsCount } from './agent/FactsCount'
 import { FactsRecall } from './agent/FactsRecall'
 import { FactsStore } from './agent/FactsStore'
-import { GenerateContext } from './agent/GenerateContext'
 import { GetAgentData } from './agent/GetAgentData'
 import { GetAgentFacts } from './agent/GetAgentFacts'
 import { InputDestructureComponent } from './agent/InputDestructure'
@@ -35,7 +32,6 @@ import { ActionTypeComponent } from './ml/ActionType'
 import { Classifier } from './ml/Classifier'
 import { DifficultyDetectorComponent } from './ml/DifficultyDetector'
 import { EntityDetector } from './ml/EntityDetector'
-import { ComplexStringMatcher } from './strings/ComplexStringMatcher'
 import { Generator } from './ml/Generator'
 import { HuggingfaceComponent } from './ml/Huggingface'
 import { ItemTypeComponent } from './ml/ItemDetector'
@@ -53,6 +49,7 @@ import { DocumentSet } from './search/DocumentSet'
 import { Search } from './search/Search'
 import { StateRead } from './state/StateRead'
 import { StateWrite } from './state/StateWrite'
+import { ComplexStringMatcher } from './strings/ComplexStringMatcher'
 import { JoinListComponent } from './strings/JoinList'
 import { RandomStringFromList } from './strings/RandomStringFromList'
 import { StringAdder } from './strings/StringAdder'
@@ -89,11 +86,9 @@ export const components = {
   agentManager: () => new AgentManager(),
   keywordExtractor: () => new KeywordExtractor(),
   namedEntityRecognition: () => new NamedEntityRecognition(),
-  generateContext: () => new GenerateContext(),
   createOrGetAgent: () => new CreateOrGetAgent(),
   factsStore: () => new FactsStore(),
   factsRecall: () => new FactsRecall(),
-  factsCount: () => new FactsCount(),
   Classifier: () => new Classifier(),
   getAgentData: () => new GetAgentData(),
   getAgentFacts: () => new GetAgentFacts(),
@@ -123,7 +118,6 @@ export const components = {
   arrayVariable: () => new ArrayVariable(),
   addAgent: () => new AddAgent(),
   logicalOperator: () => new LogicalOperator(),
-  archiveConversation: () => new ArchiveConversation(),
   generator: () => new Generator(),
   huggingfaceComponent: () => new HuggingfaceComponent(),
   inputComponent: () => new InputComponent(),

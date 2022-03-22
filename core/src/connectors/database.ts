@@ -51,79 +51,7 @@ export class database {
     await this.client.query('SELECT NOW()')
   }
 
-  async initData() {
-    await this.getConfig()
-  }
-
   async firstInit() {
-    const id = new idGenerator()
-
-    const kv = [
-      {
-        key: 'openai_api_key',
-        value: '',
-      },
-      { key: 'google_project_id', value: '' },
-      { key: 'hf_api_token', value: '' },
-      { key: 'use_gptj', value: '' },
-      { key: 'editMessageMaxCount', value: '5' },
-      { key: 'botNameRegex', value: '((?:digital|being)(?: |$))' },
-      { key: 'chatHistoryMessagesCount', value: '20' },
-      { key: 'botName', value: 'digital being' },
-      { key: 'botNameHandler', value: 'digital.being' },
-      { key: 'digitalBeingsOnly', value: 'false' },
-      { key: 'fastMode', value: 'false' },
-      { key: 'discord_calendar_channel', value: '' },
-      {
-        key: 'discussion_channel_topics',
-        value: 'Apples|Trees|Space|Universe',
-      },
-      { key: 'use_logtail', value: 'false' },
-      { key: 'logtail_key', value: '' },
-      { key: 'initCalendar', value: '' },
-      { key: 'fps', value: '' },
-      {
-        key: 'fact_summarization',
-        value: 'Instructions: Extract the facts from the following passage.',
-      },
-
-      {
-        key: 'xr_world',
-        value: 'The following is a description of the world that we are in.',
-      },
-
-      {
-        key: 'opinion',
-        value: 'Instructions: Form an opinion about the following statement.',
-      },
-
-      {
-        key: 'xr_room',
-        value: 'The following is a description of the room that we are in.',
-      },
-    ]
-
-    // TODO: Simplify this, some cruft from adding our old code in
-    let query = ''
-    for (let i = 0; i < kv.length; i++) {
-      query +=
-        (i == 0 ? 'INSERT INTO config\n select t.*\n from (' : '') +
-        '(SELECT ' +
-        id.getId() +
-        " as id, '" +
-        kv[i].key +
-        "' as key, '" +
-        kv[i].value +
-        "' as value  \n" +
-        '      ) ' +
-        (i !== kv.length - 1
-          ? 'union all \n'
-          : '\n) t\nWHERE NOT EXISTS (SELECT * FROM config);')
-    }
-
-    await this.client.query(query)
-    id.reset()
-
     const check = 'SELECT * FROM "public"."chains"'
     const r = await this.client.query(check)
 
@@ -134,82 +62,40 @@ export class database {
     }
   }
 
-  //reads the config table from the database
-  async getConfig() {
-    const configs = {}
-    const query = 'SELECT * FROM config'
-
-    const rows = await this.client.query(query)
-    if (rows && rows.rows && rows.rows.length > 0) {
-      for (let i = 0; i < rows.rows.length; i++) {
-        configs[rows.rows[i].key] = rows.rows[i].value
-      }
-    }
-
-    return configs
-  }
-
-  //updates a config value
-  async setConfig(key: any, value: any) {
-    console.log('setting ', key, value)
-    const check = `SELECT * FROM config WHERE key='${key}'`
-
-    const rows = await this.client.query(check)
-    console.log('rows from setConfig are', rows)
-
-    if (rows && rows.rows && rows.rows.length > 0) {
-      const query = 'UPDATE config SET value=$1 WHERE key=$2'
-      const values = [value, key]
-
-      await this.client.query(query, values)
-    } else {
-      const query = 'INSERT INTO config(key, value) VALUES($1, $2)'
-      const values = [key, value]
-
-      await this.client.query(query, values)
-    }
-  }
-  async deleteConfig(id: any) {
-    const query = 'DELETE FROM config WHERE id=$1'
-    const values = [id]
-
-    await this.client.query(query, values)
-  }
-
-  async setConversation(
+  async setEvents(
+    type: string,
     agent: any,
     client: any,
     channel: any,
     sender: any,
-    text: string | any[],
-    archive: any
+    text: string | any[]
   ) {
     const query =
-      'INSERT INTO conversation(agent, client, channel, sender, text, archive, date) VALUES($1, $2, $3, $4, $5, $6, $7)'
+      'INSERT INTO events(type, agent, client, channel, sender, text, date) VALUES($1, $2, $3, $4, $5, $6, $7)'
     const values = [
+      type,
       agent,
       client,
       channel,
       sender,
       text,
-      archive,
       new Date().toUTCString(),
     ]
 
     await this.client.query(query, values)
   }
-  async getConversation(
+  async getEvents(
+    type: string,
     agent: any,
     sender: any,
     client: any,
     channel: any,
-    archive: any,
     asString: boolean = true,
     maxCount: number = 10
   ) {
     const query =
-      'SELECT * FROM conversation WHERE agent=$1 AND client=$2 AND channel=$3 AND archive=$4'
-    const values = [agent, client, channel, archive]
+      'SELECT * FROM events WHERE agent=$1 AND sender=$2 AND client=$3 AND channel=$4 AND type=$6'
+    const values = [agent, sender, client, channel, type]
 
     const row = await this.client.query(query, values)
     if (row && row.rows && row.rows.length > 0) {
@@ -246,148 +132,7 @@ export class database {
       return asString ? '' : []
     }
   }
-  archiveConversation(agent: any, client: any, channel: any, sender: any) {
-    const query =
-      'UPDATE conversation SET archive=$1 WHERE agent=$2 AND client=$3 AND channel=$4 AND sender=$5'
-    const values = [true, agent, client, channel, sender]
 
-    this.client.query(query, values)
-  }
-
-  async setSpeakersFacts(agent: any, speaker: any, facts: any) {
-    const query =
-      'INSERT INTO speakers_facts(agent, speaker, facts) VALUES($1, $2, $3)'
-    const values = [agent, speaker, facts]
-
-    await this.client.query(query, values)
-  }
-  async getSpeakersFacts(agent: any, speaker: any, toString: boolean) {
-    const query = 'SELECT * FROM speakers_facts WHERE agent=$1 AND speaker=$2'
-    const values = [agent, speaker]
-
-    const row = await this.client.query(query, values)
-    if (row && row.rows && row.rows.length > 0) {
-      const res = []
-      for (let i = 0; i < row.rows.length; i++) {
-        res.push(row.rows[i].facts)
-      }
-      return toString ? res.join(',') : res
-    } else {
-      return toString ? '' : []
-    }
-  }
-  async updateSpeakersFactsArchive(agent: any, speaker: any, facts: string) {
-    const archive = await this.getSpeakersFactsArchive(agent, speaker)
-    if (archive && archive.length > 0) {
-      const query =
-        'UPDATE speakers_facts_archive SET facts=$1 WHERE agent=$2 AND speaker=$3'
-      const values = [archive + '\n' + facts, agent, speaker]
-
-      await this.client.query(query, values)
-    } else {
-      const query =
-        'INSERT INTO speakers_facts_archive(agent, speaker, facts) VALUES($1, $2, $3)'
-      const values = [agent, speaker, facts]
-
-      await this.client.query(query, values)
-    }
-  }
-  async getSpeakersFactsArchive(agent: any, speaker: any) {
-    const query =
-      'SELECT * FROM speakers_facts_archive WHERE agent=$1 AND speaker=$2'
-    const values = [agent, speaker]
-
-    const row = await this.client.query(query, values)
-    if (row && row.rows && row.rows.length > 0) {
-      return row.rows[0].facts
-    }
-    return ''
-  }
-  async setAgentFacts(agent: any, facts: string, reset: any = false) {
-    const check = 'SELECT * FROM agents WHERE agent=$1'
-    const cvalues = [agent]
-    const res = await this.client.query(check, cvalues)
-    const test = res
-    let query = ''
-    let values = []
-
-    if (test && test.rows && test.rows.length > 0) {
-      const newFacts = test.rows[0].facts + !reset ? '\n' + facts : ''
-
-      query = 'UPDATE agents SET facts=$1 WHERE agent=$2'
-      values = [newFacts, agent]
-    } else {
-      query = 'INSERT INTO agent(agent, facts) VALUES($1, $2)'
-      values = [agent, facts]
-    }
-
-    await this.client.query(query, values)
-  }
-  async getAgentFacts(agent: any) {
-    const query = 'SELECT * FROM agent_facts WHERE agent=$1'
-    const values = [agent]
-
-    const row = await this.client.query(query, values)
-    if (row && row.rows && row.rows.length > 0) {
-      return row.rows[0].facts
-    } else {
-      return await ''
-    }
-  }
-  async updateAgentFactsArchive(agent: any, facts: string) {
-    const archive = await this.getAgentFactsArchive(agent)
-    if (archive && archive.length > 0) {
-      const query = 'UPDATE agent_facts_archive SET facts=$1 WHERE agent=$2'
-      const values = [archive + '\n' + facts, agent]
-
-      await this.client.query(query, values)
-    } else {
-      const query =
-        'INSERT INTO agent_facts_archive(agent, facts) VALUES($1, $2)'
-      const values = [agent, facts]
-
-      await this.client.query(query, values)
-    }
-  }
-  async getAgentFactsArchive(agent: any) {
-    const query = 'SELECT * FROM agent_facts_archive WHERE agent=$1'
-    const values = [agent]
-
-    const row = await this.client.query(query, values)
-    if (row && row.rows && row.rows.length > 0) {
-      return row.rows[0].facts
-    }
-    return ''
-  }
-  async setSpeakerAgentMeta(agent: any, speaker: any, meta: any) {
-    const check = 'SELECT * FROM meta WHERE agent=$1 AND speaker=$2'
-    const cvalues = [agent, speaker]
-
-    const test = await this.client.query(check, cvalues)
-    let query = ''
-    let values = []
-
-    if (test && test.rows && test.rows.length > 0) {
-      query = 'UPDATE meta SET meta=$1 WHERE agent=$2 AND speaker=$3'
-      values = [meta, agent, speaker]
-    } else {
-      query = 'INSERT INTO meta(agent, speaker, meta) VALUES($1, $2, $3)'
-      values = [agent, speaker, meta]
-    }
-
-    await this.client.query(query, values)
-  }
-  async getSpeakerAgentMeta(agent: any, speaker: any) {
-    const query = 'SELECT * FROM meta WHERE agent=$1 AND speaker=$2'
-    const values = [agent, speaker]
-
-    const row = await this.client.query(query, values)
-    if (row && row.rows && row.rows.length > 0) {
-      return row.rows[0].meta
-    } else {
-      return ''
-    }
-  }
   async setRelationshipMatrix(speaker: any, agent: any, matrix: any) {
     const check =
       'SELECT * FROM relationship_matrix WHERE speaker=$1 AND agent=$2'
@@ -409,6 +154,7 @@ export class database {
 
     await this.client.query(query, values)
   }
+
   async getRelationshipMatrix(speaker: any, agent: any) {
     const query =
       'SELECT * FROM relationship_matrix WHERE speaker=$1 AND agent=$2'
@@ -417,6 +163,7 @@ export class database {
     const row = await this.client.query(query, values)
     return row && row.rows[0] ? JSON.parse(row.rows[0].matrix) : null
   }
+
   async getAgent(agent: string) {
     const query = 'SELECT * FROM agents WHERE agent=$1'
     const values = [agent]
@@ -469,123 +216,6 @@ export class database {
     const query = 'SELECT * FROM agents'
 
     return (await this.client.query(query)).rows
-  }
-
-  // TODO: Move to single table with other prompts
-  async getContext(agent = 'common') {
-    const query = 'SELECT * FROM context WHERE agent=$1'
-    const values = [agent]
-
-    const rows = await this.client.query(query, values)
-    if (rows && rows.rows && rows.rows.length > 0) {
-      return rows.rows[0].context
-    } else {
-      return ''
-    }
-  }
-
-  async getSpeakerFactSummarization(agent = 'common') {
-    const query = 'SELECT * FROM speaker_fact_summarization WHERE agent=$1'
-    const values = [agent]
-
-    const row = await this.client.query(query, values)
-    if (row && row.rows && row.rows.length > 0) {
-      return row.rows[0].summarization
-    } else {
-      return ''
-    }
-  }
-
-  async getFacts(agent: any) {
-    const query = 'SELECT facts FROM agents WHERE agent=$1'
-    const values = [agent]
-
-    const rows = await this.client.query(query, values)
-    if (rows && rows.rows && rows.rows.length > 0) {
-      return rows.rows[0].facts
-    } else {
-      return ''
-    }
-  }
-
-  async getRandomGreeting(agent: string) {
-    return 'Hello'
-    // TODO: Refactor to get starting message from agent db
-    // const query = 'SELECT * FROM greetings WHERE agent=$1'
-    // const values = [agent]
-    // const rows = await this.client.query(query, values)
-    // if (rows && rows.rows && rows.rows.length > 0) {
-    //   const index = getRandomNumber(0, rows.rows.length)
-    //   if (rows.rows[index] === undefined || !rows.rows) {
-    //     return 'Hello there!'
-    //   }
-    //   return rows.rows[index].message
-    // } else {
-    //   return this.getRandomGreeting('common')
-    // }
-  }
-  async getGreetings(agent: any) {
-    return 'Hello'
-    // TODO: Refactor to get starting message from agent db
-    // const query = 'SELECT * FROM greetings WHERE agent=$1'
-    // const values = [agent]
-
-    // const rows = await this.client.query(query, values)
-    // if (rows && rows.rows && rows.rows.length > 0) {
-    //   let res = ''
-    //   for (let i = 0; i < rows.rows.length; i++) {
-    //     if (rows.rows[i].message.length <= 0) continue
-    //     res += rows.rows[i].message + '|'
-    //   }
-    //   return res
-    // }
-
-    // return ''
-  }
-
-  async setGreetings(agent: string | any[], data: string) {
-    if (!agent || agent.length <= 0) return
-    const messages = data.split('|')
-    for (let i = 0; i < messages.length; i++) {
-      if (messages.length <= 0) continue
-      const query = 'UPDATE agents SET greetings=$2 WHERE agent=$1'
-      const values = [agent, messages[i]]
-
-      await this.client.query(query, values)
-    }
-  }
-
-  async getIgnoredKeywords(agent: any) {
-    const query =
-      'SELECT ignored_keywords FROM agents WHERE agent=$1 OR agent=$2'
-    const values = [agent, 'common']
-
-    const rows = await this.client.query(query, values)
-    const res = []
-    if (rows && rows.rows && rows.rows.length) {
-      for (let i = 0; i < rows.rows.length; i++) {
-        res.push(rows.rows[i].keyword)
-      }
-    }
-
-    return res
-  }
-
-  async getIgnoredKeywordsData(agent: any) {
-    const query = 'SELECT ignored_keywords FROM agents WHERE agent=$1'
-    const values = [agent]
-
-    const rows = await this.client.query(query, values)
-    if (rows && rows.rows && rows.rows.length) {
-      let res = ''
-      for (let i = 0; i < rows.rows.length; i++) {
-        if (rows.rows[i].keyword.length <= 0) continue
-        res += rows.rows[i].keyword + '|'
-      }
-      return res
-    }
-
-    return ''
   }
 
   async deleteAgent(id: any) {

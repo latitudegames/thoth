@@ -63,13 +63,21 @@ export class AgentManager extends ThothComponent<Promise<WorkerReturn>> {
       value,
     })
 
-    const dataInput = new Rete.Input('trigger', 'Trigger In', triggerSocket,true)
+    const dataInput = new Rete.Input(
+      'trigger',
+      'Trigger In',
+      triggerSocket,
+      true
+    )
     const dataOutput = new Rete.Output('trigger', 'Trigger Out', triggerSocket)
     const outDialog = new Rete.Output('dialog', 'Dialog', anySocket)
-    const outMoral = new Rete.Output('morals and Ethics', 'Morals and Ethics', anySocket)
+    const outMoral = new Rete.Output(
+      'morals and Ethics',
+      'Morals and Ethics',
+      anySocket
+    )
     const outMonologue = new Rete.Output('monologue', 'Monologue', anySocket)
     const outGreeting = new Rete.Output('greetings', 'Greetings []', anySocket)
-  
 
     const personality = new InputControl({
       dataKey: 'personality',
@@ -79,8 +87,7 @@ export class AgentManager extends ThothComponent<Promise<WorkerReturn>> {
 
     node.inspector.add(personality)
 
-    return (
-      node
+    return node
       .addOutput(outName)
       .addOutput(outDialog)
       .addOutput(outPersonality)
@@ -90,7 +97,6 @@ export class AgentManager extends ThothComponent<Promise<WorkerReturn>> {
       .addOutput(dataOutput)
       .addControl(inputDropdown)
       .addInput(dataInput)
-    )
   }
 
   async worker(
@@ -100,18 +106,17 @@ export class AgentManager extends ThothComponent<Promise<WorkerReturn>> {
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
     console.log('Handling ', node?.data)
-    console.log("serverUrl is", serverUrl)
+    console.log('serverUrl is', serverUrl)
 
-    const pernalityName = localStorage.getItem("pernalityName")
+    const pernalityName = localStorage.getItem('pernalityName')
     console.log('personality is', pernalityName)
-
 
     // const res = await axios.get(`${serverUrl}/agent?agent=${personality}`)
 
     const res = await axios.get(`${serverUrl}/agent_data`, {
       params: { agent: pernalityName },
     })
-   
+
     node.display(res && res.data && res.data.agent)
     const agent = res.data.agent
     return {

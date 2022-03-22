@@ -5,6 +5,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import { TwitterApi } from 'twitter-api-v2'
+
 import { database } from './database'
 import { handleInput } from './handleInput'
 import { getSetting } from './utils'
@@ -53,10 +54,7 @@ export class twitter_client {
       'twitterAccessTokenSecret'
     )
     const regex = new RegExp('', 'ig')
-    const regex2 = new RegExp(
-      (await database.instance.getConfig())['botNameRegex'],
-      'ig'
-    )
+    const regex2 = new RegExp('botNameRegex', 'ig')
     if (!bearerToken || !twitterUser)
       return console.warn('No API token for Whatsapp bot, skipping')
 

@@ -17,9 +17,7 @@ export async function makeModelRequest(
       { inputs, parameters, options },
       {
         headers: {
-          Authorization: `Bearer ${(
-            await database.instance.getConfig()
-          )['hf_api_token'].replace(' ', '_')}`,
+          Authorization: `Bearer ${process.env.HF_API_KEY}`,
         },
       }
     )

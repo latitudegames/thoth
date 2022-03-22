@@ -766,7 +766,7 @@ export class discord_client {
 
   //Event that is triggered when the discord client fully loaded
   ready = async client => {
-    const logDMUserID = (await database.instance.getConfig())['logDMUserID']
+    const logDMUserID = false
     await this.client.users
       .fetch(logDMUserID)
       .then(user => {
