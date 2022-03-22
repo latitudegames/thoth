@@ -17,17 +17,17 @@ import { triggerSocket, stringSocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
 const info =
-  'Fast Classifier uses basic string matches to determine if the input matches some selected properties'
+  'Complex String Matcher uses basic string matches to determine if the input matches some selected properties'
 
 export class FastClassifier extends ThothComponent<Promise<void>> {
   constructor() {
-    super('Fast Classifier')
+    super('Complex String Matcher')
 
     this.task = {
       outputs: { true: 'option', false: 'option' },
     }
 
-    this.category = 'AI/ML'
+    this.category = 'Strings'
     this.display = true
     this.info = info
   }
@@ -114,7 +114,12 @@ export class FastClassifier extends ThothComponent<Promise<void>> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    const input = inputs['input'][0] as string
+    const input = (inputs['input'][0] as string)
+      .replaceAll('"', '')
+      .replaceAll("'", '')
+      .replaceAll('<', '')
+      .replaceAll('>', '')
+      .toLowerCase()
 
     const dontMatchBeginning = node.data.dontMatchBeginning
 
@@ -127,14 +132,17 @@ export class FastClassifier extends ThothComponent<Promise<void>> {
 
     const matchBeginningStringArray = (node.data.matchBeginningString as string)
       .trim()
+      .toLowerCase()
       .split(', ')
 
     const matchEndStringArray = (node.data.matchEndString as string)
       .trim()
+      .toLowerCase()
       .split(', ')
 
     const matchAnyStringArray = (node.data.matchAnyString as string)
       .trim()
+      .toLowerCase()
       .split(', ')
 
     let isMatched = false
