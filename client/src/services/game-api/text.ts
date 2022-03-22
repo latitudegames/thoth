@@ -3,7 +3,7 @@ import { getAuthHeader } from '../../contexts/AuthProvider'
 
 export const completion = async body => {
   try {
-    const response = await fetch(latitudeApiRootUrl + '/text/completions/v2', {
+    const response = await fetch(latitudeApiRootUrl + '/text/completions_v2', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
