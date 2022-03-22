@@ -16,6 +16,7 @@ import { rootApi } from './api'
 
 const _moduleModel = async () => {
   const db = await initDB()
+  if (!db) return
   const { modules } = db.models
   return modules
 }

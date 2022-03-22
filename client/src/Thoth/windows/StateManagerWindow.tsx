@@ -2,12 +2,23 @@ import Editor from '@monaco-editor/react'
 import jsonFormat from 'json-format'
 // import debounce from 'lodash.debounce'
 import { useSnackbar } from 'notistack'
+<<<<<<< HEAD
 import { useEffect, useState } from 'react'
 import Window from '../../components/Window/Window'
 import {
   useGetSpellQuery,
   useSaveSpellMutation
 } from '../../state/api/spells'
+=======
+import { useState, useEffect } from 'react'
+import {
+  useGetSpellQuery,
+  useSaveSpellMutation,
+} from '../../../state/api/spells'
+import Window from '../../common/Window/Window'
+
+import '../thoth.module.css'
+>>>>>>> latitudegames-main-2
 import WindowMessage from '../components/WindowMessage'
 import '../thoth.module.css'
 
@@ -71,7 +82,6 @@ const StateManager = ({ tab, ...props }) => {
 
   // update code when game state changes
   useEffect(() => {
-    console.log('SPELL LOADED', spell)
     if (!spell?.gameState) return
     setCode(jsonFormat(spell.gameState))
   }, [spell])
@@ -94,7 +104,13 @@ const StateManager = ({ tab, ...props }) => {
         gameState: parsedState,
       }
       const res = await saveSpell(spellUpdate)
-      if ('error' in res) return
+      if ('error' in res) {
+        enqueueSnackbar('Error saving state', {
+          preventDuplicate: true,
+          variant: 'error',
+        })
+        throw new Error('Error saving spell')
+      }
       res.data.gameState && setCode(JSON.stringify(res.data.gameState?.state))
 
       enqueueSnackbar('State saved', {

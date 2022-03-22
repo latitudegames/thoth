@@ -1,6 +1,10 @@
+<<<<<<< HEAD:client/src/Thoth/workspaces/composer/index.tsx
 // @ts-nocheck
 
 import { useEffect } from 'react'
+=======
+import { useEffect, useRef } from 'react'
+>>>>>>> 5877e541b06f80bf5eb248d0c98bd82f6d69e2f8:client/src/features/Thoth/workspaces/composer/index.tsx
 
 import { store } from '@/state/store'
 import { useEditor } from '@thoth/contexts/EditorProvider'
@@ -22,10 +26,15 @@ import EntManager from '@thoth/windows/EntManagerWindow'
 import ConfigManager from '@thoth/windows/ConfigManagerWindow'
 import TextEditor from '@thoth/windows/TextEditorWindow'
 import DebugConsole from '@thoth/windows/DebugConsole'
+<<<<<<< HEAD:client/src/Thoth/workspaces/composer/index.tsx
 import SearchCorpus from '../../windows/SearchCorpusWindow'
 import DebugConsole from '@thoth/windows/DebugConsole'
+=======
+import { Spell } from '../../../../state/api/spells'
+>>>>>>> 5877e541b06f80bf5eb248d0c98bd82f6d69e2f8:client/src/features/Thoth/workspaces/composer/index.tsx
 
 const Workspace = ({ tab, tabs, pubSub }) => {
+  const spellRef = useRef<Spell>()
   const [loadSpell, { data: spellData }] = useLazyGetSpellQuery()
   const [saveSpell] = useSaveSpellMutation()
   const { saveModule } = useModule()
@@ -38,7 +47,7 @@ const Workspace = ({ tab, tabs, pubSub }) => {
       'save nodecreated noderemoved',
       debounce(() => {
         if (tab.type === 'spell') {
-          saveSpell({ ...spellData, chain: editor.toJSON() })
+          saveSpell({ ...spellRef.current, chain: editor.toJSON() })
         }
         if (tab.type === 'module') {
           saveModule(tab.module, { data: editor.toJSON() }, false)
@@ -63,6 +72,11 @@ const Workspace = ({ tab, tabs, pubSub }) => {
       }, 500)
     )
   }, [editor])
+
+  useEffect(() => {
+    if (!spellData) return
+    spellRef.current = spellData
+  }, [spellData])
 
   useEffect(() => {
     if (!tab || !tab.spell) return
