@@ -18,7 +18,7 @@
   "scripts": {
     "start:core": "lerna exec --scope @latitudegames/thoth-core -- yarn start",
     "start:client": "lerna exec --scope @thoth/client -- yarn start",
-    "start": "concurrently \"yarn start:core\" \"sleep 15s && yarn start:client\"",
+    "start": "run-p start:core start:client",
     "lint": "lerna run lint --parallel",
     "lint:fix": "lerna run lint:fix --parallel",
     "build": "copyfiles LICENSE.txt client && lerna exec --scope @thoth/client -- yarn build",
