@@ -1,6 +1,6 @@
-import { useModule } from '@/contexts/ModuleProvider'
+// import { useModule } from '@/contexts/ModuleProvider'
 import {
-  selectSpellById, useLazyGetSpellQuery,
+  useLazyGetSpellQuery,
   useSaveSpellMutation
 } from '@/state/api/spells'
 import EntityManagerWindow from '@/Thoth/windows/EntityManagerWindow'
@@ -25,38 +25,38 @@ const Workspace = ({ tab, tabs, pubSub }) => {
   const spellRef = useRef<Spell>()
   const [loadSpell, { data: spellData }] = useLazyGetSpellQuery()
   const [saveSpell] = useSaveSpellMutation()
-  const { saveModule } = useModule()
+  // const { saveModule } = useModule()
   const { editor } = useEditor()
 
   // Set up autosave for the workspaces
   useEffect(() => {
     if (!editor?.on) return
     return editor.on(
-      'save nodecreated noderemoved connectioncreated connectionremoved nodetranslated',
+      'save nodecreated noderemoved',
       debounce(() => {
         if (tab.type === 'spell') {
           saveSpell({ ...spellRef.current, chain: editor.toJSON() })
         }
-        if (tab.type === 'module') {
-          saveModule(tab.module, { data: editor.toJSON() }, false)
-          // when a module is saved, we look for any open spell tabs, and check if they have the module.
-          /// if they do, we trigger a save to ensure the module change is captured to the server
-          tabs
-            .filter(tab => tab.type === 'spell')
-            .forEach(filteredTab => {
-              if (filteredTab.spell) {
-                const spell = selectSpellById(
-                  // store.getState(),
-                  filteredTab.spell
-                )
-                if (
-                  spell?.modules &&
-                  spell?.modules.some(module => module.name === tab.module)
-                )
-                  saveSpell({ ...spell })
-              }
-            })
-        }
+        // if (tab.type === 'module') {
+        //   saveModule(tab.module, { data: editor.toJSON() }, false)
+        //   // when a module is saved, we look for any open spell tabs, and check if they have the module.
+        //   /// if they do, we trigger a save to ensure the module change is captured to the server
+        //   tabs
+        //     .filter(tab => tab.type === 'spell')
+        //     .forEach(filteredTab => {
+        //       if (filteredTab.spell) {
+        //         const spell = selectSpellById(
+        //           // store.getState(),
+        //           filteredTab.spell
+        //         )
+        //         if (
+        //           spell?.modules &&
+        //           spell?.modules.some(module => module.name === tab.module)
+        //         )
+        //           saveSpell({ ...spell })
+        //       }
+        //     })
+        // }
       }, 500)
     )
   }, [editor])

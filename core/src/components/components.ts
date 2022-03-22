@@ -35,7 +35,7 @@ import { ActionTypeComponent } from './ml/ActionType'
 import { Classifier } from './ml/Classifier'
 import { DifficultyDetectorComponent } from './ml/DifficultyDetector'
 import { EntityDetector } from './ml/EntityDetector'
-import { FastClassifier } from './ml/FastClassifier'
+import { ComplexStringMatcher } from './strings/ComplexStringMatcher'
 import { Generator } from './ml/Generator'
 import { HuggingfaceComponent } from './ml/Huggingface'
 import { ItemTypeComponent } from './ml/ItemDetector'
@@ -81,7 +81,7 @@ export const components = {
   difficultyDetectorComponent: () => new DifficultyDetectorComponent(),
   // enkiTask: () => new EnkiTask(),
   entityDetector: () => new EntityDetector(),
-  fastClassifier: () => new FastClassifier(),
+  complexStringMatcher: () => new ComplexStringMatcher(),
   echo: () => new Echo(),
   SummarizeFacts: () => new SummarizeFacts(),
   textToSpeech: () => new TextToSpeech(),
