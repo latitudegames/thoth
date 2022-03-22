@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { Spell as SpellType } from '@latitudegames/thoth-core/types'
+import { ChainData } from '@latitudegames/thoth-core/types'
 
 import {
   uniqueNamesGenerator,
@@ -59,7 +59,7 @@ const EventHandler = ({ pubSub, tab }) => {
 
   const saveSpell = async () => {
     const currentSpell = spellRef.current
-    const chain = serialize() as SpellType
+    const chain = serialize() as ChainData
 
     await saveSpellMutation({ ...currentSpell, chain })
   }
@@ -96,7 +96,8 @@ const EventHandler = ({ pubSub, tab }) => {
   const onExport = async () => {
     // refetch spell from local DB to ensure it is the most up to date
     const spell = { ...spellRef.current }
-    spell.chain = serialize() as SpellType
+    spell.chain = serialize() as ChainData
+
     const modules = await getSpellModules(spell)
     // attach modules to spell to be exported
     spell.modules = modules
