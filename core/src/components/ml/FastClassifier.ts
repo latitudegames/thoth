@@ -114,7 +114,7 @@ export class FastClassifier extends ThothComponent<Promise<void>> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    const input = (inputs['input'][0] as any)
+    const input = (inputs['input'][0] as string)
       .replaceAll('"', '')
       .replaceAll("'", '')
       .replaceAll('<', '')
