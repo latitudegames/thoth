@@ -67,7 +67,7 @@ export class ProseToScript extends ThothComponent<Promise<WorkerReturn>> {
 
     this.task = {
       outputs: { detectedItem: 'output', trigger: 'option' },
-      init: () => {},
+      init: () => { },
     }
 
     this.category = 'AI/ML'
@@ -110,7 +110,7 @@ export class ProseToScript extends ThothComponent<Promise<WorkerReturn>> {
           modelName: 'davinci',
           temperature: 0.0,
           maxTokens: 300,
-          stop: ['\n4'],
+          stop: ['\n'],
         },
       }
     )

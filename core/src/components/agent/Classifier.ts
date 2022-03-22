@@ -73,8 +73,6 @@ export class Classifier extends ThothComponent<Promise<InputReturn>> {
     const inputData = inputs['input'][0]
     const labelData = (node.data?.labels as string).split(', ')
 
-    console.log('Label data is', labelData)
-    console.log('inputData is', inputData)
     const parameters = {
       candidate_labels: labelData,
     }
@@ -95,7 +93,7 @@ export class Classifier extends ThothComponent<Promise<InputReturn>> {
       if (!success) node.display(error)
       else node.display('Top label is ' + data.labels[0])
     }
-
+    console.log('Top label is ' + data.labels[0])
     return { output: data.labels[0] }
   }
 }

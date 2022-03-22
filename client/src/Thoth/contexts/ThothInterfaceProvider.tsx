@@ -193,7 +193,7 @@ const ThothInterfaceProvider = ({ children, tab }) => {
       },
     }
 
-    saveSpell(newSpell as Spell)
+    // saveSpell(newSpell as Spell)
   }
 
   const publicInterface = {

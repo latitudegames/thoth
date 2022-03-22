@@ -586,7 +586,6 @@ const textCompletion = async (ctx: Koa.Context) => {
     }
   }
 
-  console.log('textCompletion for prompt:', prompt)
   const { success, choice } = await makeCompletion(modelName, {
     prompt: prompt,
     temperature: temperature,
@@ -608,7 +607,7 @@ const hfRequest = async (ctx: Koa.Context) => {
     use_cache: false,
     wait_for_model: true,
   }
-  console.log('Handling request with', ctx.request.body)
+
   const { success, data } = await makeModelRequest(
     inputs,
     model,
@@ -669,9 +668,8 @@ const requestInformationAboutVideo = async (
   question: string
 ): Promise<string> => {
   const videoInformation = ``
-  const prompt = `Information: ${videoInformation} \n ${sender}: ${
-    question.trim().endsWith('?') ? question.trim() : question.trim() + '?'
-  }\n${agent}:`
+  const prompt = `Information: ${videoInformation} \n ${sender}: ${question.trim().endsWith('?') ? question.trim() : question.trim() + '?'
+    }\n${agent}:`
 
   const modelName = 'davinci'
   const temperature = 0.9

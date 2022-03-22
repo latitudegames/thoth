@@ -621,7 +621,7 @@ export class discord_client {
     const response = await handleInput(
       message.content,
       message.author.username,
-      this.discord_bot_name ?? 'Thales',
+      this.discord_bot_name,
       'discord',
       message.channel.id,
       this.spell_handler,

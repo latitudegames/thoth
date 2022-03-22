@@ -133,6 +133,8 @@ export class AgentTextCompletion extends ThothComponent<Promise<WorkerReturn>> {
       return el != null && el !== undefined && el.length > 0
     })
 
+    console.log('filteredStop is', filteredStop)
+
     const resp = await axios.post(
       `${process.env.REACT_APP_API_URL}/text_completion`,
       {
@@ -148,12 +150,18 @@ export class AgentTextCompletion extends ThothComponent<Promise<WorkerReturn>> {
     )
     console.log('resp.data is ', resp.data)
 
-    const { success, choice } = resp.data
+    const { success, choice, error } = resp.data
+
+    if (!success)
+      return {
+        output: 'Sorry, I had a completion error:' + error,
+      }
 
     const res =
       success !== 'false' && success !== false
         ? choice.text
-        : 'Sorry i had an error!'
+        : 'Sorry, I had an error!'
+
     console.log('success:', success, 'choice:', choice.text, 'res:', res)
 
     return {

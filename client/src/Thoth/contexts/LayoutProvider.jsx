@@ -32,17 +32,17 @@ const windowTypes = {
 const Context = createContext({
   inspectorData: {},
   textEditorData: {},
-  createModel: () => {},
+  createModel: () => { },
   currentModel: {},
   currentRef: {},
-  setCurrentRef: () => {},
-  saveInspector: () => {},
-  saveTextEditor: () => {},
-  createOrFocus: () => {},
-  addWindow: () => {},
+  setCurrentRef: () => { },
+  saveInspector: () => { },
+  saveTextEditor: () => { },
+  createOrFocus: () => { },
+  addWindow: () => { },
   windowTypes: {},
   workspaceMap: {},
-  getWorkspace: () => {},
+  getWorkspace: () => { },
 })
 
 export const useLayout = () => useContext(Context)
@@ -128,7 +128,7 @@ const LayoutProvider = ({ children, tab }) => {
     if (inspectorData) {
       setInspectorData(update)
     }
-    saveSpell(spell)
+    // saveSpell(spell)
   }
 
   const saveInspector = inspectorData => {
