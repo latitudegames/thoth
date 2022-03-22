@@ -95,7 +95,7 @@ export class InputDestructureComponent extends ThothComponent<Promise<InputRetur
       agent: (input as any).Agent ?? 'Agent',
       client: (input as any).Client ?? 'Client',
       channelId: (input as any).ChannelID ?? '0',
-      entityId: (input as any).entityId ?? 0
+      entityId: (input as any).entityId ?? ''
     }
   }
 }
