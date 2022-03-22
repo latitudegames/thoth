@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars-2'
-import { useSelector } from 'react-redux'
 import { useSnackbar } from 'notistack'
 
 import css from './editorwindow.module.css'
@@ -13,10 +12,10 @@ import { useModal } from '@/contexts/ModalProvider'
 
 import {
   useGetDeploymentsQuery,
-  selectSpellById,
   useDeploySpellMutation,
   useLazyGetDeploymentQuery,
   useSaveSpellMutation,
+  useGetSpellQuery,
 } from '@/state/api/spells'
 import { useEditor } from '@thoth/contexts/EditorProvider'
 import { latitudeApiRootUrl } from '@/config'
@@ -30,7 +29,9 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
   const [deploySpell] = useDeploySpellMutation()
   const [saveSpell] = useSaveSpellMutation()
   const [getDeplopyment, { data: deploymentData }] = useLazyGetDeploymentQuery()
-  const spell = useSelector(state => selectSpellById(state, spellId))
+  const { data: spell } = useGetSpellQuery(spellId, {
+    skip: !spellId,
+  })
   const name = spell?.name as string
   const { data: deployments, isLoading } = useGetDeploymentsQuery(name, {
     skip: !spell?.name,
