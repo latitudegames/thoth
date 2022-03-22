@@ -32,6 +32,7 @@ export class agent extends gameObject {
     discord_starting_words: string,
     discord_bot_name_regex: string,
     discord_bot_name: string,
+    entity: string,
     spell_handler: string,
     spell_version: string
   ) {
@@ -45,6 +46,7 @@ export class agent extends gameObject {
       discord_starting_words,
       discord_bot_name_regex,
       discord_bot_name,
+      entity,
       spell_handler,
       spell_version
     )
@@ -59,6 +61,7 @@ export class agent extends gameObject {
   }
 
   startXREngine(settings: {
+    entity: any
     url: string
     spell_handler: string
     spell_version: string
@@ -97,6 +100,7 @@ export class agent extends gameObject {
         data.discord_starting_words,
         data.discord_bot_name_regex,
         data.discord_bot_name,
+        data,
         data.discord_spell_handler_incoming,
         data.spell_version
       )
@@ -105,6 +109,7 @@ export class agent extends gameObject {
     if (data.xrengine_enabled) {
       this.startXREngine({
         url: data.xrengine_url,
+        entity: data,
         spell_handler: data.xrengine_spell_handler_incoming,
         spell_version: data.spell_version,
         xrengine_bot_name: data.xrengine_bot_name,

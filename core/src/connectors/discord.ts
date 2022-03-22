@@ -624,6 +624,7 @@ export class discord_client {
       this.discord_bot_name,
       'discord',
       message.channel.id,
+      this.entity,
       this.spell_handler,
       this.spell_version
     )
@@ -1377,10 +1378,12 @@ export class discord_client {
     discord_starting_words,
     discord_bot_name_regex,
     discord_bot_name,
+    entity,
     spell_handler,
     spell_version = 'latest'
   ) => {
     this.agent = agent
+    this.entity = entity
     if (!discord_starting_words || discord_starting_words?.length <= 0) {
       this.discord_starting_words = ['hi', 'hey']
     } else {

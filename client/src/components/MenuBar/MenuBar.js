@@ -94,10 +94,6 @@ const MenuBar = () => {
     publish($CREATE_ENT_MANAGER(activeTabRef.current.id))
   }
 
-  const onConfigManagerCreate = () => {
-    publish($CREATE_CONFIG_MANAGER(activeTabRef.current.id))
-  }
-
   const onPlaytestCreate = () => {
     publish($CREATE_PLAYTEST(activeTabRef.current.id))
   }
@@ -147,10 +143,7 @@ const MenuBar = () => {
         },
         ent_manager: {
           onClick: onEntityManagerCreate,
-        },
-        config_manager: {
-          onClick: onConfigManagerCreate,
-        },
+        }
       }
       : {}
 

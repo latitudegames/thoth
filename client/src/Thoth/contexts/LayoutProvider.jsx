@@ -19,7 +19,6 @@ const windowTypes = {
   STATE_MANAGER: 'stateManager',
   AGENT_MANAGER: 'agentManager',
   SEARCH_CORPUS: 'searchCorpus',
-  CONFIG_MANAGER: 'configManager',
   ENT_MANAGER: 'entManager',
   EDITOR: 'editor',
   PLAYTEST: 'playtest',

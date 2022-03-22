@@ -391,6 +391,7 @@ export class xrengine_client {
           this.settings.xrengine_bot_name ?? 'Agent',
           'xr-engine',
           channelId,
+          entity,
           this.spell_handler,
           this.spell_version
         )
@@ -561,6 +562,7 @@ class XREngineBot {
     headless = true,
     autoLog = true,
     agent,
+    entity,
     settings,
     xrengineclient,
   } = {}) {
@@ -570,6 +572,7 @@ class XREngineBot {
     this.fakeMediaPath = fakeMediaPath
     this.agent = agent
     this.settings = settings
+    this.entity = entity
     this.xrengineclient = xrengineclient
     setInterval(() => this.instanceMessages(), 1000)
   }
@@ -846,7 +849,7 @@ class XREngineBot {
     await this.waitForTimeout(timeout)
   }
 
-  async interactObject() {}
+  async interactObject() { }
 
   /** Return screenshot
    * @param {Function} fn Function to execut _in the node context._

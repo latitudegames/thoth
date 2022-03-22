@@ -15,7 +15,7 @@ import {
 } from '../../../types'
 import { InputControl } from '../../dataControls/InputControl'
 import { EngineContext } from '../../engine'
-import { triggerSocket, stringSocket } from '../../sockets'
+import { triggerSocket, stringSocket, anySocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
 const info = 'Agent Text Completion is using OpenAI for the agent to respond.'
@@ -42,6 +42,7 @@ export class AgentTextCompletion extends ThothComponent<Promise<WorkerReturn>> {
 
   builder(node: ThothNode) {
     const inp = new Rete.Input('string', 'Text', stringSocket)
+    const settings = new Rete.Input('settings', 'Settings', anySocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
     const outp = new Rete.Output('output', 'output', stringSocket)
@@ -99,6 +100,7 @@ export class AgentTextCompletion extends ThothComponent<Promise<WorkerReturn>> {
 
     return node
       .addInput(inp)
+      .addInput(settings)
       .addInput(dataInput)
       .addOutput(dataOutput)
       .addOutput(outp)
@@ -110,26 +112,31 @@ export class AgentTextCompletion extends ThothComponent<Promise<WorkerReturn>> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    const action = inputs['string'][0]
-    const modelName = node?.data?.modelName as string
-    const temperatureData = node?.data?.temperature as string
+    const prompt = inputs['string'][0]
+    const settings = ((inputs.settings && inputs.settings[0]) ?? {}) as any
+    const modelName = settings.modelName ?? (node?.data?.modelName as string)
+    const temperatureData =
+      settings.temperature ?? (node?.data?.temperature as string)
     const temperature = parseFloat(temperatureData)
-    const maxTokensData = node?.data?.maxTokens as string
+    const maxTokensData =
+      settings.max_tokens ?? (node?.data?.maxTokens as string)
     const maxTokens = parseInt(maxTokensData)
-    const topPData = node?.data?.topP as string
+    const topPData = settings.top_p ?? (node?.data?.topP as string)
     const topP = parseFloat(topPData)
-    const frequencyPenaltyData = node?.data?.frequencyPenalty as string
+    const frequencyPenaltyData =
+      settings.frequency_penalty ?? (node?.data?.frequencyPenalty as string)
     const frequencyPenalty = parseFloat(frequencyPenaltyData)
-    const presencePenaltyData = node?.data?.presencePenalty as string
+    const presencePenaltyData =
+      settings.presence_penalty ?? (node?.data?.presencePenalty as string)
     const presencePenalty = parseFloat(presencePenaltyData)
-    const stop = (node?.data?.stop as string).split(',')
+    const stop = settings.stop ?? (node?.data?.stop as string).split(',')
     for (let i = 0; i < stop.length; i++) {
       stop[i] = stop[i].trim()
       if (stop[i] === '\\n') {
         stop[i] = '\n'
       }
     }
-    const filteredStop = stop.filter(function (el) {
+    const filteredStop = stop.filter(function (el: any) {
       return el != null && el !== undefined && el.length > 0
     })
 
@@ -138,7 +145,7 @@ export class AgentTextCompletion extends ThothComponent<Promise<WorkerReturn>> {
     const resp = await axios.post(
       `${process.env.REACT_APP_API_URL}/text_completion`,
       {
-        prompt: action,
+        prompt: prompt,
         modelName: modelName,
         temperature: temperature,
         maxTokens: maxTokens,

@@ -10,7 +10,6 @@ import EventHandler from '@thoth/components/EventHandler'
 import { useEditor } from '@thoth/contexts/EditorProvider'
 import { Layout } from '@thoth/contexts/LayoutProvider'
 import AgentManager from '@thoth/windows/AgentManagerWindow'
-import ConfigManager from '@thoth/windows/ConfigManagerWindow'
 import DebugConsole from '@thoth/windows/DebugConsole'
 import EditorWindow from '@thoth/windows/EditorWindow'
 import Inspector from '@thoth/windows/InspectorWindow'
@@ -85,8 +84,6 @@ const Workspace = ({ tab, tabs, pubSub }) => {
           return <AgentManager />
         case 'searchCorpus':
           return <SearchCorpus />
-        case 'configManager':
-          return <ConfigManager />
         case 'entManager':
           return <EntityManagerWindow />
         case 'playtest':
