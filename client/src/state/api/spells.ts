@@ -58,7 +58,7 @@ export interface PatchArgs {
 export const spellApi = rootApi.injectEndpoints({
   endpoints: builder => ({
     getSpells: builder.query<Spell[], void>({
-      providesTags: ['Spell'],
+      providesTags: ['Spells'],
       query: () => 'game/spells',
     }),
     getSpell: builder.query<Spell, string>({
@@ -93,7 +93,7 @@ export const spellApi = rootApi.injectEndpoints({
       },
     }),
     newSpell: builder.mutation<Spell, Partial<Spell>>({
-      invalidatesTags: ['Spell'],
+      invalidatesTags: ['Spells'],
       query: spellData => ({
         url: 'game/spells',
         method: 'POST',
@@ -113,7 +113,7 @@ export const spellApi = rootApi.injectEndpoints({
       },
     }),
     deleteSpell: builder.mutation<string[], boolean>({
-      invalidatesTags: ['Spell'],
+      invalidatesTags: ['Spells'],
       query: spellId => ({
         url: `game/spells/${spellId}`,
         method: 'DELETE',
