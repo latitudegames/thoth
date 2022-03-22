@@ -1,14 +1,8 @@
 import { useEffect, useRef } from 'react'
 
-import { store } from '@/state/store'
 import { useEditor } from '@thoth/contexts/EditorProvider'
 import { Layout } from '@thoth/contexts/LayoutProvider'
-import { useModule } from '@/contexts/ModuleProvider'
-import {
-  useLazyGetSpellQuery,
-  useSaveSpellMutation,
-  selectSpellById,
-} from '@/state/api/spells'
+import { useLazyGetSpellQuery, useSaveSpellMutation } from '@/state/api/spells'
 import { debounce } from '@/utils/debounce'
 import EditorWindow from '@thoth/windows/EditorWindow'
 import EventHandler from '@thoth/components/EventHandler'
@@ -23,7 +17,6 @@ const Workspace = ({ tab, tabs, pubSub }) => {
   const spellRef = useRef<Spell>()
   const [loadSpell, { data: spellData }] = useLazyGetSpellQuery()
   const [saveSpell] = useSaveSpellMutation()
-  const { saveModule } = useModule()
   const { editor } = useEditor()
 
   // Set up autosave for the workspaces
@@ -34,26 +27,6 @@ const Workspace = ({ tab, tabs, pubSub }) => {
       debounce(() => {
         if (tab.type === 'spell') {
           saveSpell({ ...spellRef.current, chain: editor.toJSON() })
-        }
-        if (tab.type === 'module') {
-          saveModule(tab.module, { data: editor.toJSON() }, false)
-          // when a module is saved, we look for any open spell tabs, and check if they have the module.
-          /// if they do, we trigger a save to ensure the module change is captured to the server
-          tabs
-            .filter(tab => tab.type === 'spell')
-            .forEach(filteredTab => {
-              if (filteredTab.spellId) {
-                const spell = selectSpellById(
-                  store.getState(),
-                  filteredTab.spellId
-                )
-                if (
-                  spell?.modules &&
-                  spell?.modules.some(module => module.name === tab.module)
-                )
-                  saveSpell({ ...spell })
-              }
-            })
         }
       }, 500)
     )
