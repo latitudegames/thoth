@@ -25,7 +25,7 @@ const babelOptions = {
 
 module.exports = () => {
   return {
-    entry: ['regenerator-runtime/runtime.js', './src/index.js'],
+    entry: ['regenerator-runtime/runtime.js', './src/index.tsx'],
     output: {
       path: path.resolve(__dirname, '../build'),
       filename: '[name].[contenthash].bundle.js',
