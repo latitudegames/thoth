@@ -90,7 +90,7 @@ const MenuBar = () => {
     publish($CREATE_AGENT_MANAGER(activeTabRef.current.id))
   }
 
-  const onEntManagerCreate = () => {
+  const onEntityManagerCreate = () => {
     publish($CREATE_ENT_MANAGER(activeTabRef.current.id))
   }
 
@@ -142,16 +142,16 @@ const MenuBar = () => {
   const agentMenuItems =
     process.env.REACT_APP_USE_AGENTS === 'true'
       ? {
-          agent_manager: {
-            onClick: onAgentManagerCreate,
-          },
-          ent_manager: {
-            onClick: onEntManagerCreate,
-          },
-          config_manager: {
-            onClick: onConfigManagerCreate,
-          },
-        }
+        agent_manager: {
+          onClick: onAgentManagerCreate,
+        },
+        ent_manager: {
+          onClick: onEntityManagerCreate,
+        },
+        config_manager: {
+          onClick: onConfigManagerCreate,
+        },
+      }
       : {}
 
   //Menu bar entries

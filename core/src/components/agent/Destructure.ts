@@ -38,7 +38,7 @@ export class Destructure extends ThothComponent<Promise<any>> {
       },
     }
 
-    this.category = 'I/O'
+    this.category = 'Agents'
     this.display = true
     this.info = info
   }

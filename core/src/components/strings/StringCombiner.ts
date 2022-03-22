@@ -16,15 +16,15 @@ import { triggerSocket, stringSocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
 const info =
-  'String Combiner is used to replace a value in the string with something else - Add a new socket with the string and the value like this - Agent Replacer (will replace all the #agent from the input with the input assigned)'
+  'String Combiner is used to replace a value in the string with something else - Add a new socket with the string and the value like this - Agent Replacer (will replace all the $agent from the input with the input assigned)'
 
 type WorkerReturn = {
   output: string
 }
 
-export class InputsToJSON extends ThothComponent<Promise<WorkerReturn>> {
+export class StringCombiner extends ThothComponent<Promise<WorkerReturn>> {
   constructor() {
-    super('Inputs To JSON')
+    super('String Combiner')
 
     this.task = {
       outputs: {
@@ -33,12 +33,13 @@ export class InputsToJSON extends ThothComponent<Promise<WorkerReturn>> {
       },
     }
 
-    this.category = 'Agents'
+    this.category = 'Strings'
     this.display = true
     this.info = info
   }
 
   builder(node: ThothNode) {
+    const inp = new Rete.Input('string', 'String', stringSocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
     const outp = new Rete.Output('output', 'String', stringSocket)
@@ -51,7 +52,11 @@ export class InputsToJSON extends ThothComponent<Promise<WorkerReturn>> {
 
     node.inspector.add(inputGenerator)
 
-    return node.addInput(dataInput).addOutput(dataOutput).addOutput(outp)
+    return node
+      .addInput(inp)
+      .addInput(dataInput)
+      .addOutput(dataOutput)
+      .addOutput(outp)
   }
 
   async worker(
@@ -65,13 +70,27 @@ export class InputsToJSON extends ThothComponent<Promise<WorkerReturn>> {
       return acc
     }, {} as Record<string, unknown>)
 
-    const data: { [key: string]: any } = {}
+    let input = inputs['string'] as string
+    console.log('combining input:', input)
     for (const x in inputs) {
-      data[x.toLowerCase().trim()] = inputs[x]
+      if (x.toLowerCase().includes('replacer')) {
+        console.log(
+          'replacing: $',
+          x.split(' ')[0].toLowerCase().trim(),
+          'with:',
+          inputs[x]
+        )
+        input = input.replace(
+          '$' + x.split(' ')[0].toLowerCase().trim(),
+          inputs[x] as string
+        )
+      }
     }
 
+    console.log('new string combined:', input)
+
     return {
-      output: JSON.stringify(data),
+      output: input,
     }
   }
 }

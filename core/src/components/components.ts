@@ -1,79 +1,70 @@
-import { ActionTypeComponent } from './ActionType'
 import { AddAgent } from './agent/AddAgent'
 import { AgentManager } from './agent/AgentManager'
 import { AgentTextCompletion } from './agent/AgentTextCompletion'
 import { ArchiveConversation } from './agent/ArchiveConversation'
-import { ArrayVariable } from './agent/ArrayVariable'
-import { BooleanVariable } from './agent/BooleanVariable'
 import { CacheManagerDelete } from './agent/CacheManagerDelete'
 import { CacheManagerGet } from './agent/CacheManagerGet'
 import { CacheManagerSet } from './agent/CacheManagerSet'
-import { Classifier } from './agent/Classifier'
 import { ConversationRecall } from './agent/ConversationRecall'
 import { ConversationStore } from './agent/ConversationStore'
 import { CreateOrGetAgent } from './agent/CreateOrGetAgent'
-import { DocumentDelete } from './agent/DocumentDelete'
-import { DocumentGet } from './agent/DocumentGet'
-import { DocumentSet } from './agent/DocumentSet'
-import { Echo } from './agent/Echo'
 import { FactsCount } from './agent/FactsCount'
 import { FactsRecall } from './agent/FactsRecall'
 import { FactsStore } from './agent/FactsStore'
-import { FastGreetingDetector } from './agent/FastGreetingDetector'
-import { FastProfanityDetector } from './agent/FastProfanityDetector'
-import { FastQuestionDetector } from './agent/FastQuestionDetector'
-import { FewshotVariable } from './agent/FewshotVariable'
 import { GenerateContext } from './agent/GenerateContext'
 import { GetAgentData } from './agent/GetAgentData'
 import { GetAgentFacts } from './agent/GetAgentFacts'
 import { InputDestructureComponent } from './agent/InputDestructure'
 import { InputsToJSON } from './agent/InputsToJSON'
-import { IsNullOrUndefined } from './agent/IsNullOrUndefined'
-import { IsVariableTrue } from './agent/IsVariableTrue'
-import { KeywordExtractor } from './agent/KeywordExtractor'
-import { LogicalOperator } from './agent/LogicalOperator'
-import { NamedEntityRecognition } from './agent/NamedEntityRecognition'
-import { NumberVariable } from './agent/NumberVariable'
 import { RandomGreetingResponse } from './agent/RandomGreetingResponse'
 import { RandomProfanityResponse } from './agent/RandomProfanityResponse'
-import { RandomStringFromList } from './agent/RandomStringFromList'
-import { Search } from './agent/Search'
-import { StringAdder } from './agent/StringAdder'
-import { StringCombiner } from './agent/StringCombiner'
-import { StringEvaluator } from './agent/StringEvaluator'
-import { StringProcessor } from './agent/StringProcessor'
-import { StringVariable } from './agent/StringVariable'
-import { SummarizeFacts } from './agent/SummarizeFacts'
-import { TextToSpeech } from './agent/TextToSpeech'
-import { Alert } from './AlertMessage'
-import { BooleanGate } from './BooleanGate'
-import { Code } from './Code'
-import { InputFieldComponent } from './deprecated/InputField'
-import { ModuleInput } from './deprecated/ModuleInput'
-import { ModuleOutput } from './deprecated/ModuleOutput'
-import { PlaytestInput } from './deprecated/PlaytestInput'
-import { PlaytestPrint } from './deprecated/PlaytestPrint'
-import { RunInputComponent } from './deprecated/RunInput'
-import { DifficultyDetectorComponent } from './DifficultyDetector'
-import { EntityDetector } from './EntityDetector'
-import { ForEach } from './ForEach'
-import { Generator } from './Generator'
-import { HuggingfaceComponent } from './Huggingface'
-import { InputComponent } from './Input'
-import { ItemTypeComponent } from './ItemDetector'
-import { JoinListComponent } from './JoinList'
-import { ModuleComponent } from './Module'
-import { Output } from './Output'
-import { ProseToScript } from './ProseToScript'
-import { SafetyVerifier } from './SafetyVerifier'
-import { StateRead } from './StateRead'
-import { StateWrite } from './StateWrite'
-import { SwitchGate } from './SwitchGate'
-import { TenseTransformer } from './TenseTransformer'
-import { TimeDetectorComponent } from './TimeDetector'
-import { TriggerIn } from './TriggerIn'
-import { TriggerOut } from './TriggerOut'
-import { WhileLoop } from './WhileLoop'
+import { InputComponent } from './io/Input'
+import { ModuleComponent } from './io/Module'
+import { TriggerIn } from './io/TriggerIn'
+import { TriggerOut } from './io/TriggerOut'
+import { BooleanGate } from './logic/BooleanGate'
+import { Code } from './logic/Code'
+import { ForEach } from './logic/ForEach'
+import { IsNullOrUndefined } from './logic/IsNullOrUndefined'
+import { IsVariableTrue } from './logic/IsVariableTrue'
+import { LogicalOperator } from './logic/LogicalOperator'
+import { SwitchGate } from './logic/SwitchGate'
+import { WhileLoop } from './logic/WhileLoop'
+import { ActionTypeComponent } from './ml/ActionType'
+import { Classifier } from './ml/Classifier'
+import { DifficultyDetectorComponent } from './ml/DifficultyDetector'
+import { EntityDetector } from './ml/EntityDetector'
+import { FastClassifier } from './ml/FastClassifier'
+import { Generator } from './ml/Generator'
+import { HuggingfaceComponent } from './ml/Huggingface'
+import { ItemTypeComponent } from './ml/ItemDetector'
+import { KeywordExtractor } from './ml/KeywordExtractor'
+import { NamedEntityRecognition } from './ml/NamedEntityRecognition'
+import { ProseToScript } from './ml/ProseToScript'
+import { SafetyVerifier } from './ml/SafetyVerifier'
+import { SummarizeFacts } from './ml/SummarizeFacts'
+import { TenseTransformer } from './ml/TenseTransformer'
+import { TextToSpeech } from './ml/TextToSpeech'
+import { TimeDetectorComponent } from './ml/TimeDetector'
+import { DocumentDelete } from './search/DocumentDelete'
+import { DocumentGet } from './search/DocumentGet'
+import { DocumentSet } from './search/DocumentSet'
+import { Search } from './search/Search'
+import { StateRead } from './state/StateRead'
+import { StateWrite } from './state/StateWrite'
+import { JoinListComponent } from './strings/JoinList'
+import { RandomStringFromList } from './strings/RandomStringFromList'
+import { StringAdder } from './strings/StringAdder'
+import { StringCombiner } from './strings/StringCombiner'
+import { StringEvaluator } from './strings/StringEvaluator'
+import { StringProcessor } from './strings/StringProcessor'
+import { Alert } from './utility/AlertMessage'
+import { Echo } from './utility/Echo'
+import { ArrayVariable } from './variable/ArrayVariable'
+import { BooleanVariable } from './variable/BooleanVariable'
+import { FewshotVariable } from './variable/FewshotVariable'
+import { NumberVariable } from './variable/NumberVariable'
+import { StringVariable } from './variable/StringVariable'
 
 // Here we load up all components of the builder into our editor for usage.
 // We might be able to programatically generate components from enki
@@ -89,9 +80,7 @@ export const components = {
   difficultyDetectorComponent: () => new DifficultyDetectorComponent(),
   // enkiTask: () => new EnkiTask(),
   entityDetector: () => new EntityDetector(),
-  fastQuestionDetector: () => new FastQuestionDetector(),
-  fastGreetingDetector: () => new FastGreetingDetector(),
-  fastProfanityDetector: () => new FastProfanityDetector(),
+  fastClassifier: () => new FastClassifier(),
   echo: () => new Echo(),
   SummarizeFacts: () => new SummarizeFacts(),
   textToSpeech: () => new TextToSpeech(),
@@ -138,18 +127,11 @@ export const components = {
   huggingfaceComponent: () => new HuggingfaceComponent(),
   inputComponent: () => new InputComponent(),
   inputDestructureComponent: () => new InputDestructureComponent(),
-  inputFieldComponent: () => new InputFieldComponent(),
   inputsToJson: () => new InputsToJSON(),
   itemTypeComponent: () => new ItemTypeComponent(),
   joinListComponent: () => new JoinListComponent(),
   moduleComponent: () => new ModuleComponent(),
-  moduleInput: () => new ModuleInput(),
-  moduleOutput: () => new ModuleOutput(),
-  output: () => new Output(),
-  playtestPrint: () => new PlaytestPrint(),
-  playtestInput: () => new PlaytestInput(),
   proseToScript: () => new ProseToScript(),
-  runInputCompnent: () => new RunInputComponent(),
   safetyVerifier: () => new SafetyVerifier(),
   stateWrite: () => new StateWrite(),
   stateRead: () => new StateRead(),

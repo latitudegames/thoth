@@ -1,4 +1,4 @@
-import { EngineContext } from '@latitudegames/thoth-core'
+import { EngineContext } from '@latitudegames/thoth-core/src/engine'
 import { useContext, createContext } from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -8,7 +8,7 @@ import {
   selectGameStateBySpellId,
   updateGameState,
 } from '../../state/gameState'
-import { store } from '../../state/store'
+// import { store } from '../../state/store'
 import { invokeInference } from '../../utils/huggingfaceHelper'
 import { useDB } from '../../contexts/DatabaseProvider'
 import { usePubSub } from '../../contexts/PubSubProvider'

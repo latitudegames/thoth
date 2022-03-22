@@ -1,22 +1,24 @@
-import { useEffect, useRef } from 'react'
-
+import { useModule } from '@/contexts/ModuleProvider'
+import {
+  selectSpellById, useLazyGetSpellQuery,
+  useSaveSpellMutation
+} from '@/state/api/spells'
+import EntityManagerWindow from '@/Thoth/windows/EntityManagerWindow'
+import { debounce } from '@/utils/debounce'
+import EventHandler from '@thoth/components/EventHandler'
 // import { store } from '@/state/store'
 import { useEditor } from '@thoth/contexts/EditorProvider'
 import { Layout } from '@thoth/contexts/LayoutProvider'
-import { useModule } from '@/contexts/ModuleProvider'
-import {
-  useLazyGetSpellQuery,
-  useSaveSpellMutation,
-  selectSpellById,
-} from '@/state/api/spells'
-import { debounce } from '@/utils/debounce'
+import AgentManager from '@thoth/windows/AgentManagerWindow'
+import ConfigManager from '@thoth/windows/ConfigManagerWindow'
+import DebugConsole from '@thoth/windows/DebugConsole'
 import EditorWindow from '@thoth/windows/EditorWindow'
-import EventHandler from '@thoth/components/EventHandler'
 import Inspector from '@thoth/windows/InspectorWindow'
 import Playtest from '@thoth/windows/PlaytestWindow'
+import SearchCorpus from '@thoth/windows/SearchCorpusWindow'
 import StateManager from '@thoth/windows/StateManagerWindow'
 import TextEditor from '@thoth/windows/TextEditorWindow'
-import DebugConsole from '@thoth/windows/DebugConsole'
+import { useEffect, useRef } from 'react'
 import { Spell } from '../../../state/api/spells'
 
 const Workspace = ({ tab, tabs, pubSub }) => {
@@ -79,6 +81,14 @@ const Workspace = ({ tab, tabs, pubSub }) => {
       switch (component) {
         case 'stateManager':
           return <StateManager {...props} />
+        case 'agentManager':
+          return <AgentManager />
+        case 'searchCorpus':
+          return <SearchCorpus />
+        case 'configManager':
+          return <ConfigManager />
+        case 'entManager':
+          return <EntityManagerWindow />
         case 'playtest':
           return <Playtest {...props} />
         case 'inspector':

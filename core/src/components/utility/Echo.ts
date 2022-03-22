@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 /* eslint-disable no-console */
 /* eslint-disable require-await */
@@ -10,21 +11,19 @@ import {
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../../types'
-import { SocketGeneratorControl } from '../../dataControls/SocketGenerator'
 import { EngineContext } from '../../engine'
 import { triggerSocket, stringSocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
-const info =
-  'String Combiner is used to replace a value in the string with something else - Add a new socket with the string and the value like this - Agent Replacer (will replace all the #agent from the input with the input assigned)'
+const info = 'Returns the same output as the input'
 
 type WorkerReturn = {
   output: string
 }
 
-export class InputsToJSON extends ThothComponent<Promise<WorkerReturn>> {
+export class Echo extends ThothComponent<Promise<WorkerReturn>> {
   constructor() {
-    super('Inputs To JSON')
+    super('Echo')
 
     this.task = {
       outputs: {
@@ -33,45 +32,34 @@ export class InputsToJSON extends ThothComponent<Promise<WorkerReturn>> {
       },
     }
 
-    this.category = 'Agents'
+    this.category = 'Utility'
     this.display = true
     this.info = info
   }
 
   builder(node: ThothNode) {
+    const inp = new Rete.Input('string', 'String', stringSocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
     const outp = new Rete.Output('output', 'String', stringSocket)
 
-    const inputGenerator = new SocketGeneratorControl({
-      connectionType: 'input',
-      name: 'Input Sockets',
-      ignored: ['trigger'],
-    })
-
-    node.inspector.add(inputGenerator)
-
-    return node.addInput(dataInput).addOutput(dataOutput).addOutput(outp)
+    return node
+      .addInput(dataInput)
+      .addInput(inp)
+      .addOutput(dataOutput)
+      .addOutput(outp)
   }
 
   async worker(
     node: NodeData,
-    rawInputs: ThothWorkerInputs,
+    inputs: ThothWorkerInputs,
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    const inputs = Object.entries(rawInputs).reduce((acc, [key, value]) => {
-      acc[key] = value[0]
-      return acc
-    }, {} as Record<string, unknown>)
-
-    const data: { [key: string]: any } = {}
-    for (const x in inputs) {
-      data[x.toLowerCase().trim()] = inputs[x]
-    }
+    const input = inputs.string[0] as string
 
     return {
-      output: JSON.stringify(data),
+      output: input,
     }
   }
 }

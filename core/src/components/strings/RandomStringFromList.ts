@@ -19,7 +19,7 @@ import { ThothComponent } from '../../thoth-component'
 const info =
   'Random String From List returns a randomly selected string from an array, it keeps memory of recently selected strings'
 
-const fewshot = `Hello,Hi there, How are you?,Hello there`
+const fewshot = ``
 
 const recently_used: string[] = []
 let clear: any = undefined
@@ -28,11 +28,11 @@ type WorkerReturn = {
   output: string
 }
 
-export class RandomGreetingResponse extends ThothComponent<
+export class RandomStringFromList extends ThothComponent<
   Promise<WorkerReturn>
 > {
   constructor() {
-    super('Random Greeting Response')
+    super('Random List From String')
 
     this.task = {
       outputs: {
@@ -41,7 +41,7 @@ export class RandomGreetingResponse extends ThothComponent<
       },
     }
 
-    this.category = 'Agents'
+    this.category = 'Strings'
     this.display = true
     this.info = info
   }
@@ -67,7 +67,7 @@ export class RandomGreetingResponse extends ThothComponent<
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
     const fewshot = node.data.fewshot as string
-    const strings = fewshot.split(',')
+    const strings = fewshot.split('\n')
     if (strings.length <= 0) {
       return {
         output: '',

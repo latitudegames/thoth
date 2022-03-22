@@ -24,10 +24,9 @@ async function getConversation(
   maxCount = 10
 ) {
   const response = await axios.get(
-    `${
-      process.env.REACT_APP_API_ROOT_URL ??
-      process.env.API_ROOT_URL ??
-      'http://localhost:8001'
+    `${process.env.REACT_APP_API_ROOT_URL ??
+    process.env.API_ROOT_URL ??
+    'http://localhost:8001'
     }/conversation`,
     {
       params: {

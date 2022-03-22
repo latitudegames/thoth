@@ -88,7 +88,7 @@ const EventHandler = ({ pubSub, tab }) => {
     createOrFocus(windowTypes.CONFIG_MANAGER, 'Config Manager')
   }
 
-  const createEntManager = () => {
+  const createEntityManager = () => {
     createOrFocus(windowTypes.ENT_MANAGER, 'Ent Manager')
   }
 
@@ -156,7 +156,7 @@ const EventHandler = ({ pubSub, tab }) => {
     [$CREATE_STATE_MANAGER(tab.id)]: createStateManager,
     [$CREATE_AGENT_MANAGER(tab.id)]: createAgentManager,
     [$CREATE_SEARCH_CORPUS(tab.id)]: createSearchCorpus,
-    [$CREATE_ENT_MANAGER(tab.id)]: createEntManager,
+    [$CREATE_ENT_MANAGER(tab.id)]: createEntityManager,
     [$CREATE_CONFIG_MANAGER(tab.id)]: createConfigManager,
     [$CREATE_PLAYTEST(tab.id)]: createPlaytest,
     [$CREATE_INSPECTOR(tab.id)]: createInspector,
