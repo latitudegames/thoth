@@ -16,7 +16,7 @@ import langImg from '../lang.png'
 import css from '../homeScreen.module.css'
 import TemplatePanel from '../components/TemplatePanel'
 import defaultChain from './chains/default'
-import { Spell } from '@latitudegames/thoth-core/types'
+import { ChainData } from '@latitudegames/thoth-core/types'
 
 const customConfig = {
   dictionaries: [adjectives, colors],
@@ -27,7 +27,7 @@ const customConfig = {
 type Template = {
   label: string
   bg: string
-  chain: Spell
+  chain: ChainData
 }
 
 const templates = [
