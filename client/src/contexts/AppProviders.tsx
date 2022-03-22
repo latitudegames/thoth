@@ -4,7 +4,6 @@ import AuthProvider from './AuthProvider'
 import DatabaseProvider from './DatabaseProvider'
 import ModuleProvider from './ModuleProvider'
 import PubSubProvider from './PubSubProvider'
-import TabManagerProvider from './TabManagerProvider'
 import ToastProvider from './ToastProvider'
 
 const darkTheme = createTheme({
@@ -20,7 +19,6 @@ const providers = [
   DatabaseProvider,
   AuthProvider,
   ModuleProvider,
-  TabManagerProvider,
 ]
 
 /**
