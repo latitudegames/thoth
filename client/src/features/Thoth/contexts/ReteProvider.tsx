@@ -1,5 +1,5 @@
 import { EngineContext } from '@latitudegames/thoth-core'
-import { useContext, createContext } from 'react'
+import { useContext, createContext, useRef, useEffect } from 'react'
 
 import { postEnkiCompletion } from '../../../services/game-api/enki'
 import { completion as _completion } from '../../../services/game-api/text'
@@ -47,11 +47,17 @@ export const useRete = () => useContext(Context)
 
 const ReteProvider = ({ children, tab }) => {
   const { events, publish, subscribe } = usePubSub()
+  const spellRef = useRef<Spell | null>(null)
   const [fetchFromImageCache] = useFetchFromImageCacheMutation()
   const [saveSpell] = useSaveSpellMutation()
-  const { data: spell } = useGetSpellQuery(tab.spellId, {
-    skip: !tab.spellId,
+  const { data: _spell } = useGetSpellQuery(tab.spell, {
+    skip: !tab.spell,
   })
+
+  useEffect(() => {
+    if (!_spell) return
+    spellRef.current = _spell
+  }, [_spell])
 
   const { models } = useDB() as unknown as ModelsType
 
@@ -167,13 +173,14 @@ const ReteProvider = ({ children, tab }) => {
   }
 
   const getCurrentGameState = () => {
-    if (!spell) return {}
+    if (!spellRef.current) return {}
 
-    return spell?.gameState ?? {}
+    return spellRef.current?.gameState ?? {}
   }
 
   const updateCurrentGameState = update => {
-    if (!spell) return
+    if (!spellRef.current) return
+    const spell = spellRef.current
 
     const newSpell = {
       ...spell,
