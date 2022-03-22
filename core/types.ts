@@ -17,6 +17,7 @@ import { SocketNameType, SocketType } from './src/sockets'
 import { EngineContext } from './src/engine'
 import { ThothTask } from './src/thoth-component'
 import { ThothConsole } from './src/plugins/debuggerPlugin/ThothConsole'
+import { Data } from 'rete/types/core/data'
 
 export type { InspectorData } from './src/plugins/inspectorPlugin/Inspector'
 
@@ -125,6 +126,8 @@ export type NodeOutputs = {
     connections: NodeConnections[]
   }
 }
+
+export type ChainData = Data
 
 export type NodeData = ReteNodeData & {
   fewshot?: string
