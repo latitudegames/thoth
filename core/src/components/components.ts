@@ -20,6 +20,7 @@ import { RandomGreetingResponse } from './agent/RandomGreetingResponse'
 import { RandomProfanityResponse } from './agent/RandomProfanityResponse'
 import { InputComponent } from './io/Input'
 import { ModuleComponent } from './io/Module'
+import { Output } from './io/Output'
 import { TriggerIn } from './io/TriggerIn'
 import { TriggerOut } from './io/TriggerOut'
 import { BooleanGate } from './logic/BooleanGate'
@@ -133,6 +134,7 @@ export const components = {
   moduleComponent: () => new ModuleComponent(),
   proseToScript: () => new ProseToScript(),
   safetyVerifier: () => new SafetyVerifier(),
+  output: () => new Output(),
   stateWrite: () => new StateWrite(),
   stateRead: () => new StateRead(),
   stringProcessor: () => new StringProcessor(),
