@@ -3,8 +3,8 @@
 
 import { EngineContext } from '@latitudegames/thoth-core'
 import { useContext, createContext } from 'react'
-import { useDispatch } from 'react-redux'
 
+<<<<<<< HEAD:client/src/Thoth/contexts/ThothInterfaceProvider.tsx
 import { postEnkiCompletion } from '../../services/game-api/enki'
 import { completion as _completion } from '../../services/game-api/text'
 import {
@@ -15,9 +15,21 @@ import { store } from '../../state/store'
 import { invokeInference } from '../../utils/huggingfaceHelper'
 import { useDB } from '../../contexts/DatabaseProvider'
 import { usePubSub } from '../../contexts/PubSubProvider'
+=======
+import { postEnkiCompletion } from '../../../services/game-api/enki'
+import { completion as _completion } from '../../../services/game-api/text'
+import { invokeInference } from '../../../utils/huggingfaceHelper'
+import { useDB } from '../../../contexts/DatabaseProvider'
+import { usePubSub } from '../../../contexts/PubSubProvider'
+>>>>>>> 5877e541b06f80bf5eb248d0c98bd82f6d69e2f8:client/src/features/Thoth/contexts/ReteProvider.tsx
 import { useFetchFromImageCacheMutation } from '@/state/api/visualGenerationsApi'
 import { ModelsType } from '../../../types'
 import { ThothWorkerInputs } from '@latitudegames/thoth-core/types'
+import {
+  Spell,
+  useGetSpellQuery,
+  useSaveSpellMutation,
+} from '@/state/api/spells'
 
 import { ModelsType } from '../../types'
 /*
@@ -52,8 +64,11 @@ export const useThothInterface = () => useContext(Context)
 
 const ThothInterfaceProvider = ({ children, tab }) => {
   const { events, publish, subscribe } = usePubSub()
-  const dispatch = useDispatch()
   const [fetchFromImageCache] = useFetchFromImageCacheMutation()
+  const [saveSpell] = useSaveSpellMutation()
+  const { data: spell } = useGetSpellQuery(tab.spell, {
+    skip: !tab.spell,
+  })
 
   const { models } = useDB() as unknown as ModelsType
 
@@ -169,19 +184,23 @@ const ThothInterfaceProvider = ({ children, tab }) => {
   }
 
   const getCurrentGameState = () => {
-    const currentGameState = selectGameStateBySpellId(
-      store.getState().gameState,
-      tab.spell
-    )
-    return currentGameState?.state ?? {}
+    if (!spell) return {}
+
+    return spell?.gameState ?? {}
   }
 
   const updateCurrentGameState = update => {
-    const newState = {
-      spellId: tab.spell,
-      state: update,
+    if (!spell) return
+
+    const newSpell = {
+      ...spell,
+      gameState: {
+        ...spell.gameState,
+        ...update,
+      },
     }
-    dispatch(updateGameState(newState))
+
+    saveSpell(newSpell as Spell)
   }
 
   const publicInterface = {
