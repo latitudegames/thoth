@@ -6,20 +6,17 @@ import {
   useDeleteSpellMutation,
   useNewSpellMutation,
 } from '../../state/api/spells'
-import { useDB } from '../../contexts/DatabaseProvider'
 import AllProjects from './screens/AllProjects'
 import CreateNew from './screens/CreateNew'
 import OpenProject from './screens/OpenProject'
 import css from './homeScreen.module.css'
 import LoadingScreen from '../common/LoadingScreen/LoadingScreen'
-import { ModelsType } from '../../types'
 import { closeTab, openTab } from '@/state/tabs'
 import { useDispatch } from 'react-redux'
 
 //MAIN
 
 const StartScreen = () => {
-  const { models } = useDB() as unknown as ModelsType
   const dispatch = useDispatch()
 
   const navigate = useNavigate()
@@ -35,14 +32,6 @@ const StartScreen = () => {
       delete spellData.graph
     }
     // TODO check for proper values here and throw errors
-
-    // Load modules from the spell
-    if (spellData?.modules && spellData.modules.length > 0)
-      await Promise.all(
-        spellData.modules.map(module => {
-          return models.modules.updateOrCreate(module)
-        })
-      )
 
     // Create new spell
     await newSpell({
