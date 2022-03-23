@@ -10,7 +10,7 @@ export async function handleInput(
   agent: string,
   client: string,
   channelId: string,
-  entityId: number,
+  entity: number,
   spell_handler: string,
   spell_version: string = 'latest'
 ) {
@@ -25,7 +25,7 @@ export async function handleInput(
       Agent: agent,
       Client: client,
       ChannelID: channelId,
-      EntityID: entityId
+      Entity: entity
     },
   })
   let index = undefined

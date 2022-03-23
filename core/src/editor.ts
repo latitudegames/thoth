@@ -11,7 +11,7 @@ import { EngineContext, initSharedEngine } from './engine'
 import AreaPlugin from './plugins/areaPlugin'
 import DebuggerPlugin from './plugins/debuggerPlugin'
 import DisplayPlugin from './plugins/displayPlugin'
-import HistoryPlugin from './plugins/historyPlugin'
+// import HistoryPlugin from './plugins/historyPlugin'
 import InspectorPlugin from './plugins/inspectorPlugin'
 import LifecyclePlugin from './plugins/lifecyclePlugin'
 import ModulePlugin from './plugins/modulePlugin'
@@ -69,7 +69,7 @@ export const initEditor = async function ({
   // ╚═╝     ╚══════╝ ╚═════╝  ╚═════╝ ╚═╝╚═╝  ╚═══╝╚══════╝
 
   // History plugin for undo/redo
-  editor.use(HistoryPlugin, { keyboard: false })
+  // editor.use(HistoryPlugin, { keyboard: false })
 
   // PLUGINS
   // https://github.com/retejs/comment-plugin
@@ -177,8 +177,9 @@ export const initEditor = async function ({
   editor.bind('save')
 
   editor.on(
-    'process nodecreated noderemoved connectioncreated connectionremoved',
+    'process',
     async () => {
+      if (editor.silent) return
       // Here we would swap out local processing for an endpoint that we send the serialised JSON too.
       // Then we run the fewshots, etc on the backend rather than on the client.
       // Alternative for now is for the client to call our own /openai endpoint.

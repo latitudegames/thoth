@@ -36,6 +36,7 @@ export class Code extends ThothComponent<unknown> {
     super('Code')
 
     this.task = {
+      runOneInput: true,
       outputs: {
         trigger: 'option',
       },
@@ -99,7 +100,7 @@ export class Code extends ThothComponent<unknown> {
         {} as Record<string, any>
       )
       // eslint-disable-next-line no-new-func
-      return Function('"use strict";return (' + obj + ')')()(
+      return Function('return (' + obj + ')')()(
         flattenedInputs,
         data
       )

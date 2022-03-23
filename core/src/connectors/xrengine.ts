@@ -391,7 +391,7 @@ export class xrengine_client {
           this.settings.xrengine_bot_name ?? 'Agent',
           'xr-engine',
           channelId,
-          entity,
+          this.entity,
           this.spell_handler,
           this.spell_version
         )
@@ -498,6 +498,7 @@ export class xrengine_client {
     console.log('createXREngineClient', agent)
     this.agent = agent
     this.settings = settings
+    this.entity = settings.entity
     //generateVoice('hello there', (buf, path) => {}, false)
     console.log('creating xr engine client', settings)
 
@@ -562,7 +563,6 @@ class XREngineBot {
     headless = true,
     autoLog = true,
     agent,
-    entity,
     settings,
     xrengineclient,
   } = {}) {
@@ -572,7 +572,6 @@ class XREngineBot {
     this.fakeMediaPath = fakeMediaPath
     this.agent = agent
     this.settings = settings
-    this.entity = entity
     this.xrengineclient = xrengineclient
     setInterval(() => this.instanceMessages(), 1000)
   }

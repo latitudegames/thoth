@@ -14,7 +14,7 @@ const ReactTextInputControl = props => {
   const onChange = e => {
     props.putData(props.name, e.target.value)
     setValue(e.target.value)
-    props.editor.trigger('save')
+    // props.editor.trigger('save')
   }
 
   return (

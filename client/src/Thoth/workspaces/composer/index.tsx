@@ -31,7 +31,7 @@ const Workspace = ({ tab, tabs, pubSub }) => {
   useEffect(() => {
     if (!editor?.on) return
     return editor.on(
-      'save nodecreated noderemoved',
+      'save',
       debounce(() => {
         if (tab.type === 'spell') {
           saveSpell({ ...spellRef.current, chain: editor.toJSON() })
