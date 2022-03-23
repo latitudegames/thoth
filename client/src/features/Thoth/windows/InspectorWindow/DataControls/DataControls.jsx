@@ -6,7 +6,6 @@ import Info from './Info'
 import Input from './Input'
 import InputGenerator from './InputGenerator'
 import LongText from './LongTextControl'
-import ModuleSelect from './ModuleSelect'
 import OutputGenerator from './OutputGenerator'
 import DropdownSelect from './DropdownSelect'
 import SocketGenerator from './SocketGenerator'
@@ -23,7 +22,7 @@ const controlMap = {
   input: Input,
   inputGenerator: InputGenerator,
   longText: LongText,
-  moduleSelect: ModuleSelect,
+  // moduleSelect: ModuleSelect,
   outputGenerator: OutputGenerator,
   slider: StubComponent,
   socketGenerator: SocketGenerator,
