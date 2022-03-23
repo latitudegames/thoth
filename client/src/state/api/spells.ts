@@ -1,9 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit'
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 
-import { initDB } from '../../database'
 import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes'
-import { Module } from '../../database/schemas/module'
 import { rootApi } from './api'
 import { ChainData } from '@latitudegames/thoth-core/types'
 // function camelize(str) {
@@ -13,19 +11,12 @@ import { ChainData } from '@latitudegames/thoth-core/types'
 //     })
 //     .replace(/\s+/g, '')
 // }
-
-const _moduleModel = async () => {
-  const db = await initDB()
-  if (!db) return
-  const { modules } = db.models
-  return modules
-}
 export interface Spell {
   id?: string
   user?: Record<string, unknown> | null | undefined
   name: string
   chain: ChainData
-  modules: Module[]
+  // Spells: Module[]
   gameState: Record<string, unknown>
   createdAt?: number
   updatedAt?: number
@@ -73,10 +64,6 @@ export const spellApi = rootApi.injectEndpoints({
       invalidatesTags: ['Spell'],
       // needed to use queryFn as query option didnt seem to allow async functions.
       async queryFn(spell, { dispatch }, extraOptions, baseQuery) {
-        const moduleModel = await _moduleModel()
-        const modules = await moduleModel.getSpellModules(spell)
-        spell.modules = modules
-
         const baseQueryOptions = {
           url: 'game/spells/save',
           body: spell,
@@ -148,16 +135,6 @@ const emptySpells = []
 export const selectAllSpells = createSelector(
   selectSpellResults,
   spellResult => spellResult?.data || emptySpells
-)
-
-export const selectSpellsByModuleName = createSelector(
-  [selectAllSpells, (state, moduleName) => moduleName],
-  (spells, moduleName) =>
-    spells.filter(
-      spell =>
-        spell.modules &&
-        spell?.modules.some(module => module.name === moduleName)
-    )
 )
 
 export const {
