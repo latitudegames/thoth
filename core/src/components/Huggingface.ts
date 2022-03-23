@@ -42,6 +42,7 @@ export class HuggingfaceComponent extends ThothComponent<
     }
     this.category = 'AI/ML'
     this.info = info
+    this.deprecated = true
   }
 
   builder(node: ThothNode) {

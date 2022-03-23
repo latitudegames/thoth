@@ -65,6 +65,7 @@ export class DifficultyDetectorComponent extends ThothComponent<
     this.category = 'AI/ML'
     this.info = info
     this.display = true
+    this.deprecated = true
   }
 
   displayControl = {}

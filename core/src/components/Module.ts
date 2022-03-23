@@ -36,6 +36,7 @@ export class ModuleComponent extends ThothComponent<ModuleWorkerOutput[]> {
     this.category = 'Core'
     this.info = info
     this.noBuildUpdate = true
+    this.deprecated = true
   }
 
   builder(node: ThothNode) {
