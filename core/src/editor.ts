@@ -96,6 +96,7 @@ export const initEditor = async function ({
       const { workspaceType } = component
 
       if (component.deprecated) return null
+      if (component.hide) return null
       if (workspaceType && workspaceType !== tabType) return null
       return [component.category]
     },
@@ -109,7 +110,8 @@ export const initEditor = async function ({
     scaleExtent: { min: 0.25, max: 2 },
   })
 
-  const moduleDocs = await thoth.getModules()
+  // const moduleDocs = await thoth.getModules()
+  const moduleDocs = [] as any[]
 
   // Parse modules into dictionary of all modules and JSON values
   let modules: Record<string, ModuleType> = moduleDocs
