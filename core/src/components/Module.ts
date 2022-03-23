@@ -20,6 +20,7 @@ export class ModuleComponent extends ThothComponent<ModuleWorkerOutput[]> {
   info
   subscriptionMap: Record<number, Function> = {}
   editor: any
+  hide: true
   noBuildUpdate: boolean
   category: string
 
