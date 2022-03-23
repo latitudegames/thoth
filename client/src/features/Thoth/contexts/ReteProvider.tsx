@@ -4,10 +4,8 @@ import { useContext, createContext, useRef, useEffect } from 'react'
 import { postEnkiCompletion } from '../../../services/game-api/enki'
 import { completion as _completion } from '../../../services/game-api/text'
 import { invokeInference } from '../../../utils/huggingfaceHelper'
-import { useDB } from '../../../contexts/DatabaseProvider'
 import { usePubSub } from '../../../contexts/PubSubProvider'
 import { useFetchFromImageCacheMutation } from '@/state/api/visualGenerationsApi'
-import { ModelsType } from '../../../types'
 import { ThothWorkerInputs } from '@latitudegames/thoth-core/types'
 import {
   Spell,
@@ -28,9 +26,6 @@ export interface ReteContext extends EngineContext {
   sendToDebug: (data) => void
   onDebug: (node, callback) => void
   clearTextEditor: () => void
-  getSpell: Function
-  getModule: Function
-  getModules: Function
   getCurrentGameState: () => Record<string, unknown>
   updateCurrentGameState: (update) => void
   readFromImageCache: (caption, cacheTag, topK) => Promise<Record<string, any>>
@@ -58,8 +53,6 @@ const ReteProvider = ({ children, tab }) => {
     if (!_spell) return
     spellRef.current = _spell
   }, [_spell])
-
-  const { models } = useDB() as unknown as ModelsType
 
   const {
     $PLAYTEST_INPUT,
@@ -212,10 +205,6 @@ const ReteProvider = ({ children, tab }) => {
     getCurrentGameState,
     updateCurrentGameState,
     processCode,
-    ...models.modules,
-
-    // going to need to manuall create theses
-    ...models.spells,
   }
 
   return <Context.Provider value={publicInterface}>{children}</Context.Provider>
