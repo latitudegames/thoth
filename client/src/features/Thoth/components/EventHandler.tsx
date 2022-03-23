@@ -14,7 +14,6 @@ import {
 } from '../../../state/api/spells'
 import { useEditor } from '../contexts/EditorProvider'
 import { useLayout } from '../contexts/LayoutProvider'
-import { useModule } from '../../../contexts/ModuleProvider'
 
 // Config for unique name generator
 const customConfig = {
@@ -40,7 +39,6 @@ const EventHandler = ({ pubSub, tab }) => {
   }, [spell])
 
   const { serialize, getEditor, undo, redo } = useEditor()
-  const { getSpellModules } = useModule()
 
   const { events, subscribe } = pubSub
 
@@ -97,10 +95,6 @@ const EventHandler = ({ pubSub, tab }) => {
     // refetch spell from local DB to ensure it is the most up to date
     const spell = { ...spellRef.current }
     spell.chain = serialize() as ChainData
-
-    const modules = await getSpellModules(spell)
-    // attach modules to spell to be exported
-    spell.modules = modules
     spell.name = uniqueNamesGenerator(customConfig)
 
     const json = JSON.stringify(spell)
