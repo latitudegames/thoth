@@ -1,12 +1,16 @@
 import { useSnackbar } from 'notistack'
 
-import { useAppDispatch } from '../../../../../state/hooks'
-import { openTab } from '../../../../../state/tabs'
-import { useModule } from '../../../../../contexts/ModuleProvider'
-import Select from '../../../../common/Select/Select'
+import { useAppDispatch } from '@/state/hooks'
+import { openTab } from '@/state/tabs'
+// import { useModule } from '../../../contexts/ModuleProvider'
+import Select from '@components/Select/Select'
+import { useGetSpellsQuery, useNewSpellMutation } from '@/state/api/spells'
 
 const ModuleSelect = ({ control, updateData, initialValue }) => {
   const dispatch = useAppDispatch()
+
+  const { data: spells } = useGetSpellsQuery()
+  const [newSpell] = useNewSpellMutation()
 
   const { modules, newModule, findOneModule } = useModule()
   const { enqueueSnackbar } = useSnackbar()
@@ -52,6 +56,7 @@ const ModuleSelect = ({ control, updateData, initialValue }) => {
 
   const onCreateOption = async value => {
     try {
+      const spell = await newSpell()
       const module = await newModule({ name: value })
 
       await _openTab(module)
