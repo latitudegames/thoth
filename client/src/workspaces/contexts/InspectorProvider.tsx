@@ -3,9 +3,16 @@ import { useGetSpellQuery, useSaveSpellMutation } from '@/state/api/spells'
 import { InspectorData } from '@latitudegames/thoth-core/types'
 import { createContext, useContext, useEffect, useState } from 'react'
 
+export type TextEditorData = {
+  options?: Record<string, any> | undefined
+  data?: string
+  control?: Record<string, any> | undefined
+  name?: string
+}
+
 type InspectorContext = {
   inspectorData: InspectorData | null
-  textEditorData: Partial<InspectorData> | null
+  textEditorData: TextEditorData | null
   saveTextEditor: Function
   saveInspector: Function
 }
