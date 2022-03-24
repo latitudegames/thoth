@@ -17,7 +17,7 @@ import LoadingScreen from '../../components/LoadingScreen/LoadingScreen'
 import { MyNode } from '../../components/Node/Node'
 import gridimg from '@/grid.png'
 import { usePubSub } from '../../contexts/PubSubProvider'
-import { useRete, ReteContext } from './ThothInterfaceProvider'
+import { useRete, ThothInterfaceContext } from './ThothInterfaceProvider'
 
 export type ThothTab = {
   layoutJson: string
@@ -40,7 +40,7 @@ const Context = createContext({
     // todo update this to use proper spell type
     spell: Spell | undefined,
     tab: ThothTab,
-    reteInterface: ReteContext
+    reteInterface: ThothInterfaceContext
   ) => {},
   setEditor: (editor: any) => {},
   getNodeMap: () => {},
