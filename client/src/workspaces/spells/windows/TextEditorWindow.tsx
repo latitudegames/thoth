@@ -2,20 +2,24 @@ import Editor from '@monaco-editor/react'
 import { useSnackbar } from 'notistack'
 import { useState, useEffect } from 'react'
 
-import { useLayout } from '../../contexts/LayoutProvider'
-import Window from '../../../components/Window/Window.tsx'
+import Window from '@components/Window/Window'
 import WindowMessage from '../components/WindowMessage'
 
 import '../../../screens/Thoth/thoth.module.css'
+import {
+  TextEditorData,
+  useInspector,
+} from '@/workspaces/contexts/InspectorProvider'
 
 const TextEditor = props => {
-  const [code, setCode] = useState('')
-  const [data, setData] = useState('')
-  const [height, setHeight] = useState()
-  const [editorOptions, setEditorOptions] = useState()
-  const [typing, setTyping] = useState(null)
-  const [language, setLanguage] = useState(null)
-  const { textEditorData, saveTextEditor } = useLayout()
+  const [code, setCode] = useState<string | undefined>(undefined)
+  const [data, setData] = useState<TextEditorData | null>(null)
+  const [height, setHeight] = useState<number>()
+  const [editorOptions, setEditorOptions] = useState<Record<string, any>>()
+  const [typing, setTyping] = useState<boolean>(false)
+  const [language, setLanguage] = useState<string | undefined>(undefined)
+
+  const { textEditorData, saveTextEditor } = useInspector()
   const { enqueueSnackbar } = useSnackbar()
 
   const bottomHeight = 50
@@ -50,7 +54,7 @@ const TextEditor = props => {
   useEffect(() => {
     if (!textEditorData) return
     setData(textEditorData)
-    setCode(textEditorData.data)
+    setCode(textEditorData.data as string)
     setTyping(false)
 
     if (textEditorData?.options?.language) {
@@ -63,9 +67,12 @@ const TextEditor = props => {
       setHeight(props.node.rect.height - bottomHeight)
 
     // this is to dynamically set the appriopriate height so that Monaco editor doesnt break flexbox when resizing
-    props.node.setEventListener('resize', data => {
-      setTimeout(() => setHeight(data.rect.height - bottomHeight), 0)
-    })
+    props.node.setEventListener(
+      'resize',
+      (data: { rect: { height: number } }) => {
+        setTimeout(() => setHeight(data.rect.height - bottomHeight), 0)
+      }
+    )
   }, [props.node])
 
   // debounce for delayed save
@@ -97,7 +104,7 @@ const TextEditor = props => {
     save(code)
   }
 
-  const updateCode = code => {
+  const updateCode = (code: string) => {
     setCode(code)
     const update = {
       ...data,
@@ -116,7 +123,7 @@ const TextEditor = props => {
     </>
   )
 
-  if (!textEditorData.control)
+  if (!textEditorData?.control)
     return <WindowMessage content="Component has no editable text" />
 
   return (
