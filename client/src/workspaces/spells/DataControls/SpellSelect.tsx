@@ -5,6 +5,8 @@ import { openTab } from '@/state/tabs'
 // import { useModule } from '../../../contexts/ModuleProvider'
 import Select from '@components/Select/Select'
 import { useGetSpellsQuery, useNewSpellMutation } from '@/state/api/spells'
+import defaultChain from '@/data/chains/default'
+import { ChainData } from '@latitudegames/thoth-core/types'
 
 const ModuleSelect = ({ control, updateData, initialValue }) => {
   const dispatch = useAppDispatch()
@@ -12,42 +14,40 @@ const ModuleSelect = ({ control, updateData, initialValue }) => {
   const { data: spells } = useGetSpellsQuery()
   const [newSpell] = useNewSpellMutation()
 
-  const { modules, newModule, findOneModule } = useModule()
   const { enqueueSnackbar } = useSnackbar()
   const { dataKey } = control
 
   const optionArray = () => {
-    return modules.map((module, index) => ({
+    if (!spells) return
+    return spells.map((module, index) => ({
       value: module.name,
       label: module.name,
     }))
   }
 
-  const _openTab = async module => {
+  const _openTab = async spell => {
     const tab = {
-      name: module.name,
-      type: 'module',
-      moduleName: module.name,
+      name: spell.name,
+      type: 'spell',
+      moduleName: spell.name,
       openNew: false,
     }
 
     dispatch(openTab(tab))
-    // await openTab(tab)
   }
 
+  // TODO fix on change to handle loading a single spell
   const onChange = async ({ value }) => {
-    const _module = await findOneModule({ name: value })
-    if (!_module) {
-      enqueueSnackbar('No module found', {
-        variant: 'error',
-      })
-      return
-    }
-    update(value)
-
-    const module = _module.toJSON()
-
-    await _openTab(module)
+    // const _spell = await findOneModule({ name: value })
+    // if (!_module) {
+    //   enqueueSnackbar('No module found', {
+    //     variant: 'error',
+    //   })
+    //   return
+    // }
+    // update(value)
+    // const module = _module.toJSON()
+    // await _openTab(module)
   }
 
   const update = update => {
@@ -56,10 +56,12 @@ const ModuleSelect = ({ control, updateData, initialValue }) => {
 
   const onCreateOption = async value => {
     try {
-      const spell = await newSpell()
-      const module = await newModule({ name: value })
+      const spell = await newSpell({
+        name: value,
+        chain: defaultChain as unknown as ChainData,
+      })
 
-      await _openTab(module)
+      await _openTab(spell)
 
       // todo better naming for rete modules.
       // Handle displaying name as using ID for internal mapping
