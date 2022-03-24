@@ -8,7 +8,7 @@ import WindowToolbar from '../../../../components/Window/WindowToolbar'
 import { SimpleAccordion } from '../../../../components/Accordion'
 import Input from '../../../../components/Input/Input'
 import Panel from '../../../../components/Panel/Panel'
-import { useModal } from 'client/src/contexts/ModalProvider'
+import { useModal } from '@/contexts/ModalProvider'
 
 import {
   useGetDeploymentsQuery,
