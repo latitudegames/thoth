@@ -1,4 +1,5 @@
 import { usePubSub } from '@/contexts/PubSubProvider'
+import { useGetSpellQuery, useSaveSpellMutation } from '@/state/api/spells'
 import { InspectorData } from '@latitudegames/thoth-core/types'
 import { createContext, useContext, useEffect, useState } from 'react'
 
@@ -15,6 +16,11 @@ export const useInspector = () => useContext(Context)
 
 const InspectorProvider = ({ children, tab }) => {
   const { subscribe, publish, events } = usePubSub()
+
+  const [saveSpell] = useSaveSpellMutation()
+  const { data: spell } = useGetSpellQuery(tab.spellId, {
+    skip: !tab.spellId,
+  })
 
   const [inspectorData, setInspectorData] = useState<InspectorData | null>(null)
 
@@ -66,9 +72,34 @@ const InspectorProvider = ({ children, tab }) => {
     })
   }, [events, subscribe, publish])
 
-  const saveTextEditor = () => {}
+  //
+  const saveTextEditor = textData => {
+    const textUpdate = {
+      [textData.control.dataKey]: textData.data,
+    }
 
-  const saveInspector = () => {}
+    if (!inspectorData) return
+
+    const update = {
+      ...inspectorData,
+      data: {
+        ...inspectorData.data,
+        ...textUpdate,
+      },
+    }
+
+    publish(events.$NODE_SET(tab.id, textData.nodeId), update)
+    if (inspectorData) {
+      setInspectorData(update)
+    }
+    spell && saveSpell(spell)
+  }
+
+  const saveInspector = inspectorData => {
+    setInspectorData(inspectorData)
+    publish(events.$NODE_SET(tab.id, inspectorData.nodeId), inspectorData)
+    spell && saveSpell(spell)
+  }
 
   const publicInterface: InspectorContext = {
     inspectorData,
