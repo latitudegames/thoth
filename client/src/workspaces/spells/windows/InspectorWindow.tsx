@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react'
 
-import { useLayout } from '../../contexts/LayoutProvider'
 import { useModal } from '@/contexts/ModalProvider'
 import Icon, { componentCategories } from '../../../components/Icon/Icon'
 import Window from '../../../components/Window/Window'
 import DataControls from '../DataControls'
 import WindowMessage from '../components/WindowMessage'
+import { useInspector } from '@/workspaces/contexts/InspectorProvider'
+import { InspectorData } from '@latitudegames/thoth-core/types'
 
 const Inspector = props => {
-  const { inspectorData, saveInspector } = useLayout()
+  const { inspectorData, saveInspector } = useInspector()
   const [width, setWidth] = useState()
   const { openModal } = useModal()
 
@@ -30,6 +31,7 @@ const Inspector = props => {
   }, [props])
 
   const updateControl = control => {
+    if (!inspectorData) return
     const newData = {
       ...inspectorData,
       dataControls: {
@@ -42,6 +44,7 @@ const Inspector = props => {
   }
 
   const updateData = update => {
+    if (!inspectorData) return
     const newData = {
       ...inspectorData,
       data: {
@@ -57,7 +60,7 @@ const Inspector = props => {
     <>
       <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
         <Icon
-          name={componentCategories[inspectorData?.category]}
+          name={componentCategories[inspectorData?.category || 0]}
           style={{ marginRight: 'var(--extraSmall)' }}
         />
         {inspectorData?.name}
@@ -79,16 +82,21 @@ const Inspector = props => {
     </>
   )
 
+  const DeprecationMessage = (inspectorData: InspectorData) => {
+    if (!inspectorData.deprecated) return <></>
+    return (
+      <div style={{ padding: 'var(--c1) var(--c2)' }}>
+        <h2 style={{ color: 'var(--red)' }}>WARNING</h2>
+        <p>{inspectorData.deprecationMessage}</p>
+      </div>
+    )
+  }
+
   if (!inspectorData) return <WindowMessage />
 
   return (
     <Window toolbar={toolbar} darker outline borderless>
-      {inspectorData.deprecated && (
-        <div style={{ padding: 'var(--c1) var(--c2)' }}>
-          <h2 style={{ color: 'var(--red)' }}>WARNING</h2>
-          <p>{inspectorData.deprecationMessage}</p>
-        </div>
-      )}
+      {DeprecationMessage(inspectorData)}
       <DataControls
         inspectorData={inspectorData}
         nodeId={inspectorData.nodeId}
