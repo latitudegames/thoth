@@ -7,7 +7,7 @@ import {
 } from '@reduxjs/toolkit'
 
 import { RootState } from './store'
-import defaultJson from '../contexts/layouts/defaultLayout.json'
+import defaultJson from '../data/layouts/defaultLayout.json'
 
 // Used to set workspaces to tabs
 const workspaceMap = {
