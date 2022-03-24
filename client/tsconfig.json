@@ -27,5 +27,5 @@
       "path": "../core"
     }
   ],
-  "include": ["src", "src/contexts/layouts/defaultLayout.json"]
+  "include": ["src", "src/data/layouts/defaultLayout.json"]
 }
