@@ -24,13 +24,13 @@ const customConfig = {
   length: 2,
 }
 
-type Template = {
+export type Template = {
   label: string
   bg: string
   chain: ChainData
 }
 
-const templates = [
+export const thothTemplates = [
   { label: 'Starter', bg: emptyImg, chain: defaultChain },
   { label: 'Language example', bg: langImg, chain: defaultChain },
   { label: 'Enki example', bg: enkiImg, chain: defaultChain },
@@ -115,7 +115,7 @@ const CreateNew = () => {
           gap: 'var(--extraSmall)',
         }}
       >
-        {templates.map((template, i) => (
+        {thothTemplates.map((template, i) => (
           <TemplatePanel
             setSelectedTemplate={setSelectedTemplate}
             selectedTemplate={selectedTemplate}
