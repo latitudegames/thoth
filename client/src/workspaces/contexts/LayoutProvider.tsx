@@ -9,9 +9,6 @@ import {
 import { useContext, createContext, useEffect, useState, useRef } from 'react'
 
 import LoadingScreen from '../../components/LoadingScreen/LoadingScreen'
-import { usePubSub } from '@/contexts/PubSubProvider'
-import { useGetSpellQuery, useSaveSpellMutation } from '@/state/api/spells'
-import { InspectorData } from '@latitudegames/thoth-core/dist/types'
 import { saveTabLayout } from '@/state/tabs'
 import { useDispatch } from 'react-redux'
 // Component types are listed here which are used to load components from the data sent by rete
@@ -43,10 +40,6 @@ declare global {
 }
 
 type LayoutContext = {
-  inspectorData: InspectorData | null
-  textEditorData: Partial<InspectorData> | null
-  saveTextEditor: Function
-  saveInspector: Function
   currentModel: Model | null
   createModel: Function
   createOrFocus: Function
@@ -60,18 +53,10 @@ const Context = createContext<LayoutContext>(undefined!)
 export const useLayout = () => useContext(Context)
 
 const LayoutProvider = ({ children, tab }) => {
-  const { subscribe, publish, events } = usePubSub()
-
-  const [saveSpell] = useSaveSpellMutation()
-  const { data: spell } = useGetSpellQuery(tab.spellId, {
-    skip: !tab.spellId,
-  })
   const currentModelRef = useRef<Model | null>(null)
 
   const [currentModel, setCurrentModel] = useState<Model | null>(null)
   const [currentRef, setCurrentRef] = useState(null)
-  const [inspectorData, setInspectorData] = useState<InspectorData | null>(null)
-  const [textEditorData, setTextEditorData] = useState({})
 
   const updateCurrentModel = (model: Model) => {
     currentModelRef.current = model
@@ -82,78 +67,6 @@ const LayoutProvider = ({ children, tab }) => {
     window.getLayout = () =>
       currentModelRef?.current && currentModelRef?.current?.toJson()
   }, [currentModel])
-
-  // inspector subscription
-  useEffect(() => {
-    return subscribe(
-      events.$INSPECTOR_SET(tab.id),
-      (event, data: InspectorData) => {
-        if (data?.nodeId !== inspectorData?.nodeId) setInspectorData(null)
-        setInspectorData(data)
-
-        if (!data.dataControls) return
-
-        // Handle components in a special way here.  Could probaby abstract this better
-
-        Object.entries(data.dataControls).forEach(([, control]) => {
-          if (control?.options?.editor) {
-            // we relay data to the text editor component for display here as well.
-            const textData = {
-              data: data.data[control.dataKey],
-              nodeId: data.nodeId,
-              name: data.name,
-              control: control,
-              options: control.options,
-            }
-
-            setTextEditorData(textData)
-          }
-        })
-      }
-    )
-  }, [events, subscribe, publish])
-
-  // text editor subscription
-  useEffect(() => {
-    return subscribe(events.$TEXT_EDITOR_SET(tab.id), (event, data) => {
-      setTextEditorData(data)
-    })
-  }, [events, subscribe, publish])
-
-  // clear text editor subscription
-  useEffect(() => {
-    return subscribe(events.$TEXT_EDITOR_CLEAR(tab.id), () => {
-      setTextEditorData({})
-    })
-  }, [events, subscribe, publish])
-
-  const saveTextEditor = textData => {
-    const textUpdate = {
-      [textData.control.dataKey]: textData.data,
-    }
-
-    if (!inspectorData) return
-
-    const update = {
-      ...inspectorData,
-      data: {
-        ...inspectorData.data,
-        ...textUpdate,
-      },
-    }
-
-    publish(events.$NODE_SET(tab.id, textData.nodeId), update)
-    if (inspectorData) {
-      setInspectorData(update)
-    }
-    spell && saveSpell(spell)
-  }
-
-  const saveInspector = inspectorData => {
-    setInspectorData(inspectorData)
-    publish(events.$NODE_SET(tab.id, inspectorData.nodeId), inspectorData)
-    spell && saveSpell(spell)
-  }
 
   const createModel = json => {
     const model = Model.fromJson(json)
@@ -219,10 +132,6 @@ const LayoutProvider = ({ children, tab }) => {
   }
 
   const publicInterface = {
-    inspectorData,
-    textEditorData,
-    saveTextEditor,
-    saveInspector,
     currentModel,
     createModel,
     createOrFocus,
