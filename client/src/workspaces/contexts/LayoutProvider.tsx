@@ -9,7 +9,7 @@ import {
 import { useContext, createContext, useEffect, useState, useRef } from 'react'
 
 import LoadingScreen from '../../components/LoadingScreen/LoadingScreen'
-import { usePubSub } from 'client/src/contexts/PubSubProvider'
+import { usePubSub } from '@/contexts/PubSubProvider'
 import { useGetSpellQuery, useSaveSpellMutation } from '@/state/api/spells'
 import { InspectorData } from '@latitudegames/thoth-core/dist/types'
 import { saveTabLayout } from '@/state/tabs'
