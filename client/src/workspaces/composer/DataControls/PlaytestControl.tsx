@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import Switch from '../../../../../components/Switch/Switch'
+import Switch from '../../../components/Switch/Switch'
 
 type SocketType = {
   name: string

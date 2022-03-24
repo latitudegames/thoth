@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import InputComponent from '../../../../../components/Input/Input'
+import InputComponent from '../../../components/Input/Input'
 
 const Input = ({ control, updateData, initialValue }) => {
   const [value, setValue] = useState(initialValue)

@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 
-import { useLayout } from '../../../contexts/LayoutProvider'
+import { useLayout } from '../../contexts/LayoutProvider'
 import { useModal } from '@/contexts/ModalProvider'
-import Icon, { componentCategories } from '../../../../components/Icon/Icon'
-import Window from '../../../../components/Window/Window'
-import DataControls from './DataControls'
-import WindowMessage from '../../components/WindowMessage'
+import Icon, { componentCategories } from '../../../components/Icon/Icon'
+import Window from '../../../components/Window/Window'
+import DataControls from '../DataControls'
+import WindowMessage from '../components/WindowMessage'
 
 const Inspector = props => {
   const { inspectorData, saveInspector } = useLayout()

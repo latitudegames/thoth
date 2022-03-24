@@ -1,4 +1,4 @@
-import Select from '../../../../../components/Select/Select'
+import Select from '../../../components/Select/Select'
 
 const DropdownSelect = ({ control, updateData, initialValue }) => {
   const { dataKey, data } = control
