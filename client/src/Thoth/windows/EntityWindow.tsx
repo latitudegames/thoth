@@ -46,11 +46,12 @@ const EntityWindow = ({ id, updateCallback }) => {
   const [xrengine_url, setXREngineUrl] = useState('')
   const [xrengine_bot_name, setXREngineBotName] = useState('')
   const [xrengine_bot_name_regex, setXREngineBotNameRegex] = useState('')
+  const [xrengine_starting_words, setXREngineStartingWords] = useState('')
 
   const [spellList, setSpellList] = useState('')
   useEffect(() => {
     if (!loaded) {
-      ; (async () => {
+      ;(async () => {
         const res = await axios.get(
           `${process.env.REACT_APP_API_ROOT_URL}/agentInstance?instanceId=` + id
         )
@@ -75,13 +76,14 @@ const EntityWindow = ({ id, updateCallback }) => {
         setXREngineSpellHandlerFeed(res.data.xrengine_spell_handler_feed)
         setXREngineBotName(res.data.xrengine_bot_name)
         setXREngineBotNameRegex(res.data.xrengine_bot_name_regex)
+        setXREngineStartingWords(res.data.xrengine_starting_words)
         setLoaded(true)
       })()
     }
   }, [loaded])
 
   useEffect(() => {
-    ; (async () => {
+    ;(async () => {
       const res = await axios.get(
         `${process.env.REACT_APP_API_ROOT_URL}/game/spells`
       )
@@ -119,6 +121,7 @@ const EntityWindow = ({ id, updateCallback }) => {
       xrengine_spell_handler_feed,
       xrengine_bot_name,
       xrengine_bot_name_regex,
+      xrengine_starting_words,
     }
     axios
       .post(`${process.env.REACT_APP_API_ROOT_URL}/agentInstance`, {
@@ -149,6 +152,7 @@ const EntityWindow = ({ id, updateCallback }) => {
         setXREngineSpellHandlerFeed(responseData.xrengine_spell_handler_feed)
         setXREngineBotName(responseData.xrengine_bot_name)
         setXREngineBotNameRegex(responseData.xrengine_bot_name_regex)
+        setXREngineStartingWords(responseData.xrengine_starting_words)
         updateCallback()
       })
   }
@@ -321,16 +325,18 @@ const EntityWindow = ({ id, updateCallback }) => {
                   }}
                 />
               </div>
+
               <div className="form-item">
-                <span className="form-item-label">Bot Name</span>
+                <span className="form-item-label">Starting Words</span>
                 <input
                   type="text"
-                  defaultValue={xrengine_bot_name}
+                  defaultValue={xrengine_starting_words}
                   onChange={e => {
-                    setXREngineBotName(e.target.value)
+                    setXREngineStartingWords(e.target.value)
                   }}
                 />
               </div>
+
               <div className="form-item">
                 <span className="form-item-label">Bot Name Regex</span>
                 <input
@@ -338,6 +344,17 @@ const EntityWindow = ({ id, updateCallback }) => {
                   defaultValue={xrengine_bot_name_regex}
                   onChange={e => {
                     setXREngineBotNameRegex(e.target.value)
+                  }}
+                />
+              </div>
+
+              <div className="form-item">
+                <span className="form-item-label">Bot Name</span>
+                <input
+                  type="text"
+                  defaultValue={xrengine_bot_name}
+                  onChange={e => {
+                    setXREngineBotName(e.target.value)
                   }}
                 />
               </div>

@@ -67,6 +67,7 @@ export class agent extends gameObject {
     spell_version: string
     xrengine_bot_name: string
     xrengine_bot_name_regex: string
+    xrengine_starting_words: string
   }) {
     if (this.xrengine)
       throw new Error(
@@ -79,7 +80,7 @@ export class agent extends gameObject {
 
   stopXREngine() {
     if (!this.xrengine) throw new Error("XREngine isn't running, can't stop it")
-      ; (this.xrengine as any) = null
+    ;(this.xrengine as any) = null
     console.log('Stopped xrengine client for agent ' + this.name)
   }
 
@@ -114,6 +115,7 @@ export class agent extends gameObject {
         spell_version: data.spell_version,
         xrengine_bot_name: data.xrengine_bot_name,
         xrengine_bot_name_regex: data.xrengine_bot_name_regex,
+        xrengine_starting_words: data.xrengine_starting_words,
       })
     }
   }

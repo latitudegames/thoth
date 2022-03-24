@@ -215,6 +215,7 @@ export class xrengine_client {
     isVoice
   ) {
     console.log('handling message:', text)
+    if (text.startsWith('/') || text.startsWith('//')) return
     if (text.includes('[') && text.includes(']')) return
     else if (text.includes('joined the layer')) {
       const user = text.replace('joined the layer', '')
@@ -284,6 +285,14 @@ export class xrengine_client {
         }
 
         const _sender = sender
+        if (
+          this.UsersInHarassmentRange[sender] !== undefined &&
+          this.UsersInIntimateRange[sender] !== undefined &&
+          this.UsersInRange[sender] !== undefined
+        ) {
+          return
+        }
+
         let content = text
         log('handling message: ' + content)
         await this.addMessageToHistory(channelId, id, _sender, content)
@@ -306,18 +315,27 @@ export class xrengine_client {
         let startConv = false
         let startConvName = ''
         const trimmed = content.trimStart()
-        if (trimmed.toLowerCase().startsWith('hi')) {
-          const parts = trimmed.split(' ')
-          if (parts.length > 1) {
-            if (!startsWithCapital(parts[1])) {
-              startConv = true
+        for (let i = 0; i < this.settings.xrengine_starting_words.length; i++) {
+          if (
+            trimmed
+              .toLowerCase()
+              .startsWith(this.settings.xrengine_starting_words[i])
+          ) {
+            const parts = trimmed.split(' ')
+            if (parts.length > 1) {
+              if (!startsWithCapital(parts[1])) {
+                startConv = true
+              } else {
+                startConv = false
+                startConvName = parts[1]
+              }
             } else {
-              startConv = false
-              startConvName = parts[1]
-            }
-          } else {
-            if (trimmed.toLowerCase() === 'hi') {
-              startConv = true
+              if (
+                trimmed.toLowerCase() ===
+                this.settings.xrengine_starting_words[i]
+              ) {
+                startConv = true
+              }
             }
           }
         }
@@ -499,6 +517,18 @@ export class xrengine_client {
     this.agent = agent
     this.settings = settings
     this.entity = settings.entity
+
+    let temp = this.settings.xrengine_starting_words
+    if (temp && temp !== undefined) {
+      temp = temp.split(',')
+    } else {
+      temp = ['hi', 'hey']
+    }
+    this.settings.xrengine_starting_words = []
+    for (let i = 0; i < temp.length; i++) {
+      this.settings.xrengine_starting_words.push(temp[i].toLowerCase())
+    }
+
     //generateVoice('hello there', (buf, path) => {}, false)
     console.log('creating xr engine client', settings)
 
@@ -848,7 +878,7 @@ class XREngineBot {
     await this.waitForTimeout(timeout)
   }
 
-  async interactObject() { }
+  async interactObject() {}
 
   /** Return screenshot
    * @param {Function} fn Function to execut _in the node context._
@@ -1261,5 +1291,5 @@ class XREngineBot {
 }
 
 function log(text: string) {
-  // console.log(text)
+  console.log(text)
 }
