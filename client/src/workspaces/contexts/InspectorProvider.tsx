@@ -20,35 +20,34 @@ const InspectorProvider = ({ children, tab }) => {
 
   const [textEditorData, setTextEditorData] = useState({})
 
+  const SET_INSPECTOR = events.$INSPECTOR_SET(tab.id)
+
   // inspector subscription
   useEffect(() => {
-    return subscribe(
-      events.$INSPECTOR_SET(tab.id),
-      (event, data: InspectorData) => {
-        if (data?.nodeId !== inspectorData?.nodeId) setInspectorData(null)
+    return subscribe(SET_INSPECTOR, (_, data: InspectorData) => {
+      if (data?.nodeId !== inspectorData?.nodeId) setInspectorData(null)
 
-        setInspectorData(data)
+      setInspectorData(data)
 
-        if (!data.dataControls) return
+      if (!data.dataControls) return
 
-        // Handle components in a special way here.  Could probaby abstract this better
+      // Handle components in a special way here.  Could probaby abstract this better
 
-        Object.entries(data.dataControls).forEach(([, control]) => {
-          if (control?.options?.editor) {
-            // we relay data to the text editor component for display here as well.
-            const textData = {
-              data: data.data[control.dataKey],
-              nodeId: data.nodeId,
-              name: data.name,
-              control: control,
-              options: control.options,
-            }
-
-            setTextEditorData(textData)
+      Object.entries(data.dataControls).forEach(([, control]) => {
+        if (control?.options?.editor) {
+          // we relay data to the text editor component for display here as well.
+          const textData = {
+            data: data.data[control.dataKey],
+            nodeId: data.nodeId,
+            name: data.name,
+            control: control,
+            options: control.options,
           }
-        })
-      }
-    )
+
+          setTextEditorData(textData)
+        }
+      })
+    })
   }, [events, subscribe, publish])
 
   const saveTextEditor = () => {}
