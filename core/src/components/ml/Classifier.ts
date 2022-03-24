@@ -86,9 +86,7 @@ export class Classifier extends ThothComponent<Promise<InputReturn>> {
       `${process.env.REACT_APP_API_URL}/hf_request`,
       {
         inputs: inputData as string,
-        model:
-          (inputs['modelName'] && inputs['modelName'][0]) ??
-          'facebook/bart-large-mnli',
+        model: 'facebook/bart-large-mnli',
         parameters: parameters,
         options: undefined,
       }
@@ -101,6 +99,6 @@ export class Classifier extends ThothComponent<Promise<InputReturn>> {
       else node.display('Top label is ' + data.labels[0])
     }
     console.log('Top label is ' + data.labels[0])
-    return { output: data.labels[0] }
+    return { output: (data.labels && data.labels[0]) ?? 'error' }
   }
 }
