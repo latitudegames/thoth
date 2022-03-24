@@ -1,5 +1,5 @@
 import WorkspaceProvider from './contexts/WorkspaceProvider'
-import Composer from './composer'
+import Composer from './spells'
 
 // TODO create a proper workspace component that can take in everything we need it to
 // for a standalone workspace environment.  Factor, events, etc.
