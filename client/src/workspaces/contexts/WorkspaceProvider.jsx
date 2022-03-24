@@ -1,8 +1,8 @@
 import EditorProvider from './EditorProvider'
 import LayoutProvider from './LayoutProvider'
-import ReteProvider from './ThothInterfaceProvider'
+import ThothInterfaceProvider from './ThothInterfaceProvider'
 
-const providers = [ReteProvider, EditorProvider, LayoutProvider]
+const providers = [ThothInterfaceProvider, EditorProvider, LayoutProvider]
 
 function ComposeProviders({ providers, children, ...parentProps }) {
   const _providers = [...providers].reverse()
