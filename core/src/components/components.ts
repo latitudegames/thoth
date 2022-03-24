@@ -21,6 +21,7 @@ import { Output } from './io/Output'
 import { TriggerIn } from './io/TriggerIn'
 import { TriggerOut } from './io/TriggerOut'
 import { BooleanGate } from './logic/BooleanGate'
+import { Coallesce } from './logic/Coallesce'
 import { Code } from './logic/Code'
 import { ForEach } from './logic/ForEach'
 import { IsNullOrUndefined } from './logic/IsNullOrUndefined'
@@ -39,6 +40,7 @@ import { KeywordExtractor } from './ml/KeywordExtractor'
 import { NamedEntityRecognition } from './ml/NamedEntityRecognition'
 import { ProseToScript } from './ml/ProseToScript'
 import { SafetyVerifier } from './ml/SafetyVerifier'
+import { SentenceMatcher } from './ml/SentenceMatcher'
 import { SummarizeFacts } from './ml/SummarizeFacts'
 import { TenseTransformer } from './ml/TenseTransformer'
 import { TextToSpeech } from './ml/TextToSpeech'
@@ -74,7 +76,9 @@ export const components = {
   actionTypeComponent: () => new ActionTypeComponent(),
   alert: () => new Alert(),
   booleanGate: () => new BooleanGate(),
+  coallesce: () => new Coallesce(),
   code: () => new Code(),
+  sentenceMatcher: () => new SentenceMatcher(),
   difficultyDetectorComponent: () => new DifficultyDetectorComponent(),
   // enkiTask: () => new EnkiTask(),
   entityDetector: () => new EntityDetector(),
