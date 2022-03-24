@@ -1,5 +1,8 @@
 import { initEditor } from '@latitudegames/thoth-core'
-import { ChainData, IRunContextEditor } from '@latitudegames/thoth-core/dist/types'
+import {
+  ChainData,
+  IRunContextEditor,
+} from '@latitudegames/thoth-core/dist/types'
 import React, {
   useRef,
   useContext,
@@ -14,7 +17,7 @@ import LoadingScreen from '../../components/LoadingScreen/LoadingScreen'
 import { MyNode } from '../../components/Node/Node'
 import gridimg from '@/grid.png'
 import { usePubSub } from '../../contexts/PubSubProvider'
-import { useRete, ReteContext } from './ReteProvider'
+import { useRete, ReteContext } from './ThothInterfaceProvider'
 
 export type ThothTab = {
   layoutJson: string
