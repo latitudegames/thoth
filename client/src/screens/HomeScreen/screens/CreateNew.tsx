@@ -15,7 +15,7 @@ import enkiImg from '../enki.png'
 import langImg from '../lang.png'
 import css from '../homeScreen.module.css'
 import TemplatePanel from '../components/TemplatePanel'
-import defaultChain from './chains/default'
+import defaultChain from '../../../data/chains/default'
 import { ChainData } from '@latitudegames/thoth-core/types'
 
 const customConfig = {
