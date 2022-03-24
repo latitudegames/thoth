@@ -17,7 +17,10 @@ import LoadingScreen from '../../components/LoadingScreen/LoadingScreen'
 import { MyNode } from '../../components/Node/Node'
 import gridimg from '@/grid.png'
 import { usePubSub } from '../../contexts/PubSubProvider'
-import { useRete, ThothInterfaceContext } from './ThothInterfaceProvider'
+import {
+  useThothInterface,
+  ThothInterfaceContext,
+} from './ThothInterfaceProvider'
 
 export type ThothTab = {
   layoutJson: string
@@ -157,7 +160,7 @@ const RawEditor = ({ tab, children }) => {
   const [loaded, setLoaded] = useState(false)
   const { buildEditor } = useEditor()
   // This will be the main interface between thoth and rete
-  const reteInterface = useRete()
+  const reteInterface = useThothInterface()
 
   useEffect(() => {
     if (!tab) return
