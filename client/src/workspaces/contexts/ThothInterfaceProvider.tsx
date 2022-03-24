@@ -40,7 +40,7 @@ const Context = createContext<ThothInterfaceContext>(undefined!)
 
 export const useThothInterface = () => useContext(Context)
 
-const ReteProvider = ({ children, tab }) => {
+const ThothInterfaceProvider = ({ children, tab }) => {
   const { events, publish, subscribe } = usePubSub()
   const spellRef = useRef<Spell | null>(null)
   const [fetchFromImageCache] = useFetchFromImageCacheMutation()
@@ -210,4 +210,4 @@ const ReteProvider = ({ children, tab }) => {
   return <Context.Provider value={publicInterface}>{children}</Context.Provider>
 }
 
-export default ReteProvider
+export default ThothInterfaceProvider
