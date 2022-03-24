@@ -183,39 +183,39 @@ const deleteAgentInstanceHandler = async (ctx: Koa.Context) => {
 }
 
 const setFacts = async (ctx: Koa.Context) => {
-  const agent = ctx.request.query.agent
-  const speaker = ctx.request.query.speaker
-  const client = ctx.request.query.platform
-  const channel = ctx.request.query.channel
-  const text = ctx.request.query.text as string
+  const agent = ctx.request.body.agent
+  const speaker = ctx.request.body.speaker
+  const client = ctx.request.body.client
+  const channel = ctx.request.body.channel
+  const text = ctx.request.body.facts as string
+
+  console.log("Request body was", ctx.request.body)
 
   await database.instance.setEvents('facts', agent, client, channel, speaker, text)
 
   return (ctx.body = 'ok')
 }
 
+
 const getFacts = async (ctx: Koa.Context) => {
   const agent = ctx.request.query.agent
   const speaker = ctx.request.query.speaker
-  const client = ctx.request.query.platform
+  const client = ctx.request.query.client
   const channel = ctx.request.query.channel
   const maxCount = parseInt(ctx.request.query.maxCount as string)
+  const conversation = await database.instance.getEvents(
+    'facts',
+    agent,
+    speaker,
+    client,
+    channel,
+    true,
+    maxCount
+  )
 
-  try {
-    const conversation = await database.instance.getEvents(
-      'facts',
-      agent,
-      speaker,
-      client,
-      channel,
-      true,
-      maxCount
-    )
-    console.log('conversation, query:', ctx.request.query, 'conv:', conversation)
-    return (ctx.body = conversation)
-  } catch (e) {
-    return (ctx.body = '')
-  }
+  console.log('facts, query:', ctx.request.query, 'conv:', conversation)
+
+  return (ctx.body = conversation)
 }
 
 const getConversation = async (ctx: Koa.Context) => {
@@ -224,7 +224,6 @@ const getConversation = async (ctx: Koa.Context) => {
   const client = ctx.request.query.client
   const channel = ctx.request.query.channel
   const maxCount = parseInt(ctx.request.query.maxCount as string)
-
   const conversation = await database.instance.getEvents(
     'conversation',
     agent,

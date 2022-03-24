@@ -12,19 +12,18 @@ import {
 } from '../../../types'
 import { InputControl } from '../../dataControls/InputControl'
 import { EngineContext } from '../../engine'
-import { stringSocket, triggerSocket } from '../../sockets'
+import { anySocket, stringSocket, triggerSocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
-const info =
-  'Classifier takes an input string and arbitrary labels and returns the most likely label'
+const info = 'SentenceMatcher takes an query, needs to be generalized'
 
 type InputReturn = {
   output: unknown
 }
 
-export class Classifier extends ThothComponent<Promise<InputReturn>> {
+export class SentenceMatcher extends ThothComponent<Promise<InputReturn>> {
   constructor() {
-    super('Classifier')
+    super('Sentence Matcher')
 
     this.task = {
       outputs: {
@@ -39,8 +38,6 @@ export class Classifier extends ThothComponent<Promise<InputReturn>> {
   }
 
   builder(node: ThothNode) {
-    const input = new Rete.Input('input', 'Input', stringSocket)
-
     const nameControl = new InputControl({
       dataKey: 'name',
       name: 'Component Name',
@@ -52,8 +49,8 @@ export class Classifier extends ThothComponent<Promise<InputReturn>> {
     })
 
     node.inspector.add(nameControl).add(labelControl)
-    const labelInput = new Rete.Input('labels', 'Labels', stringSocket, true)
-    const modelInput = new Rete.Input('model', 'Model Name', stringSocket, true)
+    const sentences = new Rete.Input('sentences', 'Sentences', anySocket, true)
+    const source = new Rete.Input('source', 'Source', anySocket, true)
 
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
@@ -62,9 +59,8 @@ export class Classifier extends ThothComponent<Promise<InputReturn>> {
     return node
       .addOutput(output)
       .addOutput(dataOutput)
-      .addInput(input)
-      .addInput(labelInput)
-      .addInput(modelInput)
+      .addInput(sentences)
+      .addInput(source)
       .addInput(dataInput)
   }
 
@@ -74,33 +70,41 @@ export class Classifier extends ThothComponent<Promise<InputReturn>> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    const inputData = inputs['input'][0]
-    const labels = inputs['labels'] && inputs['labels'][0]
-    const labelData = ((labels ?? node.data?.labels) as string).split(', ')
+    const sourceSentence = (inputs['source'][0] ?? inputs['source']) as string
+    const sentences = (inputs['sentences'][0] ??
+      inputs['sentences']) as string[]
 
-    const parameters = {
-      candidate_labels: labelData,
+    const query = {
+      inputs: {
+        source_sentence: sourceSentence,
+        sentences: sentences,
+      },
     }
 
     const resp = await axios.post(
       `${process.env.REACT_APP_API_URL}/hf_request`,
-      {
-        inputs: inputData as string,
-        model:
-          (inputs['modelName'] && inputs['modelName'][0]) ??
-          'facebook/bart-large-mnli',
-        parameters: parameters,
-        options: undefined,
-      }
+      query
     )
 
     const { data, success, error } = resp.data
 
+    console.log('Response is', data)
+
+    // get the index of the largest number in the data array
+    const maxIndex = data.reduce(
+      (iMax: number, x: number, i: number, arr: { [x: number]: number }) =>
+        x > arr[iMax] ? i : iMax,
+      0
+    )
+
+    console.log('maxIndex is', maxIndex)
+    console.log('sentences[maxIndex] is', sentences[maxIndex])
+
     if (!silent) {
       if (!success) node.display(error)
-      else node.display('Top label is ' + data.labels[0])
+      else node.display('Top label is ' + sentences[maxIndex])
     }
-    console.log('Top label is ' + data.labels[0])
-    return { output: data.labels[0] }
+    console.log('Top label is ' + sentences[maxIndex])
+    return { output: sentences[maxIndex] }
   }
 }

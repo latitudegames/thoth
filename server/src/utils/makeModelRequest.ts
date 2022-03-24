@@ -11,7 +11,6 @@ export async function makeModelRequest(
     options = { use_cache: false, wait_for_model: true }
 ) {
     try {
-        console.log('inputs:', inputs)
         const response = await axios.post(
             `https://api-inference.huggingface.co/models/${model}`,
             { inputs, parameters, options },
@@ -24,6 +23,6 @@ export async function makeModelRequest(
         return { success: true, data: response.data }
     } catch (err) {
         console.error(err)
-        return { success: false, data: undefined }
+        return { success: false, data: err }
     }
 }

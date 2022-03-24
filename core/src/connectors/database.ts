@@ -96,8 +96,9 @@ export class database {
     const query =
       'SELECT * FROM events WHERE agent=$1 AND sender=$2 AND client=$3 AND channel=$4 AND type=$5'
     const values = [agent, sender, client, channel, type]
-
+    console.log('values are', values)
     const row = await this.client.query(query, values)
+    console.log("row is", row)
     if (row && row.rows && row.rows.length > 0) {
       console.log('got ' + row.rows.length + ' rows')
       row.rows.sort(function (
