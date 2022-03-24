@@ -2,7 +2,12 @@ import { usePubSub } from '@/contexts/PubSubProvider'
 import { InspectorData } from '@latitudegames/thoth-core/types'
 import { createContext, useContext, useEffect, useState } from 'react'
 
-type InspectorContext = {}
+type InspectorContext = {
+  inspectorData: InspectorData | null
+  textEditorData: Partial<InspectorData> | null
+  saveTextEditor: Function
+  saveInspector: Function
+}
 
 const Context = createContext<InspectorContext>(undefined!)
 
@@ -13,12 +18,15 @@ const InspectorProvider = ({ children, tab }) => {
 
   const [inspectorData, setInspectorData] = useState<InspectorData | null>(null)
 
+  const [textEditorData, setTextEditorData] = useState({})
+
   // inspector subscription
   useEffect(() => {
     return subscribe(
       events.$INSPECTOR_SET(tab.id),
       (event, data: InspectorData) => {
         if (data?.nodeId !== inspectorData?.nodeId) setInspectorData(null)
+
         setInspectorData(data)
 
         if (!data.dataControls) return
@@ -28,21 +36,31 @@ const InspectorProvider = ({ children, tab }) => {
         Object.entries(data.dataControls).forEach(([, control]) => {
           if (control?.options?.editor) {
             // we relay data to the text editor component for display here as well.
-            // const textData = {
-            //   data: data.data[control.dataKey],
-            //   nodeId: data.nodeId,
-            //   name: data.name,
-            //   control: control,
-            //   options: control.options,
-            // }
-            // setTextEditorData(textData)
+            const textData = {
+              data: data.data[control.dataKey],
+              nodeId: data.nodeId,
+              name: data.name,
+              control: control,
+              options: control.options,
+            }
+
+            setTextEditorData(textData)
           }
         })
       }
     )
   }, [events, subscribe, publish])
 
-  const publicInterface: InspectorContext = {}
+  const saveTextEditor = () => {}
+
+  const saveInspector = () => {}
+
+  const publicInterface: InspectorContext = {
+    inspectorData,
+    textEditorData,
+    saveTextEditor,
+    saveInspector,
+  }
 
   return <Context.Provider value={publicInterface}>{children}</Context.Provider>
 }
