@@ -38,7 +38,7 @@ export interface ThothInterfaceContext extends EngineContext {
 
 const Context = createContext<ThothInterfaceContext>(undefined!)
 
-export const useRete = () => useContext(Context)
+export const useThothInterface = () => useContext(Context)
 
 const ReteProvider = ({ children, tab }) => {
   const { events, publish, subscribe } = usePubSub()
