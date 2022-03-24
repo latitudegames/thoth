@@ -60,7 +60,7 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       dataKey: 'model',
       name: 'Model',
       defaultValue: (node.data?.model as string) || 'davinci',
-      values: ['vanilla-davinci', 'aid-jumbo', 'vanilla-jumbo']
+      values: ['vanilla-davinci', 'aid-jumbo', 'vanilla-jumbo'],
     })
 
     const inputGenerator = new SocketGeneratorControl({
@@ -126,7 +126,8 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
 
     const fewshot = (node.data.fewshot as string) || ''
     const stopSequence = node.data.stop as string
-    const template = Handlebars.compile(fewshot)
+
+    const template = Handlebars.compile(fewshot, { noEscape: true })
     const prompt = template(inputs)
 
     const stop = node?.data?.stop
@@ -134,7 +135,7 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
           if (i.includes('\n')) return i
           return i.trim()
         })
-      : ""
+      : ''
 
     const tempData = node.data.temp as string
     const temperature = tempData ? parseFloat(tempData) : 0.7
