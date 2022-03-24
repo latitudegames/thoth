@@ -2,8 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { renderToString } from 'react-dom/server'
 import Terminal from 'react-console-emulator'
 import { useAuth } from '@/contexts/AuthProvider'
-import { usePubSub } from 'client/src/contexts/PubSubProvider'
-import Window from '@/../../../../../components/Window/Window'
+import { usePubSub } from '@/contexts/PubSubProvider'
+import Window from '@components/Window/Window'
 
 export type DebugMessage = {
   message: string
