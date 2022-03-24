@@ -25,8 +25,10 @@ const InspectorProvider = ({ children, tab }) => {
   // inspector subscription
   useEffect(() => {
     return subscribe(SET_INSPECTOR, (_, data: InspectorData) => {
+      // If the incoming data and existing data are at odds, clear inspector data
       if (data?.nodeId !== inspectorData?.nodeId) setInspectorData(null)
 
+      // Set the inspector
       setInspectorData(data)
 
       if (!data.dataControls) return
@@ -47,6 +49,20 @@ const InspectorProvider = ({ children, tab }) => {
           setTextEditorData(textData)
         }
       })
+    })
+  }, [events, subscribe, publish])
+
+  // text editor subscription
+  useEffect(() => {
+    return subscribe(events.$TEXT_EDITOR_SET(tab.id), (event, data) => {
+      setTextEditorData(data)
+    })
+  }, [events, subscribe, publish])
+
+  // clear text editor subscription
+  useEffect(() => {
+    return subscribe(events.$TEXT_EDITOR_CLEAR(tab.id), () => {
+      setTextEditorData({})
     })
   }, [events, subscribe, publish])
 
