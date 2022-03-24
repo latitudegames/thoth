@@ -34,8 +34,8 @@ module.exports = () => {
     resolve: {
       alias: {
         '@': path.resolve(__dirname, 'src'),
-        '@thoth': path.resolve(__dirname, 'src/features/Thoth'),
-        '@common': path.resolve(__dirname, 'src/features/common'),
+        '@thoth': path.resolve(__dirname, 'src/screens/Thoth'),
+        '@common': path.resolve(__dirname, 'src/screens/components'),
       },
       extensions: ['.ts', '.tsx', '.js', '.jsx', '.json', '.css'],
       fallback: {

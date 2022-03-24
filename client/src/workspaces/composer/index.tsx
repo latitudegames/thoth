@@ -1,0 +1,83 @@
+import { useEffect, useRef } from 'react'
+
+import { useEditor } from '@/workspaces/contexts/EditorProvider'
+import { Layout } from '@/workspaces/contexts/LayoutProvider'
+import { useLazyGetSpellQuery, useSaveSpellMutation } from '@/state/api/spells'
+import { debounce } from 'client/src/utils/debounce'
+import EditorWindow from 'client/Thoth/windows/EditorWindow'
+import EventHandler from '@/screens/Thoth/components/EventHandler'
+import Inspector from 'client/Thoth/windows/InspectorWindow'
+import Playtest from 'client/Thoth/windows/PlaytestWindow'
+import StateManager from '@/workspaces/composer/windows/StateManagerWindow'
+import TextEditor from 'client/Thoth/windows/TextEditorWindow'
+import DebugConsole from 'client/Thoth/windows/DebugConsole'
+import { Spell } from '../../state/api/spells'
+
+const Workspace = ({ tab, tabs, pubSub }) => {
+  const spellRef = useRef<Spell>()
+  const [loadSpell, { data: spellData }] = useLazyGetSpellQuery()
+  const [saveSpell] = useSaveSpellMutation()
+  const { editor } = useEditor()
+
+  // Set up autosave for the workspaces
+  useEffect(() => {
+    if (!editor?.on) return
+    return editor.on(
+      'save nodecreated noderemoved connectioncreated connectionremoved nodetranslated',
+      debounce(() => {
+        if (tab.type === 'spell') {
+          saveSpell({ ...spellRef.current, chain: editor.toJSON() })
+        }
+      }, 500)
+    )
+  }, [editor])
+
+  useEffect(() => {
+    if (!spellData) return
+    spellRef.current = spellData
+  }, [spellData])
+
+  useEffect(() => {
+    if (!tab || !tab.spellId) return
+    loadSpell(tab.spellId)
+  }, [tab])
+
+  const factory = tab => {
+    return node => {
+      const props = {
+        tab,
+        node,
+      }
+      const component = node.getComponent()
+      switch (component) {
+        case 'stateManager':
+          return <StateManager {...props} />
+        case 'playtest':
+          return <Playtest {...props} />
+        case 'inspector':
+          return <Inspector {...props} />
+        case 'textEditor':
+          return <TextEditor {...props} />
+        case 'editorWindow':
+          return <EditorWindow {...props} />
+        case 'debugConsole':
+          return <DebugConsole {...props} />
+        default:
+          return <p></p>
+      }
+    }
+  }
+
+  return (
+    <>
+      <EventHandler tab={tab} pubSub={pubSub} />
+      <Layout json={tab.layoutJson} factory={factory(tab)} tab={tab} />
+    </>
+  )
+}
+
+const Wrapped = props => {
+  return <Workspace {...props} />
+}
+
+export default Wrapped
