@@ -40,6 +40,7 @@ export class TriggerOut extends ThothComponent<WorkerReturn> {
     this.category = 'I/O'
     this.displayName = 'Trigger Out'
     this.info = info
+    this.deprecated = true
   }
 
   // the builder is used to "assemble" the node component.

@@ -16,6 +16,17 @@ type InspectorConstructor = {
 // todo improve this typing
 type DataControlData = Record<string, any>
 
+export type InspectorData = {
+  name: string
+  nodeId: number
+  dataControls: Record<string, any>
+  data: Record<string, unknown>
+  category?: string
+  info: string
+  deprecated: boolean
+  deprecationMessage: string
+}
+
 export class Inspector {
   // Stub of function.  Can be a nodes catch all onData
   cache: Record<string, any> = {}
@@ -238,7 +249,7 @@ export class Inspector {
   get() {}
 
   // returns all data prepared for the pubsub to send it.
-  data() {
+  data(): InspectorData {
     const dataControls = Array.from(this.dataControls.entries()).reduce(
       (acc, [key, val]) => {
         const cache = this.node?.data?.dataControls as DataControlData

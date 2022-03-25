@@ -90,6 +90,8 @@ export class Task {
       fromNode,
     } = options
 
+    console.log({ data })
+
     // garbage means that the nodes output value will be reset after it is all done.
     if (needReset) garbage.push(this)
 
