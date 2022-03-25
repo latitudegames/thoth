@@ -1,4 +1,3 @@
-import { EngineContext } from '@latitudegames/thoth-core'
 import { useContext, createContext, useRef, useEffect } from 'react'
 
 import { postEnkiCompletion } from '../../services/game-api/enki'
@@ -14,6 +13,7 @@ import {
   useGetSpellQuery,
   useSaveSpellMutation,
 } from '@/state/api/spells'
+import { EngineContext } from '@latitudegames/thoth-core/src/engine'
 
 /*
 Some notes here.  The new rete provider, not to be confused with the old rete provider renamed to the editor provider, is designed to serve as the single source of truth for interfacing with the rete internal system.  This unified interface will also allow us to replicate the same API in the server, where rete expects certain functions to exist but doesn't care what is behind these functions so long as they work.

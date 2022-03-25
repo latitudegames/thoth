@@ -85,7 +85,7 @@ const executeHandler = async (ctx: Koa.Context) => {
     }
 
     out.defaultGreeting = await msg
-    database.instance.setEvents(
+    database.instance.createEvent(
       'conversation',
       agent,
       'web',
@@ -182,42 +182,6 @@ const deleteAgentInstanceHandler = async (ctx: Koa.Context) => {
   ctx.body = await database.instance.deleteAgentInstance(id)
 }
 
-const setFacts = async (ctx: Koa.Context) => {
-  const agent = ctx.request.body.agent
-  const speaker = ctx.request.body.speaker
-  const client = ctx.request.body.client
-  const channel = ctx.request.body.channel
-  const text = ctx.request.body.facts as string
-
-  console.log("Request body was", ctx.request.body)
-
-  const response = await database.instance.setEvents('facts', agent, client, channel, speaker, text)
-
-  return (ctx.body = response)
-}
-
-
-const getFacts = async (ctx: Koa.Context) => {
-  const agent = ctx.request.query.agent
-  // const speaker = ctx.request.query.speaker
-  const client = ctx.request.query.client
-  const channel = ctx.request.query.channel
-  const maxCount = parseInt(ctx.request.query.maxCount as string)
-  const conversation = await database.instance.getEvents(
-    'facts',
-    agent,
-    null,
-    client,
-    channel,
-    true,
-    maxCount
-  )
-
-  console.log('facts', 'conv:', conversation)
-
-  return (ctx.body = conversation)
-}
-
 const getEvent = async (ctx: Koa.Context) => {
   const type = ctx.request.query.type as string
   const agent = ctx.request.query.agent
@@ -248,7 +212,7 @@ const createEvent = async (ctx: Koa.Context) => {
   const text = ctx.request.body.text
   const type = ctx.request.body.type
 
-  await database.instance.setEvents(
+  await database.instance.createEvent(
     type,
     agent,
     client,
@@ -664,12 +628,6 @@ export const agents: Route[] = [
     path: '/agentInstance/:id',
     access: noAuth,
     delete: deleteAgentInstanceHandler,
-  },
-  {
-    path: '/facts',
-    access: noAuth,
-    get: getFacts,
-    post: setFacts,
   },
   {
     path: '/event',

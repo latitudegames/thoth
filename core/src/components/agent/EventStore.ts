@@ -58,7 +58,7 @@ export class EventStore extends ThothComponent<Promise<void>> {
   builder(node: ThothNode) {
     const agentInput = new Rete.Input('agent', 'Agent', stringSocket)
     const speakerInput = new Rete.Input('speaker', 'Speaker', stringSocket)
-    const factsInp = new Rete.Input('convs', 'Primary Event', stringSocket)
+    const factsInp = new Rete.Input('primary', 'Primary Event', stringSocket)
 
     const nameInput = new InputControl({
       dataKey: 'name',
@@ -74,7 +74,7 @@ export class EventStore extends ThothComponent<Promise<void>> {
     node.inspector.add(nameInput).add(type)
 
     const factaInp = new Rete.Input(
-      'conva',
+      'secondary',
       'Secondary Event (Opt)',
       stringSocket
     )
@@ -103,14 +103,14 @@ export class EventStore extends ThothComponent<Promise<void>> {
     console.log('Input is', inputs)
     const speaker = inputs['speaker'][0] as string
     const agent = inputs['agent'][0] as string
-    const convSpeaker = (inputs['convs'] && inputs['convs'][0]) as string
-    const convAgent = (inputs['conva'] && inputs['conva'][0]) as string
+    const primary = (inputs['primary'] && inputs['primary'][0]) as string
+    const secondary = (inputs['secondary'] && inputs['secondary'][0]) as string
     const client = inputs['client'][0] as string
     const channel = inputs['channel'][0] as string
 
-    console.log('convSpeaker is', convSpeaker)
+    console.log('convSpeaker is', primary)
 
-    if (!convSpeaker) return console.log('Event null, so skipping')
+    if (!primary) return console.log('Event null, so skipping')
 
     const typeData = node?.data?.type as string
     const type =
@@ -125,7 +125,7 @@ export class EventStore extends ThothComponent<Promise<void>> {
       type,
       agent,
       speaker,
-      convSpeaker,
+      primary,
       client,
       channel
     )
@@ -136,7 +136,7 @@ export class EventStore extends ThothComponent<Promise<void>> {
         type,
         agent,
         agent,
-        convAgent,
+        secondary,
         client,
         channel
       )

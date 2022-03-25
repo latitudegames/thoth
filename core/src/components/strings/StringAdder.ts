@@ -72,9 +72,11 @@ export class StringAdder extends ThothComponent<Promise<WorkerReturn>> {
       node?.data?.newLineStarting === true ||
       node?.data?.newLineStarting === 'true'
     console.log('new output:', input + (newLineStarting ? '\n' : '') + newInput)
-
+    const newstring = input + (newLineStarting ? '\n' : '') + newInput
+    // get the last 1000 characters of newstring, if there are more than 1000 characters
+    const newstringTruncated = newstring.slice(-1000)
     return {
-      output: input + (newLineStarting ? '\n' : '') + newInput,
+      output: newstringTruncated,
     }
   }
 }
