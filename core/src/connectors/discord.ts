@@ -666,7 +666,7 @@ export class discord_client {
 
     const oldResponse = this.getResponse(channel.id, id)
     if (oldResponse === undefined) {
-      await channel.messages.fetch(id).then(async msg => { })
+      await channel.messages.fetch(id).then(async msg => {})
       log('message not found')
       return
     }
@@ -1389,7 +1389,9 @@ export class discord_client {
     } else {
       this.discord_starting_words = discord_starting_words?.split(',')
       for (let i = 0; i < this.discord_starting_words.length; i++) {
-        this.discord_starting_words[i] = this.discord_starting_words[i].trim()
+        this.discord_starting_words[i] = this.discord_starting_words[i]
+          .trim()
+          .toLowerCase()
       }
     }
     this.discord_bot_name_regex = discord_bot_name_regex

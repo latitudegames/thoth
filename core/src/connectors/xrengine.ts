@@ -215,11 +215,14 @@ export class xrengine_client {
     isVoice
   ) {
     console.log('handling message:', text)
+    if (text.startsWith('/') || text.startsWith('//')) return
     if (text.includes('[') && text.includes(']')) return
     else if (text.includes('joined the layer')) {
       const user = text.replace('joined the layer', '')
 
-      const response = await handleCustomInput(
+      await this.handleXREngineResponse('Welcome ' + user, false, sender, false)
+
+      /*const response = await handleCustomInput(
         '[welcome]' + user,
         sender,
         this.settings.xrengine_bot_name ?? 'Agent',
@@ -228,7 +231,7 @@ export class xrengine_client {
         channelId,
         true
       )
-      await this.handleXREngineResponse(response, false, sender, isVoice)
+      await this.handleXREngineResponse(response, false, sender, isVoice)*/
     } else if (text.includes('left the layer') || text.length === 0) return
     else if (text.includes('in harassment range with')) return
     else if (text.includes('in range with')) return
@@ -283,6 +286,14 @@ export class xrengine_client {
           return
         }
 
+        if (
+          this.UsersInHarassmentRange[sender] !== undefined &&
+          this.UsersInIntimateRange[sender] !== undefined &&
+          this.UsersInRange[sender] !== undefined
+        ) {
+          return
+        }
+
         let content = text
         log('handling message: ' + content)
         await this.addMessageToHistory(channelId, id, sender, content)
@@ -305,18 +316,27 @@ export class xrengine_client {
         let startConv = false
         let startConvName = ''
         const trimmed = content.trimStart()
-        if (trimmed.toLowerCase().startsWith('hi')) {
-          const parts = trimmed.split(' ')
-          if (parts.length > 1) {
-            if (!startsWithCapital(parts[1])) {
-              startConv = true
+        for (let i = 0; i < this.settings.xrengine_starting_words.length; i++) {
+          if (
+            trimmed
+              .toLowerCase()
+              .startsWith(this.settings.xrengine_starting_words[i])
+          ) {
+            const parts = trimmed.split(' ')
+            if (parts.length > 1) {
+              if (!startsWithCapital(parts[1])) {
+                startConv = true
+              } else {
+                startConv = false
+                startConvName = parts[1]
+              }
             } else {
-              startConv = false
-              startConvName = parts[1]
-            }
-          } else {
-            if (trimmed.toLowerCase() === 'hi') {
-              startConv = true
+              if (
+                trimmed.toLowerCase() ===
+                this.settings.xrengine_starting_words[i]
+              ) {
+                startConv = true
+              }
             }
           }
         }
@@ -391,7 +411,7 @@ export class xrengine_client {
           'xr-engine',
           channelId,
           this.entity,
-          this.spell_handler,
+          this.settings.xrengine_spell_handler_incoming,
           this.spell_version
         )
 
@@ -498,6 +518,18 @@ export class xrengine_client {
     this.agent = agent
     this.settings = settings
     this.entity = settings.entity
+
+    let temp = this.settings.xrengine_starting_words
+    if (temp && temp !== undefined) {
+      temp = temp.split(',')
+    } else {
+      temp = ['hi', 'hey']
+    }
+    this.settings.xrengine_starting_words = []
+    for (let i = 0; i < temp.length; i++) {
+      this.settings.xrengine_starting_words.push(temp[i].toLowerCase())
+    }
+
     //generateVoice('hello there', (buf, path) => {}, false)
     console.log('creating xr engine client', settings)
 
@@ -966,18 +998,24 @@ class XREngineBot {
                 this.playEmote('wave')
               }
               this.xrengineclient.UsersInRange[player] = value
+              this.xrengineclient.UsersInIntimateRange[player] = undefined
+              this.xrengineclient.UsersInHarassmentRange[player] = undefined
             } else if (mode == 'intimate') {
               if (
                 this.xrengineclient.UsersInIntimateRange[player] === undefined
               ) {
               }
               this.xrengineclient.UsersInIntimateRange[player] = value
+              this.xrengineclient.UsersInRange[player] = undefined
+              this.xrengineclient.UsersInHarassmentRange[player] = undefined
             } else if (mode == 'harassment') {
               if (
                 this.xrengineclient.UsersInHarassmentRange[player] === undefined
               ) {
               }
               this.xrengineclient.UsersInHarassmentRange[player] = value
+              this.xrengineclient.UsersInRange[player] = undefined
+              this.xrengineclient.UsersInIntimateRange[player] = undefined
             } else if (mode == 'lookAt') {
               this.xrengineclient.UsersLookingAt[player] = value
             }
@@ -1260,5 +1298,5 @@ class XREngineBot {
 }
 
 function log(text: string) {
-  // console.log(text)
+  console.log(text)
 }

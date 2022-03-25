@@ -23,6 +23,7 @@ export interface agent_instanceAttributes {
   xrengine_spell_handler_feed?: string
   xrengine_bot_name?: string
   xrengine_bot_name_regex?: string
+  xrengine_starting_words?: string
 }
 
 export type agent_instancePk = 'id'
@@ -43,6 +44,7 @@ export type agent_instanceOptionalAttributes =
   | 'xrengine_spell_handler_feed'
   | 'xrengine_bot_name'
   | 'xrengine_bot_name_regex'
+  | 'xrengine_starting_words'
   | 'enabled'
   | 'updated_at'
 export type agent_instanceCreationAttributes = Optional<
@@ -52,7 +54,8 @@ export type agent_instanceCreationAttributes = Optional<
 
 export class agent_instance
   extends Model<agent_instanceAttributes, agent_instanceCreationAttributes>
-  implements agent_instanceAttributes {
+  implements agent_instanceAttributes
+{
   id?: number
   instanceId?: number
   personality?: string
@@ -73,6 +76,7 @@ export class agent_instance
   xrengine_spell_handler_feed?: string
   xrengine_bot_name?: string
   xrengine_bot_name_regex?: string
+  xrengine_starting_words?: string
   static initModel(sequelize: Sequelize.Sequelize): typeof agent_instance {
     return agent_instance.init(
       {
@@ -155,6 +159,10 @@ export class agent_instance
           allowNull: true,
         },
         xrengine_bot_name_regex: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
+        xrengine_starting_words: {
           type: DataTypes.TEXT,
           allowNull: true,
         },
