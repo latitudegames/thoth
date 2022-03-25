@@ -191,41 +191,42 @@ const setFacts = async (ctx: Koa.Context) => {
 
   console.log("Request body was", ctx.request.body)
 
-  await database.instance.setEvents('facts', agent, client, channel, speaker, text)
+  const response = await database.instance.setEvents('facts', agent, client, channel, speaker, text)
 
-  return (ctx.body = 'ok')
+  return (ctx.body = response)
 }
 
 
 const getFacts = async (ctx: Koa.Context) => {
   const agent = ctx.request.query.agent
-  const speaker = ctx.request.query.speaker
+  // const speaker = ctx.request.query.speaker
   const client = ctx.request.query.client
   const channel = ctx.request.query.channel
   const maxCount = parseInt(ctx.request.query.maxCount as string)
   const conversation = await database.instance.getEvents(
     'facts',
     agent,
-    speaker,
+    null,
     client,
     channel,
     true,
     maxCount
   )
 
-  console.log('facts, query:', ctx.request.query, 'conv:', conversation)
+  console.log('facts', 'conv:', conversation)
 
   return (ctx.body = conversation)
 }
 
-const getConversation = async (ctx: Koa.Context) => {
+const getEvent = async (ctx: Koa.Context) => {
+  const type = ctx.request.query.type as string
   const agent = ctx.request.query.agent
   const speaker = ctx.request.query.speaker
   const client = ctx.request.query.client
   const channel = ctx.request.query.channel
   const maxCount = parseInt(ctx.request.query.maxCount as string)
   const conversation = await database.instance.getEvents(
-    'conversation',
+    type,
     agent,
     speaker,
     client,
@@ -239,20 +240,21 @@ const getConversation = async (ctx: Koa.Context) => {
   return (ctx.body = conversation)
 }
 
-const setConversation = async (ctx: Koa.Context) => {
+const createEvent = async (ctx: Koa.Context) => {
   const agent = ctx.request.body.agent
   const speaker = ctx.request.body.speaker
   const client = ctx.request.body.client
   const channel = ctx.request.body.channel
-  const conversation = ctx.request.body.conv
+  const text = ctx.request.body.text
+  const type = ctx.request.body.type
 
   await database.instance.setEvents(
-    'conversation',
+    type,
     agent,
     client,
     channel,
     speaker,
-    conversation
+    text
   )
 
   return (ctx.body = 'ok')
@@ -670,10 +672,10 @@ export const agents: Route[] = [
     post: setFacts,
   },
   {
-    path: '/conversation',
+    path: '/event',
     access: noAuth,
-    get: getConversation,
-    post: setConversation,
+    get: getEvent,
+    post: createEvent,
   },
   {
     path: '/relationship_matrix',

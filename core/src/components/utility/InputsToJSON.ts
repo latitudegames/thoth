@@ -33,7 +33,7 @@ export class InputsToJSON extends ThothComponent<Promise<WorkerReturn>> {
       },
     }
 
-    this.category = 'Agents'
+    this.category = 'Utility'
     this.display = true
     this.info = info
   }

@@ -11,28 +11,28 @@ import {
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../../types'
+import { InputControl } from '../../dataControls/InputControl'
 import { EngineContext } from '../../engine'
 import { triggerSocket, stringSocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
-const info =
-  'Conversation Store is used to store conversation for an agent and user'
+const info = 'Event Store is used to store events for an agent and user'
 
-export async function setConversation(
+export async function createEvent(
+  type: string,
   agent: string,
   speaker: string,
-  conv: string,
+  text: string,
   client: string,
   channel: string
 ) {
   const response = await axios.post(
-    `${
-      process.env.REACT_APP_API_ROOT_URL ?? 'http://localhost:8001'
-    }/conversation`,
+    `${process.env.REACT_APP_API_ROOT_URL ?? 'http://localhost:8001'}/event`,
     {
+      type,
       agent,
       speaker,
-      conv,
+      text,
       client,
       channel,
     }
@@ -40,9 +40,9 @@ export async function setConversation(
   return response.data
 }
 
-export class ConversationStore extends ThothComponent<Promise<void>> {
+export class EventStore extends ThothComponent<Promise<void>> {
   constructor() {
-    super('Conversation Store')
+    super('Store Event')
 
     this.task = {
       outputs: {
@@ -58,12 +58,26 @@ export class ConversationStore extends ThothComponent<Promise<void>> {
   builder(node: ThothNode) {
     const agentInput = new Rete.Input('agent', 'Agent', stringSocket)
     const speakerInput = new Rete.Input('speaker', 'Speaker', stringSocket)
-    const factsInp = new Rete.Input(
-      'convs',
-      'Conversation Speaker',
+    const factsInp = new Rete.Input('convs', 'Primary Event', stringSocket)
+
+    const nameInput = new InputControl({
+      dataKey: 'name',
+      name: 'Input name',
+    })
+
+    const type = new InputControl({
+      dataKey: 'type',
+      name: 'Type',
+      icon: 'moon',
+    })
+
+    node.inspector.add(nameInput).add(type)
+
+    const factaInp = new Rete.Input(
+      'conva',
+      'Secondary Event (Opt)',
       stringSocket
     )
-    const factaInp = new Rete.Input('conva', 'Conversation Agent', stringSocket)
     const clientInput = new Rete.Input('client', 'Client', stringSocket)
     const channelInput = new Rete.Input('channel', 'Channel', stringSocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
@@ -89,12 +103,26 @@ export class ConversationStore extends ThothComponent<Promise<void>> {
     console.log('Input is', inputs)
     const speaker = inputs['speaker'][0] as string
     const agent = inputs['agent'][0] as string
-    const convSpeaker = inputs['convs'][0] as string
-    const convAgent = inputs['conva'][0] as string
+    const convSpeaker = (inputs['convs'] && inputs['convs'][0]) as string
+    const convAgent = (inputs['conva'] && inputs['conva'][0]) as string
     const client = inputs['client'][0] as string
     const channel = inputs['channel'][0] as string
 
-    const respUser = await setConversation(
+    console.log('convSpeaker is', convSpeaker)
+
+    if (!convSpeaker) return console.log('Event null, so skipping')
+
+    const typeData = node?.data?.type as string
+    const type =
+      typeData !== undefined && typeData.length > 0
+        ? typeData.toLowerCase().trim()
+        : 'none'
+
+    console.log('node data is', node.data)
+    console.log('node.data', node.data)
+
+    const respUser = await createEvent(
+      type,
       agent,
       speaker,
       convSpeaker,
@@ -103,13 +131,16 @@ export class ConversationStore extends ThothComponent<Promise<void>> {
     )
 
     if (!silent) node.display(respUser.data)
-    const respAgent = await setConversation(
-      agent,
-      agent,
-      convAgent,
-      client,
-      channel
-    )
-    if (!silent) node.display(respAgent.data)
+    if (type === 'conversation') {
+      const respAgent = await createEvent(
+        type,
+        agent,
+        agent,
+        convAgent,
+        client,
+        channel
+      )
+      if (!silent) node.display(respUser + '|' + respAgent)
+    }
   }
 }

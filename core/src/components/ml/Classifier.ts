@@ -82,14 +82,17 @@ export class Classifier extends ThothComponent<Promise<InputReturn>> {
       candidate_labels: labelData,
     }
 
+    const _parameters = { candidate_labels: parameters }
+
     const resp = await axios.post(
-      `${process.env.REACT_APP_API_URL}/hf_request`,
+      `${process.env.REACT_APP_API_URL ??
+      process.env.API_URL ??
+      'https://localhost:8001'
+      }/hf_request`,
       {
         inputs: inputData as string,
-        model:
-          (inputs['modelName'] && inputs['modelName'][0]) ??
-          'facebook/bart-large-mnli',
-        parameters: parameters,
+        model: 'facebook/bart-large-mnli',
+        parameters: _parameters,
         options: undefined,
       }
     )
@@ -98,9 +101,9 @@ export class Classifier extends ThothComponent<Promise<InputReturn>> {
 
     if (!silent) {
       if (!success) node.display(error)
-      else node.display('Top label is ' + data.labels[0])
+      else node.display('Top label is ' + data.labels)
     }
-    console.log('Top label is ' + data.labels[0])
-    return { output: data.labels[0] }
+    console.log('Top label is ' + data.labels)
+    return { output: (data.labels && data.labels[0]) ?? 'error' }
   }
 }
