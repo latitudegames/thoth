@@ -101,7 +101,6 @@ export class InputComponent extends ThothComponent<InputReturn> {
         }
       | undefined
 
-    console.log('about to set so data is ', data)
     const togglePlaytest = new PlaytestControl({
       dataKey: 'playtestToggle',
       name: 'Receive from playtest input',
@@ -121,8 +120,6 @@ export class InputComponent extends ThothComponent<InputReturn> {
     })
 
     node.inspector.add(nameInput).add(togglePlaytest).add(toggleDefault)
-
-    console.log({ node })
 
     const value = node.data.text ? node.data.text : 'Input text here'
     const input = new TextInputControl({

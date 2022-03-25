@@ -15,7 +15,6 @@ const SwitchControl = ({ control, updateData, initialValue }) => {
     const playtest = e.target.checked
     setChecked(playtest)
 
-    console.log('updating data')
     updateData({
       [dataKey]: {
         receivePlaytest: playtest,
