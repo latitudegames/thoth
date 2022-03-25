@@ -19,6 +19,7 @@ import SocketGenerator from './plugins/socketGenerator'
 import TaskPlugin from './plugins/taskPlugin'
 import { PubSubContext, ThothComponent } from './thoth-component'
 import DebuggerPlugin from './plugins/debuggerPlugin'
+import KeyCodePlugin from './plugins/keyCodePlugin'
 export class ThothEditor extends NodeEditor<EventsTypes> {
   pubSub: PubSubContext
   thoth: EngineContext
