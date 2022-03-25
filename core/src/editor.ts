@@ -138,6 +138,7 @@ export const initEditor = async function ({
   editor.use(DebuggerPlugin)
   editor.use(ModulePlugin, { engine, modules } as unknown as void)
   editor.use(TaskPlugin)
+  editor.use(KeyCodePlugin)
 
   // ███╗   ███╗ ██████╗ ██████╗ ██╗   ██╗██╗     ███████╗███████╗
   // ████╗ ████║██╔═══██╗██╔══██╗██║   ██║██║     ██╔════╝██╔════╝
