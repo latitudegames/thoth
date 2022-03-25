@@ -14,6 +14,13 @@ export async function handleInput(
   spell_handler: string,
   spell_version: string = 'latest'
 ) {
+  if (spell_handler === undefined) {
+    spell_handler = 'default'
+  }
+  if (spell_version === undefined) {
+    spell_version = 'latest'
+  }
+
   const url = encodeURI(
     `http://localhost:8001/chains/${spell_handler}/${spell_version}`
   )
@@ -25,7 +32,7 @@ export async function handleInput(
       Agent: agent,
       Client: client,
       ChannelID: channelId,
-      Entity: entity
+      Entity: entity,
     },
   })
   let index = undefined

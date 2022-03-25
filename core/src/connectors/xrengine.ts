@@ -220,7 +220,9 @@ export class xrengine_client {
     else if (text.includes('joined the layer')) {
       const user = text.replace('joined the layer', '')
 
-      const response = await handleCustomInput(
+      await this.handleXREngineResponse('Welcome ' + user, false, sender, false)
+
+      /*const response = await handleCustomInput(
         '[welcome]' + user,
         sender,
         this.settings.xrengine_bot_name ?? 'Agent',
@@ -229,7 +231,7 @@ export class xrengine_client {
         channelId,
         true
       )
-      await this.handleXREngineResponse(response, addPing, _sender, isVoice)
+      await this.handleXREngineResponse(response, false, sender, isVoice)*/
     } else if (text.includes('left the layer') || text.length === 0) return
     else if (text.includes('in harassment range with')) return
     else if (text.includes('in range with')) return
@@ -410,7 +412,7 @@ export class xrengine_client {
           'xr-engine',
           channelId,
           this.entity,
-          this.spell_handler,
+          this.settings.xrengine_spell_handler_incoming,
           this.spell_version
         )
 
@@ -997,18 +999,24 @@ class XREngineBot {
                 this.playEmote('wave')
               }
               this.xrengineclient.UsersInRange[player] = value
+              this.xrengineclient.UsersInIntimateRange[player] = undefined
+              this.xrengineclient.UsersInHarassmentRange[player] = undefined
             } else if (mode == 'intimate') {
               if (
                 this.xrengineclient.UsersInIntimateRange[player] === undefined
               ) {
               }
               this.xrengineclient.UsersInIntimateRange[player] = value
+              this.xrengineclient.UsersInRange[player] = undefined
+              this.xrengineclient.UsersInHarassmentRange[player] = undefined
             } else if (mode == 'harassment') {
               if (
                 this.xrengineclient.UsersInHarassmentRange[player] === undefined
               ) {
               }
               this.xrengineclient.UsersInHarassmentRange[player] = value
+              this.xrengineclient.UsersInRange[player] = undefined
+              this.xrengineclient.UsersInIntimateRange[player] = undefined
             } else if (mode == 'lookAt') {
               this.xrengineclient.UsersLookingAt[player] = value
             }
