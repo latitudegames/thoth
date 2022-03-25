@@ -19,7 +19,7 @@ import { ThothComponent } from '../../thoth-component'
 async function getEvent(
   type: string,
   agent: string,
-  speaker: string,
+  speaker: null | string,
   client: string,
   channel: string,
   maxCount = 10

@@ -43,8 +43,8 @@ export class database {
       host: process.env.PGHOST,
       ssl: PGSSL
         ? {
-          rejectUnauthorized: false,
-        }
+            rejectUnauthorized: false,
+          }
         : false,
     })
     this.client.connect()
@@ -62,7 +62,7 @@ export class database {
     }
   }
 
-  async setEvents(
+  async createEvent(
     type: string,
     agent: any,
     client: any,
@@ -94,8 +94,8 @@ export class database {
     maxCount: number = 10
   ) {
     const query =
-      'SELECT * FROM events WHERE agent=$1 AND sender=$2 AND client=$3 AND channel=$4 AND type=$5'
-    const values = [agent, sender, client, channel, type]
+      'SELECT * FROM events WHERE agent=$1 AND client=$2 AND channel=$3 AND type=$4'
+    const values = [agent, client, channel, type]
 
     console.log('getEvents')
     console.log(type, agent, sender, client, channel, asString, maxCount)
@@ -106,12 +106,12 @@ export class database {
       return asString ? '' : []
     }
 
-    row.rows.sort(function (
-      a: { date: string | number | Date },
-      b: { date: string | number | Date }
-    ) {
-      return new Date(b.date) - new Date(a.date)
-    })
+    // row.rows.sort(function (
+    //   a: { date: string | number | Date },
+    //   b: { date: string | number | Date }
+    // ) {
+    //   return new Date(b.date) - new Date(a.date)
+    // })
 
     console.log('got ' + row.rows.length + ' rows')
 
