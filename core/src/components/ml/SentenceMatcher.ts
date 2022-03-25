@@ -1,8 +1,10 @@
 /* eslint-disable no-console */
 /* eslint-disable require-await */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import axios from 'axios'
 import Rete from 'rete'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-ignore
+import similarity from 'similarity'
 
 import {
   NodeData,
@@ -43,12 +45,7 @@ export class SentenceMatcher extends ThothComponent<Promise<InputReturn>> {
       name: 'Component Name',
     })
 
-    const labelControl = new InputControl({
-      dataKey: 'labels',
-      name: 'Labels',
-    })
-
-    node.inspector.add(nameControl).add(labelControl)
+    node.inspector.add(nameControl)
     const sentences = new Rete.Input('sentences', 'Sentences', anySocket, true)
     const source = new Rete.Input('source', 'Source', anySocket, true)
 
@@ -74,37 +71,27 @@ export class SentenceMatcher extends ThothComponent<Promise<InputReturn>> {
     const sentences = (inputs['sentences'][0] ??
       inputs['sentences']) as string[]
 
-    const query = {
-      inputs: {
-        source_sentence: sourceSentence,
-        sentences: sentences,
-      },
+    console.log('source setences is', sourceSentence)
+    console.log('sentences are', sentences)
+
+    if (!silent) node.display('Processing')
+
+    let bestScore = 0
+    let bestSentence = ''
+
+    for (const sentence in sentences) {
+      const score = similarity(sourceSentence, sentences[sentence])
+      if (score > bestScore) {
+        console.log('score is', score, sentences[sentence])
+        bestScore = score
+        bestSentence = sentences[sentence]
+      }
     }
 
-    const resp = await axios.post(
-      `${process.env.REACT_APP_API_URL}/hf_request`,
-      query
-    )
-
-    const { data, success, error } = resp.data
-
-    console.log('Response is', data)
-
-    // get the index of the largest number in the data array
-    const maxIndex = data.reduce(
-      (iMax: number, x: number, i: number, arr: { [x: number]: number }) =>
-        x > arr[iMax] ? i : iMax,
-      0
-    )
-
-    console.log('maxIndex is', maxIndex)
-    console.log('sentences[maxIndex] is', sentences[maxIndex])
-
-    if (!silent) {
-      if (!success) node.display(error)
-      else node.display('Top label is ' + sentences[maxIndex])
-    }
-    console.log('Top label is ' + sentences[maxIndex])
-    return { output: sentences[maxIndex] }
+    if (!silent)
+      node.display(
+        'Best Score is: ' + bestScore + ' | Top label is ' + bestSentence
+      )
+    return { output: bestSentence }
   }
 }

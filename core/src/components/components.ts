@@ -1,20 +1,14 @@
 import { AddAgent } from './agent/AddAgent'
-import { AgentManager } from './agent/AgentManager'
 import { AgentTextCompletion } from './agent/AgentTextCompletion'
 import { CacheManagerDelete } from './agent/CacheManagerDelete'
 import { CacheManagerGet } from './agent/CacheManagerGet'
 import { CacheManagerSet } from './agent/CacheManagerSet'
-import { ConversationRecall } from './agent/ConversationRecall'
-import { ConversationStore } from './agent/ConversationStore'
 import { CreateOrGetAgent } from './agent/CreateOrGetAgent'
-import { FactsRecall } from './agent/FactsRecall'
-import { FactsStore } from './agent/FactsStore'
+import { EventRecall } from './agent/EventRecall'
+import { EventStore } from './agent/EventStore'
 import { GetAgentData } from './agent/GetAgentData'
-import { GetAgentFacts } from './agent/GetAgentFacts'
+import { GetAgentPersonality } from './agent/GetAgentPersonality'
 import { InputDestructureComponent } from './agent/InputDestructure'
-import { InputsToJSON } from './agent/InputsToJSON'
-import { RandomGreetingResponse } from './agent/RandomGreetingResponse'
-import { RandomProfanityResponse } from './agent/RandomProfanityResponse'
 import { InputComponent } from './io/Input'
 import { ModuleComponent } from './io/Module'
 import { Output } from './io/Output'
@@ -60,6 +54,7 @@ import { StringEvaluator } from './strings/StringEvaluator'
 import { StringProcessor } from './strings/StringProcessor'
 import { Alert } from './utility/AlertMessage'
 import { Echo } from './utility/Echo'
+import { InputsToJSON } from './utility/InputsToJSON'
 import { ArrayVariable } from './variable/ArrayVariable'
 import { BooleanVariable } from './variable/BooleanVariable'
 import { FewshotVariable } from './variable/FewshotVariable'
@@ -87,19 +82,16 @@ export const components = {
   SummarizeFacts: () => new SummarizeFacts(),
   textToSpeech: () => new TextToSpeech(),
   agentTextCompletion: () => new AgentTextCompletion(),
-  agentManager: () => new AgentManager(),
+  getAgentPersonality: () => new GetAgentPersonality(),
   keywordExtractor: () => new KeywordExtractor(),
   namedEntityRecognition: () => new NamedEntityRecognition(),
   createOrGetAgent: () => new CreateOrGetAgent(),
-  factsStore: () => new FactsStore(),
-  factsRecall: () => new FactsRecall(),
   Classifier: () => new Classifier(),
   getAgentData: () => new GetAgentData(),
-  getAgentFacts: () => new GetAgentFacts(),
   isNullOrUndefined: () => new IsNullOrUndefined(),
   isVariableTrue: () => new IsVariableTrue(),
-  conversationStore: () => new ConversationStore(),
-  conversationRecall: () => new ConversationRecall(),
+  conversationStore: () => new EventStore(),
+  conversationRecall: () => new EventRecall(),
   search: () => new Search(),
   documentGet: () => new DocumentGet(),
   documentDelete: () => new DocumentDelete(),
@@ -112,8 +104,6 @@ export const components = {
   stringEvaluator: () => new StringEvaluator(),
   stringCombiner: () => new StringCombiner(),
   randomStringFromList: () => new RandomStringFromList(),
-  randomGreetingResponse: () => new RandomGreetingResponse(),
-  randomProfanityResponse: () => new RandomProfanityResponse(),
   stringVariable: () => new StringVariable(),
   fewshotVariable: () => new FewshotVariable(),
   stringAdder: () => new StringAdder(),

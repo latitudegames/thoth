@@ -415,7 +415,7 @@ export class telegram_client {
         content = '!ping ' + content
         this.sentMessage(_sender)
       } else {
-        const oldChat = database.instance.getConversation(
+        const oldChat = database.instance.getEvent(
           defaultAgent,
           _sender,
           'telegram',

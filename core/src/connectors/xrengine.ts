@@ -228,7 +228,7 @@ export class xrengine_client {
         channelId,
         true
       )
-      await this.handleXREngineResponse(response, addPing, _sender, isVoice)
+      await this.handleXREngineResponse(response, false, sender, isVoice)
     } else if (text.includes('left the layer') || text.length === 0) return
     else if (text.includes('in harassment range with')) return
     else if (text.includes('in range with')) return
@@ -283,15 +283,14 @@ export class xrengine_client {
           return
         }
 
-        const _sender = sender
         let content = text
         log('handling message: ' + content)
-        await this.addMessageToHistory(channelId, id, _sender, content)
+        await this.addMessageToHistory(channelId, id, sender, content)
         log('Message added to history')
         let addPing = false
         let _prev = undefined
         _prev = this.prevMessage[channelId]
-        this.prevMessage[channelId] = _sender
+        this.prevMessage[channelId] = sender
         if (this.prevMessageTimers[channelId] !== undefined)
           clearTimeout(this.prevMessageTimers[channelId])
         this.prevMessageTimers[channelId] = setTimeout(
@@ -300,7 +299,7 @@ export class xrengine_client {
         )
 
         addPing =
-          (_prev !== undefined && _prev !== '' && _prev !== _sender) ||
+          (_prev !== undefined && _prev !== '' && _prev !== sender) ||
           this.moreThanOneInConversation()
 
         let startConv = false
@@ -324,7 +323,7 @@ export class xrengine_client {
 
         if (!startConv) {
           if (startConvName.length > 0) {
-            this.exitConversation(_sender)
+            this.exitConversation(sender)
             this.exitConversation(startConvName)
           }
         }
@@ -336,7 +335,7 @@ export class xrengine_client {
           .replace('?', '')
           .replace('!', '')
           .match(bot.username_regex)
-        const isInDiscussion = this.isInConversation(_sender)
+        const isInDiscussion = this.isInConversation(sender)
         if (!content.startsWith('!')) {
           if (isUserNameMention) {
             log('is user mention')
@@ -344,17 +343,17 @@ export class xrengine_client {
           } else if (isInDiscussion || startConv) content = '!ping ' + content
         }
 
-        if (content.startsWith('!ping')) this.sentMessage(_sender)
+        if (content.startsWith('!ping')) this.sentMessage(sender)
         else {
           if (content === '!ping ' || !content.startsWith('!ping')) {
             // if (true) {
             //roomManager.instance.agentCanResponse(user, 'xrengine')) {
             content = '!ping ' + content
-            this.sentMessage(_sender)
+            this.sentMessage(sender)
             // } else {
-            //   const oldChat = database.instance.getConversation(
+            //   const oldChat = database.instance.getEvent(
             //     defaultAgent,
-            //     _sender,
+            //     sender,
             //     'xrengine',
             //     msg.chat.id,
             //     false
@@ -365,12 +364,12 @@ export class xrengine_client {
             //     log('c1: ' + context + ' c2: ' + ncontext)
 
             //     if (context == ncontext) {
-            //       roomManager.instance.userTalkedSameTopic(_sender, 'xrengine')
+            //       roomManager.instance.userTalkedSameTopic(sender, 'xrengine')
             //       if (
-            //         roomManager.instance.agentCanResponse(_sender, 'xrengine')
+            //         roomManager.instance.agentCanResponse(sender, 'xrengine')
             //       ) {
             //         content = '!ping ' + content
-            //         this.sentMessage(_sender)
+            //         this.sentMessage(sender)
             //       } else {
             //         return
             //       }
@@ -380,14 +379,14 @@ export class xrengine_client {
             //   }
             // }
           } else {
-            // roomManager.instance.userGotInConversationFromAgent(_sender)
+            // roomManager.instance.userGotInConversationFromAgent(sender)
           }
         }
-        log('content: ' + content + ' sender: ' + _sender)
+        log('content: ' + content + ' sender: ' + sender)
 
         const response = await handleInput(
           content.replace('!ping', ''),
-          _sender,
+          sender,
           this.settings.xrengine_bot_name ?? 'Agent',
           'xr-engine',
           channelId,
@@ -398,7 +397,7 @@ export class xrengine_client {
 
         console.log('got response:', response)
 
-        await this.handleXREngineResponse(response, addPing, _sender, isVoice)
+        await this.handleXREngineResponse(response, addPing, sender, isVoice)
       }
     )
   }
@@ -419,7 +418,7 @@ export class xrengine_client {
     }
   }
 
-  async handleXREngineResponse(responses, addPing, _sender, isVoice) {
+  async handleXREngineResponse(responses, addPing, sender, isVoice) {
     log('response: ' + responses)
     if (!isVoice) {
       if (
@@ -434,7 +433,7 @@ export class xrengine_client {
           text.replace(/\s/g, '').length === 0
         )
           text = getRandomEmptyResponse()
-        if (addPing) text = _sender + ' ' + text
+        if (addPing) text = sender + ' ' + text
         this.xrengineBot.sendMessage(text)
       } else if (
         responses &&
@@ -466,7 +465,7 @@ export class xrengine_client {
               )
                 text = getRandomEmptyResponse()
               if (addPing) {
-                text = _sender + ' ' + text
+                text = sender + ' ' + text
                 addPing = false
               }
               this.xrengineBot.sendMessage(text)
@@ -481,7 +480,7 @@ export class xrengine_client {
           emptyResponse.replace(/\s/g, '').length === 0
         )
           emptyResponse = getRandomEmptyResponse()
-        if (addPing) emptyResponse = _sender + ' ' + emptyResponse
+        if (addPing) emptyResponse = sender + ' ' + emptyResponse
         this.xrengineBot.sendMessage(emptyResponse)
       }
     } else {
