@@ -16,7 +16,8 @@ import { EngineContext } from '../../engine'
 import { triggerSocket, stringSocket, anySocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
-async function getConversation(
+async function getEvent(
+  type: string,
   agent: string,
   speaker: string,
   client: string,
@@ -27,9 +28,10 @@ async function getConversation(
     `${process.env.REACT_APP_API_ROOT_URL ??
     process.env.API_ROOT_URL ??
     'http://localhost:8001'
-    }/conversation`,
+    }/event`,
     {
       params: {
+        type: type,
         agent: agent,
         speaker: speaker,
         client: client,
@@ -42,16 +44,15 @@ async function getConversation(
   return response.data
 }
 
-const info =
-  'Conversation Recall is used to get conversation for an agent and user'
+const info = 'Event Recall is used to get conversation for an agent and user'
 
 type InputReturn = {
   output: unknown
 }
 
-export class ConversationRecall extends ThothComponent<Promise<InputReturn>> {
+export class EventRecall extends ThothComponent<Promise<InputReturn>> {
   constructor() {
-    super('Conversation Recall')
+    super('Event Recall')
 
     this.task = {
       outputs: {
@@ -74,13 +75,24 @@ export class ConversationRecall extends ThothComponent<Promise<InputReturn>> {
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
 
+    const nameInput = new InputControl({
+      dataKey: 'name',
+      name: 'Input name',
+    })
+
+    const type = new InputControl({
+      dataKey: 'type',
+      name: 'Type',
+      icon: 'moon',
+    })
+
     const max_count = new InputControl({
       dataKey: 'max_count',
       name: 'Max Count',
       icon: 'moon',
     })
 
-    node.inspector.add(max_count)
+    node.inspector.add(nameInput).add(max_count).add(type)
 
     return node
       .addInput(agentInput)
@@ -102,18 +114,17 @@ export class ConversationRecall extends ThothComponent<Promise<InputReturn>> {
     const agent = inputs['agent'][0] as string
     const client = inputs['client'][0] as string
     const channel = inputs['channel'][0] as string
+    const typeData = node?.data?.type as string
+    const type =
+      typeData !== undefined && typeData.length > 0
+        ? typeData.toLowerCase().trim()
+        : 'none'
 
     const maxCountData = node.data?.max_count as string
     const maxCount = maxCountData ? parseInt(maxCountData) : 10
 
-    const conv = await getConversation(
-      agent,
-      speaker,
-      client,
-      channel,
-      maxCount
-    )
-    if (!silent) node.display(conv || 'Not found')
+    const conv = await getEvent(type, agent, speaker, client, channel, maxCount)
+    if (!silent) node.display(type + ' | :' + conv || 'Not found')
 
     return {
       output: conv ?? '',

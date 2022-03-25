@@ -87,7 +87,7 @@ export class database {
   async getEvents(
     type: string,
     agent: any,
-    sender: any,
+    sender: any = null,
     client: any,
     channel: any,
     asString: boolean = true,
@@ -96,42 +96,50 @@ export class database {
     const query =
       'SELECT * FROM events WHERE agent=$1 AND sender=$2 AND client=$3 AND channel=$4 AND type=$5'
     const values = [agent, sender, client, channel, type]
-    console.log('values are', values)
-    const row = await this.client.query(query, values)
-    console.log("row is", row)
-    if (row && row.rows && row.rows.length > 0) {
-      console.log('got ' + row.rows.length + ' rows')
-      row.rows.sort(function (
-        a: { date: string | number | Date },
-        b: { date: string | number | Date }
-      ) {
-        return new Date(b.date) - new Date(a.date)
-      })
-      const now = new Date()
-      const max_length = maxCount
-      let data = ''
-      let count = 0
-      for (let i = 0; i < row.rows.length; i++) {
-        if (!row.rows[i].text || row.rows[i].text.length <= 0) continue
-        const messageDate = new Date(row.rows[i].date)
-        const diffMs = now - messageDate
-        const diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000)
-        if (diffMins > 15) {
-          break
-        }
 
-        data += row.rows[i].sender + ': ' + row.rows[i].text + '\n'
-        count++
-        if (count >= max_length) {
-          break
-        }
-      }
-      return asString
-        ? data.split('\n').reverse().join('\n')
-        : data.split('\n').reverse()
-    } else {
+    console.log('getEvents')
+    console.log(type, agent, sender, client, channel, asString, maxCount)
+    const row = await this.client.query(query, values)
+    console.log('row is', row)
+    if (!row || !row.rows || row.rows.length === 0) {
+      console.log('rows are null, returning')
       return asString ? '' : []
     }
+
+    row.rows.sort(function (
+      a: { date: string | number | Date },
+      b: { date: string | number | Date }
+    ) {
+      return new Date(b.date) - new Date(a.date)
+    })
+
+    console.log('got ' + row.rows.length + ' rows')
+
+    const now = new Date()
+    const max_length = maxCount
+    let data = ''
+    let count = 0
+    for (let i = 0; i < row.rows.length; i++) {
+      if (!row.rows[i].text || row.rows[i].text.length <= 0) continue
+      // const messageDate = new Date(row.rows[i].date)
+      // const diffMs = now - messageDate
+      // const diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000)
+      // if (diffMins > 15) {
+      //   break
+      // }
+      data +=
+        (type === 'conversation' ? row.rows[i].sender + ': ' : '') +
+        row.rows[i].text +
+        (type === 'conversation' ? '\n' : type === 'facts' ? '. ' : '')
+      count++
+      if (count >= max_length) {
+        break
+      }
+    }
+    console.log('returning data', data)
+    return asString
+      ? data.split('\n').reverse().join('\n')
+      : data.split('\n').reverse()
   }
 
   async setRelationshipMatrix(speaker: any, agent: any, matrix: any) {

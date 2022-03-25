@@ -18,7 +18,7 @@ import { EngineContext } from '../../engine'
 import { triggerSocket, anySocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
-const info = 'Archive Conversation is used to archive old conversation'
+const info = 'Get Agent Personality'
 // TODO: Update this
 const serverUrl =
   process.env.REACT_APP_API_ROOT_URL ??
@@ -30,7 +30,7 @@ type WorkerReturn = {
   personality: string
 }
 
-export class AgentManager extends ThothComponent<Promise<WorkerReturn>> {
+export class GetAgentPersonality extends ThothComponent<Promise<WorkerReturn>> {
   constructor() {
     super('Get Agent Personality')
 
@@ -43,7 +43,7 @@ export class AgentManager extends ThothComponent<Promise<WorkerReturn>> {
       },
     }
 
-    this.category = 'I/O'
+    this.category = 'Agents'
     this.display = true
     this.info = info
   }
