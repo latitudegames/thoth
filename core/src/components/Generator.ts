@@ -69,23 +69,27 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       dataKey: 'stop',
       name: 'Stop',
       icon: 'stop-sign',
+      defaultValue: `\\n`,
     })
 
     const temperatureControl = new InputControl({
       dataKey: 'temp',
       name: 'Temperature',
       icon: 'temperature',
+      defaultValue: 0.7,
     })
 
     const maxTokenControl = new InputControl({
       dataKey: 'maxTokens',
       name: 'Max Tokens',
       icon: 'moon',
+      defaultValue: 50,
     })
 
     const frequencyPenalty = new InputControl({
       dataKey: 'frequencyPenalty',
       name: 'Frequency Penalty',
+      defaultValue: '0',
     })
 
     node.inspector
