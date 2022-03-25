@@ -130,7 +130,7 @@ const TextEditor = props => {
     <Window toolbar={toolbar}>
       <Editor
         theme="sds-dark"
-        height={height}
+        // height={height} // This seemed to have been causing issues.
         language={language}
         value={code}
         options={editorOptions}
