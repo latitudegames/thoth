@@ -17,7 +17,7 @@ import { HuggingfaceComponent } from './Huggingface'
 import { InputComponent } from './Input'
 import { ItemTypeComponent } from './ItemDetector'
 import { JoinListComponent } from './JoinList'
-import { ModuleComponent } from './deprecated/Module'
+import { SpellComponent } from './Spell'
 import { Output } from './Output'
 import { ProseToScript } from './ProseToScript'
 import { SafetyVerifier } from './SafetyVerifier'
@@ -49,7 +49,7 @@ export const components = {
   inputFieldComponent: () => new InputFieldComponent(),
   itemTypeComponent: () => new ItemTypeComponent(),
   joinListComponent: () => new JoinListComponent(),
-  moduleComponent: () => new ModuleComponent(),
+  moduleComponent: () => new SpellComponent(),
   moduleInput: () => new ModuleInput(),
   moduleOutput: () => new ModuleOutput(),
   output: () => new Output(),
