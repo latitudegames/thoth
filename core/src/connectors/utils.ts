@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-nocheck
 
@@ -7,18 +8,8 @@ export function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-//Empty responses in-case of an agent error in order to avoid crashing the client bots
-export const emptyResponse = [
-  'Idk',
-  'You tell me',
-  'If you tell me, we will both know',
-  "It's a secret",
-  'Some things you should figure by your self',
-  'No you',
-  "I don't know",
-]
-export function getRandomEmptyResponse() {
-  return emptyResponse[getRandomNumber(0, emptyResponse.length - 1)]
+export function getRandomEmptyResponse(responses: string[]) {
+  return responses[getRandomNumber(0, responses.length - 1)]
 }
 
 export function startsWithCapital(word) {

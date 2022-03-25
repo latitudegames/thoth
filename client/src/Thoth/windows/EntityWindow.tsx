@@ -29,6 +29,7 @@ const EntityWindow = ({ id, updateCallback }) => {
   const [discord_starting_words, setDiscordStartingWords] = useState('')
   const [discord_bot_name_regex, setDiscordBotNameRegex] = useState('')
   const [discord_bot_name, setDiscordBotName] = useState('')
+  const [discord_empty_responses, setDiscordEmptyResponses] = useState('')
 
   const [discord_spell_handler_incoming, setDiscordSpellHandlerIncoming] =
     useState('')
@@ -47,6 +48,7 @@ const EntityWindow = ({ id, updateCallback }) => {
   const [xrengine_bot_name, setXREngineBotName] = useState('')
   const [xrengine_bot_name_regex, setXREngineBotNameRegex] = useState('')
   const [xrengine_starting_words, setXREngineStartingWords] = useState('')
+  const [xrengine_empty_responses, setXREngineEmptyResponses] = useState('')
 
   const [spellList, setSpellList] = useState('')
   useEffect(() => {
@@ -63,6 +65,7 @@ const EntityWindow = ({ id, updateCallback }) => {
         setDiscordStartingWords(res.data.discord_starting_words)
         setDiscordBotNameRegex(res.data.discord_bot_name_regex)
         setDiscordBotName(res.data.discord_bot_name)
+        setDiscordEmptyResponses(res.data.discord_empty_responses)
         setDiscordSpellHandlerIncoming(res.data.discord_spell_handler_incoming)
         setDiscordSpellHandlerUpdate(res.data.discord_spell_handler_update)
         setDiscordSpellHandlerFeed(res.data.discord_spell_handler_feed)
@@ -77,6 +80,7 @@ const EntityWindow = ({ id, updateCallback }) => {
         setXREngineBotName(res.data.xrengine_bot_name)
         setXREngineBotNameRegex(res.data.xrengine_bot_name_regex)
         setXREngineStartingWords(res.data.xrengine_starting_words)
+        setXREngineEmptyResponses(res.data.xrengine_empty_responses)
         setLoaded(true)
       })()
     }
@@ -111,6 +115,7 @@ const EntityWindow = ({ id, updateCallback }) => {
       discord_starting_words,
       discord_bot_name_regex,
       discord_bot_name,
+      discord_empty_responses,
       discord_spell_handler_incoming,
       discord_spell_handler_update,
       discord_spell_handler_feed,
@@ -122,6 +127,7 @@ const EntityWindow = ({ id, updateCallback }) => {
       xrengine_bot_name,
       xrengine_bot_name_regex,
       xrengine_starting_words,
+      xrengine_empty_responses,
     }
     axios
       .post(`${process.env.REACT_APP_API_ROOT_URL}/agentInstance`, {
@@ -138,6 +144,7 @@ const EntityWindow = ({ id, updateCallback }) => {
         setDiscordStartingWords(responseData.discord_starting_words)
         setDiscordBotNameRegex(responseData.discord_bot_name_regex)
         setDiscordBotName(responseData.discord_bot_name)
+        setDiscordEmptyResponses(responseData.discord_empty_responses)
         setDiscordSpellHandlerIncoming(
           responseData.discord_spell_handler_incoming
         )
@@ -153,6 +160,7 @@ const EntityWindow = ({ id, updateCallback }) => {
         setXREngineBotName(responseData.xrengine_bot_name)
         setXREngineBotNameRegex(responseData.xrengine_bot_name_regex)
         setXREngineStartingWords(responseData.xrengine_starting_words)
+        setXREngineEmptyResponses(responseData.xrengine_empty_responses)
         updateCallback()
       })
   }
@@ -236,6 +244,17 @@ const EntityWindow = ({ id, updateCallback }) => {
                   defaultValue={discord_bot_name}
                   onChange={e => {
                     setDiscordBotName(e.target.value)
+                  }}
+                />
+              </div>
+
+              <div className="form-item">
+                <span className="form-item-label">Discord Empty Responses</span>
+                <input
+                  type="text"
+                  defaultValue={discord_empty_responses}
+                  onChange={e => {
+                    setDiscordEmptyResponses(e.target.value)
                   }}
                 />
               </div>
@@ -355,6 +374,17 @@ const EntityWindow = ({ id, updateCallback }) => {
                   defaultValue={xrengine_bot_name}
                   onChange={e => {
                     setXREngineBotName(e.target.value)
+                  }}
+                />
+              </div>
+
+              <div className="form-item">
+                <span className="form-item-label">Empty Responses</span>
+                <input
+                  type="text"
+                  defaultValue={xrengine_empty_responses}
+                  onChange={e => {
+                    setXREngineEmptyResponses(e.target.value)
                   }}
                 />
               </div>

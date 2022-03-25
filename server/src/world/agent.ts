@@ -32,6 +32,7 @@ export class agent extends gameObject {
     discord_starting_words: string,
     discord_bot_name_regex: string,
     discord_bot_name: string,
+    discord_empty_responses: string,
     entity: string,
     spell_handler: string,
     spell_version: string
@@ -46,6 +47,7 @@ export class agent extends gameObject {
       discord_starting_words,
       discord_bot_name_regex,
       discord_bot_name,
+      discord_empty_responses,
       entity,
       spell_handler,
       spell_version
@@ -68,6 +70,7 @@ export class agent extends gameObject {
     xrengine_bot_name: string
     xrengine_bot_name_regex: string
     xrengine_starting_words: string
+    xrengine_empty_responses: string
   }) {
     if (this.xrengine)
       throw new Error(
@@ -101,6 +104,7 @@ export class agent extends gameObject {
         data.discord_starting_words,
         data.discord_bot_name_regex,
         data.discord_bot_name,
+        data.discord_empty_responses,
         data,
         data.discord_spell_handler_incoming,
         data.spell_version
@@ -116,6 +120,7 @@ export class agent extends gameObject {
         xrengine_bot_name: data.xrengine_bot_name,
         xrengine_bot_name_regex: data.xrengine_bot_name_regex,
         xrengine_starting_words: data.xrengine_starting_words,
+        xrengine_empty_responses: data.xrengine_empty_responses,
       })
     }
   }

@@ -453,7 +453,7 @@ export class xrengine_client {
           text === '' ||
           text.replace(/\s/g, '').length === 0
         )
-          text = getRandomEmptyResponse()
+          text = getRandomEmptyResponse(this.settings.xrengine_empty_responses)
         if (addPing) text = _sender + ' ' + text
         this.xrengineBot.sendMessage(text)
       } else if (
@@ -484,7 +484,9 @@ export class xrengine_client {
                 text === '' ||
                 text.replace(/\s/g, '').length === 0
               )
-                text = getRandomEmptyResponse()
+                text = getRandomEmptyResponse(
+                  this.settings.xrengine_empty_responses
+                )
               if (addPing) {
                 text = _sender + ' ' + text
                 addPing = false
@@ -494,13 +496,17 @@ export class xrengine_client {
           }
         }
       } else {
-        let emptyResponse = getRandomEmptyResponse()
+        let emptyResponse = getRandomEmptyResponse(
+          this.settings.xrengine_empty_responses
+        )
         while (
           emptyResponse === undefined ||
           emptyResponse === '' ||
           emptyResponse.replace(/\s/g, '').length === 0
         )
-          emptyResponse = getRandomEmptyResponse()
+          emptyResponse = getRandomEmptyResponse(
+            this.settings.xrengine_empty_responses
+          )
         if (addPing) emptyResponse = _sender + ' ' + emptyResponse
         this.xrengineBot.sendMessage(emptyResponse)
       }
@@ -529,6 +535,17 @@ export class xrengine_client {
     this.settings.xrengine_starting_words = []
     for (let i = 0; i < temp.length; i++) {
       this.settings.xrengine_starting_words.push(temp[i].toLowerCase())
+    }
+
+    temp = this.settings.xrengine_empty_responses
+    if (temp && temp !== undefined) {
+      temp = temp.split(',')
+    } else {
+      temp = ['I am sorry, I do not understand']
+    }
+    this.settings.xrengine_empty_responses = []
+    for (let i = 0; i < temp.length; i++) {
+      this.settings.xrengine_empty_responses.push(temp[i].toLowerCase())
     }
 
     //generateVoice('hello there', (buf, path) => {}, false)

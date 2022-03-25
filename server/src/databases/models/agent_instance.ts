@@ -13,6 +13,7 @@ export interface agent_instanceAttributes {
   discord_starting_words?: string
   discord_bot_name_regex?: string
   discord_bot_name?: string
+  discord_empty_responses?: string
   discord_spell_handler_incoming?: string
   discord_spell_handler_update?: string
   discord_spell_handler_feed?: string
@@ -24,6 +25,7 @@ export interface agent_instanceAttributes {
   xrengine_bot_name?: string
   xrengine_bot_name_regex?: string
   xrengine_starting_words?: string
+  xrengine_empty_responses?: string
 }
 
 export type agent_instancePk = 'id'
@@ -34,6 +36,7 @@ export type agent_instanceOptionalAttributes =
   | 'discord_starting_words'
   | 'discord_bot_name_regex'
   | 'discord_bot_name'
+  | 'discord_empty_responses'
   | 'discord_spell_handler_incoming'
   | 'discord_spell_handler_update'
   | 'discord_spell_handler_feed'
@@ -45,6 +48,7 @@ export type agent_instanceOptionalAttributes =
   | 'xrengine_bot_name'
   | 'xrengine_bot_name_regex'
   | 'xrengine_starting_words'
+  | 'xrengine_empty_responses'
   | 'enabled'
   | 'updated_at'
 export type agent_instanceCreationAttributes = Optional<
@@ -66,6 +70,7 @@ export class agent_instance
   discord_starting_words?: string
   discord_bot_name_regex?: string
   discord_bot_name?: string
+  discord_empty_responses?: string
   discord_spell_handler_incoming?: string
   discord_spell_handler_update?: string
   discord_spell_handler_feed?: string
@@ -77,6 +82,7 @@ export class agent_instance
   xrengine_bot_name?: string
   xrengine_bot_name_regex?: string
   xrengine_starting_words?: string
+  xrengine_empty_responses?: string
   static initModel(sequelize: Sequelize.Sequelize): typeof agent_instance {
     return agent_instance.init(
       {
@@ -122,6 +128,10 @@ export class agent_instance
           type: DataTypes.TEXT,
           allowNull: true,
         },
+        discord_empty_responses: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
         discord_spell_handler_incoming: {
           type: DataTypes.TEXT,
           allowNull: true,
@@ -163,6 +173,10 @@ export class agent_instance
           allowNull: true,
         },
         xrengine_starting_words: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
+        xrengine_empty_responses: {
           type: DataTypes.TEXT,
           allowNull: true,
         },
