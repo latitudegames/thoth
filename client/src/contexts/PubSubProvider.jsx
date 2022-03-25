@@ -15,10 +15,10 @@ export { PubSub }
 
 // Might want to namespace these
 export const events = {
-  ADD_MODULE: 'addModule',
-  UPDATE_MODULE: 'updateModule',
-  DELETE_MODULE: 'deleteModule',
-  $MODULE_UPDATED: moduleName => `moduleUpdated:${moduleName}`,
+  ADD_SUBSPELL: 'addModule',
+  UPDATE_SUBSPELL: 'updateModule',
+  DELETE_SUBSPELL: 'deleteModule',
+  $SUBSPELL_UPDATED: moduleName => `moduleUpdated:${moduleName}`,
   $PLAYTEST_INPUT: tabId => `playtestInput:${tabId}`,
   $PLAYTEST_PRINT: tabId => `playtestPrint:${tabId}`,
   $DEBUG_PRINT: tabId => `debugPrint:${tabId}`,
