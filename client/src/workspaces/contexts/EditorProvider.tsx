@@ -129,7 +129,8 @@ const EditorProvider = ({ children }) => {
   }
 
   const loadChain = graph => {
-    editor.loadGraph(graph)
+    if (!editorRef.current) return
+    editorRef.current.loadGraph(graph)
   }
 
   const setContainer = () => {
