@@ -9,6 +9,7 @@ import { EventStore } from './agent/EventStore'
 import { GetAgentData } from './agent/GetAgentData'
 import { GetAgentPersonality } from './agent/GetAgentPersonality'
 import { InputDestructureComponent } from './agent/InputDestructure'
+import { Request } from './agent/Request'
 import { InputComponent } from './io/Input'
 import { ModuleComponent } from './io/Module'
 import { Output } from './io/Output'
@@ -92,6 +93,7 @@ export const components = {
   isVariableTrue: () => new IsVariableTrue(),
   conversationStore: () => new EventStore(),
   conversationRecall: () => new EventRecall(),
+  request: () => new Request(),
   search: () => new Search(),
   documentGet: () => new DocumentGet(),
   documentDelete: () => new DocumentDelete(),
