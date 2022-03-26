@@ -2,13 +2,6 @@ import { useState } from 'react'
 
 import Switch from '../../../components/Switch/Switch'
 
-type SocketType = {
-  name: string
-  socketKey: string
-  socketType: string
-  taskType: string
-}
-
 const SwitchControl = ({ control, updateData, initialValue }) => {
   const { dataKey, data } = control
   const { receivePlaytest } = initialValue
@@ -22,21 +15,9 @@ const SwitchControl = ({ control, updateData, initialValue }) => {
     const playtest = e.target.checked
     setChecked(playtest)
 
-    const outputs = [] as SocketType[]
-
-    if (playtest) {
-      outputs.push({
-        name: 'Playtest trigger',
-        socketKey: 'trigger',
-        socketType: 'triggerSocket',
-        taskType: 'option',
-      })
-    }
-
     updateData({
       [dataKey]: {
         receivePlaytest: playtest,
-        outputs,
       },
     })
   }

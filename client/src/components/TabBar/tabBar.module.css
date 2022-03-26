@@ -79,3 +79,21 @@
   font-size: var(--c2);
   cursor: pointer !important;
 }
+
+.create-spell-tab {
+  display: flex;
+  color: var(--dark-5);
+  border-radius: 4px;
+  position: relative;
+  height: var(--c4);
+  border: 1px solid var(--dark-2);
+  width: 2vw;
+  align-items: center;
+  justify-content: center;
+  margin-left: 15%;
+  background-color: transparent;
+}
+
+.create-spell-tab:hover {
+  background-color: var(--dark-2);
+}

@@ -14,7 +14,7 @@ import {
 const TextEditor = props => {
   const [code, setCode] = useState<string | undefined>(undefined)
   const [data, setData] = useState<TextEditorData | null>(null)
-  const [height, setHeight] = useState<number>()
+  // const [height, setHeight] = useState<number>()
   const [editorOptions, setEditorOptions] = useState<Record<string, any>>()
   const [typing, setTyping] = useState<boolean>(false)
   const [language, setLanguage] = useState<string | undefined>(undefined)
@@ -22,7 +22,7 @@ const TextEditor = props => {
   const { textEditorData, saveTextEditor } = useInspector()
   const { enqueueSnackbar } = useSnackbar()
 
-  const bottomHeight = 50
+  // const bottomHeight = 50
   const handleEditorWillMount = monaco => {
     monaco.editor.defineTheme('sds-dark', {
       base: 'vs-dark',
@@ -62,18 +62,18 @@ const TextEditor = props => {
     }
   }, [textEditorData])
 
-  useEffect(() => {
-    if (props?.node?.rect?.height)
-      setHeight(props.node.rect.height - bottomHeight)
+  // useEffect(() => {
+  //   if (props?.node?.rect?.height)
+  //     setHeight(props.node.rect.height - bottomHeight)
 
-    // this is to dynamically set the appriopriate height so that Monaco editor doesnt break flexbox when resizing
-    props.node.setEventListener(
-      'resize',
-      (data: { rect: { height: number } }) => {
-        setTimeout(() => setHeight(data.rect.height - bottomHeight), 0)
-      }
-    )
-  }, [props.node])
+  //   // this is to dynamically set the appriopriate height so that Monaco editor doesnt break flexbox when resizing
+  //   props.node.setEventListener(
+  //     'resize',
+  //     (data: { rect: { height: number } }) => {
+  //       setTimeout(() => setHeight(data.rect.height - bottomHeight), 0)
+  //     }
+  //   )
+  // }, [props.node])
 
   // debounce for delayed save
   useEffect(() => {
@@ -130,7 +130,7 @@ const TextEditor = props => {
     <Window toolbar={toolbar}>
       <Editor
         theme="sds-dark"
-        height={height}
+        // height={height} // This seemed to have been causing issues.
         language={language}
         value={code}
         options={editorOptions}
