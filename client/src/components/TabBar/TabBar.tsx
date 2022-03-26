@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 
 import Icon from '../Icon/Icon'
 import MenuBar from '../MenuBar/MenuBar'
+import CreateTab from './createTab'
 import css from './tabBar.module.css'
 
 const Tab = ({ tab, activeTab }) => {
@@ -51,6 +52,10 @@ const TabBar = ({ tabs, activeTab }) => {
         {tabs &&
           tabs.map((tab, i) => <Tab tab={tab} activeTab={activeTab} key={i} />)}
       </div>
+      <div className={css['tabbar-section']}>
+        <CreateTab />
+      </div>
+
       <div className={css['tabbar-user']}>
         {<Icon name="account" size={24} />}
       </div>
