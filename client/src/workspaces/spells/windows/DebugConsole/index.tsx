@@ -4,6 +4,7 @@ import Terminal from 'react-console-emulator'
 import { useAuth } from '@/contexts/AuthProvider'
 import { usePubSub } from '@/contexts/PubSubProvider'
 import Window from '@components/Window/Window'
+import { useEditor } from '@/workspaces/contexts/EditorProvider'
 
 export type DebugMessage = {
   message: string
@@ -15,6 +16,7 @@ interface Terminal {
 
 const DebugConsole = ({ tab }) => {
   const [scrollToBottom, setScrollToBottom] = useState<boolean>(false)
+  const { centerNode } = useEditor()
   const { user } = useAuth()
   const {
     //  publish,
@@ -97,6 +99,14 @@ const DebugConsole = ({ tab }) => {
       usage: 'echo <string>',
       fn: function () {
         return `${Array.from(arguments).join(' ')}`
+      },
+    },
+    node: {
+      description: 'Center a node on the editor',
+      usage: 'node <nodeId>',
+      fn: function (nodeId) {
+        centerNode(nodeId)
+        return ''
       },
     },
   }
