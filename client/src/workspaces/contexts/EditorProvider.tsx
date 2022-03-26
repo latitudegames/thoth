@@ -21,6 +21,7 @@ import {
   useThothInterface,
   ThothInterfaceContext,
 } from './ThothInterfaceProvider'
+import { ThothEditor } from '@latitudegames/thoth-core/src/editor'
 
 export type ThothTab = {
   layoutJson: string
@@ -57,11 +58,8 @@ const Context = createContext({
 export const useEditor = () => useContext(Context)
 
 const EditorProvider = ({ children }) => {
-  const [editor, setEditorState] = useState({
-    components: [],
-    loadGraph: (chain: any) => {},
-  })
-  const editorRef = useRef<IRunContextEditor | null>(null)
+  const [editor, setEditorState] = useState<ThothEditor | null>(null)
+  const editorRef = useRef<ThothEditor | null>(null)
   const pubSub = usePubSub()
 
   const setEditor = editor => {
