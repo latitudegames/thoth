@@ -1,8 +1,5 @@
 import { initEditor } from '@latitudegames/thoth-core'
-import {
-  ChainData,
-  IRunContextEditor,
-} from '@latitudegames/thoth-core/dist/types'
+import { ChainData } from '@latitudegames/thoth-core/dist/types'
 import React, {
   useRef,
   useContext,
@@ -22,6 +19,7 @@ import {
   ThothInterfaceContext,
 } from './ThothInterfaceProvider'
 import { ThothEditor } from '@latitudegames/thoth-core/src/editor'
+import { zoomAt } from '../../../../core/src/plugins/areaPlugin/zoom-at'
 
 export type ThothTab = {
   layoutJson: string
@@ -36,8 +34,8 @@ export type ThothTab = {
 // TODO give better typing to the editor
 const Context = createContext({
   run: () => {},
-  getEditor: (): IRunContextEditor | null => null,
-  editor: {} as Record<string, any>,
+  getEditor: (): ThothEditor | null => null,
+  editor: {} as ThothEditor | null,
   serialize: (): ChainData | undefined => undefined,
   buildEditor: (
     el: HTMLDivElement,
@@ -53,6 +51,7 @@ const Context = createContext({
   setContainer: () => {},
   undo: () => {},
   redo: () => {},
+  centerNode: (nodeId: number): void => {},
 })
 
 export const useEditor = () => useContext(Context)
@@ -108,6 +107,14 @@ const EditorProvider = ({ children }) => {
     editorRef.current.trigger('undo')
   }
 
+  const centerNode = (nodeId: number): void => {
+    if (!editorRef.current) return
+    const editor = editorRef.current
+    const node = editor.nodes.find(n => n.id === +nodeId)
+
+    if (node) zoomAt(editor, [node])
+  }
+
   const redo = () => {
     if (!editorRef.current) return
     editorRef.current.trigger('redo')
@@ -149,6 +156,7 @@ const EditorProvider = ({ children }) => {
     undo,
     redo,
     setContainer,
+    centerNode,
   }
 
   return <Context.Provider value={publicInterface}>{children}</Context.Provider>
