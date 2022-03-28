@@ -43,6 +43,7 @@ const EventHandler = ({ pubSub, tab }) => {
   const { events, subscribe } = pubSub
 
   const {
+    $DELETE,
     $UNDO,
     $REDO,
     $SAVE_SPELL,
