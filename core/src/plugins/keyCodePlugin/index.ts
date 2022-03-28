@@ -1,6 +1,8 @@
 import { IRunContextEditor, ThothNode } from '../../../types'
 
 function install(editor: IRunContextEditor) {
+  editor.bind('delete')
+
   let currentNode: ThothNode | undefined
 
   editor.on('nodeselect', (node: ThothNode) => {
