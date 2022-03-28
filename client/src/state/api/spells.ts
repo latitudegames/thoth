@@ -66,7 +66,8 @@ export const spellApi = rootApi.injectEndpoints({
       },
     }),
     saveDiff: builder.mutation<void, Diff>({
-      invalidatesTags: ['Spells'],
+      // TODO this may introruce bugs.  Though I don't think we need to invalidate the spell cache here since the chain is loaded in live to the rete editor.
+      // invalidatesTags: ['Spell'],
       query: diffData => ({
         url: 'game/spells/saveDiff',
         method: 'POST',
