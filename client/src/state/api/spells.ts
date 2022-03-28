@@ -22,6 +22,11 @@ export interface Spell {
   updatedAt?: number
 }
 
+export interface Diff {
+  name: string
+  diff: Record<string, unknown>
+}
+
 export interface DeployedSpellVersion {
   spellId: string
   version: string
@@ -59,6 +64,14 @@ export const spellApi = rootApi.injectEndpoints({
           url: `game/spells/${spellId}`,
         }
       },
+    }),
+    saveDiff: builder.mutation<void, Diff>({
+      invalidatesTags: ['Spells'],
+      query: diffData => ({
+        url: 'game/spells/saveDiff',
+        method: 'POST',
+        body: diffData,
+      }),
     }),
     saveSpell: builder.mutation<Partial<Spell>, Partial<Spell> | Spell>({
       invalidatesTags: ['Spell'],
@@ -144,6 +157,7 @@ export const {
   useNewSpellMutation,
   useDeleteSpellMutation,
   useSaveSpellMutation,
+  useSaveDiffMutation,
   useDeploySpellMutation,
   usePatchSpellMutation,
   useGetDeploymentsQuery,
