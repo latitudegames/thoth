@@ -62,9 +62,10 @@ const ThothInterfaceProvider = ({ children, tab }) => {
     $DEBUG_INPUT,
     $TEXT_EDITOR_CLEAR,
     $NODE_SET,
-    ADD_MODULE,
-    UPDATE_MODULE,
-    $MODULE_UPDATED,
+    ADD_SUBSPELL,
+    UPDATE_SUBSPELL,
+    $SUBSPELL_UPDATED,
+    $PROCESS,
   } = events
 
   const onInspector = (node, callback) => {
@@ -74,25 +75,25 @@ const ThothInterfaceProvider = ({ children, tab }) => {
   }
 
   const onAddModule = callback => {
-    return subscribe(ADD_MODULE, (event, data) => {
+    return subscribe(ADD_SUBSPELL, (event, data) => {
       callback(data)
     })
   }
 
   const onUpdateModule = callback => {
-    return subscribe(UPDATE_MODULE, (event, data) => {
+    return subscribe(UPDATE_SUBSPELL, (event, data) => {
       callback(data)
     })
   }
 
   const onModuleUpdated = (moduleName, callback) => {
-    return subscribe($MODULE_UPDATED(moduleName), (event, data) => {
+    return subscribe($SUBSPELL_UPDATED(moduleName), (event, data) => {
       callback(data)
     })
   }
 
   const onDeleteModule = callback => {
-    return subscribe(UPDATE_MODULE, (event, data) => {
+    return subscribe(UPDATE_SUBSPELL, (event, data) => {
       callback(data)
     })
   }
@@ -117,7 +118,10 @@ const ThothInterfaceProvider = ({ children, tab }) => {
 
   const onPlaytest = callback => {
     return subscribe($PLAYTEST_INPUT(tab.id), (event, data) => {
-      callback(data)
+      publish($PROCESS(tab.id))
+      // weird hack.  This staggers the process slightly to allow the published event to finish before the callback runs.
+      // No super elegant, but we need a better more centralised way to run the engine than these callbacks.
+      setTimeout(() => callback(data), 0)
     })
   }
 

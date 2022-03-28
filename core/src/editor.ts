@@ -27,6 +27,7 @@ export class ThothEditor extends NodeEditor<EventsTypes> {
   abort: unknown
   loadGraph: (graph: Data) => Promise<void>
   moduleManager: ModuleManager
+  runProcess: (callback?: Function) => Promise<void>
 }
 
 /*
@@ -180,18 +181,6 @@ export const initEditor = async function ({
   editor.bind('run')
   editor.bind('save')
 
-  editor.on(
-    'process nodecreated noderemoved connectioncreated connectionremoved',
-    async () => {
-      // Here we would swap out local processing for an endpoint that we send the serialised JSON too.
-      // Then we run the fewshots, etc on the backend rather than on the client.
-      // Alternative for now is for the client to call our own /openai endpoint.
-      // NOTE need to consider authentication against Latitude API from a web client
-      await engine.abort()
-      await engine.process(editor.toJSON(), null, { thoth: thoth })
-    }
-  )
-
   // ██████╗ ██╗   ██╗██████╗ ██╗     ██╗ ██████╗
   // ██╔══██╗██║   ██║██╔══██╗██║     ██║██╔════╝
   // ██████╔╝██║   ██║██████╔╝██║     ██║██║
@@ -203,6 +192,12 @@ export const initEditor = async function ({
     await engine.abort()
   }
 
+  editor.runProcess = async (callback: Function) => {
+    await engine.abort()
+    await engine.process(editor.toJSON(), null, { thoth: thoth })
+    if (callback) callback()
+  }
+
   editor.loadGraph = async (_graph: Data) => {
     const graph = JSON.parse(JSON.stringify(_graph))
     await engine.abort()
@@ -210,5 +205,8 @@ export const initEditor = async function ({
     editor.view.resize()
     AreaPlugin.zoomAt(editor)
   }
+
+  // Start the engine off on first load
+  editor.runProcess()
   return editor
 }

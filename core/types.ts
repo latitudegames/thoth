@@ -104,6 +104,8 @@ export type OpenAIResponse = {
   finish_reason: string
 }
 
+export type Subspell = { name: string; id: string; data: ChainData }
+
 export type ModuleComponent = Component & {
   run: Function
 }

@@ -54,6 +54,7 @@ const EventHandler = ({ pubSub, tab }) => {
     $SERIALIZE,
     $EXPORT,
     $CLOSE_EDITOR,
+    $PROCESS,
   } = events
 
   const saveSpell = async () => {
@@ -82,6 +83,13 @@ const EventHandler = ({ pubSub, tab }) => {
   const onSerialize = () => {
     // eslint-disable-next-line no-console
     console.log(serialize())
+  }
+
+  const onProcess = () => {
+    const editor = getEditor()
+    if (!editor) return
+
+    editor.runProcess()
   }
 
   const onUndo = () => {
@@ -141,6 +149,7 @@ const EventHandler = ({ pubSub, tab }) => {
     [$UNDO(tab.id)]: onUndo,
     [$REDO(tab.id)]: onRedo,
     [$DELETE(tab.id)]: onDelete,
+    [$PROCESS(tab.id)]: onProcess,
   }
 
   useEffect(() => {

@@ -15,10 +15,10 @@ export { PubSub }
 
 // Might want to namespace these
 export const events = {
-  ADD_MODULE: 'addModule',
-  UPDATE_MODULE: 'updateModule',
-  DELETE_MODULE: 'deleteModule',
-  $MODULE_UPDATED: moduleName => `moduleUpdated:${moduleName}`,
+  ADD_SUBSPELL: 'addSubspell',
+  UPDATE_SUBSPELL: 'updateSubspell',
+  DELETE_SUBSPELL: 'deleteSubspell',
+  $SUBSPELL_UPDATED: moduleName => `subspellUpdated:${moduleName}`,
   $PLAYTEST_INPUT: tabId => `playtestInput:${tabId}`,
   $PLAYTEST_PRINT: tabId => `playtestPrint:${tabId}`,
   $DEBUG_PRINT: tabId => `debugPrint:${tabId}`,
@@ -35,6 +35,7 @@ export const events = {
   $CREATE_TEXT_EDITOR: tabId => `createTextEditor:${tabId}`,
   $CREATE_DEBUG_CONSOLE: tabId => `createDebugConsole:${tabId}`,
   $SERIALIZE: tabId => `serialize:${tabId}`,
+  $PROCESS: tabId => `process:${tabId}`,
   $EXPORT: tabId => `export:${tabId}`,
   $UNDO: tabId => `undo:${tabId}`,
   $REDO: tabId => `redo:${tabId}`,

@@ -22,7 +22,7 @@ const Workspace = ({ tab, tabs, pubSub }) => {
   // Set up autosave for the workspaces
   useEffect(() => {
     if (!editor?.on) return
-    return editor.on(
+    const unsubscribe = editor.on(
       'save nodecreated noderemoved connectioncreated connectionremoved nodetranslated',
       debounce(() => {
         if (tab.type === 'spell') {
@@ -30,6 +30,8 @@ const Workspace = ({ tab, tabs, pubSub }) => {
         }
       }, 500)
     )
+
+    return unsubscribe as () => void
   }, [editor])
 
   useEffect(() => {

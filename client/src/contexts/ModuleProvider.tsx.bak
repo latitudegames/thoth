@@ -20,13 +20,13 @@ const ModuleProvider = ({ children }) => {
   const { events, publish, subscribe } = usePubSub()
   const { enqueueSnackbar } = useSnackbar()
   const { models } = useDB() as unknown as ModelsType
-  const { ADD_MODULE, UPDATE_MODULE, $MODULE_UPDATED } = events
+  const { ADD_SUBSPELL, UPDATE_SUBSPELL, $SUBSPELL_UPDATED } = events
 
   // Subscribe to all general update module events
   // and relay them to the individual module name subscribers
   useEffect(() => {
-    return subscribe(UPDATE_MODULE, (event, module) => {
-      publish($MODULE_UPDATED(module.name), module)
+    return subscribe(UPDATE_SUBSPELL, (event, module) => {
+      publish($SUBSPELL_UPDATED(module.name), module)
     })
   }, [])
 
@@ -53,7 +53,7 @@ const ModuleProvider = ({ children }) => {
 
       const json = module.toJSON()
 
-      publish(UPDATE_MODULE, json)
+      publish(UPDATE_SUBSPELL, json)
 
       return module
     } catch (err) {
@@ -68,7 +68,7 @@ const ModuleProvider = ({ children }) => {
 
   const newModule = async moduleOptions => {
     const module = await models.modules.newModule(moduleOptions)
-    publish(ADD_MODULE, module.toJSON())
+    publish(ADD_SUBSPELL, module.toJSON())
 
     return module
   }

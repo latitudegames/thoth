@@ -6,6 +6,8 @@ export { getComponents } from './components/components'
 export { initEditor } from './editor'
 export type { EngineContext } from './engine'
 export { Task } from './plugins/taskPlugin/task'
+export { runChain } from './utils/runChain'
+export * from './utils/chainHelpers'
 
 export default {
   getComponents,

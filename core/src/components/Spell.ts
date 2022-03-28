@@ -6,14 +6,14 @@ import {
   NodeData,
   ThothNode,
   ThothWorkerInputs,
-} from '../../../types'
-import { ModuleControl } from '../../dataControls/ModuleControl'
-import { Task } from '../../plugins/taskPlugin/task'
-import { ThothComponent } from '../../thoth-component'
+} from '../../types'
+import { ModuleControl } from '../dataControls/ModuleControl'
+import { Task } from '../plugins/taskPlugin/task'
+import { ThothComponent } from '../thoth-component'
 
 const info = `The Module component allows you to add modules into your chain.  A module is a bundled self contained chain that defines inputs, outputs, and triggers using components.`
 
-export class ModuleComponent extends ThothComponent<ModuleWorkerOutput[]> {
+export class SpellComponent extends ThothComponent<ModuleWorkerOutput[]> {
   _task: Task
   updateModuleSockets: Function
   task
@@ -36,7 +36,6 @@ export class ModuleComponent extends ThothComponent<ModuleWorkerOutput[]> {
     this.category = 'Core'
     this.info = info
     this.noBuildUpdate = true
-    this.deprecated = true
   }
 
   builder(node: ThothNode) {

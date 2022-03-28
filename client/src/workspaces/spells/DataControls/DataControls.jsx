@@ -11,6 +11,7 @@ import DropdownSelect from './DropdownSelect'
 import SocketGenerator from './SocketGenerator'
 import PlaytestControl from './PlaytestControl'
 import SwitchControl from './SwitchControl'
+import SpellSelect from './SpellSelect'
 
 const StubComponent = props => <div>{props.name}</div>
 
@@ -22,7 +23,7 @@ const controlMap = {
   input: Input,
   inputGenerator: InputGenerator,
   longText: LongText,
-  // moduleSelect: ModuleSelect,
+  spellSelect: SpellSelect,
   outputGenerator: OutputGenerator,
   slider: StubComponent,
   socketGenerator: SocketGenerator,
