@@ -155,6 +155,7 @@ const EditorProvider = ({ children }) => {
     getEditor,
     undo,
     redo,
+    del,
     setContainer,
   }
 
