@@ -1,6 +1,8 @@
 import { IRunContextEditor, ThothNode } from '../../../types'
 
 function install(editor: IRunContextEditor) {
+  editor.bind('delete')
+
   let currentNode: ThothNode | undefined
 
   editor.on('nodeselect', (node: ThothNode) => {
@@ -8,11 +10,9 @@ function install(editor: IRunContextEditor) {
     currentNode = node
   })
 
-  editor.on('keydown', (event: KeyboardEvent) => {
+  editor.on('delete', () => {
     if (!currentNode) return
-    if (event.key === 'Delete') {
-      editor.removeNode(currentNode)
-    }
+    editor.removeNode(currentNode)
   })
 }
 

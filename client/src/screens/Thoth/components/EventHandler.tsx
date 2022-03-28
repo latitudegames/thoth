@@ -38,11 +38,12 @@ const EventHandler = ({ pubSub, tab }) => {
     spellRef.current = spell
   }, [spell])
 
-  const { serialize, getEditor, undo, redo } = useEditor()
+  const { serialize, getEditor, undo, redo, del } = useEditor()
 
   const { events, subscribe } = pubSub
 
   const {
+    $DELETE,
     $UNDO,
     $REDO,
     $SAVE_SPELL,
@@ -99,6 +100,10 @@ const EventHandler = ({ pubSub, tab }) => {
     redo()
   }
 
+  const onDelete = () => {
+    del()
+  }
+
   const onExport = async () => {
     // refetch spell from local DB to ensure it is the most up to date
     const spell = { ...spellRef.current }
@@ -143,6 +148,7 @@ const EventHandler = ({ pubSub, tab }) => {
     [$CLOSE_EDITOR(tab.id)]: onCloseEditor,
     [$UNDO(tab.id)]: onUndo,
     [$REDO(tab.id)]: onRedo,
+    [$DELETE(tab.id)]: onDelete,
     [$PROCESS(tab.id)]: onProcess,
   }
 

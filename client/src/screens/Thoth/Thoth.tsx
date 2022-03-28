@@ -65,6 +65,15 @@ const Thoth = ({ empty = false }) => {
     [pubSub, activeTab]
   )
 
+  useHotkeys(
+    'Control+Delete',
+    () => {
+      if (!pubSub || !activeTab) return
+      publish(events.$DELETE(activeTab.id))
+    },
+    [pubSub, activeTab]
+  )
+
   if (!activeTab) return <LoadingScreen />
 
   return (

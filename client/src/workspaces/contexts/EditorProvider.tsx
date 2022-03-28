@@ -51,6 +51,7 @@ const Context = createContext({
   setContainer: () => {},
   undo: () => {},
   redo: () => {},
+  del: () => {},
   centerNode: (nodeId: number): void => {},
 })
 
@@ -120,6 +121,11 @@ const EditorProvider = ({ children }) => {
     editorRef.current.trigger('redo')
   }
 
+  const del = () => {
+    if (!editorRef.current) return
+    editorRef.current.trigger('delete')
+  }
+
   const serialize = () => {
     if (!editorRef.current) return
     return editorRef.current.toJSON()
@@ -155,6 +161,7 @@ const EditorProvider = ({ children }) => {
     getEditor,
     undo,
     redo,
+    del,
     setContainer,
     centerNode,
   }
