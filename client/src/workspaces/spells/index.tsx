@@ -13,9 +13,11 @@ import StateManager from '@/workspaces/spells/windows/StateManagerWindow'
 import TextEditor from './windows/TextEditorWindow'
 import DebugConsole from './windows/DebugConsole'
 import { Spell } from '../../state/api/spells'
+import { useSnackbar } from 'notistack'
 
 const Workspace = ({ tab, tabs, pubSub }) => {
   const spellRef = useRef<Spell>()
+  const { enqueueSnackbar } = useSnackbar()
   const [loadSpell, { data: spellData }] = useLazyGetSpellQuery()
   // const [saveSpell] = useSaveSpellMutation()
   const [saveDiff] = useSaveDiffMutation()
@@ -37,9 +39,11 @@ const Workspace = ({ tab, tabs, pubSub }) => {
             diff: jsonDiff,
           })
 
-          console.log('diff response', response)
-
-          // saveSpell({ ...spellRef.current, chain: editor.toJSON() })
+          if ('error' in response) {
+            enqueueSnackbar('Error saving spell', {
+              variant: 'error',
+            })
+          }
         }
       }, 500)
     )
