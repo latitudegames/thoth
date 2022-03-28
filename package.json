@@ -40,9 +40,11 @@
     "@typescript-eslint/eslint-plugin": "^4.31.1",
     "@typescript-eslint/parser": "^4.31.1",
     "copyfiles": "^2.4.1",
+    "diff-match-patch": "^1.0.5",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-prettier": "^4.0.0",
+    "json0-ot-diff": "^1.1.2",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.4.1"
   }
