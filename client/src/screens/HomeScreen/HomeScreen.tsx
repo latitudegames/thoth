@@ -37,6 +37,7 @@ const StartScreen = () => {
     await newSpell({
       chain: spellData.chain,
       name: spellData.name,
+      gameState: spellData.gameState,
     })
 
     dispatch(
