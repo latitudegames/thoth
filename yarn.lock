@@ -2442,6 +2442,15 @@
   dependencies:
     "@octokit/openapi-types" "^10.6.1"
 
+"@plotdb/json0@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@plotdb/json0/-/json0-0.0.5.tgz#080b51f472796dc680d21f92aef1ce9f5f0de2b9"
+  integrity sha512-eerS2BBMXCL7QZ6y5w2TLcRsfRhXudf/LMRyfJ1+/XVaZTGAFPuZFjV0ys4RvWfQ9uW9/rkQJQRQ1rcO1Jx25g==
+  dependencies:
+    diff-match-patch "^1.0.4"
+    json0-ot-diff "^1.0.5"
+    ot-json0 "^1.1.0"
+
 "@polka/url@^1.0.0-next.20":
   version "1.0.0-next.20"
   resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.20.tgz#111b5db0f501aa89b05076fa31f0ea0e0c292cd3"
@@ -5559,6 +5568,11 @@ dezalgo@^1.0.0:
     asap "^2.0.0"
     wrappy "1"
 
+diff-match-patch@^1.0.4:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/diff-match-patch/-/diff-match-patch-1.0.5.tgz#abb584d5f10cd1196dfc55aa03701592ae3f7b37"
+  integrity sha512-IayShXAgj/QMXgB0IWmKx+rOPuGMhqm5w6jvFxmVenXKIzRqTAAsbBPT3kWQeGANj3jGgvcvv4yK6SxqYmikgw==
+
 diff-sequences@^26.6.2:
   version "26.6.2"
   resolved "https://registry.yarnpkg.com/diff-sequences/-/diff-sequences-26.6.2.tgz#48ba99157de1923412eed41db6b6d4aa9ca7c0b1"
@@ -8599,6 +8613,13 @@ json-stringify-safe@^5.0.1, json-stringify-safe@~5.0.1:
   resolved "https://registry.yarnpkg.com/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz#1296a2d58fd45f19a0f6ce01d65701e2c735b6eb"
   integrity sha1-Epai1Y/UXxmg9s4B1lcB4sc1tus=
 
+json0-ot-diff@^1.0.5:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/json0-ot-diff/-/json0-ot-diff-1.1.2.tgz#3565b8b016992b750c364558f5b5ffd56a0749c2"
+  integrity sha512-je6cDbmPc+BkbfyvKo7y1jgQLTrX81L8fkKEIPXRUGFSxK4HTSF6u44ELR35i12tEIWh5+8KfIJH2aJgzKrFww==
+  dependencies:
+    deep-equal "^1.0.1"
+
 json5@2.x, json5@^2.1.2:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/json5/-/json5-2.2.0.tgz#2dfefe720c6ba525d9ebd909950f0515316c89a3"
@@ -10053,6 +10074,11 @@ osenv@^0.1.4:
   dependencies:
     os-homedir "^1.0.0"
     os-tmpdir "^1.0.0"
+
+ot-json0@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/ot-json0/-/ot-json0-1.1.0.tgz#f5edeff162673b62f0f136bb64724c40ac5e590d"
+  integrity sha512-wf5fci7GGpMYRDnbbdIFQymvhsbFACMHtxjivQo5KgvAHlxekyfJ9aPsRr6YfFQthQkk4bmsl5yESrZwC/oMYQ==
 
 p-each-series@^2.1.0:
   version "2.2.0"
