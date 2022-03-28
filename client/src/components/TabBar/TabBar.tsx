@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 
 import Icon from '../Icon/Icon'
 import MenuBar from '../MenuBar/MenuBar'
-import CreateTab from './createTab'
+import CreateTab from './CreateTab'
 import css from './tabBar.module.css'
 
 const Tab = ({ tab, activeTab }) => {
