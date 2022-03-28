@@ -65,6 +65,7 @@ const ThothInterfaceProvider = ({ children, tab }) => {
     ADD_SUBSPELL,
     UPDATE_SUBSPELL,
     $SUBSPELL_UPDATED,
+    $PROCESS,
   } = events
 
   const onInspector = (node, callback) => {
@@ -117,6 +118,7 @@ const ThothInterfaceProvider = ({ children, tab }) => {
 
   const onPlaytest = callback => {
     return subscribe($PLAYTEST_INPUT(tab.id), (event, data) => {
+      publish($PROCESS(tab.id))
       callback(data)
     })
   }
