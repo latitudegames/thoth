@@ -19,7 +19,6 @@ const Workspace = ({ tab, tabs, pubSub }) => {
   const spellRef = useRef<Spell>()
   const { enqueueSnackbar } = useSnackbar()
   const [loadSpell, { data: spellData }] = useLazyGetSpellQuery()
-  // const [saveSpell] = useSaveSpellMutation()
   const [saveDiff] = useSaveDiffMutation()
   const { editor } = useEditor()
 
@@ -31,8 +30,6 @@ const Workspace = ({ tab, tabs, pubSub }) => {
       debounce(async data => {
         if (tab.type === 'spell' && spellRef.current) {
           const jsonDiff = diff(spellRef.current?.chain, editor.toJSON())
-
-          console.log('DIFF', jsonDiff)
 
           const response = await saveDiff({
             name: spellRef.current.name,
