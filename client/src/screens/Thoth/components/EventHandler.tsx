@@ -140,6 +140,7 @@ const EventHandler = ({ pubSub, tab }) => {
     [$CLOSE_EDITOR(tab.id)]: onCloseEditor,
     [$UNDO(tab.id)]: onUndo,
     [$REDO(tab.id)]: onRedo,
+    [$DELETE(tab.id)]: onDelete,
   }
 
   useEffect(() => {
