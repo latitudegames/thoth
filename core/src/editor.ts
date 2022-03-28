@@ -193,7 +193,6 @@ export const initEditor = async function ({
   }
 
   editor.runProcess = async (callback: Function) => {
-    console.log()
     await engine.abort()
     await engine.process(editor.toJSON(), null, { thoth: thoth })
     if (callback) callback()
