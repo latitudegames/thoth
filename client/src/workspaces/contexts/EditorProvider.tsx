@@ -116,6 +116,11 @@ const EditorProvider = ({ children }) => {
     editorRef.current.trigger('redo')
   }
 
+  const del = () => {
+    if (!editorRef.current) return
+    editorRef.current.trigger('delete')
+  }
+
   const serialize = () => {
     if (!editorRef.current) return
     return editorRef.current.toJSON()
