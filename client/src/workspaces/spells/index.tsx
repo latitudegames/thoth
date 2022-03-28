@@ -1,8 +1,9 @@
 import { useEffect, useRef } from 'react'
 
+import { diff } from '../../utils/json0'
 import { useEditor } from '@/workspaces/contexts/EditorProvider'
 import { Layout } from '@/workspaces/contexts/LayoutProvider'
-import { useLazyGetSpellQuery, useSaveSpellMutation } from '@/state/api/spells'
+import { useLazyGetSpellQuery, useSaveDiffMutation } from '@/state/api/spells'
 import { debounce } from '@/utils/debounce'
 import EditorWindow from './windows/EditorWindow/'
 import EventHandler from '@/screens/Thoth/components/EventHandler'
@@ -12,11 +13,13 @@ import StateManager from '@/workspaces/spells/windows/StateManagerWindow'
 import TextEditor from './windows/TextEditorWindow'
 import DebugConsole from './windows/DebugConsole'
 import { Spell } from '../../state/api/spells'
+import { useSnackbar } from 'notistack'
 
 const Workspace = ({ tab, tabs, pubSub }) => {
   const spellRef = useRef<Spell>()
+  const { enqueueSnackbar } = useSnackbar()
   const [loadSpell, { data: spellData }] = useLazyGetSpellQuery()
-  const [saveSpell] = useSaveSpellMutation()
+  const [saveDiff] = useSaveDiffMutation()
   const { editor } = useEditor()
 
   // Set up autosave for the workspaces
@@ -24,9 +27,20 @@ const Workspace = ({ tab, tabs, pubSub }) => {
     if (!editor?.on) return
     const unsubscribe = editor.on(
       'save nodecreated noderemoved connectioncreated connectionremoved nodetranslated',
-      debounce(() => {
-        if (tab.type === 'spell') {
-          saveSpell({ ...spellRef.current, chain: editor.toJSON() })
+      debounce(async data => {
+        if (tab.type === 'spell' && spellRef.current) {
+          const jsonDiff = diff(spellRef.current?.chain, editor.toJSON())
+
+          const response = await saveDiff({
+            name: spellRef.current.name,
+            diff: jsonDiff,
+          })
+
+          if ('error' in response) {
+            enqueueSnackbar('Error saving spell', {
+              variant: 'error',
+            })
+          }
         }
       }, 500)
     )
