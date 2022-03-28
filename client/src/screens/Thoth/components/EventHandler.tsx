@@ -84,7 +84,12 @@ const EventHandler = ({ pubSub, tab }) => {
     console.log(serialize())
   }
 
-  const onProcess = () => {}
+  const onProcess = () => {
+    const editor = getEditor()
+    if (!editor) return
+
+    editor.runProcess()
+  }
 
   const onUndo = () => {
     undo()
