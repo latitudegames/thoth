@@ -92,6 +92,10 @@ const EventHandler = ({ pubSub, tab }) => {
     redo()
   }
 
+  const onDelete = () => {
+    del()
+  }
+
   const onExport = async () => {
     // refetch spell from local DB to ensure it is the most up to date
     const spell = { ...spellRef.current }
