@@ -52,6 +52,7 @@ const Context = createContext({
   setContainer: () => {},
   undo: () => {},
   redo: () => {},
+  del: () => {},
 })
 
 export const useEditor = () => useContext(Context)
