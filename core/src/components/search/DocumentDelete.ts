@@ -12,7 +12,7 @@ import {
   ThothWorkerOutputs,
 } from '../../../types'
 import { EngineContext } from '../../engine'
-import { triggerSocket, stringSocket } from '../../sockets'
+import { triggerSocket, numSocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
 const info =
@@ -34,14 +34,12 @@ export class DocumentDelete extends ThothComponent<void> {
   }
 
   builder(node: ThothNode) {
-    const keyInput = new Rete.Input('key', 'Key', stringSocket)
-    const agentInput = new Rete.Input('agent', 'Agent', stringSocket)
+    const docIdInput = new Rete.Input('docId', 'Document Id', numSocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
 
     return node
-      .addInput(keyInput)
-      .addInput(agentInput)
+      .addInput(docIdInput)
       .addInput(dataInput)
       .addOutput(dataOutput)
   }
@@ -52,12 +50,13 @@ export class DocumentDelete extends ThothComponent<void> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    const id = inputs['id'][0] as string
-
-    await axios.delete(`${process.env.VITE_SEARCH_SERVER_URL}/document`, {
+    const docId = inputs['docId'][0]
+    node.display(docId)
+    const resp = await axios.delete(`${process.env.REACT_APP_SEARCH_SERVER_URL}/document`, {
       params: {
-        documentId: id,
+        documentId: docId,
       },
     })
+    node.display(resp.data)
   }
 }

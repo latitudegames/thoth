@@ -94,7 +94,7 @@ export class Request extends ThothComponent<Promise<WorkerReturn>> {
       url = url.replace('server', process.env.REACT_APP_API_URL as string)
     }
 
-    let resp = undefined
+    let resp:any
     if (method === 'post') {
       resp = await axios.post(url, inputs)
     } else if (method === 'get') {
@@ -110,7 +110,7 @@ export class Request extends ThothComponent<Promise<WorkerReturn>> {
     }
 
     return {
-      output: resp ? resp.data : '',
+      output: resp ? resp['data'] : '',
     }
   }
 }
