@@ -38,7 +38,7 @@ const EventHandler = ({ pubSub, tab }) => {
     spellRef.current = spell
   }, [spell])
 
-  const { serialize, getEditor, undo, redo } = useEditor()
+  const { serialize, getEditor, undo, redo, del } = useEditor()
 
   const { events, subscribe } = pubSub
 
