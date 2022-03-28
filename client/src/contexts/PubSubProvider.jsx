@@ -35,6 +35,7 @@ export const events = {
   $CREATE_TEXT_EDITOR: tabId => `createTextEditor:${tabId}`,
   $CREATE_DEBUG_CONSOLE: tabId => `createDebugConsole:${tabId}`,
   $SERIALIZE: tabId => `serialize:${tabId}`,
+  $PROCESS: tabId => `process:${tabId}`,
   $EXPORT: tabId => `export:${tabId}`,
   $UNDO: tabId => `undo:${tabId}`,
   $REDO: tabId => `redo:${tabId}`,
