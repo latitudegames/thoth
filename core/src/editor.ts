@@ -27,7 +27,7 @@ export class ThothEditor extends NodeEditor<EventsTypes> {
   abort: unknown
   loadGraph: (graph: Data) => Promise<void>
   moduleManager: ModuleManager
-  runProcess: () => Promise<void>
+  runProcess: (callback?: Function) => Promise<void>
 }
 
 /*
@@ -192,9 +192,11 @@ export const initEditor = async function ({
     await engine.abort()
   }
 
-  editor.runProcess = async () => {
+  editor.runProcess = async (callback: Function) => {
+    console.log()
     await engine.abort()
     await engine.process(editor.toJSON(), null, { thoth: thoth })
+    if (callback) callback()
   }
 
   editor.loadGraph = async (_graph: Data) => {
