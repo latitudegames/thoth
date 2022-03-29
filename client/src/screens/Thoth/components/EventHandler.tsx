@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { ChainData } from '@latitudegames/thoth-core/dist/types'
+import { ChainData, Spell } from '@latitudegames/thoth-core/dist/types'
 
 import {
   uniqueNamesGenerator,
@@ -10,7 +10,6 @@ import {
 import {
   useSaveSpellMutation,
   useGetSpellQuery,
-  Spell,
 } from '../../../state/api/spells'
 import { useEditor } from '../../../workspaces/contexts/EditorProvider'
 import { useLayout } from '../../../workspaces/contexts/LayoutProvider'
