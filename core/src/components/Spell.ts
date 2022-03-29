@@ -7,7 +7,7 @@ import {
   ThothNode,
   ThothWorkerInputs,
 } from '../../types'
-import { ModuleControl } from '../dataControls/ModuleControl'
+import { SpellControl } from '../dataControls/SpellControl'
 import { Task } from '../plugins/taskPlugin/task'
 import { ThothComponent } from '../thoth-component'
 
@@ -20,12 +20,11 @@ export class SpellComponent extends ThothComponent<ModuleWorkerOutput[]> {
   info
   subscriptionMap: Record<number, Function> = {}
   editor: any
-  deprecated = true
   noBuildUpdate: boolean
   category: string
 
   constructor() {
-    super('Module')
+    super('Spell')
     this.module = {
       nodeType: 'module',
     }
@@ -39,37 +38,18 @@ export class SpellComponent extends ThothComponent<ModuleWorkerOutput[]> {
   }
 
   builder(node: ThothNode) {
-    const moduleControl = new ModuleControl({
-      name: 'Module select',
-      write: false,
+    const moduleControl = new SpellControl({
+      name: 'Spell Select',
     })
-
-    if (node.data.module) {
-      this.subscribe(node)
-    }
 
     moduleControl.onData = (moduleName: string) => {
       this.updateSockets(node, moduleName)
-      this.subscribe(node)
     }
 
     node.inspector.add(moduleControl)
 
     return node
   }
-
-  destroyed(node: ThothNode) {
-    this.unsubscribe(node)
-  }
-
-  unsubscribe(node: ThothNode) {
-    if (!this.subscriptionMap[node.id]) return
-
-    this.subscriptionMap[node.id]()
-
-    delete this.subscriptionMap[node.id]
-  }
-
   async subscribe(node: ThothNode) {
     if (!node.data.module) return
     let cache: ModuleType
