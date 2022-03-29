@@ -185,7 +185,6 @@ export class Inspector {
   }
 
   handleData(update: Record<string, any>) {
-    console.log('Handling data!', update)
     // store all data controls inside the nodes data
     // WATCH in case our graphs start getting quite large.
     if (update.dataControls) this.cacheControls(update.dataControls)
