@@ -5,7 +5,7 @@ import ContextMenuPlugin from 'rete-context-menu-plugin'
 import ReactRenderPlugin from 'rete-react-render-plugin'
 import { Data } from 'rete/types/core/data'
 
-import { EventsTypes, ModuleType } from '../types'
+import { EventsTypes } from '../types'
 import { getComponents } from './components/components'
 import { EngineContext, initSharedEngine } from './engine'
 import AreaPlugin from './plugins/areaPlugin'
@@ -13,7 +13,6 @@ import DisplayPlugin from './plugins/displayPlugin'
 import HistoryPlugin from './plugins/historyPlugin'
 import InspectorPlugin from './plugins/inspectorPlugin'
 import LifecyclePlugin from './plugins/lifecyclePlugin'
-import ModulePlugin from './plugins/modulePlugin'
 import { ModuleManager } from './plugins/modulePlugin/module-manager'
 import SocketGenerator from './plugins/socketGenerator'
 import TaskPlugin from './plugins/taskPlugin'
@@ -112,19 +111,6 @@ export const initEditor = async function ({
     scaleExtent: { min: 0.25, max: 2 },
   })
 
-  // const moduleDocs = await thoth.getModules()
-  const moduleDocs = [] as any[]
-
-  // Parse modules into dictionary of all modules and JSON values
-  let modules: Record<string, ModuleType> = moduleDocs
-    .map((doc: { toJSON: Function }) => doc.toJSON())
-    .reduce((acc: Record<string, ModuleType>, module: ModuleType) => {
-      // todo handle better mapping
-      // see moduleSelect.tsx
-      acc[module.name] = module
-      return acc
-    }, {} as Record<string, ModuleType>)
-
   // The engine is used to process/run the rete graph
 
   const engine = initSharedEngine({
@@ -137,33 +123,9 @@ export const initEditor = async function ({
 
   // WARNING: ModulePlugin needs to be initialized before TaskPlugin during engine setup
   editor.use(DebuggerPlugin)
-  editor.use(ModulePlugin, { engine, modules } as unknown as void)
+  // editor.use(ModulePlugin, { engine, modules } as unknown as void)
   editor.use(TaskPlugin)
   editor.use(KeyCodePlugin)
-
-  // ███╗   ███╗ ██████╗ ██████╗ ██╗   ██╗██╗     ███████╗███████╗
-  // ████╗ ████║██╔═══██╗██╔══██╗██║   ██║██║     ██╔════╝██╔════╝
-  // ██╔████╔██║██║   ██║██║  ██║██║   ██║██║     █████╗  ███████╗
-  // ██║╚██╔╝██║██║   ██║██║  ██║██║   ██║██║     ██╔══╝  ╚════██║
-  // ██║ ╚═╝ ██║╚██████╔╝██████╔╝╚██████╔╝███████╗███████╗███████║
-  // ╚═╝     ╚═╝ ╚═════╝ ╚═════╝  ╚═════╝ ╚══════╝╚══════╝╚══════╝
-
-  // add initial modules to the module manager
-  editor.moduleManager.setModules(modules)
-
-  // listen for pubsub onAddModule event to add modules
-  thoth.onAddModule((module: ModuleType) => {
-    editor.moduleManager.addModule(module)
-  })
-
-  // listen for update module event to update a module
-  thoth.onUpdateModule((module: ModuleType) => {
-    editor.moduleManager.updateModule(module)
-  })
-
-  thoth.onDeleteModule((module: ModuleType) => {
-    editor.moduleManager.deleteModule(module)
-  })
 
   // WARNING all the plugins from the editor get installed onto the component and modify it.  This effects the components registered in the engine, which already have plugins installed.
   components.forEach(c => {
