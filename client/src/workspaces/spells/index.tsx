@@ -12,8 +12,8 @@ import Playtest from './windows/PlaytestWindow'
 import StateManager from '@/workspaces/spells/windows/StateManagerWindow'
 import TextEditor from './windows/TextEditorWindow'
 import DebugConsole from './windows/DebugConsole'
-import { Spell } from '../../state/api/spells'
 import { useSnackbar } from 'notistack'
+import { Spell } from '@latitudegames/thoth-core/types'
 
 const Workspace = ({ tab, tabs, pubSub }) => {
   const spellRef = useRef<Spell>()
