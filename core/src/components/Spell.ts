@@ -38,34 +38,19 @@ export class SpellComponent extends ThothComponent<ModuleWorkerOutput[]> {
   }
 
   builder(node: ThothNode) {
-    const moduleControl = new SpellControl({
+    const spellControl = new SpellControl({
       name: 'Spell Select',
+      write: false,
     })
 
-    moduleControl.onData = (moduleName: string) => {
-      this.updateSockets(node, moduleName)
+    spellControl.onData = (spellName: string) => {
+      console.log('selected spell', spellName)
+      // this.updateSockets(node, moduleName)
     }
 
-    node.inspector.add(moduleControl)
+    node.inspector.add(spellControl)
 
     return node
-  }
-  async subscribe(node: ThothNode) {
-    if (!node.data.module) return
-    let cache: ModuleType
-
-    // this.unsubscribe(node)
-
-    this.subscriptionMap[node.id] = this.editor.thoth.onModuleUpdated(
-      node.data.module,
-      (module: ModuleType) => {
-        if (!isEqual(cache, module)) {
-          this.editor.moduleManager.updateModule(module)
-          this.updateSockets(node, module.name)
-        }
-        cache = module
-      }
-    )
   }
 
   updateSockets(node: ThothNode, moduleName: string) {
