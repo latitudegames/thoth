@@ -13,7 +13,7 @@ const BasicSelect = ({
   placeholder,
   style = {},
   focusKey = '',
-  creatable=true,
+  creatable = true,
   nested = false,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   isValidNewOption = (inputValue, selectValue, selectOptions, accessors) =>
@@ -131,41 +131,34 @@ const BasicSelect = ({
     }),
   }
 
-  const _isValidNewOption = (...args) => {
-    if (!props.creatable) return false
-    return isValidNewOption(...args)
-  }
   return (
     <span className={css['select-dropdown-container']} style={style}>
-
       {options ? (
         <>
-        {creatable && (
-          <Creatable
-          isValidNewOption={_isValidNewOption}
-          options={options}
-          onChange={onChange}
-          styles={styles}
-          placeholder={placeholder}
-          components={{ DropdownIndicator }}
-          isSearchable={props.searchable}
-          ref={selectRef}
-          formatGroupLabel={formatGroupLabel}
-          {...props}
-        />
-        )}
-        {!creatable && (
-          <Select
-          options={options}
-          onChange={onChange}
-          styles={styles}
-          placeholder={placeholder}
-          components={{ DropdownIndicator }}
-          ref={selectRef}
-          {...props}
-        />
-        )}
-        
+          {creatable && (
+            <Creatable
+              options={options}
+              onChange={onChange}
+              styles={styles}
+              placeholder={placeholder}
+              components={{ DropdownIndicator }}
+              isSearchable={props.searchable}
+              ref={selectRef}
+              formatGroupLabel={formatGroupLabel}
+              {...props}
+            />
+          )}
+          {!creatable && (
+            <Select
+              options={options}
+              onChange={onChange}
+              styles={styles}
+              placeholder={placeholder}
+              components={{ DropdownIndicator }}
+              ref={selectRef}
+              {...props}
+            />
+          )}
         </>
       ) : (
         <Chip noEvents label={'No options available...'} />
