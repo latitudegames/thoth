@@ -62,7 +62,7 @@ const ModuleSelect = ({ control, updateData, initialValue }) => {
 
   const onCreateOption = async value => {
     try {
-      const spell = await newSpell({
+      await newSpell({
         name: value,
         chain: defaultChain as unknown as ChainData,
       })
