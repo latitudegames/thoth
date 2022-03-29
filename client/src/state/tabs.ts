@@ -65,8 +65,11 @@ export const tabSlice = createSlice({
   initialState,
   reducers: {
     openTab: (state, action) => {
+      const switchActive =
+        'switchActive' in action.payload ? action.payload.switchActive : true
+
       const activeTab = _activeTabSelector(state) as Tab
-      if (activeTab)
+      if (activeTab && switchActive)
         tabAdapater.updateOne(state, {
           id: activeTab.id,
           changes: { active: false },
@@ -75,11 +78,13 @@ export const tabSlice = createSlice({
       // Check if the tab is already open.
       const existingTab = selectTabBySpellId(state, action.payload.spellId)
 
+      if (existingTab && !switchActive) return
+
       if (existingTab && !action.payload.openNew) {
         tabAdapater.updateOne(state, {
           id: existingTab.id,
           changes: {
-            active: true,
+            active: switchActive,
           },
         })
         return
