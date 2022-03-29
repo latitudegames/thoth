@@ -67,14 +67,7 @@ const ModuleSelect = ({ control, updateData, initialValue }) => {
         chain: defaultChain as unknown as ChainData,
       })
 
-      await _openTab(spell)
-
-      // todo better naming for rete modules.
-      // Handle displaying name as using ID for internal mapping
-      update(value)
-
-      // add data to node
-      //
+      getSpell(value)
     } catch (err) {
       // eslint-disable-next-line no-console
       console.warn('Error creating module', err)
