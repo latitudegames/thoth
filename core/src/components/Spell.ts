@@ -1,7 +1,4 @@
-import isEqual from 'lodash/isEqual'
-
 import {
-  ModuleType,
   ModuleWorkerOutput,
   NodeData,
   ThothNode,
