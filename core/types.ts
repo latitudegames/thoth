@@ -36,6 +36,17 @@ export type EventsTypes = {
   resetconnection: void
 }
 
+export interface Spell {
+  id?: string
+  user?: Record<string, unknown> | null | undefined
+  name: string
+  chain: ChainData
+  // Spells: Module[]
+  gameState: Record<string, unknown>
+  createdAt?: number
+  updatedAt?: number
+}
+
 export interface IRunContextEditor extends NodeEditor {
   thoth: EngineContext
   abort: Function
