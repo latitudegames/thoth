@@ -1,4 +1,4 @@
-import { Spell } from '@/state/api/spells'
+import { Spell } from '@latitudegames/thoth-core/types'
 import { CSSProperties } from 'react'
 import Icon from '../../../components/Icon/Icon'
 import css from '../homeScreen.module.css'
