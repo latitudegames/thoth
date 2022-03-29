@@ -147,10 +147,10 @@ export type NodeData = ReteNodeData & {
 //   position: number[]
 // }
 
-export type Spell = {
-  id: string
-  nodes: Record<number, Node>
-}
+// export type Spell = {
+//   id: string
+//   nodes: Record<number, Node>
+// }
 
 export type ThothReteInput = {
   type: TaskOutputTypes
