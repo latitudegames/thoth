@@ -1,12 +1,11 @@
 import Rete, { Engine } from 'rete'
-import { Node } from 'rete/types'
 
 import {
+  ChainData,
   ModelCompletionOpts,
   ModuleType,
   NodeData,
   OpenAIResultChoice,
-  Spell,
   ThothWorkerInputs,
 } from '../types'
 import debuggerPlugin from './plugins/debuggerPlugin'
@@ -104,10 +103,7 @@ export const initSharedEngine = ({
 }
 
 // this parses through all the nodes in the data and finds the nodes associated with the given map
-export const extractNodes = (
-  nodes: Record<string, Node>,
-  map: Set<unknown>
-) => {
+export const extractNodes = (nodes: ChainData['nodes'], map: Set<unknown>) => {
   const names = Array.from(map.keys())
 
   return Object.keys(nodes)
@@ -118,7 +114,7 @@ export const extractNodes = (
 
 // This will get the node that was triggered given a socketKey associated with that node.
 export const getTriggeredNode = (
-  data: Spell,
+  data: ChainData,
   socketKey: string,
   map: Set<unknown>
 ) => {
