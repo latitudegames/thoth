@@ -54,17 +54,6 @@ const ModuleSelect = ({ control, updateData, initialValue }) => {
   // TODO fix on change to handle loading a single spell
   const onChange = async ({ value }) => {
     getSpell(value)
-
-    // const _spell = await findOneModule({ name: value })
-    // if (!_module) {
-    //   enqueueSnackbar('No module found', {
-    //     variant: 'error',
-    //   })
-    //   return
-    // }
-    // update(value)
-    // const module = _module.toJSON()
-    // await _openTab(module)
   }
 
   const update = update => {
