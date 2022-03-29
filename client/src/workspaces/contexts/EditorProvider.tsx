@@ -1,5 +1,5 @@
 import { initEditor } from '@latitudegames/thoth-core'
-import { ChainData } from '@latitudegames/thoth-core/dist/types'
+import { ChainData, Spell } from '@latitudegames/thoth-core/dist/types'
 import React, {
   useRef,
   useContext,
@@ -8,7 +8,7 @@ import React, {
   useEffect,
 } from 'react'
 
-import { useLazyGetSpellQuery, Spell } from '../../state/api/spells'
+import { useLazyGetSpellQuery } from '../../state/api/spells'
 
 import LoadingScreen from '../../components/LoadingScreen/LoadingScreen'
 import { MyNode } from '../../components/Node/Node'
