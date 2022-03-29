@@ -29,7 +29,7 @@ export interface ThothTask extends Task {
 export interface ModuleOptions {
   nodeType: 'input' | 'output' | 'triggerIn' | 'triggerOut' | 'module'
   socket?: Socket
-  override?: boolean
+  skip?: boolean
 }
 
 export abstract class ThothComponent<
