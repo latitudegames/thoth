@@ -4,18 +4,32 @@ import { useAppDispatch } from '@/state/hooks'
 import { openTab } from '@/state/tabs'
 // import { useModule } from '../../../contexts/ModuleProvider'
 import Select from '@components/Select/Select'
-import { useGetSpellsQuery, useNewSpellMutation } from '@/state/api/spells'
+import {
+  useLazyGetSpellQuery,
+  useGetSpellsQuery,
+  useNewSpellMutation,
+} from '@/state/api/spells'
 import defaultChain from '@/data/chains/default'
 import { ChainData } from '@latitudegames/thoth-core/types'
+import { useEffect } from 'react'
 
 const ModuleSelect = ({ control, updateData, initialValue }) => {
   const dispatch = useAppDispatch()
 
+  const [getSpell, { data: spell }] = useLazyGetSpellQuery()
   const { data: spells } = useGetSpellsQuery()
   const [newSpell] = useNewSpellMutation()
 
   const { enqueueSnackbar } = useSnackbar()
   const { dataKey } = control
+
+  // Handle what happens when a new spell is selected and fetched
+  useEffect(() => {
+    if (!spell) return
+
+    update(spell)
+    _openTab(spell)
+  }, [spell])
 
   const optionArray = () => {
     if (!spells) return
@@ -28,9 +42,10 @@ const ModuleSelect = ({ control, updateData, initialValue }) => {
   const _openTab = async spell => {
     const tab = {
       name: spell.name,
+      spellId: spell.name,
       type: 'spell',
-      moduleName: spell.name,
       openNew: false,
+      switchActive: false,
     }
 
     dispatch(openTab(tab))
@@ -38,6 +53,8 @@ const ModuleSelect = ({ control, updateData, initialValue }) => {
 
   // TODO fix on change to handle loading a single spell
   const onChange = async ({ value }) => {
+    getSpell(value)
+
     // const _spell = await findOneModule({ name: value })
     // if (!_module) {
     //   enqueueSnackbar('No module found', {
