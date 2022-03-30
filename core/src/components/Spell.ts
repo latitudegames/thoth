@@ -6,6 +6,7 @@ import {
   ThothWorkerInputs,
 } from '../../types'
 import { SpellControl } from '../dataControls/SpellControl'
+import { ThothEditor } from '../editor'
 import { EngineContext } from '../engine'
 import { Task } from '../plugins/taskPlugin/task'
 import { ThothComponent } from '../thoth-component'
@@ -21,7 +22,7 @@ export class SpellComponent extends ThothComponent<
   task
   info
   subscriptionMap: Record<number, Function> = {}
-  editor: any
+  editor: ThothEditor
   noBuildUpdate: boolean
   category: string
 
@@ -48,7 +49,21 @@ export class SpellComponent extends ThothComponent<
 
     spellControl.onData = (spell: Spell) => {
       node.data.spellId = spell.name
+
+      // If it has a subscription remove it here.
+      if (this.subscriptionMap[node.id]) this.subscriptionMap[node.id]()
+
+      // Update the sockets
       this.updateSockets(node, spell)
+
+      // Subscribe to any changes to that spell here
+      this.subscriptionMap[node.id] = this.editor.onSpellUpdated(
+        spell.name,
+        (spell: Spell) => {
+          // this can probably be better optimise this
+          this.updateSockets(node, spell)
+        }
+      )
     }
 
     node.inspector.add(spellControl)
