@@ -130,13 +130,6 @@ const MenuBar = () => {
     [onNew]
   )
 
-  const agentMenuItems =
-    process.env.REACT_APP_USE_AGENTS === 'true'
-      ? {
-
-      }
-      : {}
-
   //Menu bar entries
   const menuBarItems = {
     file: {

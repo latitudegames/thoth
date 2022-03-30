@@ -14,10 +14,10 @@ import { creatorToolsDatabase } from './databases/creatorTools'
 import { routes } from './routes'
 import { Handler, Method, Middleware } from './types'
 
-export const app: Koa = new Koa()
-export const router: Router = new Router()
+const app: Koa = new Koa()
+const router: Router = new Router()
 
-export async function init() {
+async function init() {
   // async function initLoop() {
   //   new roomManager()
   //   const expectedServerDelta = 1000 / 60
@@ -170,3 +170,4 @@ export async function init() {
 
   // await initLoop()
 }
+init()
