@@ -41,9 +41,9 @@ export class SpellComponent extends ThothComponent<ModuleWorkerOutput[]> {
       write: false,
     })
 
-    spellControl.onData = (spellName: string) => {
-      console.log('selected spell', spellName)
-      // this.updateSockets(node, moduleName)
+    spellControl.onData = (spell: Spell) => {
+      console.log('selected spell', spell)
+      this.updateSockets(node, spell)
     }
 
     node.inspector.add(spellControl)
