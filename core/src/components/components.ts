@@ -7,7 +7,6 @@ import { CreateOrGetAgent } from './entities/CreateOrGetAgent'
 import { EventRecall } from './entities/EventRecall'
 import { EventStore } from './entities/EventStore'
 import { GetAgentData } from './entities/GetAgentData'
-import { GetAgentPersonality } from './entities/GetAgentPersonality'
 import { InputDestructureComponent } from './entities/InputDestructure'
 import { Request } from './entities/Request'
 import { InputComponent } from './io/Input'
@@ -83,7 +82,6 @@ export const components = {
   SummarizeFacts: () => new SummarizeFacts(),
   textToSpeech: () => new TextToSpeech(),
   agentTextCompletion: () => new AgentTextCompletion(),
-  getAgentPersonality: () => new GetAgentPersonality(),
   keywordExtractor: () => new KeywordExtractor(),
   namedEntityRecognition: () => new NamedEntityRecognition(),
   createOrGetAgent: () => new CreateOrGetAgent(),
