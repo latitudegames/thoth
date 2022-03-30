@@ -149,7 +149,7 @@ const ThothInterfaceProvider = ({ children, tab }) => {
       topK,
     })
     if ('error' in result) return {}
-    return { outputs: [result.data] }
+    return result.data
   }
 
   const processCode = (code, inputs, data) => {
