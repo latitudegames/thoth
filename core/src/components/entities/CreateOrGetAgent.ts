@@ -56,7 +56,7 @@ export class CreateOrGetAgent extends ThothComponent<Promise<void>> {
     const speaker = inputs['speaker'][0] as string
 
     const resp = await axios.post(
-      `${process.env.REACT_APP_API_ROOT_URL}/chat_agent`,
+      `${process.env.REACT_APP_API_ROOT_URL}/createWikipediaEntity`,
       {
         speaker: speaker,
         agent: agent,

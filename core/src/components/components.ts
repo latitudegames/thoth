@@ -6,7 +6,6 @@ import { CacheManagerSet } from './entities/CacheManagerSet'
 import { CreateOrGetAgent } from './entities/CreateOrGetAgent'
 import { EventRecall } from './entities/EventRecall'
 import { EventStore } from './entities/EventStore'
-import { GetAgentData } from './entities/GetAgentData'
 import { InputDestructureComponent } from './entities/InputDestructure'
 import { Request } from './entities/Request'
 import { InputComponent } from './io/Input'
@@ -86,7 +85,6 @@ export const components = {
   namedEntityRecognition: () => new NamedEntityRecognition(),
   createOrGetAgent: () => new CreateOrGetAgent(),
   Classifier: () => new Classifier(),
-  getAgentData: () => new GetAgentData(),
   isNullOrUndefined: () => new IsNullOrUndefined(),
   isVariableTrue: () => new IsVariableTrue(),
   conversationStore: () => new EventStore(),

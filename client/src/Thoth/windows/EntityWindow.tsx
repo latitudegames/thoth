@@ -65,7 +65,7 @@ const EntityWindow = ({ id, updateCallback }) => {
     if (!loaded) {
       ; (async () => {
         const res = await axios.get(
-          `${process.env.REACT_APP_API_ROOT_URL}/agentInstance?instanceId=` + id
+          `${process.env.REACT_APP_API_ROOT_URL}/entity?instanceId=` + id
         )
         console.log('res is', res.data)
         setEnabled(res.data.enabled === true)
@@ -116,7 +116,7 @@ const EntityWindow = ({ id, updateCallback }) => {
 
   const _delete = () => {
     axios
-      .delete(`${process.env.REACT_APP_API_ROOT_URL}/agentInstance/` + id)
+      .delete(`${process.env.REACT_APP_API_ROOT_URL}/entity/` + id)
       .then(res => {
         console.log('deleted', res)
         setLoaded(false)
@@ -157,7 +157,7 @@ const EntityWindow = ({ id, updateCallback }) => {
       twitter_bot_name_regex
     }
     axios
-      .post(`${process.env.REACT_APP_API_ROOT_URL}/agentInstance`, {
+      .post(`${process.env.REACT_APP_API_ROOT_URL}/entity`, {
         id,
         data: _data,
       })

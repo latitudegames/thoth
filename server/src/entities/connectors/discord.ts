@@ -15,7 +15,6 @@ import emoji from 'emoji-dictionary'
 import emojiRegex from 'emoji-regex'
 import { EventEmitter } from 'events'
 import { database } from '../../database'
-import { handleInput } from './handleInput'
 import { getRandomEmptyResponse, startsWithCapital } from './utils'
 
 
@@ -35,320 +34,320 @@ export class discord_client {
     this.client.destroy()
   }
 
-  //Event that is triggered when a new user is added to the server
-  async handleGuildMemberAdd(user) {
-    const userId = user.user.id
-    const username = user.user.username
+  // //Event that is triggered when a new user is added to the server
+  // async handleGuildMemberAdd(user) {
+  //   const userId = user.user.id
+  //   const username = user.user.username
 
-    const dateNow = new Date()
-    const utc = new Date(
-      dateNow.getUTCFullYear(),
-      dateNow.getUTCMonth(),
-      dateNow.getUTCDate(),
-      dateNow.getUTCHours(),
-      dateNow.getUTCMinutes(),
-      dateNow.getUTCSeconds()
-    )
-    const utcStr =
-      dateNow.getDate() +
-      '/' +
-      (dateNow.getMonth() + 1) +
-      '/' +
-      dateNow.getFullYear() +
-      ' ' +
-      utc.getHours() +
-      ':' +
-      utc.getMinutes() +
-      ':' +
-      utc.getSeconds()
+  //   const dateNow = new Date()
+  //   const utc = new Date(
+  //     dateNow.getUTCFullYear(),
+  //     dateNow.getUTCMonth(),
+  //     dateNow.getUTCDate(),
+  //     dateNow.getUTCHours(),
+  //     dateNow.getUTCMinutes(),
+  //     dateNow.getUTCSeconds()
+  //   )
+  //   const utcStr =
+  //     dateNow.getDate() +
+  //     '/' +
+  //     (dateNow.getMonth() + 1) +
+  //     '/' +
+  //     dateNow.getFullYear() +
+  //     ' ' +
+  //     utc.getHours() +
+  //     ':' +
+  //     utc.getMinutes() +
+  //     ':' +
+  //     utc.getSeconds()
 
-    // TODO: Replace me with direct message handler
-    log('Discord', 'join', username, utcStr)
-    // MessageClient.instance.sendUserUpdateEvent('Discord', 'join', username, utcStr)
-  }
+  //   // TODO: Replace me with direct message handler
+  //   log('Discord', 'join', username, utcStr)
+  //   // MessageClient.instance.sendUserUpdateEvent('Discord', 'join', username, utcStr)
+  // }
 
-  //Event that is triggered when a user is removed from the server
-  async handleGuildMemberRemove(user) {
-    const userId = user.user.id
-    const username = user.user.username
+  // //Event that is triggered when a user is removed from the server
+  // async handleGuildMemberRemove(user) {
+  //   const userId = user.user.id
+  //   const username = user.user.username
 
-    const dateNow = new Date()
-    const utc = new Date(
-      dateNow.getUTCFullYear(),
-      dateNow.getUTCMonth(),
-      dateNow.getUTCDate(),
-      dateNow.getUTCHours(),
-      dateNow.getUTCMinutes(),
-      dateNow.getUTCSeconds()
-    )
-    const utcStr =
-      dateNow.getDate() +
-      '/' +
-      (dateNow.getMonth() + 1) +
-      '/' +
-      dateNow.getFullYear() +
-      ' ' +
-      utc.getHours() +
-      ':' +
-      utc.getMinutes() +
-      ':' +
-      utc.getSeconds()
-    // TODO: Replace me with direct message handler
-    log('Discord', 'leave', username, utcStr)
-    // MessageClient.instance.sendUserUpdateEvent('Discord', 'leave', username, utcStr)
-  }
+  //   const dateNow = new Date()
+  //   const utc = new Date(
+  //     dateNow.getUTCFullYear(),
+  //     dateNow.getUTCMonth(),
+  //     dateNow.getUTCDate(),
+  //     dateNow.getUTCHours(),
+  //     dateNow.getUTCMinutes(),
+  //     dateNow.getUTCSeconds()
+  //   )
+  //   const utcStr =
+  //     dateNow.getDate() +
+  //     '/' +
+  //     (dateNow.getMonth() + 1) +
+  //     '/' +
+  //     dateNow.getFullYear() +
+  //     ' ' +
+  //     utc.getHours() +
+  //     ':' +
+  //     utc.getMinutes() +
+  //     ':' +
+  //     utc.getSeconds()
+  //   // TODO: Replace me with direct message handler
+  //   log('Discord', 'leave', username, utcStr)
+  //   // MessageClient.instance.sendUserUpdateEvent('Discord', 'leave', username, utcStr)
+  // }
 
-  //Event that is triggered when a user reacts to a message
-  async handleMessageReactionAdd(reaction, user) {
-    const { message } = reaction
-    const emojiName = emoji.getName(reaction.emoji)
+  // //Event that is triggered when a user reacts to a message
+  // async handleMessageReactionAdd(reaction, user) {
+  //   const { message } = reaction
+  //   const emojiName = emoji.getName(reaction.emoji)
 
-    const dateNow = new Date()
-    const utc = new Date(
-      dateNow.getUTCFullYear(),
-      dateNow.getUTCMonth(),
-      dateNow.getUTCDate(),
-      dateNow.getUTCHours(),
-      dateNow.getUTCMinutes(),
-      dateNow.getUTCSeconds()
-    )
-    const utcStr =
-      dateNow.getDate() +
-      '/' +
-      (dateNow.getMonth() + 1) +
-      '/' +
-      dateNow.getFullYear() +
-      ' ' +
-      utc.getHours() +
-      ':' +
-      utc.getMinutes() +
-      ':' +
-      utc.getSeconds()
+  //   const dateNow = new Date()
+  //   const utc = new Date(
+  //     dateNow.getUTCFullYear(),
+  //     dateNow.getUTCMonth(),
+  //     dateNow.getUTCDate(),
+  //     dateNow.getUTCHours(),
+  //     dateNow.getUTCMinutes(),
+  //     dateNow.getUTCSeconds()
+  //   )
+  //   const utcStr =
+  //     dateNow.getDate() +
+  //     '/' +
+  //     (dateNow.getMonth() + 1) +
+  //     '/' +
+  //     dateNow.getFullYear() +
+  //     ' ' +
+  //     utc.getHours() +
+  //     ':' +
+  //     utc.getMinutes() +
+  //     ':' +
+  //     utc.getSeconds()
 
-    // TODO: Replace me with direct message handler
-    log(
-      'Discord',
-      message.channel.id,
-      message.id,
-      message.content,
-      user.username,
-      emojiName,
-      utcStr
-    )
-    // MessageClient.instance.sendMessageReactionAdd('Discord', message.channel.id, message.id, message.content, user.username, emojiName, utcStr)
-  }
+  //   // TODO: Replace me with direct message handler
+  //   log(
+  //     'Discord',
+  //     message.channel.id,
+  //     message.id,
+  //     message.content,
+  //     user.username,
+  //     emojiName,
+  //     utcStr
+  //   )
+  //   // MessageClient.instance.sendMessageReactionAdd('Discord', message.channel.id, message.id, message.content, user.username, emojiName, utcStr)
+  // }
 
-  async agents(client, message, args, author, addPing, channel) {
-    log('Discord', message.channel.id)
-    // TODO: Replace me with direct message handler
-    // MessageClient.instance.sendGetAgents('Discord', message.channel.id)
-  }
+  // async agents(client, message, args, author, addPing, channel) {
+  //   log('Discord', message.channel.id)
+  //   // TODO: Replace me with direct message handler
+  //   // MessageClient.instance.sendGetAgents('Discord', message.channel.id)
+  // }
 
-  //ban command, it is used to ban a user from the agent so the agent doesn't respon to this user
-  async ban(client, message, args, author, addPing, channel) {
-    const pw = args.parsed_words
-    if (pw === undefined || pw.length !== 1) {
-      message.channel.send('invalid command structure!')
-      message.channel.stopTyping()
-      return
-    }
+  // //ban command, it is used to ban a user from the agent so the agent doesn't respon to this user
+  // async ban(client, message, args, author, addPing, channel) {
+  //   const pw = args.parsed_words
+  //   if (pw === undefined || pw.length !== 1) {
+  //     message.channel.send('invalid command structure!')
+  //     message.channel.stopTyping()
+  //     return
+  //   }
 
-    const { mentions } = message
-    log(JSON.stringify(mentions))
-    if (
-      mentions === undefined ||
-      mentions.users === undefined ||
-      mentions.users.size !== 1
-    ) {
-      message.channel.send('invalid command structure!')
-      message.channel.stopTyping()
-      return
-    }
-    const user = mentions.users.first().id
-    await database.instance.banUser(user, 'discord')
-    message.channel.send('banned user: ' + `<@!${user}>`)
-    message.channel.stopTyping()
-  }
+  //   const { mentions } = message
+  //   log(JSON.stringify(mentions))
+  //   if (
+  //     mentions === undefined ||
+  //     mentions.users === undefined ||
+  //     mentions.users.size !== 1
+  //   ) {
+  //     message.channel.send('invalid command structure!')
+  //     message.channel.stopTyping()
+  //     return
+  //   }
+  //   const user = mentions.users.first().id
+  //   await database.instance.banUser(user, 'discord')
+  //   message.channel.send('banned user: ' + `<@!${user}>`)
+  //   message.channel.stopTyping()
+  // }
 
-  //returns all the current commands for the bot
-  async commands(client, message, args, author, addPing, channel) {
-    let str = ''
-    this.client.helpFields[0].commands.forEach(function (item, index) {
-      if (item[3].length <= 2000 && item[3].length > 0) {
-        str += '!' + item[0] + ' - ' + item[3] + '\n'
-      }
-    })
-    if (str.length === 0) this.client.embed.description = 'empty response'
-    message.channel.send(str)
-    message.channel.stopTyping()
-  }
+  // //returns all the current commands for the bot
+  // async commands(client, message, args, author, addPing, channel) {
+  //   let str = ''
+  //   this.client.helpFields[0].commands.forEach(function (item, index) {
+  //     if (item[3].length <= 2000 && item[3].length > 0) {
+  //       str += '!' + item[0] + ' - ' + item[3] + '\n'
+  //     }
+  //   })
+  //   if (str.length === 0) this.client.embed.description = 'empty response'
+  //   message.channel.send(str)
+  //   message.channel.stopTyping()
+  // }
 
-  //ping is used to send a message directly to the agent
-  async ping(client, message, args, author, addPing, channel) {
-    if (
-      args.grpc_args.message === undefined ||
-      args.grpc_args.message === '' ||
-      args.grpc_args.message.replace(/\s/g, '').length === 0
-    ) {
-      this.client.embed.description = 'Wrong format, !ping message'
-      message.channel.send(client.embed)
-      this.client.embed.desscription = ''
-      message.channel.stopTyping()
-      return
-    }
+  // //ping is used to send a message directly to the agent
+  // async ping(client, message, args, author, addPing, channel) {
+  //   if (
+  //     args.grpc_args.message === undefined ||
+  //     args.grpc_args.message === '' ||
+  //     args.grpc_args.message.replace(/\s/g, '').length === 0
+  //   ) {
+  //     this.client.embed.description = 'Wrong format, !ping message'
+  //     message.channel.send(client.embed)
+  //     this.client.embed.desscription = ''
+  //     message.channel.stopTyping()
+  //     return
+  //   }
 
-    args.grpc_args['client_name'] = 'discord'
-    args.grpc_args['chat_id'] = channel
+  //   args.grpc_args['client_name'] = 'discord'
+  //   args.grpc_args['chat_id'] = channel
 
-    const date = new Date()
-    const utc = new Date(
-      date.getUTCFullYear(),
-      date.getUTCMonth(),
-      date.getUTCDate(),
-      date.getUTCHours(),
-      date.getUTCMinutes(),
-      date.getUTCSeconds()
-    )
-    const utcStr =
-      date.getDate() +
-      '/' +
-      (date.getMonth() + 1) +
-      '/' +
-      date.getFullYear() +
-      ' ' +
-      utc.getHours() +
-      ':' +
-      utc.getMinutes() +
-      ':' +
-      utc.getSeconds()
-    args.grpc_args['createdAt'] = utcStr
+  //   const date = new Date()
+  //   const utc = new Date(
+  //     date.getUTCFullYear(),
+  //     date.getUTCMonth(),
+  //     date.getUTCDate(),
+  //     date.getUTCHours(),
+  //     date.getUTCMinutes(),
+  //     date.getUTCSeconds()
+  //   )
+  //   const utcStr =
+  //     date.getDate() +
+  //     '/' +
+  //     (date.getMonth() + 1) +
+  //     '/' +
+  //     date.getFullYear() +
+  //     ' ' +
+  //     utc.getHours() +
+  //     ':' +
+  //     utc.getMinutes() +
+  //     ':' +
+  //     utc.getSeconds()
+  //   args.grpc_args['createdAt'] = utcStr
 
-    let parentId = ''
-    if (args.grpc_args['isThread'] === true) {
-      parentId = args.grpc_args['parentId']
-    }
+  //   let parentId = ''
+  //   if (args.grpc_args['isThread'] === true) {
+  //     parentId = args.grpc_args['parentId']
+  //   }
 
-    // TODO: Replace me with direct message handler
-    // MessageClient.instance.sendMessage(args.grpc_args['message'], message.id, 'Discord', args.grpc_args['chat_id'], utcStr, addPing, author.username, 'parentId:' + parentId)
-    log(
-      args.grpc_args['message'],
-      message.id,
-      'Discord',
-      args.grpc_args['chat_id'],
-      utcStr,
-      addPing,
-      author.username,
-      'parentId:' + parentId
-    )
-  }
+  //   // TODO: Replace me with direct message handler
+  //   // MessageClient.instance.sendMessage(args.grpc_args['message'], message.id, 'Discord', args.grpc_args['chat_id'], utcStr, addPing, author.username, 'parentId:' + parentId)
+  //   log(
+  //     args.grpc_args['message'],
+  //     message.id,
+  //     'Discord',
+  //     args.grpc_args['chat_id'],
+  //     utcStr,
+  //     addPing,
+  //     author.username,
+  //     'parentId:' + parentId
+  //   )
+  // }
 
-  //ping agent is used to ping a specific agent directly
-  async pingagent(client, message, args, author, addPing, channel) {
-    if (
-      args.grpc_args.message === undefined ||
-      args.grpc_args.message === '' ||
-      args.grpc_args.message.replace(/\s/g, '').length === 0 ||
-      args.grpc_args.message.includes('agent=') ||
-      args.grpc_args.agent === undefined ||
-      args.grpc_args.agent === '' ||
-      args.grpc_args.agent.replace(/\s/g, '').length === 0
-    ) {
-      this.client.embed.description =
-        'Wrong format, !pingagent agent=agent message=value'
-      message.channel.send(client.embed)
-      this.client.embed.desscription = ''
-      message.channel.stopTyping()
-      return
-    }
+  // //ping agent is used to ping a specific agent directly
+  // async pingagent(client, message, args, author, addPing, channel) {
+  //   if (
+  //     args.grpc_args.message === undefined ||
+  //     args.grpc_args.message === '' ||
+  //     args.grpc_args.message.replace(/\s/g, '').length === 0 ||
+  //     args.grpc_args.message.includes('agent=') ||
+  //     args.grpc_args.agent === undefined ||
+  //     args.grpc_args.agent === '' ||
+  //     args.grpc_args.agent.replace(/\s/g, '').length === 0
+  //   ) {
+  //     this.client.embed.description =
+  //       'Wrong format, !pingagent agent=agent message=value'
+  //     message.channel.send(client.embed)
+  //     this.client.embed.desscription = ''
+  //     message.channel.stopTyping()
+  //     return
+  //   }
 
-    // TODO: Replace me with direct message handler
-    log(
-      'Discord',
-      message.channel.id,
-      message.id,
-      args.grpc_args['message'],
-      args.grpc_args['agent'],
-      addPing,
-      author.username
-    )
-    // MessageClient.instance.sendPingSoloAgent('Discord', message.channel.id, message.id, args.grpc_args['message'], args.grpc_args['agent'], addPing, author.username)
-  }
+  //   // TODO: Replace me with direct message handler
+  //   log(
+  //     'Discord',
+  //     message.channel.id,
+  //     message.id,
+  //     args.grpc_args['message'],
+  //     args.grpc_args['agent'],
+  //     addPing,
+  //     author.username
+  //   )
+  //   // MessageClient.instance.sendPingSoloAgent('Discord', message.channel.id, message.id, args.grpc_args['message'], args.grpc_args['agent'], addPing, author.username)
+  // }
 
-  //setagent is used to update an agent
-  async setagent(client, message, args, author, addPing, channel) {
-    if (args.grpc_args.message === undefined || args.grpc_args.message === '') {
-      this.client.embed.description =
-        'Wrong format, !setagent agent=agent context=value'
-      message.channel.send(client.embed)
-      this.client.embed.desscription = ''
-      message.channel.stopTyping()
-      return
-    }
-    if (
-      args.grpc_args['name'] === undefined ||
-      args.grpc_args['name'] === '' ||
-      args.grpc_args['context'] === undefined ||
-      args.grpc_args['context'] === ''
-    ) {
-      this.client.embed.description =
-        'Wrong format, !setagent agent=agent context=value'
-      message.channel.send(client.embed)
-      this.client.embed.desscription = ''
-      message.channel.stopTyping()
-      return
-    }
+  // //setagent is used to update an agent
+  // async setagent(client, message, args, author, addPing, channel) {
+  //   if (args.grpc_args.message === undefined || args.grpc_args.message === '') {
+  //     this.client.embed.description =
+  //       'Wrong format, !setagent agent=agent context=value'
+  //     message.channel.send(client.embed)
+  //     this.client.embed.desscription = ''
+  //     message.channel.stopTyping()
+  //     return
+  //   }
+  //   if (
+  //     args.grpc_args['name'] === undefined ||
+  //     args.grpc_args['name'] === '' ||
+  //     args.grpc_args['context'] === undefined ||
+  //     args.grpc_args['context'] === ''
+  //   ) {
+  //     this.client.embed.description =
+  //       'Wrong format, !setagent agent=agent context=value'
+  //     message.channel.send(client.embed)
+  //     this.client.embed.desscription = ''
+  //     message.channel.stopTyping()
+  //     return
+  //   }
 
-    // TODO: Replace me with direct message handler
-    log(
-      'Discord',
-      message.channel.id,
-      args.grpc_args['name'],
-      args.grpc_args['context']
-    )
-    // MessageClient.instance.sendSetAgentsFields('Discord', message.channel.id, args.grpc_args['name'], args.grpc_args['context'])
-  }
+  //   // TODO: Replace me with direct message handler
+  //   log(
+  //     'Discord',
+  //     message.channel.id,
+  //     args.grpc_args['name'],
+  //     args.grpc_args['context']
+  //   )
+  //   // MessageClient.instance.sendSetAgentsFields('Discord', message.channel.id, args.grpc_args['name'], args.grpc_args['context'])
+  // }
 
-  //sets the name for an agent to respond for it
-  async setname(client, message, args, author, addPing, channel) {
-    if (args.parsed_words === undefined || args.parsed_words.length !== 1) {
-      message.channel.send('Invalid format, !setname name')
-      message.channel.stopTyping()
-      return
-    }
+  // //sets the name for an agent to respond for it
+  // async setname(client, message, args, author, addPing, channel) {
+  //   if (args.parsed_words === undefined || args.parsed_words.length !== 1) {
+  //     message.channel.send('Invalid format, !setname name')
+  //     message.channel.stopTyping()
+  //     return
+  //   }
 
-    const name = args.parsed_words[0]
-    this.bot_name = name
-    this.client.name_regex = new RegExp(name, 'ig')
-    log(client.bot_name + ' - ' + this.client.name_regex)
-    message.channel.send('Updated bot name to: ' + name)
-    message.channel.stopTyping()
-  }
+  //   const name = args.parsed_words[0]
+  //   this.bot_name = name
+  //   this.client.name_regex = new RegExp(name, 'ig')
+  //   log(client.bot_name + ' - ' + this.client.name_regex)
+  //   message.channel.send('Updated bot name to: ' + name)
+  //   message.channel.stopTyping()
+  // }
 
-  //unbans a user from the agent's ban list
-  async unban(client, message, args, author, addPing, channel) {
-    const pw = args.parsed_words
-    if (pw === undefined || pw.length !== 1) {
-      message.channel.send('invalid command structure!')
-      message.channel.stopTyping()
-      return
-    }
+  // //unbans a user from the agent's ban list
+  // async unban(client, message, args, author, addPing, channel) {
+  //   const pw = args.parsed_words
+  //   if (pw === undefined || pw.length !== 1) {
+  //     message.channel.send('invalid command structure!')
+  //     message.channel.stopTyping()
+  //     return
+  //   }
 
-    const { mentions } = message
-    log(JSON.stringify(mentions))
-    if (
-      mentions === undefined ||
-      mentions.users === undefined ||
-      mentions.users.size !== 1
-    ) {
-      message.channel.send('invalid command structure!')
-      message.channel.stopTyping()
-      return
-    }
-    const user = mentions.users.first().id
-    await database.instance.unbanUser(user, 'discord')
-    message.channel.send('unbanned user: ' + `<@!${user}>`)
-    message.channel.stopTyping()
-  }
+  //   const { mentions } = message
+  //   log(JSON.stringify(mentions))
+  //   if (
+  //     mentions === undefined ||
+  //     mentions.users === undefined ||
+  //     mentions.users.size !== 1
+  //   ) {
+  //     message.channel.send('invalid command structure!')
+  //     message.channel.stopTyping()
+  //     return
+  //   }
+  //   const user = mentions.users.first().id
+  //   await database.instance.unbanUser(user, 'discord')
+  //   message.channel.send('unbanned user: ' + `<@!${user}>`)
+  //   message.channel.stopTyping()
+  // }
 
   //Event that is trigger when a new message is created (sent)
   messageCreate = async (client, message) => {
@@ -616,7 +615,7 @@ export class discord_client {
     }, message.content.length)
 
     console.log('discord spell_handler:', this.spell_handler)
-    const response = await handleInput(
+    const response = await this.handleInput(
       message.content,
       message.author.username,
       this.discord_bot_name,
@@ -1389,19 +1388,10 @@ export class discord_client {
     discord_bot_name,
     discord_empty_responses,
     entity,
-    spell_handler,
-    spell_version = 'latest'
+    handleInput
   ) => {
     this.agent = agent
     this.entity = entity
-
-    // TODO:
-    // 1. Create new thoth graph
-    // 2. create a thoth graph handler function
-    // 3. set this handle message function to it
-    // 4. change handlemessage calls to use this function
-
-
 
     if (!discord_starting_words || discord_starting_words?.length <= 0) {
       this.discord_starting_words = ['hi', 'hey']
@@ -1413,6 +1403,7 @@ export class discord_client {
           .toLowerCase()
       }
     }
+
     if (!discord_empty_responses || discord_empty_responses?.length <= 0) {
       this.discord_empty_responses = ["I can't understand you"]
     } else {
@@ -1426,8 +1417,7 @@ export class discord_client {
 
     this.discord_bot_name_regex = discord_bot_name_regex
     this.discord_bot_name = discord_bot_name
-    this.spell_handler = spell_handler
-    this.spell_version = spell_version
+    this.handleInput = handleInput
 
     const token = discord_api_token ?? process.env.DISCORD_API_TOKEN
     if (!token) return console.warn('No API token for Discord bot, skipping')
@@ -1460,12 +1450,12 @@ export class discord_client {
     this.client.embed = embed
 
     this.client.on('messageCreate', this.messageCreate.bind(null, this.client))
-    this.client.on('messageDelete', this.messageDelete.bind(null, this.client))
-    this.client.on('messageUpdate', this.messageUpdate.bind(null, this.client))
-    this.client.on(
-      'presenceUpdate',
-      this.presenceUpdate.bind(null, this.client)
-    )
+    // this.client.on('messageDelete', this.messageDelete.bind(null, this.client))
+    // this.client.on('messageUpdate', this.messageUpdate.bind(null, this.client))
+    // this.client.on(
+    //   'presenceUpdate',
+    //   this.presenceUpdate.bind(null, this.client)
+    // )
 
     this.messageEvent = new EventEmitter()
     this.messageEvent.on(
@@ -1586,43 +1576,43 @@ export class discord_client {
     // this.client.commands.set('setname', this.setname)
     // this.client.commands.set('unban', this.unban)
 
-    setInterval(() => {
-      const channelIds = []
+    // setInterval(() => {
+    //   const channelIds = []
 
-      this.client.channels.cache.forEach(async channel => {
-        if (!channel || !channel.topic) return
-        if (channel === undefined || channel.topic === undefined) return
-        if (
-          channel.topic.length < 0 ||
-          channel.topic.toLowerCase() !== 'daily discussion'
-        )
-          return
-        if (channelIds.includes(channel.id)) return
+    //   this.client.channels.cache.forEach(async channel => {
+    //     if (!channel || !channel.topic) return
+    //     if (channel === undefined || channel.topic === undefined) return
+    //     if (
+    //       channel.topic.length < 0 ||
+    //       channel.topic.toLowerCase() !== 'daily discussion'
+    //     )
+    //       return
+    //     if (channelIds.includes(channel.id)) return
 
-        channelIds.push(channel.id)
-        if (
-          this.discussionChannels[channel.id] === undefined ||
-          !this.discussionChannels
-        ) {
-          this.discussionChannels[channel.id] = {
-            timeout: setTimeout(() => {
-              delete this.discussionChannels[channel.id]
-            }, 1000 * 3600 * 4),
-            responded: false,
-          }
-          // const resp = await handleInput(
-          //   'Tell me about ' + 'butterlifes',
-          //   'bot',
-          //    this.discord_bot_name ?? 'Agent',
-          //   'discord',
-          //   message.channel.id,
-          //   this.spell_handler,
-          //   this.spell_version
-          // )
-          // channel.send(resp)
-        }
-      })
-    }, 1000 * 3600)
+    //     channelIds.push(channel.id)
+    //     if (
+    //       this.discussionChannels[channel.id] === undefined ||
+    //       !this.discussionChannels
+    //     ) {
+    //       this.discussionChannels[channel.id] = {
+    //         timeout: setTimeout(() => {
+    //           delete this.discussionChannels[channel.id]
+    //         }, 1000 * 3600 * 4),
+    //         responded: false,
+    //       }
+    //       // const resp = await this.handleInput(
+    //       //   'Tell me about ' + 'butterlifes',
+    //       //   'bot',
+    //       //    this.discord_bot_name ?? 'Agent',
+    //       //   'discord',
+    //       //   message.channel.id,
+    //       //   this.spell_handler,
+    //       //   this.spell_version
+    //       // )
+    //       // channel.send(resp)
+    //     }
+    //   })
+    // }, 1000 * 3600)
 
     this.client.login(token)
   }

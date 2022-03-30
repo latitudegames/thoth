@@ -20,7 +20,7 @@ function initEntityLoop(update: Function, lateUpdate: Function) {
         update(id)
 
         updated.push(id)
-        database.instance.setInstanceUpdated(id)
+        database.instance.setEntityUpdated(id)
       }
     }
     for (let i = 0; i < updated.length; i++) {
@@ -53,8 +53,8 @@ export class World {
     this.onCreate()
   }
 
-  async updateEntities() {
-    this.newEntities = await database.instance.getAgentInstances()
+  async updateEntity() {
+    this.newEntities = await database.instance.getEntities()
     const newEntities = this.newEntities
     delete newEntities['updated_at']
     const oldEntities = this.oldEntities ?? []
@@ -88,7 +88,7 @@ export class World {
       if (newEntities[i].dirty) {
         await this.removeEntity(newEntities[i].id)
         await this.addEntity(new Entity(newEntities[i]))
-        await database.instance.setInstanceDirtyFlag(newEntities[i].id, false)
+        await database.instance.setEntityDirty(newEntities[i].id, false)
       }
     }
 
@@ -98,7 +98,7 @@ export class World {
   async onCreate() {
     initEntityLoop(
       async (id: number) => {
-        await this.updateEntities()
+        await this.updateEntity()
         this.updateInstance(id)
       },
       async (id: number) => {

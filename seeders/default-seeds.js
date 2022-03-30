@@ -11,37 +11,6 @@ module.exports = {
       ['id']
     )
 
-    // eslint-disable-next-line camelcase
-    const agents = await queryInterface.rawSelect(
-      'agents',
-      {
-        where: {},
-        plain: false,
-      },
-      ['id']
-    )
-
-    if (agents.length <= 0) {
-      await queryInterface.bulkInsert(
-        'agents',
-        [
-          {
-            id: 0,
-            agent: 'Thales',
-            dialog: '',
-            facts: '',
-            monologue: '',
-            morals: '',
-            sensitive_phrases: JSON.stringify([]),
-            sensitive_responses: JSON.stringify([]),
-            sensitive_words: JSON.stringify([]),
-            bad_words: JSON.stringify([]),
-          },
-        ],
-        {}
-      )
-    }
-
     if (chains.length <= 0) {
       await queryInterface.bulkInsert(
         'deployed_spells',

@@ -1,4 +1,4 @@
-import { createWikipediaAgent } from '../entities/connectors/wikipedia'
+import { createWikipediaEntity } from '../entities/connectors/wikipedia'
 import { database } from '../database'
 import { handleInput } from '../entities/connectors/handleInput'
 //@ts-ignore
@@ -16,56 +16,6 @@ import { MakeModelRequest } from '../utils/MakeModelRequest'
 
 export const modules: Record<string, unknown> = {}
 
-const getAgentsHandler = async (ctx: Koa.Context) => {
-  const agents = await database.instance.getAgents()
-  ctx.body = agents
-}
-
-const getAgentHandler = async (ctx: Koa.Context) => {
-  const agent = await database.instance.getAgent(ctx.query.agent as string)
-  if (agent == null) {
-    return {}
-  }
-
-  ctx.body = agent
-}
-
-const createOrUpdateAgentHandler = async (ctx: Koa.Context) => {
-  const { agent, data } = ctx.request.body
-  if (!agent || agent == undefined || agent.length <= 0) {
-    ctx.status = 404
-    return (ctx.body = { error: 'invalid agent name' })
-  }
-
-  const agentExists = await database.instance.getAgentExists(agent)
-  if (!agentExists) {
-    await database.instance.createAgent(agent)
-  }
-  // TODO: Combine all of these!
-  try {
-    await database.instance.updateAgent(agent, {
-      dialog: data.dialog,
-      morals: data.morals,
-      facts: data.facts,
-      monologue: data.monologue,
-      personality: data.personality,
-      greetings: data.greetings,
-    })
-  } catch (e) {
-    console.log('createOrUpdateAgentHandler:', e)
-    ctx.status = 500
-    return (ctx.body = { error: 'internal error' })
-  }
-
-  ctx.body = 'ok'
-}
-
-const deleteAgentHandler = async (ctx: Koa.Context) => {
-  console.log('params is', ctx.params)
-  const { id } = ctx.params
-  return (ctx.body = await database.instance.deleteAgent(id))
-}
-
 const executeHandler = async (ctx: Koa.Context) => {
   const message = ctx.request.body.command
   const speaker = ctx.request.body.sender
@@ -76,8 +26,8 @@ const executeHandler = async (ctx: Koa.Context) => {
   const spell_handler = ctx.request.body.handler ?? 'default'
   if (message.includes('/become')) {
     let out: any = {}
-    if (!(await database.instance.getAgentExists(agent))) {
-      out = await createWikipediaAgent('Speaker', agent, '', '')
+    if (!(await database.instance.entityExists(agent))) {
+      out = await createWikipediaEntity('Speaker', agent, '', '')
     }
 
     if (out === undefined) {
@@ -106,18 +56,18 @@ const executeHandler = async (ctx: Koa.Context) => {
   )
 }
 
-const getAgentInstancesHandler = async (ctx: Koa.Context) => {
+const getEntitiesHandler = async (ctx: Koa.Context) => {
   try {
-    let data = await database.instance.getAgentInstances()
+    let data = await database.instance.getEntities()
     return (ctx.body = data)
   } catch (e) {
-    console.log('getAgentInstancesHandler:', e)
+    console.log('getEntitiesHandler:', e)
     ctx.status = 500
     return (ctx.body = { error: 'internal error' })
   }
 }
 
-const getAgentInstanceHandler = async (ctx: Koa.Context) => {
+const getEntityHandler = async (ctx: Koa.Context) => {
   try {
     const instanceId = ctx.request.query.instanceId as string
     const isNum = /^\d+$/.test(instanceId)
@@ -128,10 +78,10 @@ const getAgentInstanceHandler = async (ctx: Koa.Context) => {
           : 1
         : 1
       : 1
-    let data = await database.instance.getAgentInstance(_instanceId)
+    let data = await database.instance.getEntity(_instanceId)
     if (data === undefined || !data) {
       let newId = _instanceId
-      while ((await database.instance.instanceIdExists(newId)) || newId <= 0) {
+      while ((await database.instance.entityExists(newId)) || newId <= 0) {
         newId++
       }
 
@@ -143,20 +93,20 @@ const getAgentInstanceHandler = async (ctx: Koa.Context) => {
     }
     return (ctx.body = data)
   } catch (e) {
-    console.log('getAgentInstanceHandler:', e)
+    console.log('getEntityHandler:', e)
     ctx.status = 500
     return (ctx.body = { error: 'internal error' })
   }
 }
 
-const addAgentInstanceHandler = async (ctx: Koa.Context) => {
+const addEntityHandler = async (ctx: Koa.Context) => {
   const data = ctx.request.body.data
   let instanceId = ctx.request.body.id ?? ctx.request.body.instanceId
 
   if (!instanceId || instanceId === undefined || instanceId <= 0) {
     instanceId = 0
     while (
-      (await database.instance.instanceIdExists(instanceId)) ||
+      (await database.instance.entityExists(instanceId)) ||
       instanceId <= 0
     ) {
       instanceId++
@@ -165,21 +115,21 @@ const addAgentInstanceHandler = async (ctx: Koa.Context) => {
 
   try {
     console.log('updated agent database with', data)
-    return (ctx.body = await database.instance.updateAgentInstances(
+    return (ctx.body = await database.instance.updateEntity(
       instanceId,
       data
     ))
   } catch (e) {
-    console.log('addAgentInstanceHandler:', e)
+    console.log('addEntityHandler:', e)
     ctx.status = 500
     return (ctx.body = { error: 'internal error' })
   }
 }
 
-const deleteAgentInstanceHandler = async (ctx: Koa.Context) => {
+const deleteEntityHandler = async (ctx: Koa.Context) => {
   const { id } = ctx.params
-  console.log('deleteAgentInstanceHandler', deleteAgentInstanceHandler)
-  ctx.body = await database.instance.deleteAgentInstance(id)
+  console.log('deleteEntityHandler', deleteEntityHandler)
+  ctx.body = await database.instance.deleteEntity(id)
 }
 
 const getEvent = async (ctx: Koa.Context) => {
@@ -222,35 +172,6 @@ const createEvent = async (ctx: Koa.Context) => {
   )
 
   return (ctx.body = 'ok')
-}
-
-const getRelationshipMatrix = async (ctx: Koa.Context) => {
-  const agent = ctx.request.query.agent
-  const speaker = ctx.request.query.speaker
-
-  try {
-    const matrix = database.instance.getRelationshipMatrix(speaker, agent)
-    return (ctx.body = matrix)
-  } catch (e) {
-    console.log('getRelationshipMatrix:', e)
-    ctx.status = 500
-    return (ctx.body = { error: 'internal error' })
-  }
-}
-
-const setRelationshipMatrix = async (ctx: Koa.Context) => {
-  const agent = ctx.request.body.agent
-  const speaker = ctx.request.body.speaker
-  const matrix = ctx.request.body.matrix
-
-  try {
-    database.instance.setRelationshipMatrix(speaker, agent, matrix)
-    return (ctx.body = 'ok')
-  } catch (e) {
-    console.log('setRelationshipMatrix:', e)
-    ctx.status = 500
-    return (ctx.body = { error: 'internal error' })
-  }
 }
 
 const getSpeechToText = async (ctx: Koa.Context) => {
@@ -326,7 +247,7 @@ function getAudioUrl(
   })
 }
 
-const getAgentImage = async (ctx: Koa.Context) => {
+const getEntityImage = async (ctx: Koa.Context) => {
   const agent = ctx.request.query.agent
 
   const resp = await axios.get(
@@ -499,10 +420,10 @@ const makeWeaviateRequest = async (ctx: Koa.Context) => {
   return (ctx.body = { data: '' })
 }
 
-const getAgentData = async (ctx: Koa.Context) => {
+const getEntityData = async (ctx: Koa.Context) => {
   const agent = ctx.request.query.agent as string
 
-  const data = await database.instance.getAgent(agent)
+  const data = await database.instance.getEntity(agent)
 
   return (ctx.body = { agent: data })
 }
@@ -537,7 +458,7 @@ const requestInformationAboutVideo = async (
   return success ? choice : "Sorry I can't answer your question!"
 }
 
-const chatAgent = async (ctx: Koa.Context) => {
+const chatEntity = async (ctx: Koa.Context) => {
   const speaker = ctx.request.body.speaker as string
   const agent = ctx.request?.body?.agent as string
 
@@ -545,8 +466,8 @@ const chatAgent = async (ctx: Koa.Context) => {
   const facts = ''
   let out = undefined
 
-  if (!(await database.instance.getAgentExists(agent))) {
-    out = await createWikipediaAgent(speaker, agent, personality, facts)
+  if (!(await database.instance.entityExists(agent))) {
+    out = await createWikipediaEntity(speaker, agent, personality, facts)
   }
 
   if (out === undefined) {
@@ -562,7 +483,7 @@ const getEntitiesInfo = async (ctx: Koa.Context) => {
     : -1
 
   try {
-    let data = await database.instance.getAgentInstances()
+    let data = await database.instance.getEntities()
     let info = undefined
     for (let i = 0; i < data.length; i++) {
       if (data[i].id === id) {
@@ -572,51 +493,33 @@ const getEntitiesInfo = async (ctx: Koa.Context) => {
 
     return (ctx.body = info)
   } catch (e) {
-    console.log('getAgentInstancesHandler:', e)
+    console.log('getEntitiesHandler:', e)
     ctx.status = 500
     return (ctx.body = { error: 'internal error' })
   }
 }
 
-export const agents: Route[] = [
-  {
-    path: '/agents',
-    access: noAuth,
-    get: getAgentsHandler,
-  },
-
-  {
-    path: '/agent',
-    access: noAuth,
-    get: getAgentHandler,
-    post: createOrUpdateAgentHandler,
-    delete: deleteAgentHandler,
-  },
-  {
-    path: '/agent/:id',
-    access: noAuth,
-    delete: deleteAgentHandler,
-  },
+export const entities: Route[] = [
   {
     path: '/execute',
     access: noAuth,
     post: executeHandler,
   },
   {
-    path: '/agentInstances',
+    path: '/entities',
     access: noAuth,
-    get: getAgentInstancesHandler,
+    get: getEntitiesHandler,
   },
   {
-    path: '/agentInstance',
+    path: '/entity',
     access: noAuth,
-    get: getAgentInstanceHandler,
-    post: addAgentInstanceHandler,
+    get: getEntityHandler,
+    post: addEntityHandler,
   },
   {
-    path: '/agentInstance/:id',
+    path: '/entity/:id',
     access: noAuth,
-    delete: deleteAgentInstanceHandler,
+    delete: deleteEntityHandler,
   },
   {
     path: '/event',
@@ -625,20 +528,14 @@ export const agents: Route[] = [
     post: createEvent,
   },
   {
-    path: '/relationship_matrix',
-    access: noAuth,
-    get: getRelationshipMatrix,
-    post: setRelationshipMatrix,
-  },
-  {
     path: '/speech_to_text',
     access: noAuth,
     get: getSpeechToText,
   },
   {
-    path: '/get_agent_image',
+    path: '/get_entity_image',
     access: noAuth,
-    get: getAgentImage,
+    get: getEntityImage,
   },
   {
     path: '/cache_manager',
@@ -663,11 +560,6 @@ export const agents: Route[] = [
     post: makeWeaviateRequest,
   },
   {
-    path: '/agent_data',
-    access: noAuth,
-    get: getAgentData,
-  },
-  {
     path: '/custom_message',
     access: noAuth,
     post: customMessage,
@@ -675,7 +567,7 @@ export const agents: Route[] = [
   {
     path: '/chat_agent',
     access: noAuth,
-    post: chatAgent,
+    post: chatEntity,
   },
   {
     path: '/entities_info',

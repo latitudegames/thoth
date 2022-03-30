@@ -7,7 +7,7 @@ const EntityManagerWindow = () => {
   const [data, setData] = useState(false)
 
   const resetData = async () => {
-    const res = await axios.get(`${process.env.REACT_APP_API_ROOT_URL}/agentInstances`);
+    const res = await axios.get(`${process.env.REACT_APP_API_ROOT_URL}/entities`);
     console.log("res is ", res)
     setData(res.data);
   }
@@ -15,17 +15,17 @@ const EntityManagerWindow = () => {
   const createNew = () => {
     console.log("Create new called")
     axios
-      .post(`${process.env.REACT_APP_API_ROOT_URL}/agentInstance`, { data: {} })
+      .post(`${process.env.REACT_APP_API_ROOT_URL}/entity`, { data: {} })
       .then(async res => {
         console.log("response is", res)
-        const res2 = await axios.get(`${process.env.REACT_APP_API_ROOT_URL}/agentInstances`);
+        const res2 = await axios.get(`${process.env.REACT_APP_API_ROOT_URL}/entities`);
         setData(res2.data);
       })
   }
 
   useEffect(() => {
     (async () => {
-      const res = await axios.get(`${process.env.REACT_APP_API_ROOT_URL}/agentInstances`);
+      const res = await axios.get(`${process.env.REACT_APP_API_ROOT_URL}/entities`);
       setData(res.data);
       console.log("set the data", res.data)
     })()

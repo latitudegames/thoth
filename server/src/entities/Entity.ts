@@ -10,6 +10,50 @@ import { twilio_client } from './connectors/twilio'
 //import { harmony_client } from '../../../core/src/connectors/harmony'
 import { xrengine_client } from './connectors/xrengine'
 
+async function handleInput(
+  message: string | undefined,
+  speaker: string,
+  agent: string,
+  client: string,
+  channelId: string,
+  entity: number,
+  spell_handler: string,
+  spell_version: string = 'latest'
+) {
+  if (spell_handler === undefined) {
+    spell_handler = 'default'
+  }
+  if (spell_version === undefined) {
+    spell_version = 'latest'
+  }
+
+  const url = encodeURI(
+    `http://localhost:8001/chains/${spell_handler}/${spell_version}`
+  )
+
+  const response = await axios.post(`${url}`, {
+    Input: {
+      Input: message,
+      Speaker: speaker,
+      Agent: agent,
+      Client: client,
+      ChannelID: channelId,
+      Entity: entity,
+    },
+  })
+  let index = undefined
+
+  for (const x in response.data.outputs) {
+    index = x
+  }
+
+  if (index && index !== undefined) {
+    return response.data.outputs[index]
+  } else {
+    return undefined
+  }
+}
+
 export class Entity {
   name = ''
 
@@ -40,6 +84,14 @@ export class Entity {
     console.log('initializing discord, spell_handler:', spell_handler)
     if (this.discord)
       throw new Error('Discord already running for this agent on this instance')
+
+    // TODO:
+    // 1. Create new thoth graph
+    // 2. create a thoth graph handler function
+    // 3. set this handle message function to it
+    // 4. change handlemessage calls to use this function
+
+
     this.discord = new discord_client()
     this.discord.createDiscordClient(
       this,
@@ -49,8 +101,7 @@ export class Entity {
       discord_bot_name,
       discord_empty_responses,
       entity,
-      spell_handler,
-      spell_version
+      spell_handler
     )
     console.log('Started discord client for agent ' + this.name)
   }

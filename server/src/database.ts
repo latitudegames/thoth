@@ -139,105 +139,6 @@ export class database {
       : data.split('\n').reverse()
   }
 
-  async setRelationshipMatrix(speaker: any, agent: any, matrix: any) {
-    const check =
-      'SELECT * FROM relationship_matrix WHERE speaker=$1 AND agent=$2'
-    const cvalues = [speaker, agent]
-
-    const test = await this.client.query(check, cvalues)
-    let query = ''
-    let values = []
-
-    if (test && test.rows && test.rows.length > 0) {
-      query =
-        'UPDATE relationship_matrix SET matrix=$1 WHERE speaker=$2 AND agent=$3'
-      values = [matrix, speaker, agent]
-    } else {
-      query =
-        'INSERT INTO relationship_matrix(speaker, agent, matrix) VALUES($1, $2, $3)'
-      values = [speaker, agent, matrix]
-    }
-
-    await this.client.query(query, values)
-  }
-
-  async getRelationshipMatrix(speaker: any, agent: any) {
-    const query =
-      'SELECT * FROM relationship_matrix WHERE speaker=$1 AND agent=$2'
-    const values = [speaker, agent]
-
-    const row = await this.client.query(query, values)
-    return row && row.rows[0] ? JSON.parse(row.rows[0].matrix) : null
-  }
-
-  async getAgent(agent: string) {
-    const query = 'SELECT * FROM agents WHERE agent=$1'
-    const values = [agent]
-
-    const rows = await this.client.query(query, values)
-    if (rows && rows.rows && rows.rows.length > 0) {
-      return rows.rows[0]
-    } else {
-      return null
-    }
-  }
-
-  async getAgentExists(agent: any) {
-    const query = 'SELECT * FROM agents WHERE agent=$1'
-    const values = [agent]
-
-    const rows = await this.client.query(query, values)
-    if (rows && rows.rows && rows.rows.length > 0) {
-      return true
-    } else {
-      return false
-    }
-  }
-
-  async updateAgent(agent: any, data: { [x: string]: any; dialog?: any; personality?: any; facts?: any; morals?: any; monologue?: any; greetings?: any }) {
-    let q = ''
-    Object.keys(data).forEach(key => {
-      if (data[key] !== null) {
-        data[key] = (data[key] as string)
-          .replaceAll('"', ' ')
-          .replaceAll("'", ' ')
-        q += `${key}='${data[key]}',`
-      }
-    })
-    // remove the last character from q
-    q = q.substring(0, q.length - 1)
-    const query = 'UPDATE agents SET ' + q + ' WHERE agent=$1'
-    console.log('update query is', query)
-    const values = [agent]
-
-    return await this.client.query(query, values)
-  }
-  async createAgent(agent: any) {
-    const query = 'INSERT INTO agents(agent) VALUES($1)'
-    const values = [agent]
-
-    return await this.client.query(query, values)
-  }
-  async getAgents() {
-    const query = 'SELECT * FROM agents'
-
-    return (await this.client.query(query)).rows
-  }
-
-  async deleteAgent(id: any) {
-    const query = `DELETE FROM agents WHERE id='${id}'`
-    const response = await this.client.query(query)
-  }
-
-  async createAgentSQL(sql: string | any[]) {
-    if (!sql || sql.length <= 0) {
-      return false
-    }
-
-    await this.client.query(sql as any)
-    return true
-  }
-
   async addWikipediaData(agent: any, data: any) {
     const query = 'INSERT INTO wikipedia(agent, data) VALUES($1, $2)'
     const values = [agent, data]
@@ -263,12 +164,12 @@ export class database {
     return rows && rows.rows && rows.rows.length > 0
   }
 
-  async getAgentInstances() {
+  async getEntities() {
     const query = 'SELECT * FROM entities'
     const rows = await this.client.query(query)
     return rows.rows
   }
-  async getAgentInstance(id: any) {
+  async getEntity(id: any) {
     const query = 'SELECT * FROM entities WHERE id=$1'
     const values = [id]
 
@@ -279,14 +180,14 @@ export class database {
       return undefined
     }
   }
-  async instanceIdExists(id: any) {
+  async entityExists(id: any) {
     const query = 'SELECT * FROM entities WHERE id=$1'
     const values = [id]
 
     const rows = await this.client.query(query, values)
     return rows && rows.rows && rows.rows.length > 0
   }
-  async deleteAgentInstance(id: any) {
+  async deleteEntity(id: any) {
     const query = 'DELETE FROM entities WHERE id=$1'
     const values = [id]
     console.log('query called', query, values)
@@ -309,21 +210,21 @@ export class database {
       return []
     }
   }
-  async setInstanceDirtyFlag(id: any, value: boolean) {
+  async setEntityDirty(id: any, value: boolean) {
     const query = 'UPDATE entities SET dirty=$1 WHERE id=$2'
     const values = [value, id]
 
     await this.client.query(query, values)
   }
 
-  async setInstanceUpdated(id: any) {
+  async setEntityUpdated(id: any) {
     const query = 'UPDATE entities SET updated_at=$1 WHERE id=$2'
     const values = [new Date(), id]
 
     await this.client.query(query, values)
   }
-  async updateAgentInstances(id: any, data: { [x: string]: any; dirty?: any }) {
-    console.log('updateAgentInstances', id, data)
+  async updateEntity(id: any, data: { [x: string]: any; dirty?: any }) {
+    console.log('updateEntity', id, data)
     const check = 'SELECT * FROM entities WHERE id=$1'
     const cvalues = [id]
 

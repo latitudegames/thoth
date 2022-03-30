@@ -16,7 +16,7 @@ const client = weaviate.client({
 })
 
 //Creates a new agent based on its Wikipedia article
-export async function createWikipediaAgent(speaker, name, personality, facts) {
+export async function createWikipediaEntity(speaker, name, personality, facts) {
   try {
     let start = Date.now()
     //gets the info from the wikipedia article, if the agent name can't be found it returns null, in order to send the default agent

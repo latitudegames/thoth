@@ -1105,7 +1105,11 @@ class XREngineBot {
     context.overridePermissions(parsedUrl.origin, ['microphone', 'camera'])
 
     log(`Going to ${parsedUrl}`)
-    await this.page.goto(parsedUrl, { waitUntil: 'domcontentloaded' })
+    try {
+      await this.page.goto(parsedUrl, { waitUntil: 'domcontentloaded' })
+    } catch (error) {
+      log("Unable to connect to XREngine world", error)
+    }
 
     /* const granted = await this.page.evaluate(async () => {
             return (await navigator.permissions.query({ name: 'camera' })).state;
