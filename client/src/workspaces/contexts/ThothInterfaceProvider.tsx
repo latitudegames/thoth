@@ -7,7 +7,11 @@ import { invokeInference } from '../../utils/huggingfaceHelper'
 import { usePubSub } from '../../contexts/PubSubProvider'
 import { useFetchFromImageCacheMutation } from '@/state/api/visualGenerationsApi'
 import { Spell, ThothWorkerInputs } from '@latitudegames/thoth-core/dist/types'
-import { useGetSpellQuery, useSaveSpellMutation } from '@/state/api/spells'
+import {
+  useGetSpellQuery,
+  useSaveSpellMutation,
+  useRunSpellMutation,
+} from '@/state/api/spells'
 
 /*
 Some notes here.  The new rete provider, not to be confused with the old rete provider renamed to the editor provider, is designed to serve as the single source of truth for interfacing with the rete internal system.  This unified interface will also allow us to replicate the same API in the server, where rete expects certain functions to exist but doesn't care what is behind these functions so long as they work.
@@ -41,6 +45,7 @@ const ThothInterfaceProvider = ({ children, tab }) => {
   const { events, publish, subscribe } = usePubSub()
   const spellRef = useRef<Spell | null>(null)
   const [fetchFromImageCache] = useFetchFromImageCacheMutation()
+  const [_runSpell] = useRunSpellMutation()
   const [saveSpell] = useSaveSpellMutation()
   const { data: _spell } = useGetSpellQuery(tab.spell, {
     skip: !tab.spell,
@@ -162,7 +167,13 @@ const ThothInterfaceProvider = ({ children, tab }) => {
     )
   }
 
-  const runSpell = (inputs, spellId) => {}
+  const runSpell = async (inputs, spellId) => {
+    console.log('RUN SPELL')
+    const response = await _runSpell({ inputs, spellId })
+
+    console.log('RESPONSE', response)
+    return response
+  }
 
   const clearTextEditor = () => {
     publish($TEXT_EDITOR_CLEAR(tab.id))
