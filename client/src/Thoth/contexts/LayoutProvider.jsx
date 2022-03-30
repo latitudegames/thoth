@@ -17,9 +17,8 @@ const windowTypes = {
   TEXT_EDITOR: 'textEditor',
   INSPECTOR: 'inspector',
   STATE_MANAGER: 'stateManager',
-  AGENT_MANAGER: 'agentManager',
   SEARCH_CORPUS: 'searchCorpus',
-  ENT_MANAGER: 'entManager',
+  ENT_MANAGER: 'entityManager',
   EDITOR: 'editor',
   PLAYTEST: 'playtest',
 }

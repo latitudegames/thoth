@@ -537,17 +537,6 @@ const requestInformationAboutVideo = async (
   return success ? choice : "Sorry I can't answer your question!"
 }
 
-const getPersonalities = async (ctx: Koa.Context) => {
-  const agents = await database.instance.getAgents()
-  const res: string[] = []
-
-  for (let i = 0; i < agents.length; i++) {
-    res.push(agents[i].agent)
-  }
-
-  return (ctx.body = { personalities: res })
-}
-
 const chatAgent = async (ctx: Koa.Context) => {
   const speaker = ctx.request.body.speaker as string
   const agent = ctx.request?.body?.agent as string
@@ -682,11 +671,6 @@ export const agents: Route[] = [
     path: '/custom_message',
     access: noAuth,
     post: customMessage,
-  },
-  {
-    path: '/personalities',
-    access: noAuth,
-    get: getPersonalities,
   },
   {
     path: '/chat_agent',

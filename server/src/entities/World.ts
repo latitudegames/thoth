@@ -110,7 +110,7 @@ export class World {
   async updateInstance(id: number) {
     for (const i in this.objects) {
       if (this.objects[i].id === id) {
-        await (this.objects[i]).onUpdate()
+        // await (this.objects[i]).onUpdate()
         return
       }
     }
@@ -118,7 +118,7 @@ export class World {
   async lateUpdateInstance(id: number) {
     for (const i in this.objects) {
       if (this.objects[i].id === id) {
-        await (this.objects[i])?.onLateUpdate()
+        // await (this.objects[i])?.onLateUpdate()
         return
       }
     }

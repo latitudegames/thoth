@@ -15,21 +15,14 @@
 // We need to break some of this code out so that we have more control of it in the node graph
 // i.e. text classification and such
 
-import { random } from 'lodash'
-import { Url } from 'url'
 import Xvfb from 'xvfb'
-
-import roomManager from '../components/agent/roomManager'
-import { classifyText } from '../utils/textClassifier'
+import { database } from '../../database'
 import { browserWindow, PageUtils } from './browser'
-import { database } from './database'
-import { handleCustomInput, handleInput } from './handleInput'
+import { handleInput } from './handleInput'
 import {
   detectOsOption,
-  getRandomEmptyResponse,
-  getSetting,
-  randomInt,
-  startsWithCapital,
+  getRandomEmptyResponse, randomInt,
+  startsWithCapital
 } from './utils'
 
 function isUrl(url: string): boolean {

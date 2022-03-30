@@ -6,11 +6,10 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-param-reassign */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//@ts-nocheck
 import path from 'path'
 import pg from 'pg'
 
-function randomInt(min, max) {
+function randomInt(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
@@ -34,10 +33,10 @@ export class database {
 
   async connect() {
     this.client = new Client({
-      user: process.env.PGUSER,
-      password: process.env.PGPASSWORD,
-      database: process.env.PGDATABASE,
-      port: process.env.PGPORT,
+      user: process.env.PGUSER as any,
+      password: process.env.PGPASSWORD as any,
+      database: process.env.PGDATABASE as any,
+      port: process.env.PGPORT as any,
       host: process.env.PGHOST,
       ssl: PGSSL
         ? {
@@ -195,7 +194,7 @@ export class database {
     }
   }
 
-  async updateAgent(agent: any, data) {
+  async updateAgent(agent: any, data: { [x: string]: any; dialog?: any; personality?: any; facts?: any; morals?: any; monologue?: any; greetings?: any }) {
     let q = ''
     Object.keys(data).forEach(key => {
       if (data[key] !== null) {
@@ -235,7 +234,7 @@ export class database {
       return false
     }
 
-    await this.client.query(sql)
+    await this.client.query(sql as any)
     return true
   }
 
@@ -310,20 +309,20 @@ export class database {
       return []
     }
   }
-  async setInstanceDirtyFlag(id, value) {
+  async setInstanceDirtyFlag(id: any, value: boolean) {
     const query = 'UPDATE agent_instance SET dirty=$1 WHERE id=$2'
     const values = [value, id]
 
     await this.client.query(query, values)
   }
 
-  async setInstanceUpdated(id) {
+  async setInstanceUpdated(id: any) {
     const query = 'UPDATE agent_instance SET updated_at=$1 WHERE id=$2'
     const values = [new Date(), id]
 
     await this.client.query(query, values)
   }
-  async updateAgentInstances(id, data) {
+  async updateAgentInstances(id: any, data: { [x: string]: any; dirty?: any }) {
     console.log('updateAgentInstances', id, data)
     const check = 'SELECT * FROM agent_instance WHERE id=$1'
     const cvalues = [id]
@@ -349,7 +348,7 @@ export class database {
       } catch (e) {
         throw new Error(e)
       }
-    } else if (Object.keys(data) <= 0) {
+    } else if (Object.keys(data).length <= 0) {
       const query = 'INSERT INTO agent_instance (personality) VALUES ($1)'
       const values = ['common']
       console.log('called ', query)
@@ -364,10 +363,10 @@ export class database {
   }
 
   async addDocument(
-    description,
-    keywords,
-    is_included,
-    storeId
+    description: any,
+    keywords: any,
+    is_included: any,
+    storeId: any
   ): Promise<number> {
     let id = randomInt(0, 100000)
     while (await this.documentIdExists(id)) {
@@ -381,18 +380,18 @@ export class database {
     await this.client.query(query, values)
     return id
   }
-  async removeDocument(documentId) {
+  async removeDocument(documentId: string | string[] | undefined) {
     const query = 'DELETE FROM documents WHERE id=$1'
     const values = [documentId]
 
     await this.client.query(query, values)
   }
   async updateDocument(
-    documentId,
-    description,
-    keywords,
-    is_included,
-    storeId
+    documentId: any,
+    description: any,
+    keywords: any,
+    is_included: any,
+    storeId: any
   ) {
     const query =
       'UPDATE documents SET description=$1, keywords=$2, is_included=$3, store_id=$4 WHERE id=$5'
@@ -400,7 +399,7 @@ export class database {
 
     await this.client.query(query, values)
   }
-  async getDocumentsOfStore(storeId): Promise<any> {
+  async getDocumentsOfStore(storeId: string | string[] | undefined): Promise<any> {
     const query = 'SELECT * FROM documents WHERE store_id=$1 ORDER BY id DESC'
     const values = [storeId]
 
@@ -431,7 +430,7 @@ export class database {
       return []
     }
   }
-  async getDocuments(agent): Promise<any[]> {
+  async getDocuments(agent: any): Promise<any[]> {
     const query = 'SELECT * FROM documents WHERE agent=$1'
     const values = [agent]
 
@@ -442,7 +441,7 @@ export class database {
       return []
     }
   }
-  async getDocumentsWithTopic(agent, topic): Promise<any[]> {
+  async getDocumentsWithTopic(agent: any, topic: any): Promise<any[]> {
     const query = 'SELECT * FROM documents WHERE agent=$1 AND topic=$2'
     const values = [agent, topic]
 
@@ -453,7 +452,7 @@ export class database {
       return []
     }
   }
-  async documentIdExists(documentId) {
+  async documentIdExists(documentId: any) {
     const query = 'SELECT * FROM documents WHERE id=$1'
     const values = [documentId]
 
@@ -462,10 +461,10 @@ export class database {
   }
 
   async addContentObj(
-    description,
-    keywords,
-    is_included,
-    documentId
+    description: any,
+    keywords: any,
+    is_included: any,
+    documentId: any
   ): Promise<number> {
     let id = randomInt(0, 100000)
     while (await this.contentObjIdExists(id)) {
@@ -479,13 +478,13 @@ export class database {
     await this.client.query(query, values)
     return id
   }
-  async editContentObj(objId, description, keywords, is_included, documentId) {
+  async editContentObj(objId: any, description: any, keywords: any, is_included: any, documentId: any) {
     const query =
       'UPDATE content_objects SET description = $1, keywords = $2, is_included = $3, document_id = $4 WHERE id = $5'
     const values = [description, keywords, is_included, documentId, objId]
     await this.client.query(query, values)
   }
-  async getContentObjOfDocument(documentId): Promise<any> {
+  async getContentObjOfDocument(documentId: string | string[] | undefined): Promise<any> {
     const query =
       'SELECT * FROM content_objects WHERE document_id = $1 ORDER BY id DESC'
     const values = [documentId]
@@ -494,13 +493,13 @@ export class database {
     if (rows && rows.rows && rows.rows.length > 0) return rows.rows
     else return []
   }
-  async removeContentObject(objId) {
+  async removeContentObject(objId: string | string[] | undefined) {
     const query = 'DELETE FROM content_objects WHERE id=$1'
     const values = [objId]
 
     await this.client.query(query, values)
   }
-  async contentObjIdExists(contentObjId) {
+  async contentObjIdExists(contentObjId: any) {
     const query = 'SELECT * FROM content_objects WHERE id=$1'
     const values = [contentObjId]
 
@@ -508,7 +507,7 @@ export class database {
     return rows && rows.rows && rows.rows.length > 0
   }
 
-  async addDocumentStore(name): Promise<number> {
+  async addDocumentStore(name: any): Promise<number> {
     let id = randomInt(0, 100000)
     while (await this.documentStoreIdExists(id)) {
       id = randomInt(0, 100000)
@@ -520,12 +519,12 @@ export class database {
     await this.client.query(query, values)
     return id
   }
-  async updateDocumentStore(storeId, name) {
+  async updateDocumentStore(storeId: any, name: any) {
     const query = 'UPDATE documents_store SET name = $1 WHERE id = $2'
     const values = [name, storeId]
     await this.client.query(query, values)
   }
-  async removeDocumentStore(storeId) {
+  async removeDocumentStore(storeId: string | string[] | undefined) {
     const query = 'DELETE FROM documents_store WHERE id = $1'
     const values = [storeId]
     await this.client.query(query, values)
@@ -536,7 +535,7 @@ export class database {
     if (rows && rows.rows && rows.rows.length > 0) return rows.rows
     else return []
   }
-  async documentStoreIdExists(documentStoreId) {
+  async documentStoreIdExists(documentStoreId: any) {
     const query = 'SELECT * FROM documents_store WHERE id=$1'
     const values = [documentStoreId]
 

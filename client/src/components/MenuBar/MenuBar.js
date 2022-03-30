@@ -26,7 +26,6 @@ const MenuBar = () => {
   const {
     $SAVE_SPELL,
     $CREATE_STATE_MANAGER,
-    $CREATE_AGENT_MANAGER,
     $CREATE_ENT_MANAGER,
     $CREATE_CONFIG_MANAGER,
     $CREATE_PLAYTEST,
@@ -86,10 +85,6 @@ const MenuBar = () => {
     publish($CREATE_SEARCH_CORPUS(activeTabRef.current.id))
   }
 
-  const onAgentManagerCreate = () => {
-    publish($CREATE_AGENT_MANAGER(activeTabRef.current.id))
-  }
-
   const onEntityManagerCreate = () => {
     publish($CREATE_ENT_MANAGER(activeTabRef.current.id))
   }
@@ -138,12 +133,7 @@ const MenuBar = () => {
   const agentMenuItems =
     process.env.REACT_APP_USE_AGENTS === 'true'
       ? {
-        agent_manager: {
-          onClick: onAgentManagerCreate,
-        },
-        ent_manager: {
-          onClick: onEntityManagerCreate,
-        }
+
       }
       : {}
 
@@ -206,7 +196,9 @@ const MenuBar = () => {
             search_corpus: {
               onClick: onCreateSearchCorpus,
             },
-            ...agentMenuItems,
+            ent_manager: {
+              onClick: onEntityManagerCreate,
+            },
             playtest: {
               onClick: onPlaytestCreate,
             },

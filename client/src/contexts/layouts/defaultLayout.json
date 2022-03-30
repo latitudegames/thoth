@@ -80,15 +80,9 @@
               },
               {
                 "type": "tab",
-                "id": "#11",
-                "name": "Agent Manager",
-                "component": "agentManager"
-              },
-              {
-                "type": "tab",
                 "id": "#12",
                 "name": "Ent Manager",
-                "component": "entManager"
+                "component": "entityManager"
               },
               {
                 "type": "tab",

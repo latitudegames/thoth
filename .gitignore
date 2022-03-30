@@ -11,12 +11,12 @@ build
 # Generated Styles for AreaPlugin
 core/src/plugins/areaPlugin/style.css.d.ts
 yarn-error.log
-client/.env
-server/.env
-core/.env
 server/google_credentials.json
 
 # Ignore lockfiles
 yarn.lock
 package-lock.json
 .idea
+
+.env.local
+.env.*.local

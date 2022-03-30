@@ -1,13 +1,10 @@
 /* eslint-disable no-console */
 import axios from 'axios'
-import { config } from 'dotenv-flow'
 import Koa from 'koa'
 import { creatorToolsDatabase } from '../databases/creatorTools'
 import { noAuth } from '../middleware/auth'
 import { Route } from '../types'
 import { CustomError } from '../utils/CustomError'
-
-config({ path: '.env' })
 
 // Should we use the Latitude API or run independently?
 const latitudeApiKey = process.env.LATITUDE_API_KEY !== '' && process.env.LATITUDE_API_KEY

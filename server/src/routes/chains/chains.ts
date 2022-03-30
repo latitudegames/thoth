@@ -13,8 +13,6 @@ import {
 import { getTestSpell } from './testSpells'
 import { Graph, Module } from './types'
 import { creatorToolsDatabase } from '../../databases/creatorTools'
-import { config } from 'dotenv-flow'
-config({ path: '.env' })
 
 export const modules: Record<string, unknown> = {}
 

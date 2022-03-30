@@ -20,8 +20,8 @@ const EntityManagerWindow = () => {
       .post(`${process.env.REACT_APP_API_ROOT_URL}/agentInstance`, { data: {} })
       .then(async res => {
         console.log("response is", res)
-        const res = await axios.get(`${process.env.REACT_APP_API_ROOT_URL}/agentInstances`);
-        setData(res.data);
+        const res2 = await axios.get(`${process.env.REACT_APP_API_ROOT_URL}/agentInstances`);
+        setData(res2.data);
       })
   }
 

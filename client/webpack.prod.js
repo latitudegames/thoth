@@ -14,10 +14,7 @@ module.exports = () => {
     mode: 'production',
     plugins: [
       new CompressionPlugin(),
-      new Dotenv({
-        path: './.env',
-        systemvars: true,
-      }), dotenv - flow - webpack
+      new Dotenv(),
     ],
     optimization: {
       minimize: true,

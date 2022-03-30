@@ -3,19 +3,16 @@ config()
 //@ts-ignore
 import cors from '@koa/cors'
 import Router from '@koa/router'
-import { database } from './database'
+import { initClassifier } from '@latitudegames/thoth-core/src/utils/textClassifier'
 import HttpStatus from 'http-status-codes'
 import Koa from 'koa'
 import koaBody from 'koa-body'
 import compose from 'koa-compose'
+import { cacheManager } from './cacheManager'
+import { database } from './database'
 import { creatorToolsDatabase } from './databases/creatorTools'
 import { routes } from './routes'
 import { Handler, Method, Middleware } from './types'
-import { initSpeechServer } from './systems/googleSpeechToText'
-import { World } from './entities/World'
-import { initSearchCorpus } from './systems/searchCorpus'
-import { initClassifier } from '@latitudegames/thoth-core/src/utils/textClassifier'
-import { cacheManager } from './cacheManager'
 
 export const app: Koa = new Koa()
 export const router: Router = new Router()
@@ -43,8 +40,6 @@ export async function init() {
 
   // required for some current consumers (i.e Thoth)
   // to-do: standardize an allowed origin list based on env values or another source of truth?
-  initSpeechServer(false)
-  initSearchCorpus(false)
   await initClassifier()
   new cacheManager(-1)
 

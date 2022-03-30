@@ -1,4 +1,6 @@
 dist
 src/plugins/areaPlugin/style.css.d.ts
-.env
 LICENSE
+
+.env.local
+.env.*.local
