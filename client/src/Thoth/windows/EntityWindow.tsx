@@ -50,6 +50,17 @@ const EntityWindow = ({ id, updateCallback }) => {
   const [xrengine_starting_words, setXREngineStartingWords] = useState('')
   const [xrengine_empty_responses, setXREngineEmptyResponses] = useState('')
 
+  const [twitter_client_enable, setTwitterClientEnable] = useState(false)
+  const [twitter_token, setTwitterToken] = useState('')
+  const [twitter_id, setTwitterId] = useState('')
+  const [twitter_app_token, setTwitterAppToken] = useState('')
+  const [twitter_app_token_secret, setTwitterAppTokenSecret] = useState('')
+  const [twitter_access_token, setTwitterAccessToken] = useState('')
+  const [twitter_access_token_secret, setTwitterAccessTokenSecret] = useState('')
+  const [twitter_bot_name, setTwitterBotName] = useState('')
+  const [twitter_bot_name_regex, setTwitterBotNameRegex] = useState('')
+
+
   const [spellList, setSpellList] = useState('')
   useEffect(() => {
     if (!loaded) {
@@ -81,6 +92,16 @@ const EntityWindow = ({ id, updateCallback }) => {
         setXREngineBotNameRegex(res.data.xrengine_bot_name_regex)
         setXREngineStartingWords(res.data.xrengine_starting_words)
         setXREngineEmptyResponses(res.data.xrengine_empty_responses)
+
+        setTwitterClientEnable(res.data.twitter_client_enable === true)
+        setTwitterToken(res.data.twitter_token)
+        setTwitterId(res.data.twitter_id)
+        setTwitterAppToken(res.data.twitter_app_token)
+        setTwitterAppTokenSecret(res.data.twitter_app_token_secret)
+        setTwitterAccessToken(res.data.twitter_access_token)
+        setTwitterAccessTokenSecret(res.data.twitter_access_token_secret)
+        setTwitterBotName(res.data.twitter_bot_name)
+        setTwitterBotNameRegex(res.data.twitter_bot_name_regex)
         setLoaded(true)
       })()
     }
@@ -128,6 +149,15 @@ const EntityWindow = ({ id, updateCallback }) => {
       xrengine_bot_name_regex,
       xrengine_starting_words,
       xrengine_empty_responses,
+      twitter_client_enable,
+      twitter_token,
+      twitter_id,
+      twitter_app_token,
+      twitter_app_token_secret,
+      twitter_access_token,
+      twitter_access_token_secret,
+      twitter_bot_name,
+      twitter_bot_name_regex
     }
     axios
       .post(`${process.env.REACT_APP_API_ROOT_URL}/agentInstance`, {
@@ -161,6 +191,17 @@ const EntityWindow = ({ id, updateCallback }) => {
         setXREngineBotNameRegex(responseData.xrengine_bot_name_regex)
         setXREngineStartingWords(responseData.xrengine_starting_words)
         setXREngineEmptyResponses(responseData.xrengine_empty_responses)
+
+        setTwitterClientEnable(responseData.twitterClientEnable)
+        setTwitterToken(responseData.twitterToken)
+        setTwitterId(responseData.twitterId)
+        setTwitterAppToken(responseData.twitterAppToken)
+        setTwitterAppTokenSecret(responseData.twitterAppTokenSecret)
+        setTwitterAccessToken(responseData.twitterAccessToken)
+        setTwitterAccessTokenSecret(responseData.twitterAccessTokenSecret)
+        setTwitterBotName(responseData.twitterBotName)
+        setTwitterBotNameRegex(responseData.twitterBotNameRegex)
+
         updateCallback()
       })
   }
@@ -449,6 +490,106 @@ const EntityWindow = ({ id, updateCallback }) => {
               </div>
             </>
           )}
+
+          <div className="form-item">
+            <span className="form-item-label">Twitter Client Enabled</span>
+            <input
+              type="checkbox"
+              value={twitter_client_enable}
+              defaultChecked={twitter_client_enable || twitter_client_enable === 'true'}
+              onChange={e => {
+                setTwitterClientEnable(e.target.checked)
+              }}
+            />
+          </div>
+
+
+          {twitter_client_enable && 
+            (
+              <>
+                <div className="form-item">
+                  <span className="form-item-label">Bearer Token</span>
+                  <input
+                    type="text"
+                    defaultValue={twitter_token}
+                    onChange={e => {
+                      setTwitterToken(e.target.value)
+                    }}
+                  />
+                </div>
+                <div className="form-item">
+                  <span className="form-item-label">Twitter ID</span>
+                  <input
+                    type="text"
+                    defaultValue={twitter_id}
+                    onChange={e => {
+                      setTwitterId(e.target.value)
+                    }}
+                  />
+                </div>
+                <div className="form-item">
+                  <span className="form-item-label">Twitter App Token</span>
+                  <input
+                    type="text"
+                    defaultValue={twitter_app_token}
+                    onChange={e => {
+                      setTwitterAppToken(e.target.value)
+                    }}
+                  />
+                </div>
+                <div className="form-item">
+                  <span className="form-item-label">Twitter App Token Secret</span>
+                  <input
+                    type="text"
+                    defaultValue={twitter_app_token_secret}
+                    onChange={e => {
+                      setTwitterAppTokenSecret(e.target.value)
+                    }}
+                  />
+                </div>
+                <div className="form-item">
+                  <span className="form-item-label">Twitter Access Token</span>
+                  <input
+                    type="text"
+                    defaultValue={twitter_access_token}
+                    onChange={e => {
+                      setTwitterAccessToken(e.target.value)
+                    }}
+                  />
+                </div>
+                <div className="form-item">
+                  <span className="form-item-label">Twitter Access Token Secret</span>
+                  <input
+                    type="text"
+                    defaultValue={twitter_access_token_secret}
+                    onChange={e => {
+                      setTwitterAccessTokenSecret(e.target.value)
+                    }}
+                  />
+                </div>
+                <div className="form-item">
+                  <span className="form-item-label">Bot Name</span>
+                  <input
+                    type="text"
+                    defaultValue={twitter_bot_name}
+                    onChange={e => {
+                      setTwitterBotName(e.target.value)
+                    }}
+                  />
+                </div>
+                <div className="form-item">
+                  <span className="form-item-label">Bot Name Regex</span>
+                  <input
+                    type="text"
+                    defaultValue={twitter_bot_name_regex}
+                    onChange={e => {
+                      setTwitterBotNameRegex(e.target.value)
+                    }}
+                  />
+                </div>
+              </>
+            )
+          }
         </>
       )}
       <div className="form-item entBtns">

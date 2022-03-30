@@ -26,6 +26,15 @@ export interface agent_instanceAttributes {
   xrengine_bot_name_regex?: string
   xrengine_starting_words?: string
   xrengine_empty_responses?: string
+  twitter_client_enable?: boolean
+  twitter_token?: string
+  twitter_id?: string
+  twitter_app_token?: string
+  twitter_app_token_secret?: string
+  twitter_access_token?: string
+  twitter_access_token_secret?: string
+  twitter_bot_name?: string
+  twitter_bot_name_regex?: string
 }
 
 export type agent_instancePk = 'id'
@@ -47,8 +56,15 @@ export type agent_instanceOptionalAttributes =
   | 'xrengine_spell_handler_feed'
   | 'xrengine_bot_name'
   | 'xrengine_bot_name_regex'
-  | 'xrengine_starting_words'
-  | 'xrengine_empty_responses'
+  | 'twitter_client_enable'
+  | 'twitter_token'
+  | 'twitter_id'
+  | 'twitter_app_token'
+  | 'twitter_app_token_secret'
+  | 'twitter_access_token'
+  | 'twitter_access_token_secret'
+  | 'twitter_bot_name'
+  | 'twitter_bot_name_regex'
   | 'enabled'
   | 'updated_at'
 export type agent_instanceCreationAttributes = Optional<
@@ -83,6 +99,16 @@ export class agent_instance
   xrengine_bot_name_regex?: string
   xrengine_starting_words?: string
   xrengine_empty_responses?: string
+  twitter_client_enable?: boolean
+  twitter_token?: string
+  twitter_id?: string
+  twitter_app_token?: string
+  twitter_app_token_secret?: string
+  twitter_access_token?: string
+  twitter_access_token_secret?: string
+  twitter_bot_name?: string
+  twitter_bot_name_regex?: string
+
   static initModel(sequelize: Sequelize.Sequelize): typeof agent_instance {
     return agent_instance.init(
       {
@@ -177,6 +203,42 @@ export class agent_instance
           allowNull: true,
         },
         xrengine_empty_responses: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
+        twitter_client_enable: {
+          type: DataTypes.BOOLEAN,
+          allowNull: true,
+        },
+        twitter_token: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
+        twitter_id: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
+        twitter_app_token: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
+        twitter_app_token_secret: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
+        twitter_access_token: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
+        twitter_access_token_secret: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
+        twitter_bot_name: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
+        twitter_bot_name_regex: {
           type: DataTypes.TEXT,
           allowNull: true,
         },
