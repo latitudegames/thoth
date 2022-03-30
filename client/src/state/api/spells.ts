@@ -40,6 +40,12 @@ export interface PatchArgs {
   update: Partial<Spell>
 }
 
+export interface RunSpell {
+  spellId: string
+  version?: string
+  inputs: Record<string, any>
+}
+
 export const spellApi = rootApi.injectEndpoints({
   endpoints: builder => ({
     getSpells: builder.query<Spell[], void>({
