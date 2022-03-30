@@ -47,8 +47,8 @@ const ThothInterfaceProvider = ({ children, tab }) => {
   const [fetchFromImageCache] = useFetchFromImageCacheMutation()
   const [_runSpell] = useRunSpellMutation()
   const [saveSpell] = useSaveSpellMutation()
-  const { data: _spell } = useGetSpellQuery(tab.spell, {
-    skip: !tab.spell,
+  const { data: _spell } = useGetSpellQuery(tab.spellId, {
+    skip: !tab.spellId,
   })
 
   useEffect(() => {
