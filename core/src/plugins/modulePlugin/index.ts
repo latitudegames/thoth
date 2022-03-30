@@ -44,7 +44,7 @@ function install(
     if (!component.module) return
 
     // socket - Rete.Socket instance or function that returns a socket instance
-    const { nodeType, socket } = component.module
+    const { nodeType, socket, skip } = component.module
     const name = component.name
 
     switch (nodeType) {
