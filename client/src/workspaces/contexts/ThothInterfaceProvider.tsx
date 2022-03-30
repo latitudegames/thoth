@@ -88,8 +88,8 @@ const ThothInterfaceProvider = ({ children, tab }) => {
     })
   }
 
-  const onModuleUpdated = (moduleName, callback) => {
-    return subscribe($SUBSPELL_UPDATED(moduleName), (event, data) => {
+  const onSubspellUpdated = (spellId: string, callback: Function) => {
+    return subscribe($SUBSPELL_UPDATED(spellId), (event, data) => {
       callback(data)
     })
   }
