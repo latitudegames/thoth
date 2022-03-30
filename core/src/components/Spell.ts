@@ -73,16 +73,16 @@ export class SpellComponent extends ThothComponent<
     }: { module: { outputs: ModuleWorkerOutput[] }; thoth: EngineContext }
   ) {
     if (module) {
-    const open = Object.entries(module.outputs)
-      .filter(([, value]) => typeof value === 'boolean' && value)
-      .map(([key]) => key)
-    // close all triggers first
-    const dataOutputs = node.data.outputs as ModuleWorkerOutput[]
-    this._task.closed = dataOutputs
-      .map((out: { name: string }) => out.name)
-      .filter((out: string) => !open.includes(out))
+      const open = Object.entries(module.outputs)
+        .filter(([, value]) => typeof value === 'boolean' && value)
+        .map(([key]) => key)
+      // close all triggers first
+      const dataOutputs = node.data.outputs as ModuleWorkerOutput[]
+      this._task.closed = dataOutputs
+        .map((out: { name: string }) => out.name)
+        .filter((out: string) => !open.includes(out))
 
-    return module.outputs
+      return module.outputs
     }
 
     const flattenedInputs = Object.entries(inputs).reduce(
