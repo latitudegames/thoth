@@ -1,7 +1,7 @@
 import * as Sequelize from 'sequelize'
 import { DataTypes, Model, Optional } from 'sequelize'
 
-export interface agent_instanceAttributes {
+export interface entitiesAttributes {
   id?: number
   instanceId?: number
   personality?: string
@@ -37,9 +37,9 @@ export interface agent_instanceAttributes {
   twitter_bot_name_regex?: string
 }
 
-export type agent_instancePk = 'id'
-export type agent_instanceId = agent_instance[agent_instancePk]
-export type agent_instanceOptionalAttributes =
+export type entitiesPk = 'id'
+export type entitiesId = entities[entitiesPk]
+export type entitiesOptionalAttributes =
   | 'discord_enabled'
   | 'discord_api_key'
   | 'discord_starting_words'
@@ -67,15 +67,14 @@ export type agent_instanceOptionalAttributes =
   | 'twitter_bot_name_regex'
   | 'enabled'
   | 'updated_at'
-export type agent_instanceCreationAttributes = Optional<
-  agent_instanceAttributes,
-  agent_instanceOptionalAttributes
+export type entitiesCreationAttributes = Optional<
+  entitiesAttributes,
+  entitiesOptionalAttributes
 >
 
-export class agent_instance
-  extends Model<agent_instanceAttributes, agent_instanceCreationAttributes>
-  implements agent_instanceAttributes
-{
+export class entities
+  extends Model<entitiesAttributes, entitiesCreationAttributes>
+  implements entitiesAttributes {
   id?: number
   instanceId?: number
   personality?: string
@@ -109,8 +108,8 @@ export class agent_instance
   twitter_bot_name?: string
   twitter_bot_name_regex?: string
 
-  static initModel(sequelize: Sequelize.Sequelize): typeof agent_instance {
-    return agent_instance.init(
+  static initModel(sequelize: Sequelize.Sequelize): typeof entities {
+    return entities.init(
       {
         id: {
           type: DataTypes.INTEGER,
@@ -245,7 +244,7 @@ export class agent_instance
       },
       {
         sequelize,
-        tableName: 'agent_instance',
+        tableName: 'entities',
         schema: 'public',
         timestamps: false,
       }

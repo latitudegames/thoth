@@ -264,12 +264,12 @@ export class database {
   }
 
   async getAgentInstances() {
-    const query = 'SELECT * FROM agent_instance'
+    const query = 'SELECT * FROM entities'
     const rows = await this.client.query(query)
     return rows.rows
   }
   async getAgentInstance(id: any) {
-    const query = 'SELECT * FROM agent_instance WHERE id=$1'
+    const query = 'SELECT * FROM entities WHERE id=$1'
     const values = [id]
 
     const rows = await this.client.query(query, values)
@@ -280,20 +280,20 @@ export class database {
     }
   }
   async instanceIdExists(id: any) {
-    const query = 'SELECT * FROM agent_instance WHERE id=$1'
+    const query = 'SELECT * FROM entities WHERE id=$1'
     const values = [id]
 
     const rows = await this.client.query(query, values)
     return rows && rows.rows && rows.rows.length > 0
   }
   async deleteAgentInstance(id: any) {
-    const query = 'DELETE FROM agent_instance WHERE id=$1'
+    const query = 'DELETE FROM entities WHERE id=$1'
     const values = [id]
     console.log('query called', query, values)
     return await this.client.query(query, values)
   }
   async getLastUpdatedInstances() {
-    const query = 'SELECT * FROM agent_instance'
+    const query = 'SELECT * FROM entities'
 
     const rows = await this.client.query(query)
     if (rows && rows.rows && rows.rows.length > 0) {
@@ -310,21 +310,21 @@ export class database {
     }
   }
   async setInstanceDirtyFlag(id: any, value: boolean) {
-    const query = 'UPDATE agent_instance SET dirty=$1 WHERE id=$2'
+    const query = 'UPDATE entities SET dirty=$1 WHERE id=$2'
     const values = [value, id]
 
     await this.client.query(query, values)
   }
 
   async setInstanceUpdated(id: any) {
-    const query = 'UPDATE agent_instance SET updated_at=$1 WHERE id=$2'
+    const query = 'UPDATE entities SET updated_at=$1 WHERE id=$2'
     const values = [new Date(), id]
 
     await this.client.query(query, values)
   }
   async updateAgentInstances(id: any, data: { [x: string]: any; dirty?: any }) {
     console.log('updateAgentInstances', id, data)
-    const check = 'SELECT * FROM agent_instance WHERE id=$1'
+    const check = 'SELECT * FROM entities WHERE id=$1'
     const cvalues = [id]
 
     const rows = await this.client.query(check, cvalues)
@@ -340,7 +340,7 @@ export class database {
       })
 
       const query =
-        'UPDATE agent_instance SET ' + q + ' updated_at=$1 WHERE id=$2'
+        'UPDATE entities SET ' + q + ' updated_at=$1 WHERE id=$2'
       const values = [new Date().toUTCString(), id]
       console.log('called ', query)
       try {
@@ -349,7 +349,7 @@ export class database {
         throw new Error(e)
       }
     } else if (Object.keys(data).length <= 0) {
-      const query = 'INSERT INTO agent_instance (personality) VALUES ($1)'
+      const query = 'INSERT INTO entities (personality) VALUES ($1)'
       const values = ['common']
       console.log('called ', query)
       try {

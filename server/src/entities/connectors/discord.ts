@@ -1561,30 +1561,30 @@ export class discord_client {
       }
     )
 
-    this.client.on('interactionCreate', async interaction => {
-      log('Handling interaction', interaction)
-      this.handleSlashCommand(client, interaction)
-    })
-    this.client.on('guildMemberAdd', async user => {
-      this.handleGuildMemberAdd(user)
-    })
-    this.client.on('guildMemberRemove', async user => {
-      this.handleGuildMemberRemove(user)
-    })
-    this.client.on('messageReactionAdd', async (reaction, user) => {
-      this.handleMessageReactionAdd(reaction, user)
-    })
+    // this.client.on('interactionCreate', async interaction => {
+    //   log('Handling interaction', interaction)
+    //   this.handleSlashCommand(client, interaction)
+    // })
+    // this.client.on('guildMemberAdd', async user => {
+    //   this.handleGuildMemberAdd(user)
+    // })
+    // this.client.on('guildMemberRemove', async user => {
+    //   this.handleGuildMemberRemove(user)
+    // })
+    // this.client.on('messageReactionAdd', async (reaction, user) => {
+    //   this.handleMessageReactionAdd(reaction, user)
+    // })
 
-    this.client.commands = new Discord.Collection()
+    // this.client.commands = new Discord.Collection()
 
-    this.client.commands.set('agents', this.agents)
-    this.client.commands.set('ban', this.ban)
-    this.client.commands.set('commands', this.commands)
-    this.client.commands.set('ping', this.ping)
-    this.client.commands.set('pingagent', this.pingagent)
-    this.client.commands.set('setagent', this.setagent)
-    this.client.commands.set('setname', this.setname)
-    this.client.commands.set('unban', this.unban)
+    // this.client.commands.set('agents', this.agents)
+    // this.client.commands.set('ban', this.ban)
+    // this.client.commands.set('commands', this.commands)
+    // this.client.commands.set('ping', this.ping)
+    // this.client.commands.set('pingagent', this.pingagent)
+    // this.client.commands.set('setagent', this.setagent)
+    // this.client.commands.set('setname', this.setname)
+    // this.client.commands.set('unban', this.unban)
 
     setInterval(() => {
       const channelIds = []
