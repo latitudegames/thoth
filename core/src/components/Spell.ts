@@ -102,5 +102,6 @@ export class SpellComponent extends ThothComponent<
       throw new Error(`Error running spell ${node.data.spellId}`)
     }
 
+    return response.data.outputs
   }
 }
