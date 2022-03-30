@@ -205,7 +205,7 @@ const ThothInterfaceProvider = ({ children, tab }) => {
     onAddModule,
     onUpdateModule,
     onDeleteModule,
-    onModuleUpdated,
+    onSubspellUpdated,
     sendToInspector,
     sendToDebug,
     onDebug,
