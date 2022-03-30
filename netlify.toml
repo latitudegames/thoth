@@ -26,3 +26,4 @@
     REACT_APP_LAPI_ROOT_URL_PROD="https://latitude-api-staging.herokuapp.com"
     REACT_APP_API_URL="https://latitude-api-staging.herokuapp.com"
     REACT_APP_SITE_ROOT_URL_PROD="https://staging.thoth.latitude.io"
+    REACT_APP_OAUTH_CLIENT_ID="20b80581-c3fb-405c-964d-db9556e0033f"
