@@ -220,7 +220,7 @@ export class xrengine_client {
     else if (text.includes('joined the layer')) {
       const user = text.replace('joined the layer', '')
 
-      await this.handleXREngineResponse('Welcome ' + user, false, sender, false)
+      //await this.handleXREngineResponse('Welcome ' + user, false, sender, false)
 
       /*const response = await handleCustomInput(
         '[welcome]' + user,
@@ -458,13 +458,13 @@ export class xrengine_client {
       } else if (
         responses &&
         responses !== undefined &&
-        responses.length > 2000
+        responses.length > 10000
       ) {
         const lines = []
         let line = ''
         for (let i = 0; i < responses.length; i++) {
-          line += responses
-          if (i >= 1980 && (line[i] === ' ' || line[i] === '')) {
+          line += responses[i]
+          if (i >= 9980 && (line[i] === ' ' || line[i] === '')) {
             lines.push(line)
             line = ''
           }
@@ -741,6 +741,14 @@ class XREngineBot {
   async getLocalUserId() {
     await this.sendMessage('/getLocalUserId')
   }
+  async lookAt(player) {
+    if (player === undefined || player === '') return
+
+    await this.sendMessage(`/lookAt ${player}`)
+  }
+  async lipSync(pucker, widen, open) {
+    await this.sendMessage('/lipSync ' + pucker + ' ' + widen + ' ' + open)
+  }
 
   counter = 0
   async instanceMessages() {
@@ -896,7 +904,7 @@ class XREngineBot {
     await this.waitForTimeout(timeout)
   }
 
-  async interactObject() { }
+  async interactObject() {}
 
   /** Return screenshot
    * @param {Function} fn Function to execut _in the node context._
@@ -1012,7 +1020,8 @@ class XREngineBot {
           } else {
             if (mode == 'inRange') {
               if (this.xrengineclient.UsersInRange[player] === undefined) {
-                this.playEmote('wave')
+                await this.lookAt('alex')
+                await this.playEmote('wave')
               }
               this.xrengineclient.UsersInRange[player] = value
               this.xrengineclient.UsersInIntimateRange[player] = undefined

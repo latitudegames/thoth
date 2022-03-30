@@ -1091,7 +1091,7 @@ export class discord_client {
                 text === '' ||
                 text.replace(/\s/g, '').length === 0
               )
-                text = getRandomEmptyResponse()
+                text = getRandomEmptyResponse(this.discord_empty_responses)
               log('response1: ' + text)
               message.channel
                 .send(text)
