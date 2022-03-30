@@ -1,13 +1,13 @@
 import { Input, NodeEditor, Output, Socket } from 'rete'
 
 import { IRunContextEditor } from '.'
-import { DataSocketType, ThothNode } from '../../../types'
+import { ChainData, DataSocketType, ThothNode } from '../../../types'
 import { socketNameMap, SocketNameType } from '../../sockets'
 import { ModuleSocketType } from './module-manager'
 export type ThroughPutType = 'outputs' | 'inputs'
 
 export function extractNodes(
-  nodes: Record<string, ThothNode>,
+  nodes: ChainData['nodes'],
   map: Map<string, Socket>
 ) {
   const names = Array.from(map.keys())
