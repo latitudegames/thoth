@@ -24,6 +24,7 @@ export class SpellComponent extends ThothComponent<ModuleWorkerOutput[]> {
     super('Spell')
     this.module = {
       nodeType: 'module',
+      skip: true,
     }
     this.task = {
       outputs: {},
