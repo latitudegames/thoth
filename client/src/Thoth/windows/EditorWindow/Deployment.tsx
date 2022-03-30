@@ -16,7 +16,7 @@ import {
   // selectSpellById,
   useDeploySpellMutation,
   useLazyGetDeploymentQuery,
-  useSaveSpellMutation,
+  // useSaveSpellMutation,
 } from '@/state/api/spells'
 import { useEditor } from '@thoth/contexts/EditorProvider'
 import { thothApiRootUrl } from '@/config'
@@ -28,7 +28,7 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
   const { enqueueSnackbar } = useSnackbar()
 
   const [deploySpell] = useDeploySpellMutation()
-  const [saveSpell] = useSaveSpellMutation()
+  // const [saveSpell] = useSaveSpellMutation()
   const [getDeplopyment, { data: deploymentData }] = useLazyGetDeploymentQuery()
   // const spell = useSelector(state => selectSpellById(spellId))
   const spell = spellId
@@ -69,7 +69,7 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
     if (!deploymentData || !loadingVersion) return
       ; (async () => {
         close()
-        await saveSpell({ ...spell, chain: deploymentData.chain })
+        // await saveSpell({ ...spell, chain: deploymentData.chain })
         enqueueSnackbar(`version ${deploymentData.version} loaded!`, {
           variant: 'success',
         })

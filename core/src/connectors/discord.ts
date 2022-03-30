@@ -621,9 +621,10 @@ export class discord_client {
     const response = await handleInput(
       message.content,
       message.author.username,
-      this.discord_bot_name ?? 'Thales',
+      this.discord_bot_name,
       'discord',
       message.channel.id,
+      this.entity,
       this.spell_handler,
       this.spell_version
     )
@@ -765,7 +766,7 @@ export class discord_client {
 
   //Event that is triggered when the discord client fully loaded
   ready = async client => {
-    const logDMUserID = (await database.instance.getConfig())['logDMUserID']
+    const logDMUserID = false
     await this.client.users
       .fetch(logDMUserID)
       .then(user => {
@@ -1090,7 +1091,7 @@ export class discord_client {
                 text === '' ||
                 text.replace(/\s/g, '').length === 0
               )
-                text = getRandomEmptyResponse()
+                text = getRandomEmptyResponse(this.discord_empty_responses)
               log('response1: ' + text)
               message.channel
                 .send(text)
@@ -1115,7 +1116,7 @@ export class discord_client {
                 text === '' ||
                 text.replace(/\s/g, '').length === 0
               )
-                text = getRandomEmptyResponse()
+                text = getRandomEmptyResponse(this.discord_empty_responses)
               log('response2: ' + text)
             }
             if (text.length > 0) {
@@ -1126,7 +1127,9 @@ export class discord_client {
                 })
             }
           } else {
-            const emptyResponse = getRandomEmptyResponse()
+            const emptyResponse = getRandomEmptyResponse(
+              this.discord_empty_responses
+            )
             log('sending empty response 1: ' + emptyResponse)
             if (
               emptyResponse !== undefined &&
@@ -1151,7 +1154,7 @@ export class discord_client {
                   text === '' ||
                   text.replace(/\s/g, '').length === 0
                 )
-                  text = getRandomEmptyResponse()
+                  text = getRandomEmptyResponse(this.discord_empty_responses)
                 log('response4: ' + text)
                 message.channel
                   .send(text)
@@ -1200,7 +1203,9 @@ export class discord_client {
                       text === '' ||
                       text.replace(/\s/g, '').length === 0
                     )
-                      text = getRandomEmptyResponse()
+                      text = getRandomEmptyResponse(
+                        this.discord_empty_responses
+                      )
                     log('response1: ' + text)
                     msg.edit(text)
                     onMessageResponseUpdated(channel.id, edited.id, msg.id)
@@ -1211,7 +1216,9 @@ export class discord_client {
                       text === '' ||
                       text.replace(/\s/g, '').length === 0
                     )
-                      text = getRandomEmptyResponse()
+                      text = getRandomEmptyResponse(
+                        this.discord_empty_responses
+                      )
                     log('response2: ' + text)
 
                     if (text.length > 0) {
@@ -1226,7 +1233,9 @@ export class discord_client {
                         })
                     }
                   } else {
-                    const emptyResponse = getRandomEmptyResponse()
+                    const emptyResponse = getRandomEmptyResponse(
+                      this.discord_empty_responses
+                    )
                     log('sending empty response 2: ' + emptyResponse)
                     if (
                       emptyResponse !== undefined &&
@@ -1239,7 +1248,9 @@ export class discord_client {
                         text === '' ||
                         text.replace(/\s/g, '').length === 0
                       )
-                        text = getRandomEmptyResponse()
+                        text = getRandomEmptyResponse(
+                          this.discord_empty_responses
+                        )
                       log('response4: ' + text)
                       msg.edit(text)
                       onMessageResponseUpdated(channel.id, edited.id, msg.id)
@@ -1370,6 +1381,7 @@ export class discord_client {
   discord_starting_words: string[] = []
   discord_bot_name_regex: string = ''
   discord_bot_name: string = 'Bot'
+  discord_empty_responses: string[] = []
 
   createDiscordClient = async (
     agent,
@@ -1377,18 +1389,34 @@ export class discord_client {
     discord_starting_words,
     discord_bot_name_regex,
     discord_bot_name,
+    discord_empty_responses,
+    entity,
     spell_handler,
     spell_version = 'latest'
   ) => {
     this.agent = agent
+    this.entity = entity
     if (!discord_starting_words || discord_starting_words?.length <= 0) {
       this.discord_starting_words = ['hi', 'hey']
     } else {
       this.discord_starting_words = discord_starting_words?.split(',')
       for (let i = 0; i < this.discord_starting_words.length; i++) {
-        this.discord_starting_words[i] = this.discord_starting_words[i].trim()
+        this.discord_starting_words[i] = this.discord_starting_words[i]
+          .trim()
+          .toLowerCase()
       }
     }
+    if (!discord_empty_responses || discord_empty_responses?.length <= 0) {
+      this.discord_empty_responses = ["I can't understand you"]
+    } else {
+      this.discord_empty_responses = discord_empty_responses?.split(',')
+      for (let i = 0; i < this.discord_empty_responses.length; i++) {
+        this.discord_empty_responses[i] = this.discord_empty_responses[i]
+          .trim()
+          .toLowerCase()
+      }
+    }
+
     this.discord_bot_name_regex = discord_bot_name_regex
     this.discord_bot_name = discord_bot_name
     this.spell_handler = spell_handler
@@ -1457,7 +1485,7 @@ export class discord_client {
               text === '' ||
               text.replace(/\s/g, '').length === 0
             )
-              text = getRandomEmptyResponse()
+              text = getRandomEmptyResponse(this.discord_empty_responses)
             log('response1: ' + text)
             message.channel
               .send(text)
@@ -1478,7 +1506,7 @@ export class discord_client {
               text === '' ||
               text.replace(/\s/g, '').length === 0
             )
-              text = getRandomEmptyResponse()
+              text = getRandomEmptyResponse(this.discord_empty_responses)
             log('response2: ' + text)
           }
           if (text.length > 0) {
@@ -1489,7 +1517,9 @@ export class discord_client {
               })
           }
         } else {
-          const emptyResponse = getRandomEmptyResponse()
+          const emptyResponse = getRandomEmptyResponse(
+            this.discord_empty_responses
+          )
           log('sending empty response 3: ' + emptyResponse)
           if (
             emptyResponse !== undefined &&
@@ -1510,7 +1540,7 @@ export class discord_client {
                 text === '' ||
                 text.replace(/\s/g, '').length === 0
               )
-                text = getRandomEmptyResponse()
+                text = getRandomEmptyResponse(this.discord_empty_responses)
               log('response4: ' + text)
               message.channel
                 .send(text)

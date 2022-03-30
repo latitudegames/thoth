@@ -2,6 +2,39 @@
 
 Thoth is a multishot system builder. It leverages a visual coding style interface to allows game designers and developers to rapidly create powerful natural language systems and prototype games.
 
+## Quickstart
+
+You will need **yarn** and **Docker** installed, along with **Node.js 16 or higher**. We use Docker to run a local Postgres database. You can skip the docker and install postgres directly, but you are almost always better off just using Docker.
+
+First, clone and set up Thoth
+```
+# for latitude games development
+git clone https://github.com/latitudegames/thoth
+
+# OR
+
+# for super reality agent development
+git clone https://github.com/super-reality/thoth
+```
+
+Next, install dependencies
+```
+yarn install
+```
+
+You will need to make a few environment variable modifications
+
+### Local Development - Client .env
+
+Go to client folder, and **copy .env.default and rename to .env**
+If you are developing independently and are not a member of Latitude Games team, set **REACT_APP_USE_LATITUDE=false**
+If you want to use the Super Reality entity tools (highly experimental), set **REACT_APP_USE_AGENTS=true**
+
+### Local Development -  Server .env
+
+Go to server folder, and **copy .env.default and rename to .env**
+If you are developing independently and are not a member of Latitude Games team, set **USE_LATITUDE=false**
+
 ## Client Setup
 
 1. Generate a [Personal Access Token](https://github.com/settings/tokens) on Github which will allow you to install private latitude packages. Make sure you check the `write:packages` option. (`read:packages` will suffice as well if you aren't planning on publishing new versions of @latitudegames/thoth-core)

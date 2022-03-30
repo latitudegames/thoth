@@ -28,7 +28,7 @@ export class CacheManagerSet extends ThothComponent<void> {
       },
     }
 
-    this.category = 'I/O'
+    this.category = 'Agents'
     this.display = true
     this.info = info
   }

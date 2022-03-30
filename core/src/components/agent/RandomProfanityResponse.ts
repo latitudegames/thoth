@@ -41,7 +41,7 @@ export class RandomProfanityResponse extends ThothComponent<
       },
     }
 
-    this.category = 'Conversation'
+    this.category = 'Agents'
     this.display = true
     this.info = info
   }

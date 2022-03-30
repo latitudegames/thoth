@@ -62,12 +62,12 @@ function listEvents() {
             const diffMs = eventDate - now
             const diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000)
             if (diffMins <= 60 && diffMins > 0) {
-              sendMessageToChannel(
-                (await database.instance.getConfig())[
-                'discord_calendar_channel'
-                ],
-                event.summary + ' is starting in ' + diffMins + ' minutes!'
-              )
+              // sendMessageToChannel(
+              //   (await database.instance.getConfig())[
+              //   'discord_calendar_channel'
+              //   ],
+              //   event.summary + ' is starting in ' + diffMins + ' minutes!'
+              // )
             }
           }
         })

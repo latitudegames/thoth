@@ -155,7 +155,7 @@ button.disabled {
 
 .context-menu {
   padding: 0 !important;
-  width: var(--c20) !important;
+  width: var(--c30) !important;
   box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
   z-index: 999999999 !important;
 }
@@ -171,7 +171,7 @@ button.disabled {
   padding: var(--extraSmall) !important;
   padding-left: var(--small) !important;
   text-transform: capitalize !important;
-  width: var(--c35) !important;
+  width: var(--c30) !important;
 }
 
 .context-menu .item:hover {
@@ -284,9 +284,9 @@ button.disabled {
   background-color: transparent;
 }
 
-.view-line span {
+/* .view-line span {
   font-family: 'IBM Plex Mono', sans-serif;
-}
+} */
 
 input[type='text'] {
   box-sizing: border-box;

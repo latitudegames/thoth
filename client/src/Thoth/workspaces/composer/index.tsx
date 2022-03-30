@@ -1,68 +1,69 @@
-// @ts-nocheck
-
-import { useEffect } from 'react'
-
-import { store } from '@/state/store'
-import { useEditor } from '@thoth/contexts/EditorProvider'
-import { Layout } from '@thoth/contexts/LayoutProvider'
-import { useModule } from '@/contexts/ModuleProvider'
+// import { useModule } from '@/contexts/ModuleProvider'
 import {
   useLazyGetSpellQuery,
-  useSaveSpellMutation,
-  selectSpellById,
+  useSaveSpellMutation
 } from '@/state/api/spells'
+import EntityManagerWindow from '@/Thoth/windows/EntityManagerWindow'
 import { debounce } from '@/utils/debounce'
-import EditorWindow from '@thoth/windows/EditorWindow'
 import EventHandler from '@thoth/components/EventHandler'
+// import { store } from '@/state/store'
+import { useEditor } from '@thoth/contexts/EditorProvider'
+import { Layout } from '@thoth/contexts/LayoutProvider'
+import AgentManager from '@thoth/windows/AgentManagerWindow'
+import DebugConsole from '@thoth/windows/DebugConsole'
+import EditorWindow from '@thoth/windows/EditorWindow'
 import Inspector from '@thoth/windows/InspectorWindow'
 import Playtest from '@thoth/windows/PlaytestWindow'
+import SearchCorpus from '@thoth/windows/SearchCorpusWindow'
 import StateManager from '@thoth/windows/StateManagerWindow'
-import AgentManager from '@thoth/windows/AgentManagerWindow'
-import EntManager from '@thoth/windows/EntManagerWindow'
-import ConfigManager from '@thoth/windows/ConfigManagerWindow'
 import TextEditor from '@thoth/windows/TextEditorWindow'
-import DebugConsole from '@thoth/windows/DebugConsole'
-import SearchCorpus from '../../windows/SearchCorpusWindow'
-import DebugConsole from '@thoth/windows/DebugConsole'
+import { useEffect, useRef } from 'react'
+import { Spell } from '../../../state/api/spells'
 
 const Workspace = ({ tab, tabs, pubSub }) => {
+  const spellRef = useRef<Spell>()
   const [loadSpell, { data: spellData }] = useLazyGetSpellQuery()
   const [saveSpell] = useSaveSpellMutation()
-  const { saveModule } = useModule()
+  // const { saveModule } = useModule()
   const { editor } = useEditor()
 
   // Set up autosave for the workspaces
   useEffect(() => {
     if (!editor?.on) return
     return editor.on(
-      'save nodecreated noderemoved connectioncreated connectionremoved nodetranslated',
+      'save',
       debounce(() => {
         if (tab.type === 'spell') {
-          saveSpell({ ...spellData, chain: editor.toJSON() })
+          saveSpell({ ...spellRef.current, chain: editor.toJSON() })
         }
-        if (tab.type === 'module') {
-          saveModule(tab.module, { data: editor.toJSON() }, false)
-          // when a module is saved, we look for any open spell tabs, and check if they have the module.
-          /// if they do, we trigger a save to ensure the module change is captured to the server
-          tabs
-            .filter(tab => tab.type === 'spell')
-            .forEach(filteredTab => {
-              if (filteredTab.spell) {
-                const spell = selectSpellById(
-                  store.getState(),
-                  filteredTab.spell
-                )
-                if (
-                  spell?.modules &&
-                  spell?.modules.some(module => module.name === tab.module)
-                )
-                  saveSpell({ ...spell })
-              }
-            })
-        }
+        // if (tab.type === 'module') {
+        //   saveModule(tab.module, { data: editor.toJSON() }, false)
+        //   // when a module is saved, we look for any open spell tabs, and check if they have the module.
+        //   /// if they do, we trigger a save to ensure the module change is captured to the server
+        //   tabs
+        //     .filter(tab => tab.type === 'spell')
+        //     .forEach(filteredTab => {
+        //       if (filteredTab.spell) {
+        //         const spell = selectSpellById(
+        //           // store.getState(),
+        //           filteredTab.spell
+        //         )
+        //         if (
+        //           spell?.modules &&
+        //           spell?.modules.some(module => module.name === tab.module)
+        //         )
+        //           saveSpell({ ...spell })
+        //       }
+        //     })
+        // }
       }, 500)
     )
   }, [editor])
+
+  useEffect(() => {
+    if (!spellData) return
+    spellRef.current = spellData
+  }, [spellData])
 
   useEffect(() => {
     if (!tab || !tab.spell) return
@@ -83,10 +84,8 @@ const Workspace = ({ tab, tabs, pubSub }) => {
           return <AgentManager />
         case 'searchCorpus':
           return <SearchCorpus />
-        case 'configManager':
-          return <ConfigManager />
         case 'entManager':
-          return <EntManager />
+          return <EntityManagerWindow />
         case 'playtest':
           return <Playtest {...props} />
         case 'inspector':

@@ -10,18 +10,17 @@ export async function handleInput(
   agent: string,
   client: string,
   channelId: string,
-  spell_handler = 'default',
-  spell_version = 'latest'
+  entity: number,
+  spell_handler: string,
+  spell_version: string = 'latest'
 ) {
-  if (!spell_handler || spell_handler === undefined) {
+  if (spell_handler === undefined) {
     spell_handler = 'default'
   }
-  if (!spell_version || spell_version === undefined) {
+  if (spell_version === undefined) {
     spell_version = 'latest'
   }
 
-  console.log('sending message', message)
-  console.log('speaker agent client', speaker, agent, client)
   const url = encodeURI(
     `http://localhost:8001/chains/${spell_handler}/${spell_version}`
   )
@@ -33,6 +32,7 @@ export async function handleInput(
       Agent: agent,
       Client: client,
       ChannelID: channelId,
+      Entity: entity,
     },
   })
   let index = undefined

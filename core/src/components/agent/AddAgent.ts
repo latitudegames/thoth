@@ -33,7 +33,7 @@ export class AddAgent extends ThothComponent<Promise<WorkerReturn>> {
       },
     }
 
-    this.category = 'AI/ML'
+    this.category = 'Agents'
     this.display = true
     this.info = info
   }

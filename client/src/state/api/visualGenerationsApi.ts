@@ -1,5 +1,5 @@
 import { rootApi } from './api'
-import { ImageType } from '@latitudegames/thoth-core/src/components/VisualGeneration'
+import { ImageType } from '@latitudegames/thoth-core/src/components/ml/VisualGeneration'
 
 export const visualGenerationsApi = rootApi.injectEndpoints({
   endpoints: builder => ({

@@ -13,10 +13,14 @@ config({ path: '.env' })
 const latitudeApiKey = process.env.LATITUDE_API_KEY !== '' && process.env.LATITUDE_API_KEY
 
 const saveHandler = async (ctx: Koa.Context) => {
+  console.log('ctx.request is', ctx.request)
   const body =
     typeof ctx.request.body === 'string'
       ? JSON.parse(ctx.request.body)
       : ctx.request.body
+
+  console.log('ctx.request.body is', ctx.request.body)
+
 
   if (!body) throw new CustomError('input-failed', 'No parameters provided')
   if (latitudeApiKey) {
@@ -73,8 +77,6 @@ const newHandler = async (ctx: Koa.Context) => {
     ctx.body = response.data
     return
   }
-
-  console.log('ctx.request is', ctx.request)
 
   const body = ctx.request.body
   if (!body) throw new CustomError('input-failed', 'No parameters provided')
@@ -277,8 +279,8 @@ const getDeployedSpellHandler = async (ctx: Koa.Context) => {
   console.log('handling')
   console.log("ctx.request", ctx.request.body)
   console.log("ctx.params", ctx.params)
-  const name = ctx.params.name
-  const version = ctx.params.version
+  const name = ctx.params.name ?? 'default'
+  const version = ctx.params.version ?? 'latest'
   if (latitudeApiKey) {
     const response = await axios({
       method: 'GET',
@@ -290,8 +292,9 @@ const getDeployedSpellHandler = async (ctx: Koa.Context) => {
     return (ctx.body = response.data)
   }
   const spell = await creatorToolsDatabase.deployedSpells.findOne({
-    where: { name, version },
+    where: { name: name, version: version },
   })
+  console.log("done")
   return (ctx.body = spell)
 }
 

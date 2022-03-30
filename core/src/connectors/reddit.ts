@@ -112,7 +112,7 @@ export class reddit_client {
             'reddit',
             chat_id,
             res.id,
-            (await database.instance.getConfig())['botName'],
+            'bot',
             response
           )
         })
@@ -125,7 +125,7 @@ export class reddit_client {
             'reddit',
             chat_id,
             res.id,
-            (await database.instance.getConfig())['botName'],
+            'bot',
             response
           )
         })
@@ -430,7 +430,7 @@ export class reddit_client {
     })
 
     setInterval(async () => {
-      ;(await reddit.getInbox()).forEach(async message => {
+      ; (await reddit.getInbox()).forEach(async message => {
         const id = message.name
         const senderId = message.id
         const author = message.author.name

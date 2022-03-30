@@ -19,7 +19,6 @@ const windowTypes = {
   STATE_MANAGER: 'stateManager',
   AGENT_MANAGER: 'agentManager',
   SEARCH_CORPUS: 'searchCorpus',
-  CONFIG_MANAGER: 'configManager',
   ENT_MANAGER: 'entManager',
   EDITOR: 'editor',
   PLAYTEST: 'playtest',
@@ -32,17 +31,17 @@ const windowTypes = {
 const Context = createContext({
   inspectorData: {},
   textEditorData: {},
-  createModel: () => {},
+  createModel: () => { },
   currentModel: {},
   currentRef: {},
-  setCurrentRef: () => {},
-  saveInspector: () => {},
-  saveTextEditor: () => {},
-  createOrFocus: () => {},
-  addWindow: () => {},
+  setCurrentRef: () => { },
+  saveInspector: () => { },
+  saveTextEditor: () => { },
+  createOrFocus: () => { },
+  addWindow: () => { },
   windowTypes: {},
   workspaceMap: {},
-  getWorkspace: () => {},
+  getWorkspace: () => { },
 })
 
 export const useLayout = () => useContext(Context)
@@ -128,13 +127,13 @@ const LayoutProvider = ({ children, tab }) => {
     if (inspectorData) {
       setInspectorData(update)
     }
-    saveSpell(spell)
+    // saveSpell(spell)
   }
 
   const saveInspector = inspectorData => {
     setInspectorData(inspectorData)
     publish(events.$NODE_SET(tab.id, inspectorData.nodeId), inspectorData)
-    saveSpell(spell)
+    // saveSpell(spell)
   }
 
   const createModel = json => {

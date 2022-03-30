@@ -63,7 +63,7 @@ export async function initSpeechServer(ignoreDotEnv: boolean) {
         ) {
           recognizeStream.write(data)
         }
-      } catch (e) {}
+      } catch (e) { }
     })
 
     function startRecognitionStream(client: any) {

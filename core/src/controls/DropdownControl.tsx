@@ -4,24 +4,13 @@ import React, { useState, useEffect } from 'react'
 import { Control } from 'rete'
 import axios from 'axios'
 
-const data = [
-    {
-        "agent" : "name"
-    },
-    {
-        "agent" : 'personality name'
-    }
-]
-
 const ReactDropdownControl = props => {
-    console.log(process.env.REACT_APP_API_ROOT_URL,'111111')
     const [list, setList] = useState([])
 
-    useEffect(() => {
-        // const { data } = props;
-        if(data){
-            console.log(data,'datadatadatadata')
-            getList(data)
+    useEffect(async() => {
+        const res = await axios.get(`${process.env.REACT_APP_API_ROOT_URL}/agents`)
+        if(res.data){
+            getList(res.data)
         }
     }, [])
 
@@ -37,23 +26,15 @@ const ReactDropdownControl = props => {
     }
 
     const onChange = async(e) => {
-        console.log(e, 'event')
-        // setList(e)
         const res = await axios.get(`${process.env.REACT_APP_API_ROOT_URL}/agent_data`, {
             params: { agent: e },
         })
-        // if(res.data){
-        //     setList(res.data.agent)
-        // }else{
-        //   setList([])  
-        // }
-
+        console.log(e,'event')
+        localStorage.setItem("pernalityName",e)
     }
 
-    console.log(list,'000000000000')
-
     return (
-        <div style={{width:'150px', position:'absolute', top:'55px'}}>
+        <div style={{width:'140px',position:'absolute', top:'90px'}}>
         {props.label && <label htmlFor="">{props.label}</label>}
             <select 
                 name="dropdown"
@@ -62,7 +43,7 @@ const ReactDropdownControl = props => {
                 onChange={event => {
                     onChange(event.target.value)
                 }}
-                style={{width:'150px', background:'#fff', color:'#000',marginTop:'5px'}}
+                style={{width:'145px', background:'#fff', color:'#000',marginTop:'5px'}}
             >
                 {(list as any)?.length > 0 ?
                   (list as any).map((item, idx) => (
