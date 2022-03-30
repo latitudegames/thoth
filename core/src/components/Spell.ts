@@ -1,6 +1,7 @@
 import {
   ModuleWorkerOutput,
   NodeData,
+  Spell,
   ThothNode,
   ThothWorkerInputs,
 } from '../../types'
