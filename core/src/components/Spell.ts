@@ -61,11 +61,10 @@ export class SpellComponent extends ThothComponent<
       write: false,
     })
 
+    if (node.data.spellId) this.subscribe(node, node.data.spellId as string)
+
     spellControl.onData = (spell: Spell) => {
       node.data.spellId = spell.name
-
-      // If it has a subscription remove it here.
-      if (this.subscriptionMap[node.id]) this.subscriptionMap[node.id]()
 
       // Update the sockets
       this.updateSockets(node, spell)
