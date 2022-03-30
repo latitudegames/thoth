@@ -18,7 +18,7 @@ export const events = {
   ADD_SUBSPELL: 'addSubspell',
   UPDATE_SUBSPELL: 'updateSubspell',
   DELETE_SUBSPELL: 'deleteSubspell',
-  $SUBSPELL_UPDATED: moduleName => `subspellUpdated:${moduleName}`,
+  $SUBSPELL_UPDATED: spellId => `subspellUpdated:${spellId}`,
   $PLAYTEST_INPUT: tabId => `playtestInput:${tabId}`,
   $PLAYTEST_PRINT: tabId => `playtestPrint:${tabId}`,
   $DEBUG_PRINT: tabId => `debugPrint:${tabId}`,
