@@ -132,15 +132,22 @@ function install(
         const builder: Function | undefined = component.builder
 
         if (builder) {
-          component.updateModuleSockets = (node: ThothNode) => {
+          component.updateModuleSockets = (
+            node: ThothNode,
+            chainData?: ChainData
+          ) => {
             const modules = moduleManager.modules
             const currentNodeModule = node.data.module as string
-            if (!node.data.module || !modules[currentNodeModule]) return
+            if (!modules[currentNodeModule] && !chainData) return
 
             if (!node.data.inputs) node.data.inputs = []
             if (!node.data.outputs) node.data.outputs = []
 
-            const data = modules[currentNodeModule].data
+            const data = modules[currentNodeModule]
+              ? modules[currentNodeModule].data
+              : chainData
+
+            if (!data) return
             const inputs = moduleManager.getInputs(data)
             const outputs = moduleManager.getOutputs(data)
             const triggerOuts = moduleManager.getTriggerOuts(data)
