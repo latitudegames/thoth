@@ -59,7 +59,7 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
     const modelControl = new DropdownControl({
       dataKey: 'model',
       name: 'Model',
-      defaultValue: (node.data?.model as string) || 'davinci',
+      defaultValue: (node.data?.model as string) || 'vanilla-davinci',
       values: ['vanilla-davinci', 'aid-jumbo', 'vanilla-jumbo'],
     })
 
