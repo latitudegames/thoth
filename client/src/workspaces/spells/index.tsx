@@ -14,10 +14,12 @@ import TextEditor from './windows/TextEditorWindow'
 import DebugConsole from './windows/DebugConsole'
 import { useSnackbar } from 'notistack'
 import { Spell } from '@latitudegames/thoth-core/types'
+import { usePubSub } from '@/contexts/PubSubProvider'
 
 const Workspace = ({ tab, tabs, pubSub }) => {
   const spellRef = useRef<Spell>()
   const { enqueueSnackbar } = useSnackbar()
+  const { events, publish } = usePubSub()
   const [loadSpell, { data: spellData }] = useLazyGetSpellQuery()
   const [saveDiff] = useSaveDiffMutation()
   const { editor } = useEditor()
@@ -44,6 +46,22 @@ const Workspace = ({ tab, tabs, pubSub }) => {
         }
       }, 500)
     )
+
+    return unsubscribe as () => void
+  }, [editor])
+
+  useEffect(() => {
+    if (!editor?.on) return
+
+    const unsubscribe = editor.on('nodecreated noderemoved', () => {
+      if (!spellRef.current) return
+      const event = events.$SUBSPELL_UPDATED(editor.toJSON())
+      const spell = {
+        ...spellRef.current,
+        chain: editor.toJSON(),
+      }
+      publish(event, spell)
+    }) as Function
 
     return unsubscribe as () => void
   }, [editor])
