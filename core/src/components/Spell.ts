@@ -51,9 +51,9 @@ export class SpellComponent extends ThothComponent<ModuleWorkerOutput[]> {
     return node
   }
 
-  updateSockets(node: ThothNode, moduleName: string) {
-    node.data.module = moduleName
-    this.updateModuleSockets(node)
+  updateSockets(node: ThothNode, spell: Spell) {
+    const chain = JSON.parse(JSON.stringify(spell.chain))
+    this.updateModuleSockets(node, chain)
     this.editor.trigger('process')
     node.update()
   }
