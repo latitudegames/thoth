@@ -84,7 +84,10 @@ export class SpellComponent extends ThothComponent<ModuleWorkerOutput[]> {
 
     const flattenedInputs = Object.entries(inputs).reduce(
       (acc, [key, value]) => {
-        acc[key] = value[0]
+        const name = inputNameFromSocketKey(node, key)
+        if (!name) return acc
+
+        acc[name] = value[0]
         return acc
       },
       {} as Record<string, any>
