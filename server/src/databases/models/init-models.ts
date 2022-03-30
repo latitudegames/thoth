@@ -13,12 +13,6 @@ import type { documentsStoreAttributes, documentsStoreCreationAttributes } from 
 import { documentsStore as _documentsStore } from "./documentstores";
 import type { contentObjAttributes, contentObjCreationAttributes } from "./content_objects";
 import { contentObj as _contentObj } from "./content_objects";
-import type { fewshotDataAttributes, fewshotDataCreationAttributes } from "./fewshotData";
-import { fewshotData as _fewshotData } from "./fewshotData";
-import type { fewshotSerializationAttributes, fewshotSerializationCreationAttributes } from "./fewshotSerialization";
-import { fewshotSerialization as _fewshotSerialization } from "./fewshotSerialization";
-import type { fewshotTaskAttributes, fewshotTaskCreationAttributes } from "./fewshotTask";
-import { fewshotTask as _fewshotTask } from "./fewshotTask";
 import type { wikipediaAttributes, wikipediaCreationAttributes } from "./wikipedia";
 import { wikipedia as _wikipedia } from "./wikipedia";
 export {
@@ -29,9 +23,6 @@ export {
   _documents as documents,
   _documentsStore as documentsStore,
   _contentObj as contentObj,
-  _fewshotTask as fewshotTask,
-  _fewshotSerialization as fewshotSerialization,
-  _fewshotData as fewshotData,
   _wikipedia as wikipedia,
 };
 export type {
@@ -49,12 +40,6 @@ export type {
   documentsStoreCreationAttributes,
   contentObjAttributes,
   contentObjCreationAttributes,
-  fewshotDataAttributes,
-  fewshotDataCreationAttributes,
-  fewshotSerializationAttributes,
-  fewshotSerializationCreationAttributes,
-  fewshotTaskAttributes,
-  fewshotTaskCreationAttributes,
   wikipediaAttributes,
   wikipediaCreationAttributes,
 };
@@ -67,9 +52,6 @@ export function initModels(sequelize: Sequelize) {
   const documentsStore = _documentsStore.initModel(sequelize);
   const documents = _documents.initModel(sequelize);
   const contentObj = _contentObj.initModel(sequelize);
-  const fewshotTask = _fewshotTask.initModel(sequelize);
-  const fewshotSerialization = _fewshotSerialization.initModel(sequelize);
-  const fewshotData = _fewshotData.initModel(sequelize);
   const wikipedia = _wikipedia.initModel(sequelize);
 
   return {
@@ -80,9 +62,6 @@ export function initModels(sequelize: Sequelize) {
     contentObj: contentObj,
     documents: documents,
     documentsStore: documentsStore,
-    fewshotTask: fewshotTask,
-    fewshotSerialization: fewshotSerialization,
-    fewshotData: fewshotData,
     wikipedia: wikipedia,
   };
 }
