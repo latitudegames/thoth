@@ -125,10 +125,11 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       return acc
     }, {} as Record<string, unknown>)
 
-    const model = (node.data.model as string) ?? 'vanilla-davinci'
+    const model = (node.data.model as string) || 'vanilla-davinci'
     // const model = node.data.model || 'davinci'
 
-    const fewshot = (node.data.fewshot as string) || ''
+    // Replace carriage returns with newlines because that's what the language models expect
+    const fewshot = (node.data.fewshot as string).replace('\r\n', '\n') || ''
     const stopSequence = node.data.stop as string
 
     const template = Handlebars.compile(fewshot, { noEscape: true })
@@ -149,6 +150,8 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
     const frequencyPenalty = frequencyPenaltyData
       ? parseFloat(frequencyPenaltyData)
       : 0
+
+    console.log({ model })
 
     const body = {
       model,
