@@ -1,5 +1,9 @@
-import { initEditor } from '@latitudegames/thoth-core'
-import { ChainData, Spell } from '@latitudegames/thoth-core/dist/types'
+import { initEditor, zoomAt } from '@latitudegames/thoth-core'
+import {
+  ChainData,
+  Spell,
+  ThothEditor,
+} from '@latitudegames/thoth-core/dist/types'
 import React, {
   useRef,
   useContext,
@@ -18,8 +22,6 @@ import {
   useThothInterface,
   ThothInterfaceContext,
 } from './ThothInterfaceProvider'
-import { ThothEditor } from '@latitudegames/thoth-core/src/editor'
-import { zoomAt } from '../../../../core/src/plugins/areaPlugin/zoom-at'
 
 export type ThothTab = {
   layoutJson: string
