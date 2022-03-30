@@ -64,8 +64,12 @@ export class SpellComponent extends ThothComponent<ModuleWorkerOutput[]> {
     node: NodeData,
     inputs: ThothWorkerInputs,
     outputs: { [key: string]: string },
-    { module }: { module: { outputs: ModuleWorkerOutput[] } }
+    {
+      module,
+      thoth,
+    }: { module: { outputs: ModuleWorkerOutput[] }; thoth: EngineContext }
   ) {
+    if (module) {
     const open = Object.entries(module.outputs)
       .filter(([, value]) => typeof value === 'boolean' && value)
       .map(([key]) => key)
@@ -76,5 +80,7 @@ export class SpellComponent extends ThothComponent<ModuleWorkerOutput[]> {
       .filter((out: string) => !open.includes(out))
 
     return module.outputs
+    }
+
   }
 }
