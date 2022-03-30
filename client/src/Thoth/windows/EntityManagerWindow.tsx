@@ -1,5 +1,3 @@
-//@ts-nocheck
-
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 
@@ -37,8 +35,8 @@ const EntityManagerWindow = () => {
     <div className="agent-editor">
       <React.Fragment>
         <div>
-          {data && data !== [] &&
-            data.map((value, idx) => {
+          {data && (data as any) !== [] &&
+            (data as any).map((value, idx) => {
               return (
                 <EntityWindow
                   id={value.id}

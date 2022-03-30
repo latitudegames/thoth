@@ -22,7 +22,6 @@ const EntityWindow = ({ id, updateCallback }) => {
   const [loaded, setLoaded] = useState(false)
 
   const [enabled, setEnabled] = useState(false)
-  const [agent, setAgent] = useState('')
   const [discord_enabled, setdiscord_enabled] = useState(false)
   const [discord_api_key, setDiscordApiKey] = useState('')
 
@@ -64,12 +63,11 @@ const EntityWindow = ({ id, updateCallback }) => {
   const [spellList, setSpellList] = useState('')
   useEffect(() => {
     if (!loaded) {
-      ;(async () => {
+      ; (async () => {
         const res = await axios.get(
           `${process.env.REACT_APP_API_ROOT_URL}/agentInstance?instanceId=` + id
         )
         console.log('res is', res.data)
-        setAgent(res.data.personality)
         setEnabled(res.data.enabled === true)
         setdiscord_enabled(res.data.discord_enabled === true)
         setDiscordApiKey(res.data.discord_api_key)
@@ -108,7 +106,7 @@ const EntityWindow = ({ id, updateCallback }) => {
   }, [loaded])
 
   useEffect(() => {
-    ;(async () => {
+    ; (async () => {
       const res = await axios.get(
         `${process.env.REACT_APP_API_ROOT_URL}/game/spells`
       )
@@ -129,7 +127,6 @@ const EntityWindow = ({ id, updateCallback }) => {
   const update = () => {
     console.log('Update called')
     const _data = {
-      personality: agent,
       enabled,
       discord_enabled,
       discord_api_key,
@@ -168,7 +165,6 @@ const EntityWindow = ({ id, updateCallback }) => {
         console.log('response on update', JSON.parse(res.config.data).data)
         let responseData = res && JSON.parse(res?.config?.data).data
         setEnabled(responseData.enabled)
-        setAgent(responseData.personality)
         setdiscord_enabled(responseData.discord_enabled)
         setDiscordApiKey(responseData.discord_api_key)
         setDiscordStartingWords(responseData.discord_starting_words)
@@ -222,15 +218,6 @@ const EntityWindow = ({ id, updateCallback }) => {
       </div>
       {enabled && (
         <>
-          <div className="form-item">
-            <span className="form-item-label">Agent Template</span>
-            <input
-              type="text"
-              defaultValue={agent}
-              onChange={e => setAgent(e.target.value)}
-            />
-          </div>
-
           <div className="form-item">
             <span className="form-item-label">Discord Enabled</span>
             <input
@@ -504,7 +491,7 @@ const EntityWindow = ({ id, updateCallback }) => {
           </div>
 
 
-          {twitter_client_enable && 
+          {twitter_client_enable &&
             (
               <>
                 <div className="form-item">

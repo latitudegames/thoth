@@ -6,7 +6,6 @@ import {
 import EntityManagerWindow from '@/Thoth/windows/EntityManagerWindow'
 import { debounce } from '@/utils/debounce'
 import EventHandler from '@thoth/components/EventHandler'
-// import { store } from '@/state/store'
 import { useEditor } from '@thoth/contexts/EditorProvider'
 import { Layout } from '@thoth/contexts/LayoutProvider'
 import DebugConsole from '@thoth/windows/DebugConsole'
