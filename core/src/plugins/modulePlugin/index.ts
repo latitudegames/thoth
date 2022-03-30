@@ -53,6 +53,8 @@ function install(
 
         moduleManager.registerInput(name, socket)
 
+        if (skip) return
+
         component.worker = (
           node: NodeData,
           inputs: WorkerInputs,
@@ -74,6 +76,8 @@ function install(
         const triggersWorker = component.worker as any
 
         moduleManager.registerTriggerOut(name, socket)
+
+        if (skip) return
 
         component.worker = (
           node: NodeData,
@@ -104,6 +108,8 @@ function install(
         const triggerInWorker = component.worker
 
         moduleManager.registerTriggerIn(name, socket)
+
+        if (skip) return
 
         component.worker = (
           node: NodeData,
