@@ -17,6 +17,7 @@ import { EngineContext } from './src/engine'
 import { ThothTask } from './src/thoth-component'
 import { ThothConsole } from './src/plugins/debuggerPlugin/ThothConsole'
 import { Data } from 'rete/types/core/data'
+export { ThothEditor } from './src/editor'
 
 export type { InspectorData } from './src/plugins/inspectorPlugin/Inspector'
 
