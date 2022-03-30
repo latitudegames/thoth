@@ -28,6 +28,7 @@ export class ThothEditor extends NodeEditor<EventsTypes> {
   loadGraph: (graph: Data) => Promise<void>
   moduleManager: ModuleManager
   runProcess: (callback?: Function) => Promise<void>
+  onSpellUpdated: (spellId: string, callback: Function) => Function
 }
 
 /*
