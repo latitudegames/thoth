@@ -11,7 +11,6 @@ import {
 } from 'rete/types/core/data'
 
 import { Inspector } from './src/plugins/inspectorPlugin/Inspector'
-import { ModuleGraphData } from './src/plugins/modulePlugin/module-manager'
 import { TaskOutputTypes } from './src/plugins/taskPlugin/task'
 import { SocketNameType, SocketType } from './src/sockets'
 import { EngineContext } from './src/engine'
@@ -75,7 +74,7 @@ export type ThothNode = Node & {
 export type ModuleType = {
   id: string
   name: string
-  data: ModuleGraphData
+  data: ChainData
   createdAt: number
   updatedAt: number
 }
