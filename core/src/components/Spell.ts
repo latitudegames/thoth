@@ -91,5 +91,8 @@ export class SpellComponent extends ThothComponent<ModuleWorkerOutput[]> {
       },
       {} as Record<string, any>
     )
+
+    const response = thoth.runSpell(flattenedInputs, node.data.spellId)
+
   }
 }
