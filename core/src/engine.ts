@@ -53,6 +53,7 @@ export type EngineContext = {
     model: string,
     request: string
   ) => Promise<{ error: unknown; [key: string]: unknown }>
+  runSpell: Function
   readFromImageCache: Function
   onPlaytest?: Function
   sendToDebug?: Function
