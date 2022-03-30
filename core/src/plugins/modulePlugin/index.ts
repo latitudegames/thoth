@@ -21,6 +21,7 @@ export interface IRunContextEditor extends NodeEditor {
 type ModuleOptions = {
   socket: Socket
   nodeType: 'input' | 'output' | 'triggerIn' | 'triggerOut' | 'module'
+  skip?: boolean
 }
 
 interface IModuleComponent extends Component {
