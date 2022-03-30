@@ -22,6 +22,7 @@ export interface ThothInterfaceContext extends EngineContext {
   sendToDebug: (data) => void
   onDebug: (node, callback) => void
   clearTextEditor: () => void
+  runSpell: (inputs: Record<string, any>, spellId: string) => void
   getCurrentGameState: () => Record<string, unknown>
   updateCurrentGameState: (update) => void
   readFromImageCache: (caption, cacheTag, topK) => Promise<Record<string, any>>
@@ -161,6 +162,8 @@ const ThothInterfaceProvider = ({ children, tab }) => {
     )
   }
 
+  const runSpell = (inputs, spellId) => {}
+
   const clearTextEditor = () => {
     publish($TEXT_EDITOR_CLEAR(tab.id))
   }
@@ -205,6 +208,7 @@ const ThothInterfaceProvider = ({ children, tab }) => {
     getCurrentGameState,
     updateCurrentGameState,
     processCode,
+    runSpell,
   }
 
   return <Context.Provider value={publicInterface}>{children}</Context.Provider>
