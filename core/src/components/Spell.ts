@@ -59,7 +59,7 @@ export class SpellComponent extends ThothComponent<ModuleWorkerOutput[]> {
     node.update()
   }
 
-  worker(
+  async worker(
     node: NodeData,
     inputs: ThothWorkerInputs,
     outputs: { [key: string]: string },
