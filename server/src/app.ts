@@ -3,7 +3,7 @@ config()
 //@ts-ignore
 import cors from '@koa/cors'
 import Router from '@koa/router'
-import { database } from '@latitudegames/thoth-core/src/connectors/database'
+import { database } from './database'
 import HttpStatus from 'http-status-codes'
 import Koa from 'koa'
 import koaBody from 'koa-body'
@@ -12,7 +12,7 @@ import { creatorToolsDatabase } from './databases/creatorTools'
 import { routes } from './routes'
 import { Handler, Method, Middleware } from './types'
 import { initSpeechServer } from './systems/googleSpeechToText'
-import { world } from './world/world'
+import { World } from './entities/World'
 import { initSearchCorpus } from './systems/searchCorpus'
 import { initClassifier } from '@latitudegames/thoth-core/src/utils/textClassifier'
 import { cacheManager } from './cacheManager'
@@ -60,9 +60,6 @@ export async function init() {
   console.log(await cacheManager.instance.get('global', 'key_test'))
   console.log(await cacheManager.instance.get('global', 'key test'))
   console.log(await cacheManager.instance.get('global', 'ttes_key'))*/
-
-  new world()
-
   const options = {
     origin: '*',
   }

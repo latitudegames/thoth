@@ -1,6 +1,6 @@
-import { createWikipediaAgent } from '@latitudegames/thoth-core/src/connectors/wikipedia'
-import { database } from '@latitudegames/thoth-core/src/connectors/database'
-import { handleInput } from '@latitudegames/thoth-core/src/connectors/handleInput'
+import { createWikipediaAgent } from '../entities/connectors/wikipedia'
+import { database } from '../database'
+import { handleInput } from '../entities/connectors/handleInput'
 //@ts-ignore
 import weaviate from 'weaviate-client'
 import Koa from 'koa'
@@ -11,8 +11,8 @@ import axios from 'axios'
 import request from 'request'
 import fetch from 'node-fetch'
 import { cacheManager } from '../cacheManager'
-import { makeCompletion } from '../utils/makeCompletionRequest'
-import { makeModelRequest } from '../utils/makeModelRequest'
+import { makeCompletion } from '../utils/MakeCompletionRequest'
+import { MakeModelRequest } from '../utils/MakeModelRequest'
 
 export const modules: Record<string, unknown> = {}
 
@@ -464,7 +464,7 @@ const hfRequest = async (ctx: Koa.Context) => {
     wait_for_model: true,
   }
 
-  const { success, data } = await makeModelRequest(
+  const { success, data } = await MakeModelRequest(
     inputs,
     model,
     parameters,

@@ -9,17 +9,15 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-// required for message.lineReply
+import { classifyText } from '@latitudegames/thoth-core/src/utils/textClassifier'
 import Discord, { Intents } from 'discord.js'
 import emoji from 'emoji-dictionary'
 import emojiRegex from 'emoji-regex'
 import { EventEmitter } from 'events'
-
-import roomManager from '../components/agent/roomManager'
-import { classifyText } from '../utils/textClassifier'
-import { database } from './database'
+import { database } from '../../database'
 import { handleInput } from './handleInput'
-import { getRandomEmptyResponse, startsWithCapital, getSetting } from './utils'
+import { getRandomEmptyResponse, startsWithCapital } from './utils'
+
 
 function log(...s) {
   return
@@ -666,7 +664,7 @@ export class discord_client {
 
     const oldResponse = this.getResponse(channel.id, id)
     if (oldResponse === undefined) {
-      await channel.messages.fetch(id).then(async msg => {})
+      await channel.messages.fetch(id).then(async msg => { })
       log('message not found')
       return
     }
@@ -1396,6 +1394,15 @@ export class discord_client {
   ) => {
     this.agent = agent
     this.entity = entity
+
+    // TODO:
+    // 1. Create new thoth graph
+    // 2. create a thoth graph handler function
+    // 3. set this handle message function to it
+    // 4. change handlemessage calls to use this function
+
+
+
     if (!discord_starting_words || discord_starting_words?.length <= 0) {
       this.discord_starting_words = ['hi', 'hey']
     } else {

@@ -1,17 +1,16 @@
-import gameObject from './gameObject'
-import discord_client from '../../../core/src/connectors/discord'
-import { telegram_client } from '../../../core/src/connectors/telegram'
-import { zoom_client } from '../../../core/src/connectors/zoom'
-import { twitter_client } from '../../../core/src/connectors/twitter'
-import { reddit_client } from '../../../core/src/connectors/reddit'
-import { instagram_client } from '../../../core/src/connectors/instagram'
-import { messenger_client } from '../../../core/src/connectors/messenger'
-import { whatsapp_client } from '../../../core/src/connectors/whatsapp'
-import { twilio_client } from '../../../core/src/connectors/twilio'
+import discord_client from './connectors/discord'
+import { telegram_client } from './connectors/telegram'
+import { zoom_client } from './connectors/zoom'
+import { twitter_client } from './connectors/twitter'
+import { reddit_client } from './connectors/reddit'
+import { instagram_client } from './connectors/instagram'
+import { messenger_client } from './connectors/messenger'
+import { whatsapp_client } from './connectors/whatsapp'
+import { twilio_client } from './connectors/twilio'
 //import { harmony_client } from '../../../core/src/connectors/harmony'
-import { xrengine_client } from '../../../core/src/connectors/xrengine'
+import { xrengine_client } from './connectors/xrengine'
 
-export class agent extends gameObject {
+export class Entity {
   name = ''
 
   //Clients
@@ -26,6 +25,7 @@ export class agent extends gameObject {
   twilio: twilio_client
   //harmony: any
   xrengine: xrengine_client
+  id: any
 
   startDiscord(
     discord_api_token: string,
@@ -83,17 +83,16 @@ export class agent extends gameObject {
 
   stopXREngine() {
     if (!this.xrengine) throw new Error("XREngine isn't running, can't stop it")
-    ;(this.xrengine as any) = null
+      ; (this.xrengine as any) = null
     console.log('Stopped xrengine client for agent ' + this.name)
   }
 
   async onDestroy() {
-    await super.onDestroy()
     if (this.discord) this.stopDiscord()
   }
 
   constructor(data: any) {
-    super(data.id)
+    this.id = data.id
     console.log('initing agent')
     console.log('agent data is ', data)
     this.name = data.agent ?? data.name ?? 'agent'
@@ -164,4 +163,4 @@ export class agent extends gameObject {
   // }
 }
 
-export default agent
+export default Entity

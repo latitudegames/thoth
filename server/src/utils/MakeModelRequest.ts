@@ -5,7 +5,7 @@
 import axios from 'axios'
 
 //Model Request using the Hugging Face API (models can be found at -> https://huggingface.co/models)
-export async function makeModelRequest(
+export async function MakeModelRequest(
   inputs,
   model,
   parameters = {},

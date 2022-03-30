@@ -150,28 +150,6 @@ export class xrengine_client {
     return this.messageResponses[chatId][message]
   }
 
-  async addMessageToHistory(chatId, messageId, senderName, content) {
-    return
-    // await database.instance.addMessageInHistory(
-    //   'xr-engine',
-    //   chatId,
-    //   messageId,
-    //   senderName,
-    //   content
-    // )
-  }
-  async deleteMessageFromHistory(chatId, messageId) {
-    // await database.instance.deleteMessage('xr-engine', chatId, messageId)
-  }
-  async updateMessage(chatId, messageId, newContent) {
-    // await database.instance.updateMessage(
-    //   'xr-engine',
-    //   chatId,
-    //   messageId,
-    //   newContent,
-    //   true
-    // )
-  }
   async wasHandled(chatId, messageId, foundCallback, notFoundCallback) {
     notFoundCallback()
     return false
@@ -239,13 +217,6 @@ export class xrengine_client {
     else if (text.includes('in intimate range')) return
     else if (text.startsWith('/') || text.startsWith(' /')) return
     else if (sender === bot.name || senderId === bot.userId) {
-      this.addMessageToHistory(
-        channelId,
-        id,
-        this.settings.xrengine_bot_name,
-        text
-      )
-      return
     }
     await this.wasHandled(
       channelId,
@@ -296,8 +267,6 @@ export class xrengine_client {
 
         let content = text
         log('handling message: ' + content)
-        await this.addMessageToHistory(channelId, id, sender, content)
-        log('Message added to history')
         let addPing = false
         let _prev = undefined
         _prev = this.prevMessage[channelId]
@@ -780,7 +749,7 @@ class XREngineBot {
       }
     }
 
-    if (!this.activeChannel) return log('No active channel')
+    if (!this.activeChannel) return // log('No active channel')
     const messages = this.activeChannel.messages
     if (messages === undefined || messages === null) return
 
@@ -904,7 +873,7 @@ class XREngineBot {
     await this.waitForTimeout(timeout)
   }
 
-  async interactObject() {}
+  async interactObject() { }
 
   /** Return screenshot
    * @param {Function} fn Function to execut _in the node context._
@@ -1302,7 +1271,7 @@ class XREngineBot {
   async typeMessage(input, message, clean) {
     if (clean)
       await this.page.click(`input[name="${input}"]`, { clickCount: 3 })
-    await this.page.type(`input[name=${input}`, message)
+    await this.page.type(`input[name="${input}"]`, message)
     //await this.page.keyboard.type(message);
   }
 

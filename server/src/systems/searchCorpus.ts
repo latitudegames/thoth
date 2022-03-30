@@ -13,7 +13,7 @@ import {
   removePanctuationalMarks,
   simplifyWords,
 } from '../utils/utils'
-import { database } from '@latitudegames/thoth-core/src/connectors/database'
+import { database } from '../database'
 import {
   initClassifier,
   classifyText,
@@ -354,7 +354,7 @@ export async function extractKeywords(input: string): Promise<string[]> {
     return []
   }
 
-  const result: any = await makeModelRequest(input, 'flair/pos-english')
+  const result: any = await MakeModelRequest(input, 'flair/pos-english')
 
   for (let i = 0; i < res.length; i++) {
     for (let j = 0; j < result.length; j++) {
@@ -379,7 +379,7 @@ export async function extractKeywords(input: string): Promise<string[]> {
     const weaviateResponse: any = await makeWeaviateRequest(keywords[i])
 
     if (weaviateResponse.Paragraph.length > 0) {
-      const sum: any = await makeModelRequest(
+      const sum: any = await MakeModelRequest(
         weaviateResponse.Paragraph[0].content,
         'facebook/bart-large-cnn'
       )
@@ -395,7 +395,7 @@ export async function extractKeywords(input: string): Promise<string[]> {
   return respp
 }
 
-export async function makeModelRequest(
+export async function MakeModelRequest(
   inputs: any,
   model: string,
   parameters = {},

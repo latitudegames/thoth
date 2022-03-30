@@ -2,20 +2,22 @@ import { config } from 'dotenv-flow'
 config()
 //@ts-ignore
 import Router from '@koa/router'
-import { roomManager } from '@latitudegames/thoth-core/src/components/roomManager'
-import { database } from '@latitudegames/thoth-core/src/connectors/database'
+import { roomManager } from '@latitudegames/thoth-core/src/components/entities/roomManager'
+import { database } from './database'
 import HttpStatus from 'http-status-codes'
 import Koa from 'koa'
 import koaBody from 'koa-body'
 import compose from 'koa-compose'
 import { routes } from './routes'
 import { Handler, Method, Middleware } from './types'
-import { world } from './world/world'
+import { World } from './entities/World'
 
 export const app: Koa = new Koa()
 export const router: Router = new Router()
 
-export async function init() {
+
+async function init() {
+  console.log("Starting agent runner")
   async function initLoop() {
     new roomManager()
     const expectedServerDelta = 1000 / 60
@@ -37,7 +39,7 @@ export async function init() {
   }
   new database()
   await database.instance.connect()
-  new world()
+  new World()
   console.log('Starting loop')
 
   process.on('unhandledRejection', (err: Error) => {
@@ -141,3 +143,5 @@ export async function init() {
 
   await initLoop()
 }
+
+init()
