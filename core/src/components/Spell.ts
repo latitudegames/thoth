@@ -41,6 +41,20 @@ export class SpellComponent extends ThothComponent<
     this.noBuildUpdate = true
   }
 
+  subscribe(node: ThothNode, spellId: string) {
+    if (this.subscriptionMap[node.id]) this.subscriptionMap[node.id]()
+
+    // Subscribe to any changes to that spell here
+    this.subscriptionMap[node.id] = this.editor.onSpellUpdated(
+      spellId,
+      (spell: Spell) => {
+        // this can probably be better optimise this
+        console.log('SPELL UPDATED')
+        this.updateSockets(node, spell)
+      }
+    )
+  }
+
   builder(node: ThothNode) {
     const spellControl = new SpellControl({
       name: 'Spell Select',
