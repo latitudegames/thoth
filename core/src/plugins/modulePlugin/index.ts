@@ -177,6 +177,8 @@ function install(
 
         const moduleWorker = component.worker
 
+        if (skip) return
+
         component.worker = async (
           node: NodeData,
           inputs: WorkerInputs,
@@ -202,6 +204,8 @@ function install(
         const outputsWorker = component.worker
 
         moduleManager.registerOutput(name, socket)
+
+        if (skip) return
 
         component.worker = (
           node: NodeData,
