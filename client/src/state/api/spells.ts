@@ -60,6 +60,13 @@ export const spellApi = rootApi.injectEndpoints({
         }
       },
     }),
+    runSpell: builder.mutation<Record<string, any>, RunSpell>({
+      query: ({ spellId, version = 'latest', inputs }) => ({
+        url: `game/chains/${spellId}/${version}`,
+        method: 'POST',
+        body: inputs,
+      }),
+    }),
     saveDiff: builder.mutation<void, Diff>({
       // TODO this may introruce bugs.  Though I don't think we need to invalidate the spell cache here since the chain is loaded in live to the rete editor.
       // invalidatesTags: ['Spell'],
@@ -152,6 +159,7 @@ export const {
   useLazyGetSpellQuery,
   useNewSpellMutation,
   useDeleteSpellMutation,
+  useRunSpellMutation,
   useSaveSpellMutation,
   useSaveDiffMutation,
   useDeploySpellMutation,
