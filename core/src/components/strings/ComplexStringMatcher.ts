@@ -118,7 +118,33 @@ export class ComplexStringMatcher extends ThothComponent<Promise<void>> {
     }
 
     let input = inputs['input'][0] as string
-    input = replaceAll(replaceAll(input, '"', ''), "'", '').toLowerCase()
+    // input = replaceAll(replaceAll(input, '"', ''), "'", '').toLowerCase()
+
+    console.log('input:::::', input)
+
+    let str = input + ''
+    str.replace(/<.*>/, '<>')
+    let i1 = str.replace(/<.*>/, '')
+
+    let docname = i1.replace(/\//g, '').replace(/ /, '')
+    console.log(docname.replace(/addDocument/, '').replace(/ /, ''))
+    let storename = docname
+      .replace(/addDocument/, '')
+      .replace(/ /, '')
+      .replace(/ .*/, '')
+    let new1 = docname.replace(/addDocument/, '').replace(/ /, '')
+    let response = new1.substring(new1.indexOf(' ')).replace(/ /, '')
+
+    console.log(storename)
+    console.log(response)
+
+    input = replaceAll(
+      replaceAll(i1.replace(/ /, ''), '"', ''),
+      "'",
+      ''
+    ).toLowerCase()
+
+    console.log('input:::::', input)
 
     const stringMinLength = (node.data.stringMinLength ?? 0) as number
     const stringMaxLength = (node.data.stringMaxLength ?? 0) as number
