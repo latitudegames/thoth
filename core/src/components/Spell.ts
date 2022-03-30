@@ -69,14 +69,9 @@ export class SpellComponent extends ThothComponent<
       // Update the sockets
       this.updateSockets(node, spell)
 
-      // Subscribe to any changes to that spell here
-      this.subscriptionMap[node.id] = this.editor.onSpellUpdated(
-        spell.name,
-        (spell: Spell) => {
-          // this can probably be better optimise this
-          this.updateSockets(node, spell)
-        }
-      )
+      // subscribe to changes form the spell to update the sockets if there are changes
+      // Note: We could store all spells in a spell map here and rather than receive the whole spell, only receive the diff, make the changes, update the sockets, etc.  Mayb improve speed?
+      this.subscribe(node, spell.name)
     }
 
     node.inspector.add(spellControl)
