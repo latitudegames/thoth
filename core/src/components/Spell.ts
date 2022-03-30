@@ -6,8 +6,10 @@ import {
   ThothWorkerInputs,
 } from '../../types'
 import { SpellControl } from '../dataControls/SpellControl'
+import { EngineContext } from '../engine'
 import { Task } from '../plugins/taskPlugin/task'
 import { ThothComponent } from '../thoth-component'
+import { inputNameFromSocketKey } from '../utils/nodeHelpers'
 
 const info = `The Module component allows you to add modules into your chain.  A module is a bundled self contained chain that defines inputs, outputs, and triggers using components.`
 
