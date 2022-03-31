@@ -20,6 +20,7 @@ import { PubSubContext, ThothComponent } from './thoth-component'
 import DebuggerPlugin from './plugins/debuggerPlugin'
 import KeyCodePlugin from './plugins/keyCodePlugin'
 import ModulePlugin from './plugins/modulePlugin'
+import SelectionPlugin from './plugins/selectionPlugin'
 export class ThothEditor extends NodeEditor<EventsTypes> {
   pubSub: PubSubContext
   thoth: EngineContext
@@ -80,7 +81,6 @@ export const initEditor = async function ({
   editor.use(ConnectionPlugin)
   // @seang: temporarily disabling because dependencies of ConnectionReroutePlugin are failing validation on server import of thoth-core
   editor.use(ConnectionReroutePlugin)
-
   // React rendering for the editor
   editor.use(ReactRenderPlugin, {
     // this component parameter is a custom default style for nodes
@@ -132,6 +132,7 @@ export const initEditor = async function ({
   editor.use(ModulePlugin, { engine, modules: {} } as unknown as void)
   editor.use(TaskPlugin)
   editor.use(KeyCodePlugin)
+  editor.use(SelectionPlugin)
 
   // WARNING all the plugins from the editor get installed onto the component and modify it.  This effects the components registered in the engine, which already have plugins installed.
   components.forEach(c => {
