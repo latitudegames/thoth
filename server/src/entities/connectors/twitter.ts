@@ -56,7 +56,14 @@ export class twitter_client {
     const twitterAccessTokenSecret = settings['twitterAccessTokenSecret']
     const regex = new RegExp(settings['twitter_bot_name'], 'ig')
     const regex2 = new RegExp(settings['twitter_bot_name_regex'], 'ig')
-    if (!bearerToken || !twitterUser)
+    if (
+      !bearerToken ||
+      (!twitterAppToken &&
+        !twitterAppTokenSecret &&
+        !twitterAccessToken &&
+        !twitterAccessTokenSecret) ||
+      !twitterUser
+    )
       return console.warn('No API token for Whatsapp bot, skipping')
 
     let twitter = createTwitterClient(
