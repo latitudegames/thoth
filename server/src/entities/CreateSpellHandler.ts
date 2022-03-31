@@ -109,9 +109,6 @@ export const CreateSpellHandler = async (props: { spell: any; version: string; }
             }
         })
 
-
-        module.write({})
-
         // Collect all the "trigger ins" that the module manager has gathered
         const triggerIns = engine.moduleManager.triggerIns;
 
@@ -129,21 +126,10 @@ export const CreateSpellHandler = async (props: { spell: any; version: string; }
         // Defaulting to the first node trigger to start our "run"
         const triggeredNode = getFirstNodeTrigger(graph) as any;
 
-        console.log("triggeredNode is", triggeredNode)
-
-        for (const index in triggeredNode.nodeTaskMap) {
-            triggeredNode.nodeTaskMap[index].reset()
-            triggeredNode.nodeTaskMap[index].closed = []
-        }
-
-        if (triggeredNode._task) triggeredNode._task.reset()
-
-
         const formattedOutputs: Record<string, unknown> = {};
         let error = null;
         // Eventual outputs of running the Spell
         const rawOutputs = {} as Record<string, unknown>;
-
 
         const inputKeys = extractModuleInputKeys(graph) as string[];
 
@@ -169,7 +155,6 @@ export const CreateSpellHandler = async (props: { spell: any; version: string; }
         // important to note: even single string values are wrapped in arrays due to match the client editor format
         module.read(inputs as any);
 
-
         console.log("inputs are", inputs)
 
         await component.run(triggeredNode);
@@ -177,8 +162,6 @@ export const CreateSpellHandler = async (props: { spell: any; version: string; }
 
         // Write all the raw data that was output by the module run to an object
         module.write(rawOutputs);
-
-        console.log("rawOutputs are ", rawOutputs)
 
         // Format raw outputs based on the names assigned to Module Outputs node data in the graph
         Object.values(graph.nodes)
@@ -190,6 +173,9 @@ export const CreateSpellHandler = async (props: { spell: any; version: string; }
             });
         if (error)
             return rawOutputs;
+
+        console.log("inputs are", inputs)
+        console.log("rawOutputs are ", rawOutputs)
 
         console.log("message is", message)
         console.log("response is", formattedOutputs)
