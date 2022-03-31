@@ -125,8 +125,8 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       return acc
     }, {} as Record<string, unknown>)
 
-    const model = (node.data.model as string) ?? 'vanilla-davinci'
-    // const model = node.data.model || 'davinci'
+    const model = (node.data.model as string) || 'vanilla-davinci'
+    // const model = node.data.model || 'vanilla-davinci'
 
     const fewshot = (node.data.fewshot as string) || ''
     const stopSequence = node.data.stop as string
