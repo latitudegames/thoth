@@ -17,14 +17,13 @@ import { EventEmitter } from 'events'
 import { database } from '../../database'
 import { getRandomEmptyResponse, startsWithCapital } from './utils'
 
-
 function log(...s) {
   return
   // console.log(...s)
 }
 
 export const channelTypes = {
-  text: 'GUILD_TEXT',
+  text: 'text',
   dm: 'DM',
   voice: 'GUILD_VOICE',
   thread: 'GUILD_PUBLIC_THREAD',
@@ -351,7 +350,7 @@ export class discord_client {
 
   //Event that is trigger when a new message is created (sent)
   messageCreate = async (client, message) => {
-    log(client, message)
+    console.log('new message from discord:', message.content)
     //gets the emojis from the text and replaces to unix specific type
     const reg = emojiRegex()
     let match
@@ -401,7 +400,10 @@ export class discord_client {
     }
 
     //if the message is empty it is ignored
-    if (content === '') return
+    if (content === '') {
+      console.log('empty content')
+      return
+    }
     let _prev = undefined
 
     //if the author is not a bot, it adds the message to the conversation simulation
@@ -420,11 +422,22 @@ export class discord_client {
       (_prev !== undefined && _prev !== '' && _prev !== author) ||
       this.moreThanOneInConversation()
     // Ignore all bots
-    if (author.bot) return
+    if (author.bot) {
+      console.log('author is bot')
+      return
+    }
 
     //checks if the message contains a direct mention to the bot, or if it is a DM, or if it mentions someone else
     const botMention = `<@!${client.user}>`
     const isDM = channel.type === channelTypes['dm']
+    console.log(
+      'mention, channel type:',
+      channel.type,
+      'defined channel type:',
+      channelTypes['text'],
+      'mention has user:',
+      mentions.has(client.user)
+    )
     const isMention =
       (channel.type === channelTypes['text'] && mentions.has(client.user)) ||
       isDM
@@ -607,11 +620,23 @@ export class discord_client {
     if (
       !containsPrefix &&
       (!prefixOptionalWhenMentionOrDM || (!isMention && !isDM))
-    )
+    ) {
+      console.log(
+        'messageContent:',
+        messageContent,
+        'client prefix:',
+        this.client.prefix,
+        'prefix optional in mention or dm:',
+        prefixOptionalWhenMentionOrDM,
+        'isMention:',
+        isMention
+      )
+      console.log('does not contain prefix')
       return
+    }
 
     setTimeout(() => {
-      channel.sendTyping()
+      //channel.sendTyping()
     }, message.content.length)
 
     console.log('discord spell_handler:', this.spell_handler)
@@ -663,7 +688,7 @@ export class discord_client {
 
     const oldResponse = this.getResponse(channel.id, id)
     if (oldResponse === undefined) {
-      await channel.messages.fetch(id).then(async msg => { })
+      await channel.messages.fetch(id).then(async msg => {})
       log('message not found')
       return
     }
@@ -1373,12 +1398,12 @@ export class discord_client {
   }
 
   client = Discord.Client
-  messageEvent = undefined
   agent = undefined
   discord_starting_words: string[] = []
   discord_bot_name_regex: string = ''
   discord_bot_name: string = 'Bot'
   discord_empty_responses: string[] = []
+  handleInput
 
   createDiscordClient = async (
     agent,
@@ -1449,107 +1474,14 @@ export class discord_client {
 
     this.client.embed = embed
 
-    this.client.on('messageCreate', this.messageCreate.bind(null, this.client))
+    this.client.on('message', this.messageCreate.bind(null, this.client))
+    console.log('DISCORD CLIENT LOADED!')
     // this.client.on('messageDelete', this.messageDelete.bind(null, this.client))
     // this.client.on('messageUpdate', this.messageUpdate.bind(null, this.client))
     // this.client.on(
     //   'presenceUpdate',
     //   this.presenceUpdate.bind(null, this.client)
     // )
-
-    this.messageEvent = new EventEmitter()
-    this.messageEvent.on(
-      'new_message',
-      async function (ds, response, addPing, channel, message) {
-        const responseMessage = response.message
-        log('response: ' + JSON.stringify(responseMessage))
-        if (
-          responseMessage !== undefined &&
-          responseMessage.length <= 2000 &&
-          responseMessage.length > 0
-        ) {
-          let text = ds.replacePlaceholders(responseMessage)
-          if (addPing) {
-            message
-              .reply(text)
-              .then(async function (msg) {
-                ds.onMessageResponseUpdated(channel.id, message.id, msg.id)
-              })
-              .catch(console.error)
-          } else {
-            while (
-              text === undefined ||
-              text === '' ||
-              text.replace(/\s/g, '').length === 0
-            )
-              text = getRandomEmptyResponse(this.discord_empty_responses)
-            log('response1: ' + text)
-            message.channel
-              .send(text)
-              .then(async function (msg) {
-                ds.onMessageResponseUpdated(channel.id, message.id, msg.id)
-              })
-              .catch(console.error)
-          }
-        } else if (responseMessage && responseMessage.length >= 2000) {
-          let text = replacePlaceholders(responseMessage)
-          if (addPing) {
-            message.reply(text).then(async function (msg) {
-              ds.onMessageResponseUpdated(channel.id, message.id, msg.id)
-            })
-          } else {
-            while (
-              text === undefined ||
-              text === '' ||
-              text.replace(/\s/g, '').length === 0
-            )
-              text = getRandomEmptyResponse(this.discord_empty_responses)
-            log('response2: ' + text)
-          }
-          if (text.length > 0) {
-            message.channel
-              .send(text, { split: true })
-              .then(async function (msg) {
-                ds.onMessageResponseUpdated(channel.id, message.id, msg.id)
-              })
-          }
-        } else {
-          const emptyResponse = getRandomEmptyResponse(
-            this.discord_empty_responses
-          )
-          log('sending empty response 3: ' + emptyResponse)
-          if (
-            emptyResponse !== undefined &&
-            emptyResponse !== '' &&
-            emptyResponse.replace(/\s/g, '').length !== 0
-          ) {
-            let text = emptyResponse
-            if (addPing) {
-              message
-                .reply(text)
-                .then(async function (msg) {
-                  ds.onMessageResponseUpdated(channel.id, message.id, msg.id)
-                })
-                .catch(console.error)
-            } else {
-              while (
-                text === undefined ||
-                text === '' ||
-                text.replace(/\s/g, '').length === 0
-              )
-                text = getRandomEmptyResponse(this.discord_empty_responses)
-              log('response4: ' + text)
-              message.channel
-                .send(text)
-                .then(async function (msg) {
-                  ds.onMessageResponseUpdated(channel.id, message.id, msg.id)
-                })
-                .catch(console.error)
-            }
-          }
-        }
-      }
-    )
 
     // this.client.on('interactionCreate', async interaction => {
     //   log('Handling interaction', interaction)

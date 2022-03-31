@@ -101,7 +101,7 @@ export class Entity {
       discord_bot_name,
       discord_empty_responses,
       entity,
-      spell_handler
+      handleInput
     )
     console.log('Started discord client for agent ' + this.name)
   }
