@@ -6,20 +6,14 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-param-reassign */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-import path from 'path'
 import pg from 'pg'
 
 function randomInt(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-const getRandomNumber = (min: number, max: number) =>
-  Math.floor(Math.random() * (max - min + 1)) + min
-
 const { Client } = pg
-const rootDir = path.resolve(path.dirname(''))
 
-const useLatitude = process.env.USE_LATITUDE_API === 'true'
 const PGSSL = process.env.PGSSL === 'true'
 export class database {
   static instance: database
@@ -40,8 +34,8 @@ export class database {
       host: process.env.PGHOST,
       ssl: PGSSL
         ? {
-            rejectUnauthorized: false,
-          }
+          rejectUnauthorized: false,
+        }
         : false,
     })
     this.client.connect()

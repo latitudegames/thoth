@@ -7,6 +7,7 @@ import { Graph, ModuleComponent } from '../routes/spells/types';
 import { initSharedEngine } from '@latitudegames/thoth-core/src/engine';
 import { Module } from '../routes/spells/module';
 import { ModuleType } from '@latitudegames/thoth-core/types';
+import { ThothComponent } from '@latitudegames/thoth-core/src/thoth-component';
 
 
 export const CreateSpellHandler = async (props: { spell: any; version: string; }) => {
@@ -101,7 +102,12 @@ export const CreateSpellHandler = async (props: { spell: any; version: string; }
             Entity: entity,
         } as any
 
-        module.write({})
+        engine.components.forEach((_c: any) => {
+            const c = _c as ThothComponent<unknown>
+            if (_c._task) {
+                _c._task.reset()
+            }
+        })
 
         // Collect all the "trigger ins" that the module manager has gathered
         const triggerIns = engine.moduleManager.triggerIns;
@@ -116,59 +122,14 @@ export const CreateSpellHandler = async (props: { spell: any; version: string; }
             'Module Trigger In'
         ) as ModuleComponent as any
 
-        for (const co in engine.components) {
-            const c = engine.components[co]
-
-            if (c._task) {
-                c._task?.reset()
-                c._task.closed = null
-                c._task.outputData = null
-            }
-
-            for (const index in c.nodeTaskMap) {
-                c.nodeTaskMap[index].reset()
-
-            }
-
-            if (c._task && c._task.node) {
-                console.log("c._task.node.outputData is", c._task.node.outputData)
-                c._task.node.outputData = null
-            }
-            console.log("c is", c)
-
-        }
-
-        engine.components.forEach((c: any) => {
-            if (c._task) {
-                c._task.reset()
-                c._task.closed = []
-            }
-            if (c.nodeTaskMap) {
-                for (const index in c.nodeTaskMap) {
-                    c.nodeTaskMap[index].reset()
-                    c.nodeTaskMap[index].closed = []
-                }
-            }
-        })
 
         // Defaulting to the first node trigger to start our "run"
         const triggeredNode = getFirstNodeTrigger(graph) as any;
-
-        console.log("triggeredNode is", triggeredNode)
-
-        for (const index in triggeredNode.nodeTaskMap) {
-            triggeredNode.nodeTaskMap[index].reset()
-            triggeredNode.nodeTaskMap[index].closed = []
-        }
-
-        if (triggeredNode._task) triggeredNode._task.reset()
-
 
         const formattedOutputs: Record<string, unknown> = {};
         let error = null;
         // Eventual outputs of running the Spell
         const rawOutputs = {} as Record<string, unknown>;
-
 
         const inputKeys = extractModuleInputKeys(graph) as string[];
 
@@ -194,7 +155,6 @@ export const CreateSpellHandler = async (props: { spell: any; version: string; }
         // important to note: even single string values are wrapped in arrays due to match the client editor format
         module.read(inputs as any);
 
-
         console.log("inputs are", inputs)
 
         await component.run(triggeredNode);
@@ -202,8 +162,6 @@ export const CreateSpellHandler = async (props: { spell: any; version: string; }
 
         // Write all the raw data that was output by the module run to an object
         module.write(rawOutputs);
-
-        console.log("rawOutputs are ", rawOutputs)
 
         // Format raw outputs based on the names assigned to Module Outputs node data in the graph
         Object.values(graph.nodes)
@@ -215,6 +173,9 @@ export const CreateSpellHandler = async (props: { spell: any; version: string; }
             });
         if (error)
             return rawOutputs;
+
+        console.log("inputs are", inputs)
+        console.log("rawOutputs are ", rawOutputs)
 
         console.log("message is", message)
         console.log("response is", formattedOutputs)

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /* eslint-disable prefer-const */
 /* eslint-disable no-invalid-this */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -29,14 +28,29 @@ const createTwitterClient = (
 }
 
 export class twitter_client {
-  async handleMessage(response, chat_id, args, twitterV1) {
+  async handleMessage(response, chat_id, args, twitter, twitterV1, localUser) {
     if (args === 'DM') {
-      await twitterV1.v1.sendDm({
+      const dmSent = await twitterV1.v1.sendDm({
         recipient_id: chat_id,
         text: response,
       })
+      database.instance.addMessageInHistory(
+        'twitter',
+        chat_id,
+        dmSent.event.id,
+        this.agent.name,
+        response
+      )
     } else if (args === 'Twit') {
-      await twitterV1.v1.reply(response, chat_id)
+      await twitterV1.v1.reply(response, chat_id).then(res => {
+        database.instance.addMessageInHistory(
+          'twitter',
+          chat_id,
+          res.id_str,
+          this.agent.name,
+          response
+        )
+      })
     }
   }
 
@@ -48,22 +62,18 @@ export class twitter_client {
     this.agent = agent
     this.settings = settings
 
-    const bearerToken = settings['twitter_token']
-    const twitterUser = settings['twitter_id']
-    const twitterAppToken = settings['twitterAppToken']
-    const twitterAppTokenSecret = settings['twitterAppTokenSecret']
-    const twitterAccessToken = settings['tiwtterAccessToken']
-    const twitterAccessTokenSecret = settings['twitterAccessTokenSecret']
-    const regex = new RegExp(settings['twitter_bot_name'], 'ig')
-    const regex2 = new RegExp(settings['twitter_bot_name_regex'], 'ig')
-    if (
-      !bearerToken ||
-      (!twitterAppToken &&
-        !twitterAppTokenSecret &&
-        !twitterAccessToken &&
-        !twitterAccessTokenSecret) ||
-      !twitterUser
+    const bearerToken = getSetting(settings, 'twitter_token')
+    const twitterUser = getSetting(settings, 'twitter_id')
+    const twitterAppToken = getSetting(settings, 'twitter_app_token')
+    const twitterAppTokenSecret = getSetting(settings, 'twitter_app_token_secret')
+    const twitterAccessToken = getSetting(settings, 'twitter_access_token')
+    const twitterAccessTokenSecret = getSetting(
+      settings,
+      'twitter_access_token_secret'
     )
+    const regex = new RegExp('', 'ig')
+    const regex2 = new RegExp('botNameRegex', 'ig')
+    if (!bearerToken || !twitterUser)
       return console.warn('No API token for Whatsapp bot, skipping')
 
     let twitter = createTwitterClient(
@@ -86,12 +96,10 @@ export class twitter_client {
       )
       const eventsPaginator = await tv1.v1.listDmEvents()
       for await (const event of eventsPaginator) {
-        console.log(
-          'Event: ' + JSON.stringify(event.message_create.message_data.text)
-        )
+        log('Event: ' + JSON.stringify(event.message_create.message_data.text))
         if (event.type == 'message_create') {
           if (event.message_create.sender_id == localUser.data.id) {
-            console.log('same sender')
+            log('same sender')
             return
           }
 
@@ -99,98 +107,95 @@ export class twitter_client {
           const author = await twitter.v2.user(event.message_create.sender_id)
           if (author) authorName = author.data.username
 
-          const resp = await handleInput(
-            event.message_create.message_data.text,
-            authorName,
-            this.settings['twitter_bot_name'] ?? 'Agent',
+          await database.instance.messageExistsAsyncWitHCallback2(
             'twitter',
+            event.message_create.target.recipient_id,
             event.id,
-            this.settings['entity'] ?? 1,
-            this.settings['spell_handler'],
-            this.settings['spell_version']
+            authorName,
+            event.message_create.message_data.text,
+            parseInt(event.created_timestamp),
+            async () => {
+              const resp = await handleInput(
+                event.message_create.message_data.text,
+                authorName,
+                this.agent.name ?? 'Agent',
+                'twitter',
+                event.id
+              )
+              this.handleMessage(resp, event.id, 'DM', twitter, tv1, localUser)
+
+              database.instance.addMessageInHistoryWithDate(
+                'twitter',
+                event.message_create.target.recipient_id,
+                event.id,
+                authorName,
+                event.message_create.message_data.text,
+                event.created_timestamp
+              )
+            }
           )
-          this.handleMessage(resp, event.id, 'DM', tv1)
         }
       }
-    }, 25000)
-    if (!twit.data.text.match(regex2)) {
-      const rules = await client.v2.streamRules()
-      if (rules.data?.length) {
+    }, 25000) /*!twit.data.text.match(regex2)) {
+
+    /*const rules = await client.v2.streamRules()
+        if (rules.data?.length) {
+            await client.v2.updateStreamRules({
+                delete: { ids: rules.data.map(rule => rule.id) },
+            })
+        }
+        const tweetRules = process.env.TWITTER_TWEET_RULES.split(',')
+        const _rules = []
+        for (let x in tweetRules) {
+            log('rule: ' + tweetRules[x])
+            _rules.push({value: tweetRules[x]})
+        }
         await client.v2.updateStreamRules({
-          delete: { ids: rules.data.map(rule => rule.id) },
+            add: _rules
         })
-      }
-      const tweetRules = this.settings['TWITTER_TWEET_RULES'].split(',')
-      const _rules = []
-      for (let x in tweetRules) {
-        console.log('rule: ' + tweetRules[x])
-        _rules.push({ value: tweetRules[x] })
-      }
-      await client.v2.updateStreamRules({
-        add: _rules,
-      })
-      const stream = await client.v2.searchStream({
-        'tweet.fields': ['referenced_tweets', 'author_id'],
-        expansions: ['referenced_tweets.id'],
-      })
-      stream.autoReconnect = true
-      stream.on(ETwitterStreamEvent.Data, async twit => {
-        const isARt =
-          twit.data.referenced_tweets?.some(
-            twit => twit.type === 'retweeted'
-          ) ?? false
-        if (
-          isARt ||
-          (localUser !== undefined && twit.data.author_id == localUser.data.id)
-        ) {
-          console.log('isArt found')
-        } else {
-          if (!twit.data.text.match(regex)) {
-            console.log('regex doesnt match')
-          } else {
-            let authorName = 'unknown'
-            const author = await twitter.v2.user(twit.data.author_id)
-            if (author) authorName = author.data.username
-            let date = new Date()
-            if (twit.data.created_at) date = new Date(twit.data.created_at)
-            const utc = new Date(
-              date.getUTCFullYear(),
-              date.getUTCMonth(),
-              date.getUTCDate(),
-              date.getUTCHours(),
-              date.getUTCMinutes(),
-              date.getUTCSeconds()
-            )
-            const utcStr =
-              date.getDate() +
-              '/' +
-              (date.getMonth() + 1) +
-              '/' +
-              date.getFullYear() +
-              ' ' +
-              utc.getHours() +
-              ':' +
-              utc.getMinutes() +
-              ':' +
-              utc.getSeconds()
-            let ts = Math.floor(utc.getTime() / 1000)
+        const stream = await client.v2.searchStream({
+            "tweet.fields": ['referenced_tweets', 'author_id'],
+            expansions: ['referenced_tweets.id']
+        })
+        stream.autoReconnect = true
+        stream.on(ETwitterStreamEvent.Data, async twit => {
+            const isARt = twit.data.referenced_tweets?.some(twit => twit.type === 'retweeted') ?? false
+            if (isARt || (localUser !== undefined && twit.data.author_id == localUser.data.id)) {
+                log('isArt found')
+            } else {
+                if (/*!twit.data.text.match(regex) && */
+    /*   log('regex doesnt match')
+                } else {
+                    let authorName = 'unknown'
+                    const author = await twitter.v2.user(twit.data.author_id)
+                    if (author) authorName = author.data.username
+                    let date = new Date();
+                    if (twit.data.created_at) date = new Date(twit.data.created_at)
+                    const utc = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
+                    const utcStr = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' ' + utc.getHours() + ':' + utc.getMinutes() + ':' + utc.getSeconds()
+                    var ts = Math.floor(utc.getTime() / 1000);
+                    await database.instance.messageExistsAsyncWitHCallback2('reddit', twit.data.id, twit.data.id, authorName, twit.data.text, ts, () => {
+                        MessageClient.instance.sendMessage(twit.data.text,
+                            twit.data.id,
+                            'twitter',
+                            twit.data.in_reply_to_user_id ? twit.data.in_reply_to_user_id : twit.data.id,
+                            ts + '',
+                            false,
+                            authorName,
+                            'Twit')
+                            log('sending twit: ' + JSON.stringify(twit))
 
-            console.log('sending twit: ' + JSON.stringify(twit))
-            const resp = handleInput(
-              twit.data.text,
-              authorName,
-              this.settings['Agent_Name'] ?? 'Agent',
-              'twitter',
-              twit.data.id,
-              this.settings['entity'] ?? 1,
-              this.settings['spell_handler'],
-              this.settings['spell_version']
-            )
 
-            this.handleMessage(resp, twit.data.id, 'Twit', twitterV1)
-          }
-        }
-      })
-    }
+                        database.instance.addMessageInHistoryWithDate(
+                            'twitter',
+                            twit.data.id,
+                            twit.data.id,
+                            authorName,
+                            twit.data.text,
+                            utcStr)
+                    })
+                }
+            }
+        })*/
   }
 }
