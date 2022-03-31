@@ -168,7 +168,9 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
         composed,
       }
     } catch (err) {
-      throw new Error('Error in Generator component.')
+      // Typescript reporting wrong about number of arguments for error constructor
+      //@ts-ignore:next-line
+      throw new Error('Error in Generator component.', { cause: err })
     }
   }
 }
