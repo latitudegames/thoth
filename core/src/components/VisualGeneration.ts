@@ -81,10 +81,13 @@ export class VisualGeneration extends ThothComponent<Promise<ImageType[]>> {
     const cacheTag = node.data.cacheTag ?? undefined
 
     try {
-      const images = await readFromImageCache(caption, cacheTag, node.data.topK)
-      return {
-        images,
-      }
+      const images = await readFromImageCache(
+        caption as string,
+        cacheTag as string,
+        node.data.topK as number
+      )
+
+      return images
     } catch (err) {
       throw new Error('Error in VisualGeneration component')
     }
