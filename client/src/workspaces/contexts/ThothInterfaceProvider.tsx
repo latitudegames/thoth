@@ -149,8 +149,7 @@ const ThothInterfaceProvider = ({ children, tab }) => {
       topK,
     })
     if ('error' in result) throw new Error('Error reading from image cache')
-
-    return result.data
+    return { images: result.data }
   }
 
   const processCode = (code, inputs, data) => {
