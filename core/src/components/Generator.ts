@@ -97,7 +97,7 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
     const frequencyPenalty = new InputControl({
       dataKey: 'frequencyPenalty',
       name: 'Frequency Penalty',
-      defaultValue: '0',
+      defaultValue: 0,
     })
 
     node.inspector
@@ -125,10 +125,11 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       return acc
     }, {} as Record<string, unknown>)
 
-    const model = (node.data.model as string) ?? 'vanilla-davinci'
+    const model = (node.data.model as string) || 'vanilla-davinci'
     // const model = node.data.model || 'davinci'
 
-    const fewshot = (node.data.fewshot as string) || ''
+    // Replace carriage returns with newlines because that's what the language models expect
+    const fewshot = (node.data.fewshot as string).replace('\r\n', '\n') || ''
     const stopSequence = node.data.stop as string
 
     const template = Handlebars.compile(fewshot, { noEscape: true })
@@ -150,6 +151,8 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       ? parseFloat(frequencyPenaltyData)
       : 0
 
+    console.log({ model })
+
     const body = {
       model,
       prompt,
@@ -168,7 +171,9 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
         composed,
       }
     } catch (err) {
-      throw new Error('Error in Generator component.')
+      // Typescript reporting wrong about number of arguments for error constructor
+      //@ts-ignore:next-line
+      throw new Error('Error in Generator component.', { cause: err })
     }
   }
 }
