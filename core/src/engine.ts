@@ -53,6 +53,7 @@ export type EngineContext = {
   huggingface: (
     model: string,
     request: string
+  ) => Promise<{ error?: unknown; [key: string]: unknown }>
   runSpell?: Function
   onPlaytest?: Function
   sendToDebug?: Function
