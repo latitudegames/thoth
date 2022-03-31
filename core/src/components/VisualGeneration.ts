@@ -25,11 +25,7 @@ export type ImageType = {
   score: number | string
 }
 
-type WorkerReturn = {
-  images: ImageType[]
-}
-
-export class VisualGeneration extends ThothComponent<Promise<WorkerReturn>> {
+export class VisualGeneration extends ThothComponent<Promise<ImageType[]>> {
   constructor() {
     super('VisualGeneration')
     this.task = {
