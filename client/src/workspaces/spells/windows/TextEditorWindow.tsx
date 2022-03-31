@@ -104,7 +104,8 @@ const TextEditor = props => {
     save(code)
   }
 
-  const updateCode = (code: string) => {
+  const updateCode = (rawCode: string) => {
+    const code = rawCode.replace('\r\n', '\n')
     setCode(code)
     const update = {
       ...data,

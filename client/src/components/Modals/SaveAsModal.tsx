@@ -1,9 +1,6 @@
 import { useState } from 'react'
 import { useSnackbar } from 'notistack'
-import {
-  useGetSpellQuery,
-  useSaveSpellMutation,
-} from '../../state/api/spells'
+import { useGetSpellQuery, useSaveSpellMutation } from '../../state/api/spells'
 import { useForm } from 'react-hook-form'
 import Modal from '../Modal/Modal'
 import css from './modalForms.module.css'
@@ -14,7 +11,7 @@ const EditSpellModal = ({ tab, closeModal }) => {
   const dispatch = useDispatch()
   const [error, setError] = useState('')
   const [saveSpell, { isLoading }] = useSaveSpellMutation()
-  const { data: spell } = useGetSpellQuery(tab.spell, {
+  const { data: spell } = useGetSpellQuery(tab.spellId, {
     skip: !tab.spellId,
   })
   const { enqueueSnackbar } = useSnackbar()

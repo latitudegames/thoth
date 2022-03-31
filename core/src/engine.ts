@@ -8,6 +8,7 @@ import {
   OpenAIResultChoice,
   ThothWorkerInputs,
 } from '../types'
+import { ImageType } from './components/VisualGeneration'
 import debuggerPlugin from './plugins/debuggerPlugin'
 import ModulePlugin from './plugins/modulePlugin'
 import TaskPlugin from './plugins/taskPlugin'
@@ -47,14 +48,18 @@ export type EngineContext = {
   updateCurrentGameState: (update: Record<string, unknown>) => void
   enkiCompletion: (
     taskName: string,
-    inputs: string[]
+    inputs: string[] | string
   ) => Promise<{ outputs: string[] }>
   huggingface: (
     model: string,
     request: string
-  ) => Promise<{ error: unknown; [key: string]: unknown }>
-  runSpell: Function
-  readFromImageCache: Function
+  ) => Promise<{ error?: unknown; [key: string]: unknown }>
+  runSpell?: Function
+  readFromImageCache: (
+    caption: string,
+    cacheTag?: string,
+    topK?: number
+  ) => Promise<ImageType[]>
   onPlaytest?: Function
   sendToDebug?: Function
   onAddModule?: Function

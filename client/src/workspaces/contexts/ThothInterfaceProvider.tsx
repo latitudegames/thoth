@@ -29,7 +29,7 @@ export interface ThothInterfaceContext extends EngineContext {
   runSpell: (inputs: Record<string, any>, spellId: string) => void
   getCurrentGameState: () => Record<string, unknown>
   updateCurrentGameState: (update) => void
-  readFromImageCache: (caption, cacheTag, topK) => Promise<Record<string, any>>
+  readFromImageCache: (caption, cacheTag, topK) => Promise<any>
   processCode: (
     code: unknown,
     inputs: ThothWorkerInputs,
@@ -47,8 +47,8 @@ const ThothInterfaceProvider = ({ children, tab }) => {
   const [fetchFromImageCache] = useFetchFromImageCacheMutation()
   const [_runSpell] = useRunSpellMutation()
   const [saveSpell] = useSaveSpellMutation()
-  const { data: _spell } = useGetSpellQuery(tab.spell, {
-    skip: !tab.spell,
+  const { data: _spell } = useGetSpellQuery(tab.spellId, {
+    skip: !tab.spellId,
   })
 
   useEffect(() => {
@@ -148,7 +148,7 @@ const ThothInterfaceProvider = ({ children, tab }) => {
       cacheTag,
       topK,
     })
-    if ('error' in result) return {}
+    if ('error' in result) throw new Error('Error reading from image cache')
     return result.data
   }
 
