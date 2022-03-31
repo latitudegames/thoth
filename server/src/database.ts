@@ -6,20 +6,14 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-param-reassign */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-import path from 'path'
 import pg from 'pg'
 
 function randomInt(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-const getRandomNumber = (min: number, max: number) =>
-  Math.floor(Math.random() * (max - min + 1)) + min
-
 const { Client } = pg
-const rootDir = path.resolve(path.dirname(''))
 
-const useLatitude = process.env.USE_LATITUDE_API === 'true'
 const PGSSL = process.env.PGSSL === 'true'
 export class database {
   static instance: database
@@ -233,12 +227,11 @@ export class database {
       let q = ''
       Object.keys(data).forEach(key => {
         if (data[key] !== null) {
-          q += `${key}='${data[key]}',`
+          q += `${key}='${('' + data[key]).replace("'", "''")}',`
         }
       })
 
-      const query =
-        'UPDATE entities SET ' + q + ' updated_at=$1 WHERE id=$2'
+      const query = 'UPDATE entities SET ' + q + ' updated_at=$1 WHERE id=$2'
       const values = [new Date().toUTCString(), id]
       console.log('called ', query)
       try {
@@ -297,7 +290,9 @@ export class database {
 
     await this.client.query(query, values)
   }
-  async getDocumentsOfStore(storeId: string | string[] | undefined): Promise<any> {
+  async getDocumentsOfStore(
+    storeId: string | string[] | undefined
+  ): Promise<any> {
     const query = 'SELECT * FROM documents WHERE store_id=$1 ORDER BY id DESC'
     const values = [storeId]
 
@@ -376,13 +371,21 @@ export class database {
     await this.client.query(query, values)
     return id
   }
-  async editContentObj(objId: any, description: any, keywords: any, is_included: any, documentId: any) {
+  async editContentObj(
+    objId: any,
+    description: any,
+    keywords: any,
+    is_included: any,
+    documentId: any
+  ) {
     const query =
       'UPDATE content_objects SET description = $1, keywords = $2, is_included = $3, document_id = $4 WHERE id = $5'
     const values = [description, keywords, is_included, documentId, objId]
     await this.client.query(query, values)
   }
-  async getContentObjOfDocument(documentId: string | string[] | undefined): Promise<any> {
+  async getContentObjOfDocument(
+    documentId: string | string[] | undefined
+  ): Promise<any> {
     const query =
       'SELECT * FROM content_objects WHERE document_id = $1 ORDER BY id DESC'
     const values = [documentId]

@@ -6,9 +6,26 @@
 // @ts-nocheck
 import { TwitterApi } from 'twitter-api-v2'
 
-import { database } from './database'
 import { handleInput } from './handleInput'
-import { getSetting } from './utils'
+
+const createTwitterClient = (
+  bearerKey: string,
+  appKey: string,
+  appSecret: string,
+  accessToken: string,
+  accessSecret: string
+) => {
+  if (bearerKey && bearerKey !== undefined && bearerKey.length > 0) {
+    return new TwitterApi(bearerKey)
+  } else {
+    return new TwitterApi({
+      appKey: appKey,
+      appSecret: appSecret,
+      accessToken: accessToken,
+      accessSecret: accessSecret,
+    })
+  }
+}
 
 export class twitter_client {
   async handleMessage(response, chat_id, args, twitter, twitterV1, localUser) {
@@ -41,6 +58,7 @@ export class twitter_client {
   settings
 
   createTwitterClient = async (agent, settings) => {
+    console.log('TWITTER SETTINGS:', settings)
     this.agent = agent
     this.settings = settings
 
@@ -58,34 +76,24 @@ export class twitter_client {
     if (!bearerToken || !twitterUser)
       return console.warn('No API token for Whatsapp bot, skipping')
 
-    let twitter = new TwitterApi(bearerToken)
-    let twitterV1 = new TwitterApi({
-      appKey: twitterAppToken,
-      appSecret: twitterAppTokenSecret,
-      accessToken: twitterAccessToken,
-      accessSecret: twitterAccessTokenSecret,
-    })
+    let twitter = createTwitterClient(
+      bearerToken,
+      twitterAppToken,
+      twitterAppTokenSecret,
+      twitterAccessToken,
+      twitterAccessTokenSecret
+    )
     const client = twitter.readWrite
     const localUser = await twitter.v2.userByUsername(twitterUser)
 
-    new twitterPacketHandler(
-      new TwitterApi(bearerToken),
-      new TwitterApi({
-        appKey: twitterAppToken,
-        appSecret: twitterAppTokenSecret,
-        accessToken: twitterAccessToken,
-        accessSecret: twitterAccessTokenSecret,
-      }),
-      localUser
-    )
-
     setInterval(async () => {
-      const tv1 = new TwitterApi({
-        appKey: twitterAppToken,
-        appSecret: twitterAppTokenSecret,
-        accessToken: twitterAccessToken,
-        accessSecret: twitterAccessTokenSecret,
-      })
+      const tv1 = createTwitterClient(
+        bearerToken,
+        twitterAppToken,
+        twitterAppTokenSecret,
+        twitterAccessToken,
+        twitterAccessTokenSecret
+      )
       const eventsPaginator = await tv1.v1.listDmEvents()
       for await (const event of eventsPaginator) {
         log('Event: ' + JSON.stringify(event.message_create.message_data.text))
