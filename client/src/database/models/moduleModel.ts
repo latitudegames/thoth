@@ -97,7 +97,7 @@ const loadModuleModel = db => {
   }
 
   const getSpellModules = async spell => {
-    const nodes = spell?.chain?.nodes || spell?.graph?.nodes
+    const nodes = spell?.graph?.nodes || spell?.graph?.nodes
     if (!nodes) return
 
     const moduleNames = Object.values(nodes)

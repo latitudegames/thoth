@@ -1,8 +1,8 @@
 import type { Sequelize } from "sequelize";
 import type { entitiesAttributes, entitiesCreationAttributes } from "./entities";
 import { entities as _entities } from "./entities";
-import type { chainsAttributes, chainsCreationAttributes } from "./chains";
-import { chains as _chains } from "./chains";
+import type { spellsAttributes, spellsCreationAttributes } from "./spells";
+import { spells as _spells } from "./spells";
 import type { eventsAttributes, eventsCreationAttributes } from "./events";
 import { events as _events } from "./events";
 import type { deployedSpellsAttributes, deployedSpellsCreationAttributes } from "./deployedSpells";
@@ -17,7 +17,7 @@ import type { wikipediaAttributes, wikipediaCreationAttributes } from "./wikiped
 import { wikipedia as _wikipedia } from "./wikipedia";
 export {
   _entities as entities,
-  _chains as chains,
+  _spells as spells,
   _events as events,
   _deployedSpells as deployedSpells,
   _documents as documents,
@@ -28,8 +28,8 @@ export {
 export type {
   entitiesAttributes,
   entitiesCreationAttributes,
-  chainsAttributes,
-  chainsCreationAttributes,
+  spellsAttributes,
+  spellsCreationAttributes,
   eventsAttributes,
   eventsCreationAttributes,
   deployedSpellsAttributes,
@@ -46,7 +46,7 @@ export type {
 
 export function initModels(sequelize: Sequelize) {
   const entities = _entities.initModel(sequelize);
-  const chains = _chains.initModel(sequelize);
+  const spells = _spells.initModel(sequelize);
   const events = _events.initModel(sequelize);
   const deployedSpells = _deployedSpells.initModel(sequelize);
   const documentsStore = _documentsStore.initModel(sequelize);
@@ -56,7 +56,7 @@ export function initModels(sequelize: Sequelize) {
 
   return {
     entities: entities,
-    chains: chains,
+    spells: spells,
     events: events,
     deployedSpells: deployedSpells,
     contentObj: contentObj,

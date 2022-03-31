@@ -9,55 +9,10 @@ import { whatsapp_client } from './connectors/whatsapp'
 import { twilio_client } from './connectors/twilio'
 //import { harmony_client } from '../../../core/src/connectors/harmony'
 import { xrengine_client } from './connectors/xrengine'
-import axios from 'axios'
-
-async function handleInput(
-  message: string | undefined,
-  speaker: string,
-  agent: string,
-  client: string,
-  channelId: string,
-  entity: number,
-  spell_handler: string,
-  spell_version: string = 'latest'
-) {
-  if (spell_handler === undefined) {
-    spell_handler = 'default'
-  }
-  if (spell_version === undefined) {
-    spell_version = 'latest'
-  }
-
-  const url = encodeURI(
-    `http://localhost:8001/chains/${spell_handler}/${spell_version}`
-  )
-
-  const response = await axios.post(`${url}`, {
-    Input: {
-      Input: message,
-      Speaker: speaker,
-      Agent: agent,
-      Client: client,
-      ChannelID: channelId,
-      Entity: entity,
-    },
-  })
-  let index = undefined
-
-  for (const x in response.data.outputs) {
-    index = x
-  }
-
-  if (index && index !== undefined) {
-    return response.data.outputs[index]
-  } else {
-    return undefined
-  }
-}
+import { CreateSpellHandler } from './CreateSpellHandler'
 
 export class Entity {
   name = ''
-
   //Clients
   discord: discord_client | null
   telegram: telegram_client
@@ -72,13 +27,12 @@ export class Entity {
   xrengine: xrengine_client
   id: any
 
-  startDiscord(
+  async startDiscord(
     discord_api_token: string,
     discord_starting_words: string,
     discord_bot_name_regex: string,
     discord_bot_name: string,
     discord_empty_responses: string,
-    entity: string,
     spell_handler: string,
     spell_version: string
   ) {
@@ -86,24 +40,32 @@ export class Entity {
     if (this.discord)
       throw new Error('Discord already running for this agent on this instance')
 
-    // TODO:
-    // 1. Create new thoth graph
-    // 2. create a thoth graph handler function
-    // 3. set this handle message function to it
-    // 4. change handlemessage calls to use this function
+    const spellHandler = await CreateSpellHandler({
+      spell: spell_handler,
+      version: spell_version,
+    })
 
     this.discord = new discord_client()
-    this.discord.createDiscordClient(
+    console.log("createDiscordClient")
+    await this.discord.createDiscordClient(
       this,
       discord_api_token,
       discord_starting_words,
       discord_bot_name_regex,
       discord_bot_name,
       discord_empty_responses,
-      entity,
-      handleInput
+      spellHandler
     )
     console.log('Started discord client for agent ' + this.name)
+    // const response = await spellHandler(
+    //   'testmessage',
+    //   'testsender',
+    //   'testbot',
+    //   'discord',
+    //   "0",
+    //   this.id
+    // )
+    // console.log("response is ", response)
   }
 
   stopDiscord() {
@@ -134,7 +96,7 @@ export class Entity {
 
   stopXREngine() {
     if (!this.xrengine) throw new Error("XREngine isn't running, can't stop it")
-    ;(this.xrengine as any) = null
+      ; (this.xrengine as any) = null
     console.log('Stopped xrengine client for agent ' + this.name)
   }
 
@@ -155,7 +117,6 @@ export class Entity {
         data.discord_bot_name_regex,
         data.discord_bot_name,
         data.discord_empty_responses,
-        data,
         data.discord_spell_handler_incoming,
         data.spell_version
       )

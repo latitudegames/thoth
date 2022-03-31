@@ -10,7 +10,7 @@
     "build": "yarn clean && tsc",
     "coverage": "jest --coverage --silent",
     "clean": "rm -rf dist",
-    "dev": "concurrently \"nodemon src/server.ts\" \"yarn run speech\" \"sleep 1s && yarn run search\" \"sleep 1s && yarn run entity-server\"",
+    "dev": "concurrently \"nodemon src/server.ts\" \"yarn run speech\" \"sleep 1s && yarn run search\"",
     "speech": "nodemon src/speech-server.ts",
     "search": "nodemon src/search-server.ts",
     "entity-server": "nodemon src/entity-server.ts",

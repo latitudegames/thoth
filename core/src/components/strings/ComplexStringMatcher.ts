@@ -110,7 +110,6 @@ export class ComplexStringMatcher extends ThothComponent<Promise<void>> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    console.log('node.data is', node.data)
 
     // implement a function that replaces all instances of a string with another string
     const replaceAll = (str: string, find: string, replace: string) => {
@@ -279,6 +278,5 @@ export class ComplexStringMatcher extends ThothComponent<Promise<void>> {
       node.display('isMatched: ' + isMatched + ' | invalidated: ' + invalidated)
 
     this._task.closed = !invalidated && isMatched ? ['false'] : ['true']
-    console.log('this._task.closed is', this._task.closed)
   }
 }

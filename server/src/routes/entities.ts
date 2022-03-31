@@ -161,7 +161,7 @@ const createEvent = async (ctx: Koa.Context) => {
   const channel = ctx.request.body.channel
   const text = ctx.request.body.text
   const type = ctx.request.body.type
-
+  console.log("Creating event:", agent, speaker, client, channel, text, type)
   await database.instance.createEvent(
     type,
     agent,

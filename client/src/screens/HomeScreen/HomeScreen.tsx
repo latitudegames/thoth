@@ -29,7 +29,7 @@ const StartScreen = () => {
   const onReaderLoad = async event => {
     const spellData = JSON.parse(event.target.result)
     if (spellData.graph) {
-      spellData.chain = spellData.graph
+      spellData.graph = spellData.graph
       delete spellData.graph
     }
     // TODO check for proper values here and throw errors
@@ -44,7 +44,7 @@ const StartScreen = () => {
 
     // Create new spell
     await newSpell({
-      chain: spellData.chain,
+      graph: spellData.graph,
       name: spellData.name,
     })
 

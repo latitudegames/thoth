@@ -1,10 +1,117 @@
-/* eslint-disable no-console */
 import axios from 'axios'
 import Koa from 'koa'
-import { creatorToolsDatabase } from '../databases/creatorTools'
-import { noAuth } from '../middleware/auth'
-import { Route } from '../types'
-import { CustomError } from '../utils/CustomError'
+import 'regenerator-runtime/runtime'
+import { creatorToolsDatabase } from '../../databases/creatorTools'
+import { noAuth } from '../../middleware/auth'
+import { Route } from '../../types'
+import { CustomError } from '../../utils/CustomError'
+import {
+  buildThothInterface,
+  extractModuleInputKeys,
+  runSpell
+} from './runSpell'
+import { getTestSpell } from './testSpells'
+import { Graph, Module } from './types'
+
+export const modules: Record<string, unknown> = {}
+
+const runSpellHandler = async (ctx: Koa.Context) => {
+  const { spell, version } = ctx.params
+  const { isTest, userGameState = {} } = ctx.request.body
+
+  let rootSpell
+
+  if (process.env.USE_LATITUDE_API === 'true') {
+    const response = await axios({
+      method: 'GET',
+      url: process.env.API_URL + '/game/spells/' + spell,
+      headers: ctx.headers as any,
+      data: ctx.request.body,
+    })
+    rootSpell = response.data
+  } else {
+    rootSpell = await creatorToolsDatabase.spells.findOne({
+      where: { name: spell },
+    })
+  }
+
+  // eslint-disable-next-line functional/no-let
+  let activeSpell
+
+  if (isTest) {
+    console.log('test')
+    activeSpell = getTestSpell(spell)
+  } else if (version === 'latest') {
+    console.log('latest')
+    activeSpell = rootSpell
+  } else {
+    if (process.env.USE_LATITUDE_API === 'true') {
+      console.log('checking the api')
+      const response = await axios({
+        method: 'GET',
+        url: process.env.API_URL + `/game/spells/deployed/${spell}/${version}`,
+        headers: ctx.headers as any,
+        data: ctx.request.body,
+      })
+      activeSpell = response.data
+    } else {
+      console.log('getting active spell')
+      activeSpell = await creatorToolsDatabase.deployedSpells.findOne({
+        where: { name: spell, version },
+      })
+    }
+  }
+
+  //todo validate spell has an input trigger?
+
+  if (!activeSpell?.graph) {
+    throw new CustomError(
+      'not-found',
+      `Spell with name ${spell} and version ${version} not found`
+    )
+  }
+
+  // TODO use test spells if body option is given
+  // const activeSpell = getTestSpell(spell)
+  const graph = activeSpell.graph as Graph
+  const modules = activeSpell.modules as Module[]
+
+  const gameState = {
+    ...rootSpell?.gameState,
+    ...userGameState,
+  }
+
+  const thoth = buildThothInterface(ctx, gameState)
+
+  const inputKeys = extractModuleInputKeys(graph) as string[]
+
+  let error = null
+
+  // Validates the body of the request against all expected values to ensure they are all present
+  const inputs = inputKeys.reduce((inputs, expectedInput: string) => {
+    const requestInput = ctx.request.body[expectedInput]
+
+    if (requestInput) {
+      inputs[expectedInput] = [requestInput]
+
+      return inputs
+    } else {
+      error = `Spell expects a value for ${expectedInput} to be provided `
+      // throw new CustomError(
+      //   'input-failed',
+      //   error
+      // )
+    }
+  }, {} as Record<string, unknown>)
+  if (error) {
+    return (ctx.body = { error })
+  }
+  const outputs = await runSpell(graph, (inputs as any) ?? [], thoth, modules)
+
+  const newGameState = thoth.getCurrentGameState()
+  const body = { spell: activeSpell.name, outputs, gameState: newGameState }
+  ctx.body = body
+}
 
 // Should we use the Latitude API or run independently?
 const latitudeApiKey = process.env.LATITUDE_API_KEY !== '' && process.env.LATITUDE_API_KEY
@@ -32,7 +139,7 @@ const saveHandler = async (ctx: Koa.Context) => {
     return
   }
 
-  const spell = await creatorToolsDatabase.chains.findOne({
+  const spell = await creatorToolsDatabase.spells.findOne({
     where: { name: body.name },
   })
 
@@ -47,9 +154,9 @@ const saveHandler = async (ctx: Koa.Context) => {
   }
 
   if (!spell) {
-    const newSpell = await creatorToolsDatabase.chains.create({
+    const newSpell = await creatorToolsDatabase.spells.create({
       name: body.name,
-      chain: body.chain,
+      graph: body.graph,
       gameState: body.gameState || {},
       modules: body.modules || [],
       userId: ctx.state.user?.id ?? 0,
@@ -78,22 +185,22 @@ const newHandler = async (ctx: Koa.Context) => {
   const body = ctx.request.body
   if (!body) throw new CustomError('input-failed', 'No parameters provided')
 
-  const missingBody = ['chain', 'name'].filter(property => !body[property])
+  const missingBody = ['graph', 'name'].filter(property => !body[property])
 
   if (missingBody.length > 0) {
     const message = `Request body missing ${missingBody.join(', ')} values`
     throw new CustomError('input-failed', message)
   }
 
-  const spell = await creatorToolsDatabase.chains.findOne({
+  const spell = await creatorToolsDatabase.spells.findOne({
     where: { name: body.name },
   })
 
   if (spell) throw new CustomError('input-failed', 'Spell name already taken')
 
-  const newSpell = await creatorToolsDatabase.chains.create({
+  const newSpell = await creatorToolsDatabase.spells.create({
     name: body.name,
-    chain: body.chain,
+    graph: body.graph,
     gameState: {},
     modules: [],
     userId: ctx.state.user?.id ?? 0,
@@ -117,7 +224,7 @@ const patchHandler = async (ctx: Koa.Context) => {
   const name = ctx.params.name
   const userId = ctx.state.user?.id ?? 0
 
-  const spell = await creatorToolsDatabase.chains.findOne({
+  const spell = await creatorToolsDatabase.spells.findOne({
     where: {
       name,
       userId,
@@ -142,9 +249,9 @@ const getSpellsHandler = async (ctx: Koa.Context) => {
     return (ctx.body = response.data)
   }
 
-  const spells = await creatorToolsDatabase.chains.findAll({
+  const spells = await creatorToolsDatabase.spells.findAll({
     attributes: {
-      exclude: ['chain', 'gameState', 'modules'],
+      exclude: ['graph', 'gameState', 'modules'],
     },
   })
   ctx.body = spells
@@ -163,15 +270,15 @@ const getSpellHandler = async (ctx: Koa.Context) => {
     return (ctx.body = response.data)
   }
   try {
-    const spell = await creatorToolsDatabase.chains.findOne({
+    const spell = await creatorToolsDatabase.spells.findOne({
       where: { name, userId: ctx.state.user?.id ?? 0 },
     })
 
     if (!spell) {
-      const newSpell = await creatorToolsDatabase.chains.create({
+      const newSpell = await creatorToolsDatabase.spells.create({
         userId: ctx.state.user?.id ?? 0,
         name,
-        chain: { id: 'demo@0.1.0', nodes: {} },
+        graph: { id: 'demo@0.1.0', nodes: {} },
         gameState: {},
         modules: [],
       })
@@ -196,7 +303,7 @@ const deleteHandler = async (ctx: Koa.Context) => {
 
     return (ctx.body = response.data)
   }
-  const spell = await creatorToolsDatabase.chains.findOne({
+  const spell = await creatorToolsDatabase.spells.findOne({
     where: { name, userId: ctx.state.user?.id ?? 0 },
   })
   if (!spell) throw new CustomError('input-failed', 'spell not found')
@@ -227,7 +334,7 @@ const deploySpellHandler = async (ctx: Koa.Context) => {
       ? JSON.parse(ctx.request.body)
       : ctx.request.body
 
-  const spell = await creatorToolsDatabase.chains.findOne({ where: { name } })
+  const spell = await creatorToolsDatabase.spells.findOne({ where: { name } })
   if (!spell) throw new CustomError('input-failed', 'spell not found')
 
   const lastDeployedSpell = await creatorToolsDatabase.deployedSpells.findOne({
@@ -240,7 +347,7 @@ const deploySpellHandler = async (ctx: Koa.Context) => {
 
   const newDeployedSpell = await creatorToolsDatabase.deployedSpells.create({
     name: spell.name,
-    chain: spell.chain,
+    graph: spell.graph,
     versionName: body?.versionName,
     userId: ctx.state.user?.id ?? 0,
     version: newVersion,
@@ -266,7 +373,7 @@ const getdeployedSpellsHandler = async (ctx: Koa.Context) => {
 
   const spells = await creatorToolsDatabase.deployedSpells.findAll({
     where: { name },
-    attributes: { exclude: ['chain'] },
+    attributes: { exclude: ['graph'] },
     order: [['version', 'desc']],
   })
   return (ctx.body = spells)
@@ -337,4 +444,9 @@ export const spells: Route[] = [
     access: noAuth,
     get: getDeployedSpellHandler,
   },
+  {
+    path: '/spells/:spell/:version',
+    access: noAuth,
+    post: runSpellHandler,
+  }
 ]

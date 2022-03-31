@@ -1,10 +1,10 @@
 import * as Sequelize from 'sequelize';
 import { DataTypes, Model, Optional } from 'sequelize';
 
-export interface chainsAttributes {
+export interface spellsAttributes {
   id: string;
   name: string;
-  chain?: object;
+  graph?: object;
   createdAt?: Date;
   updatedAt?: Date;
   deletedAt?: Date;
@@ -13,15 +13,15 @@ export interface chainsAttributes {
   gameState?: object;
 }
 
-export type chainsPk = "id";
-export type chainsId = chains[chainsPk];
-export type chainsOptionalAttributes = "id" | "chain" | "createdAt" | "updatedAt" | "deletedAt" | "modules" | "gameState";
-export type chainsCreationAttributes = Optional<chainsAttributes, chainsOptionalAttributes>;
+export type spellsPk = "id";
+export type spellsId = spells[spellsPk];
+export type spellsOptionalAttributes = "id" | "graph" | "createdAt" | "updatedAt" | "deletedAt" | "modules" | "gameState";
+export type spellsCreationAttributes = Optional<spellsAttributes, spellsOptionalAttributes>;
 
-export class chains extends Model<chainsAttributes, chainsCreationAttributes> implements chainsAttributes {
+export class spells extends Model<spellsAttributes, spellsCreationAttributes> implements spellsAttributes {
   id!: string;
   name!: string;
-  chain?: object;
+  graph?: object;
   createdAt?: Date;
   updatedAt?: Date;
   deletedAt?: Date;
@@ -30,8 +30,8 @@ export class chains extends Model<chainsAttributes, chainsCreationAttributes> im
   gameState?: object;
 
 
-  static initModel(sequelize: Sequelize.Sequelize): typeof chains {
-    chains.init({
+  static initModel(sequelize: Sequelize.Sequelize): typeof spells {
+    spells.init({
       id: {
         type: DataTypes.UUID,
         allowNull: false,
@@ -41,9 +41,9 @@ export class chains extends Model<chainsAttributes, chainsCreationAttributes> im
       name: {
         type: DataTypes.TEXT,
         allowNull: false,
-        unique: "chains_name_key"
+        unique: "spells_name_key"
       },
-      chain: {
+      graph: {
         type: DataTypes.JSONB,
         allowNull: true
       },
@@ -80,21 +80,21 @@ export class chains extends Model<chainsAttributes, chainsCreationAttributes> im
       }
     }, {
       sequelize,
-      tableName: 'chains',
+      tableName: 'spells',
       schema: 'public',
       timestamps: true,
       paranoid: true,
       underscored: true,
       indexes: [
         {
-          name: "chains_name_key",
+          name: "spells_name_key",
           unique: true,
           fields: [
             { name: "name" },
           ]
         },
         {
-          name: "chains_pkey",
+          name: "spells_pkey",
           unique: true,
           fields: [
             { name: "id" },
@@ -102,6 +102,6 @@ export class chains extends Model<chainsAttributes, chainsCreationAttributes> im
         },
       ]
     });
-    return chains;
+    return spells;
   }
 }

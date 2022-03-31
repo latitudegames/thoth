@@ -16,6 +16,7 @@ import {
   // selectSpellById,
   useDeploySpellMutation,
   useLazyGetDeploymentQuery,
+  useSaveSpellMutation,
   // useSaveSpellMutation,
 } from '@/state/api/spells'
 import { useEditor } from '@thoth/contexts/EditorProvider'
@@ -23,12 +24,12 @@ import { thothApiRootUrl } from '@/config'
 
 const DeploymentView = ({ open, setOpen, spellId, close }) => {
   const [loadingVersion, setLoadingVersion] = useState(false)
-  const { loadChain } = useEditor()
+  const { loadGraph } = useEditor()
   const { openModal, closeModal } = useModal()
   const { enqueueSnackbar } = useSnackbar()
 
   const [deploySpell] = useDeploySpellMutation()
-  // const [saveSpell] = useSaveSpellMutation()
+  const [saveSpell] = useSaveSpellMutation()
   const [getDeplopyment, { data: deploymentData }] = useLazyGetDeploymentQuery()
   // const spell = useSelector(state => selectSpellById(spellId))
   const spell = spellId
@@ -69,12 +70,12 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
     if (!deploymentData || !loadingVersion) return
       ; (async () => {
         close()
-        // await saveSpell({ ...spell, chain: deploymentData.chain })
+        await saveSpell({ ...spell, graph: deploymentData.graph })
         enqueueSnackbar(`version ${deploymentData.version} loaded!`, {
           variant: 'success',
         })
         setLoadingVersion(false)
-        loadChain(deploymentData.chain)
+        loadGraph(deploymentData.graph)
       })()
   }, [deploymentData, loadingVersion])
 

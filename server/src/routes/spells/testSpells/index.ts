@@ -31,7 +31,7 @@ const testSpells: { [spellName: string]: Spell } = {
 
 export const getTestSpell = (spellName: string) => {
   return {
-    chain: testSpells[spellName],
+    graph: testSpells[spellName],
     name: spellName,
     modules: {},
   }
