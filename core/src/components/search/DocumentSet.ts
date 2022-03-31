@@ -12,7 +12,12 @@ import {
   ThothWorkerOutputs,
 } from '../../../types'
 import { EngineContext } from '../../engine'
-import { triggerSocket, stringSocket, booleanSocket, numSocket } from '../../sockets'
+import {
+  triggerSocket,
+  stringSocket,
+  booleanSocket,
+  numSocket,
+} from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
 const info = 'Document Set is used to add a document in the search corpus'
@@ -36,10 +41,23 @@ export class DocumentSet extends ThothComponent<void> {
   builder(node: ThothNode) {
     const storeIdInput = new Rete.Input('storeId', 'Store ID', numSocket)
     const keywordsInput = new Rete.Input('keywords', 'Keywords', stringSocket)
-    const descriptionInput = new Rete.Input('description', 'Description', stringSocket)
-    const isIncludedInput = new Rete.Input('isIncluded', 'Is Included', booleanSocket)
+    const descriptionInput = new Rete.Input(
+      'description',
+      'Description',
+      stringSocket
+    )
+    const isIncludedInput = new Rete.Input(
+      'isIncluded',
+      'Is Included',
+      booleanSocket
+    )
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
+    const docIDOutput = new Rete.Output(
+      'documentId',
+      'Document ID',
+      stringSocket
+    )
 
     return node
       .addInput(storeIdInput)
@@ -48,6 +66,7 @@ export class DocumentSet extends ThothComponent<void> {
       .addInput(isIncludedInput)
       .addInput(dataInput)
       .addOutput(dataOutput)
+      .addOutput(docIDOutput)
   }
 
   async worker(
@@ -57,16 +76,24 @@ export class DocumentSet extends ThothComponent<void> {
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
     const storeId = inputs['storeId'][0]
-    const keywords = inputs['keywords'] ? inputs['keywords'][0] as string : ''
-    const description = inputs['description'] ? inputs['description'][0] as string : ''
+    const keywords = inputs['keywords'] ? (inputs['keywords'][0] as string) : ''
+    const description = inputs['description']
+      ? (inputs['description'][0] as string)
+      : ''
     const is_included = inputs['isIncluded'][0] as string
 
-    const resp = await axios.post(`${process.env.REACT_APP_SEARCH_SERVER_URL}/document`, {
-      keywords,
-      description,
-      is_included,
-      storeId
-    })
+    const resp = await axios.post(
+      `${process.env.REACT_APP_SEARCH_SERVER_URL}/document`,
+      {
+        keywords,
+        description,
+        is_included,
+        storeId,
+      }
+    )
     node.display(resp.data)
+    return {
+      output: resp.data.documentId,
+    }
   }
 }
