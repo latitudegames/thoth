@@ -9,6 +9,7 @@ import { whatsapp_client } from './connectors/whatsapp'
 import { twilio_client } from './connectors/twilio'
 //import { harmony_client } from '../../../core/src/connectors/harmony'
 import { xrengine_client } from './connectors/xrengine'
+import axios from 'axios'
 
 async function handleInput(
   message: string | undefined,
@@ -91,7 +92,6 @@ export class Entity {
     // 3. set this handle message function to it
     // 4. change handlemessage calls to use this function
 
-
     this.discord = new discord_client()
     this.discord.createDiscordClient(
       this,
@@ -134,7 +134,7 @@ export class Entity {
 
   stopXREngine() {
     if (!this.xrengine) throw new Error("XREngine isn't running, can't stop it")
-      ; (this.xrengine as any) = null
+    ;(this.xrengine as any) = null
     console.log('Stopped xrengine client for agent ' + this.name)
   }
 
