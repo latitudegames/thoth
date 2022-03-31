@@ -97,7 +97,7 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
     const frequencyPenalty = new InputControl({
       dataKey: 'frequencyPenalty',
       name: 'Frequency Penalty',
-      defaultValue: '0',
+      defaultValue: 0,
     })
 
     node.inspector
