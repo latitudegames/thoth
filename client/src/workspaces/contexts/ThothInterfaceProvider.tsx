@@ -30,7 +30,7 @@ export interface ThothInterfaceContext extends EngineContext {
   runSpell: (inputs: Record<string, any>, spellId: string) => void
   getCurrentGameState: () => Record<string, unknown>
   updateCurrentGameState: (update) => void
-  readFromImageCache: (caption, cacheTag, topK) => Promise<Record<string, any>>
+  readFromImageCache: (caption, cacheTag, topK) => Promise<ImageType[]>
   processCode: (
     code: unknown,
     inputs: ThothWorkerInputs,
