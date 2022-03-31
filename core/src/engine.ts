@@ -8,6 +8,7 @@ import {
   OpenAIResultChoice,
   ThothWorkerInputs,
 } from '../types'
+import { ImageType } from './components/VisualGeneration'
 import debuggerPlugin from './plugins/debuggerPlugin'
 import ModulePlugin from './plugins/modulePlugin'
 import TaskPlugin from './plugins/taskPlugin'
