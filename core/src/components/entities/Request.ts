@@ -22,7 +22,7 @@ import { ThothComponent } from '../../thoth-component'
 const info = 'Request is used to make a web request to a server.'
 
 type WorkerReturn = {
-  output: string
+  output: any
 }
 
 export class Request extends ThothComponent<Promise<WorkerReturn>> {
@@ -110,7 +110,7 @@ export class Request extends ThothComponent<Promise<WorkerReturn>> {
     }
 
     return {
-      output: resp ? resp.data : '',
+      output: resp ? (resp.data as any) : '',
     }
   }
 }
