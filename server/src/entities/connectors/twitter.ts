@@ -7,9 +7,7 @@
 // @ts-nocheck
 import { TwitterApi } from 'twitter-api-v2'
 
-import { database } from './database'
 import { handleInput } from './handleInput'
-import { getSetting } from './utils'
 
 export class twitter_client {
   async handleMessage(response, chat_id, args, twitterV1) {
@@ -27,48 +25,23 @@ export class twitter_client {
   settings
 
   createTwitterClient = async (agent, settings) => {
+    console.log('TWITTER SETTINGS:', settings)
     this.agent = agent
     this.settings = settings
 
-    const bearerToken = settings['twitterBearerToken']
-    const twitterUser = settings['twitterID']
-    const twitterAppToken = settings['twitterAppToken']
-    const twitterAppTokenSecret = settings['twitterAppTokenSecret']
-    const twitterAccessToken = settings['tiwtterAccessToken']
-    const twitterAccessTokenSecret = settings['twitterAccessTokenSecret']
-    const regex = new RegExp('', 'ig')
-    const regex2 = new RegExp(settings['botNameRegex'], 'ig')
+    const bearerToken = settings['twitter_token']
+    const twitterUser = settings['twitter_id']
+    const regex = new RegExp(settings['twitter_bot_name'], 'ig')
+    const regex2 = new RegExp(settings['twitter_bot_name_regex'], 'ig')
     if (!bearerToken || !twitterUser)
       return console.warn('No API token for Whatsapp bot, skipping')
 
     let twitter = new TwitterApi(bearerToken)
-    let twitterV1 = new TwitterApi({
-      appKey: twitterAppToken,
-      appSecret: twitterAppTokenSecret,
-      accessToken: twitterAccessToken,
-      accessSecret: twitterAccessTokenSecret,
-    })
     const client = twitter.readWrite
     const localUser = await twitter.v2.userByUsername(twitterUser)
 
-    new twitterPacketHandler(
-      new TwitterApi(bearerToken),
-      new TwitterApi({
-        appKey: twitterAppToken,
-        appSecret: twitterAppTokenSecret,
-        accessToken: twitterAccessToken,
-        accessSecret: twitterAccessTokenSecret,
-      }),
-      localUser
-    )
-
     setInterval(async () => {
-      const tv1 = new TwitterApi({
-        appKey: twitterAppToken,
-        appSecret: twitterAppTokenSecret,
-        accessToken: twitterAccessToken,
-        accessSecret: twitterAccessTokenSecret,
-      })
+      const tv1 = new TwitterApi(bearerToken)
       const eventsPaginator = await tv1.v1.listDmEvents()
       for await (const event of eventsPaginator) {
         console.log(
@@ -87,10 +60,10 @@ export class twitter_client {
           const resp = await handleInput(
             event.message_create.message_data.text,
             authorName,
-            this.settings['Agent_Name'] ?? 'Agent',
+            this.settings['twitter_bot_name'] ?? 'Agent',
             'twitter',
             event.id,
-            this.settings['entity'],
+            this.settings['entity'] ?? 1,
             this.settings['spell_handler'],
             this.settings['spell_version']
           )
@@ -167,7 +140,7 @@ export class twitter_client {
               this.settings['Agent_Name'] ?? 'Agent',
               'twitter',
               twit.data.id,
-              this.settings['entity'],
+              this.settings['entity'] ?? 1,
               this.settings['spell_handler'],
               this.settings['spell_version']
             )
