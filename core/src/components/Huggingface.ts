@@ -23,7 +23,7 @@ type WorkerReturn = {
   result?:
     | {
         [key: string]: unknown
-        error: unknown
+        error?: unknown
       }
     | undefined
 }
