@@ -48,7 +48,7 @@ export type EngineContext = {
   updateCurrentGameState: (update: Record<string, unknown>) => void
   enkiCompletion: (
     taskName: string,
-    inputs: string[]
+    inputs: string[] | string
   ) => Promise<{ outputs: string[] }>
   huggingface: (
     model: string,
