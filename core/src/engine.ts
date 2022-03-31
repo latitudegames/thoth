@@ -55,6 +55,11 @@ export type EngineContext = {
     request: string
   ) => Promise<{ error?: unknown; [key: string]: unknown }>
   runSpell?: Function
+  readFromImageCache: (
+    caption: string,
+    cacheTag?: string,
+    topK?: number
+  ) => Promise<ImageType[]>
   onPlaytest?: Function
   sendToDebug?: Function
   onAddModule?: Function
