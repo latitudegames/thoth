@@ -62,9 +62,9 @@ const EventHandler = ({ pubSub, tab }) => {
 
   const saveSpell = async () => {
     const currentSpell = spellRef.current
-    const chain = serialize(currentSpell)
+    const graph = serialize(currentSpell)
 
-    await saveSpellMutation({ ...currentSpell, chain })
+    await saveSpellMutation({ ...currentSpell, graph })
   }
 
   const saveSpellAs = async () => {
@@ -111,7 +111,7 @@ const EventHandler = ({ pubSub, tab }) => {
   const onExport = async () => {
     // refetch spell from local DB to ensure it is the most up to date
     const spell = { ...spellRef.current }
-    spell.chain = serialize()
+    spell.graph = serialize()
     const modules = await getSpellModules(spell)
     // attach modules to spell to be exported
     spell.modules = modules

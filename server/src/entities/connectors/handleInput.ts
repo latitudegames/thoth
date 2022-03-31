@@ -22,7 +22,7 @@ export async function handleInput(
   }
 
   const url = encodeURI(
-    `http://localhost:8001/chains/${spell_handler}/${spell_version}`
+    `http://localhost:8001/spells/${spell_handler}/${spell_version}`
   )
 
   const response = await axios.post(`${url}`, {

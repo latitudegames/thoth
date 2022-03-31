@@ -17,7 +17,7 @@ import enkiImg from '../enki.png'
 import langImg from '../lang.png'
 import css from '../homeScreen.module.css'
 import TemplatePanel from '../components/TemplatePanel'
-import defaultChain from './chains/default'
+import defaultSpell from './spells/default'
 
 const customConfig = {
   dictionaries: [adjectives, colors],
@@ -26,9 +26,9 @@ const customConfig = {
 }
 
 const templates = [
-  { label: 'Starter', bg: emptyImg, chain: defaultChain },
-  { label: 'Language example', bg: langImg, chain: defaultChain },
-  { label: 'Enki example', bg: enkiImg, chain: defaultChain },
+  { label: 'Starter', bg: emptyImg, graph: defaultSpell },
+  { label: 'Language example', bg: langImg, graph: defaultSpell },
+  { label: 'Enki example', bg: enkiImg, graph: defaultSpell },
 ]
 
 const CreateNew = () => {
@@ -51,7 +51,7 @@ const CreateNew = () => {
     const name = data.name || placeholderName
     console.log('selectedTemplate is', selectedTemplate)
     const response = await newSpell({
-      chain: selectedTemplate.chain,
+      graph: selectedTemplate.graph,
       name,
     })
 

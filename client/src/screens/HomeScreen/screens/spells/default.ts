@@ -1,4 +1,4 @@
-const chain = {
+const graph = {
   id: 'demo@0.1.0',
   nodes: {
     '124': {
@@ -72,4 +72,4 @@ const chain = {
   },
 }
 
-export default chain
+export default graph

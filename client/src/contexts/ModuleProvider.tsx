@@ -7,9 +7,9 @@ import { usePubSub } from './PubSubProvider'
 
 const Context = createContext({
   modules: [] as any[],
-  saveModule: () => {},
-  getModule: () => {},
-  getSpellModules: () => {},
+  saveModule: () => { },
+  getModule: () => { },
+  getSpellModules: () => { },
 } as any)
 
 export const useModule = () => useContext(Context)
@@ -34,12 +34,12 @@ const ModuleProvider = ({ children }) => {
   useEffect(() => {
     if (!models) return
     let subscription
-    ;(async () => {
-      subscription = await models.modules.getModules(results => {
-        if (!results) return
-        setModules(results.map(module => module.toJSON()) as any[])
-      })
-    })()
+      ; (async () => {
+        subscription = await models.modules.getModules(results => {
+          if (!results) return
+          setModules(results.map(module => module.toJSON()) as any[])
+        })
+      })()
 
     return () => {
       if (subscription.unsubscribe) subscription.unsubscribe()
@@ -80,7 +80,7 @@ const ModuleProvider = ({ children }) => {
 
   const getSpellModules = async spell => {
     // should actually look for spells that have a data.module key set to a string
-    const moduleNames = Object.values(spell.chain.nodes)
+    const moduleNames = Object.values(spell.graph.nodes)
       .filter((n: any) => n.name === 'Module')
       .map((n: any) => n.data.name)
 

@@ -30,24 +30,24 @@ export type ThothTab = {
 }
 
 const Context = createContext({
-  run: () => {},
-  getEditor: () => {},
+  run: () => { },
+  getEditor: () => { },
   editor: {} as any,
-  serialize: () => {},
+  serialize: () => { },
   buildEditor: (
     el: HTMLDivElement,
     // todo update this to use proper spell type
     spell: Spell | undefined,
     tab: ThothTab,
     thothInterface: ThothInterfaceContext
-  ) => {},
-  setEditor: (editor: any) => {},
-  getNodeMap: () => {},
-  getNodes: () => {},
-  loadChain: (chain: any) => {},
-  setContainer: () => {},
-  undo: () => {},
-  redo: () => {},
+  ) => { },
+  setEditor: (editor: any) => { },
+  getNodeMap: () => { },
+  getNodes: () => { },
+  loadGraph: (graph: any) => { },
+  setContainer: () => { },
+  undo: () => { },
+  redo: () => { },
 })
 
 export const useEditor = () => useContext(Context)
@@ -55,11 +55,11 @@ export const useEditor = () => useContext(Context)
 const EditorProvider = ({ children }) => {
   const [editor, setEditorState] = useState({
     components: [],
-    loadGraph: (chain: any) => {},
+    loadGraph: (graph: any) => { },
   })
   const editorRef = useRef({
-    trigger: (event: string) => {},
-    toJSON: () => {},
+    trigger: (event: string) => { },
+    toJSON: () => { },
   })
   const pubSub = usePubSub()
 
@@ -90,7 +90,7 @@ const EditorProvider = ({ children }) => {
     if (tab.type === 'spell') {
       // copy spell in case it is read onl
       const spell = JSON.parse(JSON.stringify(_spell))
-      newEditor.loadGraph(spell.chain)
+      newEditor.loadGraph(spell.graph)
     }
 
     if (tab.type === 'module') {
@@ -123,7 +123,7 @@ const EditorProvider = ({ children }) => {
     return editor && Object.fromEntries(editor.components)
   }
 
-  const loadChain = graph => {
+  const loadGraph = graph => {
     editor.loadGraph(graph)
   }
 
@@ -139,7 +139,7 @@ const EditorProvider = ({ children }) => {
     buildEditor,
     getNodeMap,
     getNodes,
-    loadChain,
+    loadGraph,
     setEditor,
     getEditor,
     undo,
@@ -180,7 +180,7 @@ const RawEditor = ({ tab, children }) => {
         onDragOver={e => {
           e.preventDefault()
         }}
-        onDrop={e => {}}
+        onDrop={e => { }}
       >
         <div
           ref={el => {

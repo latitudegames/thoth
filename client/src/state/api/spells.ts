@@ -24,7 +24,7 @@ export interface Spell {
   id?: string
   user?: Record<string, unknown> | null | undefined
   name: string
-  chain: SpellType
+  graph: SpellType
   modules: Module[]
   gameState: Record<string, unknown>
   createdAt?: number
@@ -37,7 +37,7 @@ export interface DeployedSpellVersion {
   message?: string
   versionName?: string
   url?: string
-  chain?: SpellType
+  graph?: SpellType
 }
 
 export interface DeployArgs {

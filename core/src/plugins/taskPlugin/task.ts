@@ -150,7 +150,7 @@ export class Task {
       if (this.component.task.onRun)
         this.component.task.onRun(this.node, this, data, socketInfo)
 
-      // this is what propagates the the run command to the next nodes in the chain
+      // this is what propagates the the run command to the next nodes in the graph
       // this makes use of the 'next' nodes.  It also will filter out any connectios which the task has closed.
       // it is this functionality that lets us control which direction the run signal flows.
       if (propagate)

@@ -32,7 +32,7 @@ const Workspace = ({ tab, tabs, pubSub }) => {
       'save',
       debounce(() => {
         if (tab.type === 'spell') {
-          saveSpell({ ...spellRef.current, chain: editor.toJSON() })
+          saveSpell({ ...spellRef.current, graph: editor.toJSON() })
         }
         // if (tab.type === 'module') {
         //   saveModule(tab.module, { data: editor.toJSON() }, false)

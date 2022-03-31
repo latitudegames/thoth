@@ -2,7 +2,7 @@ const moduleSchema = {
   title: 'Module schema',
   version: 1,
   description:
-    'A module is a self contained spell chain which can act as a component inside another spell chain.',
+    'A module is a self contained spell graph which can act as a component inside another spell graph.',
   type: 'object',
   properties: {
     id: {

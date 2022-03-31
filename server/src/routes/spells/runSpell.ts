@@ -74,7 +74,7 @@ const engine = initSharedEngine({
   modules: {},
 }) as any
 
-export const runChain = async (
+export const runSpell = async (
   graph: Graph,
   inputs: Record<string, unknown>,
   thoth: Record<string, unknown>,
