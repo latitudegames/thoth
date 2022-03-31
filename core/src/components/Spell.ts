@@ -119,6 +119,7 @@ export class SpellComponent extends ThothComponent<
       {} as Record<string, any>
     )
 
+    if (!thoth.runSpell) return
     const response = await thoth.runSpell(flattenedInputs, node.data.spellId)
 
     if ('error' in response) {
