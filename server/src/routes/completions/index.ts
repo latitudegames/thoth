@@ -36,7 +36,7 @@ const completionsHandler = async (ctx: Koa.Context) => {
     getFullResponse,
     modelSource = 'openai',
     ...options
-  } = ctx.request.body
+  } = (ctx.request as any).body
 
   const completion = await completionsParser({
     context,

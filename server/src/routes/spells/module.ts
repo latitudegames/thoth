@@ -9,13 +9,17 @@ export class Module {
   }
 
   read(inputs: Record<string, unknown>) {
+    console.log("this.inputs were", this.inputs)
     this.inputs = inputs
+    console.log("this.inputs are", this.inputs)
   }
 
   write(outputs: Record<string, unknown>) {
+    console.log("outputs were", outputs)
     Object.keys(this.outputs).forEach(key => {
       outputs[key] = this.outputs[key]
     })
+    console.log("outputs are now", outputs)
   }
 
   getInput(key: string) {

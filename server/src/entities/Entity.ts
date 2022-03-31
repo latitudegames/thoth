@@ -33,7 +33,6 @@ export class Entity {
     discord_bot_name_regex: string,
     discord_bot_name: string,
     discord_empty_responses: string,
-    entity: string,
     spell_handler: string,
     spell_version: string
   ) {
@@ -46,20 +45,27 @@ export class Entity {
       version: spell_version,
     })
 
-    console.log("spellHandler is", spellHandler)
-
     this.discord = new discord_client()
-    this.discord.createDiscordClient(
+    console.log("createDiscordClient")
+    await this.discord.createDiscordClient(
       this,
       discord_api_token,
       discord_starting_words,
       discord_bot_name_regex,
       discord_bot_name,
       discord_empty_responses,
-      entity,
       spellHandler
     )
     console.log('Started discord client for agent ' + this.name)
+    // const response = await spellHandler(
+    //   'testmessage',
+    //   'testsender',
+    //   'testbot',
+    //   'discord',
+    //   "0",
+    //   this.id
+    // )
+    // console.log("response is ", response)
   }
 
   stopDiscord() {
@@ -111,7 +117,6 @@ export class Entity {
         data.discord_bot_name_regex,
         data.discord_bot_name,
         data.discord_empty_responses,
-        data,
         data.discord_spell_handler_incoming,
         data.spell_version
       )

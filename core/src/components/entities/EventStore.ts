@@ -27,7 +27,10 @@ export async function createEvent(
   channel: string
 ) {
   const response = await axios.post(
-    `${process.env.REACT_APP_API_ROOT_URL ?? 'http://localhost:8001'}/event`,
+    `${process.env.REACT_APP_API_ROOT_URL ??
+    process.env.API_ROOT_URL ??
+    'http://localhost:8001'
+    }/event`,
     {
       type,
       agent,
@@ -37,6 +40,7 @@ export async function createEvent(
       channel,
     }
   )
+  console.log('Created event', response.data)
   return response.data
 }
 
@@ -103,6 +107,7 @@ export class EventStore extends ThothComponent<Promise<void>> {
     console.log('Input is', inputs)
     const speaker = inputs['speaker'][0] as string
     const agent = inputs['agent'][0] as string
+    console.log("inputs['primary']", inputs['primary'])
     const primary = (inputs['primary'] && inputs['primary'][0]) as string
     const secondary = (inputs['secondary'] && inputs['secondary'][0]) as string
     const client = inputs['client'][0] as string
@@ -117,9 +122,6 @@ export class EventStore extends ThothComponent<Promise<void>> {
       typeData !== undefined && typeData.length > 0
         ? typeData.toLowerCase().trim()
         : 'none'
-
-    console.log('node data is', node.data)
-    console.log('node.data', node.data)
 
     const respUser = await createEvent(
       type,

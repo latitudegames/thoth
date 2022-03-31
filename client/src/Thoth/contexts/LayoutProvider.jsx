@@ -126,13 +126,13 @@ const LayoutProvider = ({ children, tab }) => {
     if (inspectorData) {
       setInspectorData(update)
     }
-    // saveSpell(spell)
+    saveSpell(spell)
   }
 
   const saveInspector = inspectorData => {
     setInspectorData(inspectorData)
     publish(events.$NODE_SET(tab.id, inspectorData.nodeId), inspectorData)
-    // saveSpell(spell)
+    saveSpell(spell)
   }
 
   const createModel = json => {

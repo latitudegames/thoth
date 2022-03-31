@@ -94,10 +94,7 @@ export class database {
       'SELECT * FROM events WHERE agent=$1 AND client=$2 AND channel=$3 AND type=$4'
     const values = [agent, client, channel, type]
 
-    console.log('getEvents')
-    console.log(type, agent, sender, client, channel, asString, maxCount)
     const row = await this.client.query(query, values)
-    console.log('row is', row)
     if (!row || !row.rows || row.rows.length === 0) {
       console.log('rows are null, returning')
       return asString ? '' : []

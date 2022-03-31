@@ -6,8 +6,6 @@ import { initModels } from './models/init-models'
 
 const creatorToolsUrl = !!process.env.CREATOR_TOOLS_DB_URL && process.env.CREATOR_TOOLS_DB_URL != "" && process.env.CREATOR_TOOLS_DB_URL;
 const connectionString = creatorToolsUrl || "postgres://" + process.env.PGUSER + ":" + process.env.PGPASSWORD + "@" + process.env.PGHOST + ":" + process.env.PGPORT + "/" + process.env.PGDATABASE
-console.log("connectionString")
-console.log(connectionString)
 const sequelize = new Sequelize(creatorToolsUrl || connectionString, {
   dialect: 'postgres',
   dialectOptions: creatorToolsUrl ? { ssl: { rejectUnauthorized: false } } : {},

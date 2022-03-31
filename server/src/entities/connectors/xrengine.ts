@@ -1108,7 +1108,7 @@ class XREngineBot {
     try {
       await this.page.goto(parsedUrl, { waitUntil: 'domcontentloaded' })
     } catch (error) {
-      log("Unable to connect to XREngine world", error)
+      return log("Unable to connect to XREngine world", error)
     }
 
     /* const granted = await this.page.evaluate(async () => {
@@ -1123,45 +1123,50 @@ class XREngineBot {
    * @param {string} opts.name Name to set as the bot name when joining the room
    */
   async enterRoom(roomUrl, name) {
-    console.log('bot name:', name)
-    await this.navigate(roomUrl)
-    await this.page.waitForSelector('div[class*="instance-chat-container"]', {
-      timeout: 100000,
-    })
+    try {
 
-    if (name) {
-      this.name = name
-    } else {
-      name = this.name
+      console.log('bot name:', name)
+      await this.navigate(roomUrl)
+      await this.page.waitForSelector('div[class*="instance-chat-container"]', {
+        timeout: 100000,
+      })
+
+      if (name) {
+        this.name = name
+      } else {
+        name = this.name
+      }
+
+      this.username_regex = new RegExp(
+        this.settings.xrengine_bot_name_regex,
+        'ig'
+      )
+
+      if (this.headless) {
+        // Disable rendering for headless, otherwise chromium uses a LOT of CPU
+      }
+
+      //@ts-ignore
+      if (this.setName != null) this.setName(name)
+
+      await this.page.mouse.click(0, 0)
+
+      await this.delay(10000)
+
+      await this.getUser()
+      await this.updateChannelState()
+
+      await this.updateUsername(name)
+      await this.delay(10000)
+      const index = this.getRandomNumber(0, this.avatars.length - 1)
+      log(`avatar index: ${index}`)
+      await this.updateAvatar(this.avatars[index])
+      await this.requestPlayers()
+      await this.getUser()
+      await setInterval(() => this.getUser(), 1000)
+    } catch (error) {
+      log('error entering room', error)
     }
-
-    this.username_regex = new RegExp(
-      this.settings.xrengine_bot_name_regex,
-      'ig'
-    )
-
-    if (this.headless) {
-      // Disable rendering for headless, otherwise chromium uses a LOT of CPU
-    }
-
-    //@ts-ignore
-    if (this.setName != null) this.setName(name)
-
-    await this.page.mouse.click(0, 0)
-
-    await this.delay(10000)
-
-    await this.getUser()
-    await this.updateChannelState()
-
-    await this.updateUsername(name)
-    await this.delay(10000)
-    const index = this.getRandomNumber(0, this.avatars.length - 1)
-    log(`avatar index: ${index}`)
-    await this.updateAvatar(this.avatars[index])
-    await this.requestPlayers()
-    await this.getUser()
-    await setInterval(() => this.getUser(), 1000)
   }
 
   getRandomNumber(min, max) {

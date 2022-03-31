@@ -1,11 +1,12 @@
-import { creatorToolsDatabase } from '../databases/creatorTools';
-import { Module } from '../routes/spells/module';
+import { Component } from 'rete';
 import { buildThothInterface, extractModuleInputKeys, extractNodes } from '../routes/spells/runSpell';
-import { Graph, ModuleComponent } from '../routes/spells/types';
+import { creatorToolsDatabase } from '../databases/creatorTools';
 import { CustomError } from '../utils/CustomError';
-import { ModuleType } from '@latitudegames/thoth-core/types';
-import { initSharedEngine } from '@latitudegames/thoth-core/src/engine';
 import { getComponents } from '@latitudegames/thoth-core/src/components/components';
+import { Graph, ModuleComponent } from '../routes/spells/types';
+import { initSharedEngine } from '@latitudegames/thoth-core/src/engine';
+import { Module } from '../routes/spells/module';
+import { ModuleType } from '@latitudegames/thoth-core/types';
 
 
 export const CreateSpellHandler = async (props: { spell: any; version: string; }) => {
@@ -19,6 +20,7 @@ export const CreateSpellHandler = async (props: { spell: any; version: string; }
 
     let rootSpell;
     const { spell, version = 'latest' } = props;
+
     rootSpell = await creatorToolsDatabase.spells.findOne({
         where: { name: spell },
     });
@@ -66,6 +68,7 @@ export const CreateSpellHandler = async (props: { spell: any; version: string; }
         return modules;
     }, {} as Record<string, ModuleType>);
     // Update the modules available in the module manager during the graph run time
+
     engine.moduleManager.setModules(moduleMap);
 
 
@@ -77,62 +80,130 @@ export const CreateSpellHandler = async (props: { spell: any; version: string; }
         thoth,
         silent: true,
     };
+
     // Engine process to set up the tasks and prime the system for the first 'run' command.
     await engine.process(graph, null, context);
 
-    // Collect all the "trigger ins" that the module manager has gathered
-    const triggerIns = engine.moduleManager.triggerIns;
+    async function spellHandler(
+        message: string,
+        speaker: string,
+        agent: string,
+        client: string,
+        channelId: string,
+        entity: any
+    ) {
+        const spellInputs = {
+            Input: message,
+            Speaker: speaker,
+            Agent: agent,
+            Client: client,
+            ChannelID: channelId,
+            Entity: entity,
+        } as any
 
-    function getFirstNodeTrigger(data: Graph) {
-        const extractedNodes = extractNodes(data.nodes, triggerIns);
-        return extractedNodes[0];
-    }
+        module.write({})
 
-    // Standard default component to start the serverside run sequence from, which has the run function on it.
-    const component = engine.components.get(
-        'Module Trigger In'
-    ) as ModuleComponent;
+        // Collect all the "trigger ins" that the module manager has gathered
+        const triggerIns = engine.moduleManager.triggerIns;
+
+        function getFirstNodeTrigger(data: Graph) {
+            const extractedNodes = extractNodes(data.nodes, triggerIns);
+            return extractedNodes[0];
+        }
+
+        // Standard default component to start the serverside run sequence from, which has the run function on it.
+        const component = engine.components.get(
+            'Module Trigger In'
+        ) as ModuleComponent as any
+
+        for (const co in engine.components) {
+            const c = engine.components[co]
+
+            if (c._task) {
+                c._task?.reset()
+                c._task.closed = null
+                c._task.outputData = null
+            }
+
+            for (const index in c.nodeTaskMap) {
+                c.nodeTaskMap[index].reset()
+
+            }
+
+            if (c._task && c._task.node) {
+                console.log("c._task.node.outputData is", c._task.node.outputData)
+                c._task.node.outputData = null
+            }
+            console.log("c is", c)
+
+        }
+
+        engine.components.forEach((c: any) => {
+            if (c._task) {
+                c._task.reset()
+                c._task.closed = []
+            }
+            if (c.nodeTaskMap) {
+                for (const index in c.nodeTaskMap) {
+                    c.nodeTaskMap[index].reset()
+                    c.nodeTaskMap[index].closed = []
+                }
+            }
+        })
+
+        // Defaulting to the first node trigger to start our "run"
+        const triggeredNode = getFirstNodeTrigger(graph) as any;
+
+        console.log("triggeredNode is", triggeredNode)
+
+        for (const index in triggeredNode.nodeTaskMap) {
+            triggeredNode.nodeTaskMap[index].reset()
+            triggeredNode.nodeTaskMap[index].closed = []
+        }
+
+        if (triggeredNode._task) triggeredNode._task.reset()
 
 
-    // Defaulting to the first node trigger to start our "run"
-    const triggeredNode = getFirstNodeTrigger(graph);
-
-    const inputKeys = extractModuleInputKeys(graph) as string[];
-
-    const runSpell = async (
-        input: Record<string, any>,
-        inputKeys: Record<string, any>,
-        component: any,
-        module: any,
-        triggeredNode: any,
-        graph: Graph) => {
         const formattedOutputs: Record<string, unknown> = {};
         let error = null;
-        // Validates the body of the request against all expected values to ensure they are all present
-        const inputs = inputKeys.reduce((inputs: any, expectedInput: string) => {
-            const requestInput = input[expectedInput];
-            if (requestInput) {
-                inputs[expectedInput] = [requestInput];
-                return inputs;
-            } else {
-                error = `Spell expects a value for ${expectedInput} to be provided `;
-            }
-        }, {} as Record<string, unknown>);
         // Eventual outputs of running the Spell
         const rawOutputs = {} as Record<string, unknown>;
-        if (error)
-            return rawOutputs;
+
+
+        const inputKeys = extractModuleInputKeys(graph) as string[];
+
+        const inputs = inputKeys.reduce((inputs, expectedInput: string) => {
+            const requestInput = spellInputs[expectedInput]
+
+            if (requestInput) {
+                inputs[expectedInput] = [requestInput]
+
+                return inputs
+            } else {
+                error = `Spell expects a value for ${expectedInput} to be provided `
+                // throw new CustomError(
+                //   'input-failed',
+                //   error
+                // )
+            }
+        }, {} as Record<string, unknown>)
+
         // Attaching inputs to the module, which are passed in when the engine runs.
         // you can see this at work in the 'workerInputs' function of module-manager
         // work inputs worker reads from the module inputs via the key in node.data.name
         // important to note: even single string values are wrapped in arrays due to match the client editor format
-        module.read(inputs);
+        module.read(inputs as any);
+
+
+        console.log("inputs are", inputs)
 
         await component.run(triggeredNode);
+
 
         // Write all the raw data that was output by the module run to an object
         module.write(rawOutputs);
 
+        console.log("rawOutputs are ", rawOutputs)
 
         // Format raw outputs based on the names assigned to Module Outputs node data in the graph
         Object.values(graph.nodes)
@@ -142,35 +213,24 @@ export const CreateSpellHandler = async (props: { spell: any; version: string; }
             .forEach((node: any) => {
                 formattedOutputs[(node as any).data.name as string] = rawOutputs[(node as any).data.socketKey as string];
             });
-    };
+        if (error)
+            return rawOutputs;
 
-    return async function (
-        message: string | undefined,
-        speaker: string,
-        agent: string,
-        client: string,
-        channelId: string,
-        entity: number
-    ) {
-        const response = await runSpell({
-            Input: message,
-            Speaker: speaker,
-            Agent: agent,
-            Client: client,
-            ChannelID: channelId,
-            Entity: entity,
-        }, inputKeys, component, module, triggeredNode, graph);
+        console.log("message is", message)
+        console.log("response is", formattedOutputs)
 
         let index = undefined;
 
-        for (const x in response) {
+        for (const x in formattedOutputs) {
             index = x;
         }
 
         if (index && index !== undefined) {
-            return response && response[index];
+            return formattedOutputs && formattedOutputs[index];
         } else {
             return undefined;
         }
     };
+    console.log("spellHandler is", spellHandler)
+    return spellHandler;
 };
