@@ -149,7 +149,8 @@ const ThothInterfaceProvider = ({ children, tab }) => {
       cacheTag,
       topK,
     })
-    if ('error' in result) return {}
+    if ('error' in result) throw new Error('Error reading from image cache')
+
     return result.data
   }
 
