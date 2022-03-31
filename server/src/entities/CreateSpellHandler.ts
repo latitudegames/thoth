@@ -7,6 +7,7 @@ import { Graph, ModuleComponent } from '../routes/spells/types';
 import { initSharedEngine } from '@latitudegames/thoth-core/src/engine';
 import { Module } from '../routes/spells/module';
 import { ModuleType } from '@latitudegames/thoth-core/types';
+import { ThothComponent } from '@latitudegames/thoth-core/src/thoth-component';
 
 
 export const CreateSpellHandler = async (props: { spell: any; version: string; }) => {
@@ -101,6 +102,14 @@ export const CreateSpellHandler = async (props: { spell: any; version: string; }
             Entity: entity,
         } as any
 
+        engine.components.forEach((_c: any) => {
+            const c = _c as ThothComponent<unknown>
+            if (_c._task) {
+                _c._task.reset()
+            }
+        })
+
+
         module.write({})
 
         // Collect all the "trigger ins" that the module manager has gathered
@@ -116,40 +125,6 @@ export const CreateSpellHandler = async (props: { spell: any; version: string; }
             'Module Trigger In'
         ) as ModuleComponent as any
 
-        for (const co in engine.components) {
-            const c = engine.components[co]
-
-            if (c._task) {
-                c._task?.reset()
-                c._task.closed = null
-                c._task.outputData = null
-            }
-
-            for (const index in c.nodeTaskMap) {
-                c.nodeTaskMap[index].reset()
-
-            }
-
-            if (c._task && c._task.node) {
-                console.log("c._task.node.outputData is", c._task.node.outputData)
-                c._task.node.outputData = null
-            }
-            console.log("c is", c)
-
-        }
-
-        engine.components.forEach((c: any) => {
-            if (c._task) {
-                c._task.reset()
-                c._task.closed = []
-            }
-            if (c.nodeTaskMap) {
-                for (const index in c.nodeTaskMap) {
-                    c.nodeTaskMap[index].reset()
-                    c.nodeTaskMap[index].closed = []
-                }
-            }
-        })
 
         // Defaulting to the first node trigger to start our "run"
         const triggeredNode = getFirstNodeTrigger(graph) as any;
