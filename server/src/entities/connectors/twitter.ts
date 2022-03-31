@@ -9,6 +9,25 @@ import { TwitterApi } from 'twitter-api-v2'
 
 import { handleInput } from './handleInput'
 
+const createTwitterClient = (
+  bearerKey: string,
+  appKey: string,
+  appSecret: string,
+  accessToken: string,
+  accessSecret: string
+) => {
+  if (bearerKey && bearerKey !== undefined && bearerKey.length > 0) {
+    return new TwitterApi(bearerKey)
+  } else {
+    return new TwitterApi({
+      appKey: appKey,
+      appSecret: appSecret,
+      accessToken: accessToken,
+      accessSecret: accessSecret,
+    })
+  }
+}
+
 export class twitter_client {
   async handleMessage(response, chat_id, args, twitterV1) {
     if (args === 'DM') {
@@ -31,17 +50,33 @@ export class twitter_client {
 
     const bearerToken = settings['twitter_token']
     const twitterUser = settings['twitter_id']
+    const twitterAppToken = settings['twitterAppToken']
+    const twitterAppTokenSecret = settings['twitterAppTokenSecret']
+    const twitterAccessToken = settings['tiwtterAccessToken']
+    const twitterAccessTokenSecret = settings['twitterAccessTokenSecret']
     const regex = new RegExp(settings['twitter_bot_name'], 'ig')
     const regex2 = new RegExp(settings['twitter_bot_name_regex'], 'ig')
     if (!bearerToken || !twitterUser)
       return console.warn('No API token for Whatsapp bot, skipping')
 
-    let twitter = new TwitterApi(bearerToken)
+    let twitter = createTwitterClient(
+      bearerToken,
+      twitterAppToken,
+      twitterAppTokenSecret,
+      twitterAccessToken,
+      twitterAccessTokenSecret
+    )
     const client = twitter.readWrite
     const localUser = await twitter.v2.userByUsername(twitterUser)
 
     setInterval(async () => {
-      const tv1 = new TwitterApi(bearerToken)
+      const tv1 = createTwitterClient(
+        bearerToken,
+        twitterAppToken,
+        twitterAppTokenSecret,
+        twitterAccessToken,
+        twitterAccessTokenSecret
+      )
       const eventsPaginator = await tv1.v1.listDmEvents()
       for await (const event of eventsPaginator) {
         console.log(
