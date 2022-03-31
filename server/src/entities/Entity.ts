@@ -9,54 +9,10 @@ import { whatsapp_client } from './connectors/whatsapp'
 import { twilio_client } from './connectors/twilio'
 //import { harmony_client } from '../../../core/src/connectors/harmony'
 import { xrengine_client } from './connectors/xrengine'
-
-async function handleInput(
-  message: string | undefined,
-  speaker: string,
-  agent: string,
-  client: string,
-  channelId: string,
-  entity: number,
-  spell_handler: string,
-  spell_version: string = 'latest'
-) {
-  if (spell_handler === undefined) {
-    spell_handler = 'default'
-  }
-  if (spell_version === undefined) {
-    spell_version = 'latest'
-  }
-
-  const url = encodeURI(
-    `http://localhost:8001/chains/${spell_handler}/${spell_version}`
-  )
-
-  const response = await axios.post(`${url}`, {
-    Input: {
-      Input: message,
-      Speaker: speaker,
-      Agent: agent,
-      Client: client,
-      ChannelID: channelId,
-      Entity: entity,
-    },
-  })
-  let index = undefined
-
-  for (const x in response.data.outputs) {
-    index = x
-  }
-
-  if (index && index !== undefined) {
-    return response.data.outputs[index]
-  } else {
-    return undefined
-  }
-}
+import { CreateSpellHandler } from './CreateSpellHandler'
 
 export class Entity {
   name = ''
-
   //Clients
   discord: discord_client | null
   telegram: telegram_client
@@ -71,7 +27,7 @@ export class Entity {
   xrengine: xrengine_client
   id: any
 
-  startDiscord(
+  async startDiscord(
     discord_api_token: string,
     discord_starting_words: string,
     discord_bot_name_regex: string,
@@ -85,12 +41,12 @@ export class Entity {
     if (this.discord)
       throw new Error('Discord already running for this agent on this instance')
 
-    // TODO:
-    // 1. Create new thoth graph
-    // 2. create a thoth graph handler function
-    // 3. set this handle message function to it
-    // 4. change handlemessage calls to use this function
+    const spellHandler = await CreateSpellHandler({
+      spell: spell_handler,
+      version: spell_version,
+    })
 
+    console.log("spellHandler is", spellHandler)
 
     this.discord = new discord_client()
     this.discord.createDiscordClient(
@@ -101,7 +57,7 @@ export class Entity {
       discord_bot_name,
       discord_empty_responses,
       entity,
-      spell_handler
+      spellHandler
     )
     console.log('Started discord client for agent ' + this.name)
   }
