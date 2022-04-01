@@ -136,11 +136,12 @@ export const initEditor = async function ({
   editor.use(ModulePlugin, { engine, modules: {} } as unknown as void)
   editor.use(TaskPlugin)
   editor.use(KeyCodePlugin)
-  editor.use(SelectionPlugin)
+
+  editor.use(SelectionPlugin, { enabled: true })
 
   // WARNING all the plugins from the editor get installed onto the component and modify it.  This effects the components registered in the engine, which already have plugins installed.
   components.forEach(c => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // eslint-disable-next-line @typescrip``t-eslint/ban-ts-comment
     //@ts-ignore
     // the problematic type here is coming directly from node modules, we may need to revisit further customizing the Editor Register type expectations or it's class
     editor.register(c)
