@@ -14,7 +14,6 @@ import DisplayPlugin from './plugins/displayPlugin'
 import HistoryPlugin from './plugins/historyPlugin'
 import InspectorPlugin from './plugins/inspectorPlugin'
 import LifecyclePlugin from './plugins/lifecyclePlugin'
-
 import ModulePlugin from './plugins/modulePlugin'
 import { ModuleManager } from './plugins/modulePlugin/module-manager'
 import SocketGenerator from './plugins/socketGenerator'
@@ -70,7 +69,7 @@ export const initEditor = async function ({
   // ╚═╝     ╚══════╝ ╚═════╝  ╚═════╝ ╚═╝╚═╝  ╚═══╝╚══════╝
 
   // History plugin for undo/redo
-  editor.use(HistoryPlugin, { keyboard: false })
+  editor.use(HistoryPlugin, { keyboard: true })
 
   // PLUGINS
   // https://github.com/retejs/comment-plugin
