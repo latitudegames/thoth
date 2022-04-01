@@ -1,4 +1,3 @@
-import { Component } from 'rete';
 import { buildThothInterface, extractModuleInputKeys, extractNodes } from '../routes/spells/runSpell';
 import { creatorToolsDatabase } from '../databases/creatorTools';
 import { CustomError } from '../utils/CustomError';
@@ -7,8 +6,6 @@ import { Graph, ModuleComponent } from '../routes/spells/types';
 import { initSharedEngine } from '@latitudegames/thoth-core/src/engine';
 import { Module } from '../routes/spells/module';
 import { ModuleType } from '@latitudegames/thoth-core/types';
-import { ThothComponent } from '@latitudegames/thoth-core/src/thoth-component';
-
 
 export const CreateSpellHandler = async (props: { spell: any; version: string; }) => {
     // TODO: create a proper engine interface with the proper methods types on it.
@@ -72,7 +69,6 @@ export const CreateSpellHandler = async (props: { spell: any; version: string; }
 
     engine.moduleManager.setModules(moduleMap);
 
-
     // ThothContext: map of services expected by Thoth components,
     // allowing client and server provide different sets of helpers that match the common interface
     // EngineContext passed down into the engine and is used by workers.
@@ -82,8 +78,31 @@ export const CreateSpellHandler = async (props: { spell: any; version: string; }
         silent: true,
     };
 
+    // Collect all the "trigger ins" that the module manager has gathered
+    const triggerIns = engine.moduleManager.triggerIns;
+
+    function getFirstNodeTrigger(data: Graph) {
+        const extractedNodes = extractNodes(data.nodes, triggerIns);
+        return extractedNodes[0];
+    }
+
+    // Standard default component to start the serverside run sequence from, which has the run function on it.
+    const component = engine.components.get(
+        'Module Trigger In'
+    ) as ModuleComponent as any
+
+    // Defaulting to the first node trigger to start our "run"
+    const triggeredNode = getFirstNodeTrigger(graph) as any;
+
     // Engine process to set up the tasks and prime the system for the first 'run' command.
     await engine.process(graph, null, context);
+
+    const formattedOutputs: Record<string, unknown> = {};
+    // Eventual outputs of running the Spell
+    const rawOutputs = {} as Record<string, unknown>;
+
+    const inputKeys = extractModuleInputKeys(graph) as string[];
+
 
     async function spellHandler(
         message: string,
@@ -101,38 +120,18 @@ export const CreateSpellHandler = async (props: { spell: any; version: string; }
             ChannelID: channelId,
             Entity: entity,
         } as any
+        module.inputs = {}
+        module.outputs = {}
 
-        engine.components.forEach((_c: any) => {
-            const c = _c as ThothComponent<unknown>
-            if (_c._task) {
-                _c._task.reset()
-            }
+        modules.forEach(m => {
+            console.log(m)
         })
 
-        // Collect all the "trigger ins" that the module manager has gathered
-        const triggerIns = engine.moduleManager.triggerIns;
+        console.log("moduel is", module)
 
-        function getFirstNodeTrigger(data: Graph) {
-            const extractedNodes = extractNodes(data.nodes, triggerIns);
-            return extractedNodes[0];
-        }
+        await engine.process(graph, null, context);
 
-        // Standard default component to start the serverside run sequence from, which has the run function on it.
-        const component = engine.components.get(
-            'Module Trigger In'
-        ) as ModuleComponent as any
-
-
-        // Defaulting to the first node trigger to start our "run"
-        const triggeredNode = getFirstNodeTrigger(graph) as any;
-
-        const formattedOutputs: Record<string, unknown> = {};
         let error = null;
-        // Eventual outputs of running the Spell
-        const rawOutputs = {} as Record<string, unknown>;
-
-        const inputKeys = extractModuleInputKeys(graph) as string[];
-
         const inputs = inputKeys.reduce((inputs, expectedInput: string) => {
             const requestInput = spellInputs[expectedInput]
 
@@ -149,19 +148,26 @@ export const CreateSpellHandler = async (props: { spell: any; version: string; }
             }
         }, {} as Record<string, unknown>)
 
+
         // Attaching inputs to the module, which are passed in when the engine runs.
         // you can see this at work in the 'workerInputs' function of module-manager
         // work inputs worker reads from the module inputs via the key in node.data.name
         // important to note: even single string values are wrapped in arrays due to match the client editor format
         module.read(inputs as any);
 
-        console.log("inputs are", inputs)
-
         await component.run(triggeredNode);
-
 
         // Write all the raw data that was output by the module run to an object
         module.write(rawOutputs);
+
+        console.log("rawOutputs are", JSON.stringify(rawOutputs))
+
+        const outputs = Object.values(graph.nodes)
+            .filter((node: any) => {
+                return node.name.includes('Output');
+            })
+
+        console.log("outputs are", JSON.stringify(outputs))
 
         // Format raw outputs based on the names assigned to Module Outputs node data in the graph
         Object.values(graph.nodes)

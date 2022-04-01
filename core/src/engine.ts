@@ -77,7 +77,7 @@ export type InitEngineArguments = {
   modules?: Record<string, ModuleType>
   throwError?: Function
 }
-// @seang TODO: update this to not use positional arguments
+
 export const initSharedEngine = ({
   name,
   components,
