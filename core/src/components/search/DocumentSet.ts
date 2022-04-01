@@ -17,6 +17,7 @@ import {
   stringSocket,
   booleanSocket,
   numSocket,
+  anySocket,
 } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
@@ -53,11 +54,7 @@ export class DocumentSet extends ThothComponent<void> {
     )
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
-    const docIDOutput = new Rete.Output(
-      'documentId',
-      'Document ID',
-      stringSocket
-    )
+    const output = new Rete.Output('output', 'Output', anySocket)
 
     return node
       .addInput(storeIdInput)
@@ -66,7 +63,7 @@ export class DocumentSet extends ThothComponent<void> {
       .addInput(isIncludedInput)
       .addInput(dataInput)
       .addOutput(dataOutput)
-      .addOutput(docIDOutput)
+      .addOutput(output)
   }
 
   async worker(
@@ -92,6 +89,7 @@ export class DocumentSet extends ThothComponent<void> {
       }
     )
     node.display(resp.data)
+    console.log('resp.data.documentId', resp.data.documentId)
     return {
       output: resp.data.documentId,
     }

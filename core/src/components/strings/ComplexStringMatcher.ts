@@ -114,14 +114,14 @@ export class ComplexStringMatcher extends ThothComponent<Promise<void>> {
 
     // implement a function that replaces all instances of a string with another string
     const replaceAll = (str: string, find: string, replace: string) => {
-      return str.replace(new RegExp(find, 'g'), replace)
+      return str.toString().replace(new RegExp(find, 'g'), replace)
     }
 
     let input = inputs['input'][0] as string
     console.log('input:::::', input)
     let str = input + ''
-    let i1 = str.replace(/<.*>/, '')
- 
+    let i1 = str.toString().replace(/<.*>/, '')
+
     console.log('input:::::', i1)
 
     input = replaceAll(

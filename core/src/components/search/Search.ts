@@ -25,7 +25,7 @@ type Document = {
 }
 
 type WorkerReturn = {
-  documents: Document[]
+  output: unknown
 }
 
 export class Search extends ThothComponent<Promise<WorkerReturn>> {
@@ -34,7 +34,7 @@ export class Search extends ThothComponent<Promise<WorkerReturn>> {
 
     this.task = {
       outputs: {
-        output: 'results',
+        output: 'output',
         trigger: 'option',
       },
     }
@@ -57,7 +57,7 @@ export class Search extends ThothComponent<Promise<WorkerReturn>> {
       true
     )
     const dataOutput = new Rete.Output('trigger', 'Trigger Out', triggerSocket)
-    const output = new Rete.Output('results', 'Results []', anySocket)
+    const output = new Rete.Output('output', 'Output', anySocket)
 
     const switchControl = new SwitchControl({
       dataKey: 'sendToPlaytest',
@@ -83,7 +83,6 @@ export class Search extends ThothComponent<Promise<WorkerReturn>> {
   ) {
     const searchStr = inputs['searchStr'][0] as string
     const documents: Document[] = []
-
     const resp = await axios.get(
       `${process.env.REACT_APP_SEARCH_SERVER_URL}/search`,
       {
@@ -101,7 +100,7 @@ export class Search extends ThothComponent<Promise<WorkerReturn>> {
     node.display(documents)
 
     return {
-      documents,
+      output: documents,
     }
   }
 }
