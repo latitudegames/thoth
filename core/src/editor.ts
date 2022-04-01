@@ -17,7 +17,7 @@ import LifecyclePlugin from './plugins/lifecyclePlugin'
 import ModulePlugin from './plugins/modulePlugin'
 import { ModuleManager } from './plugins/modulePlugin/module-manager'
 import SocketGenerator from './plugins/socketGenerator'
-import TaskPlugin from './plugins/taskPlugin'
+import TaskPlugin, { Task } from './plugins/taskPlugin'
 import { PubSubContext, ThothComponent } from './thoth-component'
 export class ThothEditor extends NodeEditor<EventsTypes> {
   pubSub: PubSubContext
@@ -26,6 +26,7 @@ export class ThothEditor extends NodeEditor<EventsTypes> {
   abort: unknown
   loadGraph: (graph: Data) => Promise<void>
   moduleManager: ModuleManager
+  tasks?: Task[]
 }
 
 /*
