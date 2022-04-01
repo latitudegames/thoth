@@ -113,6 +113,10 @@ export const initEditor = async function ({
     scaleExtent: { min: 0.25, max: 2 },
   })
 
+  editor.use(CommentPlugin, {
+    margin: 20, // indent for new frame comments by default 30 (px)
+  })
+
   // The engine is used to process/run the rete graph
 
   const engine = initSharedEngine({
