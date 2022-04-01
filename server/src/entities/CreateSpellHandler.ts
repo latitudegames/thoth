@@ -103,7 +103,7 @@ export const CreateSpellHandler = async (props: { spell: any; version: string; }
 
     const inputKeys = extractModuleInputKeys(graph) as string[];
 
-
+    // Return this-- this is the callback for discord, xrengine, etc to handle chat
     async function spellHandler(
         message: string,
         speaker: string,
@@ -120,15 +120,12 @@ export const CreateSpellHandler = async (props: { spell: any; version: string; }
             ChannelID: channelId,
             Entity: entity,
         } as any
-        module.inputs = {}
-        module.outputs = {}
 
-        modules.forEach(m => {
-            console.log(m)
-        })
-
-        console.log("moduel is", module)
-
+        // TODO: Remove this line
+        // TEST CASE: Chatting with agent on Discord doesn't get same response over and over
+        // This resets everything and makes it work, BUT it is very slow
+        // We need to reset the task outputs (and tasks in general) without
+        // calling this function here
         await engine.process(graph, null, context);
 
         let error = null;
