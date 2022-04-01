@@ -75,7 +75,7 @@ export class Entity {
     console.log('Stopped discord client for agent ' + this.name)
   }
 
-  startXREngine(settings: {
+  async startXREngine(settings: {
     entity: any
     url: string
     spell_handler: string
@@ -84,11 +84,20 @@ export class Entity {
     xrengine_bot_name_regex: string
     xrengine_starting_words: string
     xrengine_empty_responses: string
+    handleInput?: any
   }) {
     if (this.xrengine)
       throw new Error(
         'XREngine already running for this agent on this instance'
       )
+
+    const spellHandler = await CreateSpellHandler({
+      spell: settings.spell_handler,
+      version: settings.spell_version,
+    })
+
+    settings.handleInput = spellHandler
+
     this.xrengine = new xrengine_client()
     this.xrengine.createXREngineClient(this, settings, this.xrengine)
     console.log('Started xrengine client for agent ' + this.name)

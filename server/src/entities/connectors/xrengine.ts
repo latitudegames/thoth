@@ -18,7 +18,6 @@
 import Xvfb from 'xvfb'
 import { database } from '../../database'
 import { browserWindow, PageUtils } from './browser'
-import { handleInput } from './handleInput'
 import {
   detectOsOption,
   getRandomEmptyResponse, randomInt,
@@ -366,7 +365,7 @@ export class xrengine_client {
         }
         log('content: ' + content + ' sender: ' + sender)
 
-        const response = await handleInput(
+        const response = await this.handleInput(
           content.replace('!ping', ''),
           sender,
           this.settings.xrengine_bot_name ?? 'Agent',
@@ -583,6 +582,7 @@ class XREngineBot {
     this.agent = agent
     this.settings = settings
     this.xrengineclient = xrengineclient
+    this.handleInput = settings.handleInput
     setInterval(() => this.instanceMessages(), 1000)
   }
 
@@ -1270,10 +1270,23 @@ class XREngineBot {
     await this.pu.clickSelectorByAlt(elemType, title)
   }
 
+  async typeOnKeyboard(page, inputText) {
+    inputText.split('').forEach(async key => {
+      await page.keyboard.sendCharacter(key);
+    });
+  };
+
+  queuedMessages
+  typing = false
   async typeMessage(input, message, clean) {
+    if (this.typing) return queredMessages.push({ input, message, clean })
+    this.typing = true
     if (clean)
       await this.page.click(`input[name="${input}"]`, { clickCount: 3 })
-    await this.page.type(`input[name="${input}"]`, message)
+    // await this.page.type(`input[name="${input}"]`, message)
+
+    await this.typeOnKeyboard(page, message)
+
     //await this.page.keyboard.type(message);
   }
 
