@@ -43,10 +43,11 @@ export class Entity {
     const spellHandler = await CreateSpellHandler({
       spell: spell_handler,
       version: spell_version,
+      client_name: 'discord',
     })
 
     this.discord = new discord_client()
-    console.log("createDiscordClient")
+    console.log('createDiscordClient')
     await this.discord.createDiscordClient(
       this,
       discord_api_token,
@@ -94,18 +95,24 @@ export class Entity {
     const spellHandler = await CreateSpellHandler({
       spell: settings.spell_handler,
       version: settings.spell_version,
+      client_name: 'xrengine',
     })
 
     settings.handleInput = spellHandler
 
     this.xrengine = new xrengine_client()
-    this.xrengine.createXREngineClient(this, settings, this.xrengine)
+    this.xrengine.createXREngineClient(
+      this,
+      settings,
+      this.xrengine,
+      spellHandler
+    )
     console.log('Started xrengine client for agent ' + this.name)
   }
 
   stopXREngine() {
     if (!this.xrengine) throw new Error("XREngine isn't running, can't stop it")
-      ; (this.xrengine as any) = null
+    ;(this.xrengine as any) = null
     console.log('Stopped xrengine client for agent ' + this.name)
   }
 
