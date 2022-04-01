@@ -3,6 +3,7 @@ import ConnectionPlugin from 'rete-connection-plugin'
 import ConnectionReroutePlugin from 'rete-connection-reroute-plugin'
 import ContextMenuPlugin from 'rete-context-menu-plugin'
 import ReactRenderPlugin from 'rete-react-render-plugin'
+import CommentPlugin from 'rete-comment-plugin'
 import { Data } from 'rete/types/core/data'
 
 import { EventsTypes } from '../types'
