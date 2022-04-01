@@ -17,7 +17,7 @@ export class Entity {
   discord: discord_client | null
   telegram: telegram_client
   zoom: zoom_client
-  twitter: twitter_client
+  twitter: twitter_client | null
   reddit: reddit_client
   instagram: instagram_client
   messenger: messenger_client
@@ -109,6 +109,52 @@ export class Entity {
     console.log('Stopped xrengine client for agent ' + this.name)
   }
 
+  async startTwitter(
+    twitter_token: any,
+    twitter_id: any,
+    twitter_app_token: any,
+    twitter_app_token_secret: any,
+    twitter_access_token: any,
+    twitter_access_token_secret: any,
+  ) {
+    console.log('initializing Twitter:', twitter_token)
+    if (this.twitter)
+      throw new Error('Twitter already running for this entity on this instance')
+
+    // const spellHandler = await CreateSpellHandler({
+    //   spell: spell_handler,
+    //   version: spell_version,
+    // })
+
+    this.twitter = new twitter_client()
+    console.log("createDiscordClient")
+    await this.twitter.createTwitterClient(
+      this,
+      twitter_token,
+      twitter_id,
+      twitter_app_token,
+      twitter_app_token_secret,
+      twitter_access_token,
+      twitter_access_token_secret,
+    )
+    console.log('Started twitter client for agent ' + this)
+    // const response = await spellHandler(
+    //   'testmessage',
+    //   'testsender',
+    //   'testbot',
+    //   'discord',
+    //   "0",
+    //   this.id
+    // )
+    // console.log("response is ", response)
+  }
+
+  stopTwitter() {
+    if (!this.discord) throw new Error("Twitter isn't running, can't stop it")
+    this.twitter = null
+    console.log('Stopped twitter client for agent ' + this)
+  }
+
   async onDestroy() {
     if (this.discord) this.stopDiscord()
   }
@@ -142,6 +188,19 @@ export class Entity {
         xrengine_starting_words: data.xrengine_starting_words,
         xrengine_empty_responses: data.xrengine_empty_responses,
       })
+    }
+
+    if(data.twitter_client_enable){
+      this.startTwitter(
+        data.twitter_token,
+        data.twitter_id,
+        data.twitter_app_token,
+        data.twitter_app_token_secret,
+        data.twitter_access_token,
+        data.twitter_access_token_secret,
+        data.twitter_bot_name,
+        data.twitter_bot_name_regex
+      )
     }
   }
 

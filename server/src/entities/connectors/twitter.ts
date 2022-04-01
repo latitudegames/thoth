@@ -15,6 +15,7 @@ const createTwitterClient = (
   accessToken: string,
   accessSecret: string
 ) => {
+  console.log('i am here')
   if (bearerKey && bearerKey !== undefined && bearerKey.length > 0) {
     return new TwitterApi(bearerKey)
   } else {
@@ -29,6 +30,7 @@ const createTwitterClient = (
 
 export class twitter_client {
   async handleMessage(response, chat_id, args, twitter, twitterV1, localUser) {
+    console.log('i am here111')
     if (args === 'DM') {
       const dmSent = await twitterV1.v1.sendDm({
         recipient_id: chat_id,
@@ -71,10 +73,9 @@ export class twitter_client {
       settings,
       'twitter_access_token_secret'
     )
-    const regex = new RegExp('', 'ig')
-    const regex2 = new RegExp('botNameRegex', 'ig')
+ 
     if (!bearerToken || !twitterUser)
-      return console.warn('No API token for Whatsapp bot, skipping')
+      return console.warn('No API token for Twitter bot, skipping')
 
     let twitter = createTwitterClient(
       bearerToken,
