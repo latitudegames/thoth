@@ -12,7 +12,6 @@ import {
   useSaveSpellMutation,
   useRunSpellMutation,
 } from '@/state/api/spells'
-import { ImageType } from '@latitudegames/thoth-core/src/components/VisualGeneration'
 
 /*
 Some notes here.  The new rete provider, not to be confused with the old rete provider renamed to the editor provider, is designed to serve as the single source of truth for interfacing with the rete internal system.  This unified interface will also allow us to replicate the same API in the server, where rete expects certain functions to exist but doesn't care what is behind these functions so long as they work.
@@ -30,7 +29,7 @@ export interface ThothInterfaceContext extends EngineContext {
   runSpell: (inputs: Record<string, any>, spellId: string) => void
   getCurrentGameState: () => Record<string, unknown>
   updateCurrentGameState: (update) => void
-  readFromImageCache: (caption, cacheTag, topK) => Promise<ImageType[]>
+  readFromImageCache: (caption, cacheTag, topK) => Promise<any>
   processCode: (
     code: unknown,
     inputs: ThothWorkerInputs,
@@ -150,7 +149,6 @@ const ThothInterfaceProvider = ({ children, tab }) => {
       topK,
     })
     if ('error' in result) throw new Error('Error reading from image cache')
-
     return result.data
   }
 
