@@ -153,6 +153,10 @@ export const initEditor = async function ({
     return source !== 'dblclick'
   })
 
+  editor.on(['click'], () => {
+    editor.selected.list = []
+  })
+
   editor.bind('run')
   editor.bind('save')
 
