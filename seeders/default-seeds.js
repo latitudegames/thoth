@@ -2,7 +2,7 @@
 
 module.exports = {
   async up(queryInterface) {
-    const spells = await queryInterface.rawSelect(
+    /*const spells = await queryInterface.rawSelect(
       'spells',
       {
         where: {},
@@ -60,13 +60,13 @@ module.exports = {
         ],
         {}
       )
-    }
+    }*/
   },
 
   async down(queryInterface) {
-    await queryInterface.bulkDelete('spells', null, {
+    /*await queryInterface.bulkDelete('spells', null, {
       id: '3599a8fa-4e3b-4e91-b329-43a907780ea7',
-    })
+    })*/
     await queryInterface.bulkDelete('deployed_spells', null, {
       id: 'a13b41e8-d2bd-4258-a259-32f426e98cdd',
     })
