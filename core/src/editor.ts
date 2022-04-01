@@ -114,10 +114,6 @@ export const initEditor = async function ({
     scaleExtent: { min: 0.25, max: 2 },
   })
 
-  editor.use(CommentPlugin, {
-    margin: 20, // indent for new frame comments by default 30 (px)
-  })
-
   // The engine is used to process/run the rete graph
 
   const engine = initSharedEngine({
@@ -139,6 +135,10 @@ export const initEditor = async function ({
   editor.use(KeyCodePlugin)
 
   editor.use(SelectionPlugin, { enabled: true })
+
+  editor.use(CommentPlugin, {
+    margin: 20, // indent for new frame comments by default 30 (px)
+  })
 
   // WARNING all the plugins from the editor get installed onto the component and modify it.  This effects the components registered in the engine, which already have plugins installed.
   components.forEach(c => {
