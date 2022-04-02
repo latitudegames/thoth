@@ -53,6 +53,12 @@ class RunSpell {
     return extractModuleInputKeys(this.currentSpell.chain)
   }
 
+  get outputData() {
+    const rawOutputs = {}
+    this.module.write(rawOutputs)
+    return this._formatOutputs(rawOutputs)
+  }
+
   private _getComponent(componentName: string) {
     return this.engine.components.get(componentName)
   }
