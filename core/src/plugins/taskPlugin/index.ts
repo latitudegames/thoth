@@ -1,11 +1,12 @@
-import { NodeEditor } from 'rete'
 import { NodeData } from 'rete/types/core/data'
 
 import { ThothWorkerInputs } from '../../../types'
 import { ThothComponent } from '../../thoth-component'
+import { IRunContextEditor } from '../modulePlugin/index'
 import { Task } from './task'
 
-function install(editor: NodeEditor) {
+function install(editor: IRunContextEditor) {
+  editor.tasks = []
   editor.on('componentregister', (component: ThothComponent<unknown>) => {
     if (!component.task)
       throw new Error('Task plugin requires a task property in component')
@@ -80,6 +81,8 @@ function install(editor: NodeEditor) {
       Object.keys(allOutputs).forEach(key => {
         outputs[key] = { type: taskOptions.outputs[key], key, task }
       })
+
+      editor.tasks?.push(task)
     }
   })
 }
