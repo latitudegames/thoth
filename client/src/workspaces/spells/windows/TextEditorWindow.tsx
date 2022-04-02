@@ -81,10 +81,6 @@ const TextEditor = props => {
     }
     setData(update)
     saveTextEditor(update)
-    enqueueSnackbar('Editor saved', {
-      preventDuplicate: true,
-      variant: 'success',
-    })
   }
 
   const onSave = () => {
