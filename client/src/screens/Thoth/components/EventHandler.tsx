@@ -66,6 +66,8 @@ const EventHandler = ({ pubSub, tab }) => {
   }
 
   const onSaveDiff = async (event, update) => {
+    if (!spellRef.current) return
+
     const currentSpell = spellRef.current
     const updatedSpell = {
       ...currentSpell,
