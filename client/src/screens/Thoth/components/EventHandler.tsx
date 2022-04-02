@@ -78,6 +78,11 @@ const EventHandler = ({ pubSub, tab }) => {
     // no point saving if nothing has changed
     if (jsonDiff.length === 0) return
 
+    const response = await saveDiff({
+      name: currentSpell.name,
+      diff: jsonDiff,
+    })
+
   }
 
   const createStateManager = () => {
