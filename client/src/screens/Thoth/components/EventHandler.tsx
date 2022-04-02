@@ -10,6 +10,7 @@ import {
 import {
   useSaveSpellMutation,
   useGetSpellQuery,
+  useSaveDiffMutation,
 } from '../../../state/api/spells'
 import { useEditor } from '../../../workspaces/contexts/EditorProvider'
 import { useLayout } from '../../../workspaces/contexts/LayoutProvider'
@@ -27,9 +28,8 @@ const EventHandler = ({ pubSub, tab }) => {
   const { createOrFocus, windowTypes } = useLayout()
 
   const [saveSpellMutation] = useSaveSpellMutation()
-  const { data: spell } = useGetSpellQuery(tab.spellId, {
-    skip: !tab.spellId,
-  })
+  const [saveDiff] = useSaveDiffMutation()
+  const { data: spell } = useGetSpellQuery(tab.spellId)
 
   // Spell ref because callbacks cant hold values from state without them
   const spellRef = useRef<Spell | null>(null)
