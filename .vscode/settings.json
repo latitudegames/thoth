@@ -2,7 +2,7 @@
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "prettier.configPath": "./.prettierrc.json",
-  "eslint.workingDirectories": ["./client", "./core"],
+  "eslint.workingDirectories": ["./client", "./core", "./server"],
   "typescript.tsserver.experimental.enableProjectDiagnostics": true,
   "cSpell.enabled": false
 }

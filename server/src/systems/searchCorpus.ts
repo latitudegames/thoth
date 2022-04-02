@@ -10,7 +10,7 @@ import Router from '@koa/router'
 import axios from 'axios'
 import {
   includeInFields,
-  removePanctuationalMarks,
+  removePunctuation,
   simplifyWords,
 } from '../utils/utils'
 import { database } from '../database'
@@ -120,7 +120,7 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
   })
   router.get('/search', async function (ctx: Koa.Context) {
     const question = ctx.request.query?.question as string
-    const cleanQuestion = removePanctuationalMarks(question)
+    const cleanQuestion = removePunctuation(question)
     const words = simplifyWords(cleanQuestion.split(' '))
     const topic = await classifyText(question)
     console.log('topic:', topic)

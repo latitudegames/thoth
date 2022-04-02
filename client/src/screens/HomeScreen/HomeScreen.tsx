@@ -6,20 +6,19 @@ import {
   useDeleteSpellMutation,
   useNewSpellMutation,
 } from '../../state/api/spells'
-import { useDB } from '../../contexts/DatabaseProvider'
-import { useTabManager } from '../../contexts/TabManagerProvider'
 import AllProjects from './screens/AllProjects'
 import CreateNew from './screens/CreateNew'
 import OpenProject from './screens/OpenProject'
 import css from './homeScreen.module.css'
 import LoadingScreen from '../../components/LoadingScreen/LoadingScreen'
-import { ModelsType } from '../../types'
+import { closeTab, openTab } from '@/state/tabs'
+import { useDispatch } from 'react-redux'
 
 //MAIN
 
 const StartScreen = () => {
-  const { models } = useDB() as unknown as ModelsType
-  const { openTab, closeTabBySpellId } = useTabManager()
+  const dispatch = useDispatch()
+
   const navigate = useNavigate()
 
   const [deleteSpell] = useDeleteSpellMutation()
@@ -34,25 +33,20 @@ const StartScreen = () => {
     }
     // TODO check for proper values here and throw errors
 
-    // Load modules from the spell
-    if (spellData?.modules && spellData.modules.length > 0)
-      await Promise.all(
-        spellData.modules.map(module => {
-          return models.modules.updateOrCreate(module)
-        })
-      )
-
     // Create new spell
     await newSpell({
       graph: spellData.graph,
       name: spellData.name,
+      gameState: spellData.gameState,
     })
 
-    await openTab({
-      name: spellData.name,
-      spellId: spellData.name,
-      type: 'spell',
-    })
+    dispatch(
+      openTab({
+        name: spellData.name,
+        spellId: spellData.name,
+        type: 'spell',
+      })
+    )
 
     navigate('/thoth')
   }
@@ -66,15 +60,15 @@ const StartScreen = () => {
   const onDelete = async spellId => {
     try {
       await deleteSpell(spellId)
-      await closeTabBySpellId(spellId)
+      dispatch(closeTab(spellId))
     } catch (err) {
       console.log('Error deleting spell', err)
     }
   }
 
   const openSpell = async spell => {
-    await openTab({ name: spell.name, spellId: spell.name, type: 'spell' })
-    navigate('/thoth')
+    // dispatch(openTab({ name: spell.name, spellId: spell.name, type: 'spell' }))
+    navigate(`/thoth/${spell.name}`)
   }
 
   const [selectedSpell, setSelectedSpell] = useState(null)

@@ -37,25 +37,25 @@ export async function initSpeechServer(ignoreDotEnv: boolean) {
 
   speechClient = new SpeechClient()
 
-  io.on('connection', function (client) {
+  io.on('connection', function (client: any) {
     console.log('speech client connected')
     let recognizeStream: any = null
 
-    client.on('join', function (data) {
+    client.on('join', function (data: any) {
       client.emit('messages', 'Client connected')
     })
-    client.on('messages', function (data) {
+    client.on('messages', function (data: any) {
       client.emit('broad', data)
     })
 
-    client.on('startGoogleCloudStream', function (data) {
+    client.on('startGoogleCloudStream', function (data: any) {
       startRecognitionStream(client)
     })
-    client.on('endGoogleCloudStream', function (data) {
+    client.on('endGoogleCloudStream', function (data: any) {
       stopRecognitionStream()
     })
 
-    client.on('binaryData', function (data) {
+    client.on('binaryData', function (data: any) {
       try {
         if (
           recognizeStream !== null &&
@@ -64,7 +64,7 @@ export async function initSpeechServer(ignoreDotEnv: boolean) {
         ) {
           recognizeStream.write(data)
         }
-      } catch (e) {}
+      } catch (e) { }
     })
 
     function startRecognitionStream(client: any) {

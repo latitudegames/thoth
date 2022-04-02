@@ -79,6 +79,7 @@ export class Task {
 
   reset() {
     this.outputData = null
+    this.closed = []
   }
 
   async run(data: unknown = {}, options: RunOptions = {}) {
@@ -111,7 +112,7 @@ export class Task {
         We assume here that his nodes worker does not need to access ALL values simultaneously, but is only interested in one. There is a task option which enables this functionality just in case we have use cases that don't want this behaviour.
       */
       await Promise.all(
-        this.getInputs('output')?.map(async key => {
+        this.getInputs('output').map(async key => {
           const inputPromises = this.inputs[key]
             .filter((con: ThothReteInput) => {
               // only filter inputs to remove ones that are not the origin if a task option is true
@@ -127,7 +128,7 @@ export class Task {
               })
               const outputData = con.task.outputData as Record<string, unknown>
 
-              return outputData ? outputData[con.key] : ''
+              return outputData[con.key]
             })
 
           const thothWorkerinputs = await Promise.all(inputPromises)
@@ -143,8 +144,7 @@ export class Task {
       }
 
       // the main output data of the task, which is gathered up when the next node gets this nodes value
-      const outputData = await this.worker(this, inputs, data, socketInfo)
-      this.outputData = outputData
+      this.outputData = await this.worker(this, inputs, data, socketInfo)
 
       // an onRun option in case a task whats to do something when the task is run.
       if (this.component.task.onRun)

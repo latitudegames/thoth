@@ -9,7 +9,6 @@ import { EventStore } from './entities/EventStore'
 import { InputDestructureComponent } from './entities/InputDestructure'
 import { Request } from './entities/Request'
 import { InputComponent } from './io/Input'
-import { ModuleComponent } from './io/Module'
 import { Output } from './io/Output'
 import { TriggerIn } from './io/TriggerIn'
 import { TriggerOut } from './io/TriggerOut'
@@ -117,10 +116,9 @@ export const components = {
   inputsToJson: () => new InputsToJSON(),
   itemTypeComponent: () => new ItemTypeComponent(),
   joinListComponent: () => new JoinListComponent(),
-  moduleComponent: () => new ModuleComponent(),
+  output: () => new Output(),
   proseToScript: () => new ProseToScript(),
   safetyVerifier: () => new SafetyVerifier(),
-  output: () => new Output(),
   stateWrite: () => new StateWrite(),
   stateRead: () => new StateRead(),
   stringProcessor: () => new StringProcessor(),

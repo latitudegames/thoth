@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { Component, Connection, Input, NodeEditor, Output } from 'rete'
+import { Component, Connection, Input, Output, NodeEditor } from 'rete'
 import { Node } from 'rete/types'
 //@seang todo: convert inspector plugin fully to typescript
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -7,17 +7,19 @@ import { Node } from 'rete/types'
 import {
   NodeData as ReteNodeData,
   WorkerInputs,
-  WorkerOutputs
+  WorkerOutputs,
 } from 'rete/types/core/data'
 
-import { EngineContext } from './src/engine'
-import { ThothConsole } from './src/plugins/debuggerPlugin/ThothConsole'
 import { Inspector } from './src/plugins/inspectorPlugin/Inspector'
-import { ModuleGraphData } from './src/plugins/modulePlugin/module-manager'
 import { TaskOutputTypes } from './src/plugins/taskPlugin/task'
 import { SocketNameType, SocketType } from './src/sockets'
+import { EngineContext } from './src/engine'
 import { ThothTask } from './src/thoth-component'
+import { ThothConsole } from './src/plugins/debuggerPlugin/ThothConsole'
+import { Data } from 'rete/types/core/data'
+export { ThothEditor } from './src/editor'
 
+export type { InspectorData } from './src/plugins/inspectorPlugin/Inspector'
 
 export type EventsTypes = {
   run: void
@@ -32,6 +34,17 @@ export type EventsTypes = {
   connectiondrop: Input | Output
   connectionpick: Input | Output
   resetconnection: void
+}
+
+export interface Spell {
+  id?: string
+  user?: Record<string, unknown> | null | undefined
+  name: string
+  graph: GraphData
+  // Spells: Module[]
+  gameState: Record<string, unknown>
+  createdAt?: number
+  updatedAt?: number
 }
 
 export interface IRunContextEditor extends NodeEditor {
@@ -62,7 +75,7 @@ export type ThothNode = Node & {
 export type ModuleType = {
   id: string
   name: string
-  data: ModuleGraphData
+  data: GraphData
   createdAt: number
   updatedAt: number
 }
@@ -102,6 +115,8 @@ export type OpenAIResponse = {
   finish_reason: string
 }
 
+export type Subspell = { name: string; id: string; data: GraphData }
+
 export type ModuleComponent = Component & {
   run: Function
 }
@@ -125,6 +140,8 @@ export type NodeOutputs = {
   }
 }
 
+export type GraphData = Data
+
 export type NodeData = ReteNodeData & {
   fewshot?: string
   display: Function
@@ -141,10 +158,10 @@ export type NodeData = ReteNodeData & {
 //   position: number[]
 // }
 
-export type Spell = {
-  id: string
-  nodes: Record<number, Node>
-}
+// export type Spell = {
+//   id: string
+//   nodes: Record<number, Node>
+// }
 
 export type ThothReteInput = {
   type: TaskOutputTypes

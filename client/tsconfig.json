@@ -17,19 +17,15 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@common/*": ["src/screens/common/*"],
+      "@components/*": ["src/components/*"],
       "@thoth/*": ["src/Thoth/*"]
     }
   },
-  "typeRoots": ["@types/@thoth"],
+  "typeRoots": ["@types/@thoth", "@types"],
   "references": [
     {
       "path": "../core"
     }
   ],
-  "include": [
-    "src",
-    "src/contexts/layouts/defaultLayout.json",
-    "../server/src/googleSpeechToText.ts"
-  ]
+  "include": ["src", "src/data/layouts/defaultLayout.json"]
 }

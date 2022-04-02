@@ -2,7 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;700&display=swap');
 * {
   font-family: 'IBM Plex Sans', 'IBM Plex Mono', sans-serif;
-  cursor: default !important;
+  /* cursor: default !important; */
 }
 
 :root {

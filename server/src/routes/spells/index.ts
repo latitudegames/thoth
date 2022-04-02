@@ -13,6 +13,8 @@ import {
 import { getTestSpell } from './testSpells'
 import { Graph, Module } from './types'
 
+import otJson0 from 'ot-json0'
+
 export const modules: Record<string, unknown> = {}
 
 const runSpellHandler = async (ctx: Koa.Context) => {
@@ -166,6 +168,40 @@ const saveHandler = async (ctx: Koa.Context) => {
     // TODO eventually we should actually validate the body before dumping it in.
     await spell.update(body)
     return (ctx.body = { id: spell.id })
+  }
+}
+
+const saveDiffHandler = async (ctx: Koa.Context) => {
+  const { body } = ctx.request
+  const { name, diff } = body
+
+  if (!body) throw new CustomError('input-failed', 'No parameters provided')
+
+  const spell = await creatorToolsDatabase.spells.findOne({
+    where: { name },
+  })
+
+  if (!spell)
+    throw new CustomError('input-failed', `No spell with ${name} name found.`)
+  if (!diff)
+    throw new CustomError('input-failed', 'No diff provided in request body')
+
+  try {
+    const newGraph = otJson0.type.apply(spell.graph, diff)
+
+    const updatedSpell = await creatorToolsDatabase.spells.update(
+      {
+        graph: newGraph,
+      },
+      {
+        where: { name },
+      }
+    )
+
+    ctx.response.status = 200
+    ctx.body = updatedSpell
+  } catch (err) {
+    throw new CustomError('server-error', 'Error processing diff. ' + err)
   }
 }
 
@@ -407,6 +443,11 @@ export const spells: Route[] = [
     path: '/game/spells/save',
     access: noAuth,
     post: saveHandler,
+  },
+  {
+    path: '/game/spells/saveDiff',
+    access: noAuth,
+    post: saveDiffHandler,
   },
   {
     path: '/game/spells',

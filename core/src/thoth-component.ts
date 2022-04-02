@@ -29,6 +29,7 @@ export interface ThothTask extends Task {
 export interface ModuleOptions {
   nodeType: 'input' | 'output' | 'triggerIn' | 'triggerOut' | 'module'
   socket?: Socket
+  skip?: boolean
 }
 
 export abstract class ThothComponent<
@@ -44,6 +45,7 @@ export abstract class ThothComponent<
   info: string
   display: boolean
   deprecated: boolean = false
+  hide: boolean = false
   deprecationMessage: string | undefined
   module: ModuleOptions
   contextMenuName: string | undefined
