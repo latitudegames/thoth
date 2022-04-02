@@ -1,5 +1,4 @@
 import Editor from '@monaco-editor/react'
-import { useSnackbar } from 'notistack'
 import { useState, useEffect } from 'react'
 
 import Window from '@components/Window/Window'
@@ -20,7 +19,6 @@ const TextEditor = props => {
   const [language, setLanguage] = useState<string | undefined>(undefined)
 
   const { textEditorData, saveTextEditor } = useInspector()
-  const { enqueueSnackbar } = useSnackbar()
 
   // const bottomHeight = 50
   const handleEditorWillMount = monaco => {
