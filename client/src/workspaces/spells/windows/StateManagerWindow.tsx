@@ -93,20 +93,8 @@ const StateManager = ({ tab, ...props }) => {
         ...spell,
         gameState: parsedState,
       }
-      const res = await saveSpell(spellUpdate)
-      if ('error' in res) {
-        enqueueSnackbar('Error saving state', {
-          preventDuplicate: true,
-          variant: 'error',
-        })
-        throw new Error('Error saving spell')
-      }
-      res.data.gameState && setCode(JSON.stringify(res.data.gameState?.state))
 
-      enqueueSnackbar('State saved', {
-        preventDuplicate: true,
-        variant: 'success',
-      })
+      publish(SAVE_SPELL_DIFF, spellUpdate)
     } catch (err) {
       console.log(err)
     }
