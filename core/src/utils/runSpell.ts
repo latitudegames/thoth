@@ -85,6 +85,10 @@ class RunSpell {
     return extractedNodes[0]
   }
 
+  private _resetTasks() {
+    this.engine.tasks.forEach(t => t.reset())
+  }
+
   getOutputs() {
     const rawOutputs = {}
     this.module.write(rawOutputs)
@@ -105,6 +109,10 @@ class RunSpell {
    * method.
    */
   async runComponent(inputs: Record<string, any>, componentName: string) {
+    // ensaure we run from a clean sloate
+    this._resetTasks()
+
+    // laod the inputs into module memory
     this._loadInputs(inputs)
 
     const component = this._getComponent(componentName) as ModuleComponent
