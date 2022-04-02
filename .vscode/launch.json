@@ -14,8 +14,8 @@
       "trace": true,
       "sourceMapPathOverrides": {
         "webpack://thothCore/./*": "${workspaceFolder}/core/*",
-        "webpack://@thoth/client/./*": "${workspaceFolder}/client/*",
-        "webpack://@thoth/client/thothCore/*": "${workspaceFolder}/core/*"
+        "webpack://@latitudegames/thoth-client/./*": "${workspaceFolder}/client/*",
+        "webpack://@latitudegames/thoth-client/thothCore/*": "${workspaceFolder}/core/*"
       }
     }
   ]

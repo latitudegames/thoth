@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useSnackbar } from 'notistack'
 import { usePatchSpellMutation } from '../../state/api/spells'
-import { useTabManager } from '../../contexts/TabManagerProvider'
 import { useForm } from 'react-hook-form'
 import Modal from '../Modal/Modal'
 import css from './modalForms.module.css'
@@ -10,8 +9,6 @@ const EditSpellModal = ({ closeModal, spellId, name, tab }) => {
   const [error, setError] = useState('')
   const [patchSpell, { isLoading }] = usePatchSpellMutation()
   const { enqueueSnackbar } = useSnackbar()
-
-  const { updateTab } = useTabManager()
 
   const {
     register,
@@ -81,3 +78,6 @@ const EditSpellModal = ({ closeModal, spellId, name, tab }) => {
 }
 
 export default EditSpellModal
+function updateTab(id: any, arg1: { name: any; spell: any }) {
+  throw new Error('Function not implemented.')
+}

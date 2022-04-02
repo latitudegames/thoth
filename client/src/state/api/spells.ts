@@ -1,11 +1,9 @@
 import { createSelector } from '@reduxjs/toolkit'
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
-import { Spell as SpellType } from '@latitudegames/thoth-core/types'
 
-import { initDB } from '../../database'
 import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes'
-import { Module } from '../../database/schemas/module'
 import { rootApi } from './api'
+import { GraphData, Spell } from '@latitudegames/thoth-core/types'
 // function camelize(str) {
 //   return str
 //     .replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
@@ -13,22 +11,9 @@ import { rootApi } from './api'
 //     })
 //     .replace(/\s+/g, '')
 // }
-
-const _moduleModel = async () => {
-  const db = await initDB()
-  if (!db) return
-  const { modules } = db.models
-  return modules
-}
-export interface Spell {
-  id?: string
-  user?: Record<string, unknown> | null | undefined
+export interface Diff {
   name: string
-  graph: SpellType
-  modules: Module[]
-  gameState: Record<string, unknown>
-  createdAt?: number
-  updatedAt?: number
+  diff: Record<string, unknown>
 }
 
 export interface DeployedSpellVersion {
@@ -37,7 +22,7 @@ export interface DeployedSpellVersion {
   message?: string
   versionName?: string
   url?: string
-  graph?: SpellType
+  graph?: GraphData
 }
 
 export interface DeployArgs {
@@ -55,10 +40,16 @@ export interface PatchArgs {
   update: Partial<Spell>
 }
 
+export interface RunSpell {
+  spellId: string
+  version?: string
+  inputs: Record<string, any>
+}
+
 export const spellApi = rootApi.injectEndpoints({
   endpoints: builder => ({
     getSpells: builder.query<Spell[], void>({
-      providesTags: ['Spell'],
+      providesTags: ['Spells'],
       query: () => 'game/spells',
     }),
     getSpell: builder.query<Spell, string>({
@@ -69,14 +60,26 @@ export const spellApi = rootApi.injectEndpoints({
         }
       },
     }),
+    runSpell: builder.mutation<Record<string, any>, RunSpell>({
+      query: ({ spellId, version = 'latest', inputs }) => ({
+        url: `game/graphs/${spellId}/${version}`,
+        method: 'POST',
+        body: inputs,
+      }),
+    }),
+    saveDiff: builder.mutation<void, Diff>({
+      // TODO this may introruce bugs.  Though I don't think we need to invalidate the spell cache here since the graph is loaded in live to the rete editor.
+      // invalidatesTags: ['Spell'],
+      query: diffData => ({
+        url: 'game/spells/saveDiff',
+        method: 'POST',
+        body: diffData,
+      }),
+    }),
     saveSpell: builder.mutation<Partial<Spell>, Partial<Spell> | Spell>({
       invalidatesTags: ['Spell'],
       // needed to use queryFn as query option didnt seem to allow async functions.
       async queryFn(spell, { dispatch }, extraOptions, baseQuery) {
-        const moduleModel = await _moduleModel()
-        const modules = await moduleModel.getSpellModules(spell)
-        spell.modules = modules
-
         const baseQueryOptions = {
           url: 'game/spells/save',
           body: spell,
@@ -93,7 +96,7 @@ export const spellApi = rootApi.injectEndpoints({
       },
     }),
     newSpell: builder.mutation<Spell, Partial<Spell>>({
-      invalidatesTags: ['Spell'],
+      invalidatesTags: ['Spells'],
       query: spellData => ({
         url: 'game/spells',
         method: 'POST',
@@ -113,7 +116,7 @@ export const spellApi = rootApi.injectEndpoints({
       },
     }),
     deleteSpell: builder.mutation<string[], boolean>({
-      invalidatesTags: ['Spell'],
+      invalidatesTags: ['Spells'],
       query: spellId => ({
         url: `game/spells/${spellId}`,
         method: 'DELETE',
@@ -150,36 +153,15 @@ export const selectAllSpells = createSelector(
   spellResult => spellResult?.data || emptySpells
 )
 
-export const selectSpellById = createSelector(
-  [
-    selectAllSpells,
-    (state, spellId) => {
-      return spellId
-    },
-  ],
-  (spells, spellId) =>
-    spells.find(spell => {
-      return spell.name === spellId
-    })
-)
-
-export const selectSpellsByModuleName = createSelector(
-  [selectAllSpells, (state, moduleName) => moduleName],
-  (spells, moduleName) =>
-    spells.filter(
-      spell =>
-        spell.modules &&
-        spell?.modules.some(module => module.name === moduleName)
-    )
-)
-
 export const {
   useGetSpellQuery,
   useGetSpellsQuery,
   useLazyGetSpellQuery,
   useNewSpellMutation,
   useDeleteSpellMutation,
+  useRunSpellMutation,
   useSaveSpellMutation,
+  useSaveDiffMutation,
   useDeploySpellMutation,
   usePatchSpellMutation,
   useGetDeploymentsQuery,

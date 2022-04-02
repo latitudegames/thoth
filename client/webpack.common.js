@@ -25,7 +25,7 @@ const babelOptions = {
 
 module.exports = () => {
   return {
-    entry: ['regenerator-runtime/runtime.js', './src/index.js'],
+    entry: ['regenerator-runtime/runtime.js', './src/index.tsx'],
     output: {
       path: path.resolve(__dirname, '../build'),
       filename: '[name].[contenthash].bundle.js',
@@ -35,7 +35,7 @@ module.exports = () => {
       alias: {
         handlebars: 'handlebars/dist/handlebars.min.js',
         '@': path.resolve(__dirname, 'src'),
-        '@thoth': path.resolve(__dirname, 'src/Thoth'),
+        '@thoth': path.resolve(__dirname, 'src/screens/Thoth'),
         '@components': path.resolve(__dirname, 'src/components'),
       },
       extensions: ['.ts', '.tsx', '.js', '.jsx', '.json', '.css'],

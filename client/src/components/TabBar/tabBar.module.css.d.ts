@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'active': string;
+  'create-spell-tab': string;
   'inactive': string;
   'tabbar-section': string;
   'tabbar-tab': string;

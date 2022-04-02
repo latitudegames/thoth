@@ -24,6 +24,7 @@ export class EnkiTask extends ThothComponent<
     this.category = 'AI/ML'
     this.display = true
     this.info = info
+    this.deprecated = true
   }
 
   node = {}

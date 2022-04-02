@@ -1,23 +1,24 @@
 import Rete, { Engine } from 'rete'
-import { Node } from 'rete/types'
 
 import {
+  GraphData,
   ModelCompletionOpts,
   ModuleType,
   NodeData,
   OpenAIResultChoice,
-  Spell,
   ThothWorkerInputs,
 } from '../types'
+import { ImageType } from './components/ml/VisualGeneration'
 import debuggerPlugin from './plugins/debuggerPlugin'
 import ModulePlugin from './plugins/modulePlugin'
-import TaskPlugin from './plugins/taskPlugin'
+import TaskPlugin, { Task } from './plugins/taskPlugin'
 
 interface WorkerOutputs {
   [key: string]: unknown
 }
 
 export interface ThothEngine extends Engine {
+  tasks: Task[]
   activateDebugger?: Function
   moduleManager?: any
 }
@@ -48,13 +49,18 @@ export type EngineContext = {
   updateCurrentGameState: (update: Record<string, unknown>) => void
   enkiCompletion: (
     taskName: string,
-    inputs: string[]
+    inputs: string[] | string
   ) => Promise<{ outputs: string[] }>
   huggingface: (
     model: string,
     request: string
-  ) => Promise<{ error: unknown;[key: string]: unknown }>
-  readFromImageCache: Function
+  ) => Promise<{ error?: unknown;[key: string]: unknown }>
+  runSpell?: Function
+  readFromImageCache: (
+    caption: string,
+    cacheTag?: string,
+    topK?: number
+  ) => Promise<ImageType[]>
   onPlaytest?: Function
   sendToDebug?: Function
   onAddModule?: Function
@@ -77,7 +83,7 @@ export type InitEngineArguments = {
   modules?: Record<string, ModuleType>
   throwError?: Function
 }
-
+// @seang TODO: update this to not use positional arguments
 export const initSharedEngine = ({
   name,
   components,
@@ -104,10 +110,7 @@ export const initSharedEngine = ({
 }
 
 // this parses through all the nodes in the data and finds the nodes associated with the given map
-export const extractNodes = (
-  nodes: Record<string, Node>,
-  map: Set<unknown>
-) => {
+export const extractNodes = (nodes: GraphData['nodes'], map: Set<unknown>) => {
   const names = Array.from(map.keys())
 
   return Object.keys(nodes)
@@ -118,7 +121,7 @@ export const extractNodes = (
 
 // This will get the node that was triggered given a socketKey associated with that node.
 export const getTriggeredNode = (
-  data: Spell,
+  data: GraphData,
   socketKey: string,
   map: Set<unknown>
 ) => {

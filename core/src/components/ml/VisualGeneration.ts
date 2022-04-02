@@ -26,11 +26,7 @@ export type ImageType = {
   score: number | string
 }
 
-type WorkerReturn = {
-  images: ImageType[]
-}
-
-export class VisualGeneration extends ThothComponent<Promise<WorkerReturn>> {
+export class VisualGeneration extends ThothComponent<Promise<ImageType[]>> {
   constructor() {
     super('VisualGeneration')
     this.task = {
@@ -86,10 +82,13 @@ export class VisualGeneration extends ThothComponent<Promise<WorkerReturn>> {
     const cacheTag = node.data.cacheTag ?? undefined
 
     try {
-      const images = await readFromImageCache(caption, cacheTag, node.data.topK)
-      return {
-        images,
-      }
+      const images = await readFromImageCache(
+        caption as string,
+        cacheTag as string,
+        node.data.topK as number
+      )
+
+      return images
     } catch (err) {
       throw new Error('Error in VisualGeneration component')
     }
