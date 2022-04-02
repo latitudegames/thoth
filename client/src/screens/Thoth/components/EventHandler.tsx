@@ -13,6 +13,7 @@ import {
 } from '../../../state/api/spells'
 import { useEditor } from '../../../workspaces/contexts/EditorProvider'
 import { useLayout } from '../../../workspaces/contexts/LayoutProvider'
+import { diff } from '@/utils/json0'
 
 // Config for unique name generator
 const customConfig = {
@@ -61,6 +62,17 @@ const EventHandler = ({ pubSub, tab }) => {
     const chain = serialize() as ChainData
 
     await saveSpellMutation({ ...currentSpell, chain })
+  }
+
+  const onSaveDiff = async (event, update) => {
+    const currentSpell = spellRef.current
+    const updatedSpell = {
+      ...currentSpell,
+      ...update,
+    }
+    const jsonDiff = diff(currentSpell, updatedSpell)
+
+    console.log('JSON DIFF', jsonDiff)
   }
 
   const createStateManager = () => {
