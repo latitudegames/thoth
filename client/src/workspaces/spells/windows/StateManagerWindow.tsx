@@ -48,15 +48,15 @@ const StateManager = ({ tab, ...props }) => {
     })
   }
 
-  useEffect(() => {
-    if (props?.node?.rect?.height)
-      setHeight((props.node.rect.height - bottomHeight) as number)
+  // useEffect(() => {
+  //   if (props?.node?.rect?.height)
+  //     setHeight((props.node.rect.height - bottomHeight) as number)
 
-    // this is to dynamically set the appriopriate height so that Monaco editor doesnt break flexbox when resizing
-    props.node.setEventListener('resize', data => {
-      setTimeout(() => setHeight(data.rect.height - bottomHeight), 0)
-    })
-  }, [props.node])
+  //   // this is to dynamically set the appriopriate height so that Monaco editor doesnt break flexbox when resizing
+  //   props.node.setEventListener('resize', data => {
+  //     setTimeout(() => setHeight(data.rect.height - bottomHeight), 0)
+  //   })
+  // }, [props.node])
 
   useEffect(() => {
     if (!typing) return
