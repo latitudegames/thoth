@@ -162,6 +162,7 @@ const EventHandler = ({ pubSub, tab }) => {
     [$REDO(tab.id)]: onRedo,
     [$DELETE(tab.id)]: onDelete,
     [$PROCESS(tab.id)]: onProcess,
+    [$SAVE_SPELL_DIFF(tab.id)]: onSaveDiff,
   }
 
   useEffect(() => {
