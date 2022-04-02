@@ -16,13 +16,14 @@ import InspectorPlugin from './plugins/inspectorPlugin'
 import LifecyclePlugin from './plugins/lifecyclePlugin'
 import { ModuleManager } from './plugins/modulePlugin/module-manager'
 import SocketGenerator from './plugins/socketGenerator'
-import TaskPlugin from './plugins/taskPlugin'
+import TaskPlugin, { Task } from './plugins/taskPlugin'
 import { PubSubContext, ThothComponent } from './thoth-component'
 import DebuggerPlugin from './plugins/debuggerPlugin'
 import KeyCodePlugin from './plugins/keyCodePlugin'
 import ModulePlugin from './plugins/modulePlugin'
 import SelectionPlugin from './plugins/selectionPlugin'
 export class ThothEditor extends NodeEditor<EventsTypes> {
+  tasks: Task[]
   pubSub: PubSubContext
   thoth: EngineContext
   tab: { type: string }
