@@ -15,6 +15,7 @@ import {
 import { useEditor } from '../../../workspaces/contexts/EditorProvider'
 import { useLayout } from '../../../workspaces/contexts/LayoutProvider'
 import { diff } from '@/utils/json0'
+import { useSnackbar } from 'notistack'
 
 // Config for unique name generator
 const customConfig = {
@@ -26,6 +27,7 @@ const customConfig = {
 const EventHandler = ({ pubSub, tab }) => {
   // only using this to handle events, so not rendering anything with it.
   const { createOrFocus, windowTypes } = useLayout()
+  const { enqueueSnackbar } = useSnackbar()
 
   const [saveSpellMutation] = useSaveSpellMutation()
   const [saveDiff] = useSaveDiffMutation()
@@ -82,6 +84,13 @@ const EventHandler = ({ pubSub, tab }) => {
       name: currentSpell.name,
       diff: jsonDiff,
     })
+
+    if ('error' in response) {
+      enqueueSnackbar('Error saving spell', {
+        variant: 'error',
+      })
+      return
+    }
 
   }
 
