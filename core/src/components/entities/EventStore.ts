@@ -104,16 +104,12 @@ export class EventStore extends ThothComponent<Promise<void>> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    console.log('Input is', inputs)
     const speaker = inputs['speaker'][0] as string
     const agent = inputs['agent'][0] as string
-    console.log("inputs['primary']", inputs['primary'])
     const primary = (inputs['primary'] && inputs['primary'][0]) as string
     const secondary = (inputs['secondary'] && inputs['secondary'][0]) as string
     const client = inputs['client'][0] as string
     const channel = inputs['channel'][0] as string
-
-    console.log('convSpeaker is', primary)
 
     if (!primary) return console.log('Event null, so skipping')
 
