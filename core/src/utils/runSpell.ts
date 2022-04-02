@@ -133,6 +133,10 @@ class RunSpell {
   }
 
   /**
+   * temporary function to be backwards compatible with current use of run spell
+   */
+  async defaultRun(inputs: Record<string, any>) {
+    return this.runComponent(inputs, 'Module Trigger In')
   }
 }
 
