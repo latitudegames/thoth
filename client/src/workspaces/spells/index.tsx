@@ -22,16 +22,19 @@ const Workspace = ({ tab, tabs, pubSub }) => {
   const { events, publish } = usePubSub()
   const [loadSpell, { data: spellData }] = useLazyGetSpellQuery()
   const [saveDiff] = useSaveDiffMutation()
-  const { editor } = useEditor()
+  const { serialize, editor } = useEditor()
 
   // Set up autosave for the workspaces
   useEffect(() => {
     if (!editor?.on) return
+
     const unsubscribe = editor.on(
       'save nodecreated noderemoved connectioncreated connectionremoved nodetranslated',
       debounce(async data => {
         if (tab.type === 'spell' && spellRef.current) {
-          const jsonDiff = diff(spellRef.current?.chain, editor.toJSON())
+          publish(events.$SAVE_SPELL_DIFF(tab.id), { chain: serialize() })
+
+          const jsonDiff = diff(spellRef.current?.chain, serialize())
 
           const response = await saveDiff({
             name: spellRef.current.name,
