@@ -42,7 +42,7 @@
     "grawlix-racism": "^1.0.2",
     "handlebars": "^4.7.7",
     "inquirer": "^8.2.0",
-    "instagram-private-api": "1.45.2",
+    "instagram-private-api": "1.45.3",
     "jsdom": "^17.0.0",
     "keyword-extractor": "^0.0.20",
     "license-webpack-plugin": "^4.0.2",

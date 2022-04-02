@@ -23,7 +23,6 @@ import KeyCodePlugin from './plugins/keyCodePlugin'
 import ModulePlugin from './plugins/modulePlugin'
 import SelectionPlugin from './plugins/selectionPlugin'
 export class ThothEditor extends NodeEditor<EventsTypes> {
-  tasks: Task[]
   pubSub: PubSubContext
   thoth: EngineContext
   tab: { type: string }
@@ -32,6 +31,7 @@ export class ThothEditor extends NodeEditor<EventsTypes> {
   moduleManager: ModuleManager
   runProcess: (callback?: Function) => Promise<void>
   onSpellUpdated: (spellId: string, callback: Function) => Function
+  tasks?: Task[]
 }
 
 /*
@@ -40,7 +40,7 @@ export class ThothEditor extends NodeEditor<EventsTypes> {
 
 const editorTabMap: Record<string, ThothEditor> = {}
 
-export const initEditor = async function ({
+export const initEditor = function ({
   container,
   pubSub,
   thoth,
@@ -101,7 +101,7 @@ export const initEditor = async function ({
       const { workspaceType } = component
 
       if (component.deprecated) return null
-      if (component.hide) return null
+      if ((component as any).hide) return null
       if (workspaceType && workspaceType !== tabType) return null
       return [component.category]
     },

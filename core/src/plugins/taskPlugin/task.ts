@@ -105,7 +105,7 @@ export class Task {
       /*
         This is where we are populating all the input values to be passed into the worker. We are getting all the input connections that are connected as outputs (ie have values)
         We filter out all connections which did not come from the previou node.  This is to hgelp support multiple inputs properly, otherwise we actually back propagate along every input and run it, whichI think is unwanted behaviour.
-        
+
         After we have filtered these out, we need to run the task, which triggers that nodes worker.  After the worker runs, the task has populated output data, which we take and we associate with the tasks input values, which are subsequently
         passed to the nodes worker for processing.
 
