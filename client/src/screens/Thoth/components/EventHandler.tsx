@@ -35,6 +35,7 @@ const EventHandler = ({ pubSub, tab }) => {
 
   // Spell ref because callbacks cant hold values from state without them
   const spellRef = useRef<Spell | null>(null)
+
   useEffect(() => {
     if (!spell) return
     spellRef.current = spell
@@ -92,6 +93,9 @@ const EventHandler = ({ pubSub, tab }) => {
       return
     }
 
+    enqueueSnackbar('Spell saved', {
+      variant: 'success',
+    })
   }
 
   const createStateManager = () => {
