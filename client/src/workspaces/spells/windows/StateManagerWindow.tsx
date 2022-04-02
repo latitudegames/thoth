@@ -1,7 +1,5 @@
 import Editor from '@monaco-editor/react'
 import jsonFormat from 'json-format'
-// import debounce from 'lodash.debounce'
-import { useSnackbar } from 'notistack'
 import { useState, useEffect } from 'react'
 import { useGetSpellQuery } from '../../../state/api/spells'
 import Window from '../../../components/Window/Window'
@@ -113,7 +111,6 @@ const StateManager = ({ tab, ...props }) => {
     <Window toolbar={toolbar}>
       <Editor
         theme="sds-dark"
-        height={height}
         defaultLanguage="json"
         value={code}
         options={editorOptions}
