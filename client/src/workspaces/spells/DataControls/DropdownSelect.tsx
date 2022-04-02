@@ -3,16 +3,16 @@ import Select from '../../../components/Select/Select'
 const DropdownSelect = ({ control, updateData, initialValue }) => {
   const { dataKey, data } = control
 
-  const {values, defaultValue} = data
+  const { values, defaultValue } = data
 
-  const options = values.map((value, index) => ({
-      value: value,
-      label: value,
-    }))
+  const options = values.map(value => ({
+    value: value,
+    label: value,
+  }))
 
   const value = initialValue?.length > 0 ? initialValue : defaultValue
 
-  const defaultVal = {value, label: value}
+  const defaultVal = { value, label: value }
 
   const onChange = async ({ value }) => {
     update(value)
@@ -22,6 +22,7 @@ const DropdownSelect = ({ control, updateData, initialValue }) => {
     updateData({ [dataKey]: update })
   }
 
+  if (!defaultVal) return
   return (
     <div style={{ flex: 1 }}>
       <Select

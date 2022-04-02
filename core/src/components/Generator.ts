@@ -65,8 +65,8 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
 
     const inputGenerator = new SocketGeneratorControl({
       connectionType: 'input',
-      name: 'Input Sockets',
       ignored: ['trigger'],
+      name: 'Input Sockets',
     })
 
     const fewshotControl = new FewshotControl({
@@ -101,9 +101,9 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
     })
 
     node.inspector
-      .add(nameControl)
       .add(modelControl)
       .add(inputGenerator)
+      .add(nameControl)
       .add(fewshotControl)
       .add(stopControl)
       .add(temperatureControl)

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import { useRef } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
 import Creatable from 'react-select/creatable'
 import Select from 'react-select'
@@ -20,11 +20,11 @@ const BasicSelect = ({
     true,
   ...props
 }) => {
-  const selectRef = useRef(null)
+  const selectRef = useRef<HTMLInputElement | null>(null)
 
   const DropdownIndicator = () => {
     return props.searchable ? (
-      <Icon name="search" size={'var(--small)'} />
+      <Icon name="search" size={16} />
     ) : (
       <div className={css['dropdown-indicator']}>❯</div>
     )
@@ -40,23 +40,26 @@ const BasicSelect = ({
     </span>
   )
 
-  const focusSelect = () => {
-    selectRef.current.focus()
-  }
+  // const focusSelect = () => {
+  //   if (!selectRef.current) return
+  //   // selectRef.current.focus()
+  // }
 
   const blurSelect = () => {
+    if (!selectRef.current) return
     selectRef.current.blur()
   }
 
-  useHotkeys(
-    focusKey,
-    event => {
-      event.preventDefault()
-      focusSelect()
-    },
-    { enableOnTags: 'INPUT' },
-    [focusSelect]
-  )
+  // useHotkeys(
+  //   focusKey,
+  //   event => {
+  //     console.log('event', event)
+  //     event.preventDefault()
+  //     focusSelect()
+  //   },
+  //   { enableOnTags: 'INPUT' as any },
+  //   [focusSelect]
+  // )
 
   useHotkeys(
     'enter, esc',
@@ -64,7 +67,7 @@ const BasicSelect = ({
       event.preventDefault()
       blurSelect()
     },
-    { enableOnTags: 'INPUT' },
+    { enableOnTags: 'INPUT' as any },
     [blurSelect]
   )
 
