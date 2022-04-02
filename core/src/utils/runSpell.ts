@@ -100,12 +100,6 @@ class RunSpell {
     this.engine.tasks.forEach(t => t.reset())
   }
 
-  getOutputs() {
-    const rawOutputs = {}
-    this.module.write(rawOutputs)
-    return this._formatOutputs(rawOutputs)
-  }
-
   loadSpell(spell: Spell) {
     this.currentSpell = spell
 
