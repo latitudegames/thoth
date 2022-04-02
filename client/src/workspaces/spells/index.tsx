@@ -33,19 +33,6 @@ const Workspace = ({ tab, tabs, pubSub }) => {
       debounce(async data => {
         if (tab.type === 'spell' && spellRef.current) {
           publish(events.$SAVE_SPELL_DIFF(tab.id), { chain: serialize() })
-
-          const jsonDiff = diff(spellRef.current?.chain, serialize())
-
-          const response = await saveDiff({
-            name: spellRef.current.name,
-            diff: jsonDiff,
-          })
-
-          if ('error' in response) {
-            enqueueSnackbar('Error saving spell', {
-              variant: 'error',
-            })
-          }
         }
       }, 500)
     )
