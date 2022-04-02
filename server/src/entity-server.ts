@@ -7,7 +7,7 @@ import { database } from './database'
 import { World } from './entities/World'
 
 async function init() {
-  console.log("Starting agent runner")
+  console.log('Starting agent runner')
   new database()
   await database.instance.connect()
   new World()

@@ -38,6 +38,7 @@ export async function initSpeechServer(ignoreDotEnv: boolean) {
   speechClient = new SpeechClient()
 
   io.on('connection', function (client) {
+    console.log('speech client connected')
     let recognizeStream: any = null
 
     client.on('join', function (data) {
@@ -63,7 +64,7 @@ export async function initSpeechServer(ignoreDotEnv: boolean) {
         ) {
           recognizeStream.write(data)
         }
-      } catch (e) { }
+      } catch (e) {}
     })
 
     function startRecognitionStream(client: any) {
