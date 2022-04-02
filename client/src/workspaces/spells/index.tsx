@@ -1,9 +1,8 @@
 import { useEffect, useRef } from 'react'
 
-import { diff } from '../../utils/json0'
 import { useEditor } from '@/workspaces/contexts/EditorProvider'
 import { Layout } from '@/workspaces/contexts/LayoutProvider'
-import { useLazyGetSpellQuery, useSaveDiffMutation } from '@/state/api/spells'
+import { useLazyGetSpellQuery } from '@/state/api/spells'
 import { debounce } from '@/utils/debounce'
 import EditorWindow from './windows/EditorWindow/'
 import EventHandler from '@/screens/Thoth/components/EventHandler'
@@ -12,16 +11,13 @@ import Playtest from './windows/PlaytestWindow'
 import StateManager from '@/workspaces/spells/windows/StateManagerWindow'
 import TextEditor from './windows/TextEditorWindow'
 import DebugConsole from './windows/DebugConsole'
-import { useSnackbar } from 'notistack'
 import { Spell } from '@latitudegames/thoth-core/types'
 import { usePubSub } from '@/contexts/PubSubProvider'
 
 const Workspace = ({ tab, tabs, pubSub }) => {
   const spellRef = useRef<Spell>()
-  const { enqueueSnackbar } = useSnackbar()
   const { events, publish } = usePubSub()
   const [loadSpell, { data: spellData }] = useLazyGetSpellQuery()
-  const [saveDiff] = useSaveDiffMutation()
   const { serialize, editor } = useEditor()
 
   // Set up autosave for the workspaces
