@@ -3,28 +3,23 @@ import jsonFormat from 'json-format'
 // import debounce from 'lodash.debounce'
 import { useSnackbar } from 'notistack'
 import { useState, useEffect } from 'react'
-import {
-  useGetSpellQuery,
-  useSaveSpellMutation,
-} from '../../../state/api/spells'
+import { useGetSpellQuery } from '../../../state/api/spells'
 import Window from '../../../components/Window/Window'
 
 import '../../../screens/Thoth/thoth.module.css'
 import WindowMessage from '../components/WindowMessage'
+import { usePubSub } from '@/contexts/PubSubProvider'
 
 const StateManager = ({ tab, ...props }) => {
-  // const dispatch = useDispatch()
-  const [saveSpell] = useSaveSpellMutation()
+  const { publish, events } = usePubSub()
   const { data: spell } = useGetSpellQuery(tab.spellId, {
     skip: !tab.spellId,
   })
 
-  const { enqueueSnackbar } = useSnackbar()
   const [typing, setTyping] = useState<boolean>(false)
   const [code, setCode] = useState('{}')
-  const [height, setHeight] = useState<number>()
 
-  const bottomHeight = 50
+  const SAVE_SPELL_DIFF = events.$SAVE_SPELL_DIFF(tab.id)
 
   const editorOptions = {
     lineNumbers: false,
