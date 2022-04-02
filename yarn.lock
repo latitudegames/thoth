@@ -11495,6 +11495,11 @@ rete-area-plugin@^0.2.1:
   resolved "https://registry.yarnpkg.com/rete-area-plugin/-/rete-area-plugin-0.2.1.tgz#0afe4581baf99c36c904d08e4f0a835ed6604d86"
   integrity sha512-MOeQRmSC/gjkZIMo0fNuomzunRplALqd86V+jSzuhBYchCw0wshv2/iXu4xRxVZkw9r1HpZxlz9gLkbatCbXMw==
 
+rete-comment-plugin@^0.7.0-rc.1:
+  version "0.7.0-rc.1"
+  resolved "https://registry.yarnpkg.com/rete-comment-plugin/-/rete-comment-plugin-0.7.0-rc.1.tgz#a8cc0e0858a655e543eb432b4bd1b82fa631a50d"
+  integrity sha512-Bc8HOFaR6IMozikpbeRzq8OFlDFpIpaIh3WbNkVvXiEINHgyBAmZw2gEtwtpf62F1MHWR7gdxvuwiMaVHKYeUQ==
+
 rete-connection-plugin@^0.9.0:
   version "0.9.0"
   resolved "https://registry.yarnpkg.com/rete-connection-plugin/-/rete-connection-plugin-0.9.0.tgz#3a6df36f55493a5c2ea021ae3147a0f0a6ada6ed"

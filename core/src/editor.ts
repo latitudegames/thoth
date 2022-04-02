@@ -8,6 +8,7 @@ import { Data } from 'rete/types/core/data'
 import { EventsTypes } from '../types'
 import { getComponents } from './components/components'
 import { EngineContext, initSharedEngine } from './engine'
+import CommentPlugin from './plugins/commentPlugin'
 import AreaPlugin from './plugins/areaPlugin'
 import DisplayPlugin from './plugins/displayPlugin'
 import HistoryPlugin from './plugins/historyPlugin'
@@ -132,11 +133,16 @@ export const initEditor = async function ({
   editor.use(ModulePlugin, { engine, modules: {} } as unknown as void)
   editor.use(TaskPlugin)
   editor.use(KeyCodePlugin)
-  editor.use(SelectionPlugin)
+
+  editor.use(SelectionPlugin, { enabled: true })
+
+  editor.use(CommentPlugin, {
+    margin: 20, // indent for new frame comments by default 30 (px)
+  })
 
   // WARNING all the plugins from the editor get installed onto the component and modify it.  This effects the components registered in the engine, which already have plugins installed.
   components.forEach(c => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // eslint-disable-next-line @typescrip``t-eslint/ban-ts-comment
     //@ts-ignore
     // the problematic type here is coming directly from node modules, we may need to revisit further customizing the Editor Register type expectations or it's class
     editor.register(c)
@@ -145,6 +151,10 @@ export const initEditor = async function ({
   // @seang: moved these two functions to attempt to preserve loading order after the introduction of initSharedEngine
   editor.on('zoom', ({ source }) => {
     return source !== 'dblclick'
+  })
+
+  editor.on(['click'], () => {
+    editor.selected.list = []
   })
 
   editor.bind('run')
