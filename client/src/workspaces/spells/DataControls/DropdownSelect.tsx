@@ -22,6 +22,7 @@ const DropdownSelect = ({ control, updateData, initialValue }) => {
     updateData({ [dataKey]: update })
   }
 
+  if (!defaultVal) return
   return (
     <div style={{ flex: 1 }}>
       <Select
