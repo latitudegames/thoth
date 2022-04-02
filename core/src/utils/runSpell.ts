@@ -5,6 +5,7 @@ import {
 import { ChainData, ModuleComponent, Spell } from '../../types'
 import { EngineContext, extractNodes, ThothEngine } from '../engine'
 import { Module } from '../plugins/modulePlugin/module'
+import { extractModuleInputKeys } from './chainHelpers'
 
 type RunSpellConstructor = {
   thothInterface: EngineContext
@@ -46,6 +47,10 @@ class RunSpell {
       thoth: this.thothInterface,
       silent: true,
     }
+  }
+
+  get inputKeys() {
+    return extractModuleInputKeys(this.currentSpell.chain)
   }
 
   private _getComponent(componentName: string) {
