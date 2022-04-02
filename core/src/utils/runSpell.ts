@@ -134,6 +134,11 @@ class RunSpell {
     // subscribe to a run pubsub and then we just use that.  This would treat running
     // from a trigger in node like any other data stream. Or even just pass in socket IO.
     await component.run(triggeredNopde)
+
+    return this.outputData
+  }
+
+  /**
   }
 }
 
