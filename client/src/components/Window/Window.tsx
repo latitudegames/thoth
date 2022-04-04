@@ -41,6 +41,7 @@ const Window = (props: Props) => {
     darker = false,
     grid = false,
     toolbar = false,
+    lock = false,
     scrollToBottom = false,
   } = props
 
