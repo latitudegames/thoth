@@ -184,6 +184,11 @@ export class Inspector {
     this.node.data.dataControls = cache
   }
 
+  handleLock(update: Record<string, any>) {
+    if (!('nodeLocked' in update)) return
+    this.node.data.nodeLocked = update.nodeLocked
+  }
+
   handleData(update: Record<string, any>) {
     // store all data controls inside the nodes data
     // WATCH in case our graphs start getting quite large.
