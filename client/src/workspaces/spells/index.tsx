@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { useEditor } from '@/workspaces/contexts/EditorProvider'
 import { Layout } from '@/workspaces/contexts/LayoutProvider'
@@ -13,12 +13,18 @@ import TextEditor from './windows/TextEditorWindow'
 import DebugConsole from './windows/DebugConsole'
 import { Spell } from '@latitudegames/thoth-core/types'
 import { usePubSub } from '@/contexts/PubSubProvider'
+import { useSharedb } from '@/contexts/SharedbProvider'
+import { sharedb } from '@/config'
+import { diff } from '@/utils/json0'
 
 const Workspace = ({ tab, tabs, pubSub }) => {
   const spellRef = useRef<Spell>()
   const { events, publish } = usePubSub()
+  const { getSpellDoc } = useSharedb()
   const [loadSpell, { data: spellData }] = useLazyGetSpellQuery()
   const { serialize, editor } = useEditor()
+
+  const [docLoaded, setDocLoaded] = useState<boolean>(false)
 
   // Set up autosave for the workspaces
   useEffect(() => {
@@ -28,6 +34,7 @@ const Workspace = ({ tab, tabs, pubSub }) => {
       'save nodecreated noderemoved connectioncreated connectionremoved nodetranslated',
       debounce(async data => {
         if (tab.type === 'spell' && spellRef.current) {
+          console.log('SENDING SAVE SPELL DIFF.  SPELL CHANGED.')
           publish(events.$SAVE_SPELL_DIFF(tab.id), { chain: serialize() })
         }
       }, 1000)
@@ -56,6 +63,26 @@ const Workspace = ({ tab, tabs, pubSub }) => {
     if (!spellData) return
     spellRef.current = spellData
   }, [spellData])
+
+  useEffect(() => {
+    if (!spellData || !sharedb || docLoaded || !editor) return
+
+    const doc = getSpellDoc(spellData as Spell)
+
+    if (!doc) return
+
+    doc.on('op', (op, origin) => {
+      if (origin) return
+      console.log('updating graph')
+      const jsonDiff = diff(spellData.chain, doc.data.chain)
+      if (jsonDiff.length > 0) {
+        editor.clear()
+        editor.loadGraph(doc.data.chain, true)
+      }
+    })
+
+    setDocLoaded(true)
+  }, [spellData, editor])
 
   useEffect(() => {
     if (!tab || !tab.spellId) return
