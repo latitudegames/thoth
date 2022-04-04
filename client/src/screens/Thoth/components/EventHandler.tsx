@@ -104,6 +104,7 @@ const EventHandler = ({ pubSub, tab }) => {
 
     if (sharedb) {
       const doc = getSpellDoc(currentSpell as Spell)
+      if (!doc) return
       doc.submitOp(jsonDiff)
     }
   }
