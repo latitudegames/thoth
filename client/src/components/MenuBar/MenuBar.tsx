@@ -134,27 +134,23 @@ const MenuBar = () => {
   const menuBarItems = {
     file: {
       items: {
-        new_project: {
+        new_spell: {
           onClick: onNew,
         },
-        open_project: {
+        open_spell: {
           onClick: onOpen,
         },
-        edit_project: {
+        edit_spell: {
           onClick: onEdit,
         },
-        save: {
-          items: {
-            save_project: {
-              onClick: onSave,
-            },
-            save_project_as: {
-              onClick: onSaveAs,
-            },
-            export_project: {
-              onClick: onExport,
-            },
-          },
+        save_spell: {
+          onClick: onSave,
+        },
+        save_spell_as: {
+          onClick: onSaveAs,
+        },
+        export_spell: {
+          onClick: onExport,
         },
       },
     },
@@ -173,34 +169,23 @@ const MenuBar = () => {
         },
       },
     },
-    studio: {
+    windows: {
       items: {
-        tools: {
-          items: {
-            text_editor: {
-              onClick: onTextEditorCreate,
-            },
-            inspector: {
-              onClick: onInspectorCreate,
-            },
-            state_manager: {
-              onClick: onStateManagerCreate,
-            },
-            playtest: {
-              onClick: onPlaytestCreate,
-            },
-            console: {
-              onClick: onConsole,
-            },
-          },
+        text_editor: {
+          onClick: onTextEditorCreate,
         },
-        // change_layout: {
-        //   items: {
-        //     multishot_editing: {},
-        //     enki_fewshot_editing: {},
-        //     node_editing: {},
-        //   },
-        // },
+        inspector: {
+          onClick: onInspectorCreate,
+        },
+        state_manager: {
+          onClick: onStateManagerCreate,
+        },
+        playtest: {
+          onClick: onPlaytestCreate,
+        },
+        console: {
+          onClick: onConsole,
+        },
       },
     },
   }
