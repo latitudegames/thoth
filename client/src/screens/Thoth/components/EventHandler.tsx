@@ -71,6 +71,25 @@ const EventHandler = ({ pubSub, tab }) => {
     await saveSpellMutation({ ...currentSpell, chain })
   }
 
+  const sharedbDiff = async (event, update) => {
+    if (!spellRef.current) return
+    const doc = getSpellDoc(spellRef.current as Spell)
+    if (!doc) return
+
+    const updatedSpell = {
+      ...doc.data,
+      ...update,
+    }
+
+    const jsonDiff = diff(doc.data, updatedSpell)
+
+    if (jsonDiff.length === 0) return
+
+    console.log('JSON DIFF IN SHAREDB DIFF', jsonDiff)
+
+    doc.submitOp(jsonDiff)
+  }
+
   const onSaveDiff = async (event, update) => {
     if (!spellRef.current) return
 
@@ -187,7 +206,7 @@ const EventHandler = ({ pubSub, tab }) => {
     [$REDO(tab.id)]: onRedo,
     [$DELETE(tab.id)]: onDelete,
     [$PROCESS(tab.id)]: onProcess,
-    [$SAVE_SPELL_DIFF(tab.id)]: onSaveDiff,
+    [$SAVE_SPELL_DIFF(tab.id)]: sharedb ? sharedbDiff : onSaveDiff,
   }
 
   useEffect(() => {
