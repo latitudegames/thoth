@@ -136,3 +136,7 @@
 .trash:hover {
   background-image: url('dangerTrash.svg');
 }
+
+.lock {
+  background-image: url('Lock.svg');
+}
