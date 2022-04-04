@@ -57,6 +57,14 @@ const Inspector = props => {
     saveInspector(newData)
   }
 
+  const onLock = () => {
+    const data = {
+      nodeLocked: !inspectorData?.data.nodeLocked,
+    }
+
+    updateData(data)
+  }
+
   const toolbar = (
     <>
       <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
