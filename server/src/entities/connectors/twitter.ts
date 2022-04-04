@@ -80,8 +80,8 @@ export class twitter_client {
     const twitterAccessToken = settings['twitter_access_token']
     const twitterAccessTokenSecret = settings['twitter_access_token_secret']
 
-    if (!bearerToken || !twitterUser)
-      return console.warn('No API token for Twitter bot, skipping')
+    if ((!bearerToken && !twitterAppToken && !twitterAppTokenSecret && !twitterAccessToken && !twitterAccessTokenSecret) || !twitterUser)
+      return console.warn('No API token for Whatsapp bot, skipping')
 
     let twitter = createTwitterClient(
       bearerToken,
