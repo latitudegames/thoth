@@ -57,6 +57,7 @@ const Window = (props: Props) => {
       `}
     >
       {toolbar && <WindowToolbar>{props.toolbar}</WindowToolbar>}
+      {lock && <WindowToolbar>{props.lock}</WindowToolbar>}
       <WindowLayout scrollToBottom={scrollToBottom}>
         {props.children}
       </WindowLayout>
