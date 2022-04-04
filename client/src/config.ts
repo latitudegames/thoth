@@ -11,3 +11,4 @@ export const appRootUrl =
     : process.env.REACT_APP_SITE_ROOT_URL
 
 export const sharedb = process.env.REACT_APP_SHAREDB
+export const websocketUrl = 'ws://localhost:8080'
