@@ -14,6 +14,7 @@ interface CssExports {
   'hand': string;
   'icon': string;
   'info': string;
+  'lock': string;
   'merge': string;
   'minus': string;
   'moon': string;
