@@ -31,7 +31,7 @@ const Workspace = ({ tab, tabs, pubSub }) => {
     if (!editor?.on) return
 
     const unsubscribe = editor.on(
-      'save nodecreated noderemoved connectioncreated connectionremoved nodetranslated',
+      'save nodecreated noderemoved connectioncreated connectionremoved nodetranslated commentremoved commentcreated addcomment removecomment editcomment',
       debounce(async data => {
         if (tab.type === 'spell' && spellRef.current) {
           console.log('SENDING SAVE SPELL DIFF.  SPELL CHANGED.')
@@ -71,12 +71,13 @@ const Workspace = ({ tab, tabs, pubSub }) => {
 
     if (!doc) return
 
+    console.log('SUBSCRIBING TO CHANGES')
     doc.on('op', (op, origin) => {
       if (origin) return
       console.log('updating graph')
       const jsonDiff = diff(spellData.chain, doc.data.chain)
       if (jsonDiff.length > 0) {
-        editor.clear()
+        console.log('UPDATED CHAIN', spellData.chain)
         editor.loadGraph(doc.data.chain, true)
       }
     })
