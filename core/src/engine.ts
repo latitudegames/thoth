@@ -11,13 +11,14 @@ import {
 import { ImageType } from './components/VisualGeneration'
 import debuggerPlugin from './plugins/debuggerPlugin'
 import ModulePlugin from './plugins/modulePlugin'
-import TaskPlugin from './plugins/taskPlugin'
+import TaskPlugin, { Task } from './plugins/taskPlugin'
 
 interface WorkerOutputs {
   [key: string]: unknown
 }
 
 export interface ThothEngine extends Engine {
+  tasks: Task[]
   activateDebugger?: Function
   moduleManager?: any
 }

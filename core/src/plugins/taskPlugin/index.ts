@@ -1,12 +1,16 @@
-import { NodeEditor } from 'rete'
+import { Component } from 'rete'
 import { NodeData } from 'rete/types/core/data'
 
-import { ThothWorkerInputs } from '../../../types'
+import { ThothEditor, ThothWorkerInputs } from '../../../types'
 import { ThothComponent } from '../../thoth-component'
 import { Task } from './task'
 
-function install(editor: NodeEditor) {
-  editor.on('componentregister', (component: ThothComponent<unknown>) => {
+function install(editor: ThothEditor) {
+  editor.on('componentregister', (_component: Component) => {
+    editor.tasks = []
+
+    const component = _component as unknown as ThothComponent<unknown>
+
     if (!component.task)
       throw new Error('Task plugin requires a task property in component')
     if (component.task.outputs.constructor !== Object)
@@ -79,6 +83,13 @@ function install(editor: NodeEditor) {
 
       Object.keys(allOutputs).forEach(key => {
         outputs[key] = { type: taskOptions.outputs[key], key, task }
+      })
+
+      // Probably need to reset this when spells change
+      editor.tasks.push(task)
+
+      editor.on('process', () => {
+        editor.tasks = []
       })
     }
   })
