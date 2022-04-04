@@ -103,8 +103,8 @@ const MenuBar = () => {
     publish($EXPORT(activeTabRef.current.id))
   }
 
-  const onModal = () => {
-    openModal({ modal: 'example', content: 'This is an example modal' })
+  const onConsole = () => {
+    if (!activeTabRef.current) return
   }
 
   //Menu bar hotkeys
@@ -187,29 +187,18 @@ const MenuBar = () => {
             playtest: {
               onClick: onPlaytestCreate,
             },
-            enki: {
-              items: {
-                fewshots: {},
-                serialization: {},
-                preamble: {},
-              },
-            },
-            test: {
-              items: {
-                'open modal ...': {
-                  onClick: onModal,
-                },
-              },
+            console: {
+              onClick: onConsole,
             },
           },
         },
-        change_layout: {
-          items: {
-            multishot_editing: {},
-            enki_fewshot_editing: {},
-            node_editing: {},
-          },
-        },
+        // change_layout: {
+        //   items: {
+        //     multishot_editing: {},
+        //     enki_fewshot_editing: {},
+        //     node_editing: {},
+        //   },
+        // },
       },
     },
   }
