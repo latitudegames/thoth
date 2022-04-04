@@ -185,8 +185,8 @@ export class Inspector {
   }
 
   handleLock(update: Record<string, any>) {
-    if (!('nodeLocked' in update)) return
-    this.node.data.nodeLocked = update.nodeLocked
+    if (!('nodeLocked' in update.data)) return
+    this.node.data.nodeLocked = update.data.nodeLocked
   }
 
   handleData(update: Record<string, any>) {
