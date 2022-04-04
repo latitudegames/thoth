@@ -30,6 +30,7 @@ const MenuBar = () => {
     $CREATE_PLAYTEST,
     $CREATE_INSPECTOR,
     $CREATE_TEXT_EDITOR,
+    $CREATE_CONSOLE,
     $SERIALIZE,
     $EXPORT,
   } = events
@@ -105,6 +106,7 @@ const MenuBar = () => {
 
   const onConsole = () => {
     if (!activeTabRef.current) return
+    publish($CREATE_CONSOLE(activeTabRef.current.id))
   }
 
   //Menu bar hotkeys
