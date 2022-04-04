@@ -16,6 +16,8 @@ import { useEditor } from '../../../workspaces/contexts/EditorProvider'
 import { useLayout } from '../../../workspaces/contexts/LayoutProvider'
 import { diff } from '@/utils/json0'
 import { useSnackbar } from 'notistack'
+import { sharedb } from '@/config'
+import { useSharedb } from '@/contexts/SharedbProvider'
 
 // Config for unique name generator
 const customConfig = {
@@ -28,6 +30,7 @@ const EventHandler = ({ pubSub, tab }) => {
   // only using this to handle events, so not rendering anything with it.
   const { createOrFocus, windowTypes } = useLayout()
   const { enqueueSnackbar } = useSnackbar()
+  const { getSpellDoc } = useSharedb()
 
   const [saveSpellMutation] = useSaveSpellMutation()
   const [saveDiff] = useSaveDiffMutation()
@@ -78,6 +81,8 @@ const EventHandler = ({ pubSub, tab }) => {
     }
     const jsonDiff = diff(currentSpell, updatedSpell)
 
+    console.log('JSON DIFF', jsonDiff)
+
     // no point saving if nothing has changed
     if (jsonDiff.length === 0) return
 
@@ -96,6 +101,11 @@ const EventHandler = ({ pubSub, tab }) => {
     enqueueSnackbar('Spell saved', {
       variant: 'success',
     })
+
+    if (sharedb) {
+      const doc = getSpellDoc(currentSpell as Spell)
+      doc.submitOp(jsonDiff)
+    }
   }
 
   const createStateManager = () => {
