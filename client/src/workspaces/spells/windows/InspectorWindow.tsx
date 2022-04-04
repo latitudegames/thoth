@@ -91,6 +91,23 @@ const Inspector = props => {
     </>
   )
 
+  const lock = (
+    <>
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
+        <Icon
+          name={componentCategories[inspectorData?.category || 0]}
+          style={{ marginRight: 'var(--extraSmall)' }}
+        />
+        Node Lock
+      </div>
+      <SwitchComponent
+        label={inspectorData?.data.nodeLocked ? 'Locked' : 'Unlocked'}
+        checked={inspectorData?.data.nodeLocked ? true : false}
+        onChange={onLock}
+      />
+    </>
+  )
+
   const DeprecationMessage = (inspectorData: InspectorData) => {
     if (!inspectorData.deprecated) return <></>
     return (
