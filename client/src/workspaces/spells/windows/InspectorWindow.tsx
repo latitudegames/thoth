@@ -7,6 +7,7 @@ import DataControls from '../DataControls'
 import WindowMessage from '../components/WindowMessage'
 import { useInspector } from '@/workspaces/contexts/InspectorProvider'
 import { InspectorData } from '@latitudegames/thoth-core/types'
+import SwitchComponent from '@/components/Switch/Switch'
 
 const Inspector = props => {
   const { inspectorData, saveInspector } = useInspector()
