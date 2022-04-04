@@ -13,10 +13,14 @@ const Connection = client.Connection
 interface SharedbContext {
   connection: client.Connection | null
   socket: Socket | null
-  getSpellDoc: (spell: Spell) => Doc
+  getSpellDoc: (spell: Spell) => Doc | null
 }
 
-const Context = createContext<SharedbContext>(undefined!)
+const Context = createContext<SharedbContext>({
+  connection: null,
+  socket: null,
+  getSpellDoc: () => null,
+})
 
 export const useSharedb = () => useContext(Context)
 
@@ -68,8 +72,10 @@ const SharedbProvider = ({ children }) => {
 }
 
 const ConditionalProvider = props => {
-  console.log('sharedb', sharedb)
+  console.log('USING SHAREDB!!!', sharedb)
   if (!sharedb) return props.children
+
+  console.log('returning sharerdb provider!')
   return <SharedbProvider {...props} />
 }
 
