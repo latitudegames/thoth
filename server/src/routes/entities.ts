@@ -126,7 +126,14 @@ const addEntityHandler = async (ctx: Koa.Context) => {
 const deleteEntityHandler = async (ctx: Koa.Context) => {
   const { id } = ctx.params
   console.log('deleteEntityHandler', deleteEntityHandler)
-  ctx.body = await database.instance.deleteEntity(id)
+
+  try {
+    return (ctx.body = await database.instance.deleteEntity(id))
+  } catch (e) {
+    console.log(e)
+    ctx.status = 500
+    return (ctx.body = 'internal error')
+  }
 }
 
 const getEvent = async (ctx: Koa.Context) => {
