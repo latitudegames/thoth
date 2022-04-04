@@ -15,6 +15,8 @@ import DebugConsole from './windows/DebugConsole'
 import { useSnackbar } from 'notistack'
 import { Spell } from '@latitudegames/thoth-core/types'
 import { usePubSub } from '@/contexts/PubSubProvider'
+import SearchCorpus from './windows/SearchCorpusWindow'
+import EntityManagerWindow from './windows/EntityManagerWindow'
 
 const Workspace = ({ tab, tabs, pubSub }) => {
   const spellRef = useRef<Spell>()
@@ -98,6 +100,10 @@ const Workspace = ({ tab, tabs, pubSub }) => {
           return <EditorWindow {...props} />
         case 'debugConsole':
           return <DebugConsole {...props} />
+        case 'searchCorpus':
+          return <SearchCorpus />
+        case 'entityManager':
+          return <EntityManagerWindow />
         default:
           return <p></p>
       }
