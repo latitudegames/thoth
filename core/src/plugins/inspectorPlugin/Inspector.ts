@@ -195,6 +195,7 @@ export class Inspector {
     if (update.dataControls) this.cacheControls(update.dataControls)
 
     const { data } = update
+    this.handleLock(update)
 
     // Send data to a possibel node global handler
     // Turned off until the pattern might be useful
