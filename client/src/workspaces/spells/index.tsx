@@ -15,7 +15,6 @@ import { Spell } from '@latitudegames/thoth-core/types'
 import { usePubSub } from '@/contexts/PubSubProvider'
 import { useSharedb } from '@/contexts/SharedbProvider'
 import { sharedb } from '@/config'
-import { diff } from '@/utils/json0'
 
 const Workspace = ({ tab, tabs, pubSub }) => {
   const spellRef = useRef<Spell>()
@@ -47,6 +46,8 @@ const Workspace = ({ tab, tabs, pubSub }) => {
 
     const unsubscribe = editor.on('nodecreated noderemoved', () => {
       if (!spellRef.current) return
+      // TODO we can probably send this update to a spell namespace for this spell.
+      // then spells can subscribe to only their dependency updates.
       const event = events.$SUBSPELL_UPDATED(editor.toJSON())
       const spell = {
         ...spellRef.current,
@@ -70,15 +71,10 @@ const Workspace = ({ tab, tabs, pubSub }) => {
 
     if (!doc) return
 
-    console.log('SUBSCRIBING TO CHANGES')
-    doc.on('op', (op, origin) => {
+    doc.on('op batch', (op, origin) => {
       if (origin) return
-      console.log('updating graph')
-      const jsonDiff = diff(spellData.chain, doc.data.chain)
-      if (jsonDiff.length > 0) {
-        console.log('UPDATED CHAIN', spellData.chain)
-        editor.loadGraph(doc.data.chain, true)
-      }
+      console.log('UPDATED CHAIN', spellData.chain)
+      editor.loadGraph(doc.data.chain, true)
     })
 
     setDocLoaded(true)
