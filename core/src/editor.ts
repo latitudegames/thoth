@@ -8,6 +8,7 @@ import { Data } from 'rete/types/core/data'
 import { EventsTypes } from '../types'
 import { getComponents } from './components/components'
 import { EngineContext, initSharedEngine } from './engine'
+import CommentPlugin from './plugins/commentPlugin'
 import AreaPlugin from './plugins/areaPlugin'
 import DisplayPlugin from './plugins/displayPlugin'
 import HistoryPlugin from './plugins/historyPlugin'
@@ -15,18 +16,19 @@ import InspectorPlugin from './plugins/inspectorPlugin'
 import LifecyclePlugin from './plugins/lifecyclePlugin'
 import { ModuleManager } from './plugins/modulePlugin/module-manager'
 import SocketGenerator from './plugins/socketGenerator'
-import TaskPlugin from './plugins/taskPlugin'
+import TaskPlugin, { Task } from './plugins/taskPlugin'
 import { PubSubContext, ThothComponent } from './thoth-component'
 import DebuggerPlugin from './plugins/debuggerPlugin'
 import KeyCodePlugin from './plugins/keyCodePlugin'
 import ModulePlugin from './plugins/modulePlugin'
 import SelectionPlugin from './plugins/selectionPlugin'
 export class ThothEditor extends NodeEditor<EventsTypes> {
+  tasks: Task[]
   pubSub: PubSubContext
   thoth: EngineContext
   tab: { type: string }
   abort: unknown
-  loadGraph: (graph: Data) => Promise<void>
+  loadGraph: (graph: Data, relaoding?: boolean) => Promise<void>
   moduleManager: ModuleManager
   runProcess: (callback?: Function) => Promise<void>
   onSpellUpdated: (spellId: string, callback: Function) => Function
@@ -132,11 +134,16 @@ export const initEditor = async function ({
   editor.use(ModulePlugin, { engine, modules: {} } as unknown as void)
   editor.use(TaskPlugin)
   editor.use(KeyCodePlugin)
-  editor.use(SelectionPlugin)
+
+  editor.use(SelectionPlugin, { enabled: true })
+
+  editor.use(CommentPlugin, {
+    margin: 20, // indent for new frame comments by default 30 (px)
+  })
 
   // WARNING all the plugins from the editor get installed onto the component and modify it.  This effects the components registered in the engine, which already have plugins installed.
   components.forEach(c => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // eslint-disable-next-line @typescrip``t-eslint/ban-ts-comment
     //@ts-ignore
     // the problematic type here is coming directly from node modules, we may need to revisit further customizing the Editor Register type expectations or it's class
     editor.register(c)
@@ -145,6 +152,10 @@ export const initEditor = async function ({
   // @seang: moved these two functions to attempt to preserve loading order after the introduction of initSharedEngine
   editor.on('zoom', ({ source }) => {
     return source !== 'dblclick'
+  })
+
+  editor.on(['click'], () => {
+    editor.selected.list = []
   })
 
   editor.bind('run')
@@ -167,12 +178,13 @@ export const initEditor = async function ({
     if (callback) callback()
   }
 
-  editor.loadGraph = async (_graph: Data) => {
+  editor.loadGraph = async (_graph: Data, reloading = false) => {
     const graph = JSON.parse(JSON.stringify(_graph))
     await engine.abort()
     editor.fromJSON(graph)
+
     editor.view.resize()
-    AreaPlugin.zoomAt(editor)
+    if (!reloading) AreaPlugin.zoomAt(editor)
   }
 
   // Start the engine off on first load

@@ -79,6 +79,7 @@ export class Task {
 
   reset() {
     this.outputData = null
+    this.closed = []
   }
 
   async run(data: unknown = {}, options: RunOptions = {}) {

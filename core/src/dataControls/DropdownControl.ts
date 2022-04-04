@@ -8,18 +8,17 @@ export class DropdownControl extends DataControl {
     defaultValue,
     icon = 'properties',
     write = true,
-
   }: {
     name: string
     dataKey: string
     defaultValue: string
-    values: string[],
+    values: string[]
     icon?: string
     write?: boolean
   }) {
     const options = {
       dataKey,
-      name: name,
+      name,
       component: 'dropdownSelect',
       write,
       icon,

@@ -9,3 +9,7 @@ export const appRootUrl =
   process.env.NODE_ENV === 'production'
     ? process.env.REACT_APP_SITE_ROOT_URL_PROD
     : process.env.REACT_APP_SITE_ROOT_URL
+
+// coercing this into a boolean
+export const sharedb = process.env.REACT_APP_SHAREDB === 'true'
+export const websocketUrl = 'ws://localhost:8080'
