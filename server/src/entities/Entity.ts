@@ -110,12 +110,12 @@ export class Entity {
   }
 
   async startTwitter(
-    twitter_token: any,
-    twitter_id: any,
-    twitter_app_token: any,
-    twitter_app_token_secret: any,
-    twitter_access_token: any,
-    twitter_access_token_secret: any,
+    twitter_token: string,
+    twitter_id: string,
+    twitter_app_token: string,
+    twitter_app_token_secret: string,
+    twitter_access_token: string,
+    twitter_access_token_secret: string,
   ) {
     console.log('initializing Twitter:', twitter_token)
     if (this.twitter)
@@ -129,15 +129,11 @@ export class Entity {
     this.twitter = new twitter_client()
     console.log("createDiscordClient")
     await this.twitter.createTwitterClient(
-      this,
+    
       twitter_token,
       twitter_id,
-      twitter_app_token,
-      twitter_app_token_secret,
-      twitter_access_token,
-      twitter_access_token_secret,
     )
-    console.log('Started twitter client for agent ' + this)
+    console.log('Started twitter client for agent ' + twitter_token)
     // const response = await spellHandler(
     //   'testmessage',
     //   'testsender',
@@ -198,8 +194,6 @@ export class Entity {
         data.twitter_app_token_secret,
         data.twitter_access_token,
         data.twitter_access_token_secret,
-        data.twitter_bot_name,
-        data.twitter_bot_name_regex
       )
     }
   }
