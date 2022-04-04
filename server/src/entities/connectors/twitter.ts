@@ -15,10 +15,11 @@ const createTwitterClient = (
   accessToken: string,
   accessSecret: string
 ) => {
-  console.log('i am here')
   if (bearerKey && bearerKey !== undefined && bearerKey.length > 0) {
+    console.log('creating with bearer key')
     return new TwitterApi(bearerKey)
   } else {
+    console.log('creating with app key')
     return new TwitterApi({
       appKey: appKey,
       appSecret: appSecret,
@@ -30,7 +31,15 @@ const createTwitterClient = (
 
 export class twitter_client {
   async handleMessage(response, chat_id, args, twitter, twitterV1, localUser) {
-    console.log('i am here111')
+    console.log(
+      'handle message:',
+      response,
+      chat_id,
+      args,
+      twitter,
+      twitterV1,
+      localUser
+    )
     if (args === 'DM') {
       const dmSent = await twitterV1.v1.sendDm({
         recipient_id: chat_id,
@@ -64,16 +73,13 @@ export class twitter_client {
     this.agent = agent
     this.settings = settings
 
-    const bearerToken = getSetting(settings, 'twitter_token')
-    const twitterUser = getSetting(settings, 'twitter_id')
-    const twitterAppToken = getSetting(settings, 'twitter_app_token')
-    const twitterAppTokenSecret = getSetting(settings, 'twitter_app_token_secret')
-    const twitterAccessToken = getSetting(settings, 'twitter_access_token')
-    const twitterAccessTokenSecret = getSetting(
-      settings,
-      'twitter_access_token_secret'
-    )
- 
+    const bearerToken = settings['twitter_token']
+    const twitterUser = settings['twitter_id']
+    const twitterAppToken = settings['twitter_app_token']
+    const twitterAppTokenSecret = settings['twitter_app_token_secret']
+    const twitterAccessToken = settings['twitter_access_token']
+    const twitterAccessTokenSecret = settings['twitter_access_token_secret']
+
     if (!bearerToken || !twitterUser)
       return console.warn('No API token for Twitter bot, skipping')
 

@@ -46,7 +46,7 @@ export class Entity {
     })
 
     this.discord = new discord_client()
-    console.log("createDiscordClient")
+    console.log('createDiscordClient')
     await this.discord.createDiscordClient(
       this,
       discord_api_token,
@@ -105,7 +105,7 @@ export class Entity {
 
   stopXREngine() {
     if (!this.xrengine) throw new Error("XREngine isn't running, can't stop it")
-      ; (this.xrengine as any) = null
+    ;(this.xrengine as any) = null
     console.log('Stopped xrengine client for agent ' + this.name)
   }
 
@@ -116,10 +116,14 @@ export class Entity {
     twitter_app_token_secret: any,
     twitter_access_token: any,
     twitter_access_token_secret: any,
+    twitter_bot_name: any,
+    twitter_bot_name_regex: any
   ) {
     console.log('initializing Twitter:', twitter_token)
     if (this.twitter)
-      throw new Error('Twitter already running for this entity on this instance')
+      throw new Error(
+        'Twitter already running for this entity on this instance'
+      )
 
     // const spellHandler = await CreateSpellHandler({
     //   spell: spell_handler,
@@ -127,16 +131,17 @@ export class Entity {
     // })
 
     this.twitter = new twitter_client()
-    console.log("createDiscordClient")
-    await this.twitter.createTwitterClient(
-      this,
+    console.log('createDiscordClient')
+    await this.twitter.createTwitterClient(this, {
       twitter_token,
       twitter_id,
       twitter_app_token,
       twitter_app_token_secret,
       twitter_access_token,
       twitter_access_token_secret,
-    )
+      twitter_bot_name,
+      twitter_bot_name_regex,
+    })
     console.log('Started twitter client for agent ' + this)
     // const response = await spellHandler(
     //   'testmessage',
@@ -190,7 +195,7 @@ export class Entity {
       })
     }
 
-    if(data.twitter_client_enable){
+    if (data.twitter_client_enable) {
       this.startTwitter(
         data.twitter_token,
         data.twitter_id,
