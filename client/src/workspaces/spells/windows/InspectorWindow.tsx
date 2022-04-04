@@ -121,7 +121,7 @@ const Inspector = props => {
   if (!inspectorData) return <WindowMessage />
 
   return (
-    <Window toolbar={toolbar} darker outline borderless>
+    <Window toolbar={toolbar} lock={lock} darker outline borderless>
       {DeprecationMessage(inspectorData)}
       <DataControls
         inspectorData={inspectorData}
