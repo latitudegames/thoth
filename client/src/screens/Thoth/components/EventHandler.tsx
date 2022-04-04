@@ -99,12 +99,6 @@ const EventHandler = ({ pubSub, tab }) => {
     enqueueSnackbar('Spell saved', {
       variant: 'success',
     })
-
-    if (sharedb) {
-      const doc = getSpellDoc(currentSpell as Spell)
-      if (!doc) return
-      doc.submitOp(jsonDiff)
-    }
   }
 
   const createStateManager = () => {
