@@ -81,8 +81,6 @@ const EventHandler = ({ pubSub, tab }) => {
     }
     const jsonDiff = diff(currentSpell, updatedSpell)
 
-    console.log('JSON DIFF', jsonDiff)
-
     // no point saving if nothing has changed
     if (jsonDiff.length === 0) return
 

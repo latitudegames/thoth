@@ -34,7 +34,6 @@ const Workspace = ({ tab, tabs, pubSub }) => {
       'save nodecreated noderemoved connectioncreated connectionremoved nodetranslated commentremoved commentcreated addcomment removecomment editcomment',
       debounce(async data => {
         if (tab.type === 'spell' && spellRef.current) {
-          console.log('SENDING SAVE SPELL DIFF.  SPELL CHANGED.')
           publish(events.$SAVE_SPELL_DIFF(tab.id), { chain: serialize() })
         }
       }, 1000)

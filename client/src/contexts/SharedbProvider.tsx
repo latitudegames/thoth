@@ -72,10 +72,8 @@ const SharedbProvider = ({ children }) => {
 }
 
 const ConditionalProvider = props => {
-  console.log('USING SHAREDB!!!', sharedb)
   if (!sharedb) return props.children
 
-  console.log('returning sharerdb provider!')
   return <SharedbProvider {...props} />
 }
 
