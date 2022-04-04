@@ -28,7 +28,7 @@ export class ThothEditor extends NodeEditor<EventsTypes> {
   thoth: EngineContext
   tab: { type: string }
   abort: unknown
-  loadGraph: (graph: Data) => Promise<void>
+  loadGraph: (graph: Data, relaoding?: boolean) => Promise<void>
   moduleManager: ModuleManager
   runProcess: (callback?: Function) => Promise<void>
   onSpellUpdated: (spellId: string, callback: Function) => Function
@@ -178,12 +178,13 @@ export const initEditor = async function ({
     if (callback) callback()
   }
 
-  editor.loadGraph = async (_graph: Data) => {
+  editor.loadGraph = async (_graph: Data, reloading = false) => {
     const graph = JSON.parse(JSON.stringify(_graph))
     await engine.abort()
     editor.fromJSON(graph)
+
     editor.view.resize()
-    AreaPlugin.zoomAt(editor)
+    if (!reloading) AreaPlugin.zoomAt(editor)
   }
 
   // Start the engine off on first load
