@@ -118,6 +118,24 @@ const Inspector = props => {
     )
   }
 
+  const LockedOverlay = ({ isLocked }) => {
+    return (
+      <>
+        <div
+          className="locked-overlay"
+          style={{
+            backgroundColor: `${isLocked ? 'red' : 'none'}`,
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+            zIndex: 10,
+            opacity: '50%',
+          }}
+        />
+      </>
+    )
+  }
+
   if (!inspectorData) return <WindowMessage />
 
   return (
