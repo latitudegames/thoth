@@ -27,10 +27,11 @@ const StartScreen = () => {
 
   const onReaderLoad = async event => {
     const spellData = JSON.parse(event.target.result)
-    if (spellData.graph) {
+    /* This part deletes the graph key from the spelldata, which causes the spell to not be imported  */
+    /* if (spellData.graph) {
       spellData.graph = spellData.graph
       delete spellData.graph
-    }
+    } */
     // TODO check for proper values here and throw errors
 
     // Create new spell
