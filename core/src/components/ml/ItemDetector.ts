@@ -70,7 +70,9 @@ export class ItemTypeComponent extends ThothComponent<Promise<WorkerReturn>> {
     const prompt = fewshot + action + ','
 
     const resp = await axios.post(
-      `${process.env.REACT_APP_API_URL}/text_completion`,
+      `${
+        process.env.REACT_APP_API_URL ?? process.env.API_URL ?? 'https://localhost:8001'
+      }/text_completion`,
       {
         params: {
           prompt: prompt,
