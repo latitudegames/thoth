@@ -96,6 +96,15 @@ export const initEditor = async function ({
     rename(component: { contextMenuName: any; name: any }) {
       return component.contextMenuName || component.name
     },
+    nodeItems: (node: ThothNode) => {
+      if (node.data.nodeLocked) {
+        return { Delete: false }
+      }
+      return {
+        Deleted: true,
+        Clone: true,
+      }
+    },
     allocate: (component: ThothComponent<unknown>) => {
       //@seang: disabling component filtering in anticipation of needing to treat spells as "top level modules" in the publishing workflow
       const tabType = editor.tab.type
