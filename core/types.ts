@@ -177,8 +177,9 @@ export type TaskOutput = {
 }
 
 export type ModuleWorkerOutput = WorkerOutputs & {
-  [key: string]: string | string[]
+  [key: string]: any
 }
+
 export type ThothWorkerInput = string | unknown | unknown[]
 export type ThothWorkerInputs = { [key: string]: ThothWorkerInput[] }
 export type ThothWorkerOutputs = WorkerOutputs & {
