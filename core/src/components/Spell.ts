@@ -143,7 +143,7 @@ export class SpellComponent extends ThothComponent<
     //   return module.outputs
     // }
 
-    // Otherwise, if we are, this is running serverside.
+    // We format the inputs since these inputs rely on the use of the socket keys.
     const flattenedInputs = this.formatInputs(node, inputs)
 
     if (!thoth.runSpell) return {}
