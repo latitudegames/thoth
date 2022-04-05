@@ -45,7 +45,7 @@
     "handlebars": "^4.7.7",
     "history": "^5.0.1",
     "json-format": "^1.0.1",
-    "notistack": "^1.0.9",
+    "notistack": "^2.0.3",
     "prism-themes": "^1.7.0",
     "prismjs": "^1.24.0",
     "pubsub-js": "^1.9.3",
