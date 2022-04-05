@@ -14,11 +14,11 @@ interface CssExports {
   'hand': string;
   'icon': string;
   'info': string;
-  'lock': string;
   'merge': string;
   'minus': string;
   'moon': string;
   'newnode': string;
+  'node-lock': string;
   'pause': string;
   'person': string;
   'play': string;

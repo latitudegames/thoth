@@ -137,6 +137,6 @@
   background-image: url('dangerTrash.svg');
 }
 
-.lock {
-  background-image: url('Lock.svg');
+.node-lock {
+  background-image: url('node-lock.svg');
 }
