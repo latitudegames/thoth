@@ -75,6 +75,12 @@ const Inspector = props => {
         />
         {inspectorData?.name}
       </div>
+      <div style={{ display: 'flex', alignItems: 'center' }}>Node Lock</div>
+      <SwitchComponent
+        label={inspectorData?.data.nodeLocked ? 'Locked' : 'Unlocked'}
+        checked={inspectorData?.data.nodeLocked ? true : false}
+        onChange={onLock}
+      />
       {/* I would like to make an "icon button" for this instead of "Help." Leaving it as help just for the function for now.*/}
       {inspectorData?.info && (
         <button
@@ -89,23 +95,6 @@ const Inspector = props => {
           Help
         </button>
       )}
-    </>
-  )
-
-  const lock = (
-    <>
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
-        <Icon
-          name={componentCategories[inspectorData?.category || 0]}
-          style={{ marginRight: 'var(--extraSmall)' }}
-        />
-        Node Lock
-      </div>
-      <SwitchComponent
-        label={inspectorData?.data.nodeLocked ? 'Locked' : 'Unlocked'}
-        checked={inspectorData?.data.nodeLocked ? true : false}
-        onChange={onLock}
-      />
     </>
   )
 
