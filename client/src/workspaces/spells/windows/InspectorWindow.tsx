@@ -122,27 +122,31 @@ const Inspector = props => {
   const LockedOverlay = ({ isLocked }) => {
     return (
       <>
-        <div
-          style={{
-            backgroundColor: `${isLocked ? 'var(--dark-1)' : 'none'}`,
-            width: '100%',
-            height: '100%',
-            position: 'absolute',
-            zIndex: 10,
-            opacity: '0.7',
-          }}
-        />
-        <div
-          className={`${isLocked && css['lock']} ${isLocked && css['icon']}`}
-          style={{
-            width: '100%',
-            height: '100%',
-            position: 'absolute',
-            opacity: 1,
-            zIndex: 11,
-            backgroundPosition: '0 18vh',
-          }}
-        />
+        {isLocked && (
+          <>
+            <div
+              style={{
+                backgroundColor: 'var(--dark-1)',
+                width: '100%',
+                height: '100%',
+                position: 'absolute',
+                zIndex: 10,
+                opacity: '0.7',
+              }}
+            />
+            <div
+              className={`${css['lock']} ${css['icon']}`}
+              style={{
+                width: '100%',
+                height: '100%',
+                position: 'absolute',
+                opacity: 1,
+                zIndex: 11,
+                backgroundPosition: '0 18vh',
+              }}
+            />
+          </>
+        )}
       </>
     )
   }
