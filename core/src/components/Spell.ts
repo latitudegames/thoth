@@ -98,6 +98,16 @@ export class SpellComponent extends ThothComponent<
     node.update()
   }
 
+  formatInputs(node: NodeData, inputs: Record<string, any>) {
+    return Object.entries(inputs).reduce((acc, [key, value]) => {
+      const name = inputNameFromSocketKey(node, key)
+      if (!name) return acc
+
+      acc[name] = value[0]
+      return acc
+    }, {} as Record<string, any>)
+  }
+
   async worker(
     node: NodeData,
     inputs: ThothWorkerInputs,
@@ -122,18 +132,9 @@ export class SpellComponent extends ThothComponent<
     // }
 
     // Otherwise, if we are, this is running serverside.
-    const flattenedInputs = Object.entries(inputs).reduce(
-      (acc, [key, value]) => {
-        const name = inputNameFromSocketKey(node, key)
-        if (!name) return acc
+    const flattenedInputs = this.formatInputs(node, inputs)
 
-        acc[name] = value[0]
-        return acc
-      },
-      {} as Record<string, any>
-    )
-
-    if (!thoth.runSpell) return
+    if (!thoth.runSpell) return {}
     const response = await thoth.runSpell(flattenedInputs, node.data.spellId)
 
     if ('error' in response) {
