@@ -75,7 +75,6 @@ const Inspector = props => {
         />
         {inspectorData?.name}
       </div>
-      <div style={{ display: 'flex', alignItems: 'center' }}>Node Lock</div>
       <SwitchComponent
         label={inspectorData?.data.nodeLocked ? 'Locked' : 'Unlocked'}
         checked={inspectorData?.data.nodeLocked ? true : false}
