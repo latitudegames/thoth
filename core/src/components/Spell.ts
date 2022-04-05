@@ -12,7 +12,10 @@ import { EngineContext } from '../engine'
 import { Task } from '../plugins/taskPlugin/task'
 import { objectSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
-import { inputNameFromSocketKey } from '../utils/nodeHelpers'
+import {
+  inputNameFromSocketKey,
+  socketKeyFromOutputName,
+} from '../utils/nodeHelpers'
 
 const info = `The Module component allows you to add modules into your chain.  A module is a bundled self contained chain that defines inputs, outputs, and triggers using components.`
 
@@ -96,6 +99,15 @@ export class SpellComponent extends ThothComponent<
     this.updateModuleSockets(node, chain)
     this.editor.trigger('process')
     node.update()
+  }
+
+  formatOutputs(node: NodeData, outputs: Record<string, any>) {
+    return Object.entries(outputs).reduce((acc, [key, value]) => {
+      const socketKey = socketKeyFromOutputName(node, key)
+      if (!socketKey) return acc
+      acc[socketKey] = value
+      return acc
+    }, {} as Record<string, any>)
   }
 
   formatInputs(node: NodeData, inputs: Record<string, any>) {
