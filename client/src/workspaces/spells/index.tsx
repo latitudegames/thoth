@@ -31,7 +31,7 @@ const Workspace = ({ tab, tabs, pubSub }) => {
     if (!editor?.on) return
 
     const unsubscribe = editor.on(
-      'save nodecreated noderemoved connectioncreated connectionremoved nodetranslated commentremoved commentcreated addcomment removecomment editcomment',
+      'save nodecreated noderemoved connectioncreated connectionremoved nodetranslated commentremoved commentcreated addcomment removecomment editcomment connectionpath',
       debounce(async data => {
         if (tab.type === 'spell' && spellRef.current) {
           publish(events.$SAVE_SPELL_DIFF(tab.id), { chain: serialize() })
