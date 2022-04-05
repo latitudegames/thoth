@@ -1,3 +1,4 @@
+import Rete from 'rete'
 import {
   ModuleWorkerOutput,
   NodeData,
@@ -9,6 +10,7 @@ import { SpellControl } from '../dataControls/SpellControl'
 import { ThothEditor } from '../editor'
 import { EngineContext } from '../engine'
 import { Task } from '../plugins/taskPlugin/task'
+import { objectSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 import { inputNameFromSocketKey } from '../utils/nodeHelpers'
 
@@ -63,6 +65,8 @@ export class SpellComponent extends ThothComponent<
 
     if (node.data.spellId) this.subscribe(node, node.data.spellId as string)
 
+    const stateSocket = new Rete.Input('state', 'State', objectSocket)
+
     spellControl.onData = (spell: Spell) => {
       node.data.spellId = spell.name
 
@@ -74,6 +78,7 @@ export class SpellComponent extends ThothComponent<
       this.subscribe(node, spell.name)
     }
 
+    node.addInput(stateSocket)
     node.inspector.add(spellControl)
 
     return node
@@ -95,19 +100,21 @@ export class SpellComponent extends ThothComponent<
       thoth,
     }: { module: { outputs: ModuleWorkerOutput[] }; thoth: EngineContext }
   ) {
-    if (module) {
-      const open = Object.entries(module.outputs)
-        .filter(([, value]) => typeof value === 'boolean' && value)
-        .map(([key]) => key)
-      // close all triggers first
-      const dataOutputs = node.data.outputs as ModuleWorkerOutput[]
-      this._task.closed = dataOutputs
-        .map((out: { name: string }) => out.name)
-        .filter((out: string) => !open.includes(out))
+    // // If there is a module present, this is runnign via the module plugin
+    // if (module) {
+    //   const open = Object.entries(module.outputs)
+    //     .filter(([, value]) => typeof value === 'boolean' && value)
+    //     .map(([key]) => key)
+    //   // close all triggers first
+    //   const dataOutputs = node.data.outputs as ModuleWorkerOutput[]
+    //   this._task.closed = dataOutputs
+    //     .map((out: { name: string }) => out.name)
+    //     .filter((out: string) => !open.includes(out))
 
-      return module.outputs
-    }
+    //   return module.outputs
+    // }
 
+    // Otherwise, if we are, this is running serverside.
     const flattenedInputs = Object.entries(inputs).reduce(
       (acc, [key, value]) => {
         const name = inputNameFromSocketKey(node, key)
