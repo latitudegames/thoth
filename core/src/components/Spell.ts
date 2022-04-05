@@ -20,7 +20,7 @@ import {
 const info = `The Module component allows you to add modules into your chain.  A module is a bundled self contained chain that defines inputs, outputs, and triggers using components.`
 
 export class SpellComponent extends ThothComponent<
-  Promise<ModuleWorkerOutput[]>
+  Promise<ModuleWorkerOutput>
 > {
   _task: Task
   updateModuleSockets: Function
