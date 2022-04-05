@@ -62,7 +62,8 @@ export class Inspector {
     control.component = this.component
     control.id = uuidv4()
 
-    if (control.defaultValue)
+    // If we gave a dewfault value and there isnt already one on the node, add it.
+    if (control.defaultValue && !this.node.data[control.dataKey])
       this.node.data[control.dataKey] = control.defaultValue
 
     list.set(control.dataKey, control)

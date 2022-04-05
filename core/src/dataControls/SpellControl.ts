@@ -5,15 +5,18 @@ export class SpellControl extends DataControl {
     name,
     icon = 'sieve',
     write = false,
+    defaultValue = '',
   }: {
     name: string
     icon?: string
     write: boolean
+    defaultValue?: string
   }) {
     const options = {
       dataKey: 'spell',
       name: name,
       component: 'spellSelect',
+      defaultValue,
       write,
       icon,
     }

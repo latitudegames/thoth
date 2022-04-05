@@ -27,6 +27,8 @@ const ModuleSelect = ({ control, updateData, initialValue }) => {
   useEffect(() => {
     if (!spell) return
 
+    // here we send the whole spell so the control can modify the nodes sockets.
+    // However, we only store the name of the spell after processing the full spell.
     update(spell)
     _openTab(spell)
   }, [spell])
@@ -78,7 +80,7 @@ const ModuleSelect = ({ control, updateData, initialValue }) => {
   }
 
   const noOptionsMessage = inputValue => {
-    return <span>Start typing to create a module</span>
+    return <span>Start typing to find or creat a spell</span>
   }
 
   const isValidNewOption = (inputValue, selectValue, selectOptions) => {

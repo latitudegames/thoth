@@ -1,3 +1,4 @@
+import Rete from 'rete'
 import {
   ModuleWorkerOutput,
   NodeData,
@@ -9,6 +10,7 @@ import { SpellControl } from '../dataControls/SpellControl'
 import { ThothEditor } from '../editor'
 import { EngineContext } from '../engine'
 import { Task } from '../plugins/taskPlugin/task'
+import { objectSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 import { inputNameFromSocketKey } from '../utils/nodeHelpers'
 
@@ -59,9 +61,12 @@ export class SpellComponent extends ThothComponent<
     const spellControl = new SpellControl({
       name: 'Spell Select',
       write: false,
+      defaultValue: (node.data.spell as string) || '',
     })
 
     if (node.data.spellId) this.subscribe(node, node.data.spellId as string)
+
+    const stateSocket = new Rete.Input('state', 'State', objectSocket)
 
     spellControl.onData = (spell: Spell) => {
       node.data.spellId = spell.name
@@ -69,11 +74,18 @@ export class SpellComponent extends ThothComponent<
       // Update the sockets
       this.updateSockets(node, spell)
 
+      // here we handle writing the spells name to the spell itself
+      node.data.spell = spell.name
+
+      // Uodate the data name to display inside the node
+      node.data.name = spell.name
+
       // subscribe to changes form the spell to update the sockets if there are changes
       // Note: We could store all spells in a spell map here and rather than receive the whole spell, only receive the diff, make the changes, update the sockets, etc.  Mayb improve speed?
       this.subscribe(node, spell.name)
     }
 
+    node.addInput(stateSocket)
     node.inspector.add(spellControl)
 
     return node
@@ -95,19 +107,21 @@ export class SpellComponent extends ThothComponent<
       thoth,
     }: { module: { outputs: ModuleWorkerOutput[] }; thoth: EngineContext }
   ) {
-    if (module) {
-      const open = Object.entries(module.outputs)
-        .filter(([, value]) => typeof value === 'boolean' && value)
-        .map(([key]) => key)
-      // close all triggers first
-      const dataOutputs = node.data.outputs as ModuleWorkerOutput[]
-      this._task.closed = dataOutputs
-        .map((out: { name: string }) => out.name)
-        .filter((out: string) => !open.includes(out))
+    // // If there is a module present, this is runnign via the module plugin
+    // if (module) {
+    //   const open = Object.entries(module.outputs)
+    //     .filter(([, value]) => typeof value === 'boolean' && value)
+    //     .map(([key]) => key)
+    //   // close all triggers first
+    //   const dataOutputs = node.data.outputs as ModuleWorkerOutput[]
+    //   this._task.closed = dataOutputs
+    //     .map((out: { name: string }) => out.name)
+    //     .filter((out: string) => !open.includes(out))
 
-      return module.outputs
-    }
+    //   return module.outputs
+    // }
 
+    // Otherwise, if we are, this is running serverside.
     const flattenedInputs = Object.entries(inputs).reduce(
       (acc, [key, value]) => {
         const name = inputNameFromSocketKey(node, key)
