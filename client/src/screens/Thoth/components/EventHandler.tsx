@@ -57,6 +57,7 @@ const EventHandler = ({ pubSub, tab }) => {
     $CREATE_STATE_MANAGER,
     $CREATE_PLAYTEST,
     $CREATE_INSPECTOR,
+    $CREATE_CONSOLE,
     $CREATE_TEXT_EDITOR,
     $SERIALIZE,
     $EXPORT,
@@ -69,6 +70,25 @@ const EventHandler = ({ pubSub, tab }) => {
     const chain = serialize() as ChainData
 
     await saveSpellMutation({ ...currentSpell, chain })
+  }
+
+  const sharedbDiff = async (event, update) => {
+    if (!spellRef.current) return
+    const doc = getSpellDoc(spellRef.current as Spell)
+    if (!doc) return
+
+    const updatedSpell = {
+      ...doc.data,
+      ...update,
+    }
+
+    const jsonDiff = diff(doc.data, updatedSpell)
+
+    if (jsonDiff.length === 0) return
+
+    console.log('JSON DIFF IN SHAREDB DIFF', jsonDiff)
+
+    doc.submitOp(jsonDiff)
   }
 
   const onSaveDiff = async (event, update) => {
@@ -99,12 +119,6 @@ const EventHandler = ({ pubSub, tab }) => {
     enqueueSnackbar('Spell saved', {
       variant: 'success',
     })
-
-    if (sharedb) {
-      const doc = getSpellDoc(currentSpell as Spell)
-      if (!doc) return
-      doc.submitOp(jsonDiff)
-    }
   }
 
   const createStateManager = () => {
@@ -121,6 +135,10 @@ const EventHandler = ({ pubSub, tab }) => {
 
   const createTextEditor = () => {
     createOrFocus(windowTypes.TEXT_EDITOR, 'Text Editor')
+  }
+
+  const createConsole = () => {
+    createOrFocus(windowTypes.CONSOLE, 'Console')
   }
 
   const onSerialize = () => {
@@ -186,6 +204,7 @@ const EventHandler = ({ pubSub, tab }) => {
     [$CREATE_PLAYTEST(tab.id)]: createPlaytest,
     [$CREATE_INSPECTOR(tab.id)]: createInspector,
     [$CREATE_TEXT_EDITOR(tab.id)]: createTextEditor,
+    [$CREATE_CONSOLE(tab.id)]: createConsole,
     [$SERIALIZE(tab.id)]: onSerialize,
     [$EXPORT(tab.id)]: onExport,
     [$CLOSE_EDITOR(tab.id)]: onCloseEditor,
@@ -193,7 +212,7 @@ const EventHandler = ({ pubSub, tab }) => {
     [$REDO(tab.id)]: onRedo,
     [$DELETE(tab.id)]: onDelete,
     [$PROCESS(tab.id)]: onProcess,
-    [$SAVE_SPELL_DIFF(tab.id)]: onSaveDiff,
+    [$SAVE_SPELL_DIFF(tab.id)]: sharedb ? sharedbDiff : onSaveDiff,
   }
 
   useEffect(() => {
