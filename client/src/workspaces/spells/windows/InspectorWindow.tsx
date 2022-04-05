@@ -124,7 +124,7 @@ const Inspector = props => {
               }}
             />
             <div
-              className={`${css['lock']} ${css['icon']}`}
+              className={`${css['node-lock']} ${css['icon']}`}
               style={{
                 width: '100%',
                 height: '100%',
