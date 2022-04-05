@@ -32,9 +32,8 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
     return
   }
 
-  if (ignoreDotEnv) {
-    new database()
-    await database.instance.connect()
+  if (!database.instance || database.instance === undefined) {
+    new database().connect()
     await initClassifier()
   }
 
@@ -134,8 +133,12 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
 
     console.log('loaded ' + documents.length + ' documents')
     for (let i = 0; i < documents.length; i++) {
-      documents[i].description = (documents[i].description as string).split(',').map(el => el.trim().toLowerCase())
-      documents[i].keywords = (documents[i].keywords as string).split(',').map(el => el.trim().toLowerCase())
+      documents[i].description = (documents[i].description as string)
+        .split(',')
+        .map(el => el.trim().toLowerCase())
+      documents[i].keywords = (documents[i].keywords as string)
+        .split(',')
+        .map(el => el.trim().toLowerCase())
 
       const metadataCount = includeInFields(
         documents[i].description as string[],
@@ -155,8 +158,8 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
         maxIdKeywords = i
       }
     }
-    console.log('maxIdMetadata ::: ', maxIdMetadata);
-    console.log('maxIdKeywords ::: ', maxIdKeywords);
+    console.log('maxIdMetadata ::: ', maxIdMetadata)
+    console.log('maxIdKeywords ::: ', maxIdKeywords)
 
     const testDocs = []
     if (maxIdKeywords === maxIdMetadata && maxIdKeywords !== -1) {
@@ -195,7 +198,7 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
 
       let highestScore = 0
       let highestScoreIndex = -1
-      console.log('response ::: ', response.data);
+      console.log('response ::: ', response.data)
 
       for (let i = 0; i < response.data.data.length; i++) {
         if (response.data.data[i].score > highestScore) {
