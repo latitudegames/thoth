@@ -2,6 +2,7 @@ import { Node, Socket, Control } from 'rete-react-render-plugin'
 
 import Icon, { componentCategories } from '../Icon/Icon'
 import css from './Node.module.css'
+import icons from '../Icon/icon.module.css'
 
 export class MyNode extends Node {
   props: { node: any; bindSocket: any; bindControl: any }
