@@ -1161,13 +1161,12 @@ class XREngineBot {
       await this.updateUsername(name)
       await this.delay(10000)
       const index = this.getRandomNumber(0, this.avatars.length - 1)
-      log(`avatar index: ${index}`)
       await this.updateAvatar(this.avatars[index])
       await this.requestPlayers()
       await this.getUser()
       await setInterval(() => this.getUser(), 1000)
     } catch (error) {
-      log('error entering room', error)
+      console.log('error entering room', error)
     }
   }
 
