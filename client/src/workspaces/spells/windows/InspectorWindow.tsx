@@ -143,7 +143,7 @@ const Inspector = props => {
   if (!inspectorData) return <WindowMessage />
 
   return (
-    <Window toolbar={toolbar} lock={lock} darker outline borderless>
+    <Window toolbar={toolbar} darker outline borderless>
       {DeprecationMessage(inspectorData)}
       <LockedOverlay isLocked={inspectorData?.data.nodeLocked} />
       <DataControls
