@@ -134,7 +134,8 @@ function install(
         if (builder) {
           component.updateModuleSockets = (
             node: ThothNode,
-            chainData?: ChainData
+            chainData?: ChainData,
+            useSocketName: boolean = false
           ) => {
             const modules = moduleManager.modules
             const currentNodeModule = node.data.module as string
@@ -163,7 +164,14 @@ function install(
 
             try {
               // The arguments for this are getting bit crazy
-              addIO(node, inputs, outputs, triggerOuts, triggerIns)
+              addIO({
+                node,
+                inputs,
+                outputs,
+                triggerOuts,
+                triggerIns,
+                useSocketName,
+              })
             } catch (e) {
               return runContext.trigger('warn', e)
             }
