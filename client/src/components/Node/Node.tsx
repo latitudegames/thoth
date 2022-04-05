@@ -16,6 +16,7 @@ export class MyNode extends Node {
     const fullName = node.data.name ? `${name} - ${node.data.name}` : name
     const hasError = node.data.error
     const hasSuccess = node.data.success
+    const nodeLocked = node.data.nodeLocked
 
     return (
       <div
