@@ -13,7 +13,7 @@ import defaultChain from '@/data/chains/default'
 import { ChainData } from '@latitudegames/thoth-core/types'
 import { useEffect } from 'react'
 
-const ModuleSelect = ({ control, updateData, initialValue }) => {
+const SpellSelect = ({ control, updateData, initialValue, tab }) => {
   const dispatch = useAppDispatch()
 
   const [getSpell, { data: spell }] = useLazyGetSpellQuery()
@@ -35,10 +35,15 @@ const ModuleSelect = ({ control, updateData, initialValue }) => {
 
   const optionArray = () => {
     if (!spells) return
-    return spells.map((module, index) => ({
-      value: module.name,
-      label: module.name,
-    }))
+    return (
+      spells
+        // Make sure we don't allow someone to  select the current spell as a submodule.  No infinite loops.
+        .filter(spell => spell.name !== tab.id)
+        .map((spell, index) => ({
+          value: spell.name,
+          label: spell.name,
+        }))
+    )
   }
 
   const _openTab = async spell => {
@@ -108,4 +113,4 @@ const ModuleSelect = ({ control, updateData, initialValue }) => {
   )
 }
 
-export default ModuleSelect
+export default SpellSelect
