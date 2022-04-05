@@ -74,6 +74,9 @@ export class SpellComponent extends ThothComponent<
       // Update the sockets
       this.updateSockets(node, spell)
 
+      // here we handle writing the spells name to the spell itself
+      node.data.spell = spell.name
+
       // subscribe to changes form the spell to update the sockets if there are changes
       // Note: We could store all spells in a spell map here and rather than receive the whole spell, only receive the diff, make the changes, update the sockets, etc.  Mayb improve speed?
       this.subscribe(node, spell.name)
