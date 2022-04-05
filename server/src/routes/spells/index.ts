@@ -8,7 +8,7 @@ import { CustomError } from '../../utils/CustomError'
 import {
   buildThothInterface,
   extractModuleInputKeys,
-  runSpell
+  runSpell,
 } from './runSpell'
 import { getTestSpell } from './testSpells'
 import { Graph, Module } from './types'
@@ -116,7 +116,8 @@ const runSpellHandler = async (ctx: Koa.Context) => {
 }
 
 // Should we use the Latitude API or run independently?
-const latitudeApiKey = process.env.LATITUDE_API_KEY !== '' && process.env.LATITUDE_API_KEY
+const latitudeApiKey =
+  process.env.LATITUDE_API_KEY !== '' && process.env.LATITUDE_API_KEY
 
 const saveHandler = async (ctx: Koa.Context) => {
   console.log('ctx.request is', ctx.request)
@@ -126,7 +127,6 @@ const saveHandler = async (ctx: Koa.Context) => {
       : ctx.request.body
 
   console.log('ctx.request.body is', ctx.request.body)
-
 
   if (!body) throw new CustomError('input-failed', 'No parameters provided')
   if (latitudeApiKey) {
@@ -201,7 +201,7 @@ const saveDiffHandler = async (ctx: Koa.Context) => {
     ctx.response.status = 200
     ctx.body = updatedSpell
   } catch (err) {
-    throw new CustomError('server-error', 'Error processing diff. ' + err)
+    throw new CustomError('server-error', 'Error processing diff.', err)
   }
 }
 
@@ -379,7 +379,8 @@ const deploySpellHandler = async (ctx: Koa.Context) => {
   })
 
   const newVersion: number = lastDeployedSpell
-    ? lastDeployedSpell.version + 1 : 1
+    ? lastDeployedSpell.version + 1
+    : 1
 
   const newDeployedSpell = await creatorToolsDatabase.deployedSpells.create({
     name: spell.name,
@@ -417,8 +418,8 @@ const getdeployedSpellsHandler = async (ctx: Koa.Context) => {
 
 const getDeployedSpellHandler = async (ctx: Koa.Context) => {
   console.log('handling')
-  console.log("ctx.request", ctx.request.body)
-  console.log("ctx.params", ctx.params)
+  console.log('ctx.request', ctx.request.body)
+  console.log('ctx.params', ctx.params)
   const name = ctx.params.name ?? 'default'
   const version = ctx.params.version ?? 'latest'
   if (latitudeApiKey) {
@@ -434,7 +435,7 @@ const getDeployedSpellHandler = async (ctx: Koa.Context) => {
   const spell = await creatorToolsDatabase.deployedSpells.findOne({
     where: { name: name, version: version },
   })
-  console.log("done")
+  console.log('done')
   return (ctx.body = spell)
 }
 
@@ -458,7 +459,7 @@ export const spells: Route[] = [
     path: '/game/spells/:name',
     access: noAuth,
     patch: patchHandler,
-    delete: deleteHandler
+    delete: deleteHandler,
   },
   {
     path: '/game/spells',
@@ -489,5 +490,5 @@ export const spells: Route[] = [
     path: '/spells/:spell/:version',
     access: noAuth,
     post: runSpellHandler,
-  }
+  },
 ]

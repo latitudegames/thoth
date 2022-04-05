@@ -1275,7 +1275,12 @@ export class discord_client {
                 message.reply({
                   files: [{ attachment: responses, name: 'voice.wav' }],
                 })
+                return
               } else {
+                message.channel.send('', {
+                  files: [{ attachment: responses, name: 'voice.wav' }],
+                })
+                return
               }
             } else {
               if (
