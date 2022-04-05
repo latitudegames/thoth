@@ -61,6 +61,7 @@ export class SpellComponent extends ThothComponent<
     const spellControl = new SpellControl({
       name: 'Spell Select',
       write: false,
+      defaultValue: (node.data.spell as string) || '',
     })
 
     if (node.data.spellId) this.subscribe(node, node.data.spellId as string)
