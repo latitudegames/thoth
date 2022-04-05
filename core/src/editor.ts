@@ -1,3 +1,4 @@
+import { ThothNode } from './../types'
 import { NodeEditor } from 'rete'
 import ConnectionPlugin from 'rete-connection-plugin'
 import ConnectionReroutePlugin from 'rete-connection-reroute-plugin'
