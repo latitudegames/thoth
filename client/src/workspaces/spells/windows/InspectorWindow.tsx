@@ -113,6 +113,7 @@ const Inspector = props => {
         {isLocked && (
           <>
             <div
+              className={`${css['node-lock']} ${css['icon']}`}
               style={{
                 backgroundColor: 'var(--dark-1)',
                 width: '100%',
@@ -120,17 +121,8 @@ const Inspector = props => {
                 position: 'absolute',
                 zIndex: 10,
                 opacity: '0.7',
-              }}
-            />
-            <div
-              className={`${css['node-lock']} ${css['icon']}`}
-              style={{
-                width: '100%',
-                height: '100%',
-                position: 'absolute',
-                opacity: 1,
-                zIndex: 11,
-                backgroundPosition: '0 18vh',
+                backgroundPositionY: '18vh',
+                backgroundSize: '50%',
               }}
             />
           </>
