@@ -153,6 +153,10 @@ export class SpellComponent extends ThothComponent<
       throw new Error(`Error running spell ${node.data.spellId}`)
     }
 
-    return response.data.outputs
+    // There should be a cleaner way to do this.  Problem is that the modules update sockets adds outputs to the task options that use the socket key.  Not helpful in our case and we need to swap the outputs for the proper socket keys.
+    const formattedOutputs = this.formatOutputs(node, response.data.outputs)
+
+    if (!formattedOutputs) return {}
+    return formattedOutputs
   }
 }
