@@ -75,6 +75,12 @@ const Inspector = props => {
         />
         {inspectorData?.name}
       </div>
+      <div style={{ display: 'flex', alignItems: 'center' }}>Node Lock</div>
+      <SwitchComponent
+        label={inspectorData?.data.nodeLocked ? 'Locked' : 'Unlocked'}
+        checked={inspectorData?.data.nodeLocked ? true : false}
+        onChange={onLock}
+      />
       {/* I would like to make an "icon button" for this instead of "Help." Leaving it as help just for the function for now.*/}
       {inspectorData?.info && (
         <button
@@ -89,23 +95,6 @@ const Inspector = props => {
           Help
         </button>
       )}
-    </>
-  )
-
-  const lock = (
-    <>
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
-        <Icon
-          name={componentCategories[inspectorData?.category || 0]}
-          style={{ marginRight: 'var(--extraSmall)' }}
-        />
-        Node Lock
-      </div>
-      <SwitchComponent
-        label={inspectorData?.data.nodeLocked ? 'Locked' : 'Unlocked'}
-        checked={inspectorData?.data.nodeLocked ? true : false}
-        onChange={onLock}
-      />
     </>
   )
 
@@ -135,7 +124,7 @@ const Inspector = props => {
               }}
             />
             <div
-              className={`${css['lock']} ${css['icon']}`}
+              className={`${css['node-lock']} ${css['icon']}`}
               style={{
                 width: '100%',
                 height: '100%',
@@ -154,7 +143,7 @@ const Inspector = props => {
   if (!inspectorData) return <WindowMessage />
 
   return (
-    <Window toolbar={toolbar} lock={lock} darker outline borderless>
+    <Window toolbar={toolbar} darker outline borderless>
       {DeprecationMessage(inspectorData)}
       <LockedOverlay isLocked={inspectorData?.data.nodeLocked} />
       <DataControls
