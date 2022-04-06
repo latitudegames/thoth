@@ -6,7 +6,7 @@ import {
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../types'
-import { EngineContext } from '../engine'
+import { EngineContext } from '../../types'
 import { stringSocket, triggerSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 const fewshot = (prose: string) => {
