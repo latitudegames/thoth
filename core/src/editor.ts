@@ -6,9 +6,9 @@ import ContextMenuPlugin from 'rete-context-menu-plugin'
 import ReactRenderPlugin from 'rete-react-render-plugin'
 import { Data } from 'rete/types/core/data'
 
-import { EventsTypes } from '../types'
+import { EventsTypes, EditorContext } from '../types'
 import { getComponents } from './components/components'
-import { EngineContext, initSharedEngine } from './engine'
+import { initSharedEngine } from './engine'
 import CommentPlugin from './plugins/commentPlugin'
 import AreaPlugin from './plugins/areaPlugin'
 import DisplayPlugin from './plugins/displayPlugin'
@@ -26,7 +26,7 @@ import SelectionPlugin from './plugins/selectionPlugin'
 export class ThothEditor extends NodeEditor<EventsTypes> {
   tasks: Task[]
   pubSub: PubSubContext
-  thoth: EngineContext
+  thoth: EditorContext
   tab: { type: string }
   abort: unknown
   loadGraph: (graph: Data, relaoding?: boolean) => Promise<void>
