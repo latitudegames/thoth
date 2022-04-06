@@ -22,7 +22,6 @@ export interface ThothInterfaceContext extends EngineContext {
   sendToDebug: (data) => void
   onDebug: (node, callback) => void
   clearTextEditor: () => void
-  runSpell: (inputs: Record<string, any>, spellId: string) => void
   getCurrentGameState: () => Record<string, unknown>
   updateCurrentGameState: (update) => void
   readFromImageCache: (caption, cacheTag, topK) => Promise<any>
@@ -167,8 +166,11 @@ const ThothInterfaceProvider = ({ children, tab }) => {
     console.log('RUN SPELL')
     const response = await _runSpell({ inputs, spellId })
 
-    console.log('RESPONSE', response)
-    return response
+    if ('error' in response) {
+      throw new Error(`Error running spell ${spellId}`)
+    }
+
+    return response.data.outputs
   }
 
   const clearTextEditor = () => {
