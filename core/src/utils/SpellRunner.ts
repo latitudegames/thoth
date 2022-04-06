@@ -2,8 +2,13 @@ import {
   getComponents,
   initSharedEngine,
 } from '@latitudegames/thoth-core/server'
-import { ChainData, ModuleComponent, Spell as SpellType } from '../../types'
-import { EngineContext, extractNodes, ThothEngine } from '../engine'
+import {
+  EngineContext,
+  ChainData,
+  ModuleComponent,
+  Spell as SpellType,
+} from '../../types'
+import { extractNodes, ThothEngine } from '../engine'
 import { Module } from '../plugins/modulePlugin/module'
 import { extractModuleInputKeys } from './chainHelpers'
 
@@ -132,7 +137,6 @@ class SpellRunner {
       return this.outputData
     } catch (err) {
       console.log('err', err)
-      throw new Error('Error running spell')
     }
   }
 
