@@ -1,6 +1,7 @@
 import { initEditor, zoomAt } from '@latitudegames/thoth-core'
 import {
   ChainData,
+  EditorContext,
   Spell,
   ThothEditor,
 } from '@latitudegames/thoth-core/dist/types'
@@ -18,10 +19,7 @@ import LoadingScreen from '../../components/LoadingScreen/LoadingScreen'
 import { MyNode } from '../../components/Node/Node'
 import gridimg from '@/grid.png'
 import { usePubSub } from '../../contexts/PubSubProvider'
-import {
-  useThothInterface,
-  ThothInterfaceContext,
-} from './ThothInterfaceProvider'
+import { useThothInterface } from './ThothInterfaceProvider'
 
 export type ThothTab = {
   layoutJson: string
@@ -44,7 +42,7 @@ const Context = createContext({
     // todo update this to use proper spell type
     spell: Spell | undefined,
     tab: ThothTab,
-    reteInterface: ThothInterfaceContext
+    reteInterface: EditorContext
   ) => {},
   setEditor: (editor: any) => {},
   getNodeMap: () => {},
