@@ -1,12 +1,12 @@
 import Rete from 'rete'
 
 import {
+  EditorContext,
   NodeData,
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../../types'
-import { EngineContext } from '../../engine'
 import { triggerSocket, anySocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 const info = `The Playtest Print component will print whatever value is attached to its input and print that valyue back to the playtest window.`
@@ -58,9 +58,9 @@ export class PlaytestPrint extends ThothComponent<void> {
     outputs: ThothWorkerOutputs,
     { silent }: { silent: boolean }
   ) {
-    const { sendToPlaytest } = this.editor?.thoth as EngineContext
+    const { sendToPlaytest } = this.editor?.thoth as EditorContext
     if (!inputs || !inputs.text) return {}
-    const text = inputs.text.filter(Boolean)[0]
+    const text = inputs.text.filter(Boolean)[0] as string
 
     if (sendToPlaytest) {
       sendToPlaytest(text)
