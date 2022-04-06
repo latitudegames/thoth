@@ -79,6 +79,7 @@ export class Task {
 
   reset() {
     this.outputData = null
+    this.closed = []
   }
 
   async run(data: unknown = {}, options: RunOptions = {}) {
@@ -104,14 +105,14 @@ export class Task {
       /*
         This is where we are populating all the input values to be passed into the worker. We are getting all the input connections that are connected as outputs (ie have values)
         We filter out all connections which did not come from the previou node.  This is to hgelp support multiple inputs properly, otherwise we actually back propagate along every input and run it, whichI think is unwanted behaviour.
-        
+
         After we have filtered these out, we need to run the task, which triggers that nodes worker.  After the worker runs, the task has populated output data, which we take and we associate with the tasks input values, which are subsequently
         passed to the nodes worker for processing.
 
         We assume here that his nodes worker does not need to access ALL values simultaneously, but is only interested in one. There is a task option which enables this functionality just in case we have use cases that don't want this behaviour.
       */
       await Promise.all(
-        this.getInputs('output')?.map(async key => {
+        this.getInputs('output').map(async key => {
           const inputPromises = this.inputs[key]
             .filter((con: ThothReteInput) => {
               // only filter inputs to remove ones that are not the origin if a task option is true
@@ -127,7 +128,7 @@ export class Task {
               })
               const outputData = con.task.outputData as Record<string, unknown>
 
-              return outputData ? outputData[con.key] : ''
+              return outputData[con.key]
             })
 
           const thothWorkerinputs = await Promise.all(inputPromises)
@@ -143,8 +144,7 @@ export class Task {
       }
 
       // the main output data of the task, which is gathered up when the next node gets this nodes value
-      const outputData = await this.worker(this, inputs, data, socketInfo)
-      this.outputData = outputData
+      this.outputData = await this.worker(this, inputs, data, socketInfo)
 
       // an onRun option in case a task whats to do something when the task is run.
       if (this.component.task.onRun)

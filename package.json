@@ -1,5 +1,5 @@
 {
-  "name": "@thoth/root",
+  "name": "@latitudegames/thoth",
   "version": "0.0.1",
   "private": true,
   "license": "apache 2.0",
@@ -19,17 +19,16 @@
   "scripts": {
     "start:core": "lerna exec --scope @latitudegames/thoth-core -- yarn start",
     "start:client": "lerna exec --scope @latitudegames/thoth-client -- yarn start",
-    "start": "concurrently \"yarn start:core\" \"sleep 10s && yarn start:client\"",
-    "dev": "NODE_OPTIONS=--max-old-space-size=8192 concurrently \"cd server && docker-compose up\" \"sleep 5s && yarn run dev:server\" \"yarn start:core\" \"sleep 1s && yarn start:client\" \"sleep 5s && yarn run db:seed\" ",
+    "start": "concurrently \"yarn start:core\" \"sleep 10 && yarn start:client\"",
+    "dev": "NODE_OPTIONS=--max-old-space-size=8192 concurrently \"cd server && docker-compose up\" \"sleep 5 && yarn run dev:server\" \"yarn start:core\" \"sleep 1 && yarn start:client\" \"sleep 5 && yarn run db:seed\" ",
     "dev-windows": "cross-env NODE_OPTIONS=--max-old-space-size=8192 concurrently \"cd server && docker-compose up\" \"yarn run dev:server\" \"yarn start:core\" yarn start:client\" yarn run db:seed\" ",
-    "dev:client": "concurrently \"yarn start:core\" \"sleep 1s && yarn start:client\"",
+    "dev:client": "concurrently \"yarn start:core\" \"sleep 1 && yarn start:client\"",
     "dev:server": "lerna exec --scope @latitudegames/thoth-server -- yarn run dev",
     "db:seed": "npx sequelize-cli db:seed:all --url 'postgres://thoth:thoth_default_pw@localhost:5432/thoth'",
     "lint": "lerna run lint --parallel",
     "lint:fix": "lerna run lint:fix --parallel",
-    "build": "copyfiles LICENSE.txt client && lerna exec --scope @thoth/client -- yarn build",
+    "build": "copyfiles LICENSE.txt client && lerna exec --scope @latitudegames/thoth-client -- yarn build",
     "build:core": "copyfiles LICENSE.txt core && lerna exec --scope @latitudegames/thoth-core -- yarn build",
-    "install:core": "lerna exec --scope @latitudegames/thoth-core -- yarn install",
     "publish:canary": "lerna exec --scope @latitudegames/thoth-core -- yarn canary",
     "install:canary": "lerna exec --scope @latitudegames/thoth-client -- yarn install:canary"
   },
@@ -39,28 +38,22 @@
     "yarn": "^1.22.10"
   },
   "devDependencies": {
-    "@types/node-fetch": "^2.6.1",
+    "concurrently": "^7.1.0",
+    "craco": "^0.0.3",
+    "cross-env": "^7.0.3",
+    "lerna": "^4.0.0"
+  },
+  "dependencies": {
+    "@plotdb/json0": "^0.0.5",
     "@typescript-eslint/eslint-plugin": "^4.31.1",
     "@typescript-eslint/parser": "^4.31.1",
-    "concurrently": "^6.2.1",
     "copyfiles": "^2.4.1",
-    "cors-anywhere": "^0.4.4",
-    "craco": "^0.0.3",
+    "diff-match-patch": "^1.0.5",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-prettier": "^4.0.0",
-    "lerna": "^4.0.0",
+    "json0-ot-diff": "^1.1.2",
+    "npm-run-all": "^4.1.5",
     "prettier": "^2.4.1"
-  },
-  "dependencies": {
-    "@google-cloud/speech": "^4.10.0",
-    "@google-cloud/text-to-speech": "^3.4.0",
-    "compromise": "^13.11.4",
-    "compromise-sentences": "^0.3.0",
-    "fastify": "^3.27.2",
-    "fastify-cors": "^6.0.2",
-    "koa-http-proxy-middleware": "^0.0.2",
-    "socket.io": "^4.4.1",
-    "socket.io-client": "^4.4.1"
   }
 }

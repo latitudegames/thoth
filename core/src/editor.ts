@@ -5,20 +5,23 @@ import ContextMenuPlugin from 'rete-context-menu-plugin'
 import ReactRenderPlugin from 'rete-react-render-plugin'
 import { Data } from 'rete/types/core/data'
 
-import { EventsTypes, ModuleType } from '../types'
+import { EventsTypes } from '../types'
 import { getComponents } from './components/components'
 import { EngineContext, initSharedEngine } from './engine'
+import CommentPlugin from './plugins/commentPlugin'
 import AreaPlugin from './plugins/areaPlugin'
-import DebuggerPlugin from './plugins/debuggerPlugin'
 import DisplayPlugin from './plugins/displayPlugin'
 import HistoryPlugin from './plugins/historyPlugin'
 import InspectorPlugin from './plugins/inspectorPlugin'
 import LifecyclePlugin from './plugins/lifecyclePlugin'
-import ModulePlugin from './plugins/modulePlugin'
 import { ModuleManager } from './plugins/modulePlugin/module-manager'
 import SocketGenerator from './plugins/socketGenerator'
-import TaskPlugin from './plugins/taskPlugin'
+import TaskPlugin, { Task } from './plugins/taskPlugin'
 import { PubSubContext, ThothComponent } from './thoth-component'
+import DebuggerPlugin from './plugins/debuggerPlugin'
+import KeyCodePlugin from './plugins/keyCodePlugin'
+import ModulePlugin from './plugins/modulePlugin'
+import SelectionPlugin from './plugins/selectionPlugin'
 export class ThothEditor extends NodeEditor<EventsTypes> {
   pubSub: PubSubContext
   thoth: EngineContext
@@ -26,6 +29,9 @@ export class ThothEditor extends NodeEditor<EventsTypes> {
   abort: unknown
   loadGraph: (graph: Data) => Promise<void>
   moduleManager: ModuleManager
+  runProcess: (callback?: Function) => Promise<void>
+  onSpellUpdated: (spellId: string, callback: Function) => Function
+  tasks?: Task[]
 }
 
 /*
@@ -34,7 +40,7 @@ export class ThothEditor extends NodeEditor<EventsTypes> {
 
 const editorTabMap: Record<string, ThothEditor> = {}
 
-export const initEditor = async function ({
+export const initEditor = function ({
   container,
   pubSub,
   thoth,
@@ -69,7 +75,7 @@ export const initEditor = async function ({
   // ╚═╝     ╚══════╝ ╚═════╝  ╚═════╝ ╚═╝╚═╝  ╚═══╝╚══════╝
 
   // History plugin for undo/redo
-  editor.use(HistoryPlugin, { keyboard: true })
+  editor.use(HistoryPlugin, { keyboard: false })
 
   // PLUGINS
   // https://github.com/retejs/comment-plugin
@@ -77,7 +83,6 @@ export const initEditor = async function ({
   editor.use(ConnectionPlugin)
   // @seang: temporarily disabling because dependencies of ConnectionReroutePlugin are failing validation on server import of thoth-core
   editor.use(ConnectionReroutePlugin)
-
   // React rendering for the editor
   editor.use(ReactRenderPlugin, {
     // this component parameter is a custom default style for nodes
@@ -96,6 +101,7 @@ export const initEditor = async function ({
       const { workspaceType } = component
 
       if (component.deprecated) return null
+      if ((component as any).hide) return null
       if (workspaceType && workspaceType !== tabType) return null
       return [component.category]
     },
@@ -109,18 +115,6 @@ export const initEditor = async function ({
     scaleExtent: { min: 0.25, max: 2 },
   })
 
-  const moduleDocs = await thoth.getModules()
-
-  // Parse modules into dictionary of all modules and JSON values
-  const modules: Record<string, ModuleType> = moduleDocs
-    .map((doc: { toJSON: Function }) => doc.toJSON())
-    .reduce((acc: Record<string, ModuleType>, module: ModuleType) => {
-      // todo handle better mapping
-      // see moduleSelect.tsx
-      acc[module.name] = module
-      return acc
-    }, {} as Record<string, ModuleType>)
-
   // The engine is used to process/run the rete graph
 
   const engine = initSharedEngine({
@@ -131,38 +125,25 @@ export const initEditor = async function ({
   })
   // @seang TODO: update types for editor.use rather than casting as unknown here, we may want to bring our custom rete directly into the monorepo at this point
 
+  editor.onSpellUpdated = (spellId: string, callback: Function) => {
+    return thoth.onSubspellUpdated(spellId, callback)
+  }
+
   // WARNING: ModulePlugin needs to be initialized before TaskPlugin during engine setup
   editor.use(DebuggerPlugin)
-  editor.use(ModulePlugin, { engine, modules } as unknown as void)
+  editor.use(ModulePlugin, { engine, modules: {} } as unknown as void)
   editor.use(TaskPlugin)
+  editor.use(KeyCodePlugin)
 
-  // ███╗   ███╗ ██████╗ ██████╗ ██╗   ██╗██╗     ███████╗███████╗
-  // ████╗ ████║██╔═══██╗██╔══██╗██║   ██║██║     ██╔════╝██╔════╝
-  // ██╔████╔██║██║   ██║██║  ██║██║   ██║██║     █████╗  ███████╗
-  // ██║╚██╔╝██║██║   ██║██║  ██║██║   ██║██║     ██╔══╝  ╚════██║
-  // ██║ ╚═╝ ██║╚██████╔╝██████╔╝╚██████╔╝███████╗███████╗███████║
-  // ╚═╝     ╚═╝ ╚═════╝ ╚═════╝  ╚═════╝ ╚══════╝╚══════╝╚══════╝
+  editor.use(SelectionPlugin, { enabled: true })
 
-  // add initial modules to the module manager
-  editor.moduleManager.setModules(modules)
-
-  // listen for pubsub onAddModule event to add modules
-  thoth.onAddModule((module: ModuleType) => {
-    editor.moduleManager.addModule(module)
-  })
-
-  // listen for update module event to update a module
-  thoth.onUpdateModule((module: ModuleType) => {
-    editor.moduleManager.updateModule(module)
-  })
-
-  thoth.onDeleteModule((module: ModuleType) => {
-    editor.moduleManager.deleteModule(module)
+  editor.use(CommentPlugin, {
+    margin: 20, // indent for new frame comments by default 30 (px)
   })
 
   // WARNING all the plugins from the editor get installed onto the component and modify it.  This effects the components registered in the engine, which already have plugins installed.
   components.forEach(c => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // eslint-disable-next-line @typescrip``t-eslint/ban-ts-comment
     //@ts-ignore
     // the problematic type here is coming directly from node modules, we may need to revisit further customizing the Editor Register type expectations or it's class
     editor.register(c)
@@ -173,17 +154,12 @@ export const initEditor = async function ({
     return source !== 'dblclick'
   })
 
+  editor.on(['click'], () => {
+    editor.selected.list = []
+  })
+
   editor.bind('run')
   editor.bind('save')
-
-  editor.on('process', async () => {
-    // Here we would swap out local processing for an endpoint that we send the serialised JSON too.
-    // Then we run the fewshots, etc on the backend rather than on the client.
-    // Alternative for now is for the client to call our own /openai endpoint.
-    // NOTE need to consider authentication against Latitude API from a web client
-    await engine.abort()
-    await engine.process(editor.toJSON(), null, { thoth: thoth })
-  })
 
   // ██████╗ ██╗   ██╗██████╗ ██╗     ██╗ ██████╗
   // ██╔══██╗██║   ██║██╔══██╗██║     ██║██╔════╝
@@ -196,6 +172,12 @@ export const initEditor = async function ({
     await engine.abort()
   }
 
+  editor.runProcess = async (callback: Function) => {
+    await engine.abort()
+    await engine.process(editor.toJSON(), null, { thoth: thoth })
+    if (callback) callback()
+  }
+
   editor.loadGraph = async (_graph: Data) => {
     const graph = JSON.parse(JSON.stringify(_graph))
     await engine.abort()
@@ -203,5 +185,8 @@ export const initEditor = async function ({
     editor.view.resize()
     AreaPlugin.zoomAt(editor)
   }
+
+  // Start the engine off on first load
+  editor.runProcess()
   return editor
 }

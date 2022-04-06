@@ -9,7 +9,6 @@ export function getRandomNumber(min, max) {
 }
 
 export function getRandomEmptyResponse(responses: string[]) {
-  return responses[getRandomNumber(0, responses.length - 1)]
 }
 
 export function startsWithCapital(word) {

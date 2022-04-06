@@ -2,6 +2,7 @@ import { Engine, Socket, Component } from 'rete'
 import { Socket as SocketType } from 'rete/types'
 
 import {
+  GraphData,
   ModuleType,
   ModuleWorkerOutput,
   ThothNode,
@@ -11,6 +12,7 @@ import {
 import { SocketNameType } from '../../sockets'
 import { Module } from './module'
 import { extractNodes } from './utils'
+import { NodeData } from 'rete/types/core/data'
 interface ModuleComponent extends Component {
   run: Function
 }
@@ -56,7 +58,7 @@ export class ModuleManager {
   }
 
   getSockets(
-    data: { nodes: Record<string, ThothNode> },
+    data: GraphData,
     typeMap: Map<string, Socket>,
     defaultName: string
   ): ModuleSocketType[] {
@@ -72,24 +74,24 @@ export class ModuleManager {
     )
   }
 
-  getInputs(data: ModuleGraphData): ModuleSocketType[] {
+  getInputs(data: GraphData): ModuleSocketType[] {
     return this.getSockets(data, this.inputs, 'input')
   }
 
-  getOutputs(data: ModuleGraphData): ModuleSocketType[] {
+  getOutputs(data: GraphData): ModuleSocketType[] {
     return this.getSockets(data, this.outputs, 'output')
   }
 
-  getTriggerOuts(data: ModuleGraphData): ModuleSocketType[] {
+  getTriggerOuts(data: GraphData): ModuleSocketType[] {
     return this.getSockets(data, this.triggerOuts, 'trigger')
   }
 
-  getTriggerIns(data: ModuleGraphData) {
+  getTriggerIns(data: GraphData) {
     return this.getSockets(data, this.triggerIns, 'trigger')
   }
 
   socketFactory(
-    node: ThothNode,
+    node: NodeData,
     socket: Socket | Function | undefined
   ): SocketType {
     // eslint-disable-next-line no-param-reassign
@@ -119,10 +121,7 @@ export class ModuleManager {
     this.outputs.set(name, socket)
   }
 
-  getTriggeredNode(
-    data: { nodes: Record<string, ThothNode> },
-    socketKey: string
-  ) {
+  getTriggeredNode(data: GraphData, socketKey: string) {
     return extractNodes(data.nodes, this.triggerIns).find(
       node => node.data.socketKey === socketKey
     )

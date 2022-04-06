@@ -1,10 +1,10 @@
 import deepEqual from 'deep-equal'
 import Rete, { Input, Output } from 'rete'
 import { v4 as uuidv4 } from 'uuid'
-import { DataSocketType, IRunContextEditor, ThothNode } from '../../../types'
-import { ThothComponent } from '../../thoth-component'
 
+import { DataSocketType, IRunContextEditor, ThothNode } from '../../../types'
 import * as socketMap from '../../sockets'
+import { ThothComponent } from '../../thoth-component'
 import { DataControl } from './DataControl'
 
 type InspectorConstructor = {
@@ -15,6 +15,17 @@ type InspectorConstructor = {
 
 // todo improve this typing
 type DataControlData = Record<string, any>
+
+export type InspectorData = {
+  name: string
+  nodeId: number
+  dataControls: Record<string, any>
+  data: Record<string, unknown>
+  category?: string
+  info: string
+  deprecated: boolean
+  deprecationMessage: string
+}
 
 export class Inspector {
   // Stub of function.  Can be a nodes catch all onData
@@ -174,7 +185,6 @@ export class Inspector {
   }
 
   handleData(update: Record<string, any>) {
-    console.log('Handling data!', update)
     // store all data controls inside the nodes data
     // WATCH in case our graphs start getting quite large.
     if (update.dataControls) this.cacheControls(update.dataControls)
@@ -235,10 +245,10 @@ export class Inspector {
     this.node.update()
   }
 
-  get() {}
+  get() { }
 
   // returns all data prepared for the pubsub to send it.
-  data() {
+  data(): InspectorData {
     const dataControls = Array.from(this.dataControls.entries()).reduce(
       (acc, [key, val]) => {
         const cache = this.node?.data?.dataControls as DataControlData
@@ -264,5 +274,5 @@ export class Inspector {
     }
   }
 
-  remove() {}
+  remove() { }
 }

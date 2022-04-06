@@ -20,8 +20,9 @@ import { database } from '../../database'
 import { browserWindow, PageUtils } from './browser'
 import {
   detectOsOption,
-  getRandomEmptyResponse, randomInt,
-  startsWithCapital
+  getRandomEmptyResponse,
+  randomInt,
+  startsWithCapital,
 } from './utils'
 
 function isUrl(url: string): boolean {
@@ -37,6 +38,7 @@ function isUrl(url: string): boolean {
 }
 
 export class xrengine_client {
+  handleInput
   UsersInRange = {}
   UsersInHarassmentRange = {}
   UsersInIntimateRange = {}
@@ -186,12 +188,11 @@ export class xrengine_client {
   ) {
     console.log('handling message:', text)
     if (text.startsWith('/') || text.startsWith('//')) return
-    if (text.includes('[') && text.includes(']')) return
+    else if (text.includes('[') && text.includes(']')) return
+    else if (sender === this.settings.xrengine_bot_name) return
     else if (text.includes('joined the layer')) {
-      const user = text.replace('joined the layer', '')
-
+      //const user = text.replace('joined the layer', '')
       //await this.handleXREngineResponse('Welcome ' + user, false, sender, false)
-
       /*const response = await handleCustomInput(
         '[welcome]' + user,
         sender,
@@ -202,12 +203,13 @@ export class xrengine_client {
         true
       )
       await this.handleXREngineResponse(response, false, sender, isVoice)*/
+      return
     } else if (text.includes('left the layer') || text.length === 0) return
     else if (text.includes('in harassment range with')) return
     else if (text.includes('in range with')) return
     else if (text.includes('looking at')) return
     else if (text.includes('in intimate range')) return
-    else if (text.startsWith('/') || text.startsWith(' /')) return
+    else if (text.startsWith('/') || text.startsWith('//')) return
     else if (sender === bot.name || senderId === bot.userId) {
     }
     await this.wasHandled(
@@ -414,7 +416,7 @@ export class xrengine_client {
           text.replace(/\s/g, '').length === 0
         )
           text = getRandomEmptyResponse(this.settings.xrengine_empty_responses)
-        if (addPing) text = _sender + ' ' + text
+        if (addPing) text = sender + ' ' + text
         this.xrengineBot.sendMessage(text)
       } else if (
         responses &&
@@ -467,7 +469,7 @@ export class xrengine_client {
           emptyResponse = getRandomEmptyResponse(
             this.settings.xrengine_empty_responses
           )
-        if (addPing) emptyResponse = _sender + ' ' + emptyResponse
+        if (addPing) emptyResponse = sender + ' ' + emptyResponse
         this.xrengineBot.sendMessage(emptyResponse)
       }
     } else {
@@ -480,11 +482,12 @@ export class xrengine_client {
   agent
   settings
 
-  async createXREngineClient(agent, settings, cli) {
+  async createXREngineClient(agent, settings, cli, handleInput) {
     console.log('createXREngineClient', agent)
     this.agent = agent
     this.settings = settings
     this.entity = settings.entity
+    this.handleInput = handleInput
 
     let temp = this.settings.xrengine_starting_words
     if (temp && temp !== undefined) {
@@ -565,6 +568,7 @@ class XREngineBot {
   username_regex
   agent
   settings
+  handleInput
   xrengineclient: xrengine_client
   constructor({
     name = 'Bot',
@@ -589,7 +593,6 @@ class XREngineBot {
   async sendMessage(message) {
     log('sending message: ' + message)
     if (message === null || message === undefined) return
-
     // TODO:
     // Send message to google cloud speech
     // Get response URL from google cloud speech
@@ -866,7 +869,7 @@ class XREngineBot {
     await this.waitForTimeout(timeout)
   }
 
-  async interactObject() { }
+  async interactObject() {}
 
   /** Return screenshot
    * @param {Function} fn Function to execut _in the node context._
@@ -1108,7 +1111,7 @@ class XREngineBot {
     try {
       await this.page.goto(parsedUrl, { waitUntil: 'domcontentloaded' })
     } catch (error) {
-      return log("Unable to connect to XREngine world", error)
+      return log('Unable to connect to XREngine world', error)
     }
 
     /* const granted = await this.page.evaluate(async () => {
@@ -1124,7 +1127,6 @@ class XREngineBot {
    */
   async enterRoom(roomUrl, name) {
     try {
-
       console.log('bot name:', name)
       await this.navigate(roomUrl)
       await this.page.waitForSelector('div[class*="instance-chat-container"]', {
@@ -1159,13 +1161,12 @@ class XREngineBot {
       await this.updateUsername(name)
       await this.delay(10000)
       const index = this.getRandomNumber(0, this.avatars.length - 1)
-      log(`avatar index: ${index}`)
       await this.updateAvatar(this.avatars[index])
       await this.requestPlayers()
       await this.getUser()
       await setInterval(() => this.getUser(), 1000)
     } catch (error) {
-      log('error entering room', error)
+      console.log('error entering room', error)
     }
   }
 
@@ -1272,22 +1273,14 @@ class XREngineBot {
 
   async typeOnKeyboard(page, inputText) {
     inputText.split('').forEach(async key => {
-      await page.keyboard.sendCharacter(key);
-    });
-  };
+      await page.keyboard.sendCharacter(key)
+    })
+  }
 
-  queuedMessages
-  typing = false
   async typeMessage(input, message, clean) {
-    if (this.typing) return queredMessages.push({ input, message, clean })
-    this.typing = true
     if (clean)
       await this.page.click(`input[name="${input}"]`, { clickCount: 3 })
-    // await this.page.type(`input[name="${input}"]`, message)
-
-    await this.typeOnKeyboard(page, message)
-
-    //await this.page.keyboard.type(message);
+    await this.page.type(`input[name="${input}"]`, message)
   }
 
   async setFocus(selector) {

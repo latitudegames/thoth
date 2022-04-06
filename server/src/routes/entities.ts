@@ -115,10 +115,7 @@ const addEntityHandler = async (ctx: Koa.Context) => {
 
   try {
     console.log('updated agent database with', data)
-    return (ctx.body = await database.instance.updateEntity(
-      instanceId,
-      data
-    ))
+    return (ctx.body = await database.instance.updateEntity(instanceId, data))
   } catch (e) {
     console.log('addEntityHandler:', e)
     ctx.status = 500
@@ -129,7 +126,14 @@ const addEntityHandler = async (ctx: Koa.Context) => {
 const deleteEntityHandler = async (ctx: Koa.Context) => {
   const { id } = ctx.params
   console.log('deleteEntityHandler', deleteEntityHandler)
-  ctx.body = await database.instance.deleteEntity(id)
+
+  try {
+    return (ctx.body = await database.instance.deleteEntity(id))
+  } catch (e) {
+    console.log(e)
+    ctx.status = 500
+    return (ctx.body = 'internal error')
+  }
 }
 
 const getEvent = async (ctx: Koa.Context) => {
@@ -161,7 +165,7 @@ const createEvent = async (ctx: Koa.Context) => {
   const channel = ctx.request.body.channel
   const text = ctx.request.body.text
   const type = ctx.request.body.type
-  console.log("Creating event:", agent, speaker, client, channel, text, type)
+  console.log('Creating event:', agent, speaker, client, channel, text, type)
   await database.instance.createEvent(
     type,
     agent,
@@ -434,8 +438,9 @@ const requestInformationAboutVideo = async (
   question: string
 ): Promise<string> => {
   const videoInformation = ``
-  const prompt = `Information: ${videoInformation} \n ${sender}: ${question.trim().endsWith('?') ? question.trim() : question.trim() + '?'
-    }\n${agent}:`
+  const prompt = `Information: ${videoInformation} \n ${sender}: ${
+    question.trim().endsWith('?') ? question.trim() : question.trim() + '?'
+  }\n${agent}:`
 
   const modelName = 'davinci'
   const temperature = 0.9
@@ -497,6 +502,27 @@ const getEntitiesInfo = async (ctx: Koa.Context) => {
     ctx.status = 500
     return (ctx.body = { error: 'internal error' })
   }
+}
+
+const handleCustomInput = async (ctx: Koa.Context) => {
+  const message = ctx.request.body.message as string
+  const speaker = ctx.request.body.sender as string
+  const agent = ctx.request.body.agent as string
+  const client = ctx.request.body.client as string
+  const channelId = ctx.request.body.channelId as string
+
+  return (ctx.body = {
+    response: handleInput(
+      message,
+      speaker,
+      agent,
+      client,
+      channelId,
+      1,
+      'default',
+      'latest'
+    ),
+  })
 }
 
 export const entities: Route[] = [
@@ -573,5 +599,10 @@ export const entities: Route[] = [
     path: '/entities_info',
     access: noAuth,
     get: getEntitiesInfo,
+  },
+  {
+    path: '/handle_custom_input',
+    access: noAuth,
+    post: handleCustomInput,
   },
 ]
