@@ -59,6 +59,15 @@ const Inspector = props => {
   }
 
   const onLock = () => {
+    if (inspectorData?.data.nodeLocked && inspectorData?.category === 'I/O') {
+      openModal({
+        modal: 'infoModal',
+        content:
+          'Editing this node could break connection with your front end template. You must ensure your templates input and output have the same name as the spells input and output',
+        title: 'Warning',
+      })
+    }
+
     const data = {
       nodeLocked: !inspectorData?.data.nodeLocked,
     }
