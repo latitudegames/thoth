@@ -2,12 +2,16 @@
 import PubSub from 'pubsub-js'
 import { useContext, createContext } from 'react'
 
-const Context = createContext({
-  publish: (_event, _data) => {},
-  subscribe: (_event, _callback) => {},
-  PubSub: () => {},
-  events: {},
-})
+type PubSubData = Record<string, any> | string | any[]
+
+type PubSubContext = {
+  publish: (event: string, data?: PubSubData) => void
+  subscribe: (event: string, callback: Function) => Function
+  PubSub: typeof PubSub
+  events: Record<string, any>
+}
+
+const Context = createContext<PubSubContext>(undefined!)
 
 export const usePubSub = () => useContext(Context)
 
