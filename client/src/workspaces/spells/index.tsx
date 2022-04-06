@@ -48,7 +48,7 @@ const Workspace = ({ tab, tabs, pubSub }) => {
       if (!spellRef.current) return
       // TODO we can probably send this update to a spell namespace for this spell.
       // then spells can subscribe to only their dependency updates.
-      const event = events.$SUBSPELL_UPDATED(editor.toJSON())
+      const event = events.$SUBSPELL_UPDATED(spellRef.current.name)
       const spell = {
         ...spellRef.current,
         chain: editor.toJSON(),
