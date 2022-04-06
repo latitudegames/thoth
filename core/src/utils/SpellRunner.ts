@@ -2,7 +2,7 @@ import {
   getComponents,
   initSharedEngine,
 } from '@latitudegames/thoth-core/server'
-import { ChainData, ModuleComponent, Spell } from '../../types'
+import { ChainData, ModuleComponent, Spell as SpellType } from '../../types'
 import { EngineContext, extractNodes, ThothEngine } from '../engine'
 import { Module } from '../plugins/modulePlugin/module'
 import { extractModuleInputKeys } from './chainHelpers'
@@ -11,9 +11,9 @@ type RunSpellConstructor = {
   thothInterface: EngineContext
 }
 
-class RunSpell {
+class SpellRunner {
   engine: ThothEngine
-  currentSpell!: Spell
+  currentSpell!: SpellType
   module: Module
   thothInterface: EngineContext
 
@@ -100,11 +100,11 @@ class RunSpell {
     this.engine.tasks.forEach(t => t.reset())
   }
 
-  loadSpell(spell: Spell) {
+  async loadSpell(spell: SpellType) {
     this.currentSpell = spell
 
     // We process the graph for the new spell which will set up all the task workers
-    this.engine.process(spell.chain as ChainData, null, this.context)
+    await this.engine.process(spell.chain as ChainData, null, this.context)
   }
 
   /**
@@ -121,15 +121,19 @@ class RunSpell {
     this._loadInputs(inputs)
 
     const component = this._getComponent(componentName) as ModuleComponent
-    const triggeredNopde = this._getFirstNodeTrigger()
+    const triggeredNode = this._getFirstNodeTrigger()
 
     // this running is where the main "work" happens.
     // I do wonder whether we could make this even more elegant by having the node
     // subscribe to a run pubsub and then we just use that.  This would treat running
     // from a trigger in node like any other data stream. Or even just pass in socket IO.
-    await component.run(triggeredNopde)
-
-    return this.outputData
+    try {
+      await component.run(triggeredNode)
+      return this.outputData
+    } catch (err) {
+      console.log('err', err)
+      throw new Error('Error running spell')
+    }
   }
 
   /**
@@ -140,4 +144,4 @@ class RunSpell {
   }
 }
 
-export default RunSpell
+export default SpellRunner
