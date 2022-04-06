@@ -172,6 +172,11 @@ const ThothInterfaceProvider = ({ children, tab }) => {
     if (!spellRef.current) return
     const spell = spellRef.current
 
+    // lets delete out all undefined properties coming in
+    Object.keys(_update).forEach(
+      key => _update[key] === undefined && delete _update[key]
+    )
+
     const update = {
       gameState: {
         ...spell.gameState,
