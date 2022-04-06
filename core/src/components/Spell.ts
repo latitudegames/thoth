@@ -1,3 +1,4 @@
+import isEqual from 'lodash/isEqual'
 import Rete from 'rete'
 import {
   ModuleWorkerOutput,
@@ -49,13 +50,18 @@ export class SpellComponent extends ThothComponent<
   subscribe(node: ThothNode, spellId: string) {
     if (this.subscriptionMap[node.id]) this.subscriptionMap[node.id]()
 
+    let cache: Spell
+
     // Subscribe to any changes to that spell here
     this.subscriptionMap[node.id] = this.editor.onSpellUpdated(
       spellId,
       (spell: Spell) => {
-        // this can probably be better optimise this
-        console.log('SPELL UPDATED')
-        this.updateSockets(node, spell)
+        if (!isEqual(spell, cache)) {
+          // this can probably be better optimise this
+          this.updateSockets(node, spell)
+        }
+
+        cache = spell
       }
     )
   }
