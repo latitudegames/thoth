@@ -33,6 +33,8 @@ const MenuBar = () => {
     $CREATE_CONSOLE,
     $SERIALIZE,
     $EXPORT,
+    $UNDO,
+    $REDO,
   } = events
 
   const useToggle = (initialValue = false) => {
