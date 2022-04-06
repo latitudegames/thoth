@@ -10,12 +10,22 @@ import { Graph, ModuleComponent } from '../routes/spells/types'
 import { initSharedEngine } from '@latitudegames/thoth-core/src/engine'
 import { Module } from '../routes/spells/module'
 import { ModuleType } from '@latitudegames/thoth-core/types'
+import { Task } from '@latitudegames/thoth-core/src/plugins/taskPlugin'
+import { StringDataType } from 'sequelize/types'
 
 export const CreateSpellHandler = async (props: {
   spell: any
   version: string
 }) => {
   // TODO: create a proper engine interface with the proper methods types on it.
+  console.log(
+    'Creating Spell Handler',
+    'spell:',
+    props.spell,
+    'version:',
+    props.version
+  )
+
   const engine = initSharedEngine({
     name: 'demo@0.1.0',
     components: getComponents(),
@@ -30,6 +40,7 @@ export const CreateSpellHandler = async (props: {
   if (!props.version || props.version === undefined) {
     props.version = 'latest'
   }
+
   const { spell, version = 'latest' } = props
 
   rootSpell = await creatorToolsDatabase.spells.findOne({
@@ -139,7 +150,6 @@ export const CreateSpellHandler = async (props: {
     // This resets everything and makes it work, BUT it is very slow
     // We need to reset the task outputs (and tasks in general) without
     // calling this function here
-    await engine.process(graph, null, context)
 
     let error = null
     const inputs = inputKeys.reduce((inputs, expectedInput: string) => {
@@ -157,6 +167,10 @@ export const CreateSpellHandler = async (props: {
         // )
       }
     }, {} as Record<string, unknown>)
+
+    engine.tasks.forEach((task: Task) => {
+      task.reset()
+    })
 
     // Attaching inputs to the module, which are passed in when the engine runs.
     // you can see this at work in the 'workerInputs' function of module-manager
