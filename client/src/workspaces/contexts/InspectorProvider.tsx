@@ -55,21 +55,21 @@ const InspectorProvider = ({ children, tab }) => {
           setTextEditorData(textData)
         }
       })
-    })
+    }) as () => void
   }, [events, subscribe, publish])
 
   // text editor subscription
   useEffect(() => {
     return subscribe(events.$TEXT_EDITOR_SET(tab.id), (event, data) => {
       setTextEditorData(data)
-    })
+    }) as () => void
   }, [events, subscribe, publish])
 
   // clear text editor subscription
   useEffect(() => {
     return subscribe(events.$TEXT_EDITOR_CLEAR(tab.id), () => {
       setTextEditorData({})
-    })
+    }) as () => void
   }, [events, subscribe, publish])
 
   //
