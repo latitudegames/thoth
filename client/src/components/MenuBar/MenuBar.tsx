@@ -153,10 +153,14 @@ const MenuBar = () => {
     },
     edit: {
       items: {
-        undo: {},
-        redo: {},
-        // copy: {},
-        // paste: {},
+        undo: {
+          onClick: onUndo,
+          hotKey: 'option+z',
+        },
+        redo: {
+          onClick: onRedo,
+          hotKey: 'option+shift+z',
+        },
       },
     },
     dev: {
