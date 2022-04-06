@@ -271,6 +271,7 @@ const MenuBar = () => {
           label={Object.keys(menuBarItems)[index]}
           topLevel={true}
           key={index}
+          hotKeyLabel={menuBarItems[item].hotKeyLabel}
           onClick={() => {
             handleClick(menuBarItems[item].onClick)
           }}
