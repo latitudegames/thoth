@@ -206,7 +206,7 @@ const MenuBar = () => {
   }
 
   //Menu bar rendering
-  const ListItem = ({ item, label, topLevel, onClick }) => {
+  const ListItem = ({ item, label, topLevel, onClick, hotKeyLabel }) => {
     label = label ? label.replace(/_/g, ' ') : label
     let children
     if (item.items && Object.keys(item.items)) {
