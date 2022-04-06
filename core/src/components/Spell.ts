@@ -1,5 +1,7 @@
+import isEqual from 'lodash/isEqual'
 import Rete from 'rete'
 import {
+  EngineContext,
   ModuleWorkerOutput,
   NodeData,
   Spell,
@@ -8,7 +10,6 @@ import {
 } from '../../types'
 import { SpellControl } from '../dataControls/SpellControl'
 import { ThothEditor } from '../editor'
-import { EngineContext } from '../engine'
 import { Task } from '../plugins/taskPlugin/task'
 import { objectSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
@@ -49,13 +50,18 @@ export class SpellComponent extends ThothComponent<
   subscribe(node: ThothNode, spellId: string) {
     if (this.subscriptionMap[node.id]) this.subscriptionMap[node.id]()
 
+    let cache: Spell
+
     // Subscribe to any changes to that spell here
     this.subscriptionMap[node.id] = this.editor.onSpellUpdated(
       spellId,
       (spell: Spell) => {
-        // this can probably be better optimise this
-        console.log('SPELL UPDATED')
-        this.updateSockets(node, spell)
+        if (!isEqual(spell, cache)) {
+          // this can probably be better optimise this
+          this.updateSockets(node, spell)
+        }
+
+        cache = spell
       }
     )
   }
@@ -67,11 +73,11 @@ export class SpellComponent extends ThothComponent<
       defaultValue: (node.data.spell as string) || '',
     })
 
-    if (node.data.spellId) this.subscribe(node, node.data.spellId as string)
-
     const stateSocket = new Rete.Input('state', 'State', objectSocket)
 
     spellControl.onData = (spell: Spell) => {
+      // break out of it the nodes data already exists.
+      if (spell.name === node.data.spellId) return
       node.data.spellId = spell.name
 
       // Update the sockets
@@ -91,13 +97,18 @@ export class SpellComponent extends ThothComponent<
     node.addInput(stateSocket)
     node.inspector.add(spellControl)
 
+    if (node.data.spellId) {
+      setTimeout(() => {
+        this.subscribe(node, node.data.spellId as string)
+      }, 1000)
+    }
+
     return node
   }
 
   updateSockets(node: ThothNode, spell: Spell) {
     const chain = JSON.parse(JSON.stringify(spell.chain))
     this.updateModuleSockets(node, chain, true)
-    this.editor.trigger('process')
     node.update()
   }
 
@@ -123,36 +134,22 @@ export class SpellComponent extends ThothComponent<
   async worker(
     node: NodeData,
     inputs: ThothWorkerInputs,
-    outputs: { [key: string]: string },
+    _outputs: { [key: string]: string },
     {
       module,
       thoth,
     }: { module: { outputs: ModuleWorkerOutput[] }; thoth: EngineContext }
   ) {
-    // // If there is a module present, this is runnign via the module plugin
-    // if (module) {
-    //   const open = Object.entries(module.outputs)
-    //     .filter(([, value]) => typeof value === 'boolean' && value)
-    //     .map(([key]) => key)
-    //   // close all triggers first
-    //   const dataOutputs = node.data.outputs as ModuleWorkerOutput[]
-    //   this._task.closed = dataOutputs
-    //     .map((out: { name: string }) => out.name)
-    //     .filter((out: string) => !open.includes(out))
-
-    //   return module.outputs
-    // }
-
     // We format the inputs since these inputs rely on the use of the socket keys.
     const flattenedInputs = this.formatInputs(node, inputs)
 
     if (!thoth.runSpell) return {}
-    const response = await thoth.runSpell(flattenedInputs, node.data.spellId)
+    const outputs = await thoth.runSpell(
+      flattenedInputs,
+      node.data.spellId as string,
+      flattenedInputs.state
+    )
 
-    if ('error' in response) {
-      throw new Error(`Error running spell ${node.data.spellId}`)
-    }
-
-    return response.data.outputs
+    return outputs
   }
 }

@@ -1,5 +1,11 @@
-import { ChainData, ModuleComponent, NodeData, Subspell } from '../../types'
-import { EngineContext, ThothEngine } from '../engine'
+import {
+  EngineContext,
+  ChainData,
+  ModuleComponent,
+  NodeData,
+  Subspell,
+} from '../../types'
+import { ThothEngine } from '../engine'
 import { Module } from '../plugins/modulePlugin/module'
 import { extractNodes } from './chainHelpers'
 

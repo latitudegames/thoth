@@ -7,7 +7,7 @@ import {
   ThothWorkerOutputs,
 } from '../../types'
 import { FewshotControl } from '../dataControls/FewshotControl'
-import { EngineContext } from '../engine'
+import { EngineContext } from '../../types'
 import { stringSocket, triggerSocket } from '../sockets'
 // @seang todo: convert data controls to typescript to remove this
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment

@@ -3,6 +3,7 @@ import Rete from 'rete'
 import { v4 as uuidv4 } from 'uuid'
 
 import {
+  EditorContext,
   NodeData,
   ThothNode,
   ThothWorkerInputs,
@@ -12,7 +13,7 @@ import { TextInputControl } from '../controls/TextInputControl'
 import { InputControl } from '../dataControls/InputControl'
 import { PlaytestControl } from '../dataControls/PlaytestControl'
 import { SwitchControl } from '../dataControls/SwitchControl'
-import { EngineContext } from '../engine'
+import {} from '../../types'
 import { Task } from '../plugins/taskPlugin/task'
 
 import { anySocket } from '../sockets'
@@ -57,7 +58,7 @@ export class InputComponent extends ThothComponent<InputReturn> {
   unsubscribe?: () => void
 
   subscribeToPlaytest(node: ThothNode) {
-    const { onPlaytest } = this.editor?.thoth as EngineContext
+    const { onPlaytest } = this.editor?.thoth as EditorContext
 
     // check node for the right data attribute
     if (onPlaytest) {

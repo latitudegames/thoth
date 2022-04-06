@@ -13,13 +13,63 @@ import {
 import { Inspector } from './src/plugins/inspectorPlugin/Inspector'
 import { TaskOutputTypes } from './src/plugins/taskPlugin/task'
 import { SocketNameType, SocketType } from './src/sockets'
-import { EngineContext } from './src/engine'
 import { ThothTask } from './src/thoth-component'
 import { ThothConsole } from './src/plugins/debuggerPlugin/ThothConsole'
 import { Data } from 'rete/types/core/data'
+import { ImageType } from './src/components/VisualGeneration'
 export { ThothEditor } from './src/editor'
 
 export type { InspectorData } from './src/plugins/inspectorPlugin/Inspector'
+
+export type EngineContext = {
+  completion: (
+    body: ModelCompletionOpts
+  ) => Promise<string | OpenAIResultChoice | undefined>
+  getCurrentGameState: () => Record<string, unknown>
+  updateCurrentGameState: (update: Record<string, unknown>) => void
+  enkiCompletion: (
+    taskName: string,
+    inputs: string[] | string
+  ) => Promise<{ outputs: string[] }>
+  huggingface: (
+    model: string,
+    request: string
+  ) => Promise<{ error?: unknown; [key: string]: unknown }>
+  runSpell: (
+    flattenedInputs: Record<string, any>,
+    spellId: string,
+    state: Record<string, any>
+  ) => Record<string, any>
+  readFromImageCache: (
+    caption: string,
+    cacheTag?: string,
+    topK?: number
+  ) => Promise<ImageType[]>
+  processCode: (
+    code: unknown,
+    inputs: ThothWorkerInputs,
+    data: Record<string, any>
+  ) => void
+}
+
+export type EventPayload = Record<string, any>
+
+export interface EditorContext extends EngineContext {
+  onInspector: (node: ThothNode, callback: Function) => Function
+  onPlaytest: (callback: Function) => Function
+  sendToPlaytest: (data: string) => Function
+  sendToInspector: (data: EventPayload) => Function
+  sendToDebug: (data: EventPayload) => Function
+  onDebug: (node: NodeData, callback: Function) => Function
+  clearTextEditor: () => void
+  getCurrentGameState: () => Record<string, unknown>
+  updateCurrentGameState: (update: EventPayload) => void
+  processCode: (
+    code: unknown,
+    inputs: ThothWorkerInputs,
+    data: Record<string, any>
+  ) => void
+}
 
 export type EventsTypes = {
   run: void
@@ -48,7 +98,7 @@ export interface Spell {
 }
 
 export interface IRunContextEditor extends NodeEditor {
-  thoth: EngineContext
+  thoth: EditorContext
   abort: Function
 }
 

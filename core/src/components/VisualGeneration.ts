@@ -6,7 +6,7 @@ import {
   ThothWorkerOutputs,
 } from '../../types'
 import { InputControl } from '../dataControls/InputControl'
-import { EngineContext } from '../engine'
+import { EngineContext } from '../../types'
 import { triggerSocket, stringSocket, arraySocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 

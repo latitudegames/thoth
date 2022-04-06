@@ -4,11 +4,10 @@ import Rete from 'rete'
 //@ts-ignore
 import { v4 as uuidv4 } from 'uuid'
 
-import { NodeData, ThothNode } from '../../types'
+import { EditorContext, NodeData, ThothNode } from '../../types'
 import { InputControl } from '../dataControls/InputControl'
 import { TaskOptions } from '../plugins/taskPlugin/task'
 import { triggerSocket } from '../sockets'
-import { EngineContext } from '../engine'
 import { ThothComponent, ThothTask } from '../thoth-component'
 import { PlaytestControl } from '../dataControls/PlaytestControl'
 const info = `The trigger in allows you to pass values into your spell either from a higher level component or from the server.  There must be one single trigger into a spell for now as the server does not support multiple triggers.  Yet.`
@@ -52,7 +51,7 @@ export class TriggerIn extends ThothComponent<void> {
   unsubscribe?: () => void
 
   subscribeToPlaytest(node: ThothNode) {
-    const { onPlaytest } = this.editor?.thoth as EngineContext
+    const { onPlaytest } = this.editor?.thoth as EditorContext
 
     // check node for the right data attribute
     if (onPlaytest) {
