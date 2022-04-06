@@ -5,7 +5,6 @@ import { ThothComponent } from './src/thoth-component'
 import SpellRunner from './src/utils/SpellRunner'
 
 export { getComponents } from './src/components/components'
-export type { EngineContext } from './src/engine'
 export { Task } from './src/plugins/taskPlugin/task'
 export { initSharedEngine }
 export { SpellRunner }
