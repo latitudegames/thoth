@@ -30,7 +30,7 @@ export class SpellComponent extends ThothComponent<
   subscriptionMap: Record<number, Function> = {}
   editor: ThothEditor
   noBuildUpdate: boolean
-  category: string
+  dev = true
 
   constructor() {
     super('Spell')
