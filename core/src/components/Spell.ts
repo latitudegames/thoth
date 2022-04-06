@@ -1,6 +1,7 @@
 import isEqual from 'lodash/isEqual'
 import Rete from 'rete'
 import {
+  EngineContext,
   ModuleWorkerOutput,
   NodeData,
   Spell,
@@ -9,7 +10,6 @@ import {
 } from '../../types'
 import { SpellControl } from '../dataControls/SpellControl'
 import { ThothEditor } from '../editor'
-import { EngineContext } from '../engine'
 import { Task } from '../plugins/taskPlugin/task'
 import { objectSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
@@ -146,7 +146,8 @@ export class SpellComponent extends ThothComponent<
     if (!thoth.runSpell) return {}
     const outputs = await thoth.runSpell(
       flattenedInputs,
-      node.data.spellId as string
+      node.data.spellId as string,
+      flattenedInputs.state
     )
 
     return outputs
