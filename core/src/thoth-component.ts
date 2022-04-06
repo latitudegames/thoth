@@ -1,7 +1,7 @@
 import { Node, NodeEditor, Socket } from 'rete'
 
-import { PubSubBase, ThothNode } from '../types'
-import { EngineContext, ThothEngineComponent } from './engine'
+import { EditorContext, PubSubBase, ThothNode } from '../types'
+import { ThothEngineComponent } from './engine'
 import { Task, TaskOptions } from './plugins/taskPlugin/task'
 
 // Note: We do this so Typescript knows what extra properties we're
@@ -16,7 +16,7 @@ export type PubSubContext = {
 
 class ThothReteNodeEditor extends NodeEditor {
   pubSub: PubSubContext
-  thoth: EngineContext
+  thoth: EditorContext
   tab: unknown
 }
 
