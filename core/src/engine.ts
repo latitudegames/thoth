@@ -55,7 +55,10 @@ export type EngineContext = {
     model: string,
     request: string
   ) => Promise<{ error?: unknown; [key: string]: unknown }>
-  runSpell?: Function
+  runSpell?: (
+    flattenedInputs: Record<string, any>,
+    spellId: string
+  ) => Record<string, any>
   readFromImageCache: (
     caption: string,
     cacheTag?: string,
