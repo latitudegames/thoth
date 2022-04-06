@@ -134,36 +134,21 @@ export class SpellComponent extends ThothComponent<
   async worker(
     node: NodeData,
     inputs: ThothWorkerInputs,
-    outputs: { [key: string]: string },
+    _outputs: { [key: string]: string },
     {
       module,
       thoth,
     }: { module: { outputs: ModuleWorkerOutput[] }; thoth: EngineContext }
   ) {
-    // // If there is a module present, this is runnign via the module plugin
-    // if (module) {
-    //   const open = Object.entries(module.outputs)
-    //     .filter(([, value]) => typeof value === 'boolean' && value)
-    //     .map(([key]) => key)
-    //   // close all triggers first
-    //   const dataOutputs = node.data.outputs as ModuleWorkerOutput[]
-    //   this._task.closed = dataOutputs
-    //     .map((out: { name: string }) => out.name)
-    //     .filter((out: string) => !open.includes(out))
-
-    //   return module.outputs
-    // }
-
     // We format the inputs since these inputs rely on the use of the socket keys.
     const flattenedInputs = this.formatInputs(node, inputs)
 
     if (!thoth.runSpell) return {}
-    const response = await thoth.runSpell(flattenedInputs, node.data.spellId)
+    const outputs = await thoth.runSpell(
+      flattenedInputs,
+      node.data.spellId as string
+    )
 
-    if ('error' in response) {
-      throw new Error(`Error running spell ${node.data.spellId}`)
-    }
-
-    return response.data.outputs
+    return outputs
   }
 }
