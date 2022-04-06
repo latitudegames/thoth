@@ -16,10 +16,23 @@ import { SocketNameType, SocketType } from './src/sockets'
 import { ThothTask } from './src/thoth-component'
 import { ThothConsole } from './src/plugins/debuggerPlugin/ThothConsole'
 import { Data } from 'rete/types/core/data'
-import { ImageType } from './src/components/VisualGeneration'
+
 export { ThothEditor } from './src/editor'
 
 export type { InspectorData } from './src/plugins/inspectorPlugin/Inspector'
+
+export type ImageType = {
+  id: string
+  captionId: string
+  imageCaption: string
+  imageUrl: string
+  tag: string
+  score: number | string
+}
+
+export type ImageCacheResponse = {
+  images: ImageType[]
+}
 
 export type EngineContext = {
   completion: (
@@ -44,7 +57,7 @@ export type EngineContext = {
     caption: string,
     cacheTag?: string,
     topK?: number
-  ) => Promise<ImageType[]>
+  ) => Promise<ImageCacheResponse>
   processCode: (
     code: unknown,
     inputs: ThothWorkerInputs,
