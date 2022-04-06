@@ -1,6 +1,6 @@
-import { Node, NodeEditor, Socket } from 'rete'
+import { Node, Socket } from 'rete'
 
-import { EditorContext, PubSubBase, ThothNode } from '../types'
+import { PubSubBase, ThothEditor, ThothNode } from '../types'
 import { ThothEngineComponent } from './engine'
 import { Task, TaskOptions } from './plugins/taskPlugin/task'
 
@@ -12,12 +12,6 @@ export type PubSubContext = {
   subscribe: (event: string, callback: Function) => void
   events: Record<string, (tabId: string) => string>
   PubSub: PubSubBase
-}
-
-class ThothReteNodeEditor extends NodeEditor {
-  pubSub: PubSubContext
-  thoth: EditorContext
-  tab: unknown
 }
 
 export interface ThothTask extends Task {
@@ -39,12 +33,13 @@ export abstract class ThothComponent<
   task: TaskOptions
   _task: ThothTask
   // Original Class: https://github.com/latitudegames/rete/blob/master/src/component.ts
-  editor: ThothReteNodeEditor | null = null
+  editor: ThothEditor | null = null
   data: unknown = {}
   category: string
   info: string
   display: boolean
   deprecated: boolean = false
+  dev: boolean = false
   hide: boolean = false
   deprecationMessage: string | undefined
   module: ModuleOptions
