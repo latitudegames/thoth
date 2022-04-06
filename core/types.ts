@@ -55,11 +55,11 @@ export type EngineContext = {
 export type EventPayload = Record<string, any>
 
 export interface EditorContext extends EngineContext {
+  sendToPlaytest: (data: string) => void
+  sendToInspector: (data: EventPayload) => void
+  sendToDebug: (data: EventPayload) => void
   onInspector: (node: ThothNode, callback: Function) => Function
   onPlaytest: (callback: Function) => Function
-  sendToPlaytest: (data: string) => Function
-  sendToInspector: (data: EventPayload) => Function
-  sendToDebug: (data: EventPayload) => Function
   onDebug: (node: NodeData, callback: Function) => Function
   clearTextEditor: () => void
   getCurrentGameState: () => Record<string, unknown>
