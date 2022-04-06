@@ -73,11 +73,11 @@ export class SpellComponent extends ThothComponent<
       defaultValue: (node.data.spell as string) || '',
     })
 
-    if (node.data.spellId) this.subscribe(node, node.data.spellId as string)
-
     const stateSocket = new Rete.Input('state', 'State', objectSocket)
 
     spellControl.onData = (spell: Spell) => {
+      // break out of it the nodes data already exists.
+      if (spell.name === node.data.spellId) return
       node.data.spellId = spell.name
 
       // Update the sockets
