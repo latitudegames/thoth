@@ -106,10 +106,12 @@ export const initEditor = async function ({
       }
     },
     allocate: (component: ThothComponent<unknown>) => {
+      const isProd = process.env.NODE_ENV === 'production'
       //@seang: disabling component filtering in anticipation of needing to treat spells as "top level modules" in the publishing workflow
       const tabType = editor.tab.type
       const { workspaceType } = component
 
+      if (isProd && component.dev) return null
       if (component.deprecated) return null
       if (component.hide) return null
       if (workspaceType && workspaceType !== tabType) return null
