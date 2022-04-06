@@ -136,21 +136,27 @@ const MenuBar = () => {
       items: {
         new_spell: {
           onClick: onNew,
+          hotKey: 'option+n',
         },
         open_spell: {
           onClick: onOpen,
+          hotKey: 'option+o',
         },
         edit_spell: {
           onClick: onEdit,
+          hotKey: 'option+e',
         },
         save_spell: {
           onClick: onSave,
+          hotKey: 'option+s',
         },
         save_spell_as: {
           onClick: onSaveAs,
+          hotKey: 'option+shift+s',
         },
         export_spell: {
           onClick: onExport,
+          hotKey: 'option+shift+e',
         },
       },
     },
