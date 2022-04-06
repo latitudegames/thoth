@@ -246,6 +246,7 @@ const MenuBar = () => {
         onClick={onClick}
       >
         {label}
+        {hotKeyLabel && <span>{parseStringToUnicode(hotKeyLabel)}</span>}
         {children && <div className={css['folder-arrow']}> ❯ </div>}
         {!topLevel && <br />}
         {children || null}
