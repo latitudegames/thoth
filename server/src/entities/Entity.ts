@@ -43,7 +43,6 @@ export class Entity {
     const spellHandler = await CreateSpellHandler({
       spell: spell_handler,
       version: spell_version,
-      client_name: 'discord',
     })
 
     this.discord = new discord_client()
@@ -95,7 +94,6 @@ export class Entity {
     const spellHandler = await CreateSpellHandler({
       spell: settings.spell_handler,
       version: settings.spell_version,
-      client_name: 'xrengine',
     })
 
     settings.handleInput = spellHandler
