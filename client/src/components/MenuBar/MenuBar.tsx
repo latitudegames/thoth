@@ -212,17 +212,30 @@ const MenuBar = () => {
     if (item.items && Object.keys(item.items)) {
       children = (
         <ul className={css['menu-panel']}>
-          {Object.keys(item.items).map((i, x) => {
-            return (
-              <ListItem
-                item={item?.items[i]}
-                label={Object.keys(item.items)[x]}
-                topLevel={false}
-                key={x}
-                onClick={item?.items[i].onClick}
-              />
-            )
-          })}
+          {Object.entries(item.items).map(
+            ([key, item]: [string, Record<string, any>]) => {
+              useHotkeys(
+                item.hotKey,
+                event => {
+                  event.preventDefault()
+                  item.onClick()
+                },
+                { enableOnTags: ['INPUT'] },
+                [item.onClick]
+              )
+
+              return (
+                <ListItem
+                  item={item}
+                  label={key}
+                  topLevel={false}
+                  key={key}
+                  onClick={item.onClick}
+                  hotKeyLabel={item.hotKey}
+                />
+              )
+            }
+          )}
         </ul>
       )
     }
