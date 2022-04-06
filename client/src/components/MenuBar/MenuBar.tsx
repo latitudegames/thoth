@@ -111,26 +111,15 @@ const MenuBar = () => {
     publish($CREATE_CONSOLE(activeTabRef.current.id))
   }
 
-  //Menu bar hotkeys
-  useHotkeys(
-    'cmd+s, crtl+s',
-    event => {
-      event.preventDefault()
-      onSave()
-    },
-    { enableOnTags: ['INPUT'] },
-    [onSave]
-  )
+  const onUndo = () => {
+    if (!activeTabRef.current) return
+    publish($UNDO(activeTabRef.current.id))
+  }
 
-  useHotkeys(
-    'option+n, crtl+n',
-    event => {
-      event.preventDefault()
-      onNew()
-    },
-    { enableOnTags: ['INPUT'] },
-    [onNew]
-  )
+  const onRedo = () => {
+    if (!activeTabRef.current) return
+    publish($REDO(activeTabRef.current.id))
+  }
 
   //Menu bar entries
   const menuBarItems = {
