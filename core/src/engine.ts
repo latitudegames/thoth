@@ -1,14 +1,6 @@
 import Rete, { Engine } from 'rete'
 
-import {
-  ChainData,
-  ModelCompletionOpts,
-  ModuleType,
-  NodeData,
-  OpenAIResultChoice,
-  ThothWorkerInputs,
-} from '../types'
-import { ImageType } from './components/VisualGeneration'
+import { ChainData, ModuleType, NodeData, ThothWorkerInputs } from '../types'
 import debuggerPlugin from './plugins/debuggerPlugin'
 import ModulePlugin from './plugins/modulePlugin'
 import TaskPlugin, { Task } from './plugins/taskPlugin'
@@ -41,43 +33,6 @@ export abstract class ThothEngineComponent<WorkerReturnType> {
 }
 
 // TODO separate the engine context out from the editor context for cleaner typing.
-export type EngineContext = {
-  completion: (
-    body: ModelCompletionOpts
-  ) => Promise<string | OpenAIResultChoice | undefined>
-  getCurrentGameState: () => Record<string, unknown>
-  updateCurrentGameState: (update: Record<string, unknown>) => void
-  enkiCompletion: (
-    taskName: string,
-    inputs: string[] | string
-  ) => Promise<{ outputs: string[] }>
-  huggingface: (
-    model: string,
-    request: string
-  ) => Promise<{ error?: unknown; [key: string]: unknown }>
-  runSpell?: (
-    flattenedInputs: Record<string, any>,
-    spellId: string
-  ) => Record<string, any>
-  readFromImageCache: (
-    caption: string,
-    cacheTag?: string,
-    topK?: number
-  ) => Promise<ImageType[]>
-  onPlaytest?: Function
-  sendToDebug?: Function
-  onAddModule?: Function
-  onUpdateModule?: Function
-  sendToPlaytest?: Function
-  onInspector?: Function
-  sendToInspector?: Function
-  clearTextEditor?: Function
-  processCode?: (
-    code: unknown,
-    inputs: ThothWorkerInputs,
-    data: Record<string, any>
-  ) => void
-}
 
 export type InitEngineArguments = {
   name: string
