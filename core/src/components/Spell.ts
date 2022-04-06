@@ -97,6 +97,12 @@ export class SpellComponent extends ThothComponent<
     node.addInput(stateSocket)
     node.inspector.add(spellControl)
 
+    if (node.data.spellId) {
+      setTimeout(() => {
+        this.subscribe(node, node.data.spellId as string)
+      }, 1000)
+    }
+
     return node
   }
 
