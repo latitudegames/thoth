@@ -145,6 +145,7 @@ const Inspector = props => {
         width={width}
         updateData={updateData}
         updateControl={updateControl}
+        tab={props.tab}
       />
     </Window>
   )

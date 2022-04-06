@@ -12,12 +12,15 @@ import { EngineContext } from '../engine'
 import { Task } from '../plugins/taskPlugin/task'
 import { objectSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
-import { inputNameFromSocketKey } from '../utils/nodeHelpers'
+import {
+  inputNameFromSocketKey,
+  socketKeyFromOutputName,
+} from '../utils/nodeHelpers'
 
 const info = `The Module component allows you to add modules into your chain.  A module is a bundled self contained chain that defines inputs, outputs, and triggers using components.`
 
 export class SpellComponent extends ThothComponent<
-  Promise<ModuleWorkerOutput[]>
+  Promise<ModuleWorkerOutput>
 > {
   _task: Task
   updateModuleSockets: Function
@@ -93,9 +96,28 @@ export class SpellComponent extends ThothComponent<
 
   updateSockets(node: ThothNode, spell: Spell) {
     const chain = JSON.parse(JSON.stringify(spell.chain))
-    this.updateModuleSockets(node, chain)
+    this.updateModuleSockets(node, chain, true)
     this.editor.trigger('process')
     node.update()
+  }
+
+  formatOutputs(node: NodeData, outputs: Record<string, any>) {
+    return Object.entries(outputs).reduce((acc, [key, value]) => {
+      const socketKey = socketKeyFromOutputName(node, key)
+      if (!socketKey) return acc
+      acc[socketKey] = value
+      return acc
+    }, {} as Record<string, any>)
+  }
+
+  formatInputs(node: NodeData, inputs: Record<string, any>) {
+    return Object.entries(inputs).reduce((acc, [key, value]) => {
+      const name = inputNameFromSocketKey(node, key)
+      if (!name) return acc
+
+      acc[name] = value[0]
+      return acc
+    }, {} as Record<string, any>)
   }
 
   async worker(
@@ -121,19 +143,10 @@ export class SpellComponent extends ThothComponent<
     //   return module.outputs
     // }
 
-    // Otherwise, if we are, this is running serverside.
-    const flattenedInputs = Object.entries(inputs).reduce(
-      (acc, [key, value]) => {
-        const name = inputNameFromSocketKey(node, key)
-        if (!name) return acc
+    // We format the inputs since these inputs rely on the use of the socket keys.
+    const flattenedInputs = this.formatInputs(node, inputs)
 
-        acc[name] = value[0]
-        return acc
-      },
-      {} as Record<string, any>
-    )
-
-    if (!thoth.runSpell) return
+    if (!thoth.runSpell) return {}
     const response = await thoth.runSpell(flattenedInputs, node.data.spellId)
 
     if ('error' in response) {
