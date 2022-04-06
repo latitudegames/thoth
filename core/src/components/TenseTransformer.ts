@@ -138,6 +138,7 @@ export class TenseTransformer extends ThothComponent<Promise<WorkerReturn>> {
       stop: ['\n'],
       maxTokens: 100,
       temperature: 0.0,
+      model: 'vanilla-davinci',
     }
 
     try {
