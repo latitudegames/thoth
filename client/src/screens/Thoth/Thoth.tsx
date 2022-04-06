@@ -47,26 +47,7 @@ const Thoth = ({ empty = false }) => {
   }, [spellName])
 
   useHotkeys(
-    'Control+z',
-    () => {
-      if (!pubSub || !activeTab) return
-
-      publish(events.$UNDO(activeTab.id))
-    },
-    [pubSub, activeTab]
-  )
-
-  useHotkeys(
-    'Control+Shift+z',
-    () => {
-      if (!pubSub || !activeTab) return
-      publish(events.$REDO(activeTab.id))
-    },
-    [pubSub, activeTab]
-  )
-
-  useHotkeys(
-    'Control+Delete',
+    'Option+Delete',
     () => {
       if (!pubSub || !activeTab) return
       publish(events.$DELETE(activeTab.id))
