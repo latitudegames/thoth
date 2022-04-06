@@ -28,6 +28,7 @@
   position: absolute;
   right: 10px;
   color: var(--red);
+  border-radius: var(--extraSmall);
 }
 .deprecated-overlay {
   background-color: var(--red);
@@ -153,4 +154,8 @@
   background-repeat: no-repeat;
   background-position: center;
   background-size: 20%;
+  border-radius: var(--extraSmall);
+  width: 99%;
+  height: 99%;
+  margin: auto;
 }
