@@ -11,12 +11,78 @@ import {
 } from 'rete/types/core/data'
 
 import { Inspector } from './src/plugins/inspectorPlugin/Inspector'
-import { ModuleGraphData } from './src/plugins/modulePlugin/module-manager'
 import { TaskOutputTypes } from './src/plugins/taskPlugin/task'
 import { SocketNameType, SocketType } from './src/sockets'
-import { EngineContext } from './src/engine'
 import { ThothTask } from './src/thoth-component'
 import { ThothConsole } from './src/plugins/debuggerPlugin/ThothConsole'
+import { Data } from 'rete/types/core/data'
+
+export { ThothEditor } from './src/editor'
+
+export type { InspectorData } from './src/plugins/inspectorPlugin/Inspector'
+
+export type ImageType = {
+  id: string
+  captionId: string
+  imageCaption: string
+  imageUrl: string
+  tag: string
+  score: number | string
+}
+
+export type ImageCacheResponse = {
+  images: ImageType[]
+}
+
+export type EngineContext = {
+  completion: (
+    body: ModelCompletionOpts
+  ) => Promise<string | OpenAIResultChoice | undefined>
+  getCurrentGameState: () => Record<string, unknown>
+  updateCurrentGameState: (update: Record<string, unknown>) => void
+  enkiCompletion: (
+    taskName: string,
+    inputs: string[] | string
+  ) => Promise<{ outputs: string[] }>
+  huggingface: (
+    model: string,
+    request: string
+  ) => Promise<{ error?: unknown; [key: string]: unknown }>
+  runSpell: (
+    flattenedInputs: Record<string, any>,
+    spellId: string,
+    state: Record<string, any>
+  ) => Record<string, any>
+  readFromImageCache: (
+    caption: string,
+    cacheTag?: string,
+    topK?: number
+  ) => Promise<ImageCacheResponse>
+  processCode: (
+    code: unknown,
+    inputs: ThothWorkerInputs,
+    data: Record<string, any>
+  ) => void
+}
+
+export type EventPayload = Record<string, any>
+
+export interface EditorContext extends EngineContext {
+  sendToPlaytest: (data: string) => void
+  sendToInspector: (data: EventPayload) => void
+  sendToDebug: (data: EventPayload) => void
+  onInspector: (node: ThothNode, callback: Function) => Function
+  onPlaytest: (callback: Function) => Function
+  onDebug: (node: NodeData, callback: Function) => Function
+  clearTextEditor: () => void
+  getCurrentGameState: () => Record<string, unknown>
+  updateCurrentGameState: (update: EventPayload) => void
+  processCode: (
+    code: unknown,
+    inputs: ThothWorkerInputs,
+    data: Record<string, any>
+  ) => void
+}
 
 export type EventsTypes = {
   run: void
@@ -33,8 +99,19 @@ export type EventsTypes = {
   resetconnection: void
 }
 
+export interface Spell {
+  id?: string
+  user?: Record<string, unknown> | null | undefined
+  name: string
+  chain: ChainData
+  // Spells: Module[]
+  gameState: Record<string, unknown>
+  createdAt?: number
+  updatedAt?: number
+}
+
 export interface IRunContextEditor extends NodeEditor {
-  thoth: EngineContext
+  thoth: EditorContext
   abort: Function
 }
 
@@ -61,7 +138,7 @@ export type ThothNode = Node & {
 export type ModuleType = {
   id: string
   name: string
-  data: ModuleGraphData
+  data: ChainData
   createdAt: number
   updatedAt: number
 }
@@ -101,6 +178,8 @@ export type OpenAIResponse = {
   finish_reason: string
 }
 
+export type Subspell = { name: string; id: string; data: ChainData }
+
 export type ModuleComponent = Component & {
   run: Function
 }
@@ -124,6 +203,8 @@ export type NodeOutputs = {
   }
 }
 
+export type ChainData = Data
+
 export type NodeData = ReteNodeData & {
   fewshot?: string
   display: Function
@@ -140,10 +221,10 @@ export type NodeData = ReteNodeData & {
 //   position: number[]
 // }
 
-export type Spell = {
-  id: string
-  nodes: Record<number, Node>
-}
+// export type Spell = {
+//   id: string
+//   nodes: Record<number, Node>
+// }
 
 export type ThothReteInput = {
   type: TaskOutputTypes
@@ -159,8 +240,9 @@ export type TaskOutput = {
 }
 
 export type ModuleWorkerOutput = WorkerOutputs & {
-  [key: string]: string | string[]
+  [key: string]: any
 }
+
 export type ThothWorkerInput = string | unknown | unknown[]
 export type ThothWorkerInputs = { [key: string]: ThothWorkerInput[] }
 export type ThothWorkerOutputs = WorkerOutputs & {

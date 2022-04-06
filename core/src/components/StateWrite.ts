@@ -7,7 +7,7 @@ import {
 } from '../../types'
 
 import { SocketGeneratorControl } from '../dataControls/SocketGenerator'
-import { EngineContext } from '../engine'
+import { EngineContext } from '../../types'
 import { triggerSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 

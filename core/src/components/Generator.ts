@@ -9,8 +9,9 @@ import {
 } from '../../types'
 import { FewshotControl } from '../dataControls/FewshotControl'
 import { InputControl } from '../dataControls/InputControl'
+import { DropdownControl } from '../dataControls/DropdownControl'
 import { SocketGeneratorControl } from '../dataControls/SocketGenerator'
-import { EngineContext } from '../engine'
+import { EngineContext } from '../../types'
 import { triggerSocket, stringSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 const info = `The generator component is our general purpose completion component.  You can define any number of inputs, and utilize those inputs in a templating language known as Handlebars.  Any value which is wrapped like {{this}} in double braces will be replaced with the corresponding value coming in to the input with the same name.  This allows you to write almost any fewshot you might need, and input values from anywhere else in your chain.
@@ -55,10 +56,17 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       name: 'Component Name',
     })
 
+    const modelControl = new DropdownControl({
+      dataKey: 'model',
+      name: 'Model',
+      defaultValue: (node.data?.model as string) || 'vanilla-davinci',
+      values: ['vanilla-davinci', 'aid-jumbo', 'vanilla-jumbo'],
+    })
+
     const inputGenerator = new SocketGeneratorControl({
       connectionType: 'input',
-      name: 'Input Sockets',
       ignored: ['trigger'],
+      name: 'Input Sockets',
     })
 
     const fewshotControl = new FewshotControl({
@@ -69,28 +77,33 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       dataKey: 'stop',
       name: 'Stop',
       icon: 'stop-sign',
+      defaultValue: `\\n`,
     })
 
     const temperatureControl = new InputControl({
       dataKey: 'temp',
       name: 'Temperature',
       icon: 'temperature',
+      defaultValue: 0.7,
     })
 
     const maxTokenControl = new InputControl({
       dataKey: 'maxTokens',
       name: 'Max Tokens',
       icon: 'moon',
+      defaultValue: 50,
     })
 
     const frequencyPenalty = new InputControl({
       dataKey: 'frequencyPenalty',
       name: 'Frequency Penalty',
+      defaultValue: 0,
     })
 
     node.inspector
-      .add(nameControl)
+      .add(modelControl)
       .add(inputGenerator)
+      .add(nameControl)
       .add(fewshotControl)
       .add(stopControl)
       .add(temperatureControl)
@@ -112,14 +125,22 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       return acc
     }, {} as Record<string, unknown>)
 
-    const fewshot = (node.data.fewshot as string) || ''
+    const model = (node.data.model as string) || 'vanilla-davinci'
+    // const model = node.data.model || 'davinci'
+
+    // Replace carriage returns with newlines because that's what the language models expect
+    const fewshot = (node.data.fewshot as string).replace('\r\n', '\n') || ''
     const stopSequence = node.data.stop as string
-    const template = Handlebars.compile(fewshot)
+
+    const template = Handlebars.compile(fewshot, { noEscape: true })
     const prompt = template(inputs)
 
     const stop = node?.data?.stop
-      ? stopSequence.split(',').map(i => i.trim())
-      : ['\n']
+      ? stopSequence.split(',').map(i => {
+          if (i.includes('\n')) return i
+          return i.trim()
+        })
+      : ''
 
     const tempData = node.data.temp as string
     const temperature = tempData ? parseFloat(tempData) : 0.7
@@ -130,7 +151,10 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       ? parseFloat(frequencyPenaltyData)
       : 0
 
+    console.log({ model })
+
     const body = {
+      model,
       prompt,
       stop,
       maxTokens,
@@ -147,7 +171,9 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
         composed,
       }
     } catch (err) {
-      throw new Error('Error in Generator component.')
+      // Typescript reporting wrong about number of arguments for error constructor
+      //@ts-ignore:next-line
+      throw new Error('Error in Generator component.', { cause: err })
     }
   }
 }

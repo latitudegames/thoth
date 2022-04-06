@@ -37,13 +37,13 @@ export class RunInputComponent extends ThothComponent<WorkerReturn> {
         // subscribe to the run function
         // TODO abstract this into something more reusable.
         // maybe modifyy the task plugin to set a run function to the node itself?
-        const unsubscribe = this.editor?.on('run', args => {
-          if (args.nodeId === node.id) {
-            task.run()
-          }
-        })
+        // const unsubscribe = this.editor?.on('run', args => {
+        //   if (args.nodeId === node.id) {
+        //     task.run()
+        //   }
+        // })
 
-        this.subscriptionMap[node.id] = unsubscribe
+        // this.subscriptionMap[node.id] = unsubscribe
       },
     }
     this.category = 'I/O'

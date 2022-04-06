@@ -1,20 +1,23 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 
-import { useTabManager } from './contexts/TabManagerProvider'
-import RequireAuth from './features/common/RequireAuth/RequireAuth'
-import ThothPageWrapper from './features/common/ThothPage/ThothPageWrapper'
-import HomeScreen from './features/HomeScreen/HomeScreen'
-import Thoth from './features/Thoth/Thoth'
+import RequireAuth from './components/RequireAuth/RequireAuth'
+import ThothPageWrapper from './components/ThothPage/ThothPageWrapper'
+import HomeScreen from './screens/HomeScreen/HomeScreen'
+import Thoth from './screens/Thoth/Thoth'
 import { useAuth } from './contexts/AuthProvider'
 
 import 'flexlayout-react/style/dark.css'
 import './design-globals/design-globals.css'
 import './App.css'
+import { activeTabSelector, selectAllTabs } from './state/tabs'
+import { useSelector } from 'react-redux'
+import { RootState } from './state/store'
 //These need to be imported last to override styles.
 
 function App() {
   // Use our routes
-  const { tabs, activeTab } = useTabManager()
+  const tabs = useSelector((state: RootState) => selectAllTabs(state.tabs))
+  const activeTab = useSelector(activeTabSelector)
   const { user } = useAuth()
 
   const redirect = () => {

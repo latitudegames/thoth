@@ -2,6 +2,12 @@ import { ActionTypeComponent } from './ActionType'
 import { Alert } from './AlertMessage'
 import { BooleanGate } from './BooleanGate'
 import { Code } from './Code'
+import { InputFieldComponent } from './deprecated/InputField'
+import { ModuleInput } from './deprecated/ModuleInput'
+import { ModuleOutput } from './deprecated/ModuleOutput'
+import { PlaytestInput } from './deprecated/PlaytestInput'
+import { PlaytestPrint } from './deprecated/PlaytestPrint'
+import { RunInputComponent } from './deprecated/RunInput'
 import { DifficultyDetectorComponent } from './DifficultyDetector'
 import { EnkiTask } from './EnkiTask'
 import { EntityDetector } from './EntityDetector'
@@ -9,26 +15,20 @@ import { ForEach } from './ForEach'
 import { Generator } from './Generator'
 import { HuggingfaceComponent } from './Huggingface'
 import { InputComponent } from './Input'
-import { InputFieldComponent } from './deprecated/InputField'
 import { ItemTypeComponent } from './ItemDetector'
 import { JoinListComponent } from './JoinList'
-import { ModuleComponent } from './Module'
-import { ModuleInput } from './deprecated/ModuleInput'
-import { ModuleOutput } from './deprecated/ModuleOutput'
-import { TriggerIn } from './TriggerIn'
-import { TriggerOut } from './TriggerOut'
 import { Output } from './Output'
-import { PlaytestInput } from './deprecated/PlaytestInput'
-import { PlaytestPrint } from './deprecated/PlaytestPrint'
 import { ProseToScript } from './ProseToScript'
-import { RunInputComponent } from './deprecated/RunInput'
 import { SafetyVerifier } from './SafetyVerifier'
+import { SpellComponent } from './Spell'
 import { StateRead } from './StateRead'
 import { StateWrite } from './StateWrite'
 import { StringProcessor } from './StringProcessor'
 import { SwitchGate } from './SwitchGate'
 import { TenseTransformer } from './TenseTransformer'
 import { TimeDetectorComponent } from './TimeDetector'
+import { TriggerIn } from './TriggerIn'
+import { TriggerOut } from './TriggerOut'
 import { VisualGeneration } from './VisualGeneration'
 
 // Here we load up all components of the builder into our editor for usage.
@@ -49,7 +49,7 @@ export const components = {
   inputFieldComponent: () => new InputFieldComponent(),
   itemTypeComponent: () => new ItemTypeComponent(),
   joinListComponent: () => new JoinListComponent(),
-  moduleComponent: () => new ModuleComponent(),
+  moduleComponent: () => new SpellComponent(),
   moduleInput: () => new ModuleInput(),
   moduleOutput: () => new ModuleOutput(),
   output: () => new Output(),

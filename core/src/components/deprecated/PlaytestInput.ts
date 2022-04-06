@@ -5,8 +5,8 @@ import {
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
+  EditorContext,
 } from '../../../types'
-import { EngineContext } from '../../engine'
 import { Task } from '../../plugins/taskPlugin/task'
 import { triggerSocket, stringSocket } from '../../sockets'
 import { ThothComponent, ThothTask } from '../../thoth-component'
@@ -47,7 +47,7 @@ export class PlaytestInput extends ThothComponent<WorkerReturn> {
   unsubscribe?: () => void
 
   subscribeToPlaytest(node: ThothNode) {
-    const { onPlaytest } = this.editor?.thoth as EngineContext
+    const { onPlaytest } = this.editor?.thoth as EditorContext
 
     if (onPlaytest) {
       // store the unsubscribe function in our node map

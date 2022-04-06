@@ -1,26 +1,34 @@
-import { createTheme, ThemeProvider } from '@material-ui/core/styles'
+import {
+  createTheme,
+  ThemeProvider,
+  Theme,
+  adaptV4Theme,
+} from '@mui/material/styles'
 
 import AuthProvider from './AuthProvider'
-import DatabaseProvider from './DatabaseProvider'
-import ModuleProvider from './ModuleProvider'
 import PubSubProvider from './PubSubProvider'
-import TabManagerProvider from './TabManagerProvider'
+import SharedbProvider from './SharedbProvider'
 import ToastProvider from './ToastProvider'
 
-const darkTheme = createTheme({
-  palette: {
-    type: 'dark',
-  },
-})
+declare module '@mui/styles/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
+
+const darkTheme = createTheme(
+  adaptV4Theme({
+    palette: {
+      mode: 'dark',
+    },
+  })
+)
 
 const providers = [
   PubSubProvider,
   [ThemeProvider, { theme: darkTheme }],
   ToastProvider,
-  DatabaseProvider,
   AuthProvider,
-  ModuleProvider,
-  TabManagerProvider,
+  SharedbProvider,
 ]
 
 /**

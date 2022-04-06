@@ -17,7 +17,7 @@ function install(
   editor.on('componentregister', (component: ThothComponent<unknown>) => {
     const worker = component.worker
 
-    component.worker = (node, inputs, outputs, data, ...args) => {
+    component.worker = async (node, inputs, outputs, data, ...args) => {
       node.console = new ThothConsole({
         node,
         component,
@@ -27,7 +27,7 @@ function install(
       })
 
       try {
-        const result = worker.apply(component, [
+        const result = await worker.apply(component, [
           node,
           inputs,
           outputs,

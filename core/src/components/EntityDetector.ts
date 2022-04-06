@@ -7,7 +7,7 @@ import {
   ThothWorkerOutputs,
 } from '../../types'
 import { FewshotControl } from '../dataControls/FewshotControl'
-import { EngineContext } from '../engine'
+import { EngineContext } from '../../types'
 import { TaskOptions } from '../plugins/taskPlugin/task'
 import { stringSocket, triggerSocket, arraySocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'

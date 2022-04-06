@@ -16,6 +16,17 @@ type InspectorConstructor = {
 // todo improve this typing
 type DataControlData = Record<string, any>
 
+export type InspectorData = {
+  name: string
+  nodeId: number
+  dataControls: Record<string, any>
+  data: Record<string, unknown>
+  category?: string
+  info: string
+  deprecated: boolean
+  deprecationMessage: string
+}
+
 export class Inspector {
   // Stub of function.  Can be a nodes catch all onData
   cache: Record<string, any> = {}
@@ -51,7 +62,8 @@ export class Inspector {
     control.component = this.component
     control.id = uuidv4()
 
-    if (control.defaultValue)
+    // If we gave a dewfault value and there isnt already one on the node, add it.
+    if (control.defaultValue && !this.node.data[control.dataKey])
       this.node.data[control.dataKey] = control.defaultValue
 
     list.set(control.dataKey, control)
@@ -173,13 +185,18 @@ export class Inspector {
     this.node.data.dataControls = cache
   }
 
+  handleLock(update: Record<string, any>) {
+    if (!('nodeLocked' in update.data)) return
+    this.node.data.nodeLocked = update.data.nodeLocked
+  }
+
   handleData(update: Record<string, any>) {
-    console.log('Handling data!', update)
     // store all data controls inside the nodes data
     // WATCH in case our graphs start getting quite large.
     if (update.dataControls) this.cacheControls(update.dataControls)
 
     const { data } = update
+    this.handleLock(update)
 
     // Send data to a possibel node global handler
     // Turned off until the pattern might be useful
@@ -238,7 +255,7 @@ export class Inspector {
   get() {}
 
   // returns all data prepared for the pubsub to send it.
-  data() {
+  data(): InspectorData {
     const dataControls = Array.from(this.dataControls.entries()).reduce(
       (acc, [key, val]) => {
         const cache = this.node?.data?.dataControls as DataControlData

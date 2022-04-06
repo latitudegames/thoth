@@ -10,7 +10,7 @@ import {
 import { FewshotControl } from '../dataControls/FewshotControl'
 import { InputControl } from '../dataControls/InputControl'
 import { SocketGeneratorControl } from '../dataControls/SocketGenerator'
-import { EngineContext } from '../engine'
+import { EngineContext } from '../../types'
 import { triggerSocket, stringSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 const info = `The huggingface component is used to access models on huggingface.co.  For now it is very simple.  You define a number of inputs with the input generator, and you can use those in forming the request to your huggingface inference model.  You input the name of the model from hugginface into the model name field, and you run it.  It will call the model, and return the result.
@@ -20,12 +20,10 @@ NOTE:  Hugginface models are on demand, and sometimes require time to "boot up".
 Also note that you will likely need to parse the return from huggingface yourself inside a code component, or similar.`
 
 type WorkerReturn = {
-  result?:
-    | {
-        [key: string]: unknown
-        error: unknown
-      }
-    | undefined
+  result: {
+    [key: string]: unknown
+    error?: unknown
+  }
 }
 
 export class HuggingfaceComponent extends ThothComponent<
@@ -42,6 +40,7 @@ export class HuggingfaceComponent extends ThothComponent<
     }
     this.category = 'AI/ML'
     this.info = info
+    this.deprecated = true
   }
 
   builder(node: ThothNode) {

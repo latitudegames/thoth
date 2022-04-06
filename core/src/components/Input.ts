@@ -3,6 +3,7 @@ import Rete from 'rete'
 import { v4 as uuidv4 } from 'uuid'
 
 import {
+  EditorContext,
   NodeData,
   ThothNode,
   ThothWorkerInputs,
@@ -12,7 +13,7 @@ import { TextInputControl } from '../controls/TextInputControl'
 import { InputControl } from '../dataControls/InputControl'
 import { PlaytestControl } from '../dataControls/PlaytestControl'
 import { SwitchControl } from '../dataControls/SwitchControl'
-import { EngineContext } from '../engine'
+import {} from '../../types'
 import { Task } from '../plugins/taskPlugin/task'
 
 import { anySocket } from '../sockets'
@@ -57,7 +58,7 @@ export class InputComponent extends ThothComponent<InputReturn> {
   unsubscribe?: () => void
 
   subscribeToPlaytest(node: ThothNode) {
-    const { onPlaytest } = this.editor?.thoth as EngineContext
+    const { onPlaytest } = this.editor?.thoth as EditorContext
 
     // check node for the right data attribute
     if (onPlaytest) {
@@ -67,17 +68,11 @@ export class InputComponent extends ThothComponent<InputReturn> {
         const playtestToggle = node.data.playtestToggle as unknown as {
           receivePlaytest: boolean
         }
+
         if (!playtestToggle.receivePlaytest) return
 
         // attach the text to the nodes data for access in worker
         node.data.text = text
-
-        const task = this.nodeTaskMap[node.id]
-
-        // will need to run this here with the stater rather than the text
-        task?.run(text)
-        task?.reset()
-        this.editor?.trigger('process')
       })
     }
   }
@@ -104,7 +99,6 @@ export class InputComponent extends ThothComponent<InputReturn> {
     const data = node?.data?.playtestToggle as
       | {
           receivePlaytest: boolean
-          outputs: []
         }
       | undefined
 
@@ -112,11 +106,11 @@ export class InputComponent extends ThothComponent<InputReturn> {
       dataKey: 'playtestToggle',
       name: 'Receive from playtest input',
       defaultValue: {
-        receivePlaytest: data?.receivePlaytest || false,
-        outputs: data?.outputs || [],
+        receivePlaytest:
+          data?.receivePlaytest !== undefined ? data?.receivePlaytest : true,
       },
       ignored: ['output'],
-      label: 'Toggle playtest',
+      label: 'Recieve from playtest',
     })
 
     const toggleDefault = new SwitchControl({

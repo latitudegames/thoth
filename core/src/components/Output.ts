@@ -2,6 +2,7 @@ import Rete from 'rete'
 import { v4 as uuidv4 } from 'uuid'
 
 import {
+  EditorContext,
   NodeData,
   ThothNode,
   ThothWorkerInputs,
@@ -9,7 +10,6 @@ import {
 } from '../../types'
 import { InputControl } from '../dataControls/InputControl'
 import { SwitchControl } from '../dataControls/SwitchControl'
-import { EngineContext } from '../engine'
 import { triggerSocket, anySocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 const info = `The output component will pass values out from your spell.  You can have multiple outputs in a spell and all output values will be collected. It also has an option to send the output to the playtest area for easy testing.`
@@ -72,11 +72,11 @@ export class Output extends ThothComponent<void> {
     node: NodeData,
     inputs: ThothWorkerInputs,
     outputs: ThothWorkerOutputs,
-    { silent, thoth }: { silent: boolean; thoth: EngineContext }
+    { silent, thoth }: { silent: boolean; thoth: EditorContext }
   ) {
     if (!inputs.input) throw new Error('No input provided to output component')
 
-    const text = inputs.input.filter(Boolean)[0]
+    const text = inputs.input.filter(Boolean)[0] as string
 
     //just need a new check here for playtest send boolean
     const { sendToPlaytest } = thoth
