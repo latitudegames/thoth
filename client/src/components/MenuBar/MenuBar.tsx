@@ -164,8 +164,8 @@ const MenuBar = () => {
       items: {
         undo: {},
         redo: {},
-        copy: {},
-        paste: {},
+        // copy: {},
+        // paste: {},
       },
     },
     dev: {
