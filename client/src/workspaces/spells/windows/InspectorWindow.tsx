@@ -127,7 +127,7 @@ const Inspector = props => {
                 width: '100%',
                 height: '100%',
                 position: 'absolute',
-                zIndex: 10,
+                zIndex: 1,
                 opacity: '0.7',
                 backgroundPositionY: '18vh',
                 backgroundSize: '50%',
