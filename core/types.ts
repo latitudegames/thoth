@@ -63,6 +63,7 @@ export type EngineContext = {
     inputs: ThothWorkerInputs,
     data: Record<string, any>,
     state: Record<string, any>
+  ) => any | void
 }
 
 export type EventPayload = Record<string, any>
