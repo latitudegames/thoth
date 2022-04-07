@@ -102,7 +102,7 @@ export class Code extends ThothComponent<unknown> {
 
     try {
       // const value = runCodeWithArguments(node.data.code)
-      const value = processCode(node.data.code, inputs, data)
+      const value = processCode(node.data.code, inputs, data, state)
 
       if (!silent) node.display(`${JSON.stringify(value)}`)
 
