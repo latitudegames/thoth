@@ -95,7 +95,7 @@ export class Code extends ThothComponent<unknown> {
       thoth,
     }: { silent: boolean; thoth: EngineContext; data: { code: unknown } }
   ) {
-    const { processCode } = thoth
+    const { processCode, getCurrentGameState, updateCurrentGameState } = thoth
     if (!processCode) return
 
     try {
