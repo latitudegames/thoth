@@ -105,6 +105,7 @@ export class Code extends ThothComponent<unknown> {
       const value = processCode(node.data.code, inputs, data, state)
 
       if (!silent) node.display(`${JSON.stringify(value)}`)
+      if (value.state) updateCurrentGameState(value.state)
 
       return value
     } catch (err) {
