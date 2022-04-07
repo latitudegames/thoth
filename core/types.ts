@@ -83,6 +83,7 @@ export interface EditorContext extends EngineContext {
     inputs: ThothWorkerInputs,
     data: Record<string, any>,
     state: Record<string, any>
+  ) => any | void
 }
 
 export type EventsTypes = {
