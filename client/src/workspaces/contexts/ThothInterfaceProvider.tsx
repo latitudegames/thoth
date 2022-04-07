@@ -141,9 +141,10 @@ const ThothInterfaceProvider = ({ children, tab }) => {
       {} as Record<string, any>
     )
     // eslint-disable-next-line no-new-func
-    return Function('"use strict";return (' + code + ')')()(
+    const result = new Function('"use strict";return (' + code + ')')()(
       flattenedInputs,
-      data
+      data,
+      state
     )
   }
 
