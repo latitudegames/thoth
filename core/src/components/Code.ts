@@ -98,6 +98,8 @@ export class Code extends ThothComponent<unknown> {
     const { processCode, getCurrentGameState, updateCurrentGameState } = thoth
     if (!processCode) return
 
+    const state = getCurrentGameState()
+
     try {
       // const value = runCodeWithArguments(node.data.code)
       const value = processCode(node.data.code, inputs, data)
