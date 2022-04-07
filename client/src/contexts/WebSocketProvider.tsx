@@ -13,7 +13,7 @@ const Context = createContext<SharedbContext>({
   socket: null,
 })
 
-export const useSharedb = () => useContext(Context)
+export const useWebSocket = () => useContext(Context)
 
 export const docMap = new Map()
 
