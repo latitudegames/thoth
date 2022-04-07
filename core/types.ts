@@ -81,8 +81,8 @@ export interface EditorContext extends EngineContext {
   processCode: (
     code: unknown,
     inputs: ThothWorkerInputs,
-    data: Record<string, any>
-  ) => void
+    data: Record<string, any>,
+    state: Record<string, any>
 }
 
 export type EventsTypes = {
