@@ -45,7 +45,7 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
 
   const buildUrl = version => {
     // return encodeURI(`${latitudeApiRootUrl}/games/spells/${spellId}/${version}`)
-    return encodeURI(`${latitudeApiRootUrl}/games/chains/${spellId}/${version}`)
+    return encodeURI(`${latitudeApiRootUrl}/game/chains/${spellId}/${version}`)
   }
 
   const loadVersion = async version => {
