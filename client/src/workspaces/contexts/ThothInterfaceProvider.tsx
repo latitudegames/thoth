@@ -146,6 +146,10 @@ const ThothInterfaceProvider = ({ children, tab }) => {
       data,
       state
     )
+    if (result.state) {
+      updateCurrentGameState(result.state)
+    }
+    return result
   }
 
   const runSpell = async (inputs, spellId) => {
