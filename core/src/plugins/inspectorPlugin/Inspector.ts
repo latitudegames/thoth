@@ -159,7 +159,7 @@ export class Inspector {
         socket.socketKey || socket.name,
         socket.name,
         socketMap[socket.socketType],
-        socket.socketType === 'triggerSocket'
+        socket.socketType === 'triggerSocket' || isOutput
       )
 
       if (isOutput) {
