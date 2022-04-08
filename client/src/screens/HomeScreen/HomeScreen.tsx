@@ -11,8 +11,9 @@ import CreateNew from './screens/CreateNew'
 import OpenProject from './screens/OpenProject'
 import css from './homeScreen.module.css'
 import LoadingScreen from '../../components/LoadingScreen/LoadingScreen'
-import { closeTab, openTab } from '@/state/tabs'
-import { useDispatch } from 'react-redux'
+import { closeTab, openTab, selectAllTabs } from '@/state/tabs'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '@/state/store'
 
 //MAIN
 
@@ -24,6 +25,8 @@ const StartScreen = () => {
   const [deleteSpell] = useDeleteSpellMutation()
   const { data: spells } = useGetSpellsQuery()
   const [newSpell] = useNewSpellMutation()
+
+  const tabs = useSelector((state: RootState) => selectAllTabs(state.tabs))
 
   const onReaderLoad = async event => {
     const spellData = JSON.parse(event.target.result)
@@ -61,7 +64,8 @@ const StartScreen = () => {
   const onDelete = async spellId => {
     try {
       await deleteSpell(spellId)
-      dispatch(closeTab(spellId))
+      const [ tab ] = tabs.filter(tab => tab.spellId === spellId)      
+      dispatch(closeTab(tab.id))
     } catch (err) {
       console.log('Error deleting spell', err)
     }

@@ -14,6 +14,7 @@ import { getTestSpell } from './testSpells'
 import { Graph, Module } from './types'
 
 import otJson0 from 'ot-json0'
+import { Op } from 'sequelize'
 
 export const modules: Record<string, unknown> = {}
 
@@ -229,10 +230,14 @@ const newHandler = async (ctx: Koa.Context) => {
   }
 
   const spell = await creatorToolsDatabase.spells.findOne({
-    where: { name: body.name },
-  })
+    where: { 
+      name: body.name, 
+      deletedAt: { [Op.ne]: null }
+    },
+    paranoid: false
+  })  
 
-  if (spell) throw new CustomError('input-failed', 'Spell name already taken')
+  if (spell) await spell.destroy({ force: true })
 
   const newSpell = await creatorToolsDatabase.spells.create({
     name: body.name,
