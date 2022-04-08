@@ -48,7 +48,7 @@ export class Code extends ThothComponent<unknown> {
     this.display = true
   }
 
-  builder(node: ThothNode): ThothNode {
+  builder(node: ThothNode) {
     if (!node.data.code) node.data.code = defaultCode
 
     const outputGenerator = new SocketGeneratorControl({
