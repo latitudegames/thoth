@@ -61,11 +61,11 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       name: 'Model',
       defaultValue: (node.data?.model as string) || 'vanilla-jumbo',
       values: [
-        'vanilla-davinci',
         'aid-jumbo',
         'vanilla-jumbo',
         'aid-gpt-j',
         'aid-neox',
+        'vanilla-neox',
       ],
     })
 
