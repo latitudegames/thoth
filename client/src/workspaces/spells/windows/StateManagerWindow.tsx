@@ -83,8 +83,8 @@ const StateManager = ({ tab, ...props }) => {
     try {
       const parsedState = JSON.parse(code)
       const spellUpdate = {
-        gameState: parsedState,
         ...spell,
+        gameState: parsedState,
       }
 
       publish(SAVE_SPELL_DIFF, spellUpdate)
