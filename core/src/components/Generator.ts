@@ -66,6 +66,7 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
         'aid-gpt-j',
         'aid-neox',
         'vanilla-neox',
+        'entity-detector',
       ],
     })
 
@@ -131,7 +132,7 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       return acc
     }, {} as Record<string, unknown>)
 
-    const model = (node.data.model as string) || 'vanilla-davinci'
+    const model = (node.data.model as string) || 'vanilla-jumbo'
     // const model = node.data.model || 'davinci'
 
     // Replace carriage returns with newlines because that's what the language models expect
