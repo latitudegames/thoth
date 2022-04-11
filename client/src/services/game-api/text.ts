@@ -9,7 +9,7 @@ export const completion = async body => {
         'Content-Type': 'application/json',
         ...(await getAuthHeader()),
       },
-      body: JSON.stringify({ ...body, prompt: body.prompt.trimEnd() }),
+      body: JSON.stringify({ ...body, prompt: body.prompt }),
     })
     const result = await response.json()
     return result.completions[0].text

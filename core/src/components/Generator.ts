@@ -59,8 +59,15 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
     const modelControl = new DropdownControl({
       dataKey: 'model',
       name: 'Model',
-      defaultValue: (node.data?.model as string) || 'vanilla-davinci',
-      values: ['vanilla-davinci', 'aid-jumbo', 'vanilla-jumbo'],
+      defaultValue: (node.data?.model as string) || 'vanilla-jumbo',
+      values: [
+        'aid-jumbo',
+        'vanilla-jumbo',
+        'aid-gpt-j',
+        'aid-neox',
+        'vanilla-neox',
+        'entity-detector',
+      ],
     })
 
     const inputGenerator = new SocketGeneratorControl({
@@ -101,9 +108,9 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
     })
 
     node.inspector
+      .add(nameControl)
       .add(modelControl)
       .add(inputGenerator)
-      .add(nameControl)
       .add(fewshotControl)
       .add(stopControl)
       .add(temperatureControl)
@@ -125,7 +132,7 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       return acc
     }, {} as Record<string, unknown>)
 
-    const model = (node.data.model as string) || 'vanilla-davinci'
+    const model = (node.data.model as string) || 'vanilla-jumbo'
     // const model = node.data.model || 'davinci'
 
     // Replace carriage returns with newlines because that's what the language models expect
@@ -163,7 +170,7 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
     }
     try {
       const raw = (await completion(body)) as string
-      const result = raw?.trim()
+      const result = raw
       const composed = `${prompt} ${result}`
 
       return {

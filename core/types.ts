@@ -61,8 +61,9 @@ export type EngineContext = {
   processCode: (
     code: unknown,
     inputs: ThothWorkerInputs,
-    data: Record<string, any>
-  ) => void
+    data: Record<string, any>,
+    state: Record<string, any>
+  ) => any | void
 }
 
 export type EventPayload = Record<string, any>
@@ -80,8 +81,9 @@ export interface EditorContext extends EngineContext {
   processCode: (
     code: unknown,
     inputs: ThothWorkerInputs,
-    data: Record<string, any>
-  ) => void
+    data: Record<string, any>,
+    state: Record<string, any>
+  ) => any | void
 }
 
 export type EventsTypes = {

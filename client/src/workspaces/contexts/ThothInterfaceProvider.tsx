@@ -132,7 +132,7 @@ const ThothInterfaceProvider = ({ children, tab }) => {
     return result.data
   }
 
-  const processCode = (code, inputs, data) => {
+  const processCode = (code, inputs, data, state) => {
     const flattenedInputs = Object.entries(inputs as ThothWorkerInputs).reduce(
       (acc, [key, value]) => {
         acc[key as string] = value[0]
@@ -141,10 +141,15 @@ const ThothInterfaceProvider = ({ children, tab }) => {
       {} as Record<string, any>
     )
     // eslint-disable-next-line no-new-func
-    return Function('"use strict";return (' + code + ')')()(
+    const result = new Function('"use strict";return (' + code + ')')()(
       flattenedInputs,
-      data
+      data,
+      state
     )
+    if (result.state) {
+      updateCurrentGameState(result.state)
+    }
+    return result
   }
 
   const runSpell = async (inputs, spellId) => {
