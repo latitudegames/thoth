@@ -1,14 +1,11 @@
 import {
-  getComponents,
-  initSharedEngine,
-} from '@latitudegames/thoth-core/server'
-import {
   EngineContext,
   ChainData,
   ModuleComponent,
   Spell as SpellType,
 } from '../../types'
-import { extractNodes, ThothEngine } from '../engine'
+import { getComponents } from '../components/components'
+import { extractNodes, initSharedEngine, ThothEngine } from '../engine'
 import { Module } from '../plugins/modulePlugin/module'
 import { extractModuleInputKeys } from './chainHelpers'
 
