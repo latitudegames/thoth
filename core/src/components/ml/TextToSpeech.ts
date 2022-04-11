@@ -44,7 +44,7 @@ export class TextToSpeech extends ThothComponent<Promise<WorkerReturn>> {
     const characterInp = new Rete.Input('character', 'Character', stringSocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
-    const outp = new Rete.Output('Voice', 'String', stringSocket)
+    const outp = new Rete.Output('output', 'output', stringSocket)
 
     return node
       .addInput(inp)
@@ -63,18 +63,16 @@ export class TextToSpeech extends ThothComponent<Promise<WorkerReturn>> {
     const action = inputs['string'][0]
     const character = inputs['character']?.[0] as string
 
-    const url = await axios.get(
-      `${process.env.REACT_APP_API_ROOT_URL}/speech_to_text`,
-      {
-        params: {
-          text: action,
-          character: character,
-        },
-      }
-    )
+    const url = await axios.get(`${process.env.API_URL}/speech_to_text`, {
+      params: {
+        text: action,
+        character: character,
+      },
+    })
+    console.log('url', url.data)
 
     return {
-      output: (url.data as any).path as string,
+      output: url.data as string,
     }
   }
 }

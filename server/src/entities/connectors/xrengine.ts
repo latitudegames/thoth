@@ -403,6 +403,11 @@ export class xrengine_client {
 
   async handleXREngineResponse(responses, addPing, sender, isVoice) {
     log('response: ' + responses)
+
+    if ((responses as string).includes('uberduck')) {
+      isVoice = true
+    }
+
     if (!isVoice) {
       if (
         responses !== undefined &&
@@ -473,7 +478,9 @@ export class xrengine_client {
         this.xrengineBot.sendMessage(emptyResponse)
       }
     } else {
-      this.xrengineBot.sendAudio(5, responses)
+      console.log('sending voice url')
+      this.xrengineBot.sendMessage('!voiceUrl|' + responses, true)
+      //this.xrengineBot.sendAudio(5, responses)
     }
   }
 
@@ -590,7 +597,7 @@ class XREngineBot {
     setInterval(() => this.instanceMessages(), 1000)
   }
 
-  async sendMessage(message) {
+  async sendMessage(message, clean = false) {
     log('sending message: ' + message)
     if (message === null || message === undefined) return
     // TODO:
@@ -599,7 +606,7 @@ class XREngineBot {
 
     // await this.sendAudio(5)
 
-    await this.typeMessage('newMessage', message, false)
+    await this.typeMessage('newMessage', message, clean)
     await this.pressKey('Enter')
   }
 

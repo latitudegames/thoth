@@ -181,11 +181,12 @@ const createEvent = async (ctx: Koa.Context) => {
 const getSpeechToText = async (ctx: Koa.Context) => {
   const text = ctx.request.query.text
   const character = ctx.request.query.character
-  const cache = cacheManager.instance.get(
-    'global',
+  const cache = await cacheManager.instance.get(
+    character as string,
     'speech_' + character + ': ' + text
   )
   if (cache !== undefined && cache !== null) {
+    console.log('got sst from cache, cache:', cache)
     return (ctx.body = cache)
   }
 
@@ -195,6 +196,7 @@ const getSpeechToText = async (ctx: Koa.Context) => {
     character as string,
     text as string
   )
+  console.log('stt url:', url)
 
   cacheManager.instance.set('global', 'speech_' + character + ': ' + text, url)
 

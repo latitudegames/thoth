@@ -1,6 +1,8 @@
 import { SpeechClient } from '@google-cloud/speech'
 import { Server } from 'socket.io'
 import { config } from 'dotenv-flow'
+import https from 'https'
+import * as fs from 'fs'
 
 config({ path: '.env' })
 
@@ -29,10 +31,27 @@ export async function initSpeechServer(ignoreDotEnv: boolean) {
     return
   }
 
+  const useSSL = process.env.USSSL_SPEECH === 'true'
+
   const PORT: number = Number(process.env.SPEECH_SERVER_PORT) || 65532
-  const io = new Server(PORT, {
-    cors: { origin: '*', methods: ['GET', 'POST'] },
-  })
+  let io
+
+  if (useSSL) {
+    const server = https.createServer({
+      key: fs.readFileSync('key.pem'),
+      cert: fs.readFileSync('cert.pem'),
+    })
+    server.listen(PORT)
+    io = new Server({
+      cors: { origin: '*', methods: ['GET', 'POST'] },
+    })
+    io.attach(server)
+  } else {
+    io = new Server(PORT, {
+      cors: { origin: '*', methods: ['GET', 'POST'] },
+    })
+  }
+
   console.log('speech server started on port', PORT)
 
   speechClient = new SpeechClient()
@@ -64,7 +83,7 @@ export async function initSpeechServer(ignoreDotEnv: boolean) {
         ) {
           recognizeStream.write(data)
         }
-      } catch (e) { }
+      } catch (e) {}
     })
 
     function startRecognitionStream(client: any) {
