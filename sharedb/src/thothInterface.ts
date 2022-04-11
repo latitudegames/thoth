@@ -8,6 +8,9 @@ export const buildThothInterface = (): EngineContext => {
     getCurrentGameState() {
       return {}
     },
+    async enkiCompletion() {
+      return { outputs: [] }
+    },
     updateCurrentGameState() {},
     async huggingface() {
       return {}
