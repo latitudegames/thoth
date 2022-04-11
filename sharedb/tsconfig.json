@@ -1,21 +1,31 @@
 {
-  "extends": "../tsconfig.json",
+  "compileOnSave": true,
   "compilerOptions": {
+    "experimentalDecorators": true,
     "allowJs": true,
+
+    "allowUnreachableCode": false,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
     "module": "commonjs",
-    "jsx": "react-jsx",
+    "outDir": "dist",
+    "removeComments": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "target": "ES2021",
+    "typeRoots": ["./@types", "node_modules/@types"],
+    "types": ["node", "jest"],
+    "baseUrl": ".",
+    "paths": {
+      "@latitudegames/thoth-core": ["@types/thoth-core.d.ts"],
+      "@teamwork/websocket-json-stream": [
+        "@types/@teamwork/websocket-json-stream"
+      ]
+    },
     "noImplicitAny": true,
-    "noUnusedLocals": true,
-    "strictNullChecks": true,
-    "strict": false,
-    "outDir": "./dist/",
-    "rootDir": ".",
-    "declaration": true,
-    "composite": true,
-    "noEmit": false,
-    "target": "es6",
-    "sourceMap": true
+    "strictNullChecks": true
   },
-  "include": ["./"],
-  "exclude": ["./node_modules/", "./dist/"]
+  "include": ["src/**/*.ts", "@types/**/*.d.ts", "index.ts"]
 }
