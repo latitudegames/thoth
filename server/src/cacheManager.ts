@@ -13,7 +13,7 @@ export class cacheManager {
     this.cleanTime = cleanTime
   }
 
-  async get(agent: string, key: string) {
+  async get(agent: string, key: string, string: boolean) {
     if (
       !this.cache[agent] ||
       this.cache[agent] === undefined ||
@@ -34,8 +34,10 @@ export class cacheManager {
       }
     }
 
-    return res
-    /*
+    if (string === true) {
+      return res
+    }
+
     if (!res || res === undefined) {
       const docs: string[] = []
       for (var x in this.cache[agent]) {
@@ -75,7 +77,7 @@ export class cacheManager {
       }
     }
 
-    return res*/
+    return res
   }
   set(agent: string, key: string, value: any) {
     if (this.cache[agent] === undefined) {

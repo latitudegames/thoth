@@ -183,7 +183,8 @@ const getSpeechToText = async (ctx: Koa.Context) => {
   const character = ctx.request.query.character
   const cache = await cacheManager.instance.get(
     character as string,
-    'speech_' + character + ': ' + text
+    'speech_' + character + ': ' + text,
+    true
   )
   if (cache !== undefined && cache !== null) {
     console.log('got sst from cache, cache:', cache)
@@ -300,7 +301,8 @@ const customMessage = async (ctx: Koa.Context) => {
     const character = 'kurzgesagt'
     const cache = cacheManager.instance.get(
       'global',
-      'speech_' + character + ': ' + response
+      'speech_' + character + ': ' + response,
+      true
     )
     if (cache !== undefined && cache !== null) {
       return (ctx.body = cache)
@@ -326,8 +328,9 @@ const customMessage = async (ctx: Koa.Context) => {
 const getFromCache = async (ctx: Koa.Context) => {
   const key = ctx.request.query.key as string
   const agent = ctx.request.query.agent as string
+  const strict = ctx.request.query.strict as string
 
-  const value = cacheManager.instance.get(agent, key)
+  const value = cacheManager.instance.get(agent, key, strict === 'true')
   return (ctx.body = { data: value })
 }
 

@@ -11,6 +11,7 @@ import {
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../../types'
+import { BooleanControl } from '../../dataControls/BooleanControl'
 import { EngineContext } from '../../engine'
 import { triggerSocket, stringSocket, anySocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
@@ -44,6 +45,14 @@ export class CacheManagerGet extends ThothComponent<Promise<WorkerReturn>> {
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
     const output = new Rete.Output('output', 'Output', anySocket)
 
+    const strict = new BooleanControl({
+      dataKey: 'strict',
+      name: 'Strict',
+      icon: 'moon',
+    })
+
+    node.inspector.add(strict)
+
     return node
       .addInput(keyInput)
       .addInput(agentInput)
@@ -60,6 +69,7 @@ export class CacheManagerGet extends ThothComponent<Promise<WorkerReturn>> {
   ) {
     const key = inputs['key'][0] as string
     const agent = inputs['agent'] ? (inputs['agent'][0] as string) : 'Global'
+    const strict = node.data?.strict as string
 
     const resp = await axios.get(
       `${process.env.REACT_APP_API_URL}/cache_manager`,
@@ -67,6 +77,7 @@ export class CacheManagerGet extends ThothComponent<Promise<WorkerReturn>> {
         params: {
           key: key,
           agent: agent,
+          strict: strict,
         },
       }
     )
