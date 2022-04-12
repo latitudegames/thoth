@@ -9,7 +9,7 @@ import {
 } from '../../types'
 import { FewshotControl } from '../dataControls/FewshotControl'
 import { InputControl } from '../dataControls/InputControl'
-import { DropdownControl } from '../dataControls/DropdownControl'
+import { ModelControl } from '../dataControls/ModelControl'
 import { SocketGeneratorControl } from '../dataControls/SocketGenerator'
 import { EngineContext } from '../../types'
 import { triggerSocket, stringSocket } from '../sockets'
@@ -56,18 +56,10 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       name: 'Component Name',
     })
 
-    const modelControl = new DropdownControl({
+    const modelControl = new ModelControl({
       dataKey: 'model',
       name: 'Model',
       defaultValue: (node.data?.model as string) || 'vanilla-jumbo',
-      values: [
-        'aid-jumbo',
-        'vanilla-jumbo',
-        'aid-gpt-j',
-        'aid-neox',
-        'vanilla-neox',
-        'entity-detector',
-      ],
     })
 
     const inputGenerator = new SocketGeneratorControl({
