@@ -42,10 +42,9 @@ export async function initSpeechServer(ignoreDotEnv: boolean) {
       cert: fs.readFileSync('cert.pem'),
     })
     server.listen(PORT)
-    io = new Server({
+    io = new Server(server, {
       cors: { origin: '*', methods: ['GET', 'POST'] },
     })
-    io.attach(server)
   } else {
     io = new Server(PORT, {
       cors: { origin: '*', methods: ['GET', 'POST'] },

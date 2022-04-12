@@ -8,8 +8,7 @@ export function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-export function getRandomEmptyResponse(responses: string[]) {
-}
+export function getRandomEmptyResponse(responses: string[]) {}
 
 export function startsWithCapital(word) {
   return word.charAt(0) === word.charAt(0).toUpperCase()

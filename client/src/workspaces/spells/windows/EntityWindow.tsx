@@ -182,49 +182,56 @@ const EntityWindow = ({ id, updateCallback }) => {
         data: _data,
       })
       .then(res => {
-        console.log('response on update', JSON.parse(res.config.data).data)
-        let responseData = res && JSON.parse(res?.config?.data).data
-        console.log(responseData, 'responseDataresponseData')
-        setEnabled(responseData.enabled)
-        setdiscord_enabled(responseData.discord_enabled)
-        setDiscordApiKey(responseData.discord_api_key)
-        setDiscordStartingWords(responseData.discord_starting_words)
-        setDiscordBotNameRegex(responseData.discord_bot_name_regex)
-        setDiscordBotName(responseData.discord_bot_name)
-        setDiscordEmptyResponses(responseData.discord_empty_responses)
-        setDiscordSpellHandlerIncoming(
-          responseData.discord_spell_handler_incoming
-        )
-        setDiscordSpellHandlerUpdate(responseData.discord_spell_handler_update)
-        setDiscordSpellHandlerFeed(responseData.discord_spell_handler_feed)
-        setXREngineSpellHandlerIncoming(
-          responseData.xrengine_spell_handler_incoming
-        )
-        setXREngineSpellHandlerUpdate(
-          responseData.xrengine_spell_handler_update
-        )
-        setXREngineSpellHandlerFeed(responseData.xrengine_spell_handler_feed)
-        setXREngineBotName(responseData.xrengine_bot_name)
-        setXREngineBotNameRegex(responseData.xrengine_bot_name_regex)
-        setXREngineStartingWords(responseData.xrengine_starting_words)
-        setXREngineEmptyResponses(responseData.xrengine_empty_responses)
+        if (res.data === 'internal error') {
+          alert('internal error updating entity')
+        } else {
+          alert('updated entity')
+          console.log('response on update', JSON.parse(res.config.data).data)
+          let responseData = res && JSON.parse(res?.config?.data).data
+          console.log(responseData, 'responseDataresponseData')
+          setEnabled(responseData.enabled)
+          setdiscord_enabled(responseData.discord_enabled)
+          setDiscordApiKey(responseData.discord_api_key)
+          setDiscordStartingWords(responseData.discord_starting_words)
+          setDiscordBotNameRegex(responseData.discord_bot_name_regex)
+          setDiscordBotName(responseData.discord_bot_name)
+          setDiscordEmptyResponses(responseData.discord_empty_responses)
+          setDiscordSpellHandlerIncoming(
+            responseData.discord_spell_handler_incoming
+          )
+          setDiscordSpellHandlerUpdate(
+            responseData.discord_spell_handler_update
+          )
+          setDiscordSpellHandlerFeed(responseData.discord_spell_handler_feed)
+          setXREngineSpellHandlerIncoming(
+            responseData.xrengine_spell_handler_incoming
+          )
+          setXREngineSpellHandlerUpdate(
+            responseData.xrengine_spell_handler_update
+          )
+          setXREngineSpellHandlerFeed(responseData.xrengine_spell_handler_feed)
+          setXREngineBotName(responseData.xrengine_bot_name)
+          setXREngineBotNameRegex(responseData.xrengine_bot_name_regex)
+          setXREngineStartingWords(responseData.xrengine_starting_words)
+          setXREngineEmptyResponses(responseData.xrengine_empty_responses)
 
-        setTwitterClientEnable(responseData.twitter_client_enable)
-        setTwitterToken(responseData.twitter_token)
-        setTwitterId(responseData.twitter_id)
-        setTwitterAppToken(responseData.twitter_app_token)
-        setTwitterAppTokenSecret(responseData.twitter_app_token_secret)
-        setTwitterAccessToken(responseData.twitter_access_token)
-        setTwitterAccessTokenSecret(responseData.twitter_access_token_secret)
-        setTwitterBotName(responseData.twitter_bot_name)
-        setTwitterBotNameRegex(responseData.twitter_bot_name_regex)
+          setTwitterClientEnable(responseData.twitter_client_enable)
+          setTwitterToken(responseData.twitter_token)
+          setTwitterId(responseData.twitter_id)
+          setTwitterAppToken(responseData.twitter_app_token)
+          setTwitterAppTokenSecret(responseData.twitter_app_token_secret)
+          setTwitterAccessToken(responseData.twitter_access_token)
+          setTwitterAccessTokenSecret(responseData.twitter_access_token_secret)
+          setTwitterBotName(responseData.twitter_bot_name)
+          setTwitterBotNameRegex(responseData.twitter_bot_name_regex)
 
-        // setTwilioClientEnable(responseData.twilio_client_enable)
-        // setTwilioSid(responseData.twilio_sid)
-        // setTwilioAuthToken(responseData.twilio_auth_token)
-        // setTwilioPhoneNumber(responseData.twilio_phone_number)
+          // setTwilioClientEnable(responseData.twilio_client_enable)
+          // setTwilioSid(responseData.twilio_sid)
+          // setTwilioAuthToken(responseData.twilio_auth_token)
+          // setTwilioPhoneNumber(responseData.twilio_phone_number)
 
-        updateCallback()
+          updateCallback()
+        }
       })
   }
 
