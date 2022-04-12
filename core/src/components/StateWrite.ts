@@ -21,7 +21,7 @@ export class StateWrite extends ThothComponent<void> {
     super('State Write')
 
     this.task = {
-      outputs: {},
+      outputs: { trigger: 'option' },
     }
 
     this.workspaceType = 'spell'
