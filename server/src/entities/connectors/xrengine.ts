@@ -531,21 +531,25 @@ export class xrengine_client {
     const xvfb = new Xvfb()
     await xvfb.start(async function (err, xvfbProcess) {
       if (err) {
-        log(err)
+        console.log(err)
         xvfb.stop(function (_err) {
           if (_err) log(_err)
         })
       }
 
-      log('started virtual window')
-      log('Preparing to connect to ', settings.url)
-      cli.xrengineBot.delay(3000 + Math.random() * 1000)
-      log('Connecting to server...')
-      await cli.xrengineBot.launchBrowser()
-      const XRENGINE_URL =
-        (settings.url as string) || 'https://n3xus.city/location/test'
-      cli.xrengineBot.enterRoom(XRENGINE_URL, settings.xrengine_bot_name)
-      log('bot fully loaded')
+      try {
+        console.log('started virtual window')
+        console.log('Preparing to connect to ', settings.url)
+        cli.xrengineBot.delay(3000 + Math.random() * 1000)
+        console.log('Connecting to server...')
+        await cli.xrengineBot.launchBrowser()
+        const XRENGINE_URL =
+          (settings.url as string) || 'https://n3xus.city/location/test'
+        cli.xrengineBot.enterRoom(XRENGINE_URL, settings.xrengine_bot_name)
+        console.log('bot fully loaded')
+      } catch (e) {
+        console.log('XVFB ERROR:', e)
+      }
     })
   }
 }
@@ -929,7 +933,7 @@ class XREngineBot {
   async launchBrowser() {
     log('Launching browser')
     const options = {
-      headless: this.headless,
+      headless: true,
       ignoreHTTPSErrors: true,
       args: [
         '--disable-gpu',
@@ -940,6 +944,8 @@ class XREngineBot {
         //     '--use-file-for-fake-video-capture=/Users/apple/Downloads/football_qcif_15fps.y4m',
         //     // '--use-file-for-fake-audio-capture=/Users/apple/Downloads/BabyElephantWalk60.wav',
         '--allow-file-access=1',
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
       ],
       ignoreDefaultArgs: ['--mute-audio'],
       ...detectOsOption(),
@@ -1066,7 +1072,7 @@ class XREngineBot {
       }
 
       /*if (this.autoLog)*/
-      //console.log('>>', message.text())
+      console.log('>>', message.text())
     })
 
     this.page.setViewport({ width: 0, height: 0 })
@@ -1104,21 +1110,27 @@ class XREngineBot {
 
   async navigate(url) {
     if (!this.browser) {
+      console.log('browser was null')
       await this.launchBrowser()
     }
 
-    const parsedUrl = new URL(url.includes('https') ? url : `https://${url}`)
-    parsedUrl.searchParams.set('bot', 'true')
-    log('parsed url is', parsedUrl)
-    const context = this.browser.defaultBrowserContext()
-    log('permission allow for ', parsedUrl.origin)
-    context.overridePermissions(parsedUrl.origin, ['microphone', 'camera'])
-
-    log(`Going to ${parsedUrl}`)
     try {
+      const parsedUrl = new URL(url.includes('https') ? url : `https://${url}`)
+      parsedUrl.searchParams.set('bot', 'true')
+      console.log('parsed url is', parsedUrl)
+      const context = this.browser.defaultBrowserContext()
+      console.log('permission allow for ', parsedUrl.origin)
+      context.overridePermissions(parsedUrl.origin, ['microphone', 'camera'])
+
+      console.log(`Going to ${parsedUrl}`)
       await this.page.goto(parsedUrl, { waitUntil: 'domcontentloaded' })
+      const data = await this.page.evaluate(
+        () => document.querySelector('*').outerHTML
+      )
+
+      console.log(data)
     } catch (error) {
-      return log('Unable to connect to XREngine world', error)
+      return console.log('Unable to connect to XREngine world', error)
     }
 
     /* const granted = await this.page.evaluate(async () => {
@@ -1136,6 +1148,7 @@ class XREngineBot {
     try {
       console.log('bot name:', name)
       await this.navigate(roomUrl)
+      console.log('navigate at:', roomUrl)
       await this.page.waitForSelector('div[class*="instance-chat-container"]', {
         timeout: 100000,
       })
@@ -1150,10 +1163,6 @@ class XREngineBot {
         this.settings.xrengine_bot_name_regex,
         'ig'
       )
-
-      if (this.headless) {
-        // Disable rendering for headless, otherwise chromium uses a LOT of CPU
-      }
 
       //@ts-ignore
       if (this.setName != null) this.setName(name)
