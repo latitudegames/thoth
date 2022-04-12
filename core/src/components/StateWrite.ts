@@ -30,7 +30,12 @@ export class StateWrite extends ThothComponent<void> {
   }
 
   builder(node: ThothNode) {
-    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
+    const socketInput = new Rete.Input(
+      'trigger',
+      'Trigger',
+      triggerSocket,
+      true
+    )
 
     const inputGenerator = new SocketGeneratorControl({
       connectionType: 'input',
