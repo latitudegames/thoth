@@ -45,7 +45,8 @@ export class StateWrite extends ThothComponent<void> {
     })
 
     node.inspector.add(inputGenerator)
-    node.addInput(dataInput)
+
+    node.addInput(socketInput).addOutput(socketOut)
 
     return node
   }
