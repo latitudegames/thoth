@@ -100,10 +100,10 @@ export class Classifier extends ThothComponent<Promise<InputReturn>> {
     const { data, success, error } = resp.data
 
     if (!silent) {
-      if (!success) node.display(error)
-      else node.display('Top label is ' + data.labels)
+      if (!success || !data) node.display(error)
+      else node.display('Top label is ' + data && data.labels)
     }
-    console.log('Top label is ' + data.labels)
-    return { output: (data.labels && data.labels[0]) ?? 'error' }
+    console.log('Respone is', resp.data)
+    return { output: (data && data?.labels && data?.labels[0]) ?? 'error' }
   }
 }

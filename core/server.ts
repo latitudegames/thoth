@@ -6,6 +6,7 @@ import { ThothComponent } from './src/thoth-component'
 export { getComponents } from './src/components/components'
 export type { EngineContext } from './src/engine'
 export { Task } from './src/plugins/taskPlugin/task'
+export { initSharedEngine }
 
 export default {
   components,

@@ -2,7 +2,8 @@
 import { Engine, NodeEditor, Component, Socket } from 'rete/types'
 import { NodeData, WorkerInputs, WorkerOutputs } from 'rete/types/core/data'
 
-import { ThothNode } from '../../../types'
+import { GraphData, ThothNode } from '../../../types'
+import { Task } from '../taskPlugin'
 import { Module } from './module'
 import { ModuleManager } from './module-manager'
 import { addIO, removeIO } from './utils'
@@ -16,11 +17,13 @@ interface IRunContextEngine extends Engine {
 
 export interface IRunContextEditor extends NodeEditor {
   moduleManager: ModuleManager
+  tasks?: Task[]
 }
 
 type ModuleOptions = {
   socket: Socket
   nodeType: 'input' | 'output' | 'triggerIn' | 'triggerOut' | 'module'
+  skip?: boolean
 }
 
 interface IModuleComponent extends Component {
@@ -43,7 +46,7 @@ function install(
     if (!component.module) return
 
     // socket - Rete.Socket instance or function that returns a socket instance
-    const { nodeType, socket } = component.module
+    const { nodeType, socket, skip } = component.module
     const name = component.name
 
     switch (nodeType) {
@@ -51,6 +54,8 @@ function install(
         const inputsWorker = component.worker
 
         moduleManager.registerInput(name, socket)
+
+        if (skip) return
 
         component.worker = (
           node: NodeData,
@@ -73,6 +78,8 @@ function install(
         const triggersWorker = component.worker as any
 
         moduleManager.registerTriggerOut(name, socket)
+
+        if (skip) return
 
         component.worker = (
           node: NodeData,
@@ -104,6 +111,8 @@ function install(
 
         moduleManager.registerTriggerIn(name, socket)
 
+        if (skip) return
+
         component.worker = (
           node: NodeData,
           inputs: WorkerInputs,
@@ -125,15 +134,22 @@ function install(
         const builder: Function | undefined = component.builder
 
         if (builder) {
-          component.updateModuleSockets = (node: ThothNode) => {
+          component.updateModuleSockets = (
+            node: ThothNode,
+            GraphData?: GraphData
+          ) => {
             const modules = moduleManager.modules
             const currentNodeModule = node.data.module as string
-            if (!node.data.module || !modules[currentNodeModule]) return
+            if (!modules[currentNodeModule] && !GraphData) return
 
             if (!node.data.inputs) node.data.inputs = []
             if (!node.data.outputs) node.data.outputs = []
 
-            const data = modules[currentNodeModule].data
+            const data = modules[currentNodeModule]
+              ? modules[currentNodeModule].data
+              : GraphData
+
+            if (!data) return
             const inputs = moduleManager.getInputs(data)
             const outputs = moduleManager.getOutputs(data)
             const triggerOuts = moduleManager.getTriggerOuts(data)
@@ -163,6 +179,8 @@ function install(
 
         const moduleWorker = component.worker
 
+        if (skip) return
+
         component.worker = async (
           node: NodeData,
           inputs: WorkerInputs,
@@ -188,6 +206,8 @@ function install(
         const outputsWorker = component.worker
 
         moduleManager.registerOutput(name, socket)
+
+        if (skip) return
 
         component.worker = (
           node: NodeData,

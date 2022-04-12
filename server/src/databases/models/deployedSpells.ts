@@ -4,7 +4,7 @@ import { DataTypes, Model, Optional } from 'sequelize';
 export interface deployedSpellsAttributes {
   id: string;
   name: string;
-  chain?: object;
+  graph?: object;
   createdAt?: Date;
   updatedAt?: Date;
   deletedAt?: Date;
@@ -17,13 +17,13 @@ export interface deployedSpellsAttributes {
 
 export type deployedSpellsPk = "id";
 export type deployedSpellsId = deployedSpells[deployedSpellsPk];
-export type deployedSpellsOptionalAttributes = "id" | "chain" | "createdAt" | "updatedAt" | "deletedAt" | "version" | "message" | "modules" | "versionName";
+export type deployedSpellsOptionalAttributes = "id" | "graph" | "createdAt" | "updatedAt" | "deletedAt" | "version" | "message" | "modules" | "versionName";
 export type deployedSpellsCreationAttributes = Optional<deployedSpellsAttributes, deployedSpellsOptionalAttributes>;
 
 export class deployedSpells extends Model<deployedSpellsAttributes, deployedSpellsCreationAttributes> implements deployedSpellsAttributes {
   id!: string;
   name!: string;
-  chain?: object;
+  graph?: object;
   createdAt?: Date;
   updatedAt?: Date;
   deletedAt?: Date;
@@ -46,7 +46,7 @@ export class deployedSpells extends Model<deployedSpellsAttributes, deployedSpel
         type: DataTypes.TEXT,
         allowNull: false
       },
-      chain: {
+      graph: {
         type: DataTypes.JSONB,
         allowNull: true
       },

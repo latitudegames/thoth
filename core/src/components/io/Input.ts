@@ -16,7 +16,7 @@ import { EngineContext } from '../../engine'
 import { Task } from '../../plugins/taskPlugin/task'
 import { anySocket } from '../../sockets'
 import { ThothComponent, ThothTask } from '../../thoth-component'
-const info = `The input component allows you to pass a single value to your chain.  You can set a default value to fall back to if no value is provided at runtime.  You can also turn the input on to receive data from the playtest input.`
+const info = `The input component allows you to pass a single value to your graph.  You can set a default value to fall back to if no value is provided at runtime.  You can also turn the input on to receive data from the playtest input.`
 
 type InputReturn = {
   output: unknown
@@ -66,17 +66,11 @@ export class InputComponent extends ThothComponent<InputReturn> {
         const playtestToggle = node.data.playtestToggle as unknown as {
           receivePlaytest: boolean
         }
+
         if (!playtestToggle.receivePlaytest) return
 
         // attach the text to the nodes data for access in worker
         node.data.text = text
-
-        const task = this.nodeTaskMap[node.id]
-
-        // will need to run this here with the stater rather than the text
-        task?.run(text)
-        task?.reset()
-        this.editor?.trigger('process')
       })
     }
   }
@@ -103,7 +97,6 @@ export class InputComponent extends ThothComponent<InputReturn> {
     const data = node?.data?.playtestToggle as
       | {
         receivePlaytest: boolean
-        outputs: []
       }
       | undefined
 
@@ -111,11 +104,11 @@ export class InputComponent extends ThothComponent<InputReturn> {
       dataKey: 'playtestToggle',
       name: 'Receive from playtest input',
       defaultValue: {
-        receivePlaytest: data?.receivePlaytest || false,
-        outputs: data?.outputs || [],
+        receivePlaytest:
+          data?.receivePlaytest !== undefined ? data?.receivePlaytest : true,
       },
       ignored: ['output'],
-      label: 'Toggle playtest',
+      label: 'Recieve from playtest',
     })
 
     const toggleDefault = new SwitchControl({

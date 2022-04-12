@@ -13,23 +13,29 @@ export class cacheManager {
     this.cleanTime = cleanTime
   }
 
-  async get(agent: string, key: string) {
+  async get(agent: string, key: string, string: boolean) {
     if (
       !this.cache[agent] ||
       this.cache[agent] === undefined ||
       this.cache[agent]?.length <= 0
     ) {
+      console.log('empty')
       return undefined
     }
 
-    let res = this.cache[agent]?.[key]
+    let res = this.cache[agent][key]
     if (!res || res === undefined) {
       for (var x in this.cache[agent]) {
         if (similarity(x, key, { sensitive: false }) > 0.7) {
-          res = this.cache[agent]?.[x]
+          console.log('similar:', this.cache[agent][x])
+          res = this.cache[agent][x]
           break
         }
       }
+    }
+
+    if (string === true) {
+      return res
     }
 
     if (!res || res === undefined) {
@@ -62,6 +68,10 @@ export class cacheManager {
         }
 
         if (highestIndex !== -1 && highestScore >= 200) {
+          console.log(
+            'highest:',
+            docs[response.data.data[highestIndex].document]
+          )
           res = docs[response.data.data[highestIndex].document]
         }
       }
