@@ -18,6 +18,7 @@ class SpellRunner {
   currentSpell!: SpellType
   module: Module
   thothInterface: EngineContext
+  ranSpells: string[]
 
   constructor({ thothInterface }: RunSpellConstructor) {
     // Initialize the engine
@@ -115,15 +116,26 @@ class SpellRunner {
    * component, and ran the one triggered rather than this slightly hacky hard coded
    * method.
    */
-  async runComponent(inputs: Record<string, any>, componentName: string) {
+  async runComponent(
+    inputs: Record<string, any>,
+    componentName: string,
+    runSubspell: boolean = false
+  ) {
+    if (runSubspell && this.ranSpells.includes(this.currentSpell.name))
+      throw new Error('Infinite loop detected.  Exiting.')
+
     // ensaure we run from a clean sloate
     this._resetTasks()
 
     // laod the inputs into module memory
     this._loadInputs(inputs)
+    console.log('inputs', inputs)
 
     const component = this._getComponent(componentName) as ModuleComponent
+    console.log('component', component)
     const triggeredNode = this._getFirstNodeTrigger()
+
+    console.log('triggerted node', triggeredNode)
 
     // this running is where the main "work" happens.
     // I do wonder whether we could make this even more elegant by having the node
@@ -131,6 +143,8 @@ class SpellRunner {
     // from a trigger in node like any other data stream. Or even just pass in socket IO.
     try {
       await component.run(triggeredNode)
+
+      if (runSubspell) this.ranSpells.push(this.currentSpell.name)
       return this.outputData
     } catch (err) {
       console.log('err', err)
@@ -140,8 +154,8 @@ class SpellRunner {
   /**
    * temporary function to be backwards compatible with current use of run spell
    */
-  async defaultRun(inputs: Record<string, any>) {
-    return this.runComponent(inputs, 'Module Trigger In')
+  async defaultRun(inputs: Record<string, any>, runSubspell: boolean = false) {
+    return this.runComponent(inputs, 'Module Trigger In', runSubspell)
   }
 }
 
