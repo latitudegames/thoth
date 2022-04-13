@@ -412,11 +412,7 @@ export class xrengine_client {
     }
 
     if (!isVoice) {
-      if (
-        responses !== undefined &&
-        responses.length <= 2000 &&
-        responses.length > 0
-      ) {
+      if (responses !== undefined && responses.length > 0) {
         let text = responses
         while (
           text === undefined ||
@@ -426,45 +422,6 @@ export class xrengine_client {
           text = getRandomEmptyResponse(this.settings.xrengine_empty_responses)
         if (addPing) text = sender + ' ' + text
         this.xrengineBot.sendMessage(text)
-      } else if (
-        responses &&
-        responses !== undefined &&
-        responses.length > 10000
-      ) {
-        const lines = []
-        let line = ''
-        for (let i = 0; i < responses.length; i++) {
-          line += responses[i]
-          if (i >= 9980 && (line[i] === ' ' || line[i] === '')) {
-            lines.push(line)
-            line = ''
-          }
-        }
-
-        for (let i = 0; i < lines.length; i++) {
-          if (
-            lines[i] !== undefined &&
-            lines[i] !== '' &&
-            lines[i].replace(/\s/g, '').length !== 0
-          ) {
-            if (i === 0) {
-              let text = lines[1]
-              while (
-                text === undefined ||
-                text === '' ||
-                text.replace(/\s/g, '').length === 0
-              )
-                text = getRandomEmptyResponse(
-                  this.settings.xrengine_empty_responses
-                )
-              if (addPing) {
-                text = sender + ' ' + text
-                addPing = false
-              }
-              this.xrengineBot.sendMessage(text)
-            }
-          }
-        }
       } else {
         let emptyResponse = getRandomEmptyResponse(
           this.settings.xrengine_empty_responses
