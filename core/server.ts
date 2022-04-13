@@ -8,6 +8,7 @@ export { getComponents } from './src/components/components'
 export { Task } from './src/plugins/taskPlugin/task'
 export { initSharedEngine }
 export { SpellRunner }
+export * from './src/utils/chainHelpers'
 
 export default {
   components,
