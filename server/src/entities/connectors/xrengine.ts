@@ -405,8 +405,8 @@ export class xrengine_client {
     log('response: ' + responses)
 
     if (
-      (responses as string).endsWith('.mp3') ||
-      (responses as string).endsWith('.wav')
+      (responses as string).trim().toLowerCase().endsWith('.mp3') ||
+      (responses as string).trim().toLowerCase().endsWith('.wav')
     ) {
       isVoice = true
     }

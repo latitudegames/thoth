@@ -13,7 +13,7 @@ import { database } from './database'
 import { creatorToolsDatabase } from './databases/creatorTools'
 import { routes } from './routes'
 import { Handler, Method, Middleware } from './types'
-import { initTextToSpeech, tts } from './systems/googleTextToSpeech'
+import { initTextToSpeech } from './systems/googleTextToSpeech'
 import { initFileServer } from './systems/fileServer'
 
 const app: Koa = new Koa()
@@ -45,7 +45,6 @@ async function init() {
   await initFileServer()
   await initClassifier()
   await initTextToSpeech()
-  await tts("hi, how are you, i'm alex")
   new cacheManager(-1)
 
   /*const string = 'test string'
