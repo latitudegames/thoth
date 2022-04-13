@@ -404,7 +404,10 @@ export class xrengine_client {
   async handleXREngineResponse(responses, addPing, sender, isVoice) {
     log('response: ' + responses)
 
-    if ((responses as string).includes('uberduck')) {
+    if (
+      (responses as string).endsWith('.mp3') ||
+      (responses as string).endsWith('.wav')
+    ) {
       isVoice = true
     }
 
