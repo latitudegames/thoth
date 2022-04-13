@@ -13,7 +13,7 @@ import fetch from 'node-fetch'
 import { cacheManager } from '../cacheManager'
 import { makeCompletion } from '../utils/MakeCompletionRequest'
 import { MakeModelRequest } from '../utils/MakeModelRequest'
-import { tts } from 'src/systems/googleTextToSpeech'
+import { tts } from '../systems/googleTextToSpeech'
 
 export const modules: Record<string, unknown> = {}
 

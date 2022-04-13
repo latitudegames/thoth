@@ -1,4 +1,3 @@
-import { protos } from '@google-cloud/speech'
 import { TextToSpeechClient } from '@google-cloud/text-to-speech'
 import * as fs from 'fs'
 import util from 'util'
