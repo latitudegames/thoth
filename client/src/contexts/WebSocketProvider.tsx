@@ -24,6 +24,8 @@ const WebSocketProvider = ({ children }) => {
   useEffect(() => {
     const _socket = new ReconnectingWebSocket(websocketUrl)
     setSocket(_socket as Socket)
+
+    _socket.send('testing')
   }, [])
 
   const publicInterface: SharedbContext = {
