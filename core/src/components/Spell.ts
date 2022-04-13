@@ -45,6 +45,7 @@ export class SpellComponent extends ThothComponent<
     this.category = 'Core'
     this.info = info
     this.noBuildUpdate = true
+    this.display = true
   }
 
   subscribe(node: ThothNode, spellId: string) {
@@ -149,6 +150,8 @@ export class SpellComponent extends ThothComponent<
       node.data.spellId as string,
       flattenedInputs.state
     )
+
+    node.display(`${JSON.stringify(outputs)}`)
 
     return outputs
   }
