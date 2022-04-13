@@ -52,7 +52,7 @@ class SpellRunner {
     }
   }
 
-  get inputKeys() {
+  get inputKeys(): string[] {
     return extractModuleInputKeys(this.currentSpell.chain)
   }
 
@@ -62,12 +62,25 @@ class SpellRunner {
     return this._formatOutputs(rawOutputs)
   }
 
+  /**
+   * Used to format inputs into the format the moduel runner expects.
+   * Takes a normal object of type { key: value } and returns an object
+   * of shape { key: [value]}.  This shape isa required when running the spell
+   * since that is the shape that rete inputs take when processing the graph.
+   */
+  private _formatInputs(inputs: Record<string, unknown>) {
+    return this.inputKeys.reduce((inputList, inputKey) => {
+      inputList[inputKey] = [inputs[inputKey]]
+      return inputList
+    }, {} as Record<string, unknown[]>)
+  }
+
   private _getComponent(componentName: string) {
     return this.engine.components.get(componentName)
   }
 
-  private _loadInputs(inputs: Record<string, any>) {
-    this.module.read(inputs)
+  private _loadInputs(inputs: Record<string, unknown>) {
+    this.module.read(this._formatInputs(inputs))
   }
 
   private _formatOutputs(rawOutputs: Record<string, any>) {
@@ -129,13 +142,9 @@ class SpellRunner {
 
     // laod the inputs into module memory
     this._loadInputs(inputs)
-    console.log('inputs', inputs)
 
     const component = this._getComponent(componentName) as ModuleComponent
-    console.log('component', component)
     const triggeredNode = this._getFirstNodeTrigger()
-
-    console.log('triggerted node', triggeredNode)
 
     // this running is where the main "work" happens.
     // I do wonder whether we could make this even more elegant by having the node
