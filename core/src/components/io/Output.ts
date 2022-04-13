@@ -1,3 +1,4 @@
+import axios from 'axios'
 import Rete from 'rete'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -58,7 +59,15 @@ export class Output extends ThothComponent<void> {
       defaultValue: node.data.sendToPlaytest || false,
     })
 
-    node.inspector.add(switchControl).add(nameInput)
+    const voiceOutput = new SwitchControl({
+      dataKey: 'voiceOutput',
+      name: 'Voice Output',
+      label: 'VoiceOutput',
+      defaultValue: node.data.voiceOutput || false,
+    })
+
+    node.inspector.add(switchControl).add(nameInput).add(voiceOutput)
+
     // need to automate this part!  Wont workw without a socket key
     node.data.socketKey = node?.data?.socketKey || uuidv4()
 
@@ -68,7 +77,7 @@ export class Output extends ThothComponent<void> {
       .addOutput(triggerOutput)
   }
 
-  worker(
+  async worker(
     node: NodeData,
     inputs: ThothWorkerInputs,
     outputs: ThothWorkerOutputs,
@@ -77,19 +86,31 @@ export class Output extends ThothComponent<void> {
     console.log(inputs)
     if (!inputs.input) throw new Error('No input provided to output component')
 
-    const text = inputs.input.filter(Boolean)[0]
+    let text = inputs.input.filter(Boolean)[0]
+    const normalText = text
+
+    if (node.data.voiceOutput) {
+      const url = await axios.get(`${process.env.API_URL}/speech_to_text`, {
+        params: {
+          text: normalText,
+          character: 'none',
+        },
+      })
+
+      text = url.data
+    }
 
     //just need a new check here for playtest send boolean
     const { sendToPlaytest } = thoth
 
     if (node.data.sendToPlaytest && sendToPlaytest) {
-      sendToPlaytest(text)
+      sendToPlaytest(normalText)
     }
 
     if (!silent) node.display(text as string)
 
     const name = node.data.name as string
-    console.log(name, '- output:', text)
+    console.log(name, '- output:', normalText)
 
     return { text }
   }
