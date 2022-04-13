@@ -13,6 +13,7 @@ import fetch from 'node-fetch'
 import { cacheManager } from '../cacheManager'
 import { makeCompletion } from '../utils/MakeCompletionRequest'
 import { MakeModelRequest } from '../utils/MakeModelRequest'
+import { tts } from 'src/systems/googleTextToSpeech'
 
 export const modules: Record<string, unknown> = {}
 
@@ -191,12 +192,15 @@ const getSpeechToText = async (ctx: Koa.Context) => {
     return (ctx.body = cache)
   }
 
-  const url = await getAudioUrl(
+  const fileId = await tts(text as string)
+  const url = process.env.FILE_SERVER_URL + '/files/' + fileId
+
+  /*const url = await getAudioUrl(
     process.env.UBER_DUCK_KEY as string,
     process.env.UBER_DUCK_SECRET_KEY as string,
     character as string,
     text as string
-  )
+  )*/
   console.log('stt url:', url)
 
   cacheManager.instance.set('global', 'speech_' + character + ': ' + text, url)

@@ -15,17 +15,31 @@ export async function tts(input: string) {
     voice: {
       languageCode: 'en-US',
       name: 'en-US-Wavenet-F',
-      ssmlGender: 1 /*Male*/,
+      ssmlGender: 2 /*Male*/,
     },
     audioConfig: { audioEncoding: 2 /*MP3*/ },
   }
 
-  console.log('GENERATING VOICEEEEEEEEEEEEE')
+  const fileName = makeid(8) + '.mp3'
+  const outputFile = 'files/' + fileName
+  if (fs.existsSync(outputFile)) {
+    fs.unlinkSync(outputFile)
+  }
 
-  const outputFile = 'test.mp3'
   const [response] = await client.synthesizeSpeech(ttsRequest)
   const writeFile = util.promisify(fs.writeFile)
   await writeFile(outputFile, response.audioContent as string, 'binary')
   console.log(`Audio content written to file: ${outputFile}`)
-  // [END tts_synthesize_text_file]
+  return outputFile
+}
+
+function makeid(length: number) {
+  var result = ''
+  var characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  var charactersLength = characters.length
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength))
+  }
+  return result
 }

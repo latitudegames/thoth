@@ -14,6 +14,7 @@ yarn-error.log
 server/google_credentials.json
 server/cert.pem
 server/key.pem
+server/files/
 
 # Ignore lockfiles
 yarn.lock
