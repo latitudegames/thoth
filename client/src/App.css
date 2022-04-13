@@ -385,7 +385,7 @@ input[type='text'] {
 }
 
 .search-corpus > select {
-  width: 20%;
+  width: 50%;
 }
 
 .search-corpus-btns {
@@ -393,7 +393,7 @@ input[type='text'] {
   display: inline-flex;
   justify-content: space-between;
   margin: 0 1rem;
-  width: 12%;
+  width: 25%;
 }
 
 .search-corpus-documents-list {
