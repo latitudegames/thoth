@@ -56,7 +56,7 @@ export class ForEach extends ThothComponent<Promise<WorkerReturn | undefined>> {
           )
         )
       } catch (err) {
-        throw new Error('Error in ForEach Componenet.')
+        throw new Error('Error in ForEach Component.')
       }
 
       this._task.closed = ['act']
