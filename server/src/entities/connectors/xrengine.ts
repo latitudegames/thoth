@@ -1072,7 +1072,7 @@ class XREngineBot {
       }
 
       /*if (this.autoLog)*/
-      console.log('>>', message.text())
+      //console.log('>>', message.text())
     })
 
     this.page.setViewport({ width: 0, height: 0 })
