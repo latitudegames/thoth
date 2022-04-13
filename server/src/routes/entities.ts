@@ -193,7 +193,10 @@ const getSpeechToText = async (ctx: Koa.Context) => {
   }
 
   const fileId = await tts(text as string)
-  const url = process.env.FILE_SERVER_URL + '/files/' + fileId
+  const url =
+    (process.env.FILE_SERVER_URL?.endsWith('/')
+      ? process.env.FILE_SERVER_URL
+      : process.env.FILE_SERVER_URL + '/') + fileId
 
   /*const url = await getAudioUrl(
     process.env.UBER_DUCK_KEY as string,
