@@ -37,6 +37,7 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
     }
     this.category = 'AI/ML'
     this.info = info
+    this.display = true
   }
 
   builder(node: ThothNode) {
@@ -165,11 +166,14 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       const result = raw
       const composed = `${prompt} ${result}`
 
+      node.display(result)
+
       return {
         result,
         composed,
       }
     } catch (err) {
+      console.log({ err })
       // Typescript reporting wrong about number of arguments for error constructor
       //@ts-ignore:next-line
       throw new Error('Error in Generator component.', { cause: err })
