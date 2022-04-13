@@ -110,7 +110,7 @@ export class InputComponent extends ThothComponent<InputReturn> {
           data?.receivePlaytest !== undefined ? data?.receivePlaytest : true,
       },
       ignored: ['output'],
-      label: 'Recieve from playtest',
+      label: 'Receive from playtest',
     })
 
     const toggleDefault = new SwitchControl({
