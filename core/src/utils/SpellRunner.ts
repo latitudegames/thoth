@@ -63,6 +63,13 @@ class SpellRunner {
   }
 
   /**
+   * Clears the cache of spells which the runner has ran.
+   */
+  private _clearRanSpellCache() {
+    this.ranSpells = []
+  }
+
+  /**
    * Used to format inputs into the format the moduel runner expects.
    * Takes a normal object of type { key: value } and returns an object
    * of shape { key: [value]}.  This shape isa required when running the spell
@@ -86,7 +93,7 @@ class SpellRunner {
    * Takes a dictionary of inputs, converts them to the module format required
    * and puts those values into the module in preparation for processing.
    */
-  private _loadInputs(inputs: Record<string, unknown>) {
+  private _loadInputs(inputs: Record<string, unknown>): void {
     this.module.read(this._formatInputs(inputs))
   }
 
@@ -94,7 +101,9 @@ class SpellRunner {
    * Takes the set of raw outputs, which makes use of the socket key,
    * and swaps the socket key for the socket name for human readable outputs.
    */
-  private _formatOutputs(rawOutputs: Record<string, any>) {
+  private _formatOutputs(
+    rawOutputs: Record<string, any>
+  ): Record<string, unknown> {
     const outputs = {} as Record<string, unknown>
     const graph = this.currentSpell.chain
 
@@ -127,10 +136,13 @@ class SpellRunner {
    * Resets all tasks.  This clears the cached data output of the task and prepares
    * it for the next run.
    */
-  private _resetTasks() {
+  private _resetTasks(): void {
     this.engine.tasks.forEach(t => t.reset())
   }
 
+  /**
+   * Runs engine process to load the spell into the engine.
+   */
   private async _process() {
     await this.engine.abort()
     await this.engine.process(
@@ -161,13 +173,16 @@ class SpellRunner {
     componentName: string,
     runSubspell: boolean = false
   ) {
-    if (runSubspell && this.ranSpells.includes(this.currentSpell.name))
+    // This should break us out of an infinite loop if we have circular spell dependencies.
+    if (runSubspell && this.ranSpells.includes(this.currentSpell.name)) {
+      this._clearRanSpellCache()
       throw new Error('Infinite loop detected.  Exiting.')
+    }
 
     // ensaure we run from a clean sloate
     this._resetTasks()
 
-    // laod the inputs into module memory
+    // load the inputs into module memory
     this._loadInputs(inputs)
 
     const component = this._getComponent(componentName) as ModuleComponent
