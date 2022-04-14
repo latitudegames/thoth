@@ -99,7 +99,7 @@ export class TriggerIn extends ThothComponent<void> {
     const out = new Rete.Output('trigger', 'Trigger', triggerSocket)
 
     node.data.socketKey = node?.data?.socketKey || uuidv4()
-    node.data.name = node.data.name || `trigger-in-${this.nodeCount}`
+    node.data.name = node.data.name || `trigger-in-${node.id}`
 
     const nameInput = new InputControl({
       dataKey: 'name',
