@@ -18,7 +18,7 @@ class SpellRunner {
   currentSpell!: SpellType
   module: Module
   thothInterface: EngineContext
-  ranSpells: string[]
+  ranSpells: string[] = []
 
   constructor({ thothInterface }: RunSpellConstructor) {
     // Initialize the engine
