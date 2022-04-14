@@ -11,7 +11,7 @@ import { extractNodes } from './chainHelpers'
 
 type RunChainArguments = {
   graph: ChainData
-  inputs: Record<string, unknown>
+  inputs: Record<string, unknown[]>
   thoth: EngineContext
   engine: ThothEngine
   subspells?: Subspell[]
