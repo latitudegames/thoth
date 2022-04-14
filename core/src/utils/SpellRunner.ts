@@ -205,14 +205,9 @@ class SpellRunner {
     // I do wonder whether we could make this even more elegant by having the node
     // subscribe to a run pubsub and then we just use that.  This would treat running
     // from a trigger in node like any other data stream. Or even just pass in socket IO.
-    try {
-      await component.run(triggeredNode)
+    await component.run(triggeredNode)
 
-      if (runSubspell) this.ranSpells.push(this.currentSpell.name)
-      return this.outputData
-    } catch (err) {
-      console.log('err', err)
-    }
+    return this.outputData
   }
 
   /**
