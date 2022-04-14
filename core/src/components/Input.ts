@@ -92,7 +92,7 @@ export class InputComponent extends ThothComponent<InputReturn> {
 
     const out = new Rete.Output('output', 'output', anySocket)
 
-    node.data.name = node.data.name || `input-${this.nodeCount}`
+    node.data.name = node.data.name || `input-${node.id}`
 
     const nameInput = new InputControl({
       dataKey: 'name',
