@@ -52,7 +52,7 @@ export class Output extends ThothComponent<void> {
     const nameInput = new InputControl({
       dataKey: 'name',
       name: 'Output name',
-      // defaultValue: node.data.name,
+      defaultValue: node.data.name,
     })
 
     const switchControl = new SwitchControl({
