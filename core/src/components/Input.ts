@@ -85,15 +85,19 @@ export class InputComponent extends ThothComponent<InputReturn> {
   builder(node: ThothNode) {
     if (this.subscriptionMap[node.id]) this.subscriptionMap[node.id]()
     delete this.subscriptionMap[node.id]
+    this.nodeCount++
 
     // subscribe the node to the playtest input data stream
     this.subscribeToPlaytest(node)
 
     const out = new Rete.Output('output', 'output', anySocket)
 
+    node.data.name = node.data.name || `input-${this.nodeCount}`
+
     const nameInput = new InputControl({
       dataKey: 'name',
       name: 'Input name',
+      defaultValue: node.data.name,
     })
 
     const data = node?.data?.playtestToggle as
