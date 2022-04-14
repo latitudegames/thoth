@@ -411,15 +411,10 @@ export class xrengine_client {
       isVoice = true
     }
 
-    if (!isVoice) {
-      if (responses !== undefined && responses.length > 0) {
+    if (isVoice === false) {
+      if (responses && responses !== undefined && responses.length > 0) {
         let text = responses
-        while (
-          text === undefined ||
-          text === '' ||
-          text.replace(/\s/g, '').length === 0
-        )
-          text = getRandomEmptyResponse(this.settings.xrengine_empty_responses)
+        if (text.startsWith('/')) addPing = false
         if (addPing) text = sender + ' ' + text
         this.xrengineBot.sendMessage(text)
       } else {
@@ -430,10 +425,12 @@ export class xrengine_client {
           emptyResponse === undefined ||
           emptyResponse === '' ||
           emptyResponse.replace(/\s/g, '').length === 0
-        )
+        ) {
           emptyResponse = getRandomEmptyResponse(
             this.settings.xrengine_empty_responses
           )
+        }
+
         if (addPing) emptyResponse = sender + ' ' + emptyResponse
         this.xrengineBot.sendMessage(emptyResponse)
       }
