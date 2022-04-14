@@ -39,11 +39,16 @@ class SpellRunner {
     // This would basicallyt be an array of spells pulled from the DB
   }
 
-  // getter method for all triggers ins of the loaded spell
+  /**
+   * Getter method for the triggers ins for the loaded spell
+   */
   get triggerIns() {
     return this.engine.moduleManager.triggerIns
   }
 
+  /**
+   * Getter method which returns the run context for the current spell.
+   */
   get context() {
     return {
       module: this.module,
@@ -52,10 +57,16 @@ class SpellRunner {
     }
   }
 
+  /**
+   * Getter method to return all of the inputs keys of a given spell from the spells inputs
+   */
   get inputKeys(): string[] {
     return extractModuleInputKeys(this.currentSpell.chain)
   }
 
+  /**
+   * Getter method to return a formatted set of outputs of the most recent spell run.
+   */
   get outputData() {
     const rawOutputs = {}
     this.module.write(rawOutputs)
