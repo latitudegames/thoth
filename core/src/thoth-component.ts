@@ -34,6 +34,7 @@ export abstract class ThothComponent<
   _task: ThothTask
   // Original Class: https://github.com/latitudegames/rete/blob/master/src/component.ts
   editor: ThothEditor | null = null
+  nodeCount: number = 0
   data: unknown = {}
   category: string
   info: string
