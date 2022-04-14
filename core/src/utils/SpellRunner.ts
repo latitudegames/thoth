@@ -75,14 +75,25 @@ class SpellRunner {
     }, {} as Record<string, unknown[]>)
   }
 
+  /**
+   * Gewts a single component from the engine by name.
+   */
   private _getComponent(componentName: string) {
     return this.engine.components.get(componentName)
   }
 
+  /**
+   * Takes a dictionary of inputs, converts them to the module format required
+   * and puts those values into the module in preparation for processing.
+   */
   private _loadInputs(inputs: Record<string, unknown>) {
     this.module.read(this._formatInputs(inputs))
   }
 
+  /**
+   * Takes the set of raw outputs, which makes use of the socket key,
+   * and swaps the socket key for the socket name for human readable outputs.
+   */
   private _formatOutputs(rawOutputs: Record<string, any>) {
     const outputs = {} as Record<string, unknown>
     const graph = this.currentSpell.chain
@@ -112,10 +123,17 @@ class SpellRunner {
     return extractedNodes[0]
   }
 
+  /**
+   * Resets all tasks.  This clears the cached data output of the task and prepares
+   * it for the next run.
+   */
   private _resetTasks() {
     this.engine.tasks.forEach(t => t.reset())
   }
 
+  /**
+   * Loads a spell into the spell runner.
+   */
   async loadSpell(spell: SpellType) {
     this.currentSpell = spell
 
@@ -151,6 +169,7 @@ class SpellRunner {
     // subscribe to a run pubsub and then we just use that.  This would treat running
     // from a trigger in node like any other data stream. Or even just pass in socket IO.
     try {
+      console.log('COMPONENT', component)
       await component.run(triggeredNode)
 
       if (runSubspell) this.ranSpells.push(this.currentSpell.name)
