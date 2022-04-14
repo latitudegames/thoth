@@ -6,7 +6,7 @@ export class Module {
     this.outputs = {}
   }
 
-  read(inputs: Record<string, any[]>) {
+  read(inputs: Record<string, unknown[]>) {
     this.inputs = inputs
   }
 
