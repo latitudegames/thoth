@@ -46,13 +46,17 @@ export class TriggerOut extends ThothComponent<WorkerReturn> {
   // when we have enki hooked up and have grabbed all few shots, we would use the builder
   // to generate the appropriate inputs and outputs for the fewshot at build time
   builder(node: ThothNode) {
+    this.nodeCount++
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const input = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
 
     // Handle default value if data is present
+    node.data.name = node.data.name || `trigger-out-${this.nodeCount}`
+
     const nameInput = new InputControl({
       dataKey: 'name',
       name: 'Trigger name',
+      defaultValue: node.data.name,
     })
 
     node.inspector.add(nameInput)
