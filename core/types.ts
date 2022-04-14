@@ -16,6 +16,7 @@ import { SocketNameType, SocketType } from './src/sockets'
 import { ThothTask } from './src/thoth-component'
 import { ThothConsole } from './src/plugins/debuggerPlugin/ThothConsole'
 import { Data } from 'rete/types/core/data'
+export { ThothComponent } from './src/thoth-component'
 
 export { ThothEditor } from './src/editor'
 
@@ -184,6 +185,7 @@ export type Subspell = { name: string; id: string; data: ChainData }
 
 export type ModuleComponent = Component & {
   run: Function
+  nodeTaskMap: Map<string, any>
 }
 
 export type NodeConnections = {
