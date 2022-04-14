@@ -1,5 +1,5 @@
 import { ActionTypeComponent } from './ActionType'
-import { Alert } from './AlertMessage'
+import { Alert } from './utility/AlertMessage'
 import { BooleanGate } from './BooleanGate'
 import { Code } from './Code'
 import { InputFieldComponent } from './deprecated/InputField'
