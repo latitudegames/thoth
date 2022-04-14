@@ -30,6 +30,7 @@ import { TimeDetectorComponent } from './TimeDetector'
 import { TriggerIn } from './TriggerIn'
 import { TriggerOut } from './TriggerOut'
 import { VisualGeneration } from './VisualGeneration'
+import { Echo } from './utility/Echo'
 
 // Here we load up all components of the builder into our editor for usage.
 // We might be able to programatically generate components from enki
@@ -40,6 +41,7 @@ export const components = {
   booleanGate: () => new BooleanGate(),
   code: () => new Code(),
   difficultyDetectorComponent: () => new DifficultyDetectorComponent(),
+  echoComponent: () => new Echo(),
   enkiTask: () => new EnkiTask(),
   entityDetector: () => new EntityDetector(),
   forEach: () => new ForEach(),
