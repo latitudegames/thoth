@@ -133,7 +133,9 @@ const addSockets = ({
   updateSockets(node, sockets)
 
   const newSockets = sockets.filter(
-    socket => !existingSockets.includes(socket.socketKey)
+    socket =>
+      !existingSockets.includes(socket.socketKey) &&
+      !existingSockets.includes(socket.name)
   )
 
   if (newSockets.length > 0)
