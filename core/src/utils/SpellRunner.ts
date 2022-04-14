@@ -146,11 +146,11 @@ class SpellRunner {
     this.currentSpell = spell
 
     // We process the graph for the new spell which will set up all the task workers
-    await this.engine.process(spell.chain as ChainData, null, this.context)
+    await this._process()
   }
 
   /**
-   * Main spell runner.  Processes inputs, gets the right component that starts the
+   * Main spell runner for now. Processes inputs, gets the right component that starts the
    * running.  Would be even better iof we just took a node identifier, got its
    * component, and ran the one triggered rather than this slightly hacky hard coded
    * method.
