@@ -149,7 +149,7 @@ export class ModuleManager {
         acc[name] = value
         return acc
       }
-    }, {} as Record<string, unknown>) as Record<string, unknown>
+    }, {} as Record<string, unknown[]>) as Record<string, unknown[]>
 
     module.read(parsedInputs)
     await engine?.process(
