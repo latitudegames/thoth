@@ -131,6 +131,14 @@ class SpellRunner {
     this.engine.tasks.forEach(t => t.reset())
   }
 
+  private async _process() {
+    await this.engine.abort()
+    await this.engine.process(
+      this.currentSpell.chain as ChainData,
+      null,
+      this.context
+    )
+  }
   /**
    * Loads a spell into the spell runner.
    */
