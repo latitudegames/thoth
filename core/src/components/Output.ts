@@ -43,7 +43,6 @@ export class Output extends ThothComponent<void> {
       triggerSocket,
       true
     )
-    this.nodeCount++
     const triggerOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
     const textInput = new Rete.Input('input', 'Outputs', anySocket, true)
 

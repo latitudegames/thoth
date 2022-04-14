@@ -85,7 +85,6 @@ export class InputComponent extends ThothComponent<InputReturn> {
   builder(node: ThothNode) {
     if (this.subscriptionMap[node.id]) this.subscriptionMap[node.id]()
     delete this.subscriptionMap[node.id]
-    this.nodeCount++
 
     // subscribe the node to the playtest input data stream
     this.subscribeToPlaytest(node)
