@@ -24,7 +24,12 @@ const getRemovedSockets = (
 ) => {
   return existingSockets.filter(
     existing =>
-      !newSockets.some(incoming => incoming.socketKey === existing.socketKey)
+      !newSockets.some(
+        incoming =>
+          incoming.socketKey === existing.socketKey ||
+          // We add this here to account for situation where we arent using socket key UUIDs
+          incoming.name === existing.socketKey
+      )
   )
 }
 
