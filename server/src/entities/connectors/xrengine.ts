@@ -276,7 +276,7 @@ export class xrengine_client {
           (_prev !== undefined && _prev !== '' && _prev !== sender) ||
           this.moreThanOneInConversation()
 
-        let startConv = false
+        let startConv = true
         let startConvName = ''
         const trimmed = content.trimStart()
         for (let i = 0; i < this.settings.xrengine_starting_words.length; i++) {
@@ -401,22 +401,22 @@ export class xrengine_client {
     }
   }
 
-  async handleXREngineResponse(responses, addPing, sender, isVoice) {
-    log('response: ' + responses)
+  async handleXREngineResponse(response, addPing, sender, isVoice) {
+    console.log('response: ' + response)
 
     if (
-      (responses as string).trim().toLowerCase().endsWith('.mp3') ||
-      (responses as string).trim().toLowerCase().endsWith('.wav')
+      (response as string).trim().toLowerCase().endsWith('.mp3') ||
+      (response as string).trim().toLowerCase().endsWith('.wav')
     ) {
       isVoice = true
     }
 
     if (isVoice === false) {
-      if (responses && responses !== undefined && responses.length > 0) {
-        let text = responses
+      if (response && response !== undefined && response.length > 0) {
+        let text = response
         if (text.startsWith('/')) addPing = false
         if (addPing) text = sender + ' ' + text
-        this.xrengineBot.sendMessage(text)
+        this.xrengineBot.sendMessage(text, true)
       } else {
         let emptyResponse = getRandomEmptyResponse(
           this.settings.xrengine_empty_responses
@@ -432,11 +432,11 @@ export class xrengine_client {
         }
 
         if (addPing) emptyResponse = sender + ' ' + emptyResponse
-        this.xrengineBot.sendMessage(emptyResponse)
+        this.xrengineBot.sendMessage(emptyResponse, true)
       }
     } else {
       console.log('sending voice url')
-      this.xrengineBot.sendMessage('!voiceUrl|' + responses, true)
+      this.xrengineBot.sendMessage('!voiceUrl|' + response, true)
       //this.xrengineBot.sendAudio(5, responses)
     }
   }
@@ -956,7 +956,7 @@ class XREngineBot {
             if (mode == 'inRange') {
               if (this.xrengineclient.UsersInRange[player] === undefined) {
                 await this.lookAt('alex')
-                await this.playEmote('wave')
+                //await this.playEmote('wave')
               }
               this.xrengineclient.UsersInRange[player] = value
               this.xrengineclient.UsersInIntimateRange[player] = undefined

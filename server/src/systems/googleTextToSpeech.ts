@@ -12,9 +12,9 @@ export async function tts(input: string) {
   const ttsRequest = {
     input: { text: input },
     voice: {
-      languageCode: 'en-US',
-      name: 'en-US-Wavenet-F',
-      ssmlGender: 2 /*Male*/,
+      languageCode: 'en-GB',
+      name: 'en-GB-Standard-B',
+      ssmlGender: 1 /*Male*/,
     },
     audioConfig: { audioEncoding: 2 /*MP3*/ },
   }
