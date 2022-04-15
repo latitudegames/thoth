@@ -117,7 +117,7 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
     node: NodeData,
     rawInputs: ThothWorkerInputs,
     outputs: ThothWorkerOutputs,
-    { thoth }: { silent: boolean; thoth: EngineContext }
+    { thoth, silent }: { silent: boolean; thoth: EngineContext }
   ) {
     const { completion } = thoth
     const inputs = Object.entries(rawInputs).reduce((acc, [key, value]) => {
@@ -166,7 +166,7 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       const result = raw
       const composed = `${prompt} ${result}`
 
-      node.display(result)
+      if (!silent) node.display(result)
 
       return {
         result,

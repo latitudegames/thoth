@@ -139,7 +139,12 @@ export class SpellComponent extends ThothComponent<
     {
       module,
       thoth,
-    }: { module: { outputs: ModuleWorkerOutput[] }; thoth: EngineContext }
+      silent,
+    }: {
+      module: { outputs: ModuleWorkerOutput[] }
+      thoth: EngineContext
+      silent: Boolean
+    }
   ) {
     // We format the inputs since these inputs rely on the use of the socket keys.
     const flattenedInputs = this.formatInputs(node, inputs)
@@ -151,7 +156,7 @@ export class SpellComponent extends ThothComponent<
       flattenedInputs.state
     )
 
-    node.display(`${JSON.stringify(outputs)}`)
+    if (!silent) node.display(`${JSON.stringify(outputs)}`)
 
     return outputs
   }
