@@ -71,6 +71,12 @@ export class InputComponent extends ThothComponent<InputReturn> {
 
         // attach the text to the nodes data for access in worker
         node.data.text = text
+
+        const task = this.nodeTaskMap[node.id]
+
+        task?.run(text)
+        task?.reset()
+        this.editor?.trigger('process')
       })
     }
   }
