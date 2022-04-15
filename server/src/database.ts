@@ -34,8 +34,8 @@ export class database {
       host: process.env.PGHOST,
       ssl: PGSSL
         ? {
-          rejectUnauthorized: false,
-        }
+            rejectUnauthorized: false,
+          }
         : false,
     })
     this.client.connect()
@@ -334,6 +334,18 @@ export class database {
       return []
     }
   }
+  async getSingleDocument(docId: any): Promise<any[]> {
+    const query = 'SELECT * FROM documents WHERE id=$1'
+    const values = [docId]
+
+    const rows = await this.client.query(query, values)
+
+    if (rows && rows.rows && rows.rows.length > 0) {
+      return rows.rows[0]
+    } else {
+      return []
+    }
+  }
   async getDocumentsWithTopic(agent: any, topic: any): Promise<any[]> {
     const query = 'SELECT * FROM documents WHERE agent=$1 AND topic=$2'
     const values = [agent, topic]
@@ -435,6 +447,18 @@ export class database {
     const rows = await this.client.query(query)
     if (rows && rows.rows && rows.rows.length > 0) return rows.rows
     else return []
+  }
+  async getSingleDocumentStore(name: any): Promise<any[]> {
+    const query = 'SELECT * FROM documents_store WHERE name=$1'
+    const values = [name]
+
+    const rows = await this.client.query(query, values)
+
+    if (rows && rows.rows && rows.rows.length > 0) {
+      return rows.rows[0]
+    } else {
+      return []
+    }
   }
   async documentStoreIdExists(documentStoreId: any) {
     const query = 'SELECT * FROM documents_store WHERE id=$1'

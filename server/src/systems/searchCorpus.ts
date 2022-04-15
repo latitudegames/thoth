@@ -55,6 +55,11 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
     const documents: any = await database.instance.getDocumentsOfStore(storeId)
     return (ctx.body = documents)
   })
+  router.get('/document/:docId', async function (ctx:Koa.Context) {
+    const docId = ctx.params.docId
+    const doc = await database.instance.getSingleDocument(docId)
+    return (ctx.body = doc)
+  })
   router.post('/document', async function (ctx: Koa.Context) {
     const { body } = ctx.request
     const description = body?.description || ''
@@ -287,6 +292,11 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
   router.get('/document-store', async function (ctx: Koa.Context) {
     const stores = await database.instance.getDocumentStores()
     return (ctx.body = stores)
+  })
+  router.get('/document-store/:name', async function (ctx:Koa.Context) {
+    const name = ctx.params.name
+    const store = await database.instance.getSingleDocumentStore(name)
+    return (ctx.body = store)
   })
   router.post('/document-store', async function (ctx: Koa.Context) {
     const name = ctx.request.body?.name || ''

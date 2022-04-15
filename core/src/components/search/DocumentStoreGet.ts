@@ -15,15 +15,15 @@ import { EngineContext } from '../../engine'
 import { triggerSocket, anySocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
-const info = 'Document Get is used to get a document from the search corpus'
+const info = 'Document Store Get is used to get a document store from the search corpus'
 
 type WorkerReturn = {
   output: string
 }
 
-export class DocumentGet extends ThothComponent<Promise<WorkerReturn>> {
+export class DocumentStoreGet extends ThothComponent<Promise<WorkerReturn>> {
   constructor() {
-    super('Document Get')
+    super('Document Store Get')
 
     this.task = {
       outputs: {
@@ -38,13 +38,13 @@ export class DocumentGet extends ThothComponent<Promise<WorkerReturn>> {
   }
 
   builder(node: ThothNode) {
-    const idInput = new Rete.Input('id', 'ID', anySocket)
+    const nameInput = new Rete.Input('name', 'Store Name', anySocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
     const output = new Rete.Output('output', 'Output', anySocket)
 
     return node
-      .addInput(idInput)
+      .addInput(nameInput)
       .addInput(dataInput)
       .addOutput(dataOutput)
       .addOutput(output)
@@ -56,14 +56,14 @@ export class DocumentGet extends ThothComponent<Promise<WorkerReturn>> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    const id = inputs['id'][0] as string
+    const name = inputs['name'][0] as string
 
     const resp = await axios.get(
-      `${process.env.REACT_APP_SEARCH_SERVER_URL}/document/${id}`
+      `${process.env.REACT_APP_SEARCH_SERVER_URL}/document-store/${name}`
     )
-
+    
     return {
-      output: resp.data,
+      output: resp?.data?.id ?? 0,
     }
   }
 }

@@ -39,6 +39,8 @@ import { TextToSpeech } from './ml/TextToSpeech'
 import { TimeDetectorComponent } from './ml/TimeDetector'
 import { DocumentDelete } from './search/DocumentDelete'
 import { DocumentGet } from './search/DocumentGet'
+import { DocumentEdit } from './search/DocumentEdit'
+import { DocumentStoreGet } from './search/DocumentStoreGet'
 import { DocumentSet } from './search/DocumentSet'
 import { Search } from './search/Search'
 import { StateRead } from './state/StateRead'
@@ -91,8 +93,10 @@ export const components = {
   request: () => new Request(),
   search: () => new Search(),
   documentGet: () => new DocumentGet(),
+  documentEdit: () => new DocumentEdit(),
   documentDelete: () => new DocumentDelete(),
   documentSet: () => new DocumentSet(),
+  documentStoreGet: () => new DocumentStoreGet(),
   forEach: () => new ForEach(),
   whileLoop: () => new WhileLoop(),
   cacheManagerGet: () => new CacheManagerGet(),

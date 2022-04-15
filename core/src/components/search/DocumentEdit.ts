@@ -17,15 +17,14 @@ import {
   stringSocket,
   booleanSocket,
   numSocket,
-  anySocket,
 } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
-const info = 'Document Set is used to add a document in the search corpus'
+const info = 'Document Edit is used to edit a document in the search corpus'
 
-export class DocumentSet extends ThothComponent<void> {
+export class DocumentEdit extends ThothComponent<void> {
   constructor() {
-    super('Document Set')
+    super('Document Edit')
 
     this.task = {
       outputs: {
@@ -40,6 +39,7 @@ export class DocumentSet extends ThothComponent<void> {
   }
 
   builder(node: ThothNode) {
+    const documentId = new Rete.Input('documentId', 'documentId', numSocket)
     const storeIdInput = new Rete.Input('storeId', 'Store ID', numSocket)
     const keywordsInput = new Rete.Input('keywords', 'Keywords', stringSocket)
     const descriptionInput = new Rete.Input(
@@ -54,16 +54,15 @@ export class DocumentSet extends ThothComponent<void> {
     )
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
-    const output = new Rete.Output('output', 'Output', anySocket)
 
     return node
       .addInput(storeIdInput)
+      .addInput(documentId)
       .addInput(keywordsInput)
       .addInput(descriptionInput)
       .addInput(isIncludedInput)
       .addInput(dataInput)
       .addOutput(dataOutput)
-      .addOutput(output)
   }
 
   async worker(
@@ -72,16 +71,18 @@ export class DocumentSet extends ThothComponent<void> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
+    const documentId = inputs['documentId'][0]
     const storeId = inputs['storeId'][0]
     const keywords = inputs['keywords'] ? (inputs['keywords'][0] as string) : ''
     const description = inputs['description']
       ? (inputs['description'][0] as string)
       : ''
     const is_included = inputs['isIncluded'][0] as string
-
+    console.log('inputs', inputs)
     const resp = await axios.post(
-      `${process.env.REACT_APP_SEARCH_SERVER_URL}/document`,
+      `${process.env.REACT_APP_SEARCH_SERVER_URL}/update_document`,
       {
+        documentId,
         keywords,
         description,
         is_included,
@@ -89,9 +90,5 @@ export class DocumentSet extends ThothComponent<void> {
       }
     )
     node.display(resp.data)
-    console.log('resp.data.documentId', resp.data.documentId)
-    return {
-      output: resp.data.documentId,
-    }
   }
 }
