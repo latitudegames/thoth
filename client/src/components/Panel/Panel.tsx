@@ -10,7 +10,7 @@ const Panel = ({
   roundness = '',
   className = '',
   flexRow = false,
-  flexColumn = '',
+  flexColumn = false,
   gap = '',
   ...props
 }) => {
@@ -24,7 +24,7 @@ const Panel = ({
         } ` + className
       }
       style={{
-        display: flexRow ? 'flex' : flexColumn,
+        display: flexRow || flexColumn ? 'flex' : '',
         flexDirection: flexRow ? 'row' : 'column',
         gap: gap,
         backgroundImage: bacgkroundImageURL ? bacgkroundImageURL : undefined,

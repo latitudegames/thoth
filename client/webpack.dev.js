@@ -1,4 +1,4 @@
-const Dotenv = require('dotenv-webpack')
+const Dotenv = require('dotenv-flow-webpack')
 const { merge } = require('webpack-merge')
 const common = require('./webpack.common')
 
@@ -27,10 +27,7 @@ module.exports = () => {
       ],
     },
     plugins: [
-      new Dotenv({
-        path: './.env',
-        safe: true,
-      }),
+      new Dotenv(),
     ],
   }
 

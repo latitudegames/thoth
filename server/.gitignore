@@ -1,7 +1,6 @@
 node_modules
 build
 yarn-error.log
-.env
 dist
 .eslintcache
 
@@ -17,3 +16,6 @@ coverage
 # Snyk
 .dccache
 google_credentials.json
+
+.env.local
+.env.*.local

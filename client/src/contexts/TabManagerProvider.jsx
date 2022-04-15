@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 
 import LoadingScreen from '../components/LoadingScreen/LoadingScreen'
 import { useDB } from './DatabaseProvider'
-import defaultJson from './layouts/defaultLayout.json'
+import defaultJson from '../data/layouts/defaultLayout.json'
 import { usePubSub } from './PubSubProvider'
 
 const Context = createContext({

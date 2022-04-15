@@ -10,10 +10,10 @@ import Router from '@koa/router'
 import axios from 'axios'
 import {
   includeInFields,
-  removePanctuationalMarks,
+  removePunctuation,
   simplifyWords,
 } from '../utils/utils'
-import { database } from '@latitudegames/thoth-core/src/connectors/database'
+import { database } from '../database'
 import {
   initClassifier,
   classifyText,
@@ -32,9 +32,8 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
     return
   }
 
-  if (ignoreDotEnv) {
-    new database()
-    await database.instance.connect()
+  if (!database.instance || database.instance === undefined) {
+    new database().connect()
     await initClassifier()
   }
 
@@ -55,6 +54,11 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
     const storeId = ctx.query.storeId
     const documents: any = await database.instance.getDocumentsOfStore(storeId)
     return (ctx.body = documents)
+  })
+  router.get('/document/:docId', async function (ctx:Koa.Context) {
+    const docId = ctx.params.docId
+    const doc = await database.instance.getSingleDocument(docId)
+    return (ctx.body = doc)
   })
   router.post('/document', async function (ctx: Koa.Context) {
     const { body } = ctx.request
@@ -120,7 +124,7 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
   })
   router.get('/search', async function (ctx: Koa.Context) {
     const question = ctx.request.query?.question as string
-    const cleanQuestion = removePanctuationalMarks(question)
+    const cleanQuestion = removePunctuation(question)
     const words = simplifyWords(cleanQuestion.split(' '))
     const topic = await classifyText(question)
     console.log('topic:', topic)
@@ -134,8 +138,12 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
 
     console.log('loaded ' + documents.length + ' documents')
     for (let i = 0; i < documents.length; i++) {
-      documents[i].description = (documents[i].description as string).split(',').map(el => el.trim().toLowerCase())
-      documents[i].keywords = (documents[i].keywords as string).split(',').map(el => el.trim().toLowerCase())
+      documents[i].description = (documents[i].description as string)
+        .split(',')
+        .map(el => el.trim().toLowerCase())
+      documents[i].keywords = (documents[i].keywords as string)
+        .split(',')
+        .map(el => el.trim().toLowerCase())
 
       const metadataCount = includeInFields(
         documents[i].description as string[],
@@ -155,8 +163,8 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
         maxIdKeywords = i
       }
     }
-    console.log('maxIdMetadata ::: ', maxIdMetadata);
-    console.log('maxIdKeywords ::: ', maxIdKeywords);
+    console.log('maxIdMetadata ::: ', maxIdMetadata)
+    console.log('maxIdKeywords ::: ', maxIdKeywords)
 
     const testDocs = []
     if (maxIdKeywords === maxIdMetadata && maxIdKeywords !== -1) {
@@ -195,7 +203,7 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
 
       let highestScore = 0
       let highestScoreIndex = -1
-      console.log('response ::: ', response.data);
+      console.log('response ::: ', response.data)
 
       for (let i = 0; i < response.data.data.length; i++) {
         if (response.data.data[i].score > highestScore) {
@@ -285,6 +293,11 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
     const stores = await database.instance.getDocumentStores()
     return (ctx.body = stores)
   })
+  router.get('/document-store/:name', async function (ctx:Koa.Context) {
+    const name = ctx.params.name
+    const store = await database.instance.getSingleDocumentStore(name)
+    return (ctx.body = store)
+  })
   router.post('/document-store', async function (ctx: Koa.Context) {
     const name = ctx.request.body?.name || ''
     let id = -1
@@ -354,7 +367,7 @@ export async function extractKeywords(input: string): Promise<string[]> {
     return []
   }
 
-  const result: any = await makeModelRequest(input, 'flair/pos-english')
+  const result: any = await MakeModelRequest(input, 'flair/pos-english')
 
   for (let i = 0; i < res.length; i++) {
     for (let j = 0; j < result.length; j++) {
@@ -379,7 +392,7 @@ export async function extractKeywords(input: string): Promise<string[]> {
     const weaviateResponse: any = await makeWeaviateRequest(keywords[i])
 
     if (weaviateResponse.Paragraph.length > 0) {
-      const sum: any = await makeModelRequest(
+      const sum: any = await MakeModelRequest(
         weaviateResponse.Paragraph[0].content,
         'facebook/bart-large-cnn'
       )
@@ -395,7 +408,7 @@ export async function extractKeywords(input: string): Promise<string[]> {
   return respp
 }
 
-export async function makeModelRequest(
+export async function MakeModelRequest(
   inputs: any,
   model: string,
   parameters = {},

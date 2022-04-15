@@ -13,7 +13,7 @@
     "declaration": true,
     "composite": true,
     "noEmit": false,
-    "target": "es6",
+    "target": "ES2021",
     "sourceMap": true
   },
   "exclude": ["./node_modules/", "./dist/"]

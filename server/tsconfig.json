@@ -15,12 +15,13 @@
     "removeComments": true,
     "skipLibCheck": true,
     "sourceMap": true,
-    "target": "ES2020",
+    "target": "ES2021",
     "typeRoots": ["./@types", "node_modules/@types"],
     "types": ["node", "jest"],
     "baseUrl": ".",
     "paths": {
       "gpt-3-encoder": ["@types/gpt-3-encoder.d.ts"],
+      "ot-json0": ["@types/ot-json0.d.ts"],
       "@latitudegames/thoth-core": ["@types/thoth-core.d.ts"]
     },
     "noImplicitAny": true,

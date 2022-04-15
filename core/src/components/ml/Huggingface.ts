@@ -20,7 +20,10 @@ NOTE:  Hugginface models are on demand, and sometimes require time to "boot up".
 Also note that you will likely need to parse the return from huggingface yourself inside a code component, or similar.`
 
 type WorkerReturn = {
-  result: any
+  result: {
+    [key: string]: unknown
+    error?: unknown
+  }
 }
 
 export class HuggingfaceComponent extends ThothComponent<
@@ -37,6 +40,7 @@ export class HuggingfaceComponent extends ThothComponent<
     }
     this.category = 'AI/ML'
     this.info = info
+    this.deprecated = true
   }
 
   builder(node: ThothNode) {

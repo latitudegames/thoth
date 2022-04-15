@@ -14,7 +14,7 @@ import {
   ThothWorkerOutputs,
 } from '../../../types'
 import { EngineContext } from '../../engine'
-import { triggerSocket, stringSocket } from '../../sockets'
+import { triggerSocket, stringSocket, anySocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
 const info = 'Returns the input string as voice'
@@ -22,6 +22,8 @@ const info = 'Returns the input string as voice'
 type WorkerReturn = {
   output: string
 }
+
+const API_URL = 'http://localhost:8001'
 
 export class TextToSpeech extends ThothComponent<Promise<WorkerReturn>> {
   constructor() {
@@ -34,21 +36,31 @@ export class TextToSpeech extends ThothComponent<Promise<WorkerReturn>> {
       },
     }
 
+    this.module = {
+      nodeType: 'module',
+      socket: anySocket,
+    }
+
     this.category = 'AI/ML'
     this.display = true
     this.info = info
   }
 
   builder(node: ThothNode) {
-    const inp = new Rete.Input('string', 'Text', stringSocket)
+    const textInput = new Rete.Input('input', 'Input', anySocket, true)
     const characterInp = new Rete.Input('character', 'Character', stringSocket)
-    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
+    const triggerInput = new Rete.Input(
+      'trigger',
+      'Trigger',
+      triggerSocket,
+      true
+    )
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
-    const outp = new Rete.Output('Voice', 'String', stringSocket)
+    const outp = new Rete.Output('output', 'output', stringSocket)
 
     return node
-      .addInput(inp)
-      .addInput(dataInput)
+      .addInput(textInput)
+      .addInput(triggerInput)
       .addInput(characterInp)
       .addOutput(dataOutput)
       .addOutput(outp)
@@ -60,21 +72,26 @@ export class TextToSpeech extends ThothComponent<Promise<WorkerReturn>> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
-    const action = inputs['string'][0]
+    console.log('INPUTS:', inputs)
+    const action = inputs['input'][0]
     const character = inputs['character']?.[0] as string
 
-    const url = await axios.get(
-      `${process.env.REACT_APP_API_ROOT_URL}/speech_to_text`,
-      {
+    const isCommand = (action as string).startsWith('/')
+
+    let url: any = undefined
+
+    if (!isCommand) {
+      url = await axios.get(`${API_URL}/speech_to_text`, {
         params: {
           text: action,
           character: character,
         },
-      }
-    )
+      })
+      console.log('url', url.data)
+    }
 
     return {
-      output: (url.data as any).path as string,
+      output: isCommand ? (action as string) : (url.data as string),
     }
   }
 }

@@ -3,7 +3,7 @@ const punctRE =
 const spaceRE = /\s+/g
 import nlp from 'compromise'
 
-export function removePanctuationalMarks(str: string): string {
+export function removePunctuation(str: string): string {
   return str.replace(punctRE, '').replace(spaceRE, ' ')
 }
 

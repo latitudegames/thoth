@@ -1,4 +1,4 @@
-import ContentObject from '@thoth/windows/ContentObject'
+import ContentObject from '@/workspaces/spells/windows/ContentObject';
 import Modal from '../Modal/Modal'
 
 const ContentObjEditModal = ({ contents, getContentObjects }) => {

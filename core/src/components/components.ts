@@ -1,17 +1,14 @@
-import { AddAgent } from './agent/AddAgent'
-import { AgentTextCompletion } from './agent/AgentTextCompletion'
-import { CacheManagerDelete } from './agent/CacheManagerDelete'
-import { CacheManagerGet } from './agent/CacheManagerGet'
-import { CacheManagerSet } from './agent/CacheManagerSet'
-import { CreateOrGetAgent } from './agent/CreateOrGetAgent'
-import { EventRecall } from './agent/EventRecall'
-import { EventStore } from './agent/EventStore'
-import { GetAgentData } from './agent/GetAgentData'
-import { GetAgentPersonality } from './agent/GetAgentPersonality'
-import { InputDestructureComponent } from './agent/InputDestructure'
-import { Request } from './agent/Request'
+import { AddAgent } from './entities/AddAgent'
+import { AgentTextCompletion } from './entities/AgentTextCompletion'
+import { CacheManagerDelete } from './entities/CacheManagerDelete'
+import { CacheManagerGet } from './entities/CacheManagerGet'
+import { CacheManagerSet } from './entities/CacheManagerSet'
+import { CreateOrGetAgent } from './entities/CreateOrGetAgent'
+import { EventRecall } from './entities/EventRecall'
+import { EventStore } from './entities/EventStore'
+import { InputDestructureComponent } from './entities/InputDestructure'
+import { Request } from './entities/Request'
 import { InputComponent } from './io/Input'
-import { ModuleComponent } from './io/Module'
 import { Output } from './io/Output'
 import { TriggerIn } from './io/TriggerIn'
 import { TriggerOut } from './io/TriggerOut'
@@ -42,6 +39,8 @@ import { TextToSpeech } from './ml/TextToSpeech'
 import { TimeDetectorComponent } from './ml/TimeDetector'
 import { DocumentDelete } from './search/DocumentDelete'
 import { DocumentGet } from './search/DocumentGet'
+import { DocumentEdit } from './search/DocumentEdit'
+import { DocumentStoreGet } from './search/DocumentStoreGet'
 import { DocumentSet } from './search/DocumentSet'
 import { Search } from './search/Search'
 import { StateRead } from './state/StateRead'
@@ -83,12 +82,10 @@ export const components = {
   SummarizeFacts: () => new SummarizeFacts(),
   textToSpeech: () => new TextToSpeech(),
   agentTextCompletion: () => new AgentTextCompletion(),
-  getAgentPersonality: () => new GetAgentPersonality(),
   keywordExtractor: () => new KeywordExtractor(),
   namedEntityRecognition: () => new NamedEntityRecognition(),
   createOrGetAgent: () => new CreateOrGetAgent(),
   Classifier: () => new Classifier(),
-  getAgentData: () => new GetAgentData(),
   isNullOrUndefined: () => new IsNullOrUndefined(),
   isVariableTrue: () => new IsVariableTrue(),
   conversationStore: () => new EventStore(),
@@ -96,8 +93,10 @@ export const components = {
   request: () => new Request(),
   search: () => new Search(),
   documentGet: () => new DocumentGet(),
+  documentEdit: () => new DocumentEdit(),
   documentDelete: () => new DocumentDelete(),
   documentSet: () => new DocumentSet(),
+  documentStoreGet: () => new DocumentStoreGet(),
   forEach: () => new ForEach(),
   whileLoop: () => new WhileLoop(),
   cacheManagerGet: () => new CacheManagerGet(),
@@ -121,10 +120,9 @@ export const components = {
   inputsToJson: () => new InputsToJSON(),
   itemTypeComponent: () => new ItemTypeComponent(),
   joinListComponent: () => new JoinListComponent(),
-  moduleComponent: () => new ModuleComponent(),
+  output: () => new Output(),
   proseToScript: () => new ProseToScript(),
   safetyVerifier: () => new SafetyVerifier(),
-  output: () => new Output(),
   stateWrite: () => new StateWrite(),
   stateRead: () => new StateRead(),
   stringProcessor: () => new StringProcessor(),

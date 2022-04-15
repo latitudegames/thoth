@@ -59,12 +59,7 @@ export class DocumentGet extends ThothComponent<Promise<WorkerReturn>> {
     const id = inputs['id'][0] as string
 
     const resp = await axios.get(
-      `${process.env.VITE_SEARCH_SERVER_URL}/document`,
-      {
-        params: {
-          documentId: id,
-        },
-      }
+      `${process.env.REACT_APP_SEARCH_SERVER_URL}/document/${id}`
     )
 
     return {

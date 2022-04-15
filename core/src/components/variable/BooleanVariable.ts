@@ -57,7 +57,7 @@ export class BooleanVariable extends ThothComponent<InputReturn> {
     outputs: ThothWorkerOutputs,
     { silent, data }: { silent: boolean; data: string | undefined }
   ) {
-    const _var = node?.data?._var == 'true'
+    const _var = node?.data?._var == true
 
     this.name = (node?.data?.name as string) + ' - ' + _var
 
