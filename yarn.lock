@@ -1604,26 +1604,6 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
-"@latitudegames/thoth-core@^0.0.66":
-  version "0.0.66"
-  resolved "https://npm.pkg.github.com/download/@latitudegames/thoth-core/0.0.66/a1893656d7c81e8b1f4e8736fa401f932a5a3b73c05174a556996c4539af0d94#f52076d44aa8f896d869260de6f4ea321452fe37"
-  integrity sha512-A9hfaqbtoG/8hXtb3M049iHdbPd+0O+XR7A3Cdq4bBDLdw37iTp97Z8A82Y08dJ0GOXWo1fo99ixLbiyS4FMTw==
-  dependencies:
-    deep-equal "^2.0.5"
-    handlebars "^4.7.7"
-    jsdom "^17.0.0"
-    license-webpack-plugin "^4.0.2"
-    path "^0.12.7"
-    react "^17.0.2"
-    regenerator-runtime "^0.13.9"
-    rete "https://github.com/latitudegames/rete.git#master"
-    rete-area-plugin "^0.2.1"
-    rete-connection-plugin "^0.9.0"
-    rete-context-menu-plugin "^0.6.0-rc.1"
-    rete-module-plugin "^0.4.1"
-    rete-react-render-plugin "^0.2.1"
-    uuid "^8.3.2"
-
 "@lerna/add@4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@lerna/add/-/add-4.0.0.tgz#c36f57d132502a57b9e7058d1548b7a565ef183f"
