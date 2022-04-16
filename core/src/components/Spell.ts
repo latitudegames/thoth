@@ -45,6 +45,7 @@ export class SpellComponent extends ThothComponent<
     this.category = 'Core'
     this.info = info
     this.noBuildUpdate = true
+    this.display = true
   }
 
   subscribe(node: ThothNode, spellId: string) {
@@ -138,7 +139,12 @@ export class SpellComponent extends ThothComponent<
     {
       module,
       thoth,
-    }: { module: { outputs: ModuleWorkerOutput[] }; thoth: EngineContext }
+      silent,
+    }: {
+      module: { outputs: ModuleWorkerOutput[] }
+      thoth: EngineContext
+      silent: Boolean
+    }
   ) {
     // We format the inputs since these inputs rely on the use of the socket keys.
     const flattenedInputs = this.formatInputs(node, inputs)
@@ -149,6 +155,8 @@ export class SpellComponent extends ThothComponent<
       node.data.spellId as string,
       flattenedInputs.state
     )
+
+    if (!silent) node.display(`${JSON.stringify(outputs)}`)
 
     return outputs
   }

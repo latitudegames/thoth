@@ -6,11 +6,11 @@ export class Module {
     this.outputs = {}
   }
 
-  read(inputs: Record<string, unknown>) {
+  read(inputs: Record<string, unknown[]>) {
     this.inputs = inputs
   }
 
-  write(outputs: Record<string, unknown>) {
+  write(outputs: Record<string, any>) {
     Object.keys(this.outputs).forEach(key => {
       outputs[key] = this.outputs[key]
     })

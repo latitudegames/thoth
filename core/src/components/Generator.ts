@@ -9,7 +9,7 @@ import {
 } from '../../types'
 import { FewshotControl } from '../dataControls/FewshotControl'
 import { InputControl } from '../dataControls/InputControl'
-import { DropdownControl } from '../dataControls/DropdownControl'
+import { ModelControl } from '../dataControls/ModelControl'
 import { SocketGeneratorControl } from '../dataControls/SocketGenerator'
 import { EngineContext } from '../../types'
 import { triggerSocket, stringSocket } from '../sockets'
@@ -37,6 +37,7 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
     }
     this.category = 'AI/ML'
     this.info = info
+    this.display = true
   }
 
   builder(node: ThothNode) {
@@ -56,18 +57,10 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       name: 'Component Name',
     })
 
-    const modelControl = new DropdownControl({
+    const modelControl = new ModelControl({
       dataKey: 'model',
       name: 'Model',
       defaultValue: (node.data?.model as string) || 'vanilla-jumbo',
-      values: [
-        'aid-jumbo',
-        'vanilla-jumbo',
-        'aid-gpt-j',
-        'aid-neox',
-        'vanilla-neox',
-        'entity-detector',
-      ],
     })
 
     const inputGenerator = new SocketGeneratorControl({
@@ -124,7 +117,7 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
     node: NodeData,
     rawInputs: ThothWorkerInputs,
     outputs: ThothWorkerOutputs,
-    { thoth }: { silent: boolean; thoth: EngineContext }
+    { thoth, silent }: { silent: boolean; thoth: EngineContext }
   ) {
     const { completion } = thoth
     const inputs = Object.entries(rawInputs).reduce((acc, [key, value]) => {
@@ -173,11 +166,14 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
       const result = raw
       const composed = `${prompt} ${result}`
 
+      if (!silent) node.display(result)
+
       return {
         result,
         composed,
       }
     } catch (err) {
+      console.log({ err })
       // Typescript reporting wrong about number of arguments for error constructor
       //@ts-ignore:next-line
       throw new Error('Error in Generator component.', { cause: err })

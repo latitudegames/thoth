@@ -15,6 +15,7 @@ import { Spell } from '@latitudegames/thoth-core/types'
 import { usePubSub } from '@/contexts/PubSubProvider'
 import { useSharedb } from '@/contexts/SharedbProvider'
 import { sharedb } from '@/config'
+import { ThothComponent } from '@latitudegames/thoth-core/src/thoth-component'
 
 const Workspace = ({ tab, tabs, pubSub }) => {
   const spellRef = useRef<Spell>()
@@ -44,17 +45,21 @@ const Workspace = ({ tab, tabs, pubSub }) => {
   useEffect(() => {
     if (!editor?.on) return
 
-    const unsubscribe = editor.on('nodecreated noderemoved', () => {
-      if (!spellRef.current) return
-      // TODO we can probably send this update to a spell namespace for this spell.
-      // then spells can subscribe to only their dependency updates.
-      const event = events.$SUBSPELL_UPDATED(spellRef.current.name)
-      const spell = {
-        ...spellRef.current,
-        chain: editor.toJSON(),
+    const unsubscribe = editor.on(
+      'nodecreated noderemoved',
+      (node: ThothComponent<unknown>) => {
+        if (!spellRef.current) return
+        if (node.category !== 'I/O') return
+        // TODO we can probably send this update to a spell namespace for this spell.
+        // then spells can subscribe to only their dependency updates.
+        const event = events.$SUBSPELL_UPDATED(spellRef.current.name)
+        const spell = {
+          ...spellRef.current,
+          chain: editor.toJSON(),
+        }
+        publish(event, spell)
       }
-      publish(event, spell)
-    }) as Function
+    ) as Function
 
     return unsubscribe as () => void
   }, [editor])

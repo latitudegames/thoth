@@ -96,12 +96,14 @@ export class TriggerIn extends ThothComponent<void> {
 
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const out = new Rete.Output('trigger', 'Trigger', triggerSocket)
-    node.data.socketKey = node?.data?.socketKey || uuidv4()
 
-    // Handle default value if data is present
+    node.data.socketKey = node?.data?.socketKey || uuidv4()
+    node.data.name = node.data.name || `trigger-in-${node.id}`
+
     const nameInput = new InputControl({
       dataKey: 'name',
       name: 'Trigger name',
+      defaultValue: node.data.name,
     })
 
     // subscribe the node to the playtest input data stream
