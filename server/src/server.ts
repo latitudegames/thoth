@@ -15,6 +15,9 @@ import { routes } from './routes'
 import { Handler, Method, Middleware } from './types'
 import { initTextToSpeech } from './systems/googleTextToSpeech'
 import { initFileServer } from './systems/fileServer'
+import https from 'https'
+import http from 'http'
+import * as fs from 'fs'
 
 const app: Koa = new Koa()
 const router: Router = new Router()
@@ -166,11 +169,17 @@ async function init() {
   })
 
   const PORT: number = Number(process.env.PORT) || 8001
-
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log('Server listening on: 0.0.0.0:' + PORT)
-  })
-
+  const useSSL = process.env.USESSL === 'true'
+  
+  var optionSsl = {
+    key: fs.readFileSync('key.pem'),
+    cert: fs.readFileSync('cert.pem'),
+  }
+  useSSL ? https.createServer(optionSsl, app.callback()).listen(PORT, '0.0.0.0', () => {
+    console.log('Https Server listening on: 0.0.0.0:' + PORT)
+  }): http.createServer(app.callback()).listen(PORT, '0.0.0.0', () => {
+    console.log('Http Server listening on: 0.0.0.0:' + PORT)
+  });
   // await initLoop()
 }
 init()

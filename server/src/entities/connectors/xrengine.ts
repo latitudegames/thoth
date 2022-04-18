@@ -556,17 +556,43 @@ class XREngineBot {
     this.xrengineclient = xrengineclient
     this.handleInput = settings.handleInput
     setInterval(() => this.instanceMessages(), 1000)
+    this.messageLoop()
   }
 
-  async sendMessage(message, clean = false) {
+  //delay in seconds
+  queue: { delay: number; message: string; clean: boolean }[] = []
+  timeStamp = 0
+
+  messageLoop() {
+    setInterval(async () => {
+      this.timeStamp += 1
+      if (
+        this.queue.length > 0 &&
+        this.queue[0] &&
+        this.queue[0].delay <= this.timeStamp
+      ) {
+        await this.handleMessage(this.queue[0].message, this.queue[0].clean)
+        this.queue.shift()
+        this.timeStamp = 0
+      }
+    }, 1000)
+  }
+  async sendMessage(message: string, clean = false) {
     log('sending message: ' + message)
     if (message === null || message === undefined) return
-    // TODO:
-    // Send message to google cloud speech
-    // Get response URL from google cloud speech
 
-    // await this.sendAudio(5)
-
+    if (this.queue.length > 0) {
+      this.queue.push({
+        delay: message.endsWith('.mp3') || message.endsWith('.wav') ? 5 : 1,
+        message,
+        clean,
+      })
+      return
+    } else {
+      await this.handleMessage(message, clean)
+    }
+  }
+  async handleMessage(message, clean = false) {
     await this.typeMessage('newMessage', message, clean)
     await this.pressKey('Enter')
   }
