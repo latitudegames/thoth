@@ -13,7 +13,7 @@ module.exports = () => {
         directory: 'public',
       },
       compress: true,
-      port: process.env.PORT || 3001,
+      port: process.env.PORT || 3003,
       historyApiFallback: true,
     },
     module: {
