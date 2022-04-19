@@ -37,6 +37,7 @@ function isUrl(url: string): boolean {
   }
 }
 
+let xr = undefined
 export class xrengine_client {
   handleInput
   UsersInRange = {}
@@ -478,13 +479,30 @@ export class xrengine_client {
     //generateVoice('hello there', (buf, path) => {}, false)
     console.log('creating xr engine client', settings)
 
-    this.xrengineBot = new XREngineBot({
-      headless: true,
-      agent: agent,
-      settings: settings,
-      xrengineclient: this,
-    })
-
+    // if (xr) {
+    //   xr.quit()
+    //   xr = undefined
+    // }
+    if (xr) {
+      console.log("***********agent", agent)
+      this.xrengineBot = new XREngineBot({
+        headless: true,
+        agent: agent,
+        settings: settings,
+        xrengineclient: this,
+        old: { bool: true, browser: xr.browser, page: xr.page, pu: xr.pu }
+      })
+      xr = undefined
+    }
+    else {
+      this.xrengineBot = new XREngineBot({
+        headless: true,
+        agent: agent,
+        settings: settings,
+        xrengineclient: this,
+      })
+    }
+    xr = this.xrengineBot
     const xvfb = new Xvfb()
     await xvfb.start(async function (err, xvfbProcess) {
       if (err) {
@@ -499,7 +517,9 @@ export class xrengine_client {
         console.log('Preparing to connect to ', settings.url)
         cli.xrengineBot.delay(3000 + Math.random() * 1000)
         console.log('Connecting to server...')
-        await cli.xrengineBot.launchBrowser()
+        if (!xr) {
+          await cli.xrengineBot.launchBrowser()
+        }
         const XRENGINE_URL =
           (settings.url as string) || 'https://n3xus.city/location/test'
         cli.xrengineBot.enterRoom(XRENGINE_URL, settings.xrengine_bot_name)
@@ -546,7 +566,13 @@ class XREngineBot {
     agent,
     settings,
     xrengineclient,
+    old = { bool: false }
   } = {}) {
+    if (old.bool) {
+      this.browser = old.browser
+      this.page = old.page
+      this.pu = old.pu
+    }
     this.headless = headless
     this.name = name
     this.autoLog = autoLog
@@ -863,7 +889,7 @@ class XREngineBot {
     await this.waitForTimeout(timeout)
   }
 
-  async interactObject() {}
+  async interactObject() { }
 
   /** Return screenshot
    * @param {Function} fn Function to execut _in the node context._
