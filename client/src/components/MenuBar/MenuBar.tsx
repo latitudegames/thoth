@@ -29,6 +29,7 @@ const MenuBar = () => {
     $SAVE_SPELL,
     $CREATE_STATE_MANAGER,
     $CREATE_ENT_MANAGER,
+    $CREATE_VIDEO_TRANSCRIPTION,
     $CREATE_PLAYTEST,
     $CREATE_INSPECTOR,
     $CREATE_SEARCH_CORPUS,
@@ -92,6 +93,10 @@ const MenuBar = () => {
 
   const onEntityManagerCreate = () => {
     publish($CREATE_ENT_MANAGER(activeTabRef.current?.id))
+  }
+
+  const onCreateVideoTranscription = () => {
+    publish($CREATE_VIDEO_TRANSCRIPTION(activeTabRef.current?.id))
   }
 
   const onPlaytestCreate = () => {
@@ -203,6 +208,9 @@ const MenuBar = () => {
             },
             playtest: {
               onClick: onPlaytestCreate,
+            },
+            video_transcription: {
+              onClick: onCreateVideoTranscription,
             },
             enki: {
               items: {

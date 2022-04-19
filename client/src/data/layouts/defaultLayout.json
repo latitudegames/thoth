@@ -74,6 +74,12 @@
               },
               {
                 "type": "tab",
+                "id": "",
+                "name": "Video Transcription",
+                "component": "videoTranscription"
+              },
+              {
+                "type": "tab",
                 "id": "#10",
                 "name": "State Manager",
                 "component": "stateManager"

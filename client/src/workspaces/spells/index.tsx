@@ -104,6 +104,8 @@ const Workspace = ({ tab, tabs, pubSub }) => {
           return <SearchCorpus />
         case 'entityManager':
           return <EntityManagerWindow />
+        case 'videoTranscription':
+          return <TextEditor {...props} />
         default:
           return <p></p>
       }

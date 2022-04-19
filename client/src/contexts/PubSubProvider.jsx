@@ -34,6 +34,7 @@ export const events = {
   $CREATE_INSPECTOR: tabId => `createInspector:${tabId}`,
   $CREATE_TEXT_EDITOR: tabId => `createTextEditor:${tabId}`,
   $CREATE_ENT_MANAGER: tabId => `createEntManager:${tabId}`,
+  $CREATE_VIDEO_TRANSCRIPTION: tabId => `createVideoTranscription:${tabId}`,
   $CREATE_SEARCH_CORPUS: tabId => `createSearchCorpus:${tabId}`,
   $CREATE_DEBUG_CONSOLE: tabId => `createDebugConsole:${tabId}`,
   $SERIALIZE: tabId => `serialize:${tabId}`,
