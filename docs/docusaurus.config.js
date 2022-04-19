@@ -66,6 +66,12 @@ const config = {
             position: 'left',
             label: 'Creators',
           },
+          {
+            type: 'doc',
+            docId: 'developers/getting started/intro',
+            position: 'left',
+            label: 'Developers',
+          },
           // { to: "/blog", label: "Blog", position: "left" },
           {
             href: 'https://github.com/latitudegames/thoth',
