@@ -172,6 +172,16 @@ const ThothInterfaceProvider = ({ children, tab }) => {
     return spellRef.current?.gameState ?? {}
   }
 
+  const setCurrentGameState = newState => {
+    if (!spellRef.current) return
+
+    const update = {
+      gameState: newState,
+    }
+
+    publish($SAVE_SPELL_DIFF(tab.id), update)
+  }
+
   const updateCurrentGameState = _update => {
     if (!spellRef.current) return
     const spell = spellRef.current
@@ -208,6 +218,7 @@ const ThothInterfaceProvider = ({ children, tab }) => {
     huggingface,
     readFromImageCache,
     getCurrentGameState,
+    setCurrentGameState,
     updateCurrentGameState,
     processCode,
     runSpell,
