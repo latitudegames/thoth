@@ -54,6 +54,18 @@ const config = {
             position: 'left',
             label: 'Intro',
           },
+          {
+            type: 'doc',
+            docId: 'core-concepts/ConceptsOverview',
+            position: 'left',
+            label: 'Concepts',
+          },
+          {
+            type: 'doc',
+            docId: 'creators/gettingStarted/CreatorWelcome',
+            position: 'left',
+            label: 'Creators',
+          },
           // { to: "/blog", label: "Blog", position: "left" },
           {
             href: 'https://github.com/latitudegames/thoth',
