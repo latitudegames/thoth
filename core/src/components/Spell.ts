@@ -109,7 +109,7 @@ export class SpellComponent extends ThothComponent<
 
   updateSockets(node: ThothNode, spell: Spell) {
     const chain = JSON.parse(JSON.stringify(spell.chain))
-    this.updateModuleSockets(node, chain, true)
+    this.updateModuleSockets(node, chain)
     node.update()
   }
 
