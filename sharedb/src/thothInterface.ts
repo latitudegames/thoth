@@ -5,6 +5,7 @@ export const buildThothInterface = (): EngineContext => {
     async completion(body) {
       return 'testing'
     },
+    setCurrentGameState() {},
     getCurrentGameState() {
       return {}
     },
