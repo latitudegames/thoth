@@ -152,9 +152,8 @@ const ThothInterfaceProvider = ({ children, tab }) => {
     return result
   }
 
-  const runSpell = async (inputs, spellId) => {
-    console.log('RUN SPELL')
-    const response = await _runSpell({ inputs, spellId })
+  const runSpell = async (inputs, spellId, state) => {
+    const response = await _runSpell({ inputs, spellId, state })
 
     if ('error' in response) {
       throw new Error(`Error running spell ${spellId}`)
