@@ -19,6 +19,7 @@ const DebugConsole = ({ tab }) => {
   const { centerNode } = useEditor()
   const { user } = useAuth()
   const { publish, subscribe, events } = usePubSub()
+  const { $RUN, $DEBUG_PRINT } = events
 
   const terminalRef = useRef<Terminal>()
 
