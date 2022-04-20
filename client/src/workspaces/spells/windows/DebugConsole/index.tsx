@@ -18,15 +18,7 @@ const DebugConsole = ({ tab }) => {
   const [scrollToBottom, setScrollToBottom] = useState<boolean>(false)
   const { centerNode } = useEditor()
   const { user } = useAuth()
-  const {
-    //  publish,
-    subscribe,
-    events,
-  } = usePubSub()
-  const {
-    //  $DEBUG_INPUT,
-    $DEBUG_PRINT,
-  } = events
+  const { publish, subscribe, events } = usePubSub()
 
   const terminalRef = useRef<Terminal>()
 
