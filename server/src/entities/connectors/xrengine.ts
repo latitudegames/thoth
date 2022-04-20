@@ -15,6 +15,7 @@
 // We need to break some of this code out so that we have more control of it in the node graph
 // i.e. text classification and such
 
+import { tts } from '../../systems/googleTextToSpeech'
 import Xvfb from 'xvfb'
 import { database } from '../../database'
 import { browserWindow, PageUtils } from './browser'
@@ -403,12 +404,31 @@ export class xrengine_client {
 
   async handleXREngineResponse(response, addPing, sender, isVoice) {
     console.log('response: ' + response)
+    if (response === undefined || !response) {
+      return
+    }
 
     if (
       (response as string).trim().toLowerCase().endsWith('.mp3') ||
       (response as string).trim().toLowerCase().endsWith('.wav')
     ) {
       isVoice = true
+    }
+
+    if (!isVoice) {
+      await this.xrengineBot.sendMessage(response, false)
+      isVoice = true
+      const fileId = await tts(response as string)
+      const url =
+        (process.env.FILE_SERVER_URL?.endsWith('/')
+          ? process.env.FILE_SERVER_URL
+          : process.env.FILE_SERVER_URL + '/') + fileId
+
+      console.log('url:', url)
+      response = url
+      await this.xrengineBot.delay(1000)
+      await this.xrengineBot.sendMessage('!voiceUrl|' + response, false)
+      return
     }
 
     if (isVoice === false) {
@@ -564,7 +584,7 @@ class XREngineBot {
   timeStamp = 0
 
   messageLoop() {
-    setInterval(async () => {
+    /*setInterval(async () => {
       this.timeStamp += 1
       if (
         this.queue.length > 0 &&
@@ -575,22 +595,19 @@ class XREngineBot {
         this.queue.shift()
         this.timeStamp = 0
       }
-    }, 1000)
+    }, 1000)*/
   }
-  async sendMessage(message: string, clean = false) {
+  async sendMessage(message, clean = true) {
     log('sending message: ' + message)
     if (message === null || message === undefined) return
+    // TODO:
+    // Send message to google cloud speech
+    // Get response URL from google cloud speech
 
-    if (this.queue.length > 0) {
-      this.queue.push({
-        delay: message.endsWith('.mp3') || message.endsWith('.wav') ? 5 : 1,
-        message,
-        clean,
-      })
-      return
-    } else {
-      await this.handleMessage(message, clean)
-    }
+    // await this.sendAudio(5)
+
+    await this.typeMessage('newMessage', message, clean)
+    await this.pressKey('Enter')
   }
   async handleMessage(message, clean = false) {
     await this.typeMessage('newMessage', message, clean)
@@ -1161,7 +1178,7 @@ class XREngineBot {
       await this.delay(10000)
       const index = this.getRandomNumber(0, this.avatars.length - 1)
       await this.updateAvatar(this.avatars[index])
-      await this.requestPlayers()
+      //await this.requestPlayers()
       await this.getUser()
       await setInterval(() => this.getUser(), 1000)
     } catch (error) {
@@ -1237,12 +1254,10 @@ class XREngineBot {
   }
 
   async updateAvatar(avatar) {
-    /*
     log(`updating avatar to: ${avatar}`)
     await this.clickElementById('SPAN', 'Profile_0')
-    await this.clickElementById('button', 'CreateIcon')
-    await this.clickSelectorByAlt('img', avatar)*/
-    //await this.clickElementById('button', 'confirm-avatar')
+    await this.clickElementById('button', 'select-avatar')
+    await this.clickElementById('div', '247b4a00-b973-11ec-b4fc-43ea990632e9')
   }
 
   async getUser() {
