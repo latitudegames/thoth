@@ -28,6 +28,10 @@ const DebugConsole = ({ tab }) => {
     setScrollToBottom(true)
   }
 
+  const run = nodeId => {
+    publish($RUN(tab.id, nodeId))
+  }
+
   const formatErrorMessage = message =>
     `> Node ${message.nodeId}: Error in ${message.from} component ${
       message.name ?? 'unnamed'
