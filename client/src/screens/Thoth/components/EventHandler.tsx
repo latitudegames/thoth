@@ -25,8 +25,6 @@ const EventHandler = ({ pubSub, tab }) => {
   // only using this to handle events, so not rendering anything with it.
   const { createOrFocus, windowTypes } = useLayout()
 
-  console.log(windowTypes,'windowTypes')
-
   const [saveSpellMutation] = useSaveSpellMutation()
   const { data: spell } = useGetSpellQuery(tab.spellId, {
     skip: !tab.spellId,
@@ -42,7 +40,6 @@ const EventHandler = ({ pubSub, tab }) => {
   const { serialize, getEditor, undo, redo, del } = useEditor()
 
   const { events, subscribe } = pubSub
-  console.log(events,'eventseventsevents')
   const {
     $DELETE,
     $UNDO,
@@ -60,8 +57,6 @@ const EventHandler = ({ pubSub, tab }) => {
     $CLOSE_EDITOR,
     $PROCESS,
   } = events
-
-  console.log(events,'events')
 
   const saveSpell = async () => {
     const currentSpell = spellRef.current
