@@ -51,6 +51,12 @@ const ThothInterfaceProvider = ({ children, tab }) => {
     $RUN,
   } = events
 
+  const onRun = (node, callback) => {
+    return subscribe($RUN(tab.id, node.id), (event, data) => {
+      callback(data)
+    })
+  }
+
   const onInspector = (node, callback) => {
     return subscribe($NODE_SET(tab.id, node.id), (event, data) => {
       callback(data)
@@ -203,6 +209,7 @@ const ThothInterfaceProvider = ({ children, tab }) => {
   }
 
   const publicInterface = {
+    onRun,
     onInspector,
     onAddModule,
     onUpdateModule,
