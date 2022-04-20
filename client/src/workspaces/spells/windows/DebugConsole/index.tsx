@@ -106,6 +106,11 @@ const DebugConsole = ({ tab }) => {
         return ''
       },
     },
+    run: {
+      description: 'Trigger a specific node to run your spell',
+      usage: 'run <nodeId>',
+      fn: run,
+    },
   }
 
   // https://github.com/linuswillner/react-console-emulator/tree/e2b602f631e8b7c57c4a7407491cbfb84f357519
