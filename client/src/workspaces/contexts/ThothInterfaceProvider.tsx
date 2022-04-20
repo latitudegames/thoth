@@ -152,9 +152,8 @@ const ThothInterfaceProvider = ({ children, tab }) => {
     return result
   }
 
-  const runSpell = async (inputs, spellId) => {
-    console.log('RUN SPELL')
-    const response = await _runSpell({ inputs, spellId })
+  const runSpell = async (inputs, spellId, state) => {
+    const response = await _runSpell({ inputs, spellId, state })
 
     if ('error' in response) {
       throw new Error(`Error running spell ${spellId}`)
@@ -171,6 +170,16 @@ const ThothInterfaceProvider = ({ children, tab }) => {
     if (!spellRef.current) return {}
 
     return spellRef.current?.gameState ?? {}
+  }
+
+  const setCurrentGameState = newState => {
+    if (!spellRef.current) return
+
+    const update = {
+      gameState: newState,
+    }
+
+    publish($SAVE_SPELL_DIFF(tab.id), update)
   }
 
   const updateCurrentGameState = _update => {
@@ -209,6 +218,7 @@ const ThothInterfaceProvider = ({ children, tab }) => {
     huggingface,
     readFromImageCache,
     getCurrentGameState,
+    setCurrentGameState,
     updateCurrentGameState,
     processCode,
     runSpell,
