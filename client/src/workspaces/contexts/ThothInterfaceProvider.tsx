@@ -51,7 +51,7 @@ const ThothInterfaceProvider = ({ children, tab }) => {
     $TRIGGER,
   } = events
 
-  const onRun = (node, callback) => {
+  const onTrigger = (node, callback) => {
     let isDefault = node === 'default' ? 'default' : null
     return subscribe($RUN(tab.id, isDefault ?? node.id), (event, data) => {
       publish($PROCESS(tab.id))
