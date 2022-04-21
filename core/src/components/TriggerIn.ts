@@ -78,13 +78,19 @@ export class TriggerIn extends ThothComponent<void> {
   subscribeToTrigger(node: ThothNode) {
     const { onTrigger } = this.editor?.thoth as EditorContext
 
-    if (onRun) {
-      this.runSubscriptionMap[node.id] = onRun(node, (value: string) => {
-        const task = this.nodeTaskMap[node.id]
-        task?.run(value)
-        task?.reset()
-        this.editor?.trigger('process')
-      })
+    const callback = (value: string) => {
+      const defaultNode = Object.entries(this.nodeTaskMap).map(
+        (entry: Record<string, any>) => {
+          if (entry[1].node.data.isDefaultTriggerIn) return parseInt(entry[0])
+        }
+      )
+      const nodeId = defaultNode[0] ?? node.id
+      const task = this.nodeTaskMap[nodeId]
+
+      task?.run(value)
+      task?.reset()
+      this.editor?.trigger('process')
+    }
     }
   }
 
