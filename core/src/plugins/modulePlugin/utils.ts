@@ -24,12 +24,7 @@ const getRemovedSockets = (
 ) => {
   return existingSockets.filter(
     existing =>
-      !newSockets.some(
-        incoming =>
-          incoming.socketKey === existing.socketKey ||
-          // We add this here to account for situation where we arent using socket key UUIDs
-          incoming.name === existing.socketKey
-      )
+      !newSockets.some(incoming => incoming.socketKey === existing.socketKey)
   )
 }
 
@@ -147,21 +142,24 @@ const addSockets = ({
       const currentConnection = node.data[
         (connectionType + 's') as ThroughPutType
       ] as DataSocketType[]
-      const key = useSocketName ? name : socketKey
 
       currentConnection.push({
         name: name as SocketNameType,
         taskType: taskType,
-        socketKey: key,
+        socketKey: socketKey,
         connectionType: connectionType,
+        useSocketName,
         socketType: socketNameMap[socket.name as SocketNameType],
       })
 
       node[addMethod](
-        new Socket(key, name, socket, taskType === 'option') as Input & Output
+        new Socket(socketKey, name, socket, taskType === 'option') as Input &
+          Output
       )
       if (connectionType === 'output')
-        node.inspector.component.task.outputs[key] = taskType
+        node.inspector.component.task.outputs[socketKey] = taskType
+      // support both key and name task outputs
+      node.inspector.component.task.outputs[name] = taskType
     })
 }
 
