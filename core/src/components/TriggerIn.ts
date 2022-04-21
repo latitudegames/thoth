@@ -91,6 +91,10 @@ export class TriggerIn extends ThothComponent<void> {
       task?.reset()
       this.editor?.trigger('process')
     }
+
+    if (onTrigger) {
+      this.triggerSubscriptionMap[node.id] = onTrigger(node, callback)
+      this.triggerSubscriptionMap['default'] = onTrigger('default', callback)
     }
   }
 
