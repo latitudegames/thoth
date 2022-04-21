@@ -146,7 +146,13 @@ export class TriggerIn extends ThothComponent<void> {
       label: 'Receive from playtest',
     })
 
-    node.inspector.add(nameInput).add(togglePlaytest)
+    const toggleDefault = new SwitchControl({
+      dataKey: 'isDefaultTriggerIn',
+      name: 'Make Default TriggerIn',
+      label: 'Make Default TriggerIn',
+      defaultValue: false,
+    })
+
 
     return node.addOutput(out)
   }
