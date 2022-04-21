@@ -53,7 +53,7 @@ const ThothInterfaceProvider = ({ children, tab }) => {
 
   const onTrigger = (node, callback) => {
     let isDefault = node === 'default' ? 'default' : null
-    return subscribe($RUN(tab.id, isDefault ?? node.id), (event, data) => {
+    return subscribe($TRIGGER(tab.id, isDefault ?? node.id), (event, data) => {
       publish($PROCESS(tab.id))
       // weird hack.  This staggers the process slightly to allow the published event to finish before the callback runs.
       // No super elegant, but we need a better more centralised way to run the engine than these callbacks.
