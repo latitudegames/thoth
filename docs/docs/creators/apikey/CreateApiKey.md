@@ -2,6 +2,7 @@
 title: Create API Key
 description: This is where you will find information relevant to creatings API key.
 hide_table_of_contents: false
+sidebar_position: 1
 ---
 
 You will need an API key to be able to call latitudes API to run the spells that you create. Currently you may only have 1 key per user.

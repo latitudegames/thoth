@@ -47,6 +47,7 @@ export class TriggerIn extends ThothComponent<void> {
   }
 
   subscriptionMap: Record<string, Function> = {}
+  runSubscriptionMap: Record<string, Function> = {}
 
   unsubscribe?: () => void
 
@@ -73,9 +74,24 @@ export class TriggerIn extends ThothComponent<void> {
     }
   }
 
+  subscribeToRun(node: ThothNode) {
+    const { onRun } = this.editor?.thoth as EditorContext
+
+    if (onRun) {
+      this.runSubscriptionMap[node.id] = onRun(node, () => {
+        const task = this.nodeTaskMap[node.id]
+        task?.run()
+        task?.reset()
+        this.editor?.trigger('process')
+      })
+    }
+  }
+
   destroyed(node: ThothNode) {
     if (this.subscriptionMap[node.id]) this.subscriptionMap[node.id]()
     delete this.subscriptionMap[node.id]
+    if (this.runSubscriptionMap[node.id]) this.subscriptionMap[node.id]()
+    delete this.runSubscriptionMap[node.id]
   }
 
   async run(node: ThothNode, data: NodeData) {
@@ -93,6 +109,8 @@ export class TriggerIn extends ThothComponent<void> {
   builder(node: ThothNode) {
     if (this.subscriptionMap[node.id]) this.subscriptionMap[node.id]()
     delete this.subscriptionMap[node.id]
+    if (this.runSubscriptionMap[node.id]) this.subscriptionMap[node.id]()
+    delete this.runSubscriptionMap[node.id]
 
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const out = new Rete.Output('trigger', 'Trigger', triggerSocket)
@@ -108,6 +126,7 @@ export class TriggerIn extends ThothComponent<void> {
 
     // subscribe the node to the playtest input data stream
     this.subscribeToPlaytest(node)
+    this.subscribeToRun(node)
 
     const data = node?.data?.playtestToggle as
       | {

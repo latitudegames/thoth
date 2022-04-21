@@ -2,6 +2,7 @@
 title: Destroy API Key
 description: This is where you will find information relevant to destroying API key.
 hide_table_of_contents: false
+sidebar_position: 2
 ---
 
 # Destroying an API key

@@ -48,7 +48,17 @@ const ThothInterfaceProvider = ({ children, tab }) => {
     UPDATE_SUBSPELL,
     $SUBSPELL_UPDATED,
     $PROCESS,
+    $RUN,
   } = events
+
+  const onRun = (node, callback) => {
+    return subscribe($RUN(tab.id, node.id), (event, data) => {
+      publish($PROCESS(tab.id))
+      // weird hack.  This staggers the process slightly to allow the published event to finish before the callback runs.
+      // No super elegant, but we need a better more centralised way to run the engine than these callbacks.
+      setTimeout(() => callback(data), 0)
+    })
+  }
 
   const onInspector = (node, callback) => {
     return subscribe($NODE_SET(tab.id, node.id), (event, data) => {
@@ -202,6 +212,7 @@ const ThothInterfaceProvider = ({ children, tab }) => {
   }
 
   const publicInterface = {
+    onRun,
     onInspector,
     onAddModule,
     onUpdateModule,
