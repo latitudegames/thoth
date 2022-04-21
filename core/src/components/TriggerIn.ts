@@ -123,8 +123,11 @@ export class TriggerIn extends ThothComponent<void> {
   builder(node: ThothNode) {
     if (this.subscriptionMap[node.id]) this.subscriptionMap[node.id]()
     delete this.subscriptionMap[node.id]
-    if (this.runSubscriptionMap[node.id]) this.subscriptionMap[node.id]()
-    delete this.runSubscriptionMap[node.id]
+    if (this.triggerSubscriptionMap[node.id]) this.subscriptionMap[node.id]()
+    delete this.triggerSubscriptionMap[node.id]
+    if (this.triggerSubscriptionMap['default'])
+      this.subscriptionMap['default']()
+    delete this.triggerSubscriptionMap['default']
 
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const out = new Rete.Output('trigger', 'Trigger', triggerSocket)
