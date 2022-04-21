@@ -1,5 +1,4 @@
 import isEqual from 'lodash/isEqual'
-import Rete from 'rete'
 import {
   EngineContext,
   ModuleWorkerOutput,
@@ -11,7 +10,6 @@ import {
 import { SpellControl } from '../dataControls/SpellControl'
 import { ThothEditor } from '../editor'
 import { Task } from '../plugins/taskPlugin/task'
-import { objectSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 import {
   inputNameFromSocketKey,
@@ -74,7 +72,7 @@ export class SpellComponent extends ThothComponent<
       defaultValue: (node.data.spell as string) || '',
     })
 
-    const stateSocket = new Rete.Input('state', 'State', objectSocket)
+    // const stateSocket = new Rete.Input('state', 'State', objectSocket)
 
     spellControl.onData = (spell: Spell) => {
       // break out of it the nodes data already exists.
@@ -95,7 +93,7 @@ export class SpellComponent extends ThothComponent<
       this.subscribe(node, spell.name)
     }
 
-    node.addInput(stateSocket)
+    // node.addInput(stateSocket)
     node.inspector.add(spellControl)
 
     if (node.data.spellId) {
@@ -153,7 +151,7 @@ export class SpellComponent extends ThothComponent<
     const outputs = await thoth.runSpell(
       flattenedInputs,
       node.data.spellId as string,
-      inputs.state || {}
+      {}
     )
 
     if (!silent) node.display(`${JSON.stringify(outputs)}`)
