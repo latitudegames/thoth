@@ -28,8 +28,8 @@ const DebugConsole = ({ tab }) => {
     setScrollToBottom(true)
   }
 
-  const run = nodeId => {
-    publish($RUN(tab.id, nodeId))
+  const run = (nodeId, value) => {
+    publish($RUN(tab.id, nodeId), value)
   }
 
   const formatErrorMessage = message =>
