@@ -143,7 +143,7 @@ export class TriggerIn extends ThothComponent<void> {
 
     // subscribe the node to the playtest input data stream
     this.subscribeToPlaytest(node)
-    this.subscribeToRun(node)
+    this.subscribeToTrigger(node)
 
     const data = node?.data?.playtestToggle as
       | {
