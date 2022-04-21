@@ -109,13 +109,13 @@ export class SpellComponent extends ThothComponent<
 
   updateSockets(node: ThothNode, spell: Spell) {
     const chain = JSON.parse(JSON.stringify(spell.chain))
-    this.updateModuleSockets(node, chain)
+    this.updateModuleSockets(node, chain, true)
     node.update()
   }
 
   formatOutputs(node: NodeData, outputs: Record<string, any>) {
-    return Object.entries(outputs).reduce((acc, [key, value]) => {
-      const socketKey = socketKeyFromOutputName(node, key)
+    return Object.entries(outputs).reduce((acc, [uuid, value]) => {
+      const socketKey = socketKeyFromOutputName(node, uuid)
       if (!socketKey) return acc
       acc[socketKey] = value
       return acc
@@ -153,11 +153,11 @@ export class SpellComponent extends ThothComponent<
     const outputs = await thoth.runSpell(
       flattenedInputs,
       node.data.spellId as string,
-      flattenedInputs.state
+      inputs.state || {}
     )
 
     if (!silent) node.display(`${JSON.stringify(outputs)}`)
 
-    return outputs
+    return this.formatOutputs(node, outputs)
   }
 }
