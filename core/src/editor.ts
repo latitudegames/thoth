@@ -120,6 +120,7 @@ export const initEditor = async function ({
   })
 
   // This should only be needed on client, not server
+  editor.use(DebuggerPlugin)
   editor.use(SocketGenerator)
   editor.use(DisplayPlugin)
   editor.use(InspectorPlugin)
@@ -142,7 +143,6 @@ export const initEditor = async function ({
   }
 
   // WARNING: ModulePlugin needs to be initialized before TaskPlugin during engine setup
-  editor.use(DebuggerPlugin)
   editor.use(ModulePlugin, { engine, modules: {} } as unknown as void)
   editor.use(TaskPlugin)
   editor.use(KeyCodePlugin)
