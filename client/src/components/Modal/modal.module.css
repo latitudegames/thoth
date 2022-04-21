@@ -39,7 +39,7 @@
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  padding-top: var(--small);
+  padding: var(--small);
   margin-top: var(--small);
   width: 100%;
   gap: var(--extraSmall);
@@ -49,6 +49,7 @@
 }
 
 .modal-title {
+  padding: 15px 10px;
   display: flex;
   align-items: center;
   position: sticky;
