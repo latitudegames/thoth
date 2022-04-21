@@ -101,8 +101,11 @@ export class TriggerIn extends ThothComponent<void> {
   destroyed(node: ThothNode) {
     if (this.subscriptionMap[node.id]) this.subscriptionMap[node.id]()
     delete this.subscriptionMap[node.id]
-    if (this.runSubscriptionMap[node.id]) this.subscriptionMap[node.id]()
-    delete this.runSubscriptionMap[node.id]
+    if (this.triggerSubscriptionMap[node.id]) this.subscriptionMap[node.id]()
+    delete this.triggerSubscriptionMap[node.id]
+    if (this.triggerSubscriptionMap['default'])
+      this.subscriptionMap['default']()
+    delete this.triggerSubscriptionMap['default']
   }
 
   async run(node: ThothNode, data: NodeData) {
