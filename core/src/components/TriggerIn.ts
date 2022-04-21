@@ -74,6 +74,19 @@ export class TriggerIn extends ThothComponent<void> {
     }
   }
 
+  subscribeToRun(node: ThothNode) {
+    const { onRun } = this.editor?.thoth as EditorContext
+
+    if (onRun) {
+      this.runSubscriptionMap[node.id] = onRun(node, () => {
+        const task = this.nodeTaskMap[node.id]
+        task?.run()
+        task?.reset()
+        this.editor?.trigger('process')
+      })
+    }
+  }
+
   destroyed(node: ThothNode) {
     if (this.subscriptionMap[node.id]) this.subscriptionMap[node.id]()
     delete this.subscriptionMap[node.id]
