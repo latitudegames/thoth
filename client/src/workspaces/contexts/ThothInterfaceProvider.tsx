@@ -48,7 +48,7 @@ const ThothInterfaceProvider = ({ children, tab }) => {
     UPDATE_SUBSPELL,
     $SUBSPELL_UPDATED,
     $PROCESS,
-    $RUN,
+    $TRIGGER,
   } = events
 
   const onRun = (node, callback) => {
