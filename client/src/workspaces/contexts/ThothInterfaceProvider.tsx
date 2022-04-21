@@ -213,7 +213,7 @@ const ThothInterfaceProvider = ({ children, tab }) => {
   }
 
   const publicInterface = {
-    onRun,
+    onTrigger,
     onInspector,
     onAddModule,
     onUpdateModule,
