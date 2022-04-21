@@ -76,6 +76,7 @@ export class TriggerIn extends ThothComponent<void> {
   }
 
   subscribeToTrigger(node: ThothNode) {
+    const { onTrigger } = this.editor?.thoth as EditorContext
 
     if (onRun) {
       this.runSubscriptionMap[node.id] = onRun(node, (value: string) => {
