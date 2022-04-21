@@ -156,7 +156,7 @@ export class Inspector {
 
       // use the provided information from the socket to generate it
       const newSocket = new SocketConstructor(
-        socket.socketKey || socket.name,
+        socket.useSocketName ? socket.name : socket.socketKey || socket.name,
         socket.name,
         socketMap[socket.socketType],
         socket.socketType === 'triggerSocket' || isOutput
