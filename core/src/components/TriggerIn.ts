@@ -48,7 +48,7 @@ export class TriggerIn extends ThothComponent<void> {
   }
 
   subscriptionMap: Record<string, Function> = {}
-  runSubscriptionMap: Record<string, Function> = {}
+  triggerSubscriptionMap: Record<string, Function> = {}
 
   unsubscribe?: () => void
 
