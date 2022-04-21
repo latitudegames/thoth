@@ -153,6 +153,7 @@ export class TriggerIn extends ThothComponent<void> {
       defaultValue: false,
     })
 
+    node.inspector.add(nameInput).add(togglePlaytest).add(toggleDefault)
 
     return node.addOutput(out)
   }
