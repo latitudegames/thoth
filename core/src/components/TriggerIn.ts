@@ -81,7 +81,7 @@ export class TriggerIn extends ThothComponent<void> {
     if (onRun) {
       this.runSubscriptionMap[node.id] = onRun(node, (value: string) => {
         const task = this.nodeTaskMap[node.id]
-        task?.run()
+        task?.run(value)
         task?.reset()
         this.editor?.trigger('process')
       })
