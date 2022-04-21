@@ -190,6 +190,18 @@ export class Inspector {
     this.node.data.nodeLocked = update.data.nodeLocked
   }
 
+  handleDefaultTrigger(update: Record<string, any>) {
+    this.editor.nodes
+      .filter((node: ThothNode) => node.name === 'Module Trigger In')
+      .map((node: ThothNode) => {
+        if (node.data.isDefaultTriggerIn) {
+          node.data.isDefaultTriggerIn = !node.data.isDefaultTriggerIn
+        }
+      })
+
+    this.node.data.isDefaultTriggerIn = update.data.isDefaultTriggerIn
+  }
+
   handleData(update: Record<string, any>) {
     // store all data controls inside the nodes data
     // WATCH in case our graphs start getting quite large.
