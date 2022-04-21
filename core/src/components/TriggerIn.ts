@@ -10,6 +10,7 @@ import { TaskOptions } from '../plugins/taskPlugin/task'
 import { triggerSocket } from '../sockets'
 import { ThothComponent, ThothTask } from '../thoth-component'
 import { PlaytestControl } from '../dataControls/PlaytestControl'
+import { SwitchControl } from '../dataControls/SwitchControl'
 const info = `The trigger in allows you to pass values into your spell either from a higher level component or from the server.  There must be one single trigger into a spell for now as the server does not support multiple triggers.  Yet.`
 
 export class TriggerIn extends ThothComponent<void> {
