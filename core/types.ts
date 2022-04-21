@@ -125,6 +125,7 @@ export type DataSocketType = {
   socketKey: string
   connectionType: 'input' | 'output'
   socketType: SocketType
+  useSocketName: boolean
 }
 
 export type ThothNode = Node & {
