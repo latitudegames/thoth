@@ -108,7 +108,7 @@ const DebugConsole = ({ tab }) => {
     },
     trigger: {
       description: 'Trigger a specific node to run your spell',
-      usage: 'trigger <nodeId> <value>',
+      usage: 'trigger <nodeId>',
       fn: trigger,
     },
   }
