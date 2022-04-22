@@ -38,6 +38,7 @@ function isUrl(url: string): boolean {
   }
 }
 
+let xr = undefined
 export class xrengine_client {
   handleInput
   UsersInRange = {}
@@ -403,10 +404,10 @@ export class xrengine_client {
   }
 
   async handleXREngineResponse(response, addPing, sender, isVoice) {
-    console.log('response: ' + response)
     if (response === undefined || !response) {
       return
     }
+    console.log('response: ' + response)
 
     if (
       (response as string).trim().toLowerCase().endsWith('.mp3') ||
@@ -416,18 +417,20 @@ export class xrengine_client {
     }
 
     if (!isVoice) {
-      await this.xrengineBot.sendMessage(response, false)
-      isVoice = true
-      const fileId = await tts(response as string)
-      const url =
-        (process.env.FILE_SERVER_URL?.endsWith('/')
-          ? process.env.FILE_SERVER_URL
-          : process.env.FILE_SERVER_URL + '/') + fileId
+      await this.xrengineBot.sendMessage(response)
+      if (!(response as string).startsWith('/')) {
+        isVoice = true
+        const fileId = await tts(response as string)
+        const url =
+          (process.env.FILE_SERVER_URL?.endsWith('/')
+            ? process.env.FILE_SERVER_URL
+            : process.env.FILE_SERVER_URL + '/') + fileId
 
-      console.log('url:', url)
-      response = url
-      await this.xrengineBot.delay(1000)
-      await this.xrengineBot.sendMessage('!voiceUrl|' + response, false)
+        console.log('url:', url)
+        response = url
+        await this.xrengineBot.delay(1000)
+        await this.xrengineBot.sendMessage('!voiceUrl|' + response)
+      }
       return
     }
 
@@ -498,13 +501,29 @@ export class xrengine_client {
     //generateVoice('hello there', (buf, path) => {}, false)
     console.log('creating xr engine client', settings)
 
-    this.xrengineBot = new XREngineBot({
-      headless: true,
-      agent: agent,
-      settings: settings,
-      xrengineclient: this,
-    })
-
+    // if (xr) {
+    //   xr.quit()
+    //   xr = undefined
+    // }
+    if (xr) {
+      console.log('***********agent', agent)
+      this.xrengineBot = new XREngineBot({
+        headless: true,
+        agent: agent,
+        settings: settings,
+        xrengineclient: this,
+        old: { bool: true, browser: xr.browser, page: xr.page, pu: xr.pu },
+      })
+      xr = undefined
+    } else {
+      this.xrengineBot = new XREngineBot({
+        headless: true,
+        agent: agent,
+        settings: settings,
+        xrengineclient: this,
+      })
+    }
+    xr = this.xrengineBot
     const xvfb = new Xvfb()
     await xvfb.start(async function (err, xvfbProcess) {
       if (err) {
@@ -519,7 +538,9 @@ export class xrengine_client {
         console.log('Preparing to connect to ', settings.url)
         cli.xrengineBot.delay(3000 + Math.random() * 1000)
         console.log('Connecting to server...')
-        await cli.xrengineBot.launchBrowser()
+        if (!xr) {
+          await cli.xrengineBot.launchBrowser()
+        }
         const XRENGINE_URL =
           (settings.url as string) || 'https://n3xus.city/location/test'
         cli.xrengineBot.enterRoom(XRENGINE_URL, settings.xrengine_bot_name)
@@ -545,14 +566,6 @@ class XREngineBot {
   pu
   userId
   chatHistory = []
-  avatars = [
-    'Alissa',
-    'Cornelius',
-    'James_ReadyPlayerMe',
-    'Jamie',
-    'Mogrid',
-    'Warrior',
-  ]
   username_regex
   agent
   settings
@@ -566,7 +579,13 @@ class XREngineBot {
     agent,
     settings,
     xrengineclient,
+    old = { bool: false },
   } = {}) {
+    if (old.bool) {
+      this.browser = old.browser
+      this.page = old.page
+      this.pu = old.pu
+    }
     this.headless = headless
     this.name = name
     this.autoLog = autoLog
@@ -584,7 +603,7 @@ class XREngineBot {
   timeStamp = 0
 
   messageLoop() {
-    /*setInterval(async () => {
+    setInterval(async () => {
       this.timeStamp += 1
       if (
         this.queue.length > 0 &&
@@ -595,19 +614,26 @@ class XREngineBot {
         this.queue.shift()
         this.timeStamp = 0
       }
-    }, 1000)*/
+    }, 1000)
   }
-  async sendMessage(message, clean = true) {
+  async sendMessage(message, clean = false) {
     log('sending message: ' + message)
-    if (message === null || message === undefined) return
+    if (!message || message === undefined) return
     // TODO:
     // Send message to google cloud speech
     // Get response URL from google cloud speech
 
     // await this.sendAudio(5)
 
-    await this.typeMessage('newMessage', message, clean)
-    await this.pressKey('Enter')
+    this.evaluate(msg => {
+      try {
+        globalThis.sendMessage(msg)
+      } catch (e) {}
+    }, message)
+    /*console.log('typing message')
+    await this.typeMessage('newMessage', message, false)
+    console.log('sending message!')
+    await this.pressKey('Enter')*/
   }
   async handleMessage(message, clean = false) {
     await this.typeMessage('newMessage', message, clean)
@@ -934,6 +960,7 @@ class XREngineBot {
     log('Launching browser')
     const options = {
       headless: true,
+      slowMo: 0,
       ignoreHTTPSErrors: true,
       args: [
         '--disable-gpu',
@@ -1176,9 +1203,11 @@ class XREngineBot {
 
       await this.updateUsername(name)
       await this.delay(10000)
-      const index = this.getRandomNumber(0, this.avatars.length - 1)
-      await this.updateAvatar(this.avatars[index])
-      //await this.requestPlayers()
+      await this.updateAvatar(
+        'CyberbotGreen',
+        'https://try.n3xus.city:8642/avatars/public/CyberbotGreen.glb'
+      )
+      await this.requestPlayers()
       await this.getUser()
       await setInterval(() => this.getUser(), 1000)
     } catch (error) {
@@ -1238,7 +1267,6 @@ class XREngineBot {
 
         return res
       } else {
-        console.log("Couldn't get chat state")
         return undefined
       }
     })
@@ -1253,11 +1281,28 @@ class XREngineBot {
     await this.clickElementById('SPAN', 'Profile_0')
   }
 
-  async updateAvatar(avatar) {
+  async updateAvatar(avatar: string, avatarUrl: string) {
+    setTimeout(
+      (avatar, avatarUrl) => {
+        console.log('updating avatar to:', avatar, avatarUrl)
+        this.evaluate(
+          (avatar, avatarUrl) => {
+            globalThis.setAvatar(avatar, avatarUrl)
+          },
+          avatar,
+          avatarUrl
+        )
+      },
+      10000,
+      avatar,
+      avatarUrl
+    )
+    /*
     log(`updating avatar to: ${avatar}`)
     await this.clickElementById('SPAN', 'Profile_0')
-    await this.clickElementById('button', 'select-avatar')
-    await this.clickElementById('div', '247b4a00-b973-11ec-b4fc-43ea990632e9')
+    await this.clickElementById('button', 'CreateIcon')
+    await this.clickSelectorByAlt('img', avatar)*/
+    //await this.clickElementById('button', 'confirm-avatar')
   }
 
   async getUser() {
@@ -1294,7 +1339,7 @@ class XREngineBot {
   async typeMessage(input, message, clean) {
     if (clean)
       await this.page.click(`input[name="${input}"]`, { clickCount: 3 })
-    await this.page.type(`input[name="${input}"]`, message)
+    await this.page.type(`input[name="${input}"]`, message, { delay: 50 })
   }
 
   async setFocus(selector) {
