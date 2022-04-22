@@ -68,6 +68,7 @@ export const spellApi = rootApi.injectEndpoints({
       }),
     }),
     saveDiff: builder.mutation<void, Diff>({
+      invalidatesTags: ['Spell'],
       query: diffData => ({
         url: 'game/spells/saveDiff',
         method: 'POST',
