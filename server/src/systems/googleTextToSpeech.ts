@@ -9,6 +9,10 @@ export async function initTextToSpeech() {
 }
 
 export async function tts(input: string) {
+  if (!client || client === undefined) {
+    client = new TextToSpeechClient()
+  }
+
   const ttsRequest = {
     input: { text: input },
     voice: {

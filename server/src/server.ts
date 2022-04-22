@@ -170,16 +170,20 @@ async function init() {
 
   const PORT: number = Number(process.env.PORT) || 8001
   const useSSL = process.env.USESSL === 'true'
-  
+
   var optionSsl = {
-    key: fs.readFileSync('key.pem'),
-    cert: fs.readFileSync('cert.pem'),
+    key: useSSL ? fs.readFileSync('key.pem') : '',
+    cert: useSSL ? fs.readFileSync('cert.pem') : '',
   }
-  useSSL ? https.createServer(optionSsl, app.callback()).listen(PORT, '0.0.0.0', () => {
-    console.log('Https Server listening on: 0.0.0.0:' + PORT)
-  }): http.createServer(app.callback()).listen(PORT, '0.0.0.0', () => {
-    console.log('Http Server listening on: 0.0.0.0:' + PORT)
-  });
+  useSSL
+    ? https
+        .createServer(optionSsl, app.callback())
+        .listen(PORT, '0.0.0.0', () => {
+          console.log('Https Server listening on: 0.0.0.0:' + PORT)
+        })
+    : http.createServer(app.callback()).listen(PORT, '0.0.0.0', () => {
+        console.log('Http Server listening on: 0.0.0.0:' + PORT)
+      })
   // await initLoop()
 }
 init()
