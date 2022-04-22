@@ -28,8 +28,8 @@ const DebugConsole = ({ tab }) => {
     setScrollToBottom(true)
   }
 
-  const trigger = (nodeId, value) => {
-    publish($TRIGGER(tab.id, nodeId), value)
+  const trigger = nodeId => {
+    publish($TRIGGER(tab.id, nodeId))
   }
 
   const formatErrorMessage = message =>
