@@ -6,14 +6,21 @@ import axios from 'axios'
 
 const StoreAddEditModal = ({ closeModal, store, getDocumentsStores, opType }) => { 
   const [name, setName] = useState(store ? store.name : '')
+  const [error, setError] = useState('')
   const performOperation = async () => {
     switch(opType) {
       case 'add': {
         let body = { name }
-        await axios.post(
-          `${process.env.REACT_APP_SEARCH_SERVER_URL}/document-store`,
-          body
-        )
+        if(!name){
+          setError('Store Can not be Empty')
+        }else{
+          setError('')
+          await axios.post(
+            `${process.env.REACT_APP_SEARCH_SERVER_URL}/document-store`,
+            body
+          )
+          closeModal()
+        }
         break
       }
       case 'edit': {
@@ -21,17 +28,21 @@ const StoreAddEditModal = ({ closeModal, store, getDocumentsStores, opType }) =>
           id: store.id,
           name
         }
-        await axios.put(
-          `${process.env.REACT_APP_SEARCH_SERVER_URL}/document-store`,
-          body
-        )
+        if(!name){
+          setError('Store Can not be Empty')
+        }else{
+          setError('')
+          await axios.put(
+            `${process.env.REACT_APP_SEARCH_SERVER_URL}/document-store`,
+            body
+          )
+          closeModal()
+        }
         break
       }
       default: break
     }
     await getDocumentsStores()
-    closeModal()
-    
   }
   const operation = opType === 'add' ? 'Add' : 'Update'
   const title = `${operation} Store`
@@ -43,6 +54,13 @@ const StoreAddEditModal = ({ closeModal, store, getDocumentsStores, opType }) =>
     },
   ]
 
+  const onChange = (e) =>{
+    setName(e.target.value)
+    if(name){
+      setError('')
+    }
+  }
+
   return (
     <Modal title={title} icon='add' options={options}>
       <form>
@@ -51,9 +69,10 @@ const StoreAddEditModal = ({ closeModal, store, getDocumentsStores, opType }) =>
           <input
             type="text"
             className="form-text-area"
-            onChange={e => setName(e.target.value)}
+            onChange={e => onChange(e)}
             defaultValue={name}
           ></input>
+          <p style={{color:'red'}}>{error}</p>
         </div>
       </form>
     </Modal>
