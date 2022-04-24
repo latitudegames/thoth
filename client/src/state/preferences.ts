@@ -11,4 +11,10 @@ export const preferenceSlice = createSlice({
     autoSave: true,
     doNotShowUnlockWarning: false,
   },
+  reducers: {
+    toggleAutoSave: state => {
+      const newState = state.autoSave === true ? false : true
+      state.autoSave = newState
+    },
+  },
 })
