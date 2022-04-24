@@ -6,5 +6,6 @@ import preferencesReducer from './preferences'
 
 export default combineReducers({
   tabs: tabReducer,
+  preferences: preferencesReducer,
   [spellApi.reducerPath]: spellApi.reducer,
 })
