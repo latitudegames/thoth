@@ -8,6 +8,8 @@ import thothlogo from './thoth.png'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { activeTabSelector, Tab } from '@/state/tabs'
+import { toggleAutoSave } from '@/state/preferences'
+import { RootState } from '@/state/store'
 
 const MenuBar = () => {
   const navigate = useNavigate()
