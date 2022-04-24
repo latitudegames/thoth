@@ -257,7 +257,26 @@ const MenuBar = () => {
         className={`${css[topLevel ? 'menu-bar-item' : 'list-item']}`}
         onClick={onClick}
       >
-        {label}
+        <span>
+          {Object.entries(item).map(
+            ([key, value]: [string, Record<string, any>]) => {
+              if (key === 'isActive')
+                return (
+                  <span
+                    key={key}
+                    className={
+                      item.isActive
+                        ? css['preference-active']
+                        : css['preference-notActive']
+                    }
+                  >
+                    ●{' '}
+                  </span>
+                )
+            }
+          )}
+          {label}
+        </span>
         {hotKeyLabel && <span>{parseStringToUnicode(hotKeyLabel)}</span>}
         {children && <div className={css['folder-arrow']}> ❯ </div>}
         {/* {!topLevel && <br />} */}
