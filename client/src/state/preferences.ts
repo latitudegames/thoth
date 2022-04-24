@@ -5,3 +5,6 @@ export interface Preference {
   doNotShowUnlockWarning: boolean
 }
 
+export const preferenceSlice = createSlice({
+  name: 'preferences',
+})
