@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux'
 import { selectAllTabs } from '@/state/tabs'
 import { RootState } from '@/state/store'
 
+//TODO: this should be dynamic
 const getThothVersion = () => '0.0.67'
 
 const OpenProject = ({
