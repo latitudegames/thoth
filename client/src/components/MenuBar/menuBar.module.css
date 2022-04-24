@@ -116,3 +116,11 @@ li.list-item:only-child {
   right: var(--small);
   transform: translateY(-50%);
 }
+
+.preference-active {
+  color: green;
+}
+
+.preference-notActive {
+  color: red;
+}
