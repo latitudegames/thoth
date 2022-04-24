@@ -6,7 +6,7 @@ import { usePubSub } from '../../contexts/PubSubProvider'
 import css from './menuBar.module.css'
 import thothlogo from './thoth.png'
 import { useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { activeTabSelector, Tab } from '@/state/tabs'
 
 const MenuBar = () => {
