@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux'
 import { selectAllTabs } from '@/state/tabs'
 import { RootState } from '@/state/store'
 
-const getThothVersion = () => '0.0.1'
+const getThothVersion = () => '0.0.67'
 
 const OpenProject = ({
   spells,
