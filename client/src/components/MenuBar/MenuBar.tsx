@@ -17,6 +17,8 @@ const MenuBar = () => {
   const dispatch = useDispatch()
   const activeTab = useSelector(activeTabSelector)
 
+  const preferences = useSelector((state: RootState) => state.preferences)
+
   const { openModal } = useModal()
 
   const activeTabRef = useRef<Tab | null>(null)
