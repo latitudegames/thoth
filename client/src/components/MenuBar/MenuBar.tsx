@@ -14,6 +14,7 @@ import { RootState } from '@/state/store'
 const MenuBar = () => {
   const navigate = useNavigate()
   const { publish, events } = usePubSub()
+  const dispatch = useDispatch()
   const activeTab = useSelector(activeTabSelector)
 
   const { openModal } = useModal()
