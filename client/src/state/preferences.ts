@@ -22,3 +22,8 @@ export const preferenceSlice = createSlice({
     },
   },
 })
+
+// actions
+export const { toggleAutoSave, toggleDoNotShowUnlockWarning } =
+  preferenceSlice.actions
+
