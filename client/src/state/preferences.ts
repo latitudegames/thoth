@@ -16,5 +16,9 @@ export const preferenceSlice = createSlice({
       const newState = state.autoSave === true ? false : true
       state.autoSave = newState
     },
+    toggleDoNotShowUnlockWarning: state => {
+      const newState = state.doNotShowUnlockWarning === true ? false : true
+      state.doNotShowUnlockWarning = newState
+    },
   },
 })
