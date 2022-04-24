@@ -7,4 +7,8 @@ export interface Preference {
 
 export const preferenceSlice = createSlice({
   name: 'preferences',
+  initialState: {
+    autoSave: true,
+    doNotShowUnlockWarning: false,
+  },
 })
