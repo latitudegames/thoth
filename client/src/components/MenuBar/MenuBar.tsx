@@ -197,6 +197,15 @@ const MenuBar = () => {
         },
       },
     },
+    settings: {
+      items: {
+        'Auto Save': {
+          onClick: toggleSave,
+          hotKey: 'option+shift+a',
+          isActive: preferences.autoSave,
+        },
+      },
+    },
   }
 
   const parseStringToUnicode = commandString => {
