@@ -126,6 +126,9 @@ const MenuBar = () => {
     publish($REDO(activeTabRef.current.id))
   }
 
+  const toggleSave = () => {
+    dispatch(toggleAutoSave())
+  }
   //Menu bar entries
   const menuBarItems = {
     file: {
