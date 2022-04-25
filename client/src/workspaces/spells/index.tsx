@@ -32,7 +32,7 @@ const Workspace = ({ tab, tabs, pubSub }) => {
   // Set up autosave for the workspaces
   useEffect(() => {
     if (!editor?.on) return
-
+    if (!preferences.autoSave) return
     const unsubscribe = editor.on(
       'save nodecreated noderemoved connectioncreated connectionremoved nodetranslated commentremoved commentcreated addcomment removecomment editcomment connectionpath',
       debounce(async data => {
