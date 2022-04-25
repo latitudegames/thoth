@@ -4,11 +4,13 @@ import fs from 'fs'
 import child_process from 'child_process'
 import { v1p1beta1 } from '@google-cloud/speech'
 import { joinVoiceChannel } from '@discordjs/voice'
+import os from 'os'
+
 const execFile = child_process.execFile
 
 const speech = v1p1beta1
 const speechClient = new speech.SpeechClient({
-  keyFilename: 'google-cloud.credentials.json',
+  keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS,
 })
 
 /**
@@ -17,7 +19,7 @@ const speechClient = new speech.SpeechClient({
  * @param {Discord.TextChannel} textChannel
  */
 export async function recognizeSpeech(
-//   receiver,
+  //   receiver,
   callback,
   textChannel,
   author
@@ -38,8 +40,8 @@ export async function recognizeSpeech(
   console.log('receiver speaking :::: ', receiver.speaking)
 
   userStream.on('data', (chunk: string | boolean) => {
-    console.log('------on data------')
-    console.log(chunk)
+    //console.log('------on data------')
+    //console.log(chunk)
     getRecognizer(author.id).handleBuffer(chunk)
   })
 
@@ -81,7 +83,7 @@ export async function recognizeSpeech(
     /**
      * Raw PCM data from discord.js will be written to this file.
      */
-    const tmpFile = '.tmp/input' + Date.now() + '.s32'
+    const tmpFile = os.tmpdir() + '/input' + Date.now() + '.s32'
 
     /**
      * Write stream for raw PCM data from discord.js.
@@ -133,6 +135,7 @@ export async function recognizeSpeech(
      */
     async function transcribe() {
       try {
+        console.log('transcribing')
         const audio = (await saveAndConvertAudio()) as any
         const audioLength = audio.length / 2 / 16000
         const duration = audioLength.toFixed(2)
@@ -158,6 +161,7 @@ export async function recognizeSpeech(
             enableAutomaticPunctuation: true,
           },
         })
+        console.log('data.results:', data.results)
         if (data.results) {
           for (const result of data.results) {
             const alt = result.alternatives && result.alternatives[0]
