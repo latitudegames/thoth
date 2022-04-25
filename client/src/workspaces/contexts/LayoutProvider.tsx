@@ -29,6 +29,7 @@ type WindowType =
   | 'editor'
   | 'playtest'
   | 'debugConsole'
+  | 'settings'
 
 type WindowTypes = Record<string, WindowType>
 
