@@ -17,6 +17,10 @@ const SettingsWindow = ({ tab }) => {
     autoSave: () => dispatch(toggleAutoSave()),
   }
 
+  const toolbar = (
+    <div style={{ flex: 1, marginTop: 'var(--c1)' }}>User Preferences</div>
+  )
+
   return (
   )
 }
