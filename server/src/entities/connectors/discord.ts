@@ -17,6 +17,7 @@ import { EventEmitter } from 'events'
 
 // import { classifyText } from '../utils/textClassifier'
 import { database } from '../../database'
+import { recognizeSpeech } from './discord-voice'
 import { getRandomEmptyResponse, startsWithCapital } from './utils'
 
 function log(...s: (string | boolean)[]) {
@@ -660,6 +661,21 @@ export class discord_client {
               ) {
                 const connection = await channel.join()
                 const receiver = connection.receiver
+
+                const callback = (text) => {
+                  this.handleInput(
+                    text,
+                    message?.author?.username ?? "VoiceSpeaker",
+                    this.discord_bot_name,
+                    'discord',
+                    channel.id,
+                    this.entity
+                  )
+                }
+
+                // Start the speech recognizer
+                recognizeSpeech(receiver, callback);
+
                 const userStream = receiver.createStream(author, {
                   mode: 'pcm',
                   end: 'silence',
@@ -777,7 +793,7 @@ export class discord_client {
 
     const oldResponse = this.getResponse(channel.id, id)
     if (oldResponse === undefined) {
-      await channel.messages.fetch(id).then(async (msg: any) => {})
+      await channel.messages.fetch(id).then(async (msg: any) => { })
       log('message not found')
       return
     }
@@ -950,8 +966,8 @@ export class discord_client {
               deleted: boolean
               permissionsFor: (arg0: any) => {
                 (): any
-                new (): any
-                has: { (arg0: string[]): any; new (): any }
+                new(): any
+                has: { (arg0: string[]): any; new(): any }
               }
               name: string | boolean
               id: string | boolean
