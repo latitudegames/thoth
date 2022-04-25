@@ -21,13 +21,14 @@ export async function recognizeSpeech(
   textChannel: Discord.TextChannel,
   author
 ) {
+  console.log('author.id:', author.id)
   const userStream = receiver.subscribe(author.id)
   console.log('receiver speaking :::: ', receiver.speaking)
 
   userStream.on('data', (chunk: string | boolean) => {
     console.log('------on data------')
     console.log(chunk)
-    getRecognizer(user).handleBuffer(chunk)
+    getRecognizer(author.id).handleBuffer(chunk)
   })
 
   userStream.on('end', () => {
