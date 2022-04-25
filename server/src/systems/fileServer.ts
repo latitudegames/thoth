@@ -21,8 +21,8 @@ async function initSSL() {
   https
     .createServer(
       {
-        key: fs.readFileSync('key.pem'),
-        cert: fs.readFileSync('cert.pem'),
+        key: fs.readFileSync('certs/key.pem'),
+        cert: fs.readFileSync('certs/cert.pem'),
       },
       function (req, res) {
         let filePath = '.' + req.url

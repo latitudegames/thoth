@@ -11,9 +11,9 @@ build
 # Generated Styles for AreaPlugin
 core/src/plugins/areaPlugin/style.css.d.ts
 yarn-error.log
-server/google_credentials.json
-server/cert.pem
-server/key.pem
+server/certs/google_credentials.json
+server/certs/cert.pem
+server/certs/key.pem
 server/files/
 
 # Ignore lockfiles
