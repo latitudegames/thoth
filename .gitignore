@@ -12,8 +12,6 @@ build
 core/src/plugins/areaPlugin/style.css.d.ts
 yarn-error.log
 server/google_credentials.json
-server/cert.pem
-server/key.pem
 server/files/
 
 # Ignore lockfiles
