@@ -18,7 +18,7 @@ const SettingsWindow = ({ tab }) => {
   }
 
   const toolbar = (
-    <div style={{ flex: 1, marginTop: 'var(--c1)' }}>User Preferences</div>
+    <div style={{ flex: 1, marginTop: 'var(--c1)' }}>Glabal Settings</div>
   )
 
   type PreferenceType = {
