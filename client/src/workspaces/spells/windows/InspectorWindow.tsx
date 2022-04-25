@@ -65,7 +65,11 @@ const Inspector = props => {
   }
 
   const onLock = () => {
-    if (inspectorData?.data.nodeLocked && inspectorData?.category === 'I/O') {
+    if (
+      !preferences.doNotShowUnlockWarning &&
+      inspectorData?.data.nodeLocked &&
+      inspectorData?.category === 'I/O'
+    ) {
       openModal({
         modal: 'infoModal',
         content: 'Editing this node could break connection with your app.',
