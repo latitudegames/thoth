@@ -206,6 +206,7 @@ const EventHandler = ({ pubSub, tab }) => {
   const handlerMap = {
     [$SAVE_SPELL(tab.id)]: saveSpell,
     [$CREATE_STATE_MANAGER(tab.id)]: createStateManager,
+    [$CREATE_SETTINGS_WINDOW(tab.id)]: createSettingsWindow,
     [$CREATE_PLAYTEST(tab.id)]: createPlaytest,
     [$CREATE_INSPECTOR(tab.id)]: createInspector,
     [$CREATE_TEXT_EDITOR(tab.id)]: createTextEditor,
