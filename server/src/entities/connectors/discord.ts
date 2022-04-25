@@ -25,6 +25,7 @@ import {
 import { database } from '../../database'
 import { recognizeSpeech } from './discord-voice'
 import { getRandomEmptyResponse, startsWithCapital } from './utils'
+import { tts } from '../../systems/googleTextToSpeech'
 
 function log(...s: (string | boolean)[]) {
   console.log(...s)
@@ -673,10 +674,11 @@ export class discord_client {
                   adapterCreator: channel.guild.voiceAdapterCreator,
                 })
                 const receiver = connection.receiver
+                const audioPlayer = createAudioPlayer()
 
-                const callback = text => {
+                const callback = async text => {
                   console.log('got voice input:', text)
-                  this.handleInput(
+                  const response = await this.handleInput(
                     text,
                     message?.author?.username ?? 'VoiceSpeaker',
                     this.discord_bot_name,
@@ -684,6 +686,12 @@ export class discord_client {
                     channel.id,
                     this.entity
                   )
+
+                  const url = await tts(response)
+                  const audioResource = createAudioResource(url, {
+                    inputType: StreamType.Arbitrary,
+                  })
+                  audioPlayer.play(audioResource)
                 }
 
                 // Start the speech recognizer
