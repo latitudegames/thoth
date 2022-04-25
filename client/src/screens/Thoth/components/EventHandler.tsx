@@ -142,6 +142,10 @@ const EventHandler = ({ pubSub, tab }) => {
     createOrFocus(windowTypes.CONSOLE, 'Console')
   }
 
+  const createSettingsWindow = () => {
+    createOrFocus(windowTypes.SETTINGS, 'Settings')
+  }
+
   const onSerialize = () => {
     // eslint-disable-next-line no-console
     console.log(serialize())
