@@ -37,6 +37,18 @@ const SettingsWindow = ({ tab }) => {
 
   if (!preferences) return <></>
   return (
+    <Window toolbar={toolbar}>
+      <Setting
+        label={'Turn off Autosave'}
+        checked={preferences.autoSave}
+        onClick={settingControls.autoSave}
+      />
+      <Setting
+        label={'Hide unlock warning'}
+        checked={preferences.doNotShowUnlockWarning}
+        onClick={settingControls.doNotShowUnlock}
+      />
+    </Window>
   )
 }
 
