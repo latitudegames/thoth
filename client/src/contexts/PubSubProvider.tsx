@@ -35,6 +35,7 @@ export const events = {
   $NODE_SET: (tabId, nodeId) => `nodeSet:${tabId}:${nodeId}`,
   $SAVE_SPELL: tabId => `saveSpell:${tabId}`,
   $SAVE_SPELL_DIFF: tabId => `saveSpell:${tabId}`,
+  $CREATE_SETTINGS_WINDOW: tabId => `createSettingsWindow:${tabId}`,
   $CREATE_STATE_MANAGER: tabId => `createStateManage:${tabId}`,
   $CREATE_PLAYTEST: tabId => `createPlaytest:${tabId}`,
   $CREATE_INSPECTOR: tabId => `createInspector:${tabId}`,
