@@ -19,6 +19,7 @@ const windowTypes: WindowTypes = {
   EDITOR: 'editor',
   PLAYTEST: 'playtest',
   CONSOLE: 'debugConsole',
+  SETTINGS: 'settings',
 }
 
 type WindowType =
