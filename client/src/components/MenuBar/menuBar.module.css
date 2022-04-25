@@ -122,5 +122,5 @@ li.list-item:only-child {
 }
 
 .preference-notActive {
-  color: red;
+  color: rgb(183, 0, 0);
 }
