@@ -14,6 +14,12 @@ import Discord, { Intents } from 'discord.js'
 import emoji from 'emoji-dictionary'
 import emojiRegex from 'emoji-regex'
 import { EventEmitter } from 'events'
+import {
+  joinVoiceChannel,
+  createAudioPlayer,
+  createAudioResource,
+  StreamType,
+} from '@discordjs/voice'
 
 // import { classifyText } from '../utils/textClassifier'
 import { database } from '../../database'
@@ -659,13 +665,20 @@ export class discord_client {
                 channel.type === channelTypes['voice'] &&
                 channel.name === channelName
               ) {
-                const connection = await channel.join()
+                const connection = await joinVoiceChannel({
+                  channelId: channel.id,
+                  guildId: channel.guild.id,
+                  selfDeaf: false,
+                  selfMute: false,
+                  adapterCreator: channel.guild.voiceAdapterCreator,
+                })
                 const receiver = connection.receiver
 
-                const callback = (text) => {
+                const callback = text => {
+                  console.log('got voice input:', text)
                   this.handleInput(
                     text,
-                    message?.author?.username ?? "VoiceSpeaker",
+                    message?.author?.username ?? 'VoiceSpeaker',
                     this.discord_bot_name,
                     'discord',
                     channel.id,
@@ -674,36 +687,7 @@ export class discord_client {
                 }
 
                 // Start the speech recognizer
-                recognizeSpeech(receiver, callback);
-
-                const userStream = receiver.createStream(author, {
-                  mode: 'pcm',
-                  end: 'silence',
-                })
-                const writeStream = fs.createWriteStream('recording.pcm', {})
-
-                const buffer = []
-                userStream.on('data', (chunk: string | boolean) => {
-                  buffer.push(chunk)
-                  log(chunk)
-                  userStream.pipe(writeStream)
-                })
-                writeStream.on('pipe', log)
-                userStream.on('finish', () => {
-                  channel.leave()
-                  /*const cmd = 'ffmpeg -i recording.pcm recording.wav';
-                              exec(cmd, (error, stdout, stderr) => {
-                                  if (error) {
-                                      log(`error: ${error.message}`);
-                                      return;
-                                  }
-                                  if (stderr) {
-                                      log(`stderr: ${stderr}`);
-                                      return;
-                                  }
-                                  log(`stdout: ${stdout}`);
-                              });*/
-                })
+                recognizeSpeech(receiver, callback[Symbol], channel, author)
                 return false
               }
             }
@@ -793,7 +777,7 @@ export class discord_client {
 
     const oldResponse = this.getResponse(channel.id, id)
     if (oldResponse === undefined) {
-      await channel.messages.fetch(id).then(async (msg: any) => { })
+      await channel.messages.fetch(id).then(async (msg: any) => {})
       log('message not found')
       return
     }
@@ -966,8 +950,8 @@ export class discord_client {
               deleted: boolean
               permissionsFor: (arg0: any) => {
                 (): any
-                new(): any
-                has: { (arg0: string[]): any; new(): any }
+                new (): any
+                has: { (arg0: string[]): any; new (): any }
               }
               name: string | boolean
               id: string | boolean
