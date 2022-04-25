@@ -107,6 +107,11 @@ const MenuBar = () => {
     publish($CREATE_TEXT_EDITOR(activeTabRef.current.id))
   }
 
+  const onSettingsCreate = () => {
+    if (!activeTabRef.current) return
+    publish($CREATE_SETTINGS_WINDOW(activeTabRef.current.id))
+  }
+
   const onExport = () => {
     if (!activeTabRef.current) return
     publish($EXPORT(activeTabRef.current.id))
