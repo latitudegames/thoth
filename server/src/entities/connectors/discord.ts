@@ -666,14 +666,6 @@ export class discord_client {
                 channel.type === channelTypes['voice'] &&
                 channel.name === channelName
               ) {
-                const connection = await joinVoiceChannel({
-                  channelId: channel.id,
-                  guildId: channel.guild.id,
-                  selfDeaf: false,
-                  selfMute: false,
-                  adapterCreator: channel.guild.voiceAdapterCreator,
-                })
-                const receiver = connection.receiver
                 const audioPlayer = createAudioPlayer()
 
                 const callback = async text => {
@@ -695,7 +687,7 @@ export class discord_client {
                 }
 
                 // Start the speech recognizer
-                recognizeSpeech(receiver, callback[Symbol], channel, author)
+                recognizeSpeech(callback[Symbol], channel, author)
                 return false
               }
             }
@@ -1703,6 +1695,7 @@ export class discord_client {
         Intents.FLAGS.GUILD_PRESENCES,
         Intents.FLAGS.GUILD_MEMBERS,
         Intents.FLAGS.GUILD_MESSAGES,
+        Intents.FLAGS.GUILD_VOICE_STATES
       ],
     })
     this.bot_name = discord_bot_name

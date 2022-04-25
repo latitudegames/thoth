@@ -3,6 +3,7 @@ import Discord from 'discord.js'
 import fs from 'fs'
 import child_process from 'child_process'
 import { v1p1beta1 } from '@google-cloud/speech'
+import { joinVoiceChannel } from '@discordjs/voice'
 const execFile = child_process.execFile
 
 const speech = v1p1beta1
@@ -16,13 +17,24 @@ const speechClient = new speech.SpeechClient({
  * @param {Discord.TextChannel} textChannel
  */
 export async function recognizeSpeech(
-  receiver,
+//   receiver,
   callback,
-  textChannel: Discord.TextChannel,
+  textChannel,
   author
 ) {
+  const connection = joinVoiceChannel({
+    channelId: textChannel.id,
+    guildId: textChannel.guild.id,
+    selfDeaf: false,
+    selfMute: false,
+    adapterCreator: textChannel.guild.voiceAdapterCreator,
+  })
+  const receiver = connection.receiver
   console.log('author.id:', author.id)
-  const userStream = receiver.subscribe(author.id)
+  const userStream = receiver.subscribe(author.id, {
+    mode: 'pcm',
+    // end: 'silence',
+  })
   console.log('receiver speaking :::: ', receiver.speaking)
 
   userStream.on('data', (chunk: string | boolean) => {
