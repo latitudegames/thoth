@@ -19,6 +19,7 @@ const Inspector = props => {
   const [width, setWidth] = useState()
   const { openModal } = useModal()
   const preferences = useSelector((state: RootState) => state.preferences)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (props?.node?._rect?.width) {
