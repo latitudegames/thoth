@@ -9,6 +9,9 @@ import SwitchComponent from '../../../../components/Switch/Switch'
 
 const SettingsWindow = ({ tab }) => {
   const preferences = useSelector((state: RootState) => state.preferences)
+
+  const dispatch = useDispatch()
+
   return (
   )
 }
