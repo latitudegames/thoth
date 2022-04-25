@@ -43,7 +43,7 @@ const Workspace = ({ tab, tabs, pubSub }) => {
     )
 
     return unsubscribe as () => void
-  }, [editor])
+  }, [editor, preferences.autoSave])
 
   useEffect(() => {
     if (!editor?.on) return
