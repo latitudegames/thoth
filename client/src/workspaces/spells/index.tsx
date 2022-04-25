@@ -114,6 +114,8 @@ const Workspace = ({ tab, tabs, pubSub }) => {
           return <EditorWindow {...props} />
         case 'debugConsole':
           return <DebugConsole {...props} />
+        case 'settings':
+          return <SettingsWindow {...props} />
         default:
           return <p></p>
       }
