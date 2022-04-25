@@ -16,6 +16,8 @@ import { usePubSub } from '@/contexts/PubSubProvider'
 import { useSharedb } from '@/contexts/SharedbProvider'
 import { sharedb } from '@/config'
 import { ThothComponent } from '@latitudegames/thoth-core/src/thoth-component'
+import { RootState } from '@/state/store'
+import { useSelector } from 'react-redux'
 
 const Workspace = ({ tab, tabs, pubSub }) => {
   const spellRef = useRef<Spell>()
