@@ -26,7 +26,7 @@ export class SpellComponent extends ThothComponent<
 > {
   _task: Task
   updateModuleSockets: Function
-  task
+  task: any
   info
   subscriptionMap: Record<number, Function> = {}
   editor: ThothEditor

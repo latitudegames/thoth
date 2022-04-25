@@ -154,7 +154,7 @@ export const initEditor = function ({
   })
 
   // WARNING all the plugins from the editor get installed onto the component and modify it.  This effects the components registered in the engine, which already have plugins installed.
-  components.forEach(c => {
+  components.forEach((c: any) => {
     // the problematic type here is coming directly from node modules, we may need to revisit further customizing the Editor Register type expectations or it's class
     editor.register(c)
   })

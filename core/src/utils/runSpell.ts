@@ -3,8 +3,8 @@ import {
   initSharedEngine,
 } from '@latitudegames/thoth-core/server'
 
-import { GraphData, ModuleComponent, Spell } from '../../types'
-import { EngineContext, extractNodes, ThothEngine } from '../engine'
+import { EngineContext, GraphData, ModuleComponent, Spell } from '../../types'
+import { extractNodes, ThothEngine } from '../engine'
 import { Module } from '../plugins/modulePlugin/module'
 
 type RunSpellConstructor = {

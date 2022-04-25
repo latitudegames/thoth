@@ -4,6 +4,9 @@
 import axios from 'axios'
 import Rete from 'rete'
 
+import { FewshotControl } from '../../dataControls/FewshotControl'
+import { stringSocket, triggerSocket } from '../../sockets'
+import { ThothComponent } from '../../thoth-component'
 import {
   EngineContext,
   NodeData,
@@ -11,12 +14,9 @@ import {
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../types'
-import { FewshotControl } from '../dataControls/FewshotControl'
-import { stringSocket, triggerSocket } from '../sockets'
 // @seang todo: convert data controls to typescript to remove this
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore
-import { ThothComponent } from '../../thoth-component'
 const fewshot = `Change each statement to be in the third person present tense and correct all grammar.
 Matt: am sleepy.
 Third Person: Matt is sleepy.
