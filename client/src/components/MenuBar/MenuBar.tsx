@@ -201,6 +201,9 @@ const MenuBar = () => {
         console: {
           onClick: onConsole,
         },
+        settings: {
+          onClick: onSettingsCreate,
+        },
       },
     },
     settings: {
