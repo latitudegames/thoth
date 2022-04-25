@@ -27,6 +27,14 @@ const SettingsWindow = ({ tab }) => {
     checked: boolean
   }
 
+  const Setting = (preference: PreferenceType) => (
+    <SwitchComponent
+      label={preference.label}
+      checked={preference.checked}
+      onChange={preference.onClick}
+    />
+  )
+
   return (
   )
 }
