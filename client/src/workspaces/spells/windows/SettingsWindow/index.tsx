@@ -35,6 +35,7 @@ const SettingsWindow = ({ tab }) => {
     />
   )
 
+  if (!preferences) return <></>
   return (
   )
 }
