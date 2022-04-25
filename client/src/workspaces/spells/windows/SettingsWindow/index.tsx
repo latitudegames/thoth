@@ -12,6 +12,11 @@ const SettingsWindow = ({ tab }) => {
 
   const dispatch = useDispatch()
 
+  const settingControls = {
+    doNotShowUnlock: () => dispatch(toggleDoNotShowUnlockWarning()),
+    autoSave: () => dispatch(toggleAutoSave()),
+  }
+
   return (
   )
 }
