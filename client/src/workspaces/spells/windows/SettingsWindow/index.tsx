@@ -7,3 +7,9 @@ import {
 } from '@/state/preferences'
 import SwitchComponent from '../../../../components/Switch/Switch'
 
+const SettingsWindow = ({ tab }) => {
+  return (
+  )
+}
+
+export default SettingsWindow
