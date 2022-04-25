@@ -36,6 +36,7 @@ const MenuBar = () => {
     $CREATE_INSPECTOR,
     $CREATE_TEXT_EDITOR,
     $CREATE_CONSOLE,
+    $CREATE_SETTINGS_WINDOW,
     $SERIALIZE,
     $EXPORT,
     $UNDO,
