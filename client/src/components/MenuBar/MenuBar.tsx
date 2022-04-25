@@ -3,11 +3,10 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+
 import { useModal } from '../../contexts/ModalProvider'
 import { usePubSub } from '../../contexts/PubSubProvider'
 import css from './menuBar.module.css'
-import thothlogo from './thoth.png'
-
 
 const MenuBar = () => {
   const navigate = useNavigate()
@@ -33,8 +32,11 @@ const MenuBar = () => {
     $CREATE_INSPECTOR,
     $CREATE_SEARCH_CORPUS,
     $CREATE_TEXT_EDITOR,
+    $CREATE_CONSOLE,
     $SERIALIZE,
     $EXPORT,
+    $UNDO,
+    $REDO,
   } = events
 
   const useToggle = (initialValue = false) => {
@@ -114,8 +116,9 @@ const MenuBar = () => {
     publish($EXPORT(activeTabRef.current.id))
   }
 
-  const onModal = () => {
-    openModal({ modal: 'example', content: 'This is an example modal' })
+  const onConsole = () => {
+    if (!activeTabRef.current) return
+    publish($CREATE_CONSOLE(activeTabRef.current.id))
   }
 
   //Menu bar hotkeys
@@ -138,41 +141,56 @@ const MenuBar = () => {
     { enableOnTags: ['INPUT'] },
     [onNew]
   )
+  const onUndo = () => {
+    if (!activeTabRef.current) return
+    publish($UNDO(activeTabRef.current.id))
+  }
+
+  const onRedo = () => {
+    if (!activeTabRef.current) return
+    publish($REDO(activeTabRef.current.id))
+  }
 
   //Menu bar entries
   const menuBarItems = {
     file: {
       items: {
-        new_project: {
+        new_spell: {
           onClick: onNew,
+          hotKey: 'option+n',
         },
-        open_project: {
+        open_spell: {
           onClick: onOpen,
+          hotKey: 'option+o',
         },
-        edit_project: {
+        edit_spell: {
           onClick: onEdit,
+          hotKey: 'option+e',
         },
-        save: {
-          items: {
-            save_project: {
-              onClick: onSave,
-            },
-            save_project_as: {
-              onClick: onSaveAs,
-            },
-            export_project: {
-              onClick: onExport,
-            },
-          },
+        save_spell: {
+          onClick: onSave,
+          hotKey: 'option+s',
+        },
+        save_spell_as: {
+          onClick: onSaveAs,
+          hotKey: 'option+shift+s',
+        },
+        export_spell: {
+          onClick: onExport,
+          hotKey: 'option+shift+e',
         },
       },
     },
     edit: {
       items: {
-        undo: {},
-        redo: {},
-        copy: {},
-        paste: {},
+        undo: {
+          onClick: onUndo,
+          hotKey: 'option+z',
+        },
+        redo: {
+          onClick: onRedo,
+          hotKey: 'option+shift+z',
+        },
       },
     },
     dev: {
@@ -182,73 +200,73 @@ const MenuBar = () => {
         },
       },
     },
-    studio: {
+    windows: {
       items: {
-        tools: {
-          items: {
-            text_editor: {
-              onClick: onTextEditorCreate,
-            },
-            inspector: {
-              onClick: onInspectorCreate,
-            },
-            state_manager: {
-              onClick: onStateManagerCreate,
-            },
-            search_corpus: {
-              onClick: onCreateSearchCorpus,
-            },
-            ent_manager: {
-              onClick: onEntityManagerCreate,
-            },
-            playtest: {
-              onClick: onPlaytestCreate,
-            },
-            enki: {
-              items: {
-                fewshots: {},
-                serialization: {},
-                preamble: {},
-              },
-            },
-            test: {
-              items: {
-                'open modal ...': {
-                  onClick: onModal,
-                },
-              },
-            },
-          },
+        text_editor: {
+          onClick: onTextEditorCreate,
         },
-        change_layout: {
-          items: {
-            multishot_editing: {},
-            enki_fewshot_editing: {},
-            node_editing: {},
-          },
+        inspector: {
+          onClick: onInspectorCreate,
+        },
+        state_manager: {
+          onClick: onStateManagerCreate,
+        },
+        search_corpus: {
+          onClick: onCreateSearchCorpus,
+        },
+        ent_manager: {
+          onClick: onEntityManagerCreate,
+        },
+        playtest: {
+          onClick: onPlaytestCreate,
+        },
+        console: {
+          onClick: onConsole,
         },
       },
     },
   }
 
+  const parseStringToUnicode = commandString => {
+    let formattedCommand = commandString
+    formattedCommand = formattedCommand.replace('option', '\u2325')
+    formattedCommand = formattedCommand.replace('shift', '\u21E7')
+    formattedCommand = formattedCommand.replace('cmd', '\u2318')
+    formattedCommand = formattedCommand.replace(/[`+`]/g, ' ')
+    return formattedCommand
+  }
+
   //Menu bar rendering
-  const ListItem = ({ item, label, topLevel, onClick }) => {
+  const ListItem = ({ item, label, topLevel, onClick, hotKeyLabel }) => {
     label = label ? label.replace(/_/g, ' ') : label
     let children
     if (item.items && Object.keys(item.items)) {
       children = (
         <ul className={css['menu-panel']}>
-          {Object.keys(item.items).map((i, x) => {
-            return (
-              <ListItem
-                item={item?.items[i]}
-                label={Object.keys(item.items)[x]}
-                topLevel={false}
-                key={x}
-                onClick={item?.items[i].onClick}
-              />
-            )
-          })}
+          {Object.entries(item.items).map(
+            ([key, item]: [string, Record<string, any>]) => {
+              useHotkeys(
+                item.hotKey,
+                event => {
+                  event.preventDefault()
+                  item.onClick()
+                },
+                { enableOnTags: ['INPUT'] },
+                [item.onClick]
+              )
+
+              return (
+                <ListItem
+                  item={item}
+                  label={key}
+                  topLevel={false}
+                  key={key}
+                  onClick={item.onClick}
+                  hotKeyLabel={item.hotKey}
+                />
+              )
+            }
+          )}
         </ul>
       )
     }
@@ -259,17 +277,22 @@ const MenuBar = () => {
         onClick={onClick}
       >
         {label}
+        {hotKeyLabel && <span>{parseStringToUnicode(hotKeyLabel)}</span>}
         {children && <div className={css['folder-arrow']}> ❯ </div>}
-        {!topLevel && <br />}
-        {children || null}
-      </li>
+        {/* {!topLevel && <br />} */}
+        {children}
+      </li >
     )
   }
 
   const handleClick = func => {
     //Initially intended to control the visibility with a state, but this triggers a re-render and hides the menu anyway! :D
     //Keeping this intact just in case.
+<<<<<<< HEAD:client/src/components/MenuBar/MenuBar.tsx
     ; (togglemenuVisibility as Function)(menuVisibility)
+=======
+    ;(togglemenuVisibility as Function)(menuVisibility)
+>>>>>>> latitude/main:client/src/features/common/MenuBar/MenuBar.js
     // eslint-disable-next-line no-eval
     eval(func)
   }
@@ -283,6 +306,7 @@ const MenuBar = () => {
           label={Object.keys(menuBarItems)[index]}
           topLevel={true}
           key={index}
+          hotKeyLabel={menuBarItems[item].hotKeyLabel}
           onClick={() => {
             handleClick(menuBarItems[item].onClick)
           }}

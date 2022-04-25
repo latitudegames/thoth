@@ -1,9 +1,10 @@
-import Select from '@components/Select/Select'
-import { useState } from 'react'
-
+import React, { useState, useEffect } from 'react'
 import { createNode } from 'rete-context-menu-plugin/src/utils'
+
+import WindowToolbar from '@/components/Window/WindowToolbar'
 import { Editor, useEditor } from '../../../contexts/EditorProvider'
 import Deployment from './Deployment'
+import Select from '@components/Select/Select'
 import css from './editorwindow.module.css'
 
 const EditorWindow = ({ tab }) => {
@@ -64,7 +65,7 @@ const EditorWindow = ({ tab }) => {
 
   const EditorToolbar = () => {
     return (
-      <>
+      <React.Fragment>
         <button style={{ opacity: 0 }}>Deploy...</button>
         <Select
           searchable
@@ -85,7 +86,7 @@ const EditorWindow = ({ tab }) => {
         >
           Deploy
         </button>
-      </>
+      </React.Fragment>
     )
   }
 

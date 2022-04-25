@@ -95,12 +95,21 @@ const updateSockets = (node: ThothNode, sockets: ModuleSocketType[]) => {
   })
 }
 
-const addSockets = (
-  node: ThothNode,
-  sockets: ModuleSocketType[],
-  connectionType: 'input' | 'output',
-  taskType: 'option' | 'output' = 'output'
-) => {
+type AddSockets = {
+  node: ThothNode
+  sockets: ModuleSocketType[]
+  connectionType: 'input' | 'output'
+  taskType?: 'option' | 'output'
+  useSocketName?: boolean
+}
+
+const addSockets = ({
+  node,
+  sockets,
+  connectionType,
+  taskType = 'output',
+  useSocketName = false,
+}: AddSockets) => {
   const uniqueCount = new Set(sockets.map(i => i.name)).size
   const currentConnection = node.data[
     (connectionType + 's') as ThroughPutType
@@ -130,34 +139,72 @@ const addSockets = (
       const currentConnection = node.data[
         (connectionType + 's') as ThroughPutType
       ] as DataSocketType[]
+      const key = useSocketName ? name : socketKey
+
       currentConnection.push({
         name: name as SocketNameType,
         taskType: taskType,
-        socketKey: socketKey,
+        socketKey: key,
         connectionType: connectionType,
         socketType: socketNameMap[socket.name as SocketNameType],
       })
 
       node[addMethod](
-        new Socket(socketKey, name, socket, taskType === 'option') as Input &
-        Output
+        new Socket(key, name, socket, taskType === 'option') as Input & Output
       )
       if (connectionType === 'output')
-        node.inspector.component.task.outputs[socketKey] = taskType
+        node.inspector.component.task.outputs[key] = taskType
     })
 }
 
-export function addIO(
-  node: ThothNode,
-  inputs: ModuleSocketType[],
-  outputs: ModuleSocketType[],
-  triggerOuts: ModuleSocketType[],
+type AddIO = {
+  node: ThothNode
+  inputs: ModuleSocketType[]
+  outputs: ModuleSocketType[]
+  triggerOuts: ModuleSocketType[]
   triggerIns: ModuleSocketType[]
-) {
-  if (inputs?.length > 0) addSockets(node, inputs, 'input')
-  if (triggerIns?.length > 0) addSockets(node, triggerIns, 'input', 'option')
-  if (outputs?.length > 0) addSockets(node, outputs, 'output')
-  if (triggerOuts?.length > 0) addSockets(node, triggerOuts, 'output', 'option')
+  useSocketName: boolean
+}
+
+export function addIO({
+  node,
+  inputs,
+  outputs,
+  triggerOuts,
+  triggerIns,
+  useSocketName,
+}: AddIO) {
+  // This is SOOOOO messy.
+  if (inputs?.length > 0)
+    addSockets({
+      node,
+      sockets: inputs,
+      connectionType: 'input',
+      useSocketName,
+    })
+  if (triggerIns?.length > 0)
+    addSockets({
+      node,
+      sockets: triggerIns,
+      connectionType: 'input',
+      taskType: 'option',
+      useSocketName,
+    })
+  if (outputs?.length > 0)
+    addSockets({
+      node,
+      sockets: outputs,
+      connectionType: 'output',
+      useSocketName,
+    })
+  if (triggerOuts?.length > 0)
+    addSockets({
+      node,
+      sockets: triggerOuts,
+      connectionType: 'output',
+      taskType: 'option',
+      useSocketName,
+    })
 }
 
 // here we can only remove the inputs and outputs that are not supposed to be on the node.

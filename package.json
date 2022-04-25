@@ -13,18 +13,20 @@
     "packages": [
       "client",
       "core",
-      "server"
+      "server",
+      "sharedb"
     ]
   },
   "scripts": {
     "start:core": "lerna exec --scope @latitudegames/thoth-core -- yarn start",
-    "start:client": "lerna exec --scope @latitudegames/thoth-client -- yarn start",
-    "start": "concurrently \"yarn start:core\" \"sleep 10 && yarn start:client\"",
     "dev": "NODE_OPTIONS=--max-old-space-size=8192 concurrently \"cd server && docker-compose up\" \"sleep 5 && yarn run dev:server\" \"yarn start:core\" \"sleep 1 && yarn start:client\" \"sleep 5 && yarn run db:seed\" ",
     "dev-windows": "cross-env NODE_OPTIONS=--max-old-space-size=8192 concurrently \"cd server && docker-compose up\" \"yarn run dev:server\" \"yarn start:core\" yarn start:client\" yarn run db:seed\" ",
     "dev:client": "concurrently \"yarn start:core\" \"sleep 1 && yarn start:client\"",
     "dev:server": "lerna exec --scope @latitudegames/thoth-server -- yarn run dev",
     "db:seed": "npx sequelize-cli db:seed:all --url 'postgres://thoth:thoth_default_pw@localhost:5432/thoth'",
+    "start:client": "lerna exec --scope @thoth/client -- yarn start",
+    "start:sharedb": "lerna exec --scope @thoth/sharedb -- yarn start",
+    "start": "run-p start:core start:client",
     "lint": "lerna run lint --parallel",
     "lint:fix": "lerna run lint:fix --parallel",
     "build": "copyfiles LICENSE.txt client && lerna exec --scope @latitudegames/thoth-client -- yarn build",

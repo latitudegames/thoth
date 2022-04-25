@@ -5,33 +5,34 @@ import ContextMenuPlugin from 'rete-context-menu-plugin'
 import ReactRenderPlugin from 'rete-react-render-plugin'
 import { Data } from 'rete/types/core/data'
 
-import { EventsTypes } from '../types'
+import { EventsTypes, EditorContext } from '../types'
+import { ThothNode } from './../types'
 import { getComponents } from './components/components'
-import { EngineContext, initSharedEngine } from './engine'
-import CommentPlugin from './plugins/commentPlugin'
+import { initSharedEngine } from './engine'
 import AreaPlugin from './plugins/areaPlugin'
+import CommentPlugin from './plugins/commentPlugin'
+import DebuggerPlugin from './plugins/debuggerPlugin'
 import DisplayPlugin from './plugins/displayPlugin'
 import HistoryPlugin from './plugins/historyPlugin'
 import InspectorPlugin from './plugins/inspectorPlugin'
+import KeyCodePlugin from './plugins/keyCodePlugin'
 import LifecyclePlugin from './plugins/lifecyclePlugin'
+import ModulePlugin from './plugins/modulePlugin'
 import { ModuleManager } from './plugins/modulePlugin/module-manager'
+import SelectionPlugin from './plugins/selectionPlugin'
 import SocketGenerator from './plugins/socketGenerator'
 import TaskPlugin, { Task } from './plugins/taskPlugin'
 import { PubSubContext, ThothComponent } from './thoth-component'
-import DebuggerPlugin from './plugins/debuggerPlugin'
-import KeyCodePlugin from './plugins/keyCodePlugin'
-import ModulePlugin from './plugins/modulePlugin'
-import SelectionPlugin from './plugins/selectionPlugin'
 export class ThothEditor extends NodeEditor<EventsTypes> {
+  tasks: Task[]
   pubSub: PubSubContext
-  thoth: EngineContext
+  thoth: EditorContext
   tab: { type: string }
   abort: unknown
-  loadGraph: (graph: Data) => Promise<void>
+  loadGraph: (graph: Data, relaoding?: boolean) => Promise<void>
   moduleManager: ModuleManager
   runProcess: (callback?: Function) => Promise<void>
   onSpellUpdated: (spellId: string, callback: Function) => Function
-  tasks?: Task[]
 }
 
 /*
@@ -95,13 +96,24 @@ export const initEditor = function ({
     rename(component: { contextMenuName: any; name: any }) {
       return component.contextMenuName || component.name
     },
+    nodeItems: (node: ThothNode) => {
+      if (node.data.nodeLocked) {
+        return { Delete: false }
+      }
+      return {
+        Deleted: true,
+        Clone: true,
+      }
+    },
     allocate: (component: ThothComponent<unknown>) => {
+      const isProd = process.env.NODE_ENV === 'production'
       //@seang: disabling component filtering in anticipation of needing to treat spells as "top level modules" in the publishing workflow
       const tabType = editor.tab.type
       const { workspaceType } = component
 
+      if (isProd && (component as any).dev) return null
       if (component.deprecated) return null
-      if ((component as any).hide) return null
+      if (component.hide) return null
       if (workspaceType && workspaceType !== tabType) return null
       return [component.category]
     },
@@ -143,8 +155,6 @@ export const initEditor = function ({
 
   // WARNING all the plugins from the editor get installed onto the component and modify it.  This effects the components registered in the engine, which already have plugins installed.
   components.forEach(c => {
-    // eslint-disable-next-line @typescrip``t-eslint/ban-ts-comment
-    //@ts-ignore
     // the problematic type here is coming directly from node modules, we may need to revisit further customizing the Editor Register type expectations or it's class
     editor.register(c)
   })
@@ -178,12 +188,13 @@ export const initEditor = function ({
     if (callback) callback()
   }
 
-  editor.loadGraph = async (_graph: Data) => {
+  editor.loadGraph = async (_graph: Data, reloading = false) => {
     const graph = JSON.parse(JSON.stringify(_graph))
     await engine.abort()
     editor.fromJSON(graph)
+
     editor.view.resize()
-    AreaPlugin.zoomAt(editor)
+    if (!reloading) AreaPlugin.zoomAt(editor)
   }
 
   // Start the engine off on first load

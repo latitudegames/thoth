@@ -3,6 +3,7 @@ import Rete from 'rete'
 import { v4 as uuidv4 } from 'uuid'
 
 import {
+  EditorContext,
   NodeData,
   ThothNode,
   ThothWorkerInputs,
@@ -10,10 +11,10 @@ import {
 } from '../../../types'
 import { TextInputControl } from '../../controls/TextInputControl'
 import { InputControl } from '../../dataControls/InputControl'
+import { PlaytestControl } from '../../dataControls/PlaytestControl'
 import { SwitchControl } from '../../dataControls/SwitchControl'
-import { EngineContext } from '../../engine'
 import { Task } from '../../plugins/taskPlugin/task'
-import { triggerSocket, anySocket } from '../../sockets'
+import { anySocket } from '../../sockets'
 import { ThothComponent, ThothTask } from '../../thoth-component'
 const info = `The input component allows you to pass a single value to your graph.  You can set a default value to fall back to if no value is provided at runtime.  You can also turn the input on to receive data from the playtest input.`
 
@@ -55,12 +56,19 @@ export class InputComponent extends ThothComponent<InputReturn> {
   unsubscribe?: () => void
 
   subscribeToPlaytest(node: ThothNode) {
-    const { onPlaytest } = this.editor?.thoth as EngineContext
+    const { onPlaytest } = this.editor?.thoth as EditorContext
 
     // check node for the right data attribute
     if (onPlaytest) {
       // store the unsubscribe function in our node map
       this.subscriptionMap[node.id] = onPlaytest((text: string) => {
+        // if the node doesnt have playtest toggled on, do nothing
+        const playtestToggle = node.data.playtestToggle as unknown as {
+          receivePlaytest: boolean
+        }
+
+        if (!playtestToggle.receivePlaytest) return
+
         // attach the text to the nodes data for access in worker
         node.data.text = text
       })
@@ -79,8 +87,6 @@ export class InputComponent extends ThothComponent<InputReturn> {
     // subscribe the node to the playtest input data stream
     this.subscribeToPlaytest(node)
 
-    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
-    const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
     const out = new Rete.Output('output', 'output', anySocket)
 
     const nameInput = new InputControl({
@@ -88,6 +94,22 @@ export class InputComponent extends ThothComponent<InputReturn> {
       name: 'Input name',
     })
 
+    const data = node?.data?.playtestToggle as
+      | {
+        receivePlaytest: boolean
+      }
+      | undefined
+
+    const togglePlaytest = new PlaytestControl({
+      dataKey: 'playtestToggle',
+      name: 'Receive from playtest input',
+      defaultValue: {
+        receivePlaytest:
+          data?.receivePlaytest !== undefined ? data?.receivePlaytest : true,
+      },
+      ignored: ['output'],
+      label: 'Recieve from playtest',
+    })
 
     const toggleDefault = new SwitchControl({
       dataKey: 'useDefault',
@@ -96,7 +118,7 @@ export class InputComponent extends ThothComponent<InputReturn> {
       defaultValue: false,
     })
 
-    node.inspector.add(nameInput).add(toggleDefault)
+    node.inspector.add(nameInput).add(togglePlaytest).add(toggleDefault)
 
     const value = node.data.text ? node.data.text : 'Input text here'
     const input = new TextInputControl({
@@ -111,7 +133,6 @@ export class InputComponent extends ThothComponent<InputReturn> {
     node.data.socketKey = node?.data?.socketKey || uuidv4()
 
     return node.addOutput(out).addControl(input)
-      .addInput(dataInput).addOutput(dataOutput)
   }
 
   worker(
@@ -122,28 +143,30 @@ export class InputComponent extends ThothComponent<InputReturn> {
   ) {
     this._task.closed = ['trigger']
 
-
-    // send default value if use default is explicity toggled on
-    if (node.data.useDefault) {
-      return {
-        output: node.data.display as string,
-      }
+    const nodeData = node.data as {
+      playtestToggle: { receivePlaytest: boolean }
     }
-
-    // If there are outputs, we are running as a module input and we use that value
-    if (outputs.output && !outputs?.output.task) {
-      return outputs as { output: unknown }
-    }
-
 
     // handle data subscription.  If there is data, this is from playtest
-    if (data && !isEmpty(data)) {
+    if (data && !isEmpty(data) && nodeData.playtestToggle.receivePlaytest) {
       this._task.closed = []
 
       if (!silent) node.display(data)
       return {
         output: data,
       }
+    }
+
+    // send default value if use default is explicity toggled on
+    if (node.data.useDefault) {
+      return {
+        output: node.data.text as string,
+      }
+    }
+
+    // If there are outputs, we are running as a module input and we use that value
+    if (outputs.output && !outputs?.output.task) {
+      return outputs as { output: unknown }
     }
 
     // fallback to default value at the end

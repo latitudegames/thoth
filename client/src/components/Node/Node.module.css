@@ -28,6 +28,7 @@
   position: absolute;
   right: 10px;
   color: var(--red);
+  border-radius: var(--extraSmall);
 }
 .deprecated-overlay {
   background-color: var(--red);
@@ -140,4 +141,21 @@
   justify-content: flex-end;
   align-items: center;
   display: flex;
+}
+
+.node-locked {
+  background-color: var(--dark-3);
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  opacity: 0.6;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 20%;
+  border-radius: var(--extraSmall);
+  width: 99%;
+  height: 99%;
+  margin: auto;
 }
