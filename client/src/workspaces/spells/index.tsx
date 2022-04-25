@@ -25,6 +25,7 @@ const Workspace = ({ tab, tabs, pubSub }) => {
   const { getSpellDoc } = useSharedb()
   const [loadSpell, { data: spellData }] = useLazyGetSpellQuery()
   const { serialize, editor } = useEditor()
+  const preferences = useSelector((state: RootState) => state.preferences)
 
   const [docLoaded, setDocLoaded] = useState<boolean>(false)
 
