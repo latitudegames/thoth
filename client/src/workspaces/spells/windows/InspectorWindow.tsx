@@ -74,6 +74,10 @@ const Inspector = props => {
         modal: 'infoModal',
         content: 'Editing this node could break connection with your app.',
         title: 'Warning',
+        checkbox: {
+          onClick: () => dispatch(toggleDoNotShowUnlockWarning()),
+          label: 'Do not show this again',
+        },
       })
     }
 
