@@ -21,6 +21,12 @@ const SettingsWindow = ({ tab }) => {
     <div style={{ flex: 1, marginTop: 'var(--c1)' }}>User Preferences</div>
   )
 
+  type PreferenceType = {
+    onClick: () => {}
+    label: string
+    checked: boolean
+  }
+
   return (
   )
 }
