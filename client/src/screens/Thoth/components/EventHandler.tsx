@@ -55,6 +55,7 @@ const EventHandler = ({ pubSub, tab }) => {
     $SAVE_SPELL,
     $SAVE_SPELL_DIFF,
     $CREATE_STATE_MANAGER,
+    $CREATE_SETTINGS_WINDOW,
     $CREATE_PLAYTEST,
     $CREATE_INSPECTOR,
     $CREATE_CONSOLE,
