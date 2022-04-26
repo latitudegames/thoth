@@ -13,19 +13,11 @@
 import Discord, { Intents } from 'discord.js'
 import emoji from 'emoji-dictionary'
 import emojiRegex from 'emoji-regex'
-import { EventEmitter } from 'events'
-import {
-  joinVoiceChannel,
-  createAudioPlayer,
-  createAudioResource,
-  StreamType,
-} from '@discordjs/voice'
 
 // import { classifyText } from '../utils/textClassifier'
 import { database } from '../../database'
-import { recognizeSpeech } from './discord-voice'
+import { initSpeechClient, recognizeSpeech } from './discord-voice'
 import { getRandomEmptyResponse, startsWithCapital } from './utils'
-import { tts } from '../../systems/googleTextToSpeech'
 
 function log(...s: (string | boolean)[]) {
   console.log(...s)
@@ -666,28 +658,7 @@ export class discord_client {
                 channel.type === channelTypes['voice'] &&
                 channel.name === channelName
               ) {
-                const audioPlayer = createAudioPlayer()
-
-                const callback = async text => {
-                  console.log('got voice input:', text)
-                  const response = await this.handleInput(
-                    text,
-                    message?.author?.username ?? 'VoiceSpeaker',
-                    this.discord_bot_name,
-                    'discord',
-                    channel.id,
-                    this.entity
-                  )
-
-                  const url = await tts(response)
-                  const audioResource = createAudioResource(url, {
-                    inputType: StreamType.Arbitrary,
-                  })
-                  audioPlayer.play(audioResource)
-                }
-
-                // Start the speech recognizer
-                recognizeSpeech(callback[Symbol], channel, author)
+                recognizeSpeech(channel)
                 return false
               }
             }
@@ -1695,7 +1666,7 @@ export class discord_client {
         Intents.FLAGS.GUILD_PRESENCES,
         Intents.FLAGS.GUILD_MEMBERS,
         Intents.FLAGS.GUILD_MESSAGES,
-        Intents.FLAGS.GUILD_VOICE_STATES
+        Intents.FLAGS.GUILD_VOICE_STATES,
       ],
     })
     this.bot_name = discord_bot_name
@@ -1719,6 +1690,12 @@ export class discord_client {
     const embed = new Discord.MessageEmbed().setColor(0x00ae86)
 
     this.client.embed = embed
+    initSpeechClient(
+      this.client,
+      this.discord_bot_name,
+      this.entity,
+      this.handleInput
+    )
 
     this.client.on('messageCreate', this.messageCreate.bind(null, this.client))
     // this.client.on('messageDelete', this.messageDelete.bind(null, this.client))
