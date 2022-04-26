@@ -5,6 +5,11 @@ import child_process from 'child_process'
 import { v1p1beta1 } from '@google-cloud/speech'
 import { joinVoiceChannel } from '@discordjs/voice'
 import os from 'os'
+import {
+  convertBufferTo1Channel,
+  ConvertTo1ChannelStream,
+} from '../../utils/convertBufferTo1Channel'
+import Transcriber from '../../utils/transcriber'
 
 const execFile = child_process.execFile
 
@@ -12,6 +17,7 @@ const speech = v1p1beta1
 const speechClient = new speech.SpeechClient({
   keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS,
 })
+const transcriber = new Transcriber('288916776772018')
 
 /**
  * Join the voice channel and start listening.
@@ -33,6 +39,14 @@ export async function recognizeSpeech(
   })
   const receiver = connection.receiver
   console.log('author.id:', author.id)
+
+  receiver.speaking.on('start', userId => {
+    console.log('speaker started talking')
+    transcriber.listen(receiver, userId).then(data => {
+      console.log('transcription data:', data)
+    })
+  })
+  /*
   const userStream = receiver.subscribe(author.id, {
     mode: 'pcm',
     // end: 'silence',
@@ -42,12 +56,12 @@ export async function recognizeSpeech(
   userStream.on('data', (chunk: string | boolean) => {
     //console.log('------on data------')
     //console.log(chunk)
-    getRecognizer(author.id).handleBuffer(chunk)
+    getRecognizer(author.id, userStream).handleBuffer(chunk)
   })
 
   userStream.on('end', () => {
     console.log('------on finish------')
-  })
+  })*/
 
   /**
    * Map of active recognizers.
@@ -61,11 +75,11 @@ export async function recognizeSpeech(
    * @param {Discord.User} user
    * @returns {ReturnType<typeof createRecognizer>}
    */
-  function getRecognizer(user) {
+  function getRecognizer(user, dStream) {
     if (recognizers.has(user)) {
       return recognizers.get(user)
     }
-    const recognizer = createRecognizer(user)
+    const recognizer = createRecognizer(user, dStream)
     recognizers.set(user, recognizer)
     return recognizer
   }
@@ -75,7 +89,30 @@ export async function recognizeSpeech(
    * The recognizer will self-destruct when user stopped speaking for 500ms.
    * @param {Discord.User} user
    */
-  function createRecognizer(user) {
+  function createRecognizer(user, dstream) {
+    const requestConfig = {
+      encoding: 'LINEAR16',
+      sampleRateHertz: 48000,
+      languageCode: 'en-US',
+    }
+    const request = {
+      config: requestConfig,
+    }
+    const recognizeStream = speechClient
+      .streamingRecognize(request)
+      .on('error', console.error)
+      .on('data', response => {
+        const transcription = response.results
+          .map(result => result.alternatives[0].transcript)
+          .join('\n')
+          .toLowerCase()
+        console.log(`Transcription: ${transcription}`)
+      })
+    const convertTo1ChannelStream = new ConvertTo1ChannelStream()
+    dstream.pipe(convertTo1ChannelStream).pipe(recognizeStream)
+    recognizeStream.on('data', data => {
+      console.log('data', data)
+    })
     const hash = require('crypto').createHash('sha256')
     hash.update(`${user}`)
     const obfuscatedId = parseInt(hash.digest('hex').substr(0, 12), 16)
@@ -134,6 +171,7 @@ export async function recognizeSpeech(
      * Transcribe the heard audio into text, and post it.
      */
     async function transcribe() {
+      return
       try {
         console.log('transcribing')
         const audio = (await saveAndConvertAudio()) as any
@@ -148,17 +186,8 @@ export async function recognizeSpeech(
           audio: { content: audio.toString('base64') },
           config: {
             encoding: 'LINEAR16',
-            sampleRateHertz: 16000,
+            sampleRateHertz: 48000,
             languageCode: 'en_US',
-            maxAlternatives: 1,
-            profanityFilter: false,
-            metadata: {
-              interactionType: 'PHONE_CALL',
-              obfuscatedId,
-            },
-            model: 'default',
-            useEnhanced: true,
-            enableAutomaticPunctuation: true,
           },
         })
         console.log('data.results:', data.results)
