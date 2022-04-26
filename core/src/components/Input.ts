@@ -129,6 +129,7 @@ export class InputComponent extends ThothComponent<InputReturn> {
 
     node.data.defaultValue = value
 
+    const defaultInput = new TextInputControl({
       editor: this.editor,
       key: 'text',
       value,
