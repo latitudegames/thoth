@@ -140,7 +140,7 @@ export class InputComponent extends ThothComponent<InputReturn> {
     // todo add this somewhere automated? Maybe wrap the modules builder in the plugin
     node.data.socketKey = node?.data?.socketKey || uuidv4()
 
-    return node.addOutput(out).addControl(input)
+    return node.addOutput(out).addControl(defaultInput)
   }
 
   worker(
