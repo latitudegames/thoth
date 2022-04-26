@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux'
 
 const StateManager = ({ tab, ...props }) => {
   const { publish, events } = usePubSub()
+  const preferences = useSelector((state: RootState) => state.preferences)
   const { data: spell } = useGetSpellQuery(tab.spellId, {
     skip: !tab.spellId,
   })
