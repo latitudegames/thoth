@@ -7,6 +7,8 @@ import Window from '../../../components/Window/Window'
 import '../../../screens/Thoth/thoth.module.css'
 import WindowMessage from '../components/WindowMessage'
 import { usePubSub } from '@/contexts/PubSubProvider'
+import { RootState } from '@/state/store'
+import { useSelector } from 'react-redux'
 
 const StateManager = ({ tab, ...props }) => {
   const { publish, events } = usePubSub()
