@@ -55,7 +55,7 @@ const StateManager = ({ tab, ...props }) => {
   // }, [props.node])
 
   useEffect(() => {
-    if (!typing) return
+    if (!typing || !preferences.autoSave) return
 
     const delayDebounceFn = setTimeout(() => {
       // Send Axios request here
