@@ -31,6 +31,7 @@ export const channelTypes = {
 }
 export class discord_client {
   destroy() {
+    this.client.destroy()
     this.client = null
   }
 

@@ -110,6 +110,7 @@ export class Entity {
 
   stopXREngine() {
     if (!this.xrengine) throw new Error("XREngine isn't running, can't stop it")
+    this.xrengine.destroy()
     ;(this.xrengine as any) = null
     console.log('Stopped xrengine client for agent ' + this.name)
   }
@@ -167,9 +168,12 @@ export class Entity {
 
   async onDestroy() {
     if (this.discord) this.stopDiscord()
+    if (this.xrengine) this.stopXREngine()
+    if (this.twitter) this.stopTwitter()
   }
 
   constructor(data: any) {
+    this.onDestroy()
     this.id = data.id
     console.log('initing agent')
     console.log('agent data is ', data)

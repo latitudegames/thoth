@@ -38,7 +38,6 @@ function isUrl(url: string): boolean {
   }
 }
 
-let xr = undefined
 export class xrengine_client {
   handleInput
   UsersInRange = {}
@@ -466,6 +465,7 @@ export class xrengine_client {
 
   doTests = false
   xrengineBot = null
+  xvfb
   agent
   settings
 
@@ -505,30 +505,18 @@ export class xrengine_client {
     //   xr.quit()
     //   xr = undefined
     // }
-    if (xr) {
-      console.log('***********agent', agent)
-      this.xrengineBot = new XREngineBot({
-        headless: true,
-        agent: agent,
-        settings: settings,
-        xrengineclient: this,
-        old: { bool: true, browser: xr.browser, page: xr.page, pu: xr.pu },
-      })
-      xr = undefined
-    } else {
-      this.xrengineBot = new XREngineBot({
-        headless: true,
-        agent: agent,
-        settings: settings,
-        xrengineclient: this,
-      })
-    }
-    xr = this.xrengineBot
-    const xvfb = new Xvfb()
-    await xvfb.start(async function (err, xvfbProcess) {
+    this.xrengineBot = new XREngineBot({
+      headless: true,
+      agent: agent,
+      settings: settings,
+      xrengineclient: this,
+    })
+
+    this.xvfb = new Xvfb()
+    await this.xvfb.start(async function (err, xvfbProcess) {
       if (err) {
         console.log(err)
-        xvfb.stop(function (_err) {
+        this.xvfb.stop(function (_err) {
           if (_err) log(_err)
         })
       }
@@ -538,9 +526,7 @@ export class xrengine_client {
         console.log('Preparing to connect to ', settings.url)
         cli.xrengineBot.delay(3000 + Math.random() * 1000)
         console.log('Connecting to server...')
-        if (!xr) {
-          await cli.xrengineBot.launchBrowser()
-        }
+        await cli.xrengineBot.launchBrowser()
         const XRENGINE_URL =
           (settings.url as string) || 'https://n3xus.city/location/test'
         cli.xrengineBot.enterRoom(XRENGINE_URL, settings.xrengine_bot_name)
@@ -549,6 +535,17 @@ export class xrengine_client {
         console.log('XVFB ERROR:', e)
       }
     })
+  }
+  destroy() {
+    if (this.xrengienBot) {
+      this.xrengineBot.destroy()
+    }
+    if (this.xvfb) {
+      this.xvfb.stop()
+    }
+
+    this.xrengineBot = null
+    this.xvfb = null
   }
 }
 
@@ -596,6 +593,12 @@ class XREngineBot {
     this.handleInput = settings.handleInput
     setInterval(() => this.instanceMessages(), 1000)
     this.messageLoop()
+  }
+  destroy() {
+    this.browser.close()
+    this.browser = undefined
+    this.page = undefined
+    this.pu = undefined
   }
 
   //delay in seconds
