@@ -165,10 +165,10 @@ export class InputComponent extends ThothComponent<InputReturn> {
       }
     }
 
-    // send default value if use default is explicity toggled on
+    // send default value if 'use default' is explicity toggled on
     if (node.data.useDefault) {
       return {
-        output: node.data.text as string,
+        output: node.data.defaultValue as string,
       }
     }
 
