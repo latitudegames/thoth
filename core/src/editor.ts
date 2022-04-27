@@ -140,7 +140,7 @@ export const initEditor = async function ({
     components,
     server: false,
     modules: {},
-  })
+  }) as ThothEngineClient
   // @seang TODO: update types for editor.use rather than casting as unknown here, we may want to bring our custom rete directly into the monorepo at this point
 
   editor.onSpellUpdated = (spellId: string, callback: Function) => {
