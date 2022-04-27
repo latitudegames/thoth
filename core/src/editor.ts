@@ -24,6 +24,10 @@ import KeyCodePlugin from './plugins/keyCodePlugin'
 import ModulePlugin from './plugins/modulePlugin'
 import SelectionPlugin from './plugins/selectionPlugin'
 import errorPlugin from './plugins/errorPlugin'
+
+interface ThothEngineClient extends ThothEngine {
+  thoth: EditorContext
+}
 export class ThothEditor extends NodeEditor<EventsTypes> {
   tasks: Task[]
   pubSub: PubSubContext
