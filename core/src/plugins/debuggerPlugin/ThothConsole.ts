@@ -43,7 +43,7 @@ export class ThothConsole {
     this.isEngine = isEngine
 
     if (throwError) this.throwError = throwError
-    if (server) return
+    if (server || isEngine) return
 
     const nodeValues = Array.from(editor.view.nodes)
     const foundNode = nodeValues.find(([, n]) => n.node.id === node.id)
