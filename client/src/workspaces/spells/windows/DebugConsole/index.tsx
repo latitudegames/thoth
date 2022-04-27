@@ -119,16 +119,14 @@ const DebugConsole = ({ tab }) => {
       <Terminal
         ref={terminalRef}
         commands={commands}
-        dangerMode={true}
+        dangerMode={true} // This is causing the [Object, object] line to appear in the terminal printout
         commandCallback={commandCallback}
         noNewlineParsing={true}
         promptLabel={`${user?.id}@Thoth:~$`}
-        // readOnly={true}
         style={{
           overflow: 'hidden',
           minHeight: '100%',
           maxHeight: 'initial',
-          // height: '100%',
         }}
         messageStyle={{ color: 'red' }}
       />
