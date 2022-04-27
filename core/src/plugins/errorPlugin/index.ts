@@ -6,4 +6,13 @@ function install(
   engine: IRunContextEditor,
   { server = false, throwError }: { server?: boolean; throwError?: Function }
 ) {
+  engine.on(
+    'error',
+    ({ message, data }: { message: string; data: NodeData }) => {
+      const component = engine.components.get(
+        data.name
+      ) as unknown as ThothComponent<unknown>
+    }
+  )
+}
 }
