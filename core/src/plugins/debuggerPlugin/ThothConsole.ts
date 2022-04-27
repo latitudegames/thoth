@@ -40,6 +40,7 @@ export class ThothConsole {
     this.editor = editor
     this.node = node
     this.isServer = server
+    this.isEngine = isEngine
 
     if (throwError) this.throwError = throwError
     if (server) return
