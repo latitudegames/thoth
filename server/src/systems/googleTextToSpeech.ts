@@ -23,6 +23,8 @@ export async function tts(input: string) {
     audioConfig: { audioEncoding: 2 /*MP3*/ },
   }
 
+  console.log("ttsRequest is", ttsRequest)
+
   const fileName = makeid(8) + '.mp3'
   const outputFile = 'files/' + fileName
   if (fs.existsSync(outputFile)) {

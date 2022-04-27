@@ -84,7 +84,7 @@ In the project directory, you can run:
 ### `yarn start`
 
 Runs @latitudegames/thoth-client in the development mode.\
-Open [http://localhost:3001](http://localhost:3001) to view it in the browser.
+Open [https://localhost:3001](https://localhost:3001) to view it in the browser.
 
 ### `yarn build`
 

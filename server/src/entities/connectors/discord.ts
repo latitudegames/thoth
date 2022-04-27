@@ -642,6 +642,7 @@ export class discord_client {
       const mention = `<@!${client.user.id}>`
       if (
         content.startsWith('!ping join') ||
+        content.startsWith('!join') ||
         content.startsWith('!ping ' + mention + ' join')
       ) {
         const d = content.split(' ')
@@ -696,7 +697,6 @@ export class discord_client {
       channel.sendTyping()
     }, message.content.length)
 
-    console.log('discord spell_handler:', this.spell_handler)
     const response = await this.handleInput(
       message.content,
       message.author.username,
@@ -749,7 +749,7 @@ export class discord_client {
 
     const oldResponse = this.getResponse(channel.id, id)
     if (oldResponse === undefined) {
-      await channel.messages.fetch(id).then(async (msg: any) => {})
+      await channel.messages.fetch(id).then(async (msg: any) => { })
       log('message not found')
       return
     }
@@ -922,8 +922,8 @@ export class discord_client {
               deleted: boolean
               permissionsFor: (arg0: any) => {
                 (): any
-                new (): any
-                has: { (arg0: string[]): any; new (): any }
+                new(): any
+                has: { (arg0: string[]): any; new(): any }
               }
               name: string | boolean
               id: string | boolean
@@ -1242,7 +1242,7 @@ export class discord_client {
             }
           }) => {
             log('response:', responses)
-            if ((responses as string).includes('uberduck')) {
+            if (responses && (responses as string).includes('uberduck')) {
               if (addPing) {
                 message.reply({
                   files: [{ attachment: responses, name: 'voice.wav' }],

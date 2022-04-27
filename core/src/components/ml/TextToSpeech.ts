@@ -23,7 +23,7 @@ type WorkerReturn = {
   output: string
 }
 
-const API_URL = 'http://localhost:8001'
+const API_URL = 'https://localhost:8001'
 
 export class TextToSpeech extends ThothComponent<Promise<WorkerReturn>> {
   constructor() {
@@ -80,7 +80,7 @@ export class TextToSpeech extends ThothComponent<Promise<WorkerReturn>> {
 
     let url: any = undefined
 
-    if (!isCommand) {
+    if (!isCommand && action) {
       url = await axios.get(`${API_URL}/speech_to_text`, {
         params: {
           text: action,

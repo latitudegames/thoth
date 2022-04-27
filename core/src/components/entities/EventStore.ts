@@ -29,7 +29,7 @@ export async function createEvent(
   const response = await axios.post(
     `${process.env.REACT_APP_API_ROOT_URL ??
     process.env.API_ROOT_URL ??
-    'http://localhost:8001'
+    'https://localhost:8001'
     }/event`,
     {
       type,

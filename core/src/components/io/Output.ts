@@ -15,7 +15,7 @@ import { triggerSocket, anySocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 const info = `The output component will pass values out from your spell.  You can have multiple outputs in a spell and all output values will be collected. It also has an option to send the output to the playtest area for easy testing.`
 
-const API_URL = 'http://localhost:8001'
+const API_URL = 'https://localhost:8001'
 
 export class Output extends ThothComponent<void> {
   constructor() {
@@ -95,7 +95,10 @@ export class Output extends ThothComponent<void> {
       'voiceOutput:',
       node.data.voiceOutput && !normalText.startsWith('/')
     )
-    if (node.data.voiceOutput && !normalText.startsWith('/')) {
+
+    console.log('normalText is', normalText)
+
+    if (normalText && node.data.voiceOutput && !normalText.startsWith('/')) {
       const url = await axios.get(`${API_URL}/speech_to_text`, {
         params: {
           text: normalText,
