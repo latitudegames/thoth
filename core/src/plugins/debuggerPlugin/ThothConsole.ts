@@ -26,6 +26,7 @@ export class ThothConsole {
   nodeView: NodeView
   isServer: boolean
   throwError?: Function
+  isEngine: boolean
 
   constructor({
     component,
