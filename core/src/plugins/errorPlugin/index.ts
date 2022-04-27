@@ -12,6 +12,9 @@ function install(
       const component = engine.components.get(
         data.name
       ) as unknown as ThothComponent<unknown>
+
+      if (!component) return
+
     }
   )
 }
