@@ -15,6 +15,15 @@ function install(
 
       if (!component) return
 
+      const console = new ThothConsole({
+        node: data,
+        component,
+        editor: engine,
+        server,
+        throwError,
+        isEngine: true,
+      })
+
     }
   )
 }
