@@ -73,6 +73,7 @@ export class ThothConsole {
   }
 
   renderError() {
+    if (this.isEngine) return
     this.node.data.error = true
     this.updateNodeView()
     this.node.data.error = false
