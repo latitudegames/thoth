@@ -32,4 +32,10 @@ function install(
     }
   )
 }
+
+const defaultExport = {
+  name: 'errorPlugin',
+  install,
 }
+
+export default defaultExport
