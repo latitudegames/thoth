@@ -24,6 +24,11 @@ function install(
         isEngine: true,
       })
 
+      if (message === 'Recursion detected') {
+        const error = new Error(`Recursion occured in node ID ${data.id}`)
+
+        console.error(error)
+      }
     }
   )
 }
