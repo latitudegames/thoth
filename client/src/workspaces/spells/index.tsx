@@ -41,6 +41,7 @@ const Workspace = ({ tab, tabs, pubSub }) => {
             name: spellRef.current.name,
             diff: jsonDiff,
           })
+          loadSpell(tab.spellId)
 
           if ('error' in response) {
             enqueueSnackbar('Error saving spell', {
