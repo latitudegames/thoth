@@ -33,8 +33,8 @@ const DebugConsole = ({ tab }) => {
   }
 
   const formatErrorMessage = message =>
-    `> Node ${message.nodeId}: Error in ${message.from} component ${
-      message.name ?? 'unnamed'
+    `> Node ${message.nodeId}: Error in ${message.from} component${
+      message.name ? ' ' + message.name : ''
     }.`
 
   const formatLogMessage = message =>
