@@ -8,6 +8,7 @@ type ConsoleConstructor = {
   node: NodeData
   server: boolean
   throwError?: Function
+  isEngine?: boolean
 }
 
 export type Message = {
