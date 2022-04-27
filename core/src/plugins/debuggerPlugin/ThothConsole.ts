@@ -34,6 +34,7 @@ export class ThothConsole {
     node,
     server,
     throwError,
+    isEngine = false,
   }: ConsoleConstructor) {
     this.component = component
     this.editor = editor
