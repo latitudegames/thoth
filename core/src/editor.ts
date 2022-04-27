@@ -8,7 +8,7 @@ import { Data } from 'rete/types/core/data'
 
 import { EventsTypes, EditorContext } from '../types'
 import { getComponents } from './components/components'
-import { initSharedEngine } from './engine'
+import { initSharedEngine, ThothEngine } from './engine'
 import CommentPlugin from './plugins/commentPlugin'
 import AreaPlugin from './plugins/areaPlugin'
 import DisplayPlugin from './plugins/displayPlugin'
