@@ -35,7 +35,22 @@ const Workspace = ({ tab, tabs, pubSub }) => {
       'save nodecreated noderemoved connectioncreated connectionremoved nodetranslated commentremoved commentcreated addcomment removecomment editcomment connectionpath',
       debounce(async data => {
         if (tab.type === 'spell' && spellRef.current) {
-          publish(events.$SAVE_SPELL_DIFF(tab.id), { graph: serialize() })
+          const jsonDiff = diff(spellRef.current?.graph, editor.toJSON())
+          console.log("Saving diff", jsonDiff)
+          if (jsonDiff == [] || !jsonDiff) return
+
+          const response = await saveDiff({
+            name: spellRef.current.name,
+            diff: jsonDiff,
+          })
+          loadSpell(tab.spellId)
+
+          if ('error' in response) {
+            enqueueSnackbar('Error saving spell', {
+              variant: 'error',
+            })
+          }
+          // publish(events.$SAVE_SPELL_DIFF(tab.id), { graph: serialize() })
         }
       }, 1000)
     )
