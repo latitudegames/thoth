@@ -6,13 +6,13 @@ import axios from 'axios'
 import Rete from 'rete'
 
 import {
+  EngineContext,
   NodeData,
   ThothNode,
   ThothWorkerInputs,
-  ThothWorkerOutputs,
+  ThothWorkerOutputs
 } from '../../../types'
-import { EngineContext } from '../../engine'
-import { triggerSocket, stringSocket } from '../../sockets'
+import { stringSocket, triggerSocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
 const info =

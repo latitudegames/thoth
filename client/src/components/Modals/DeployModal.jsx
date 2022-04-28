@@ -1,4 +1,4 @@
-import { SettingsRemoteSharp } from '@material-ui/icons'
+import { SettingsRemoteSharp } from '@mui/icons-material'
 import { useState } from 'react'
 import { useModal } from '../../contexts/ModalProvider'
 import Input from '../Input/Input'

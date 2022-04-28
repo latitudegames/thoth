@@ -68,8 +68,6 @@ export const spellApi = rootApi.injectEndpoints({
       }),
     }),
     saveDiff: builder.mutation<void, Diff>({
-      // TODO this may introruce bugs.  Though I don't think we need to invalidate the spell cache here since the graph is loaded in live to the rete editor.
-      // invalidatesTags: ['Spell'],
       query: diffData => ({
         url: 'game/spells/saveDiff',
         method: 'POST',

@@ -7,7 +7,6 @@ import { v4 as uuidv4 } from 'uuid'
 import { NodeData, ThothNode } from '../../../types'
 import { InputControl } from '../../dataControls/InputControl'
 import { PlaytestControl } from '../../dataControls/PlaytestControl'
-import { EngineContext } from '../../engine'
 import { TaskOptions } from '../../plugins/taskPlugin/task'
 import { triggerSocket } from '../../sockets'
 import { ThothComponent, ThothTask } from '../../thoth-component'
@@ -53,7 +52,7 @@ export class TriggerIn extends ThothComponent<void> {
   unsubscribe?: () => void
 
   subscribeToPlaytest(node: ThothNode) {
-    const { onPlaytest } = this.editor?.thoth as EngineContext
+    const { onPlaytest } = this.editor?.thoth as any
 
     // check node for the right data attribute
     if (onPlaytest) {

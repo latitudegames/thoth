@@ -4,7 +4,7 @@ import {
   NodeData,
   ThothNode,
   ThothWorkerInputs,
-  ThothWorkerOutputs,
+  ThothWorkerOutputs
 } from '../../../types'
 import { CodeControl } from '../../dataControls/CodeControl'
 // @seang todo: convert data controls to typescript to remove this

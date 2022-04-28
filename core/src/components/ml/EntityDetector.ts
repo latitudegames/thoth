@@ -5,16 +5,16 @@ import axios from 'axios'
 import Rete from 'rete'
 
 import {
+  EngineContext,
   NodeData,
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../../types'
 import { FewshotControl } from '../../dataControls/FewshotControl'
-import { EngineContext } from '../../engine'
-import { TaskOptions } from '../../plugins/taskPlugin/task'
 import { stringSocket, triggerSocket, arraySocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
+import { TaskOptions } from '../plugins/../taskPlugin/task'
 const fewshot = `Given an action, detect what entities the player is interacting with. Ignore entities that the player is just asking about.
 Entity types: food, person, creature, object, place, other, none
 Action: throw an anvil at the man
@@ -161,8 +161,9 @@ export class EntityDetector extends ThothComponent<
     const prompt = fewshot + action + '\nEntities:'
 
     const resp = await axios.post(
-      `${
-        process.env.REACT_APP_API_URL ?? process.env.API_URL ?? 'https://localhost:8001'
+      `${process.env.REACT_APP_API_URL ??
+      process.env.API_URL ??
+      'https://localhost:8001'
       }/text_completion`,
       {
         params: {
