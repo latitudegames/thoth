@@ -4,27 +4,33 @@ Thoth is a multishot system builder. It leverages a visual coding style interfac
 
 ## Quickstart
 
-You will need **yarn** and **Docker** installed, along with **Node.js 16 or higher**. We use Docker to run a local Postgres database. You can skip the docker and install postgres directly, but you are almost always better off just using Docker.
+You will need **yarn or npm** and **Docker** installed, along with **Node.js 16 or higher**. We use Docker to run a local Postgres database. You can skip the docker and install postgres directly, but you are almost always better off just using Docker.
+For **Linux** and **MAC** users, **sleep** and **concurently** commands must be installed in the machine.
 
 First, clone and set up Thoth
 
 ```
-# for latitude games development
-git clone https://github.com/latitudegames/thoth
-
-# OR
-
-# for super reality agent development
-git clone https://github.com/super-reality/thoth
+git clone https://github.com/TheNexusCity/thoth
 ```
 
 Next, install dependencies
 
 ```
 yarn install
+OR
+npm i
 ```
 
 You will need to make a few environment variable modifications
+To keep values privates, create a new file for each .env, called .env.local (these files are safe from the .gitignore)
+
+In order to run the client and server use
+```
+yarn run dev
+
+If on Windows run:
+yarn run dev:windows
+```
 
 ### Local Development
 
@@ -80,6 +86,11 @@ for the next prerelease.
 ## Available Scripts
 
 In the project directory, you can run:
+
+### `yarn run dev`
+
+Runs both server and client.\
+Open [https://localhost:3001](https://localhost:3001) to view it in the browser.
 
 ### `yarn start`
 
