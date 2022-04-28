@@ -2,7 +2,7 @@ import {
   EditorContext,
   Spell,
   ThothWorkerInputs,
-} from '@latitudegames/thoth-core/dist/types'
+} from '@latitudegames/thoth-core/types'
 import { useContext, createContext, useRef, useEffect } from 'react'
 
 import { postEnkiCompletion } from '../../services/game-api/enki'
