@@ -25,6 +25,7 @@ import {
   randomInt,
   startsWithCapital,
 } from './utils'
+import { removeEmojisFromString } from '../../utils/utils'
 
 function isUrl(url: string): boolean {
   if (!url || url === undefined || url.length <= 0 || !url.startsWith('http'))
@@ -419,6 +420,7 @@ export class xrengine_client {
       await this.xrengineBot.sendMessage(response)
       if (!(response as string).startsWith('/')) {
         isVoice = true
+        response = removeEmojisFromString(response)
         const fileId = await tts(response as string)
         const url =
           (process.env.FILE_SERVER_URL?.endsWith('/')
@@ -634,7 +636,7 @@ class XREngineBot {
     this.evaluate(msg => {
       try {
         globalThis.sendMessage(msg)
-      } catch (e) { }
+      } catch (e) {}
     }, message)
     /*console.log('typing message')
     await this.typeMessage('newMessage', message, false)
@@ -912,7 +914,7 @@ class XREngineBot {
     await this.waitForTimeout(timeout)
   }
 
-  async interactObject() { }
+  async interactObject() {}
 
   /** Return screenshot
    * @param {Function} fn Function to execut _in the node context._
@@ -1072,7 +1074,6 @@ class XREngineBot {
         const msg = message.text().substring(message.text().indexOf('|') + 2)
         console.log(msg)
         const msgObj = JSON.parse(msg)
-
 
         let isVoice = false
         if (this.useVoice && msgObj.text.startsWith('voice|')) {
