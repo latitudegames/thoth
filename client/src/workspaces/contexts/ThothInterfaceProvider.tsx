@@ -135,7 +135,8 @@ const ThothInterfaceProvider = ({ children, tab }) => {
   const processCode = (code, inputs, data) => {
     const flattenedInputs = Object.entries(inputs as ThothWorkerInputs).reduce(
       (acc, [key, value]) => {
-        acc[key as string] = value[0]
+        // @ts-ignore
+        acc[key as string] = value[0] as any
         return acc
       },
       {} as Record<string, any>

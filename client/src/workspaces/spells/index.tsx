@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from 'react'
 
 import { useEditor } from '@/workspaces/contexts/EditorProvider'
 import { Layout } from '@/workspaces/contexts/LayoutProvider'
-import { useLazyGetSpellQuery } from '@/state/api/spells'
+import { useLazyGetSpellQuery, useSaveDiffMutation } from '@/state/api/spells'
 import { debounce } from '@/utils/debounce'
+import { useSnackbar } from 'notistack'
 import EditorWindow from './windows/EditorWindow/'
 import EventHandler from '@/screens/Thoth/components/EventHandler'
 import Inspector from './windows/InspectorWindow'
@@ -17,15 +18,19 @@ import { useSharedb } from '@/contexts/SharedbProvider'
 import { sharedb } from '@/config'
 import SearchCorpus from './windows/SearchCorpusWindow'
 import EntityManagerWindow from './windows/EntityManagerWindow'
+import { diff } from '@/utils/json0'
 
 const Workspace = ({ tab, tabs, pubSub }) => {
   const spellRef = useRef<Spell>()
   const { events, publish } = usePubSub()
   const { getSpellDoc } = useSharedb()
   const [loadSpell, { data: spellData }] = useLazyGetSpellQuery()
-  const { serialize, editor } = useEditor()
+  const { editor } = useEditor()
+  const [saveDiff] = useSaveDiffMutation()
 
   const [docLoaded, setDocLoaded] = useState<boolean>(false)
+
+  const { enqueueSnackbar } = useSnackbar()
 
   // Set up autosave for the workspaces
   useEffect(() => {

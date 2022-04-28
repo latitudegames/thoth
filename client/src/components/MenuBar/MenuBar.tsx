@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import thothlogo from './thoth.png'
 
 import { useModal } from '../../contexts/ModalProvider'
 import { usePubSub } from '../../contexts/PubSubProvider'
@@ -288,7 +289,7 @@ const MenuBar = () => {
   const handleClick = func => {
     //Initially intended to control the visibility with a state, but this triggers a re-render and hides the menu anyway! :D
     //Keeping this intact just in case.
-    ;(togglemenuVisibility as Function)(menuVisibility)
+    ; (togglemenuVisibility as Function)(menuVisibility)
     // eslint-disable-next-line no-eval
     eval(func)
   }
