@@ -1,4 +1,4 @@
-import { initEditor, zoomAt } from '@latitudegames/thoth-core'
+import { initEditor } from '@latitudegames/thoth-core/src'
 import {
   GraphData,
   EditorContext,
@@ -20,6 +20,7 @@ import { MyNode } from '../../components/Node/Node'
 import gridimg from '@/grid.png'
 import { usePubSub } from '../../contexts/PubSubProvider'
 import { useThothInterface } from './ThothInterfaceProvider'
+import { zoomAt } from '@latitudegames/thoth-core/src/plugins/areaPlugin/zoom-at'
 
 export type ThothTab = {
   layoutJson: string
