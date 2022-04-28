@@ -591,6 +591,9 @@ class XREngineBot {
     this.settings = settings
     this.xrengineclient = xrengineclient
     this.handleInput = settings.handleInput
+    this.useVoice = settings.use_voice
+    this.voiceProvider = settings.voice_provider
+    this.voiceCharacter = settings.voice_character
     setInterval(() => this.instanceMessages(), 1000)
     this.messageLoop()
   }
@@ -631,7 +634,7 @@ class XREngineBot {
     this.evaluate(msg => {
       try {
         globalThis.sendMessage(msg)
-      } catch (e) {}
+      } catch (e) { }
     }, message)
     /*console.log('typing message')
     await this.typeMessage('newMessage', message, false)
@@ -909,7 +912,7 @@ class XREngineBot {
     await this.waitForTimeout(timeout)
   }
 
-  async interactObject() {}
+  async interactObject() { }
 
   /** Return screenshot
    * @param {Function} fn Function to execut _in the node context._
@@ -1069,8 +1072,10 @@ class XREngineBot {
         const msg = message.text().substring(message.text().indexOf('|') + 2)
         console.log(msg)
         const msgObj = JSON.parse(msg)
+
+
         let isVoice = false
-        if (msgObj.text.startsWith('voice|')) {
+        if (this.useVoice && msgObj.text.startsWith('voice|')) {
           msgObj.text = msgObj.text.substring(msgObj.text.indexOf('|') + 1)
           isVoice = false // true
         }
@@ -1097,7 +1102,7 @@ class XREngineBot {
           msgObj.text,
           msgObj.updatedAt,
           this,
-          true
+          this.useVoice
         )
       }
 

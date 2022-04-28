@@ -17,6 +17,10 @@ export interface entitiesAttributes {
   discord_spell_handler_incoming?: string
   discord_spell_handler_update?: string
   discord_spell_handler_feed?: string
+  use_voice?: boolean
+  voice_provider?: string
+  voice_character?: string
+  voice_language_code?: string
   xrengine_enabled?: boolean
   xrengine_url?: string
   xrengine_spell_handler_incoming?: string
@@ -49,6 +53,10 @@ export type entitiesOptionalAttributes =
   | 'discord_spell_handler_incoming'
   | 'discord_spell_handler_update'
   | 'discord_spell_handler_feed'
+  | 'use_voice'
+  | 'voice_provider'
+  | 'voice_character'
+  | 'voice_language_code'
   | 'xrengine_enabled'
   | 'xrengine_url'
   | 'xrengine_spell_handler_incoming'
@@ -89,6 +97,10 @@ export class entities
   discord_spell_handler_incoming?: string
   discord_spell_handler_update?: string
   discord_spell_handler_feed?: string
+  use_voice?: boolean
+  voice_provider?: string
+  voice_character?: string
+  voice_language_code?: string
   xrengine_enabled?: boolean
   xrengine_url?: string
   xrengine_spell_handler_incoming?: string
@@ -158,6 +170,22 @@ export class entities
           allowNull: true,
         },
         discord_spell_handler_incoming: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
+        use_voice: {
+          type: DataTypes.BOOLEAN,
+          allowNull: true,
+        },
+        voice_provider: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
+        voice_character: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
+        voice_language_code: {
           type: DataTypes.TEXT,
           allowNull: true,
         },

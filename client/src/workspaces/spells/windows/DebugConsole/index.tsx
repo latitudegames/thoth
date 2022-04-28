@@ -85,7 +85,7 @@ const DebugConsole = ({ tab }) => {
   useEffect(() => {
     const unsubscribe = subscribe($DEBUG_PRINT(tab.id), printToDebugger)
 
-    return unsubscribe
+    return unsubscribe as () => void
   }, [subscribe, printToDebugger, $DEBUG_PRINT])
 
   /**

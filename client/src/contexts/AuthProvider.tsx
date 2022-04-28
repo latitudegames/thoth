@@ -114,7 +114,6 @@ const AuthProvider = ({ children }: { children: ReactElement }) => {
     ) {
       setSessionInfo(sessionInfoParam)
       setUserInfo(userInfo)
-      console.log(userInfo)
 
       let search = window.location.search.toString()
       initialize(search)
@@ -145,7 +144,6 @@ const AuthProvider = ({ children }: { children: ReactElement }) => {
         // Check if User has an existing sessionId in local storage
         const sessionId = await getSessionId()
 
-        console.log('im running', sessionId)
         if (sessionId) {
           const sessionReq = await fetch(
             `${latitudeApiRootUrl}/user/auth/info?access_token=${sessionId}`

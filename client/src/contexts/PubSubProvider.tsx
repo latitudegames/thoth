@@ -2,12 +2,16 @@
 import PubSub from 'pubsub-js'
 import { useContext, createContext } from 'react'
 
-const Context = createContext({
-  publish: (_event, _data) => { },
-  subscribe: (_event, _callback) => { },
-  PubSub: () => { },
-  events: {},
-})
+type PubSubData = Record<string, any> | string | any[]
+
+type PubSubContext = {
+  publish: (event: string, data?: PubSubData) => void
+  subscribe: (event: string, callback: Function) => Function
+  PubSub: typeof PubSub
+  events: Record<string, any>
+}
+
+const Context = createContext<PubSubContext>(undefined!)
 
 export const usePubSub = () => useContext(Context)
 
@@ -29,6 +33,7 @@ export const events = {
   $CLOSE_EDITOR: tabId => `closeEditor:${tabId}`,
   $NODE_SET: (tabId, nodeId) => `nodeSet:${tabId}:${nodeId}`,
   $SAVE_SPELL: tabId => `saveSpell:${tabId}`,
+  $SAVE_SPELL_DIFF: tabId => `saveSpell:${tabId}`,
   $CREATE_STATE_MANAGER: tabId => `createStateManage:${tabId}`,
   $CREATE_PLAYTEST: tabId => `createPlaytest:${tabId}`,
   $CREATE_INSPECTOR: tabId => `createInspector:${tabId}`,
@@ -36,6 +41,7 @@ export const events = {
   $CREATE_ENT_MANAGER: tabId => `createEntManager:${tabId}`,
   $CREATE_SEARCH_CORPUS: tabId => `createSearchCorpus:${tabId}`,
   $CREATE_DEBUG_CONSOLE: tabId => `createDebugConsole:${tabId}`,
+  $CREATE_CONSOLE: tabId => `createDebugConsole:${tabId}`,
   $SERIALIZE: tabId => `serialize:${tabId}`,
   $PROCESS: tabId => `process:${tabId}`,
   $EXPORT: tabId => `export:${tabId}`,

@@ -22,8 +22,13 @@ const EntityWindow = ({ id, updateCallback }) => {
   const [loaded, setLoaded] = useState(false)
 
   const [enabled, setEnabled] = useState(false)
-  const [discord_enabled, setdiscord_enabled] = useState(false)
+  const [discord_enabled, setDiscordEnabled] = useState(false)
   const [discord_api_key, setDiscordApiKey] = useState('')
+
+  const [use_voice, setUseVoice] = useState(false)
+  const [voice_provider, setVoiceProvider] = useState(false)
+  const [voice_character, setVoiceCharacter] = useState('')
+  const [voice_language_voice, setVoiceLanguageCode] = useState('')
 
   const [discord_starting_words, setDiscordStartingWords] = useState('')
   const [discord_bot_name_regex, setDiscordBotNameRegex] = useState('')
@@ -68,13 +73,17 @@ const EntityWindow = ({ id, updateCallback }) => {
   const [spellList, setSpellList] = useState('')
   useEffect(() => {
     if (!loaded) {
-      ;(async () => {
+      ; (async () => {
         const res = await axios.get(
           `${process.env.REACT_APP_API_ROOT_URL}/entity?instanceId=` + id
         )
         console.log('res is', res.data)
         setEnabled(res.data.enabled === true)
-        setdiscord_enabled(res.data.discord_enabled === true)
+        setDiscordEnabled(res.data.discord_enabled === true)
+        setUseVoice(res.data.use_voice === true)
+        setVoiceProvider(res.data.voice_provider)
+        setVoiceCharacter(res.data.voice_character)
+        setVoiceLanguageCode(res.data.voice_language_code)
         setDiscordApiKey(res.data.discord_api_key)
         setDiscordStartingWords(res.data.discord_starting_words)
         setDiscordBotNameRegex(res.data.discord_bot_name_regex)
@@ -117,7 +126,7 @@ const EntityWindow = ({ id, updateCallback }) => {
   }, [loaded])
 
   useEffect(() => {
-    ;(async () => {
+    ; (async () => {
       const res = await axios.get(
         `${process.env.REACT_APP_API_ROOT_URL}/game/spells`
       )
@@ -153,6 +162,10 @@ const EntityWindow = ({ id, updateCallback }) => {
       discord_spell_handler_incoming,
       discord_spell_handler_update,
       discord_spell_handler_feed,
+      use_voice,
+      voice_provider,
+      voice_character,
+      voice_language_code,
       xrengine_enabled,
       xrengine_url,
       xrengine_spell_handler_incoming,
@@ -190,7 +203,7 @@ const EntityWindow = ({ id, updateCallback }) => {
           let responseData = res && JSON.parse(res?.config?.data).data
           console.log(responseData, 'responseDataresponseData')
           setEnabled(responseData.enabled)
-          setdiscord_enabled(responseData.discord_enabled)
+          setDiscordEnabled(responseData.discord_enabled)
           setDiscordApiKey(responseData.discord_api_key)
           setDiscordStartingWords(responseData.discord_starting_words)
           setDiscordBotNameRegex(responseData.discord_bot_name_regex)
@@ -249,6 +262,63 @@ const EntityWindow = ({ id, updateCallback }) => {
           }}
         />
       </div>
+      <div className="form-item">
+        <span className="form-item-label">Voice Enabled</span>
+        <input
+          type="checkbox"
+          value={use_voice}
+          defaultChecked={use_voice || use_voice === 'true'}
+          onChange={e => {
+            setUseVoice(e.target.checked)
+          }}
+        />
+      </div>
+
+      {use_voice &&
+        <React.Fragment>
+          <div className="form-item agent-select">
+            <span className="form-item-label">Voice Provider</span>
+            <select
+              name="voice_provider"
+              id="voice_provider"
+              value={voice_provider}
+              onChange={event => {
+                setVoiceProvider(event.target.value)
+              }}
+            >
+              <option value={"google"}>
+                Google
+              </option>
+              <option value={"uberduck"}>
+                Uberduck
+              </option>
+            </select>
+          </div>
+
+          <div className="form-item">
+            <span className="form-item-label">Character</span>
+            <input
+              type="text"
+              defaultValue={voice_character}
+              onChange={e => {
+                setVoiceCharacter(e.target.value)
+              }}
+            />
+          </div>
+
+          <div className="form-item">
+            <span className="form-item-label">Language Code</span>
+            <input
+              type="text"
+              defaultValue={voice_language_code}
+              onChange={e => {
+                setVoiceLanguageCode(e.target.value)
+              }}
+            />
+          </div>
+        </React.Fragment>
+      }
+
       {enabled && (
         <>
           <div className="form-item">
@@ -258,7 +328,7 @@ const EntityWindow = ({ id, updateCallback }) => {
               value={discord_enabled}
               defaultChecked={discord_enabled || discord_enabled === 'true'}
               onChange={e => {
-                setdiscord_enabled(e.target.checked)
+                setDiscordEnabled(e.target.checked)
               }}
             />
           </div>

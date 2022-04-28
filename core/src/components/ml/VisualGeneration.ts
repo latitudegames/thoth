@@ -1,13 +1,14 @@
 import Rete from 'rete'
 
 import {
+  EngineContext,
+  ImageCacheResponse,
   NodeData,
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../../types'
 import { InputControl } from '../../dataControls/InputControl'
-import { EngineContext } from '../../engine'
 import { triggerSocket, stringSocket, arraySocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
@@ -17,16 +18,9 @@ caption- is a string related to what type of image you want to search for.
 
 topK- number of (k) matches for a particular description. IE: if you submit as a caption: "castle" and k was 5, it would return a fortress, a keep, a battlement, a gatehouse, and a tower. The k=5 images most similar to the word "castle`
 
-export type ImageType = {
-  id: string
-  captionId: string
-  imageCaption: string
-  imageUrl: string
-  tag: string
-  score: number | string
-}
-
-export class VisualGeneration extends ThothComponent<Promise<ImageType[]>> {
+export class VisualGeneration extends ThothComponent<
+  Promise<ImageCacheResponse>
+> {
   constructor() {
     super('VisualGeneration')
     this.task = {

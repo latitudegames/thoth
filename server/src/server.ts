@@ -21,6 +21,8 @@ import * as fs from 'fs'
 
 const app: Koa = new Koa()
 const router: Router = new Router()
+// @ts-ignore
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
 
 async function init() {
   // async function initLoop() {

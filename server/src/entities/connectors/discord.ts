@@ -642,6 +642,7 @@ export class discord_client {
       const mention = `<@!${client.user.id}>`
       if (
         content.startsWith('!ping join') ||
+        content.startsWith('!join') ||
         content.startsWith('!ping ' + mention + ' join')
       ) {
         const d = content.split(' ')
@@ -656,6 +657,7 @@ export class discord_client {
               leave: () => void
             }) => {
               if (
+                this.use_voice &&
                 channel.type === channelTypes['voice'] &&
                 channel.name === channelName
               ) {
@@ -696,7 +698,6 @@ export class discord_client {
       channel.sendTyping()
     }, message.content.length)
 
-    console.log('discord spell_handler:', this.spell_handler)
     const response = await this.handleInput(
       message.content,
       message.author.username,
@@ -749,7 +750,7 @@ export class discord_client {
 
     const oldResponse = this.getResponse(channel.id, id)
     if (oldResponse === undefined) {
-      await channel.messages.fetch(id).then(async (msg: any) => {})
+      await channel.messages.fetch(id).then(async (msg: any) => { })
       log('message not found')
       return
     }
@@ -922,8 +923,8 @@ export class discord_client {
               deleted: boolean
               permissionsFor: (arg0: any) => {
                 (): any
-                new (): any
-                has: { (arg0: string[]): any; new (): any }
+                new(): any
+                has: { (arg0: string[]): any; new(): any }
               }
               name: string | boolean
               id: string | boolean
@@ -1242,7 +1243,7 @@ export class discord_client {
             }
           }) => {
             log('response:', responses)
-            if ((responses as string).includes('uberduck')) {
+            if (responses && (responses as string).includes('uberduck')) {
               if (addPing) {
                 message.reply({
                   files: [{ attachment: responses, name: 'voice.wav' }],
@@ -1613,7 +1614,10 @@ export class discord_client {
   discord_bot_name_regex: string = ''
   discord_bot_name: string = 'Bot'
   discord_empty_responses: string[] = []
-
+  use_voice: boolean
+  voice_provider: string
+  voice_character: string
+  voice_language_code: string
   createDiscordClient = async (
     entity: any,
     discord_api_token: string | undefined,
@@ -1628,11 +1632,19 @@ export class discord_client {
       client: string,
       channelId: string,
       entity: number
-    ) => Promise<unknown>
+    ) => Promise<unknown>,
+    use_voice,
+    voice_provider,
+    voice_character,
+    voice_language_code
   ) => {
     console.log('creating discord client')
     this.entity = entity
     this.handleInput = handleInput
+    this.use_voice = use_voice
+    this.voice_provider = voice_provider
+    this.voice_character = voice_character
+    this.voice_language_code = voice_language_code
     if (!discord_starting_words || discord_starting_words?.length <= 0) {
       this.discord_starting_words = ['hi', 'hey']
     } else {
@@ -1691,12 +1703,18 @@ export class discord_client {
     const embed = new Discord.MessageEmbed().setColor(0x00ae86)
 
     this.client.embed = embed
-    initSpeechClient(
-      this.client,
-      this.discord_bot_name,
-      this.entity,
-      this.handleInput
-    )
+
+    if (this.use_voice) {
+      initSpeechClient(
+        this.client,
+        this.discord_bot_name,
+        this.entity,
+        this.handleInput,
+        this.voice_provider,
+        this.voice_character,
+        this.voice_language_code
+      )
+    }
 
     this.client.on('messageCreate', this.messageCreate.bind(null, this.client))
     // this.client.on('messageDelete', this.messageDelete.bind(null, this.client))

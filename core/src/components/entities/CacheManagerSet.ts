@@ -6,13 +6,13 @@ import axios from 'axios'
 import Rete from 'rete'
 
 import {
+  EngineContext,
   NodeData,
   ThothNode,
   ThothWorkerInputs,
-  ThothWorkerOutputs,
+  ThothWorkerOutputs
 } from '../../../types'
-import { EngineContext } from '../../engine'
-import { triggerSocket, stringSocket, anySocket } from '../../sockets'
+import { anySocket, stringSocket, triggerSocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
 const info = 'Cache Manager Set is used to (set/add) data in the cache manager'
