@@ -28,7 +28,7 @@
     "@material-ui/icons": "^4.11.2",
     "@emotion/react": "^11.8.2",
     "@emotion/styled": "^11.8.1",
-    "@latitudegames/thoth-core": "^0.0.66",
+    "@latitudegames/thoth-core": "^0.0.67",
     "@monaco-editor/react": "^4.2.1",
     "@mui/icons-material": "^5.5.1",
     "@mui/material": "^5.5.3",

@@ -8,6 +8,7 @@
     "Jakob Grant <j.grant@project89.org>",
     "Preston Gull <gull.preston@gmail.com>"
   ],
+  "private": true,
   "description": "core shared code for thoth",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",

@@ -40,7 +40,7 @@ const DataControls = ({
   data,
   inspectorData,
   nodeId,
-  tab,
+  tab = null,
 }) => {
   if (!dataControls)
     return <p className={css['message']}>No component selected</p>
