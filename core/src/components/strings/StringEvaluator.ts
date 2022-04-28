@@ -5,6 +5,7 @@
 import Rete from 'rete'
 
 import {
+  EngineContext,
   NodeData,
   ThothNode,
   ThothWorkerInputs,
@@ -12,7 +13,6 @@ import {
 } from '../../../types'
 import { FewshotControl } from '../../dataControls/FewshotControl'
 import { InputControl } from '../../dataControls/InputControl'
-import { EngineContext } from '../../engine'
 import { triggerSocket, stringSocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 

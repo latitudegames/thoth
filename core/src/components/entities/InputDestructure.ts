@@ -93,11 +93,11 @@ export class InputDestructureComponent extends ThothComponent<
     // If there are outputs, we are running as a module input and we use that value
     return {
       output: (input as any).Input ?? input,
-      speaker: 'Speaker',
-      agent: (input as any).Agent ?? 'Agent',
-      client: (input as any).Client ?? 'Client',
-      channelId: (input as any).ChannelID ?? '0',
-      entity: (input as any).entity ?? {},
+      speaker: (input as any).Speaker ?? 'Speaker',
+      agent: (input as any).Agent,
+      client: (input as any).Client,
+      channelId: (input as any).ChannelID,
+      entity: (input as any).entity
     }
   }
 }

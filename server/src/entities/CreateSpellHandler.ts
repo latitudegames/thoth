@@ -145,6 +145,9 @@ export const CreateSpellHandler = async (props: {
       Entity: entity,
     } as any
 
+    console.log("********** spellInputs are")
+    console.log(spellInputs);
+
     // TODO: Remove this line
     // TEST CASE: Chatting with agent on Discord doesn't get same response over and over
     // This resets everything and makes it work, BUT it is very slow
@@ -201,12 +204,6 @@ export const CreateSpellHandler = async (props: {
           rawOutputs[(node as any).data.socketKey as string]
       })
     if (error) return rawOutputs
-
-    console.log('inputs are', inputs)
-    console.log('rawOutputs are ', rawOutputs)
-
-    console.log('message is', message)
-    console.log('response is', formattedOutputs)
 
     let index = undefined
 

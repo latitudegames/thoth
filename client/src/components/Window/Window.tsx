@@ -29,6 +29,7 @@ type Props = {
   grid?: boolean
   scrollToBottom?: boolean
   toolbar?: ReactElement<any, any> | false
+  lock?: ReactElement<any, any> | false
   children: ReactElement<any, any> | ReactElement<any, any>[]
 }
 

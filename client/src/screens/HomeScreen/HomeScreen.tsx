@@ -64,7 +64,7 @@ const StartScreen = () => {
   const onDelete = async spellId => {
     try {
       await deleteSpell(spellId)
-      const [ tab ] = tabs.filter(tab => tab.spellId === spellId)      
+      const [tab] = tabs.filter(tab => tab.spellId === spellId)
       dispatch(closeTab(tab.id))
     } catch (err) {
       console.log('Error deleting spell', err)

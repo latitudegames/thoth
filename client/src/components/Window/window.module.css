@@ -7,6 +7,7 @@
 }
 .window.bordered .window-layout {
   border: 1px solid var(--dark-2);
+  border-top: none;
 }
 .window.darkened .window-layout {
   background-color: var(--dark-2);
@@ -35,7 +36,13 @@
   justify-content: flex-end;
   padding-bottom: var(--c1);
   gap: var(--extraSmall);
+  border-bottom: 1px solid var(--dark-1);
 }
+
+.lock-bar {
+  border-bottom: none;
+}
+
 .window.unpadded {
   padding: 0;
   padding-bottom: var(--c1);

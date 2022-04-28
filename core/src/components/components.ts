@@ -38,11 +38,12 @@ import { TenseTransformer } from './ml/TenseTransformer'
 import { TextToSpeech } from './ml/TextToSpeech'
 import { TimeDetectorComponent } from './ml/TimeDetector'
 import { DocumentDelete } from './search/DocumentDelete'
-import { DocumentGet } from './search/DocumentGet'
 import { DocumentEdit } from './search/DocumentEdit'
-import { DocumentStoreGet } from './search/DocumentStoreGet'
+import { DocumentGet } from './search/DocumentGet'
 import { DocumentSet } from './search/DocumentSet'
+import { DocumentStoreGet } from './search/DocumentStoreGet'
 import { Search } from './search/Search'
+import { SpellComponent } from './Spell'
 import { StateRead } from './state/StateRead'
 import { StateWrite } from './state/StateWrite'
 import { ComplexStringMatcher } from './strings/ComplexStringMatcher'
@@ -120,6 +121,7 @@ export const components = {
   inputsToJson: () => new InputsToJSON(),
   itemTypeComponent: () => new ItemTypeComponent(),
   joinListComponent: () => new JoinListComponent(),
+  moduleComponent: () => new SpellComponent(),
   output: () => new Output(),
   proseToScript: () => new ProseToScript(),
   safetyVerifier: () => new SafetyVerifier(),

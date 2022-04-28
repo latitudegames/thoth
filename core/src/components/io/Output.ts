@@ -3,6 +3,7 @@ import Rete from 'rete'
 import { v4 as uuidv4 } from 'uuid'
 
 import {
+  EditorContext,
   NodeData,
   ThothNode,
   ThothWorkerInputs,
@@ -10,13 +11,12 @@ import {
 } from '../../../types'
 import { InputControl } from '../../dataControls/InputControl'
 import { SwitchControl } from '../../dataControls/SwitchControl'
-import { EngineContext } from '../../engine'
 import { triggerSocket, anySocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 const info = `The output component will pass values out from your spell.  You can have multiple outputs in a spell and all output values will be collected. It also has an option to send the output to the playtest area for easy testing.`
 
+// TODO: Remove me, move to process.env
 const API_URL = 'https://localhost:8001'
-
 export class Output extends ThothComponent<void> {
   constructor() {
     super('Output')
@@ -61,15 +61,7 @@ export class Output extends ThothComponent<void> {
       defaultValue: node.data.sendToPlaytest || false,
     })
 
-    const voiceOutput = new SwitchControl({
-      dataKey: 'voiceOutput',
-      name: 'Voice Output',
-      label: 'VoiceOutput',
-      defaultValue: node.data.voiceOutput || false,
-    })
-
-    node.inspector.add(switchControl).add(nameInput).add(voiceOutput)
-
+    node.inspector.add(switchControl).add(nameInput)
     // need to automate this part!  Wont workw without a socket key
     node.data.socketKey = node?.data?.socketKey || uuidv4()
 
@@ -83,12 +75,11 @@ export class Output extends ThothComponent<void> {
     node: NodeData,
     inputs: ThothWorkerInputs,
     outputs: ThothWorkerOutputs,
-    { silent, thoth }: { silent: boolean; thoth: EngineContext }
+    { silent, thoth }: { silent: boolean; thoth: EditorContext }
   ) {
-    console.log(inputs)
     if (!inputs.input) throw new Error('No input provided to output component')
 
-    let text = inputs.input.filter(Boolean)[0]
+    let text = inputs.input.filter(Boolean)[0] as string
     const normalText = text as string
 
     console.log(
@@ -113,14 +104,12 @@ export class Output extends ThothComponent<void> {
     const { sendToPlaytest } = thoth
 
     if (node.data.sendToPlaytest && sendToPlaytest) {
-      sendToPlaytest(normalText)
+      sendToPlaytest(text)
     }
-
     if (!silent) node.display(text as string)
 
-    const name = node.data.name as string
-    console.log(name, '- output:', normalText)
-
-    return { text }
+    return {
+      text,
+    }
   }
 }

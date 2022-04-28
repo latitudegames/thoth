@@ -5,6 +5,7 @@ interface CssExports {
   'darkened': string;
   'darker': string;
   'grid': string;
+  'lock-bar': string;
   'unpadded': string;
   'window': string;
   'window-layout': string;

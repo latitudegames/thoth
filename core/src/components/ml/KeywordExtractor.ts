@@ -9,13 +9,13 @@ import keyword_extractor from 'keyword-extractor'
 import Rete from 'rete'
 
 import {
+  EngineContext,
   NodeData,
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../../types'
 import { BooleanControl } from '../../dataControls/BooleanControl'
-import { EngineContext } from '../../engine'
 import { triggerSocket, anySocket, stringSocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
