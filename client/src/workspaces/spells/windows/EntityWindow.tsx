@@ -28,7 +28,7 @@ const EntityWindow = ({ id, updateCallback }) => {
   const [use_voice, setUseVoice] = useState(false)
   const [voice_provider, setVoiceProvider] = useState(false)
   const [voice_character, setVoiceCharacter] = useState('')
-  const [voice_language_voice, setVoiceLanguageCode] = useState('')
+  const [voice_language_code, setVoiceLanguageCode] = useState('')
 
   const [discord_starting_words, setDiscordStartingWords] = useState('')
   const [discord_bot_name_regex, setDiscordBotNameRegex] = useState('')
@@ -73,7 +73,7 @@ const EntityWindow = ({ id, updateCallback }) => {
   const [spellList, setSpellList] = useState('')
   useEffect(() => {
     if (!loaded) {
-      ; (async () => {
+      ;(async () => {
         const res = await axios.get(
           `${process.env.REACT_APP_API_ROOT_URL}/entity?instanceId=` + id
         )
@@ -126,7 +126,7 @@ const EntityWindow = ({ id, updateCallback }) => {
   }, [loaded])
 
   useEffect(() => {
-    ; (async () => {
+    ;(async () => {
       const res = await axios.get(
         `${process.env.REACT_APP_API_ROOT_URL}/game/spells`
       )
@@ -274,7 +274,7 @@ const EntityWindow = ({ id, updateCallback }) => {
         />
       </div>
 
-      {use_voice &&
+      {use_voice && (
         <React.Fragment>
           <div className="form-item agent-select">
             <span className="form-item-label">Voice Provider</span>
@@ -286,12 +286,8 @@ const EntityWindow = ({ id, updateCallback }) => {
                 setVoiceProvider(event.target.value)
               }}
             >
-              <option value={"google"}>
-                Google
-              </option>
-              <option value={"uberduck"}>
-                Uberduck
-              </option>
+              <option value={'google'}>Google</option>
+              <option value={'uberduck'}>Uberduck</option>
             </select>
           </div>
 
@@ -317,7 +313,7 @@ const EntityWindow = ({ id, updateCallback }) => {
             />
           </div>
         </React.Fragment>
-      }
+      )}
 
       {enabled && (
         <>
