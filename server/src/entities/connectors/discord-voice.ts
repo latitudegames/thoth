@@ -5,7 +5,7 @@ import {
     createAudioResource,
     StreamType,
 } from '@discordjs/voice'
-
+import { tts } from '../../systems/googleTextToSpeech'
 import { getAudioUrl } from "../../routes/getAudioUrl"
 import { addSpeechEvent } from './voiceUtils/addSpeechEvent'
 
@@ -14,7 +14,10 @@ export function initSpeechClient(
     client,
     discord_bot_name,
     entity,
-    handleInput
+    handleInput,
+    voiceProvider,
+    voiceCharacter,
+    languageCode?
 ) {
     addSpeechEvent(client)
 
@@ -38,20 +41,35 @@ export function initSpeechClient(
             console.log("response is", response)
             if (response) {
                 const audioPlayer = createAudioPlayer()
-                const url = await getAudioUrl(
-                    process.env.UBER_DUCK_KEY as string,
-                    process.env.UBER_DUCK_SECRET_KEY as string,
-                    "juice-wrld-rapping" as string,
-                    response as string
-                )
+
+                // TODO
+                // 1. get the voice provider
+                // if google, use that
+                // otherwise use uberduck
+                // 2. set the character name from the request
+                let url;
+
+                if (voiceProvider === 'uberduck') {
+                    url = await getAudioUrl(
+                        process.env.UBER_DUCK_KEY as string,
+                        process.env.UBER_DUCK_SECRET_KEY as string,
+                        voiceCharacter,
+                        response as string
+                    )
+                } else { // google tts
+                    url = await tts(response, voiceProvider, voiceCharacter, languageCode)
+                }
 
                 // const url = await tts(response)
                 connection.subscribe(audioPlayer)
                 console.log('speech url:', url)
-                const audioResource = createAudioResource(url, {
-                    inputType: StreamType.Arbitrary,
-                })
-                audioPlayer.play(audioResource)
+                if (url) {
+
+                    const audioResource = createAudioResource(url, {
+                        inputType: StreamType.Arbitrary,
+                    })
+                    audioPlayer.play(audioResource)
+                }
             }
         }
     })
