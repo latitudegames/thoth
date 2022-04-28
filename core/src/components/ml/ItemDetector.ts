@@ -42,7 +42,7 @@ export class ItemTypeComponent extends ThothComponent<Promise<WorkerReturn>> {
   }
 
   builder(node: ThothNode) {
-    node.data.fewshot = fewshot
+    if(!node.data.fewshot) node.data.fewshot = fewshot
     const inp = new Rete.Input('string', 'Text', stringSocket)
     const out = new Rete.Output('detectedItem', 'Item Detected', stringSocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)

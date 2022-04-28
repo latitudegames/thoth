@@ -71,7 +71,7 @@ export class DifficultyDetectorComponent extends ThothComponent<
   displayControl = {}
 
   builder(node: ThothNode) {
-    node.data.fewshot = fewshot
+    if(!node.data.fewshot) node.data.fewshot = fewshot
     const inp = new Rete.Input('action', 'Action', stringSocket)
     const difficultyOut = new Rete.Output(
       'difficulty',

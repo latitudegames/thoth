@@ -57,7 +57,7 @@ export class TimeDetectorComponent extends ThothComponent<
   }
 
   builder(node: ThothNode) {
-    node.data.fewshot = fewshot
+    if(!node.data.fewshot) node.data.fewshot = fewshot
     const inp = new Rete.Input('string', 'Text', stringSocket)
     const out = new Rete.Output('detectedTime', 'Time Detected', stringSocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
