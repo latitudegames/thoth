@@ -4,7 +4,7 @@ import {
   EditorContext,
   Spell,
   ThothEditor,
-} from '@latitudegames/thoth-core/dist/types'
+} from '@latitudegames/thoth-core/types'
 import React, {
   useRef,
   useContext,
