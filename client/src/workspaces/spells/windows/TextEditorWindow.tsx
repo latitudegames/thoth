@@ -13,7 +13,7 @@ import { RootState } from '@/state/store'
 import { useSelector } from 'react-redux'
 
 const TextEditor = props => {
-  const [code, setCode] = useState<string | undefined>(undefined)
+  const [code, setCodeState] = useState<string | undefined>(undefined)
   const [data, setData] = useState<TextEditorData | null>(null)
   // const [height, setHeight] = useState<number>()
   const [editorOptions, setEditorOptions] = useState<Record<string, any>>()
