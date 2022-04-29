@@ -264,6 +264,7 @@ export class Inspector {
 
     // update the node at the end ofthid
     this.node.update()
+    this.editor.trigger('save')
   }
 
   get() {}
