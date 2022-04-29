@@ -1,5 +1,5 @@
 import Editor from '@monaco-editor/react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 import Window from '@components/Window/Window'
 import WindowMessage from '../components/WindowMessage'
