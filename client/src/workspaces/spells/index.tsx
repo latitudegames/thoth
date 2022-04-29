@@ -40,7 +40,7 @@ const Workspace = ({ tab, tabs, pubSub }) => {
         if (tab.type === 'spell' && spellRef.current) {
           publish(events.$SAVE_SPELL_DIFF(tab.id), { chain: serialize() })
         }
-      }, 1000)
+      }, 2000)
     )
 
     return unsubscribe as () => void
