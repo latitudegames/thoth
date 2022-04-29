@@ -26,6 +26,7 @@ const ThothInterfaceProvider = ({ children, tab }) => {
   const { data: _spell } = useGetSpellQuery(tab.spellId, {
     skip: !tab.spellId,
   })
+  const preferences = useSelector((state: RootState) => state.preferences)
 
   useEffect(() => {
     if (!_spell) return
