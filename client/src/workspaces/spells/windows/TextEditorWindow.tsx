@@ -20,6 +20,7 @@ const TextEditor = props => {
   const [typing, setTyping] = useState<boolean>(false)
   const [language, setLanguage] = useState<string | undefined>(undefined)
   const codeRef = useRef<string>()
+  const preferences = useSelector((state: RootState) => state.preferences)
 
   const { textEditorData, saveTextEditor } = useInspector()
 
