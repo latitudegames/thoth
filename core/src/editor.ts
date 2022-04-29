@@ -9,7 +9,7 @@ import { Data } from 'rete/types/core/data'
 import { EventsTypes, EditorContext } from '../types'
 import { getComponents } from './components/components'
 import { initSharedEngine } from './engine'
-import CommentPlugin from './plugins/commentPlugin'
+// import CommentPlugin from './plugins/commentPlugin'
 import AreaPlugin from './plugins/areaPlugin'
 import DisplayPlugin from './plugins/displayPlugin'
 import HistoryPlugin from './plugins/historyPlugin'
@@ -22,7 +22,7 @@ import { PubSubContext, ThothComponent } from './thoth-component'
 import DebuggerPlugin from './plugins/debuggerPlugin'
 import KeyCodePlugin from './plugins/keyCodePlugin'
 import ModulePlugin from './plugins/modulePlugin'
-import SelectionPlugin from './plugins/selectionPlugin'
+// import SelectionPlugin from './plugins/selectionPlugin'
 export class ThothEditor extends NodeEditor<EventsTypes> {
   tasks: Task[]
   pubSub: PubSubContext
@@ -147,11 +147,11 @@ export const initEditor = async function ({
   editor.use(TaskPlugin)
   editor.use(KeyCodePlugin)
 
-  editor.use(SelectionPlugin, { enabled: true })
+  // editor.use(SelectionPlugin, { enabled: true })
 
-  editor.use(CommentPlugin, {
-    margin: 20, // indent for new frame comments by default 30 (px)
-  })
+  // editor.use(CommentPlugin, {
+  //   margin: 20, // indent for new frame comments by default 30 (px)
+  // })
 
   // WARNING all the plugins from the editor get installed onto the component and modify it.  This effects the components registered in the engine, which already have plugins installed.
   components.forEach(c => {
