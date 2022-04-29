@@ -18,6 +18,8 @@ import { diff } from '@/utils/json0'
 import { useSnackbar } from 'notistack'
 import { sharedb } from '@/config'
 import { useSharedb } from '@/contexts/SharedbProvider'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/state/store'
 
 // Config for unique name generator
 const customConfig = {
