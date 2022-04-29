@@ -32,11 +32,12 @@ const Workspace = ({ tab, tabs, pubSub }) => {
 
   // Set up autosave for the workspaces
   useEffect(() => {
-    if (!editor?.on || !preferences.autoSave) return
+    if (!editor?.on) return
     const unsubscribe = editor.on(
-      'save nodecreated noderemoved connectioncreated connectionremoved nodetranslated commentremoved commentcreated addcomment removecomment editcomment connectionpath',
+      'nodecreated noderemoved connectioncreated connectionremoved nodetranslated commentremoved commentcreated addcomment removecomment editcomment connectionpath',
       debounce(async data => {
         if (tab.type === 'spell' && spellRef.current) {
+          if (!preferences.autoSave) return
           publish(events.$SAVE_SPELL_DIFF(tab.id), { chain: serialize() })
         }
       }, 2000)
