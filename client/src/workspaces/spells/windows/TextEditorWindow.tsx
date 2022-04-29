@@ -9,6 +9,8 @@ import {
   TextEditorData,
   useInspector,
 } from '@/workspaces/contexts/InspectorProvider'
+import { RootState } from '@/state/store'
+import { useSelector } from 'react-redux'
 
 const TextEditor = props => {
   const [code, setCode] = useState<string | undefined>(undefined)
