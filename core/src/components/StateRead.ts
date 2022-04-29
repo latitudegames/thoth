@@ -47,17 +47,7 @@ export class StateRead extends ThothComponent<
     try {
       const gameState = await getCurrentGameState()
 
-      return Object.entries(gameState).reduce((acc, [key, value]) => {
-        const nodeOutputs = node.data.outputs as {
-          name: string
-          [key: string]: unknown
-        }[]
-        if (nodeOutputs.some(out => out.name === key)) {
-          acc[key] = value
-        }
-
-        return acc
-      }, {} as { [key: string]: unknown })
+      return gameState
     } catch (err) {
       throw new Error('Error in State Read component')
     }
