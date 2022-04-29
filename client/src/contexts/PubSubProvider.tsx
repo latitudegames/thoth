@@ -42,6 +42,7 @@ export const events = {
   $CREATE_SEARCH_CORPUS: tabId => `createSearchCorpus:${tabId}`,
   $CREATE_DEBUG_CONSOLE: tabId => `createDebugConsole:${tabId}`,
   $CREATE_CONSOLE: tabId => `createDebugConsole:${tabId}`,
+  $CREATE_EVENT_MANAGER: tabId => `createEventManager:${tabId}`,
   $SERIALIZE: tabId => `serialize:${tabId}`,
   $PROCESS: tabId => `process:${tabId}`,
   $EXPORT: tabId => `export:${tabId}`,

@@ -89,6 +89,12 @@
                 "id": "#16",
                 "name": "Search Corpus",
                 "component": "searchCorpus"
+              },
+              {
+                "type": "tab",
+                "id": "#19",
+                "name": "Event Manager",
+                "component": "eventManager"
               }
             ]
           },

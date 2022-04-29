@@ -130,7 +130,7 @@ export class database {
       : data.split('\n').reverse()
   }
   async getAllEvents() {
-    const query = 'SELECT * FROM events ORDER BY id DESC'
+    const query = 'SELECT * FROM events'
     const rows = await this.client.query(query)
     if(rows && rows.rows && rows.rows.length > 0) return rows.rows
     else return []

@@ -34,6 +34,7 @@ const MenuBar = () => {
     $CREATE_SEARCH_CORPUS,
     $CREATE_TEXT_EDITOR,
     $CREATE_CONSOLE,
+    $CREATE_EVENT_MANAGER,
     $SERIALIZE,
     $EXPORT,
     $UNDO,
@@ -120,6 +121,11 @@ const MenuBar = () => {
   const onConsole = () => {
     if (!activeTabRef.current) return
     publish($CREATE_CONSOLE(activeTabRef.current.id))
+  }
+
+  const onEventManagerCreate = () => {
+    if (!activeTabRef.current) return
+    publish($CREATE_EVENT_MANAGER(activeTabRef.current.id))
   }
 
   //Menu bar hotkeys
@@ -223,6 +229,9 @@ const MenuBar = () => {
         },
         console: {
           onClick: onConsole,
+        },
+        event_manager: {
+          onClick: onEventManagerCreate,
         },
       },
     },

@@ -211,14 +211,14 @@ const updateEvent = async (ctx: Koa.Context) => {
     }
 
     const agent = ctx.request.body.agent
-    const speaker = ctx.request.body.speaker
+    const sender = ctx.request.body.sender
     const client = ctx.request.body.client
     const channel = ctx.request.body.channel
     const text = ctx.request.body.text
     const type = ctx.request.body.type
     const date = ctx.request.body.date
 
-    const res = await database.instance.updateEvent(id, { agent, sender: speaker, client, channel, text, type, date })
+    const res = await database.instance.updateEvent(id, { agent, sender, client, channel, text, type, date })
     return (ctx.body = res)
   } catch (e) {
     console.log(e)

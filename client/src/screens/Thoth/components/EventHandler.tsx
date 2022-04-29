@@ -60,6 +60,7 @@ const EventHandler = ({ pubSub, tab }) => {
     $CREATE_PLAYTEST,
     $CREATE_INSPECTOR,
     $CREATE_CONSOLE,
+    $CREATE_EVENT_MANAGER,
     $CREATE_TEXT_EDITOR,
     $SERIALIZE,
     $EXPORT,
@@ -150,6 +151,10 @@ const EventHandler = ({ pubSub, tab }) => {
   const createConsole = () => {
     createOrFocus(windowTypes.CONSOLE, 'Console')
   }
+  
+  const createEventManager = () => {
+    createOrFocus(windowTypes.EVENT_MANAGER, 'Event Manager')
+  }
 
   const onSerialize = () => {
     // eslint-disable-next-line no-console
@@ -217,6 +222,7 @@ const EventHandler = ({ pubSub, tab }) => {
     [$CREATE_INSPECTOR(tab.id)]: createInspector,
     [$CREATE_TEXT_EDITOR(tab.id)]: createTextEditor,
     [$CREATE_CONSOLE(tab.id)]: createConsole,
+    [$CREATE_EVENT_MANAGER(tab.id)]: createEventManager,
     [$SERIALIZE(tab.id)]: onSerialize,
     [$EXPORT(tab.id)]: onExport,
     [$CLOSE_EDITOR(tab.id)]: onCloseEditor,
