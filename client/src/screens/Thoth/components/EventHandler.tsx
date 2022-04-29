@@ -18,8 +18,6 @@ import { diff } from '@/utils/json0'
 import { useSnackbar } from 'notistack'
 import { sharedb } from '@/config'
 import { useSharedb } from '@/contexts/SharedbProvider'
-import { useSelector } from 'react-redux'
-import { RootState } from '@/state/store'
 
 // Config for unique name generator
 const customConfig = {
@@ -37,8 +35,6 @@ const EventHandler = ({ pubSub, tab }) => {
   const [saveSpellMutation] = useSaveSpellMutation()
   const [saveDiff] = useSaveDiffMutation()
   const { data: spell } = useGetSpellQuery(tab.spellId)
-
-  const preferences = useSelector((state: RootState) => state.preferences)
 
   // Spell ref because callbacks cant hold values from state without them
   const spellRef = useRef<Spell | null>(null)
