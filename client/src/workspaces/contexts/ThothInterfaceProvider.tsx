@@ -207,6 +207,13 @@ const ThothInterfaceProvider = ({ children, tab }) => {
       },
     }
     if (!preferences.autoSave) return
+
+    // Temporarily update the spell refs game state to account for multiple state writes in a spell run
+    spellRef.current = {
+      ...spell,
+      ...update,
+    }
+
     publish($SAVE_SPELL_DIFF(tab.id), update)
   }
 
