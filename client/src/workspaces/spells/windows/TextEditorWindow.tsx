@@ -100,6 +100,11 @@ const TextEditor = props => {
     setTyping(true)
   }
 
+  const setCode = update => {
+    setCodeState(update)
+    codeRef.current = update
+  }
+
   const toolbar = (
     <>
       <div style={{ flex: 1, marginTop: 'var(--c1)' }}>
