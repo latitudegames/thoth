@@ -31,6 +31,25 @@ export function initSpeechClient(
 
     console.log('got voice input:', content)
     if (content) {
+      const roomInfo: {
+        user: string
+        inConversation: boolean
+        isBot: boolean
+        info3d: string
+      }[] = []
+
+      try {
+        for (const [memberID, member] of channel.members) {
+          roomInfo.push({
+            user: member.user.username,
+            inConversation: this.isInConversation(member.user.id),
+            isBot: member.user.bot,
+            info3d: '',
+          })
+        }
+      } catch (e) {}
+
+      console.log(roomInfo)
       const response = removeEmojisFromString(
         await handleInput(
           content,
@@ -38,7 +57,8 @@ export function initSpeechClient(
           discord_bot_name,
           'discord',
           channel.id,
-          entity
+          entity,
+          roomInfo
         )
       )
 

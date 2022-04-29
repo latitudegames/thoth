@@ -77,7 +77,7 @@ export class xrengine_client {
     )
   }
 
-  sentMessage(user) {
+  sentMessage(user, userId) {
     for (const c in this.conversation) {
       if (c === user) continue
       if (
@@ -93,6 +93,7 @@ export class xrengine_client {
         timeoutId: undefined,
         timeOutFinished: true,
         isInConversation: true,
+        userId: userId,
       }
       if (this.conversation[user].timeoutId !== undefined)
         clearTimeout(this.conversation[user].timeoutId)
@@ -328,13 +329,13 @@ export class xrengine_client {
           } else if (isInDiscussion || startConv) content = '!ping ' + content
         }
 
-        if (content.startsWith('!ping')) this.sentMessage(sender)
+        if (content.startsWith('!ping')) this.sentMessage(sender, senderId)
         else {
           if (content === '!ping ' || !content.startsWith('!ping')) {
             // if (true) {
             //roomManager.instance.agentCanResponse(user, 'xrengine')) {
             content = '!ping ' + content
-            this.sentMessage(sender)
+            this.sentMessage(sender, senderId)
             // } else {
             //   const oldChat = database.instance.getEvent(
             //     defaultAgent,
@@ -369,6 +370,52 @@ export class xrengine_client {
         }
         log('content: ' + content + ' sender: ' + sender)
 
+        console.log(
+          'in conversation:',
+          this.conversation,
+          this.UsersInRange,
+          this.UsersInHarassmentRange,
+          this.UsersInIntimateRange
+        )
+
+        const roomInfo: {
+          user: string
+          inConversation: boolean
+          isBot: boolean
+          info3d: string
+        }[] = []
+
+        for (let x in this.UsersInRange) {
+          if (!this.checkIfUserIsAdded(roomInfo, x)) {
+            roomInfo.push({
+              user: x,
+              inConversation: this.isInConversation(x),
+              isBot: false,
+              info3d: 'in range',
+            })
+          }
+        }
+        for (let x in this.UsersInHarassmentRange) {
+          if (!this.checkIfUserIsAdded(roomInfo, x)) {
+            roomInfo.push({
+              user: x,
+              inConversation: this.isInConversation(x),
+              isBot: false,
+              info3d: 'in harassment range',
+            })
+          }
+        }
+        for (let x in this.UsersInIntimateRange) {
+          if (!this.checkIfUserIsAdded(roomInfo, x)) {
+            roomInfo.push({
+              user: x,
+              inConversation: this.isInConversation(x),
+              isBot: false,
+              info3d: 'in intimate range',
+            })
+          }
+        }
+
         const response = await this.handleInput(
           content.replace('!ping', ''),
           sender,
@@ -376,6 +423,7 @@ export class xrengine_client {
           'xr-engine',
           channelId,
           this.entity,
+          roomInfo,
           this.settings.xrengine_spell_handler_incoming,
           this.spell_version
         )
@@ -385,6 +433,24 @@ export class xrengine_client {
         await this.handleXREngineResponse(response, addPing, sender, isVoice)
       }
     )
+  }
+
+  checkIfUserIsAdded(
+    arr: {
+      user: string
+      inConversation: boolean
+      isBot: boolean
+      info3d: string
+    }[],
+    user: string
+  ): boolean {
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i].user == user) {
+        return true
+      }
+    }
+
+    return false
   }
 
   async handleMessages(messages, bot) {

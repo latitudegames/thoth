@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import Rete from 'rete'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -8,7 +9,12 @@ import {
   ThothWorkerOutputs,
 } from '../../../types'
 import { Task } from '../../plugins/taskPlugin/task'
-import { anySocket, stringSocket, triggerSocket } from '../../sockets'
+import {
+  anySocket,
+  arraySocket,
+  stringSocket,
+  triggerSocket,
+} from '../../sockets'
 import { ThothComponent, ThothTask } from '../../thoth-component'
 
 const info = `The input component allows you to pass a single value to your graph.  You can set a default value to fall back to if no value is provided at runtime.  You can also turn the input on to receive data from the playtest input.`
@@ -20,6 +26,12 @@ type InputReturn = {
   client: string
   channelId: string
   entity: number
+  roomInfo: {
+    user: string
+    inConversation: boolean
+    isBot: boolean
+    info3d: string
+  }[]
 }
 
 export class InputDestructureComponent extends ThothComponent<
@@ -39,6 +51,7 @@ export class InputDestructureComponent extends ThothComponent<
         client: 'output',
         channelId: 'output',
         entity: 'output',
+        roomInfo: 'output',
         trigger: 'option',
       },
       init: (task = {} as Task, node: ThothNode) => {
@@ -64,6 +77,7 @@ export class InputDestructureComponent extends ThothComponent<
     const client = new Rete.Output('client', 'client', stringSocket)
     const channelId = new Rete.Output('channelId', 'channelId', stringSocket)
     const entity = new Rete.Output('entity', 'entity', stringSocket)
+    const roomInfo = new Rete.Output('roomInfo', 'roomInfo', arraySocket)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)
 
     return node
@@ -74,6 +88,7 @@ export class InputDestructureComponent extends ThothComponent<
       .addOutput(client)
       .addOutput(channelId)
       .addOutput(entity)
+      .addOutput(roomInfo)
       .addOutput(out)
       .addOutput(dataOutput)
   }
@@ -97,7 +112,8 @@ export class InputDestructureComponent extends ThothComponent<
       agent: (input as any).Agent,
       client: (input as any).Client,
       channelId: (input as any).ChannelID,
-      entity: (input as any).entity
+      entity: (input as any).entity,
+      roomInfo: (input as any).roomInfo,
     }
   }
 }

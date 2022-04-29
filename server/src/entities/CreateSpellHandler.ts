@@ -134,7 +134,13 @@ export const CreateSpellHandler = async (props: {
     agent: string,
     client: string,
     channelId: string,
-    entity: any
+    entity: any,
+    roomInfo: {
+      user: string
+      inConversation: boolean
+      isBot: boolean
+      info3d: string
+    }[]
   ) {
     const spellInputs = {
       Input: message,
@@ -143,10 +149,11 @@ export const CreateSpellHandler = async (props: {
       Client: client,
       ChannelID: channelId,
       Entity: entity,
+      RoomInfo: roomInfo,
     } as any
 
-    console.log("********** spellInputs are")
-    console.log(spellInputs);
+    console.log('********** spellInputs are')
+    console.log(spellInputs)
 
     // TODO: Remove this line
     // TEST CASE: Chatting with agent on Discord doesn't get same response over and over

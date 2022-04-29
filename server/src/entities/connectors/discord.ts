@@ -647,6 +647,7 @@ export class discord_client {
       ) {
         const d = content.split(' ')
         const index = d.indexOf('join') + 1
+        console.log('d:', d)
         if (d.length > index) {
           const channelName = d[index]
           await message.guild.channels.cache.forEach(
@@ -698,14 +699,32 @@ export class discord_client {
       channel.sendTyping()
     }, message.content.length)
 
+    const roomInfo: {
+      user: string
+      inConversation: boolean
+      isBot: boolean
+      info3d: string
+    }[] = []
+    for (const [memberID, member] of channel.members) {
+      roomInfo.push({
+        user: member.user.username,
+        inConversation: this.isInConversation(member.user.id),
+        isBot: member.user.bot,
+        info3d: '',
+      })
+    }
+    console.log(roomInfo)
+
     const response = await this.handleInput(
       message.content,
       message.author.username,
       this.discord_bot_name,
       'discord',
       message.channel.id,
-      this.entity
+      this.entity,
+      roomInfo
     )
+
     this.handlePingSoloAgent(message.channel.id, message.id, response, false)
   }
 
@@ -750,7 +769,7 @@ export class discord_client {
 
     const oldResponse = this.getResponse(channel.id, id)
     if (oldResponse === undefined) {
-      await channel.messages.fetch(id).then(async (msg: any) => { })
+      await channel.messages.fetch(id).then(async (msg: any) => {})
       log('message not found')
       return
     }
@@ -923,8 +942,8 @@ export class discord_client {
               deleted: boolean
               permissionsFor: (arg0: any) => {
                 (): any
-                new(): any
-                has: { (arg0: string[]): any; new(): any }
+                new (): any
+                has: { (arg0: string[]): any; new (): any }
               }
               name: string | boolean
               id: string | boolean
@@ -1631,7 +1650,13 @@ export class discord_client {
       agent: string,
       client: string,
       channelId: string,
-      entity: number
+      entity: number,
+      roomInfo: {
+        user: string
+        inConversation: boolean
+        isBot: boolean
+        info3d: string
+      }[]
     ) => Promise<unknown>,
     use_voice,
     voice_provider,
