@@ -86,7 +86,7 @@ const TextEditor = props => {
   }
 
   const onSave = () => {
-    save(code)
+    save(codeRef.current)
   }
 
   const updateCode = (rawCode: string) => {
