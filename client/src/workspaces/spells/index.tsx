@@ -48,6 +48,15 @@ const Workspace = ({ tab, tabs, pubSub }) => {
 
   useEffect(() => {
     if (!editor?.on) return
+    const unsubscribe = editor.on('save', () =>
+      publish(events.$SAVE_SPELL_DIFF(tab.id), { chain: serialize() })
+    )
+
+    return unsubscribe as () => void
+  }, [editor])
+
+  useEffect(() => {
+    if (!editor?.on) return
 
     const unsubscribe = editor.on(
       'nodecreated noderemoved',
