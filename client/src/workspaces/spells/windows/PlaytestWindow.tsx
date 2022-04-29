@@ -64,7 +64,6 @@ const Playtest = ({ tab }) => {
     const newHistory = [...history, `You: ${value}`]
     setHistory(newHistory as [])
     publish($PLAYTEST_INPUT(tab.id), value)
-    console.log('value', value)
     setValue('')
   }
 
