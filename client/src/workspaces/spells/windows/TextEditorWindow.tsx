@@ -71,7 +71,7 @@ const TextEditor = props => {
     const delayDebounceFn = setTimeout(() => {
       save(code)
       setTyping(false)
-    }, 5000)
+    }, 2500)
 
     return () => clearTimeout(delayDebounceFn)
   }, [code])
