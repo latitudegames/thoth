@@ -38,6 +38,8 @@ const EventHandler = ({ pubSub, tab }) => {
   const [saveDiff] = useSaveDiffMutation()
   const { data: spell } = useGetSpellQuery(tab.spellId)
 
+  const preferences = useSelector((state: RootState) => state.preferences)
+
   // Spell ref because callbacks cant hold values from state without them
   const spellRef = useRef<Spell | null>(null)
 
