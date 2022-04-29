@@ -187,7 +187,7 @@ const ThothInterfaceProvider = ({ children, tab }) => {
     const update = {
       gameState: newState,
     }
-
+    if (!preferences.autoSave) return
     publish($SAVE_SPELL_DIFF(tab.id), update)
   }
 
@@ -206,7 +206,7 @@ const ThothInterfaceProvider = ({ children, tab }) => {
         ..._update,
       },
     }
-
+    if (!preferences.autoSave) return
     publish($SAVE_SPELL_DIFF(tab.id), update)
   }
 
