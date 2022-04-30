@@ -163,7 +163,7 @@ export const CreateSpellHandler = async (props: {
 
     let error = null
     const inputs = inputKeys.reduce((inputs, expectedInput: string) => {
-      const requestInput = spellInputs[expectedInput]
+      const requestInput = spellInputs
 
       if (requestInput) {
         inputs[expectedInput] = [requestInput]
