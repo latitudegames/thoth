@@ -76,9 +76,9 @@ export class Entity {
     // console.log("response is ", response)
   }
 
-  stopDiscord() {
+  async stopDiscord() {
     if (!this.discord) throw new Error("Discord isn't running, can't stop it")
-    this.discord.destroy()
+    await this.discord.destroy()
     this.discord = null
     console.log('Stopped discord client for agent ' + this.name)
   }
@@ -92,10 +92,10 @@ export class Entity {
     xrengine_bot_name_regex: string
     xrengine_starting_words: string
     xrengine_empty_responses: string
-    handleInput?: any,
-    use_voice: boolean,
-    voice_provider: string,
-    voice_character: string,
+    handleInput?: any
+    use_voice: boolean
+    voice_provider: string
+    voice_character: string
     voice_language_code: string
   }) {
     if (this.xrengine)
@@ -123,7 +123,7 @@ export class Entity {
   stopXREngine() {
     if (!this.xrengine) throw new Error("XREngine isn't running, can't stop it")
     this.xrengine.destroy()
-      ; (this.xrengine as any) = null
+    ;(this.xrengine as any) = null
     console.log('Stopped xrengine client for agent ' + this.name)
   }
 
@@ -179,6 +179,10 @@ export class Entity {
   }
 
   async onDestroy() {
+    console.log(
+      'CLOSING ALL CLIENTS, discord is defined:,',
+      this.discord === null || this.discord === undefined
+    )
     if (this.discord) this.stopDiscord()
     if (this.xrengine) this.stopXREngine()
     if (this.twitter) this.stopTwitter()
@@ -220,7 +224,7 @@ export class Entity {
         use_voice: data.use_voice,
         voice_provider: data.voice_provider,
         voice_character: data.voice_character,
-        voice_language_code: data.voice_language_code
+        voice_language_code: data.voice_language_code,
       })
     }
 
