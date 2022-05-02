@@ -1,14 +1,73 @@
 {
   "name": "@thoth/runner",
-  "version": "0.0.1",
   "description": "Realtime spell running server",
-  "license": "Apache-2.0",
-  "author": "Michael Sharpe <m.sharpe@project89.org> (https://www.project89.org)",
-  "main": "index.ts",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "version": "0.0.0",
+  "homepage": "",
+  "private": true,
+  "main": "src",
+  "keywords": [
+    "feathers"
+  ],
+  "author": {
+    "name": "Michael Sharpe",
+    "email": "m.sharpe@project89.org"
   },
+  "contributors": [],
+  "bugs": {},
+  "directories": {
+    "lib": "src",
+    "test": "test/",
+    "config": "config/"
+  },
+  "engines": {
+    "node": "^14.0.0",
+    "yarn": ">= 0.18.0"
+  },
+  "scripts": {
+    "test": "yarn run lint && yarn run compile && yarn run jest",
+    "lint": "eslint src/. test/. --config .eslintrc.json --ext .ts --fix",
+    "dev": "ts-node-dev --no-notify src/",
+    "start": "yarn run compile && node lib/",
+    "jest": "jest --forceExit",
+    "compile": "shx rm -rf lib/ && tsc"
+  },
+  "standard": {
+    "env": [
+      "jest"
+    ],
+    "ignore": []
+  },
+  "types": "lib/",
   "dependencies": {
-    "@feathersjs/feathers": "^4.5.12"
+    "@feathersjs/authentication": "^4.5.11",
+    "@feathersjs/authentication-local": "^4.5.11",
+    "@feathersjs/authentication-oauth": "^4.5.11",
+    "@feathersjs/configuration": "^4.5.11",
+    "@feathersjs/errors": "^4.5.11",
+    "@feathersjs/express": "^4.5.11",
+    "@feathersjs/feathers": "^4.5.11",
+    "@feathersjs/socketio": "^4.5.11",
+    "@feathersjs/transport-commons": "^4.5.14",
+    "@typescript-eslint/eslint-plugin": "^5.22.0",
+    "@typescript-eslint/parser": "^5.22.0",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "helmet": "^4.6.0",
+    "serve-favicon": "^2.5.0",
+    "winston": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/compression": "^1.7.2",
+    "@types/cors": "^2.8.12",
+    "@types/jest": "^27.4.1",
+    "@types/jsonwebtoken": "^8.5.8",
+    "@types/serve-favicon": "^2.5.3",
+    "axios": "^0.27.2",
+    "eslint": "^8.6.0",
+    "jest": "^28.0.3",
+    "shx": "^0.3.4",
+    "ts-jest": "^27.1.4",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.5.4"
   }
 }
