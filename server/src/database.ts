@@ -85,7 +85,7 @@ export class database {
     maxCount: number = 10
   ) {
     const query =
-      'SELECT * FROM events WHERE agent=$1 AND client=$2 AND channel=$3 AND type=$4'
+      'SELECT * FROM events WHERE agent=$1 AND client=$2 AND channel=$3 AND type=$4 ORDER BY id desc'
     const values = [agent, client, channel, type]
 
     const row = await this.client.query(query, values)
@@ -128,6 +128,52 @@ export class database {
     return asString
       ? data.split('\n').reverse().join('\n')
       : data.split('\n').reverse()
+  }
+  async getAllEvents() {
+    const query = 'SELECT * FROM events'
+    const rows = await this.client.query(query)
+    if(rows && rows.rows && rows.rows.length > 0) return rows.rows
+    else return []
+  }
+  async getSortedEventsByDate(sortOrder: string) {
+    const query = 'SELECT * FROM events'
+    const rows = await this.client.query(query)
+    if(rows && rows.rows && rows.rows.length > 0) {
+      rows.rows.sort((a: { date: string | number | Date }, b: { date: string | number | Date }) => {
+        if(sortOrder === 'asc') return new Date(a.date).valueOf() - new Date(b.date).valueOf()
+        else {
+          let sortValue = new Date(b.date).valueOf() - new Date(a.date).valueOf()
+          return sortValue === 0 ? -1 : sortValue
+        }
+      })
+      return rows.rows
+    } else return []
+  }
+  async deleteEvent(id: number) {
+    const query = 'DELETE FROM events WHERE id = $1'
+    const values = [id]
+    return await this.client.query(query, values)
+  }
+  async updateEvent(id: number, data: { [key: string]: string }) {
+    const findEventQuery = 'SELECT * FROM events WHERE id = $1'
+    const findEventQueryValues = [id]
+    const rows = await this.client.query(findEventQuery, findEventQueryValues)
+    if(rows && rows.rows && rows.rows.length > 0) {
+      const {
+        agent,
+        sender,
+        client,
+        channel,
+        text,
+        type,
+        date
+      } = data
+      const query = `UPDATE events SET agent = $1, sender = $2, client = $3, channel = $4, text = $5, type = $6, date = $7 WHERE id = $8`
+      const values = [agent, sender, client, channel, text, type, date, id]
+      console.log('query :: ', query);
+      const res = await this.client.query(query, values)
+      return res.rowCount
+    } else return 0
   }
 
   async addWikipediaData(agent: any, data: any) {

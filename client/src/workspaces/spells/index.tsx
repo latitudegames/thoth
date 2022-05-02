@@ -19,6 +19,7 @@ import { sharedb } from '@/config'
 import SearchCorpus from './windows/SearchCorpusWindow'
 import EntityManagerWindow from './windows/EntityManagerWindow'
 import { diff } from '@/utils/json0'
+import EventManagerWindow from './windows/EventManager'
 
 const Workspace = ({ tab, tabs, pubSub }) => {
   const spellRef = useRef<Spell>()
@@ -131,6 +132,8 @@ const Workspace = ({ tab, tabs, pubSub }) => {
           return <SearchCorpus />
         case 'entityManager':
           return <EntityManagerWindow />
+        case 'eventManager':
+          return <EventManagerWindow />
         default:
           return <p></p>
       }

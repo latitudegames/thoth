@@ -159,6 +159,74 @@ const getEvent = async (ctx: Koa.Context) => {
   return (ctx.body = conversation)
 }
 
+const getAllEvents = async (ctx: Koa.Context) => {
+  try {
+    const events = await database.instance.getAllEvents()
+    return (ctx.body = events)
+  } catch (e) {
+    console.log(e)
+    ctx.status = 500
+    return (ctx.body = 'internal error')
+  }
+}
+
+const getSortedEventsByDate = async (ctx: Koa.Context) => {
+  try {
+    const sortOrder = ctx.request.query.order as st
+    if(!['asc', 'desc'].includes(sortOrder)) {
+      ctx.status = 400
+      return (ctx.body = 'invalid sort order')
+    }
+    const events = await database.instance.getSortedEventsByDate(sortOrder)
+    return (ctx.body = events)
+  } catch (e) {
+    console.log(e)
+    ctx.status = 500
+    return (ctx.body = 'internal error')
+  }
+}
+
+const deleteEvent = async (ctx: Koa.Context) => {
+  try {
+    const { id } = ctx.params
+    if(!parseInt(id)) {
+      ctx.status = 400
+      return (ctx.body = 'invalid url parameter')
+    }
+    const res = await database.instance.deleteEvent(id)
+    return (ctx.body = res.rowCount)
+  } catch (e) {
+    console.log(e)
+    ctx.status = 500
+    return (ctx.body = 'internal error')
+  }
+}
+
+const updateEvent = async (ctx: Koa.Context) => {
+  try {
+    const { id } = ctx.params
+    if(!parseInt(id)) {
+      ctx.status = 400
+      return (ctx.body = 'invalid url parameter')
+    }
+
+    const agent = ctx.request.body.agent
+    const sender = ctx.request.body.sender
+    const client = ctx.request.body.client
+    const channel = ctx.request.body.channel
+    const text = ctx.request.body.text
+    const type = ctx.request.body.type
+    const date = ctx.request.body.date
+
+    const res = await database.instance.updateEvent(id, { agent, sender, client, channel, text, type, date })
+    return (ctx.body = res)
+  } catch (e) {
+    console.log(e)
+    ctx.status = 500
+    return (ctx.body = 'internal error')
+  }
+}
+
 const createEvent = async (ctx: Koa.Context) => {
   const agent = ctx.request.body.agent
   const speaker = ctx.request.body.speaker
@@ -514,6 +582,22 @@ export const entities: Route[] = [
     access: noAuth,
     get: getEvent,
     post: createEvent,
+  },
+  {
+    path: '/event/:id',
+    access: noAuth,
+    delete: deleteEvent,
+    put: updateEvent,
+  },
+  {
+    path: '/events',
+    access: noAuth,
+    get: getAllEvents,
+  },
+  {
+    path: '/events_sorted',
+    access: noAuth,
+    get: getSortedEventsByDate,
   },
   {
     path: '/speech_to_text',
