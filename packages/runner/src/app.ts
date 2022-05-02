@@ -16,6 +16,7 @@ import services from './services'
 import appHooks from './app.hooks'
 import channels from './channels'
 import { HookContext as FeathersHookContext } from '@feathersjs/feathers'
+import handleSockets from './sockets'
 // import authentication from './authentication';
 // Don't remove this comment. It's needed to format import lines nicely.
 
@@ -40,7 +41,9 @@ app.use('/', express.static(app.get('public')))
 
 // Set up Plugins and providers
 app.configure(express.rest())
-app.configure(socketio())
+
+// Begins the entrypoint or where we handle our sockets
+app.configure(socketio(handleSockets))
 
 // Configure other middleware (see `middleware/index.ts`)
 app.configure(middleware)
