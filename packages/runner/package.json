@@ -1,0 +1,11 @@
+{
+  "name": "@thoth/runner",
+  "version": "0.0.1",
+  "description": "Realtime spell running server",
+  "license": "Apache-2.0",
+  "author": "Michael Sharpe <m.sharpe@project89.org> (https://www.project89.org)",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
