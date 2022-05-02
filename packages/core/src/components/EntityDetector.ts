@@ -131,7 +131,7 @@ type WorkerReturn = {
 }
 
 export class EntityDetector extends ThothComponent<
-  Promise<never[] | WorkerReturn>
+  Promise<any[] | WorkerReturn>
 > {
   constructor() {
     // Name of the component

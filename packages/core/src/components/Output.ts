@@ -19,7 +19,7 @@ export class Output extends ThothComponent<void> {
     super('Output')
 
     this.task = {
-      runOneInput: true,
+      // runOneInput: true,
       outputs: {
         text: 'output',
         trigger: 'option',

@@ -11,9 +11,7 @@
   ],
   "workspaces": {
     "packages": [
-      "client",
-      "core",
-      "sharedb"
+      "packages/*"
     ]
   },
   "scripts": {
