@@ -34,7 +34,8 @@ const Workspace = ({ tab, tabs, pubSub }) => {
   useEffect(() => {
     if (!editor?.on) return
     const unsubscribe = editor.on(
-      'nodecreated noderemoved connectioncreated connectionremoved nodetranslated commentremoved commentcreated addcomment removecomment editcomment connectionpath',
+      // Comment events:  commentremoved commentcreated addcomment removecomment editcomment connectionpath
+      'nodecreated noderemoved connectioncreated connectionremoved nodetranslated',
       debounce(async data => {
         if (tab.type === 'spell' && spellRef.current) {
           if (!preferences.autoSave) return
