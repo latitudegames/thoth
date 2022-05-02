@@ -1,0 +1,21 @@
+- feathers server for primary work using socket IO
+- user connects to the server with proper authentication headers right away\
+- when socket connects, we add a spellManager to the socket for use during the lifetime of the socket connection
+  - spell manager contains a map of all spell runners or each spell
+  - spell manager is responsible for initiating spell runners for spells not in the map
+  - spell manager is responsible for destroying a spell runner when a spell is removed from the session
+- each open tab will request that spell connection, which will cause the spell manager to load the spell into memory for that sessions usage
+  - when a tab closes, we will remove that spell form the spell manager to conserve memory
+- we can send custom events UP to the client, which we use to publish the events required by the spell runner
+  - node id of the worker that was ruin, as well as any results
+  - this comes from passing in the IO and socket connection to the spell manager
+  - spell manager boots up each spell runner with the IO and the socket
+- we will likely want to create "channels" for the userId and the running spell.
+  - this channel would allow us to restrict the running of an individual spell to the owner itself
+    - allows us to target the right user when we are sending results of spell running
+- when a spell "runs" we send a message to the spellRunner service with the spell we want to "run"
+  - spell runner service will then use the spell manager to find the spell loaded in memory
+  - spell runner runs that spell runner, which triggers off the sequence of emitted messages of each node
+    - should also send a "completed" message at the end of the runtime
+    - or perhaps we send back the result of the spell runner as the result of that running.
+      - this will keep us REST compliant as well, as the service will still return a result event without sockets
