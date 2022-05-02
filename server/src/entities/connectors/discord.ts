@@ -30,8 +30,8 @@ export const channelTypes = {
   thread: 'GUILD_PUBLIC_THREAD',
 }
 export class discord_client {
-  destroy() {
-    this.client.destroy()
+  async destroy() {
+    await this.client.destroy()
     this.client = null
   }
 

@@ -65,10 +65,10 @@ export class World {
     for (const i in oldEntities) {
       // filter for entries where oldAgents where id === newAgents[i].id
       if (
-        newEntities.filter((x: any) => x.id === oldEntities[i].id)[0] === undefined
+        newEntities.filter((x: any) => x.id === oldEntities[i].id)[0] ===
+        undefined
       ) {
         await this.removeEntity(oldEntities[i].id)
-        console.log('removed ', oldEntities[i].id)
       }
     }
 
@@ -76,7 +76,8 @@ export class World {
     for (const i in newEntities) {
       // filter for entries where oldAgents where id === newAgents[i].id
       if (
-        oldEntities.filter((x: any) => x.id === newEntities[i].id)[0] === undefined
+        oldEntities.filter((x: any) => x.id === newEntities[i].id)[0] ===
+        undefined
       ) {
         if (newEntities[i].enabled) {
           await this.addEntity(new Entity(newEntities[i]))
@@ -124,9 +125,7 @@ export class World {
     }
   }
 
-  async onDestroy() {
-
-  }
+  async onDestroy() {}
 
   async addEntity(obj: Entity) {
     console.log('adding object', obj.id)
@@ -146,12 +145,20 @@ export class World {
     }
   }
 
-  getEntity(id: number) {
-    return this.objects[id]
+  getEntity(id: any) {
+    let res = null
+
+    for (let x in this.objects) {
+      if (x == id) {
+        res = this.objects[x]
+      }
+    }
+
+    return res
   }
 
-  objectExists(id: number) {
-    return this.objects[id] !== undefined && this.objects[id] === null
+  objectExists(id: any) {
+    return this.getEntity(id) !== null && this.getEntity(id) !== undefined
   }
 
   generateId(): number {
