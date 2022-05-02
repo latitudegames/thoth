@@ -159,17 +159,21 @@ export class database {
     const findEventQueryValues = [id]
     const rows = await this.client.query(findEventQuery, findEventQueryValues)
     if(rows && rows.rows && rows.rows.length > 0) {
-      let q = ''
-      let dataLength = Object.values(data).length
-      Object.entries(data).map(([key, val], idx) => {
-        q += `${key} = '${val}'${(idx !== dataLength - 1) ? ', ' : ''}`
-      })
-      const query = `UPDATE events SET ${q} WHERE id = $1`
-      const values = [id]
+      const {
+        agent,
+        sender,
+        client,
+        channel,
+        text,
+        type,
+        date
+      } = data
+      const query = `UPDATE events SET agent = $1, sender = $2, client = $3, channel = $4, text = $5, type = $6, date = $7 WHERE id = $8`
+      const values = [agent, sender, client, channel, text, type, date, id]
       console.log('query :: ', query);
       const res = await this.client.query(query, values)
       return res.rowCount
-    } else return 'event not found'
+    } else return 0
   }
 
   async addWikipediaData(agent: any, data: any) {

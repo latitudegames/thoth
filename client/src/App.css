@@ -522,4 +522,5 @@ input[type='text'] {
   border: 0;
   background: transparent;
   outline: none;
+  font-size: 0.975rem;
 }

@@ -1,6 +1,6 @@
 // @ts-nocheck
-import React, { useEffect, useMemo, useState } from 'react'
-import { Row, usePagination, useSortBy, useTable } from 'react-table'
+import { useEffect, useMemo, useState } from 'react'
+import { useAsyncDebounce, useGlobalFilter, usePagination, useSortBy, useTable } from 'react-table'
 import { 
   TableContainer, 
   Table, 
@@ -12,15 +12,33 @@ import {
   Pagination, 
   Stack,
   IconButton,
-  Input, 
 } from '@mui/material'
 import { VscArrowDown, VscArrowUp, VscTrash } from 'react-icons/vsc'
 import { useSnackbar } from 'notistack'
 import axios from 'axios'
+import _ from 'lodash'
 
-function EventTable({ events: propEvents, updateCallback }) {
+const GlobalFilter = ({ globalFilter, setGlobalFilter }) => {
+  const [value, setValue] = useState(globalFilter)
+  const onChange = useAsyncDebounce((value) => {
+    setGlobalFilter(value || undefined)
+  }, 500)
+  return (
+    <input
+      type='text'
+      value={value || ''}
+      onChange={e => {
+        setValue(e.target.value)
+        onChange(e.target.value)
+      }}
+      placeholder='Search events...'
+      style={{ width: '30%' }}
+    />
+  )
+}
+
+function EventTable({ events, updateCallback }) {
   const { enqueueSnackbar } = useSnackbar()
-  const [events, setEvents] = useState(propEvents)
 
   const columns = useMemo(() => [
     {
@@ -61,14 +79,17 @@ function EventTable({ events: propEvents, updateCallback }) {
     },
   ], [])
 
-  const updateEvent = ({ id, ...rowData }, columnId, value) => {
-    console.log('-----in updateEvent-----');
+  const updateEvent = async ({ id, ...rowData }, columnId, value) => {
     let reqBody = {
       ...rowData,
       [columnId]: value
     }
-    console.log('id ::: ', id);
-    console.log('req ::: ', reqBody);
+    if(!_.isEqual(reqBody, rowData)) {
+      const isUpdated = await axios.put(`${process.env.REACT_APP_API_ROOT_URL}/event/${id}`, reqBody)
+      if(isUpdated) enqueueSnackbar('Event updated', { variant: 'success' })
+      else enqueueSnackbar('Error updating event', { variant: 'error' })
+      updateCallback()
+    }
   }
   
   const EditableCell = ({ value, row: { original: row }, column: { id }, updateEvent }) => {
@@ -96,6 +117,8 @@ function EventTable({ events: propEvents, updateCallback }) {
     prepareRow,
     pageOptions,
     gotoPage,
+    setGlobalFilter,
+    state
   } = useTable(
     { 
       columns, 
@@ -103,6 +126,7 @@ function EventTable({ events: propEvents, updateCallback }) {
       defaultColumn,
       updateEvent 
     },
+    useGlobalFilter,
     useSortBy,
     usePagination
   )
@@ -122,6 +146,10 @@ function EventTable({ events: propEvents, updateCallback }) {
     
   return (
     <Stack spacing={2}>
+      <GlobalFilter 
+        globalFilter={state.globalFilter}
+        setGlobalFilter={setGlobalFilter}
+      />
       <TableContainer component={Paper}>
         <Table {...getTableProps()}>
           <TableHead style={{ backgroundColor: '#000'}}>
@@ -130,6 +158,7 @@ function EventTable({ events: propEvents, updateCallback }) {
                 {headerGroup.headers.map((column, idx) => (
                   <TableCell 
                     {...column.getHeaderProps(column.getSortByToggleProps())} 
+                    style={{fontSize: '0.985rem'}}
                     key={idx}
                   >
                     {column.render('Header')}{' '}
