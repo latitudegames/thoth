@@ -1,6 +1,7 @@
 import { DataControl } from '../plugins/inspectorPlugin'
 
 export class SocketGeneratorControl extends DataControl {
+  connectionType: string
   constructor({
     socketType = 'anySocket',
     taskType = 'output',
@@ -8,6 +9,13 @@ export class SocketGeneratorControl extends DataControl {
     icon = 'properties',
     connectionType,
     name: nameInput,
+  }: {
+    socketType?: string
+    taskType?: string
+    ignored?: string[]
+    icon?: string
+    connectionType: 'input' | 'output'
+    name: string
   }) {
     if (
       !connectionType ||

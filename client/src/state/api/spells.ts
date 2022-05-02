@@ -44,6 +44,7 @@ export interface RunSpell {
   spellId: string
   version?: string
   inputs: Record<string, any>
+  state?: Record<string, any>
 }
 
 export const spellApi = rootApi.injectEndpoints({
@@ -61,10 +62,13 @@ export const spellApi = rootApi.injectEndpoints({
       },
     }),
     runSpell: builder.mutation<Record<string, any>, RunSpell>({
-      query: ({ spellId, version = 'latest', inputs }) => ({
+      query: ({ spellId, version = 'latest', inputs, state = {} }) => ({
         url: `game/chains/${spellId}/${version}`,
         method: 'POST',
-        body: inputs,
+        body: {
+          ...inputs,
+          state,
+        },
       }),
     }),
     saveDiff: builder.mutation<void, Diff>({

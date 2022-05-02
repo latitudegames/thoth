@@ -23,6 +23,7 @@ export const events = {
   UPDATE_SUBSPELL: 'updateSubspell',
   DELETE_SUBSPELL: 'deleteSubspell',
   $SUBSPELL_UPDATED: spellId => `subspellUpdated:${spellId}`,
+  $TRIGGER: (tabId, nodeId) => `triggerNode:${tabId}:${nodeId}`,
   $PLAYTEST_INPUT: tabId => `playtestInput:${tabId}`,
   $PLAYTEST_PRINT: tabId => `playtestPrint:${tabId}`,
   $DEBUG_PRINT: tabId => `debugPrint:${tabId}`,

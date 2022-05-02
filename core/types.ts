@@ -16,6 +16,7 @@ import { SocketNameType, SocketType } from './src/sockets'
 import { ThothTask } from './src/thoth-component'
 import { ThothConsole } from './src/plugins/debuggerPlugin/ThothConsole'
 import { Data } from 'rete/types/core/data'
+export { ThothComponent } from './src/thoth-component'
 
 export { ThothEditor } from './src/editor'
 
@@ -39,6 +40,7 @@ export type EngineContext = {
     body: ModelCompletionOpts
   ) => Promise<string | OpenAIResultChoice | undefined>
   getCurrentGameState: () => Record<string, unknown>
+  setCurrentGameState: (state: Record<string, unknown>) => void
   updateCurrentGameState: (update: Record<string, unknown>) => void
   enkiCompletion: (
     taskName: string,
@@ -61,13 +63,15 @@ export type EngineContext = {
   processCode: (
     code: unknown,
     inputs: ThothWorkerInputs,
-    data: Record<string, any>
-  ) => void
+    data: Record<string, any>,
+    state: Record<string, any>
+  ) => any | void
 }
 
 export type EventPayload = Record<string, any>
 
 export interface EditorContext extends EngineContext {
+  onTrigger: (node: ThothNode | string, callback: Function) => Function
   sendToPlaytest: (data: string) => void
   sendToInspector: (data: EventPayload) => void
   sendToDebug: (data: EventPayload) => void
@@ -80,8 +84,9 @@ export interface EditorContext extends EngineContext {
   processCode: (
     code: unknown,
     inputs: ThothWorkerInputs,
-    data: Record<string, any>
-  ) => void
+    data: Record<string, any>,
+    state: Record<string, any>
+  ) => any | void
 }
 
 export type EventsTypes = {
@@ -121,6 +126,7 @@ export type DataSocketType = {
   socketKey: string
   connectionType: 'input' | 'output'
   socketType: SocketType
+  useSocketName: boolean
 }
 
 export type ThothNode = Node & {
@@ -182,6 +188,7 @@ export type Subspell = { name: string; id: string; data: ChainData }
 
 export type ModuleComponent = Component & {
   run: Function
+  nodeTaskMap: Map<string, any>
 }
 
 export type NodeConnections = {

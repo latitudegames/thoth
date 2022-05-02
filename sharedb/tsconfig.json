@@ -3,7 +3,6 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "allowJs": true,
-    "jsx": "react-jsx",
 
     "allowUnreachableCode": false,
     "allowSyntheticDefaultImports": true,
@@ -20,8 +19,6 @@
     "types": ["node", "jest"],
     "baseUrl": ".",
     "paths": {
-      "gpt-3-encoder": ["@types/gpt-3-encoder.d.ts"],
-      "ot-json0": ["@types/ot-json0.d.ts"],
       "@latitudegames/thoth-core": ["@types/thoth-core.d.ts"],
       "@teamwork/websocket-json-stream": [
         "@types/@teamwork/websocket-json-stream"
@@ -30,12 +27,5 @@
     "noImplicitAny": true,
     "strictNullChecks": true
   },
-  "include": [
-    "hocs/**/*.ts",
-    "jobs/**/*.ts",
-    "src/**/*.ts",
-    "@types/**/*.d.ts",
-    "__tests__/**/*.ts",
-    "index.ts"
-  ]
+  "include": ["src/**/*.ts", "@types/**/*.d.ts", "index.ts"]
 }

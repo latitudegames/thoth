@@ -50,9 +50,12 @@ export class TriggerOut extends ThothComponent<WorkerReturn> {
     const input = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
 
     // Handle default value if data is present
+    node.data.name = node.data.name || `trigger-out-${node.id}`
+
     const nameInput = new InputControl({
       dataKey: 'name',
       name: 'Trigger name',
+      defaultValue: node.data.name,
     })
 
     node.inspector.add(nameInput)

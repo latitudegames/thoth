@@ -10,6 +10,7 @@ import { TaskOptions } from '../plugins/taskPlugin/task'
 import { triggerSocket } from '../sockets'
 import { ThothComponent, ThothTask } from '../thoth-component'
 import { PlaytestControl } from '../dataControls/PlaytestControl'
+import { SwitchControl } from '../dataControls/SwitchControl'
 const info = `The trigger in allows you to pass values into your spell either from a higher level component or from the server.  There must be one single trigger into a spell for now as the server does not support multiple triggers.  Yet.`
 
 export class TriggerIn extends ThothComponent<void> {
@@ -47,6 +48,7 @@ export class TriggerIn extends ThothComponent<void> {
   }
 
   subscriptionMap: Record<string, Function> = {}
+  triggerSubscriptionMap: Record<string, Function> = {}
 
   unsubscribe?: () => void
 
@@ -73,9 +75,37 @@ export class TriggerIn extends ThothComponent<void> {
     }
   }
 
+  subscribeToTrigger(node: ThothNode) {
+    const { onTrigger } = this.editor?.thoth as EditorContext
+
+    const callback = (value: string) => {
+      const defaultNode = Object.entries(this.nodeTaskMap).map(
+        (entry: Record<string, any>) => {
+          if (entry[1].node.data.isDefaultTriggerIn) return parseInt(entry[0])
+        }
+      )
+      const nodeId = defaultNode[0] ?? node.id
+      const task = this.nodeTaskMap[nodeId]
+
+      task?.run(value)
+      task?.reset()
+      this.editor?.trigger('process')
+    }
+
+    if (onTrigger) {
+      this.triggerSubscriptionMap[node.id] = onTrigger(node, callback)
+      this.triggerSubscriptionMap['default'] = onTrigger('default', callback)
+    }
+  }
+
   destroyed(node: ThothNode) {
     if (this.subscriptionMap[node.id]) this.subscriptionMap[node.id]()
     delete this.subscriptionMap[node.id]
+    if (this.triggerSubscriptionMap[node.id]) this.subscriptionMap[node.id]()
+    delete this.triggerSubscriptionMap[node.id]
+    if (this.triggerSubscriptionMap['default'])
+      this.subscriptionMap['default']()
+    delete this.triggerSubscriptionMap['default']
   }
 
   async run(node: ThothNode, data: NodeData) {
@@ -93,19 +123,27 @@ export class TriggerIn extends ThothComponent<void> {
   builder(node: ThothNode) {
     if (this.subscriptionMap[node.id]) this.subscriptionMap[node.id]()
     delete this.subscriptionMap[node.id]
+    if (this.triggerSubscriptionMap[node.id]) this.subscriptionMap[node.id]()
+    delete this.triggerSubscriptionMap[node.id]
+    if (this.triggerSubscriptionMap['default'])
+      this.subscriptionMap['default']()
+    delete this.triggerSubscriptionMap['default']
 
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const out = new Rete.Output('trigger', 'Trigger', triggerSocket)
-    node.data.socketKey = node?.data?.socketKey || uuidv4()
 
-    // Handle default value if data is present
+    node.data.socketKey = node?.data?.socketKey || uuidv4()
+    node.data.name = node.data.name || `trigger-in-${node.id}`
+
     const nameInput = new InputControl({
       dataKey: 'name',
       name: 'Trigger name',
+      defaultValue: node.data.name,
     })
 
     // subscribe the node to the playtest input data stream
     this.subscribeToPlaytest(node)
+    this.subscribeToTrigger(node)
 
     const data = node?.data?.playtestToggle as
       | {
@@ -124,7 +162,14 @@ export class TriggerIn extends ThothComponent<void> {
       label: 'Receive from playtest',
     })
 
-    node.inspector.add(nameInput).add(togglePlaytest)
+    const toggleDefault = new SwitchControl({
+      dataKey: 'isDefaultTriggerIn',
+      name: 'Make Default TriggerIn',
+      label: 'Make Default TriggerIn',
+      defaultValue: false,
+    })
+
+    node.inspector.add(nameInput).add(togglePlaytest).add(toggleDefault)
 
     return node.addOutput(out)
   }

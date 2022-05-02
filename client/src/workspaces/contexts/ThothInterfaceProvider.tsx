@@ -48,7 +48,18 @@ const ThothInterfaceProvider = ({ children, tab }) => {
     UPDATE_SUBSPELL,
     $SUBSPELL_UPDATED,
     $PROCESS,
+    $TRIGGER,
   } = events
+
+  const onTrigger = (node, callback) => {
+    let isDefault = node === 'default' ? 'default' : null
+    return subscribe($TRIGGER(tab.id, isDefault ?? node.id), (event, data) => {
+      publish($PROCESS(tab.id))
+      // weird hack.  This staggers the process slightly to allow the published event to finish before the callback runs.
+      // No super elegant, but we need a better more centralised way to run the engine than these callbacks.
+      setTimeout(() => callback(data), 0)
+    })
+  }
 
   const onInspector = (node, callback) => {
     return subscribe($NODE_SET(tab.id, node.id), (event, data) => {
@@ -132,7 +143,7 @@ const ThothInterfaceProvider = ({ children, tab }) => {
     return result.data
   }
 
-  const processCode = (code, inputs, data) => {
+  const processCode = (code, inputs, data, state) => {
     const flattenedInputs = Object.entries(inputs as ThothWorkerInputs).reduce(
       (acc, [key, value]) => {
         acc[key as string] = value[0]
@@ -141,15 +152,19 @@ const ThothInterfaceProvider = ({ children, tab }) => {
       {} as Record<string, any>
     )
     // eslint-disable-next-line no-new-func
-    return Function('"use strict";return (' + code + ')')()(
+    const result = new Function('"use strict";return (' + code + ')')()(
       flattenedInputs,
-      data
+      data,
+      state
     )
+    if (result.state) {
+      updateCurrentGameState(result.state)
+    }
+    return result
   }
 
-  const runSpell = async (inputs, spellId) => {
-    console.log('RUN SPELL')
-    const response = await _runSpell({ inputs, spellId })
+  const runSpell = async (inputs, spellId, state) => {
+    const response = await _runSpell({ inputs, spellId, state })
 
     if ('error' in response) {
       throw new Error(`Error running spell ${spellId}`)
@@ -168,6 +183,16 @@ const ThothInterfaceProvider = ({ children, tab }) => {
     return spellRef.current?.gameState ?? {}
   }
 
+  const setCurrentGameState = newState => {
+    if (!spellRef.current) return
+
+    const update = {
+      gameState: newState,
+    }
+
+    publish($SAVE_SPELL_DIFF(tab.id), update)
+  }
+
   const updateCurrentGameState = _update => {
     if (!spellRef.current) return
     const spell = spellRef.current
@@ -184,10 +209,17 @@ const ThothInterfaceProvider = ({ children, tab }) => {
       },
     }
 
+    // Temporarily update the spell refs game state to account for multiple state writes in a spell run
+    spellRef.current = {
+      ...spell,
+      ...update,
+    }
+
     publish($SAVE_SPELL_DIFF(tab.id), update)
   }
 
   const publicInterface = {
+    onTrigger,
     onInspector,
     onAddModule,
     onUpdateModule,
@@ -204,6 +236,7 @@ const ThothInterfaceProvider = ({ children, tab }) => {
     huggingface,
     readFromImageCache,
     getCurrentGameState,
+    setCurrentGameState,
     updateCurrentGameState,
     processCode,
     runSpell,

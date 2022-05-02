@@ -91,9 +91,12 @@ export class InputComponent extends ThothComponent<InputReturn> {
 
     const out = new Rete.Output('output', 'output', anySocket)
 
+    node.data.name = node.data.name || `input-${node.id}`
+
     const nameInput = new InputControl({
       dataKey: 'name',
       name: 'Input name',
+      defaultValue: node.data.name,
     })
 
     const data = node?.data?.playtestToggle as
@@ -110,7 +113,7 @@ export class InputComponent extends ThothComponent<InputReturn> {
           data?.receivePlaytest !== undefined ? data?.receivePlaytest : true,
       },
       ignored: ['output'],
-      label: 'Recieve from playtest',
+      label: 'Receive from playtest',
     })
 
     const toggleDefault = new SwitchControl({

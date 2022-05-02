@@ -58,7 +58,7 @@ const StateManager = ({ tab, ...props }) => {
       // Send Axios request here
       onSave()
       setTyping(false)
-    }, 3000)
+    }, 5000)
 
     return () => clearTimeout(delayDebounceFn)
   }, [code])

@@ -39,7 +39,7 @@ function install(editor: IRunContextEditor) {
 
       node.subscription = onInspector(node, (data: Record<string, any>) => {
         node.inspector.handleData(data)
-        editor.trigger('nodecreated')
+        editor.trigger('nodecreated', node)
         // NOTE might still need this.  Keep an eye out.
         // sendToInspector(node.inspector.data());
       })

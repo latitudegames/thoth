@@ -1,5 +1,4 @@
 import isEqual from 'lodash/isEqual'
-import Rete from 'rete'
 import {
   EngineContext,
   ModuleWorkerOutput,
@@ -11,7 +10,6 @@ import {
 import { SpellControl } from '../dataControls/SpellControl'
 import { ThothEditor } from '../editor'
 import { Task } from '../plugins/taskPlugin/task'
-import { objectSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 import {
   inputNameFromSocketKey,
@@ -30,7 +28,6 @@ export class SpellComponent extends ThothComponent<
   subscriptionMap: Record<number, Function> = {}
   editor: ThothEditor
   noBuildUpdate: boolean
-  dev = true
 
   constructor() {
     super('Spell')
@@ -45,6 +42,7 @@ export class SpellComponent extends ThothComponent<
     this.category = 'Core'
     this.info = info
     this.noBuildUpdate = true
+    this.display = true
   }
 
   subscribe(node: ThothNode, spellId: string) {
@@ -73,7 +71,7 @@ export class SpellComponent extends ThothComponent<
       defaultValue: (node.data.spell as string) || '',
     })
 
-    const stateSocket = new Rete.Input('state', 'State', objectSocket)
+    // const stateSocket = new Rete.Input('state', 'State', objectSocket)
 
     spellControl.onData = (spell: Spell) => {
       // break out of it the nodes data already exists.
@@ -94,7 +92,7 @@ export class SpellComponent extends ThothComponent<
       this.subscribe(node, spell.name)
     }
 
-    node.addInput(stateSocket)
+    // node.addInput(stateSocket)
     node.inspector.add(spellControl)
 
     if (node.data.spellId) {
@@ -113,8 +111,8 @@ export class SpellComponent extends ThothComponent<
   }
 
   formatOutputs(node: NodeData, outputs: Record<string, any>) {
-    return Object.entries(outputs).reduce((acc, [key, value]) => {
-      const socketKey = socketKeyFromOutputName(node, key)
+    return Object.entries(outputs).reduce((acc, [uuid, value]) => {
+      const socketKey = socketKeyFromOutputName(node, uuid)
       if (!socketKey) return acc
       acc[socketKey] = value
       return acc
@@ -138,7 +136,12 @@ export class SpellComponent extends ThothComponent<
     {
       module,
       thoth,
-    }: { module: { outputs: ModuleWorkerOutput[] }; thoth: EngineContext }
+      silent,
+    }: {
+      module: { outputs: ModuleWorkerOutput[] }
+      thoth: EngineContext
+      silent: Boolean
+    }
   ) {
     // We format the inputs since these inputs rely on the use of the socket keys.
     const flattenedInputs = this.formatInputs(node, inputs)
@@ -147,9 +150,11 @@ export class SpellComponent extends ThothComponent<
     const outputs = await thoth.runSpell(
       flattenedInputs,
       node.data.spellId as string,
-      flattenedInputs.state
+      {}
     )
 
-    return outputs
+    if (!silent) node.display(`${JSON.stringify(outputs)}`)
+
+    return this.formatOutputs(node, outputs)
   }
 }

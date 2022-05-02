@@ -1,24 +1,22 @@
-import { sharedb, websocketUrl } from '@/config'
+import { sharedb } from '@/config'
 import { useContext, createContext, useEffect, useState } from 'react'
 import { Doc } from 'sharedb'
 
-import ReconnectingWebSocket from 'reconnecting-websocket'
 import client from 'sharedb/lib/client'
 import { Socket } from 'sharedb/lib/sharedb'
 import { Spell } from '@latitudegames/thoth-core/types'
 import LoadingScreen from '@/components/LoadingScreen/LoadingScreen'
+import { useWebSocket } from './WebSocketProvider'
 
 const Connection = client.Connection
 
 interface SharedbContext {
   connection: client.Connection | null
-  socket: Socket | null
   getSpellDoc: (spell: Spell) => Doc | null
 }
 
 const Context = createContext<SharedbContext>({
   connection: null,
-  socket: null,
   getSpellDoc: () => null,
 })
 
@@ -28,14 +26,12 @@ export const docMap = new Map()
 
 // Might want to namespace these
 const SharedbProvider = ({ children }) => {
-  const [socket, setSocket] = useState<Socket | null>(null)
+  const { socket } = useWebSocket()
   const [connection, setConnection] = useState<client.Connection | null>(null)
 
   useEffect(() => {
-    const _socket = new ReconnectingWebSocket(websocketUrl)
-    const _connection = new Connection(_socket as Socket)
+    const _connection = new Connection(socket as Socket)
     setConnection(_connection)
-    setSocket(_socket as Socket)
   }, [])
 
   const getSpellDoc = (spell: Spell) => {
@@ -61,7 +57,6 @@ const SharedbProvider = ({ children }) => {
   }
 
   const publicInterface: SharedbContext = {
-    socket,
     connection,
     getSpellDoc,
   }

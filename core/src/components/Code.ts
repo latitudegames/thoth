@@ -19,10 +19,12 @@ import { ThothComponent } from '../thoth-component'
 const defaultCode = `
 // inputs: dictionary of inputs based on socket names
 // data: internal data of the node to read or write to nodes data state
-function worker(inputs, data) {
+// state: access to the current game state in the state manager window. Return state to update the state.
+function worker(inputs, data, state) {
 
   // Keys of the object returned must match the names 
   // of your outputs you defined.
+  // To update the state, you must return the modified state.
   return {}
 }
 `
@@ -46,7 +48,7 @@ export class Code extends ThothComponent<unknown> {
     this.display = true
   }
 
-  builder(node: ThothNode): ThothNode {
+  builder(node: ThothNode) {
     if (!node.data.code) node.data.code = defaultCode
 
     const outputGenerator = new SocketGeneratorControl({
@@ -95,14 +97,17 @@ export class Code extends ThothComponent<unknown> {
       thoth,
     }: { silent: boolean; thoth: EngineContext; data: { code: unknown } }
   ) {
-    const { processCode } = thoth
+    const { processCode, getCurrentGameState, updateCurrentGameState } = thoth
     if (!processCode) return
+
+    const state = getCurrentGameState()
 
     try {
       // const value = runCodeWithArguments(node.data.code)
-      const value = processCode(node.data.code, inputs, data)
+      const value = processCode(node.data.code, inputs, data, state)
 
       if (!silent) node.display(`${JSON.stringify(value)}`)
+      if (value.state) updateCurrentGameState(value.state)
 
       return value
     } catch (err) {

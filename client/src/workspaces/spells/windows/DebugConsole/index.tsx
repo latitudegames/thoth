@@ -18,21 +18,18 @@ const DebugConsole = ({ tab }) => {
   const [scrollToBottom, setScrollToBottom] = useState<boolean>(false)
   const { centerNode } = useEditor()
   const { user } = useAuth()
-  const {
-    //  publish,
-    subscribe,
-    events,
-  } = usePubSub()
-  const {
-    //  $DEBUG_INPUT,
-    $DEBUG_PRINT,
-  } = events
+  const { publish, subscribe, events } = usePubSub()
+  const { $TRIGGER, $DEBUG_PRINT } = events
 
   const terminalRef = useRef<Terminal>()
 
   const scroll = () => {
     setScrollToBottom(false)
     setScrollToBottom(true)
+  }
+
+  const trigger = nodeId => {
+    publish($TRIGGER(tab.id, nodeId))
   }
 
   const formatErrorMessage = message =>
@@ -108,6 +105,11 @@ const DebugConsole = ({ tab }) => {
         centerNode(nodeId)
         return ''
       },
+    },
+    trigger: {
+      description: 'Trigger a specific node to run your spell',
+      usage: 'trigger <nodeId>',
+      fn: trigger,
     },
   }
 

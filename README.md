@@ -50,7 +50,7 @@ In the project directory, you can run:
 ### `yarn start`
 
 Runs @thoth/client in the development mode.\
-Open [http://localhost:3001](http://localhost:3001) to view it in the browser.
+Open [http://localhost:3003](http://localhost:3003) to view it in the browser.
 
 ### `yarn build`
 
