@@ -1,0 +1,10 @@
+export declare type SocketNameType = 'Any type' | 'Number' | 'Boolean' | 'Array' | 'String' | 'Object' | 'Trigger';
+export declare type SocketType = 'anySocket' | 'numSocket' | 'booleanSocket' | 'arraySocket' | 'stringSocket' | 'objectSocket' | 'triggerSocket';
+export declare const socketNameMap: Record<SocketNameType, SocketType>;
+export declare const anySocket: import("rete").Socket;
+export declare const numSocket: import("rete").Socket;
+export declare const booleanSocket: import("rete").Socket;
+export declare const arraySocket: import("rete").Socket;
+export declare const stringSocket: import("rete").Socket;
+export declare const objectSocket: import("rete").Socket;
+export declare const triggerSocket: import("rete").Socket;
