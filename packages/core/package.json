@@ -30,6 +30,7 @@
   "dependencies": {
     "deep-equal": "^2.0.5",
     "handlebars": "^4.7.7",
+    "jest": "27",
     "jsdom": "^17.0.0",
     "license-webpack-plugin": "^4.0.2",
     "path": "^0.12.7",
