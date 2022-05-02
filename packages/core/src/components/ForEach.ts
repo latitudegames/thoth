@@ -14,6 +14,8 @@ type WorkerReturn = {
   element: string | string[] | unknown
 }
 export class ForEach extends ThothComponent<Promise<WorkerReturn | undefined>> {
+  dev: true
+
   constructor() {
     super('ForEach')
     this.task = {
