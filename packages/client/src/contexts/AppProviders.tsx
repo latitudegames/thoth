@@ -6,6 +6,7 @@ import {
 } from '@mui/material/styles'
 
 import AuthProvider from './AuthProvider'
+import FeathersProvider from './FeathersProvider'
 import PubSubProvider from './PubSubProvider'
 import SharedbProvider from './SharedbProvider'
 import ToastProvider from './ToastProvider'
@@ -29,6 +30,7 @@ const providers = [
   [ThemeProvider, { theme: darkTheme }],
   ToastProvider,
   AuthProvider,
+  FeathersProvider,
   WebSocketProvider,
   SharedbProvider,
 ]
