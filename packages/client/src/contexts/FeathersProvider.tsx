@@ -1,31 +1,57 @@
-import { feathers, feathersUrl } from '@/config'
-import { useContext, createContext, useEffect } from 'react'
+import feathers from '@feathersjs/client'
+import io from 'socket.io-client'
+import { useContext, createContext, useEffect, useState } from 'react'
 
-// import LoadingScreen from '@/components/LoadingScreen/LoadingScreen'
+import { feathers as feathersFlag, feathersUrl } from '@/config'
+import auth from 'feathers-authentication-client'
+import { Application } from '@feathersjs/feathers'
 
-interface FeathersContext {}
+import LoadingScreen from '@/components/LoadingScreen/LoadingScreen'
+import { getAuthHeader } from './AuthProvider'
 
-const Context = createContext<FeathersContext>({
-  socket: null,
-})
+const buildFeathersClient = () => {
+  const feathersClient = feathers()
+  const authHeaders = getAuthHeader()
+
+  const socket = io(feathersUrl, {
+    withCredentials: true,
+    transports: ['websocket'],
+    // Send the authorization header in the initial connection request
+    extraHeaders: authHeaders,
+  })
+  feathersClient.configure(feathers.socketio(socket, { timeout: 10000 }))
+  feathersClient.configure(auth())
+
+  return feathersClient
+}
+
+interface FeathersContext {
+  client: Application<any> | null
+}
+
+const Context = createContext<FeathersContext>(undefined!)
 
 export const useFeathers = () => useContext(Context)
 
 // Might want to namespace these
 const FeathersProvider = ({ children }) => {
+  const [client, setClient] = useState<FeathersContext['client']>(null)
   useEffect(() => {
-    console.log('fetahers url', feathersUrl)
+    const client = buildFeathersClient()
+    setClient(client)
   }, [])
 
-  const publicInterface: FeathersContext = {}
+  const publicInterface: FeathersContext = {
+    client,
+  }
 
-  // if (!socket) return <LoadingScreen />
+  if (!client) return <LoadingScreen />
 
   return <Context.Provider value={publicInterface}>{children}</Context.Provider>
 }
 
 const ConditionalProvider = props => {
-  if (!feathers) return props.children
+  if (!feathersFlag) return props.children
 
   return <FeathersProvider {...props} />
 }
