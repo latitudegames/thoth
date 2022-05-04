@@ -22,3 +22,9 @@
   align-items: center;
   justify-content: center;
 }
+
+.githubButtons {
+  display: flex;
+  left: 1%;
+  position: relative;
+}
