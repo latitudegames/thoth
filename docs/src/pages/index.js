@@ -24,6 +24,12 @@ function HomepageHeader() {
           >
             Creators
           </Link>
+          <Link
+            className="button button--secondary button--lg"
+            to="/docs/developers/getting%20started/installingThoth"
+          >
+            Developers
+          </Link>
         </div>
       </div>
     </header>
