@@ -19,6 +19,9 @@
     "test": "echo test",
     "install:canary": "yarn add @latitudegames/thoth-core@canary"
   },
+  "resolutions": {
+    "@types/react": "17.0.24"
+  },
   "dependencies": {
     "@callstack/async-storage": "^2.0.3",
     "@emotion/react": "^11.8.2",
@@ -83,7 +86,7 @@
     "@testing-library/user-event": "^12.1.10",
     "@types/jest": "^26.0.24",
     "@types/node": "^16.4.3",
-    "@types/react": "^17.0.15",
+    "@types/react": "^17.0.24",
     "@types/react-dom": "^17.0.9",
     "@types/react-redux": "^7.1.18",
     "@welldone-software/why-did-you-render": "^6.2.1",

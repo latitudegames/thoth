@@ -122,7 +122,7 @@ const DebugConsole = ({ tab }) => {
         dangerMode={true} // This is causing the [Object, object] line to appear in the terminal printout
         commandCallback={commandCallback}
         noNewlineParsing={true}
-        promptLabel={`${user?.id}@Thoth:~$`}
+        promptLabel={`${user?.username}@Thoth:~$`}
         style={{
           overflow: 'hidden',
           minHeight: '100%',
