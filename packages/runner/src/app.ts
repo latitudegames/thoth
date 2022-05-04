@@ -17,7 +17,7 @@ import appHooks from './app.hooks'
 import channels from './channels'
 import { HookContext as FeathersHookContext } from '@feathersjs/feathers'
 import handleSockets from './sockets'
-// import authentication from './authentication';
+import authentication from './authentication'
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const app: Application = express(feathers())
@@ -32,6 +32,7 @@ app.use(
   })
 )
 app.use(cors())
+
 app.use(compress())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -42,12 +43,26 @@ app.use('/', express.static(app.get('public')))
 // Set up Plugins and providers
 app.configure(express.rest())
 
+const socketOptions = {
+  origins: ['http://localhost:3003'],
+
+  handlePreflightRequest: (_: any, res: any) => {
+    console.log('HANDLING PREFLIGHT!!')
+    res.writeHead(200, {
+      'Access-Control-Allow-Origin': 'http://localhost:3003',
+      'Access-Control-Allow-Methods': 'GET,POST',
+      'Access-Control-Allow-Headers': 'Authorization',
+      'Access-Control-Allow-Credentials': true,
+    })
+    res.end()
+  },
+}
 // Begins the entrypoint or where we handle our sockets
-app.configure(socketio(handleSockets))
+app.configure(socketio(socketOptions, handleSockets))
 
 // Configure other middleware (see `middleware/index.ts`)
 app.configure(middleware)
-// app.configure(authentication);
+// app.configure(authentication)
 // Set up our services (see `services/index.ts`)
 app.configure(services)
 // Set up event channels (see channels.ts)
