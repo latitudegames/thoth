@@ -17,11 +17,13 @@ function HomepageHeader() {
         <img src={siteConfig.customFields.thothLogo} />
         <p className="hero__subtitle">{siteConfig.tagline}</p>
         <div className={styles.buttons}>
-          {/* <Link
+          <Link
             className="button button--secondary button--lg"
-            to="/docs/intro">
-            Docusaurus Tutorial - 5min ⏱️
-          </Link> */}
+            to="/docs/creators/gettingStarted/CreatorWelcome"
+            // style={{ marginRight: '2%' }}
+          >
+            Creators
+          </Link>
         </div>
       </div>
     </header>
