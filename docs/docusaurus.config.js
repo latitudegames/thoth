@@ -122,6 +122,9 @@ const config = {
         darkTheme: darkCodeTheme,
       },
     }),
+  customFields: {
+    thothLogo: 'img/thoth-logo.png',
+  },
 }
 
 module.exports = config
