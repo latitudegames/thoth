@@ -30,10 +30,20 @@ function HomepageHeader() {
           >
             Developers
           </Link>
+          <div className={styles.githubButtons}>
+            <iframe
+              src="https://ghbtns.com/github-btn.html?user=latitudegames&repo=thoth&type=star&count=true&size=large&v=2"
+              frameborder="0"
+              scrolling="0"
+              width="170"
+              height="30"
+              title="GitHub"
+            ></iframe>
+          </div>
         </div>
       </div>
     </header>
-  );
+  )
 }
 
 export default function Home() {
