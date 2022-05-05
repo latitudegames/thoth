@@ -40,7 +40,6 @@ const EventHandler = ({ pubSub, tab }) => {
   const { serialize, getEditor, undo, redo, del } = useEditor()
 
   const { events, subscribe } = pubSub
-
   const {
     $DELETE,
     $UNDO,
@@ -49,6 +48,7 @@ const EventHandler = ({ pubSub, tab }) => {
     $CREATE_STATE_MANAGER,
     $CREATE_SEARCH_CORPUS,
     $CREATE_ENT_MANAGER,
+    $CREATE_VIDEO_TRANSCRIPTION,
     $CREATE_PLAYTEST,
     $CREATE_INSPECTOR,
     $CREATE_TEXT_EDITOR,
@@ -87,6 +87,10 @@ const EventHandler = ({ pubSub, tab }) => {
 
   const createTextEditor = () => {
     createOrFocus(windowTypes.TEXT_EDITOR, 'Text Editor')
+  }
+
+  const createVideoTranscription = () => {
+    createOrFocus(windowTypes.VIDEOTRANSCRIPTION, 'Video Transcription')
   }
 
   const onSerialize = () => {
@@ -154,6 +158,7 @@ const EventHandler = ({ pubSub, tab }) => {
     [$CREATE_PLAYTEST(tab.id)]: createPlaytest,
     [$CREATE_INSPECTOR(tab.id)]: createInspector,
     [$CREATE_TEXT_EDITOR(tab.id)]: createTextEditor,
+    [$CREATE_VIDEO_TRANSCRIPTION(tab.id)]: createVideoTranscription,
     [$SERIALIZE(tab.id)]: onSerialize,
     [$EXPORT(tab.id)]: onExport,
     [$CLOSE_EDITOR(tab.id)]: onCloseEditor,

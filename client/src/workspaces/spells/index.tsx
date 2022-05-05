@@ -17,6 +17,7 @@ import { Spell } from '@latitudegames/thoth-core/types'
 import { usePubSub } from '@/contexts/PubSubProvider'
 import SearchCorpus from './windows/SearchCorpusWindow'
 import EntityManagerWindow from './windows/EntityManagerWindow'
+import VideoTranscription from './windows/VideoTranscription'
 
 const Workspace = ({ tab, tabs, pubSub }) => {
   const spellRef = useRef<Spell>()
@@ -104,6 +105,8 @@ const Workspace = ({ tab, tabs, pubSub }) => {
           return <SearchCorpus />
         case 'entityManager':
           return <EntityManagerWindow />
+        case 'videoTranscription':
+          return <VideoTranscription />
         default:
           return <p></p>
       }
