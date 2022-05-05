@@ -1,14 +1,46 @@
 import io from 'socket.io'
+import axios from 'axios'
 import { SpellManager } from '@latitudegames/thoth-core/dist/server'
 
-const managerMap = {}
+interface FeathersSocket extends io.Socket {
+  feathers: any
+}
 
-const handleSockets = (io: io.Server) => {
-  io.on('connection', function (socket: io.Socket) {
-    console.log('handshake headers', socket.handshake.headers)
-    // Authenticate with the auth headers here
-    const spellManager = new SpellManager()
-  })
+const getUserInfo = async (sessionId: string) => {
+  try {
+    const response = await axios({
+      url: 'https://api.latitude.io/user/info',
+      headers: {
+        Authorization: `session ${sessionId}`,
+      },
+    })
+
+    return response.data
+  } catch (err) {
+    console.log('Error getting usert info!')
+    console.log(err)
+  }
+}
+
+const handleSockets = (app: any) => {
+  return (io: any) => {
+    // Another gross 'any' here
+    io.on('connection', async function (socket: any) {
+      console.log('handshake headers', socket.handshake.headers)
+      const sessionId = socket.handshake.headers.authorization.split(' ')[1]
+
+      if (!sessionId) throw new Error('No session id provided for handshake')
+      // Authenticate with the auth headers here
+      const user = await getUserInfo(sessionId)
+
+      // Attach the user info to the params or use in services
+      socket.feathers.user = user
+
+      const spellManager = new SpellManager(socket)
+
+      app.userSpellManagers.set(user.id, spellManager)
+    })
+  }
 }
 
 export default handleSockets
