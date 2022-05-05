@@ -4,9 +4,11 @@ import { usePatchSpellMutation } from '../../state/api/spells'
 import { useForm } from 'react-hook-form'
 import Modal from '../Modal/Modal'
 import css from './modalForms.module.css'
+import { useAuth } from '@/contexts/AuthProvider'
 
 const EditSpellModal = ({ closeModal, spellId, name, tab }) => {
   const [error, setError] = useState('')
+  const { user } = useAuth()
   const [patchSpell, { isLoading }] = usePatchSpellMutation()
   const { enqueueSnackbar } = useSnackbar()
 
@@ -15,9 +17,14 @@ const EditSpellModal = ({ closeModal, spellId, name, tab }) => {
     handleSubmit,
     // formState: { errors },
   } = useForm()
-
+  console.log('tab ::: ', tab);
+  
   const onSubmit = handleSubmit(async data => {
-    const response: any = await patchSpell({ spellId, update: data })
+    const response: any = await patchSpell({ 
+      spellId: tab.spellId, 
+      userId: user?.id as string, 
+      update: data 
+    })
 
     if (response.error) {
       setError(response.error.data.error.message)

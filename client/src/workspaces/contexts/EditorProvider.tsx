@@ -21,6 +21,7 @@ import gridimg from '@/grid.png'
 import { usePubSub } from '../../contexts/PubSubProvider'
 import { useThothInterface } from './ThothInterfaceProvider'
 import { zoomAt } from '@latitudegames/thoth-core/src/plugins/areaPlugin/zoom-at'
+import { useAuth } from '@/contexts/AuthProvider'
 
 export type ThothTab = {
   layoutJson: string
@@ -171,6 +172,7 @@ const EditorProvider = ({ children }) => {
 }
 
 const RawEditor = ({ tab, children }) => {
+  const { user } = useAuth()
   const [getSpell, { data: spell, isLoading }] = useLazyGetSpellQuery()
   const [loaded, setLoaded] = useState(false)
   const { buildEditor } = useEditor()
@@ -180,7 +182,10 @@ const RawEditor = ({ tab, children }) => {
   useEffect(() => {
     if (!tab) return
 
-    if (tab?.spellId) getSpell(tab.spellId)
+    if (tab?.spellId) getSpell({
+      spellId: tab.spellId,
+      userId: user?.id as string
+    })
   }, [tab])
 
   if (!tab || (tab.type === 'spell' && (isLoading || !spell)))

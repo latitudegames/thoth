@@ -19,6 +19,7 @@ import {
 } from '@/state/api/spells'
 import { useEditor } from '@/workspaces/contexts/EditorProvider'
 import { latitudeApiRootUrl } from '@/config'
+import { useAuth } from '@/contexts/AuthProvider'
 
 const DeploymentView = ({ open, setOpen, spellId, close }) => {
   const [loadingVersion, setLoadingVersion] = useState(false)
@@ -29,7 +30,11 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
   const [deploySpell] = useDeploySpellMutation()
   const [saveSpell] = useSaveSpellMutation()
   const [getDeplopyment, { data: deploymentData }] = useLazyGetDeploymentQuery()
-  const { data: spell } = useGetSpellQuery(spellId, {
+  const { user } = useAuth()
+  const { data: spell } = useGetSpellQuery({ 
+    spellId: spellId, 
+    userId: user?.id as string 
+  }, {
     skip: !spellId,
   })
   const name = spell?.name as string
@@ -39,7 +44,7 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
 
   const deploy = data => {
     if (!spell) return
-    deploySpell({ spellId: spell.name, ...data })
+    deploySpell({ spellId: spell.name, userId: user?.id, ...data })
     enqueueSnackbar('Spell deployed', { variant: 'success' })
   }
 
@@ -67,7 +72,7 @@ const DeploymentView = ({ open, setOpen, spellId, close }) => {
     if (!deploymentData || !loadingVersion) return
       ; (async () => {
         close()
-        await saveSpell({ ...spell, graph: deploymentData.graph })
+        await saveSpell({ ...spell, graph: deploymentData.graph, user: user?.id })
         enqueueSnackbar(`version ${deploymentData.version} loaded!`, {
           variant: 'success',
         })
