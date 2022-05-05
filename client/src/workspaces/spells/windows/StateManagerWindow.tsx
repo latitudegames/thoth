@@ -7,10 +7,15 @@ import Window from '../../../components/Window/Window'
 import '../../../screens/Thoth/thoth.module.css'
 import WindowMessage from '../components/WindowMessage'
 import { usePubSub } from '@/contexts/PubSubProvider'
+import { useAuth } from '@/contexts/AuthProvider'
 
 const StateManager = ({ tab, ...props }) => {
   const { publish, events } = usePubSub()
-  const { data: spell } = useGetSpellQuery(tab.spellId, {
+  const { user } = useAuth()
+  const { data: spell } = useGetSpellQuery({ 
+    spellId: tab.spellId, 
+    userId: user?.id as string 
+  }, {
     skip: !tab.spellId,
   })
 

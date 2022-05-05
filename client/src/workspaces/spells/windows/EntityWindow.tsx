@@ -1,5 +1,6 @@
 //@ts-nocheck
 
+import { useAuth } from '@/contexts/AuthProvider'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -19,6 +20,7 @@ function capitalizeFirstLetter(word) {
 }
 
 const EntityWindow = ({ id, updateCallback }) => {
+  const { user } = useAuth()
   const [loaded, setLoaded] = useState(false)
 
   const [enabled, setEnabled] = useState(false)
@@ -128,7 +130,7 @@ const EntityWindow = ({ id, updateCallback }) => {
   useEffect(() => {
     ;(async () => {
       const res = await axios.get(
-        `${process.env.REACT_APP_API_ROOT_URL}/game/spells`
+        `${process.env.REACT_APP_API_ROOT_URL}/game/spells?userId=${user?.id}`
       )
       setSpellList(res.data)
     })()

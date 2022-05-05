@@ -17,6 +17,7 @@ import css from '../homeScreen.module.css'
 import TemplatePanel from '../components/TemplatePanel'
 import defaultGraph from '../../../data/graphs/default'
 import { GraphData } from '@latitudegames/thoth-core/types'
+import { useAuth } from '@/contexts/AuthProvider'
 
 const customConfig = {
   dictionaries: [adjectives, colors],
@@ -45,7 +46,7 @@ const CreateNew = () => {
   const { enqueueSnackbar } = useSnackbar()
   const navigate = useNavigate()
   const [newSpell] = useNewSpellMutation()
-
+  const { user } = useAuth()
   const {
     register,
     handleSubmit,
@@ -59,6 +60,7 @@ const CreateNew = () => {
       const response = await newSpell({
         graph: selectedTemplate?.graph,
         name,
+        user: user?.id
       })
 
       if ('error' in response) {

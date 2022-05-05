@@ -18,6 +18,7 @@ import { diff } from '@/utils/json0'
 import { useSnackbar } from 'notistack'
 import { sharedb } from '@/config'
 import { useSharedb } from '@/contexts/SharedbProvider'
+import { useAuth } from '@/contexts/AuthProvider'
 
 // Config for unique name generator
 const customConfig = {
@@ -34,7 +35,11 @@ const EventHandler = ({ pubSub, tab }) => {
 
   const [saveSpellMutation] = useSaveSpellMutation()
   const [saveDiff] = useSaveDiffMutation()
-  const { data: spell } = useGetSpellQuery(tab.spellId)
+  const { user } = useAuth()
+  const { data: spell } = useGetSpellQuery({ 
+    spellId: tab.spellId, 
+    userId: user?.id as string 
+  })
 
   // Spell ref because callbacks cant hold values from state without them
   const spellRef = useRef<Spell | null>(null)
@@ -72,7 +77,7 @@ const EventHandler = ({ pubSub, tab }) => {
     const currentSpell = spellRef.current
     const graph = serialize() as GraphData
 
-    await saveSpellMutation({ ...currentSpell, graph })
+    await saveSpellMutation({ ...currentSpell, graph, user: user?.id })
   }
 
   const sharedbDiff = async (event, update) => {

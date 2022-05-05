@@ -101,7 +101,7 @@ export type EventsTypes = {
 
 export interface Spell {
   id?: string
-  user?: Record<string, unknown> | null | undefined
+  user?: Record<string, unknown> | string | null | undefined
   name: string
   graph: GraphData
   // Spells: Module[]
