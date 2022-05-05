@@ -19,6 +19,9 @@
     "test": "echo test",
     "install:canary": "yarn add @latitudegames/thoth-core@canary"
   },
+  "resolutions": {
+    "@types/react": "18.0.0"
+  },
   "dependencies": {
     "@callstack/async-storage": "^2.0.3",
     "@latitudegames/thoth-core": "0.0.66",
@@ -30,8 +33,8 @@
     "@types/deep-equal": "^1.0.1",
     "@types/jest": "^26.0.24",
     "@types/node": "^16.4.3",
-    "@types/react": "^17.0.15",
-    "@types/react-dom": "^17.0.9",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
     "@types/react-redux": "^7.1.18",
     "axios": "^0.21.4",
     "better-react-spinkit": "^2.0.4",
@@ -46,11 +49,11 @@
     "prism-themes": "^1.7.0",
     "prismjs": "^1.24.0",
     "pubsub-js": "^1.9.3",
-    "react": "^17.0.2",
+    "react": "^18.0.0",
     "react-console-emulator": "^5.0.1",
     "react-custom-scrollbars": "^4.2.1",
     "react-custom-scrollbars-2": "^4.4.0",
-    "react-dom": "^17.0.2",
+    "react-dom": "^18.0.0",
     "react-hook-form": "^7.15.4",
     "react-hotkeys-hook": "^3.3.2",
     "react-icons": "^4.2.0",

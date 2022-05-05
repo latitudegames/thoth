@@ -1,6 +1,7 @@
 const Dotenv = require('dotenv-flow-webpack')
 const { merge } = require('webpack-merge')
 const common = require('./webpack.common')
+const fs = require('fs')
 
 module.exports = () => {
   const commonConfig = common()
@@ -9,6 +10,10 @@ module.exports = () => {
     mode: 'development',
     devtool: 'source-map',
     devServer: {
+      https: {
+        key: fs.readFileSync('certs/key.pem'),
+        cert: fs.readFileSync('certs/cert.pem'),
+      },
       static: {
         directory: 'public',
       },

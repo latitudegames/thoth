@@ -49,10 +49,9 @@ const SearchCorpus = () => {
   const openAddEditModal = opType => {
     let store = null
     if (opType === 'edit') {
-      store =
-        documentsStores.filter(
-          store => store.id === parseInt(storeRef.current.value)
-        )[0] ?? ''
+      store = documentsStores.filter(store => store.id === parseInt(storeRef.current.value))[0] ?? ''
+
+      console.log(store,'storestorestore')
     } else store = ''
     openModal({
       modal: 'documentStoreAddEditModal',
@@ -94,11 +93,12 @@ const SearchCorpus = () => {
               }}
             >
               {documentsStores &&
-                documentsStores.map(store => (
-                  <option value={store.id} key={store.id}>
+                documentsStores.map((store,i) => {
+                  return (<option value={store.id} key={store.id}>
                     {store.name}
                   </option>
-                ))}
+                  )
+                  })}
             </select>
           </span>
           <span className="search-corpus-btns">

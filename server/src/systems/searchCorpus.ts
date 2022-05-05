@@ -46,9 +46,9 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
   app.use(cors(options))
   app.use(koaBody({ multipart: true }))
 
-  router.get('/documents', async function (ctx: Koa.Context) {
-    const documents = await database.instance.getAllDocuments()
-    return (ctx.body = documents)
+  router.get('/document-store', async function (ctx: Koa.Context) {
+    const stores = await database.instance.getDocumentStores()
+    return (ctx.body = stores.sort((a, b) => a.id - b.id))
   })
   router.get('/document', async function (ctx: Koa.Context) {
     const storeId = ctx.query.storeId

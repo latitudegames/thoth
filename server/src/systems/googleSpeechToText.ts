@@ -38,8 +38,8 @@ export async function initSpeechServer(ignoreDotEnv: boolean) {
 
   if (useSSL) {
     const server = https.createServer({
-      key: fs.readFileSync('key.pem'),
-      cert: fs.readFileSync('cert.pem'),
+      key: fs.readFileSync('certs/key.pem'),
+      cert: fs.readFileSync('certs/cert.pem'),
     })
     server.listen(PORT)
     io = new Server(server, {
@@ -82,7 +82,7 @@ export async function initSpeechServer(ignoreDotEnv: boolean) {
         ) {
           recognizeStream.write(data)
         }
-      } catch (e) {}
+      } catch (e) { }
     })
 
     function startRecognitionStream(client: any) {
