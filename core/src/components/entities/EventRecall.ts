@@ -110,6 +110,7 @@ export class EventRecall extends ThothComponent<Promise<InputReturn>> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
+    
     const speaker = inputs['speaker'][0] as string
     const agent = inputs['agent'][0] as string
     const client = inputs['client'][0] as string

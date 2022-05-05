@@ -8,7 +8,7 @@ export async function initTextToSpeech() {
   client = new TextToSpeechClient()
 }
 
-export async function tts(input: string, languageCode = 'en-GB', character = "en-GB-Standard-B") {
+export async function tts(input: string, character = "en-GB-Standard-B", languageCode = 'en-GB') {
   if (!client || client === undefined) {
     client = new TextToSpeechClient()
   }
@@ -16,8 +16,8 @@ export async function tts(input: string, languageCode = 'en-GB', character = "en
   const ttsRequest = {
     input: { text: input },
     voice: {
-      languageCode: 'en-GB',
-      name: 'en-GB-Standard-B',
+      languageCode: languageCode,
+      name: character,
       ssmlGender: 1 /*Male*/,
     },
     audioConfig: { audioEncoding: 2 /*MP3*/ },

@@ -18,7 +18,7 @@ export function initSpeechClient(
   handleInput,
   voiceProvider,
   voiceCharacter,
-  languageCode?
+  languageCode
 ) {
   addSpeechEvent(client)
 
@@ -47,7 +47,7 @@ export function initSpeechClient(
             info3d: '',
           })
         }
-      } catch (e) {}
+      } catch (e) { }
 
       console.log(roomInfo)
       const response = removeEmojisFromString(
@@ -82,7 +82,7 @@ export function initSpeechClient(
           )
         } else {
           // google tts
-          url = await tts(response, voiceProvider, voiceCharacter, languageCode)
+          url = await tts(response, voiceCharacter, languageCode)
         }
 
         // const url = await tts(response)
