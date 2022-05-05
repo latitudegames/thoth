@@ -1,3 +1,4 @@
+import io from 'socket.io'
 import path from 'path'
 import favicon from 'serve-favicon'
 import compress from 'compression'
@@ -18,6 +19,7 @@ import channels from './channels'
 import { HookContext as FeathersHookContext } from '@feathersjs/feathers'
 import handleSockets from './sockets'
 import authentication from './authentication'
+import { configureManager } from '@latitudegames/thoth-core/dist/server'
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const app: Application = express(feathers())
@@ -61,7 +63,10 @@ const socketOptions = {
 // configures this needed for the spellManager
 app.configure(configureManager())
 // Begins the entrypoint or where we handle our sockets
-app.configure(socketio(socketOptions, handleSockets))
+app.configure(
+  // This is hacky.  But some socket options are required by typescript, but the library uses defaults.
+  socketio(socketOptions as unknown as io.ServerOptions, handleSockets(app))
+)
 
 // Configure other middleware (see `middleware/index.ts`)
 app.configure(middleware)
