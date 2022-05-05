@@ -57,6 +57,9 @@ const socketOptions = {
     res.end()
   },
 }
+
+// configures this needed for the spellManager
+app.configure(configureManager())
 // Begins the entrypoint or where we handle our sockets
 app.configure(socketio(socketOptions, handleSockets))
 
