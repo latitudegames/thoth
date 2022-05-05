@@ -51,6 +51,7 @@
     "@latitudegames/thoth-core": "^0.0.68",
     "@typescript-eslint/eslint-plugin": "^5.22.0",
     "@typescript-eslint/parser": "^5.22.0",
+    "axios": "^0.27.2",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "helmet": "^4.6.0",
