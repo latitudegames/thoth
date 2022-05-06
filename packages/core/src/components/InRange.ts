@@ -34,6 +34,8 @@ export class InRange extends ThothComponent<void> {
     const testInput = new Rete.Input('input', 'Input', numSocket)
 
     const isTrue = new Rete.Output('true', 'True', triggerSocket)
+    const isFalse = new Rete.Output('false', 'False', triggerSocket)
+
   }
 
   }
