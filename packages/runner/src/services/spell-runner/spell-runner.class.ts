@@ -50,10 +50,12 @@ export class SpellRunner implements ServiceMethods<Data> {
 
     console.log('spell found!', spell)
 
-    return {
-      id,
-      text: `A new message with ID: ${id}!`,
-    }
+    // Load the spell into the spellManager. If there is no spell runner, we make one.
+    const spellRunner = spellManager.load(spell)
+
+    console.log('spellRunner loaded!', spellRunner)
+
+    return spell
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
