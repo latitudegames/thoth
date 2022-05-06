@@ -16,4 +16,16 @@ export class InRange extends ThothComponent<void> {
     this.category = 'Logic'
     this.info = info
   }
+
+  builder(node: ThothNode) {
+    const startNumSocket = new Rete.Input(
+      'number',
+      'Start Number',
+      numSocket,
+      false
+    )
+  }
+
+  }
+  }
 }
