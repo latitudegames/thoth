@@ -50,6 +50,8 @@ export class InRange extends ThothComponent<void> {
       (inputs['number'][0] as number) ?? (node.data.startNumber as number)
     const endRange =
       (inputs['number'][1] as number) ?? (node.data.endNumber as number)
+    const numberToTest = inputs['input'][0] as number
+
     }
   }
 }
