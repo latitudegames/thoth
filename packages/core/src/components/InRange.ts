@@ -48,6 +48,8 @@ export class InRange extends ThothComponent<void> {
   worker(node: NodeData, inputs: ThothWorkerInputs) {
     const startRange =
       (inputs['number'][0] as number) ?? (node.data.startNumber as number)
+    const endRange =
+      (inputs['number'][1] as number) ?? (node.data.endNumber as number)
     }
   }
 }
