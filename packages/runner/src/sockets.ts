@@ -1,6 +1,7 @@
 import io from 'socket.io'
 import axios from 'axios'
 import { SpellManager } from '@latitudegames/thoth-core/dist/server'
+import { buildThothInterface } from './thothInterface'
 
 interface FeathersSocket extends io.Socket {
   feathers: any
@@ -38,7 +39,8 @@ const handleSockets = (app: any) => {
       // Attach the user info to the params or use in services
       socket.feathers.user = user
 
-      const spellManager = new SpellManager(socket)
+      const thothInterface = buildThothInterface()
+      const spellManager = new SpellManager(thothInterface, socket)
 
       app.userSpellManagers.set(user.id, spellManager)
 
