@@ -7,8 +7,8 @@ const LicenseWebpackPlugin =
 module.exports = () => {
   const config = {
     entry: {
-      index: './index.ts',
-      server: './server.ts',
+      index: ['regenerator-runtime/runtime.js', './index.ts'],
+      server: ['regenerator-runtime/runtime.js', './server.ts'],
     },
     output: {
       path: path.join(__dirname, 'dist'),

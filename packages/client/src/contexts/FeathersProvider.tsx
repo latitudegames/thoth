@@ -7,17 +7,19 @@ import auth from 'feathers-authentication-client'
 import { Application } from '@feathersjs/feathers'
 
 import LoadingScreen from '@/components/LoadingScreen/LoadingScreen'
-import { getAuthHeader } from './AuthProvider'
+import { getAuthHeader, useAuth } from './AuthProvider'
 
-const buildFeathersClient = () => {
+const buildFeathersClient = async () => {
   const feathersClient = feathers()
-  const authHeaders = getAuthHeader()
-
+  const authHeaders = await getAuthHeader()
   const socket = io(feathersUrl, {
-    withCredentials: true,
-    transports: ['websocket'],
     // Send the authorization header in the initial connection request
-    extraHeaders: authHeaders,
+    transportOptions: {
+      polling: {
+        withCredentials: true,
+        extraHeaders: authHeaders,
+      },
+    },
   })
   feathersClient.configure(feathers.socketio(socket, { timeout: 10000 }))
   feathersClient.configure(auth())
@@ -36,10 +38,17 @@ export const useFeathers = () => useContext(Context)
 // Might want to namespace these
 const FeathersProvider = ({ children }) => {
   const [client, setClient] = useState<FeathersContext['client']>(null)
+
+  const { user } = useAuth()
+
   useEffect(() => {
-    const client = buildFeathersClient()
-    setClient(client)
-  }, [])
+    // We only want to create the feathers connection once we have a user to handle
+    if (!user) return
+    ;(async () => {
+      const client = await buildFeathersClient()
+      setClient(client)
+    })()
+  }, [user])
 
   const publicInterface: FeathersContext = {
     client,

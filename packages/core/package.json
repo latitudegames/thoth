@@ -41,6 +41,7 @@
     "rete-context-menu-plugin": "^0.6.0-rc.1",
     "rete-module-plugin": "^0.4.1",
     "rete-react-render-plugin": "^0.2.1",
+    "socket.io": "^4.5.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
