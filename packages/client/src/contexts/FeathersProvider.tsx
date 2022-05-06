@@ -3,10 +3,8 @@ import io from 'socket.io-client'
 import { useContext, createContext, useEffect, useState } from 'react'
 
 import { feathers as feathersFlag, feathersUrl } from '@/config'
-import auth from 'feathers-authentication-client'
-import { Application } from '@feathersjs/feathers'
+// import { Application } from '@feathersjs/feathers'
 
-import LoadingScreen from '@/components/LoadingScreen/LoadingScreen'
 import { getAuthHeader, useAuth } from './AuthProvider'
 
 const buildFeathersClient = async () => {
@@ -22,13 +20,13 @@ const buildFeathersClient = async () => {
     },
   })
   feathersClient.configure(feathers.socketio(socket, { timeout: 10000 }))
-  feathersClient.configure(auth())
 
-  return feathersClient
+  // No idea how to type feathers to add io properties to root client.
+  return feathersClient as any
 }
 
 interface FeathersContext {
-  client: Application<any> | null
+  client: any | null
 }
 
 const Context = createContext<FeathersContext>(undefined!)
@@ -39,22 +37,24 @@ export const useFeathers = () => useContext(Context)
 const FeathersProvider = ({ children }) => {
   const [client, setClient] = useState<FeathersContext['client']>(null)
 
-  const { user } = useAuth()
+  const { done } = useAuth()
 
   useEffect(() => {
     // We only want to create the feathers connection once we have a user to handle
-    if (!user) return
+    if (!done) return
     ;(async () => {
       const client = await buildFeathersClient()
-      setClient(client)
+      client.io.on('connected', () => {
+        setClient(client)
+      })
     })()
-  }, [user])
+  }, [done])
 
   const publicInterface: FeathersContext = {
     client,
   }
 
-  if (!client) return <LoadingScreen />
+  // if (!client) return <LoadingScreen />
 
   return <Context.Provider value={publicInterface}>{children}</Context.Provider>
 }
