@@ -34,6 +34,7 @@ const initialState = {
   logoutAndRedirect: () => {},
   loginRedirect: (force?: boolean, returnToPath?: string) => {},
   refreshSession: (origin: string) => {},
+  done: false,
 }
 
 const AuthContext = createContext(initialState)
@@ -216,6 +217,7 @@ const AuthProvider = ({ children }: { children: ReactElement }) => {
     logoutAndRedirect,
     loginRedirect,
     refreshSession,
+    done,
   }
 
   if (!done) return <LoadingScreen />
