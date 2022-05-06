@@ -52,6 +52,10 @@ export class InRange extends ThothComponent<void> {
       (inputs['number'][1] as number) ?? (node.data.endNumber as number)
     const numberToTest = inputs['input'][0] as number
 
+    if (numberToTest >= startRange && numberToTest <= endRange) {
+      this._task.closed = ['true']
+    } else {
+      this._task.closed = ['false']
     }
   }
 }
