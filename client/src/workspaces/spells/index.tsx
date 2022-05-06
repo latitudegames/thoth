@@ -20,11 +20,13 @@ import SearchCorpus from './windows/SearchCorpusWindow'
 import EntityManagerWindow from './windows/EntityManagerWindow'
 import { diff } from '@/utils/json0'
 import EventManagerWindow from './windows/EventManager'
+import { useAuth } from '@/contexts/AuthProvider'
 
 const Workspace = ({ tab, tabs, pubSub }) => {
   const spellRef = useRef<Spell>()
   const { events, publish } = usePubSub()
   const { getSpellDoc } = useSharedb()
+  const { user } = useAuth()
   const [loadSpell, { data: spellData }] = useLazyGetSpellQuery()
   const { editor } = useEditor()
   const [saveDiff] = useSaveDiffMutation()
@@ -49,7 +51,10 @@ const Workspace = ({ tab, tabs, pubSub }) => {
             name: spellRef.current.name,
             diff: jsonDiff,
           })
-          loadSpell(tab.spellId)
+          loadSpell({
+            spellId: tab.spellId,
+            userId: user?.id as string
+          })
 
           if ('error' in response) {
             enqueueSnackbar('Error saving spell', {
@@ -105,7 +110,10 @@ const Workspace = ({ tab, tabs, pubSub }) => {
 
   useEffect(() => {
     if (!tab || !tab.spellId) return
-    loadSpell(tab.spellId)
+    loadSpell({
+      spellId: tab.spellId,
+      userId: user?.id as string
+    })
   }, [tab])
 
   const factory = tab => {

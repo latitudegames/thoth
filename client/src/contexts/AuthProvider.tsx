@@ -22,7 +22,7 @@ interface SessionInfoType {
 }
 
 export interface UserInfoType {
-  id: number
+  id: string
   email: string
   groups: string[]
   username: string
@@ -204,6 +204,18 @@ const AuthProvider = ({ children }: { children: ReactElement }) => {
           }
         }
       } else {
+        // Setting static user data
+        let userId = localStorage.getItem('userId')
+        if(!userId) {
+          userId = uuidv4()
+          localStorage.setItem('userId', userId)
+        }
+        setUserInfo({
+          id: userId,
+          email: '',
+          groups: [],
+          username: ''
+        })
         setDone(true)
       }
     })()

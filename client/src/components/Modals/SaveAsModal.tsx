@@ -6,12 +6,17 @@ import Modal from '../Modal/Modal'
 import css from './modalForms.module.css'
 import { openTab } from '@/state/tabs'
 import { useDispatch } from 'react-redux'
+import { useAuth } from '@/contexts/AuthProvider'
 
 const EditSpellModal = ({ tab, closeModal }) => {
   const dispatch = useDispatch()
   const [error, setError] = useState('')
   const [saveSpell, { isLoading }] = useSaveSpellMutation()
-  const { data: spell } = useGetSpellQuery(tab.spellId, {
+  const { user } = useAuth()
+  const { data: spell } = useGetSpellQuery({ 
+    spellId: tab.spellId, 
+    userId: user?.id as string 
+  }, {
     skip: !tab.spellId,
   })
   const { enqueueSnackbar } = useSnackbar()
@@ -26,6 +31,7 @@ const EditSpellModal = ({ tab, closeModal }) => {
     const saveResponse: any = await saveSpell({
       ...spell,
       name: data.name,
+      user: user?.id
     })
 
     if (saveResponse.error) {
