@@ -34,8 +34,6 @@ const handleSockets = (app: any) => {
       // Authenticate with the auth headers here
       const user = await getUserInfo(sessionId)
 
-      console.log('SETTING USER', user)
-
       // Attach the user info to the params or use in services
       socket.feathers.user = user
 
@@ -44,7 +42,6 @@ const handleSockets = (app: any) => {
 
       app.userSpellManagers.set(user.id, spellManager)
 
-      console.log('EMITTING CONNECTED EVENT')
       socket.emit('connected')
     })
   }
