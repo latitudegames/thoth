@@ -7,7 +7,11 @@
 /* eslint-disable no-param-reassign */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 import pg from 'pg'
-import { AddClient, EditClient } from './routes/settings/types'
+import {
+  AddClient,
+  ClientFilterOptions,
+  EditClient,
+} from './routes/settings/types'
 import { isValidObject, makeUpdateQuery } from './utils/utils'
 
 function randomInt(min: number, max: number) {
@@ -533,11 +537,15 @@ export class database {
     return rows && rows.rows && rows.rows.length > 0 ? rows.rows[0] : {}
   }
 
-  async getAllClientSetting() {
-    const query =
-      'SELECT id, client, name, type, default_value FROM client_settings WHERE is_deleted=false'
+  async getAllClientSetting({ page, per_page }: ClientFilterOptions) {
+    let offset = Math.abs(
+      (per_page as number) * Math.abs((page as number) - 1)
+    ) as number
 
-    const rows = await this.client.query(query)
+    const query =
+      'SELECT id, client, name, type, default_value FROM client_settings WHERE is_deleted=false ORDER BY id ASC LIMIT $1 OFFSET $2'
+
+    const rows = await this.client.query(query, [per_page, offset])
     if (rows && rows.rows && rows.rows.length > 0) {
       return { data: rows.rows, success: true }
     }
