@@ -533,6 +533,17 @@ export class database {
     return rows && rows.rows && rows.rows.length > 0 ? rows.rows[0] : {}
   }
 
+  async getAllClientSetting() {
+    const query =
+      'SELECT id, client, name, type, default_value FROM client_settings WHERE is_deleted=false'
+
+    const rows = await this.client.query(query)
+    if (rows && rows.rows && rows.rows.length > 0) {
+      return { data: rows.rows, success: true }
+    }
+    return { data: [], success: false }
+  }
+
   async addClientSetting(body: AddClient): Promise<any> {
     const { client, defaultValue, name, type } = body
 

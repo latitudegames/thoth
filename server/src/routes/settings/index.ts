@@ -105,6 +105,21 @@ const deleteClient = async (ctx: Koa.Context) => {
   }
 }
 
+const getAllClient = async (ctx: Koa.Context) => {
+  try {
+    const { success, data } = await database.instance.getAllClientSetting()
+
+    if (success) return (ctx.body = makeResponse('Records available', data))
+
+    return (ctx.body = makeResponse('Records are not available', data))
+  } catch (error) {
+    console.error('Error: editClient =>', error)
+    return (
+      (ctx.body = makeResponse('Something went wrong!', {})), (ctx.status = 400)
+    )
+  }
+}
+
 export const settings: Route[] = [
   {
     path: '/setting/client',
@@ -112,5 +127,6 @@ export const settings: Route[] = [
     post: addClient,
     patch: editClient,
     delete: deleteClient,
+    get: getAllClient,
   },
 ]
