@@ -7,6 +7,8 @@
 /* eslint-disable no-param-reassign */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 import pg from 'pg'
+import { AddClient, EditClient } from './routes/settings/types'
+import { isValidObject, makeUpdateQuery } from './utils/utils'
 
 function randomInt(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min
@@ -132,20 +134,27 @@ export class database {
   async getAllEvents() {
     const query = 'SELECT * FROM events'
     const rows = await this.client.query(query)
-    if(rows && rows.rows && rows.rows.length > 0) return rows.rows
+    if (rows && rows.rows && rows.rows.length > 0) return rows.rows
     else return []
   }
   async getSortedEventsByDate(sortOrder: string) {
     const query = 'SELECT * FROM events'
     const rows = await this.client.query(query)
-    if(rows && rows.rows && rows.rows.length > 0) {
-      rows.rows.sort((a: { date: string | number | Date }, b: { date: string | number | Date }) => {
-        if(sortOrder === 'asc') return new Date(a.date).valueOf() - new Date(b.date).valueOf()
-        else {
-          let sortValue = new Date(b.date).valueOf() - new Date(a.date).valueOf()
-          return sortValue === 0 ? -1 : sortValue
+    if (rows && rows.rows && rows.rows.length > 0) {
+      rows.rows.sort(
+        (
+          a: { date: string | number | Date },
+          b: { date: string | number | Date }
+        ) => {
+          if (sortOrder === 'asc')
+            return new Date(a.date).valueOf() - new Date(b.date).valueOf()
+          else {
+            let sortValue =
+              new Date(b.date).valueOf() - new Date(a.date).valueOf()
+            return sortValue === 0 ? -1 : sortValue
+          }
         }
-      })
+      )
       return rows.rows
     } else return []
   }
@@ -158,19 +167,11 @@ export class database {
     const findEventQuery = 'SELECT * FROM events WHERE id = $1'
     const findEventQueryValues = [id]
     const rows = await this.client.query(findEventQuery, findEventQueryValues)
-    if(rows && rows.rows && rows.rows.length > 0) {
-      const {
-        agent,
-        sender,
-        client,
-        channel,
-        text,
-        type,
-        date
-      } = data
+    if (rows && rows.rows && rows.rows.length > 0) {
+      const { agent, sender, client, channel, text, type, date } = data
       const query = `UPDATE events SET agent = $1, sender = $2, client = $3, channel = $4, text = $5, type = $6, date = $7 WHERE id = $8`
       const values = [agent, sender, client, channel, text, type, date, id]
-      console.log('query :: ', query);
+      console.log('query :: ', query)
       const res = await this.client.query(query, values)
       return res.rowCount
     } else return 0
@@ -512,5 +513,112 @@ export class database {
 
     const rows = await this.client.query(query, values)
     return rows && rows.rows && rows.rows.length > 0
+  }
+
+  async getClientSettingByName(name: string) {
+    const query =
+      'SELECT id, client, name, type, default_value FROM client_settings WHERE name=$1 AND is_deleted=false'
+    const values = [name]
+
+    const rows = await this.client.query(query, values)
+    return rows && rows.rows && rows.rows.length > 0 ? rows.rows[0] : {}
+  }
+
+  async getClientSettingById(id: string | number) {
+    const query =
+      'SELECT id, client, name, type, default_value FROM client_settings WHERE id=$1 AND is_deleted=false'
+    const values = [id]
+
+    const rows = await this.client.query(query, values)
+    return rows && rows.rows && rows.rows.length > 0 ? rows.rows[0] : {}
+  }
+
+  async addClientSetting(body: AddClient): Promise<any> {
+    const { client, defaultValue, name, type } = body
+
+    const data = await this.getClientSettingByName(name)
+
+    if (!isValidObject(data)) {
+      const query =
+        'INSERT INTO client_settings(client, name, type, default_value) VALUES($1, $2, $3, $4)'
+
+      const values: any = [client, name, type, defaultValue]
+
+      try {
+        const res = await this.client.query(query, values)
+        const { command, rowCount } = res
+
+        if (command === 'INSERT' && rowCount > 0) {
+          const data = await this.getClientSettingByName(name)
+          return { success: true, data: data, isAlreadyExists: false }
+        }
+      } catch (error) {
+        console.log('Error => addClientSetting => ', error)
+      }
+      return { success: false, data: {}, isAlreadyExists: false }
+    }
+    return { success: false, data: data, isAlreadyExists: true }
+  }
+
+  async editClientSetting(body: EditClient, id: string | number): Promise<any> {
+    const data = await this.getClientSettingById(id)
+
+    const cols = Object.keys(body).map(key =>
+      key === 'defaultValue' ? 'default_value' : key
+    )
+
+    const idKey = cols.length + 1
+
+    if (isValidObject(data)) {
+      const query = makeUpdateQuery({
+        table: 'client_settings',
+        wheres: { id: `$${idKey}`, is_deleted: false },
+        cols: cols,
+      })
+
+      const values: any = [...Object.values(body), id]
+
+      try {
+        const res = await this.client.query(query, values)
+        const { command, rowCount } = res
+
+        if (command === 'UPDATE' && rowCount > 0) {
+          const data = await this.getClientSettingById(id)
+          return { success: true, data: data, isExists: true }
+        }
+      } catch (error) {
+        console.log('Error => editClientSetting => ', error)
+      }
+      return { success: false, data: {}, isExists: true }
+    }
+    return { success: false, data: data, isExists: false }
+  }
+
+  async deleteClientSetting(id: string | number): Promise<any> {
+    const data = await this.getClientSettingById(id)
+
+    if (isValidObject(data)) {
+      const query = makeUpdateQuery({
+        table: 'client_settings',
+        wheres: { id: `$2`, is_deleted: false },
+        cols: ['is_deleted'],
+      })
+
+      const values: any = [true, id]
+
+      try {
+        const res = await this.client.query(query, values)
+        const { command, rowCount } = res
+
+        if (command === 'UPDATE' && rowCount > 0) {
+          const data = await this.getClientSettingById(id)
+          return { success: true, data: data, isExists: true }
+        }
+      } catch (error) {
+        console.log('Error => deleteClientSetting => ', error)
+      }
+      return { success: false, data: {}, isExists: true }
+    }
+    return { success: false, data: data, isExists: false }
   }
 }

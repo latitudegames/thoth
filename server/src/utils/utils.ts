@@ -2,6 +2,15 @@ const punctRE =
   /[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,\-.\/:;<=>?@\[\]^_`{|}~]/g
 const spaceRE = /\s+/g
 import nlp from 'compromise'
+import {
+  isBoolean,
+  isDate,
+  isEmpty,
+  isNull,
+  isNumber,
+  isString,
+  isUndefined,
+} from 'lodash'
 
 export function removePunctuation(str: string): string {
   return str.replace(punctRE, '').replace(spaceRE, ' ')
@@ -34,4 +43,125 @@ export function removeEmojisFromString(str: string): string {
       ''
     )
     .replace(/:(.*?):/g, '')
+}
+
+export const isValidObject = (obj: any): boolean => {
+  return obj && Object.keys(obj).length > 0
+}
+
+export const isValidArray = (arr: any): boolean => {
+  return arr && Array.isArray(arr) && arr.length > 0
+}
+
+export const isValidObjectWithValues = (
+  obj: any,
+  skipKeys: string[]
+): boolean => {
+  let isValid = true
+
+  if (isValidObject(obj)) {
+    Object.entries(obj).forEach(([key, value]: any) => {
+      if (!skipKeys.includes(key)) {
+        if (
+          (!isNumber(value) && !isBoolean(value) && isEmpty(value)) ||
+          (!isNumber(value) && !isBoolean(value) && isUndefined(value))
+        ) {
+          isValid = false
+        } else if (
+          typeof value === 'string' &&
+          isString(value) &&
+          (value.length === 0 || value.charAt(0) === ' ')
+        ) {
+          isValid = false
+        } else if (typeof value === 'object') {
+          if (!(isValidArray(value) || isValidObject(value))) {
+            isValid = false
+          }
+        } else if (typeof value === 'number' && !Number.isInteger(value)) {
+          isValid = false
+        }
+      }
+    })
+    return isValid
+  }
+  return false
+}
+
+export const validBodyFieldsForUpdate = (obj: any, skipKeys: string[]): any => {
+  let newObj: any = {}
+
+  if (isValidObject(obj)) {
+    const keys = Object.keys(obj)
+
+    for (let index = 0; index < keys.length; index++) {
+      let isValid = true
+      const value = obj[keys[index]]
+      if (!skipKeys.includes(keys[index])) {
+        if (!isNumber(value) && !isBoolean(value) && isEmpty(value)) {
+          isValid = false
+        } else if (
+          !isNumber(value) &&
+          !isBoolean(value) &&
+          isUndefined(value)
+        ) {
+          isValid = false
+        } else if (
+          isString(value) &&
+          (value.length === 0 || value.charAt(0) === ' ')
+        ) {
+          isValid = false
+        } else if (typeof value === 'object') {
+          if (!(isValidArray(value) || isValidObject(value))) {
+            isValid = false
+          }
+        } else if (isNumber(value) && value === 0) {
+          isValid = false
+        } else if (isNull(value)) {
+          isValid = false
+        }
+      }
+
+      if (isValid) {
+        newObj[keys[index]] = value
+      }
+    }
+  }
+  return { ...newObj }
+}
+
+export const makeResponse = (message: string, body: any) => {
+  if (isValidArray(body)) {
+    return { message, payload: body }
+  }
+
+  if (isValidObject(body)) {
+    return { message, payload: [body] }
+  }
+
+  return { message, payload: [] }
+}
+
+export const makeUpdateQuery = ({ table, wheres, cols }: any): string => {
+  // Setup static beginning of query
+  let query = [`UPDATE ${table}`]
+  query.push('SET')
+
+  // Create another array storing each set command
+  // and assigning a number value for parameterized query
+  let set: any = []
+  cols.forEach(function (col: any, i: number) {
+    set.push(col + ' = ($' + (i + 1) + ')')
+  })
+  query.push(set.join(', '))
+
+  query.push('WHERE')
+
+  // Add the WHERE statement to look up by id
+  Object.entries(wheres).forEach(([key, value]: any, index: number) => {
+    if (index === 0) query.push(` ${key} = ` + value)
+    if (index > 0) query.push(`AND ${key} = ` + value)
+  })
+
+  // Return a complete query string
+  return query.join(' ')
 }
