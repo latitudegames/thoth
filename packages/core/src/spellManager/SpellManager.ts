@@ -7,5 +7,10 @@ export default class SpellManager {
 
   constructor(socket: io.Socket) {
     this.socket = socket
+
+  getSpellRunner(spellId: string) {
+    return this.spellRunnerMap.get(spellId)
+  }
+
   }
 }
