@@ -8,7 +8,7 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import Checkbox from '@mui/material/Checkbox'
-import data from '../../data/config/clientSettings'
+import data from '../../data/config/scopedata'
 import Pagination from '@mui/material/Pagination'
 import MoreHoriz from '@mui/icons-material/MoreHoriz'
 import IconButton from '@mui/material/IconButton'
@@ -43,11 +43,14 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 //   return { client, name, type, defaultValue }
 // }
 
-const rows = data.slice(0, 10)
+export default function ScopeTable() {
+  const [page, setPage] = React.useState(1)
+  //   const rows = data.slice(0, 10)
+  const PER_PAGE = 10
 
-export default function CustomizedTables() {
-  const [page, setPage] = React.useState(0)
+  const count = Math.ceil(data.length / PER_PAGE)
 
+  const paginatedData = data.slice((page - 1) * PER_PAGE, page * PER_PAGE)
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage)
   }
@@ -64,16 +67,16 @@ export default function CustomizedTables() {
           <TableHead>
             <TableRow>
               <StyledTableCell align="right">Select</StyledTableCell>
-              <StyledTableCell align="right">Client</StyledTableCell>
-              <StyledTableCell align="right">Name</StyledTableCell>
-              <StyledTableCell align="right">Type</StyledTableCell>
-              <StyledTableCell align="right">Default Value</StyledTableCell>
+              <StyledTableCell align="right">Tables</StyledTableCell>
+              <StyledTableCell align="right">Full table size</StyledTableCell>
+              <StyledTableCell align="right">Table size</StyledTableCell>
+              <StyledTableCell align="right">Record count</StyledTableCell>
               <StyledTableCell align="right">Action</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map(row => (
-              <StyledTableRow key={row.name}>
+            {paginatedData.map(row => (
+              <StyledTableRow key={row.table}>
                 <TableCell padding="checkbox">
                   <Checkbox
                     color="primary"
@@ -82,12 +85,11 @@ export default function CustomizedTables() {
                     }}
                   />
                 </TableCell>
-                <StyledTableCell align="right">{row.client}</StyledTableCell>
-                <StyledTableCell align="right">{row.name}</StyledTableCell>
-                <StyledTableCell align="right">{row.type}</StyledTableCell>
-                <StyledTableCell align="right">
-                  {row.defaultValue}
-                </StyledTableCell>
+                <StyledTableCell align="right">{row.table}</StyledTableCell>
+                <StyledTableCell align="right">{row.Fullsize}</StyledTableCell>
+                <StyledTableCell align="right">{row.size}</StyledTableCell>
+                <StyledTableCell align="right">{row.count}</StyledTableCell>
+
                 <TableCell padding="checkbox" align="center">
                   <IconButton>
                     <MoreHoriz />
@@ -108,7 +110,7 @@ export default function CustomizedTables() {
         }}
       >
         <Pagination
-          count={2}
+          count={count}
           variant="outlined"
           shape="rounded"
           page={page}
