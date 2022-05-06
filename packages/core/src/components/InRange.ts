@@ -36,6 +36,13 @@ export class InRange extends ThothComponent<void> {
     const isTrue = new Rete.Output('true', 'True', triggerSocket)
     const isFalse = new Rete.Output('false', 'False', triggerSocket)
 
+    return node
+      .addInput(startNumSocket)
+      .addInput(endNumSocket)
+      .addInput(dataInput)
+      .addInput(testInput)
+      .addOutput(isTrue)
+      .addOutput(isFalse)
   }
 
   }
