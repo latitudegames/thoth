@@ -30,6 +30,7 @@ export class InRange extends ThothComponent<void> {
       numSocket,
       false
     )
+    const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
   }
 
   }
