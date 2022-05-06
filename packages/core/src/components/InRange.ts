@@ -24,6 +24,12 @@ export class InRange extends ThothComponent<void> {
       numSocket,
       false
     )
+    const endNumSocket = new Rete.Input(
+      'number',
+      'End Number',
+      numSocket,
+      false
+    )
   }
 
   }
