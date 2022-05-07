@@ -2,7 +2,7 @@ import Koa from 'koa'
 import { noAuth } from './../../middleware/auth'
 import { Route } from 'src/types'
 import { database } from '../../database'
-import { AddClient, EditClient } from './types'
+import { AddClient, ClientFilterOptions, EditClient } from './types'
 import { isValidObjectWithValues, makeResponse } from '../../utils/utils'
 
 const addClient = async (ctx: Koa.Context) => {
@@ -106,8 +106,18 @@ const deleteClient = async (ctx: Koa.Context) => {
 }
 
 const getAllClient = async (ctx: Koa.Context) => {
+  let { query } = ctx.request as Koa.Request
+
+  let { page, per_page } = query as ClientFilterOptions
+
+  page = page || (1 as any)
+  per_page = per_page || (10 as any)
+
   try {
-    const { success, data } = await database.instance.getAllClientSetting()
+    const { success, data } = await database.instance.getAllClientSetting({
+      page,
+      per_page,
+    })
 
     if (success) return (ctx.body = makeResponse('Records available', data))
 

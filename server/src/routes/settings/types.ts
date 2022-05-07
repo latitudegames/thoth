@@ -10,3 +10,8 @@ export type EditClient = {
   defaultValue: string
   id: string
 }
+
+export type ClientFilterOptions = {
+  per_page: number | string
+  page: number | string
+}
