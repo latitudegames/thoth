@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthProvider'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { adjectives, colors, uniqueNamesGenerator } from 'unique-names-generator'
 
 function isJson(str) {
   try {
@@ -248,6 +249,65 @@ const EntityWindow = ({ id, updateCallback }) => {
           updateCallback()
         }
       })
+  }
+
+  const exportEntity = () => {
+    const _data = {
+      enabled,
+      discord_enabled,
+      discord_api_key,
+      discord_starting_words,
+      discord_bot_name_regex,
+      discord_bot_name,
+      discord_empty_responses,
+      discord_spell_handler_incoming,
+      discord_spell_handler_update,
+      discord_spell_handler_feed,
+      use_voice,
+      voice_provider,
+      voice_character,
+      voice_language_code,
+      xrengine_enabled,
+      xrengine_url,
+      xrengine_spell_handler_incoming,
+      xrengine_spell_handler_update,
+      xrengine_spell_handler_feed,
+      xrengine_bot_name,
+      xrengine_bot_name_regex,
+      xrengine_starting_words,
+      xrengine_empty_responses,
+      twitter_client_enable,
+      twitter_token,
+      twitter_id,
+      twitter_app_token,
+      twitter_app_token_secret,
+      twitter_access_token,
+      twitter_access_token_secret,
+      twitter_bot_name,
+      twitter_bot_name_regex,
+      // twilio_client_enable,
+      // twilio_sid,
+      // twilio_auth_token,
+      // twilio_phone_number
+    }    
+    const fileName = uniqueNamesGenerator({
+      dictionaries: [adjectives, colors],
+      separator: '-',
+      length: 2,
+    })
+    const json = JSON.stringify(_data)
+    const blob = new Blob([json], { type: 'application/json' })
+    const url = window.URL.createObjectURL(new Blob([blob]))
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', `${fileName}.thoth`)
+    // Append to html link element page
+    document.body.appendChild(link)
+    // Start download
+    link.click()
+    if (!link.parentNode) return
+    // Clean up and remove the link
+    link.parentNode.removeChild(link)
   }
 
   return !loaded ? (
@@ -735,7 +795,8 @@ const EntityWindow = ({ id, updateCallback }) => {
         <button onClick={() => update()} style={{ marginRight: '10px' }}>
           Update
         </button>
-        <button onClick={() => _delete()}>Delete</button>
+        <button onClick={() => _delete()} style={{ marginRight: '10px' }}>Delete</button>
+        <button onClick={() => exportEntity()}>Export</button>
       </div>
     </div>
   )

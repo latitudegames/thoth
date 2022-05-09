@@ -265,6 +265,16 @@ export class database {
 
     await this.client.query(query, values)
   }
+  async createEntity() {
+    const query = 'INSERT INTO entities (personality) VALUES ($1)'
+    const values = ['common']
+    console.log('called ', query)
+    try {
+      return await this.client.query(query, values)
+    } catch (e) {
+      throw new Error(e)
+    }
+  }
   async updateEntity(id: any, data: { [x: string]: any; dirty?: any }) {
     console.log('updateEntity', id, data)
     const check = 'SELECT * FROM entities WHERE id=$1'
@@ -276,7 +286,8 @@ export class database {
     if (rows && rows.rows && rows.rows.length > 0) {
       data.dirty = 'true'
       let q = ''
-      Object.keys(data).forEach(key => {
+      let dataArray = Object.keys(data)
+      dataArray.map((key) => {
         if (data[key] !== null) {
           q += `${key}='${('' + data[key]).replace("'", "''")}',`
         }
@@ -290,17 +301,25 @@ export class database {
       } catch (e) {
         throw new Error(e)
       }
-    } else if (Object.keys(data).length <= 0) {
-      const query = 'INSERT INTO entities (personality) VALUES ($1)'
-      const values = ['common']
+    } else {
+      let q = '', cols = ''
+      let dataArray = Object.keys(data)
+      dataArray.map((key) => {
+        if (data[key] !== null) {
+          cols += `${key},`
+          q += `'${('' + data[key]).replace("'", "''")}',`
+        }
+      })
+      cols = cols.slice(0, cols.lastIndexOf(','))
+      q = q.slice(0, q.lastIndexOf(','))
+
+      const query = `INSERT INTO entities(${cols}) VALUES (${q})`
       console.log('called ', query)
       try {
-        return await this.client.query(query, values)
+        return await this.client.query(query)
       } catch (e) {
         throw new Error(e)
       }
-    } else {
-      console.log('nope ', data)
     }
   }
 

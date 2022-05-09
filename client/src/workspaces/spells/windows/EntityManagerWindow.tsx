@@ -1,3 +1,4 @@
+import FileInput from '@/screens/HomeScreen/components/FileInput'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 
@@ -12,15 +13,24 @@ const EntityManagerWindow = () => {
     setData(res.data);
   }
 
-  const createNew = () => {
+  const createNew = (data = {}) => {
     console.log("Create new called")
     axios
-      .post(`${process.env.REACT_APP_API_ROOT_URL}/entity`, { data: {} })
+      .post(`${process.env.REACT_APP_API_ROOT_URL}/entity`, { data })
       .then(async res => {
         console.log("response is", res)
         const res2 = await axios.get(`${process.env.REACT_APP_API_ROOT_URL}/entities`);
         setData(res2.data);
       })
+  }
+
+  const loadFile = (selectedFile) => {
+    const fileReader = new FileReader()
+    fileReader.readAsText(selectedFile)
+    fileReader.onload = (event) => {
+      const data = JSON.parse(event?.target?.result as string)
+      createNew(data)
+    }
   }
 
   useEffect(() => {
@@ -36,11 +46,11 @@ const EntityManagerWindow = () => {
       <React.Fragment>
         <div>
           {data && (data as any) !== [] &&
-            (data as any).map((value, idx) => {
+            (data as any).map((value) => {
               return (
                 <EntityWindow
                   id={value.id}
-                  key={idx}
+                  key={value.id}
                   updateCallback={async () => {
                     resetData();
                   }}
@@ -49,8 +59,10 @@ const EntityManagerWindow = () => {
             })}
         </div>
       </React.Fragment>
-
-      <button onClick={() => createNew()}>Create New</button>
+      <div className="entBtns">
+        <button onClick={() => createNew()} style={{ marginRight: '10px' }}>Create New</button>
+        <FileInput loadFile={loadFile}/>
+      </div>
     </div>
   )
 }
