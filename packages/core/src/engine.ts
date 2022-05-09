@@ -1,6 +1,8 @@
+import io from 'socket.io'
 import Rete, { Engine } from 'rete'
 
 import { ChainData, ModuleType, NodeData, ThothWorkerInputs } from '../types'
+import SocketPlugin from './plugins/socketPlugin'
 import debuggerPlugin from './plugins/debuggerPlugin'
 import ModulePlugin from './plugins/modulePlugin'
 import TaskPlugin, { Task } from './plugins/taskPlugin'
@@ -40,6 +42,7 @@ export type InitEngineArguments = {
   server: boolean
   modules?: Record<string, ModuleType>
   throwError?: Function
+  socket?: io.Socket
 }
 // @seang TODO: update this to not use positional arguments
 export const initSharedEngine = ({
@@ -48,6 +51,7 @@ export const initSharedEngine = ({
   server = false,
   modules = {},
   throwError,
+  socket,
 }: InitEngineArguments) => {
   const engine = new Rete.Engine(name) as ThothEngine
 
@@ -56,6 +60,10 @@ export const initSharedEngine = ({
     engine.use(debuggerPlugin, { server: true, throwError })
     engine.use(ModulePlugin, { engine, modules } as any)
     engine.use(TaskPlugin)
+
+    if (socket) {
+      engine.use(SocketPlugin, { socket })
+    }
   }
 
   engine.bind('run')
