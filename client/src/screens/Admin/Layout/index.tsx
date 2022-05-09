@@ -9,13 +9,13 @@ import ListItem from '@mui/material/ListItem'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import InboxIcon from '@mui/icons-material/MoveToInbox'
-import MailIcon from '@mui/icons-material/Mail'
-import Tables from '../../Admin/Scope'
+import { Outlet } from 'react-router-dom'
 import FormControl from '@mui/material/FormControl'
 import OutlinedInput from '@mui/material/OutlinedInput'
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
 import { styled } from '@mui/material/styles'
+import { Link } from 'react-router-dom'
 
 const drawerWidth = 240
 
@@ -69,14 +69,30 @@ const AdminDashboard = () => {
         <Toolbar />
         <Box sx={{ overflow: 'auto' }}>
           <List>
-            {['Config', 'Client Settings', 'scope'].map((text, index) => (
-              <ListItem button key={text}>
+            <Link to={'config'}>
+              <ListItem button>
                 <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  <InboxIcon />
                 </ListItemIcon>
-                <ListItemText primary={text} />
+                <ListItemText primary="Config" />
               </ListItem>
-            ))}
+            </Link>
+            <Link to={'clientSettings'}>
+              <ListItem button>
+                <ListItemIcon>
+                  <InboxIcon />
+                </ListItemIcon>
+                <ListItemText primary="Client Settings" />
+              </ListItem>
+            </Link>
+            <Link to={'scope'}>
+              <ListItem button>
+                <ListItemIcon>
+                  <InboxIcon />
+                </ListItemIcon>
+                <ListItemText primary="Scope" />
+              </ListItem>
+            </Link>
           </List>
         </Box>
       </Drawer>
@@ -110,8 +126,7 @@ const AdminDashboard = () => {
             </OutlineButton>
           </Grid>
         </Container>
-
-        <Tables />
+        <Outlet />
       </Box>
     </Box>
   )
