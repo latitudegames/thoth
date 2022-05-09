@@ -22,6 +22,8 @@ export const buildThothInterface = (): EngineContext => {
     async readFromImageCache() {
       return { images: [] }
     },
-    processCode() {},
+    processCode() {
+      return {}
+    },
   }
 }
