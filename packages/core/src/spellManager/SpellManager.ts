@@ -25,6 +25,8 @@ export default class SpellManager {
       socket: this.socket,
     })
 
+    spellRunner.loadSpell(spell)
+
     this.spellRunnerMap.set(spell.name, spellRunner)
 
     return spellRunner
