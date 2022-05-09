@@ -10,6 +10,11 @@ import { Application } from '../../declarations'
 
 interface Data {}
 
+interface CreateData {
+  inputs: Record<string, any>
+  spellId: string
+}
+
 interface ServiceOptions {}
 
 type UserInfo = {
@@ -48,8 +53,6 @@ export class SpellRunner implements ServiceMethods<Data> {
 
     const spell = await getSpell(id as string)
 
-    console.log('spell found!', spell)
-
     // Load the spell into the spellManager. If there is no spell runner, we make one.
     const spellRunner = spellManager.load(spell)
 
@@ -59,12 +62,30 @@ export class SpellRunner implements ServiceMethods<Data> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async create(data: Data, params?: Params): Promise<Data> {
-    if (Array.isArray(data)) {
-      return Promise.all(data.map(current => this.create(current, params)))
-    }
+  async create(
+    data: CreateData,
+    params?: Params
+  ): Promise<Record<string, unknown>> {
+    if (!this.app.userSpellManagers) return {}
+    if (!params) throw new Error('No params present in service')
 
-    return data
+    const { user } = params
+
+    if (!user) throw new Error('No user is present in service')
+
+    const { inputs, spellId } = data
+
+    const spellManager = this.app.userSpellManagers.get(user.id)
+
+    console.log('Spell manager', spellManager)
+
+    if (!spellManager) throw new Error('No spell manager found for user!')
+
+    const result = await spellManager.run(spellId, inputs)
+
+    console.log('RESULT', result)
+
+    return result || {}
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
