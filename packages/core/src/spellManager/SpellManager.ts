@@ -29,4 +29,11 @@ export default class SpellManager {
 
     return spellRunner
   }
+
+  async run(spellId: string, inputs: Record<string, any>) {
+    const runner = this.getSpellRunner(spellId)
+    const result = await runner?.defaultRun(inputs)
+
+    return result
+  }
 }
