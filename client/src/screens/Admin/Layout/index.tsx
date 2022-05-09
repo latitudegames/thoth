@@ -10,37 +10,18 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import InboxIcon from '@mui/icons-material/MoveToInbox'
 import { Outlet } from 'react-router-dom'
-import FormControl from '@mui/material/FormControl'
-import OutlinedInput from '@mui/material/OutlinedInput'
-import Grid from '@mui/material/Grid'
-import Button from '@mui/material/Button'
 import { styled } from '@mui/material/styles'
-import { Link } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 
 const drawerWidth = 240
 
-const Container = styled(Grid)({
-  marginBottom: '1.5rem',
-})
-
-const ButtonCustom = styled(Button)({
-  background: '#424242',
-  color: '#fff',
-  border: '1px solid #636363',
-  '&:hover': {
-    background: '#424242',
-  },
-})
-
-const OutlineButton = styled(Button)({
-  color: '#fff',
-  border: '2px solid #636363',
-  '&:hover': {
-    border: '1px solid #636363',
-  },
+const StyledLink = styled(NavLink)({
+  textDecoration: 'none',
+  color: 'white',
 })
 
 const AdminDashboard = () => {
+  const location = useLocation()
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -69,63 +50,38 @@ const AdminDashboard = () => {
         <Toolbar />
         <Box sx={{ overflow: 'auto' }}>
           <List>
-            <Link to={'config'}>
-              <ListItem button>
+            <StyledLink to={'config'}>
+              <ListItem selected={location.pathname === '/admin/config'} button>
                 <ListItemIcon>
                   <InboxIcon />
                 </ListItemIcon>
                 <ListItemText primary="Config" />
               </ListItem>
-            </Link>
-            <Link to={'clientSettings'}>
-              <ListItem button>
+            </StyledLink>
+            <StyledLink to={'clientSettings'}>
+              <ListItem
+                selected={location.pathname === '/admin/clientSettings'}
+                button
+              >
                 <ListItemIcon>
                   <InboxIcon />
                 </ListItemIcon>
                 <ListItemText primary="Client Settings" />
               </ListItem>
-            </Link>
-            <Link to={'scope'}>
-              <ListItem button>
+            </StyledLink>
+            <StyledLink to={'scope'}>
+              <ListItem selected={location.pathname === '/admin/scope'} button>
                 <ListItemIcon>
                   <InboxIcon />
                 </ListItemIcon>
                 <ListItemText primary="Scope" />
               </ListItem>
-            </Link>
+            </StyledLink>
           </List>
         </Box>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Toolbar />
-        <Typography variant="h3" gutterBottom component="div">
-          Client Settings
-        </Typography>
-        <Container container spacing={2}>
-          <Grid item xs={10}>
-            <Typography variant="h6" gutterBottom component="div">
-              These are all the client settings you have created
-            </Typography>
-          </Grid>
-          <Grid item xs={2}>
-            <ButtonCustom variant="contained" size="medium" fullWidth>
-              Add Setting
-            </ButtonCustom>
-          </Grid>
-        </Container>
-
-        <Container container spacing={2}>
-          <Grid item xs={11}>
-            <FormControl sx={{ width: '100%' }}>
-              <OutlinedInput placeholder="Search" />
-            </FormControl>
-          </Grid>
-          <Grid item xs={1}>
-            <OutlineButton variant="outlined" size="medium" fullWidth>
-              Filter
-            </OutlineButton>
-          </Grid>
-        </Container>
         <Outlet />
       </Box>
     </Box>

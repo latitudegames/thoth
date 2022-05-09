@@ -12,6 +12,11 @@ import data from '../../data/config/clientSettings'
 import Pagination from '@mui/material/Pagination'
 import MoreHoriz from '@mui/icons-material/MoreHoriz'
 import IconButton from '@mui/material/IconButton'
+import FormControl from '@mui/material/FormControl'
+import OutlinedInput from '@mui/material/OutlinedInput'
+import Grid from '@mui/material/Grid'
+import Button from '@mui/material/Button'
+import Typography from '@mui/material/Typography'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -33,6 +38,27 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     border: 0,
   },
 }))
+
+const Container = styled(Grid)({
+  marginBottom: '1.5rem',
+})
+
+const ButtonCustom = styled(Button)({
+  background: '#424242',
+  color: '#fff',
+  border: '1px solid #636363',
+  '&:hover': {
+    background: '#424242',
+  },
+})
+
+const OutlineButton = styled(Button)({
+  color: '#fff',
+  border: '2px solid #636363',
+  '&:hover': {
+    border: '1px solid #636363',
+  },
+})
 
 // function createData(
 //   client: string,
@@ -59,6 +85,34 @@ export default function CustomizedTables() {
 
   return (
     <div>
+      <Typography variant="h3" gutterBottom component="div">
+        Client Settings
+      </Typography>
+      <Container container spacing={2}>
+        <Grid item xs={10}>
+          <Typography variant="h6" gutterBottom component="div">
+            These are all the Client settings you have created
+          </Typography>
+        </Grid>
+        <Grid item xs={2}>
+          <ButtonCustom variant="contained" size="medium" fullWidth>
+            Add Setting
+          </ButtonCustom>
+        </Grid>
+      </Container>
+
+      <Container container spacing={2}>
+        <Grid item xs={11}>
+          <FormControl sx={{ width: '100%' }}>
+            <OutlinedInput placeholder="Search" />
+          </FormControl>
+        </Grid>
+        <Grid item xs={1}>
+          <OutlineButton variant="outlined" size="medium" fullWidth>
+            Filter
+          </OutlineButton>
+        </Grid>
+      </Container>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
