@@ -3,32 +3,44 @@ import {
   EngineContext,
   ThothWorkerInputs,
 } from '@latitudegames/thoth-core/dist/types'
+import { completion } from './api/completion'
+import { runSpell } from './api/spell'
 
-export const buildThothInterface = (): EngineContext => {
+export const buildThothInterface = (
+  defaultState: Record<string, any>
+): EngineContext => {
   // notes: need a way to replace state between runs?
 
+  let gameState = {
+    ...defaultState,
+  }
+
   return {
-    async completion(body) {
-      // Call latitude completion endpoint
-      return 'testing'
+    // would be good to get a proper type in here
+    async completion(request: Record<string, any>) {
+      const response = await completion(request)
+      return response
     },
-    setCurrentGameState() {
-      // set closure state?
+    getCurrentGameState: () => gameState,
+    setCurrentGameState: (state: Record<string, any>) => {
+      gameState = state
     },
-    getCurrentGameState() {
-      // resturn closure state
-      return {}
+    updateCurrentGameState: (update: Record<string, unknown>) => {
+      const newState = {
+        ...gameState,
+        ...update,
+      }
+      gameState = newState
     },
     async enkiCompletion() {
       // Hit enki endpoint?
       return { outputs: [] }
     },
-    updateCurrentGameState() {},
     async huggingface() {
       return {}
     },
-    async runSpell() {
-      return {}
+    async runSpell(inputs: Record<string, any>, spellId: string) {
+      return runSpell({ spellId, inputs })
     },
     async readFromImageCache() {
       return { images: [] }
