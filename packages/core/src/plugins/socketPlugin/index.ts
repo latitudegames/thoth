@@ -10,9 +10,15 @@ function install(
     client,
   }: { server?: boolean; socket?: io.Socket; client?: any }
 ) {
+  if (client) {
+    client.io.on('worker', (data: unknown) => {
+      console.log('DATA RECEIVED', data)
+    })
+  }
+
   editor.on('componentregister', (component: ThothComponent<unknown>) => {
     const worker = component.worker
-    // const builder = component.builder
+    const builder = component.builder
 
     component.worker = async (node, inputs, outputs, data, ...args) => {
       const result = await worker.apply(component, [
@@ -22,19 +28,29 @@ function install(
         data,
         ...args,
       ])
+
       if (server) {
         socket?.emit('worker', {
           nodeId: node.id,
-          result,
+          result: {
+            output: result?.output,
+          },
+        })
+
+        socket?.emit(`${node.id}`, {
+          output: result?.output,
         })
         return result
       }
+    }
 
+    component.builder = node => {
       if (client) {
-        client.io.on('worker', (data: unknown) => {
-          console.log('DATA RECEIVED', data)
+        client.io.on(node.id, (data: unknown) => {
+          console.log('DATA RECEIVED', node.id, data)
         })
       }
+      return builder.call(component, node)
     }
   })
 }
