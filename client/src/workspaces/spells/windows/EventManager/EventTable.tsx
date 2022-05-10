@@ -1,6 +1,13 @@
 // @ts-nocheck
 import { useEffect, useMemo, useState } from 'react'
-import { useAsyncDebounce, useGlobalFilter, usePagination, useSortBy, useTable } from 'react-table'
+import { 
+  useAsyncDebounce, 
+  useGlobalFilter, 
+  useFilters, 
+  usePagination, 
+  useSortBy, 
+  useTable 
+} from 'react-table'
 import { 
   TableContainer, 
   Table, 
@@ -12,11 +19,14 @@ import {
   Pagination, 
   Stack,
   IconButton,
+  Grid,
 } from '@mui/material'
 import { VscArrowDown, VscArrowUp, VscTrash } from 'react-icons/vsc'
+import { FaFileCsv } from 'react-icons/fa'
 import { useSnackbar } from 'notistack'
 import axios from 'axios'
 import _ from 'lodash'
+import { CSVLink } from 'react-csv'
 
 const GlobalFilter = ({ globalFilter, setGlobalFilter }) => {
   const [value, setValue] = useState(globalFilter)
@@ -37,37 +47,65 @@ const GlobalFilter = ({ globalFilter, setGlobalFilter }) => {
   )
 }
 
+const DefaultColumnFilter = ({
+  column: { filterValue, setFilter, Header },
+}) => {
+  return (
+    <input 
+      type='text' 
+      value={filterValue || ''}
+      onChange={e => {
+        setFilter(e.target.value || undefined)
+      }}
+      placeholder={'Search ' + Header}
+      style={{
+        width: '80%',
+        height: 'unset',
+        paddingTop: '4px',
+        paddingBottom: '4px'
+      }}
+    />
+  )
+}
+
 function EventTable({ events, updateCallback }) {
   const { enqueueSnackbar } = useSnackbar()
 
   const columns = useMemo(() => [
     {
       Header: 'Agent',
-      accessor: 'agent'
+      accessor: 'agent',
+      disableSortBy: true
     },
     {
       Header: 'Client',
-      accessor: 'client'
+      accessor: 'client',
+      disableSortBy: true
     },
     {
       Header: 'Sender',
-      accessor: 'sender'
+      accessor: 'sender',
+      disableSortBy: true
     },
     {
       Header: 'Text',
-      accessor: 'text'
+      accessor: 'text',
+      disableSortBy: true
     },
     {
       Header: 'Type',
-      accessor: 'type'
+      accessor: 'type',
+      disableSortBy: true
     },
     {
       Header: 'Channel',
-      accessor: 'channel'
+      accessor: 'channel',
+      disableSortBy: true
     },
     {
       Header: 'Date',
-      accessor: 'date'
+      accessor: 'date',
+      disableFilters: true
     },
     {
       Header: 'Actions',
@@ -106,7 +144,8 @@ function EventTable({ events, updateCallback }) {
   }
 
   const defaultColumn = {
-    Cell: EditableCell
+    Cell: EditableCell,
+    Filter: DefaultColumnFilter
   }
 
   const {
@@ -114,6 +153,7 @@ function EventTable({ events, updateCallback }) {
     getTableBodyProps,
     headerGroups,
     page,
+    flatRows,
     prepareRow,
     pageOptions,
     gotoPage,
@@ -126,6 +166,7 @@ function EventTable({ events, updateCallback }) {
       defaultColumn,
       updateEvent 
     },
+    useFilters,
     useGlobalFilter,
     useSortBy,
     usePagination
@@ -143,13 +184,31 @@ function EventTable({ events, updateCallback }) {
     else enqueueSnackbar('Error deleting Event', { variant: 'error' })
     updateCallback()
   }
-    
+
+  const originalRows = useMemo(() => flatRows.map(row => row.original), [flatRows])
+
   return (
     <Stack spacing={2}>
-      <GlobalFilter 
-        globalFilter={state.globalFilter}
-        setGlobalFilter={setGlobalFilter}
-      />
+      <Grid container justifyContent='space-between'>
+        <Grid item xs={6}>
+          <GlobalFilter 
+            globalFilter={state.globalFilter}
+            setGlobalFilter={setGlobalFilter}
+          />
+        </Grid>
+        <Grid item xs={1}>
+          <Grid container justifyContent='end'>
+            <CSVLink 
+              data={originalRows} 
+              filename='events.csv' 
+              target='_blank' 
+              style={{ textDecoration: 'none' }}
+            >
+              <button><FaFileCsv size={20}/></button>
+            </CSVLink>
+          </Grid>
+        </Grid>
+      </Grid>
       <TableContainer component={Paper}>
         <Table {...getTableProps()}>
           <TableHead style={{ backgroundColor: '#000'}}>
@@ -161,14 +220,21 @@ function EventTable({ events, updateCallback }) {
                     style={{fontSize: '0.985rem'}}
                     key={idx}
                   >
-                    {column.render('Header')}{' '}
-                    <span>
-                      {column.isSorted ? 
-                        column.isSortedDesc ? 
-                          <VscArrowDown size={14} />
-                          : <VscArrowUp size={14} /> 
-                        : ''}
-                    </span>
+                    <Stack spacing={1}>
+                      <div>
+                        {column.render('Header')}{' '}
+                        <span>
+                          {column.isSorted ? 
+                            column.isSortedDesc ? 
+                              <VscArrowDown size={14} />
+                              : <VscArrowUp size={14} /> 
+                            : ''}
+                        </span>
+                      </div>
+                      <div>
+                        {column.canFilter ? column.render('Filter') : null}
+                      </div>
+                    </Stack>
                   </TableCell>
                 ))}
               </TableRow>
