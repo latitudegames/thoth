@@ -30,6 +30,7 @@ class SpellRunner {
       components: getComponents(),
       server: true,
       modules: {},
+      socket: socket || undefined,
     }) as ThothEngine
 
     // Set up the module to interface with the runtime processes
