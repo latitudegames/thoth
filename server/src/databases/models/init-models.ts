@@ -35,6 +35,16 @@ import type {
   clientSettingAttributes,
 } from './client_settings'
 import { clientSettings as _clientSettings } from './client_settings'
+import type {
+  configurationSettingAttributes,
+  configurationSettingCreationAttributes,
+} from './configuration_setting'
+import { configurationSettings as _configurationSettings } from './configuration_setting'
+import type {
+  scopeSettingAttributes,
+  scopeSettingCreationAttributes,
+} from './scope_settings'
+import { scopeSettings as _scopeSettings } from './scope_settings'
 
 export {
   _entities as entities,
@@ -46,6 +56,8 @@ export {
   _contentObj as contentObj,
   _wikipedia as wikipedia,
   _clientSettings as clientSettings,
+  _configurationSettings as configurationSettings,
+  _scopeSettings as scopeSettings,
 }
 
 export type {
@@ -67,6 +79,10 @@ export type {
   wikipediaCreationAttributes,
   clientSettingCreationAttributes,
   clientSettingAttributes,
+  configurationSettingAttributes,
+  configurationSettingCreationAttributes,
+  scopeSettingAttributes,
+  scopeSettingCreationAttributes,
 }
 
 export function initModels(sequelize: Sequelize) {
@@ -79,6 +95,8 @@ export function initModels(sequelize: Sequelize) {
   const contentObj = _contentObj.initModel(sequelize)
   const wikipedia = _wikipedia.initModel(sequelize)
   const clientSettings = _clientSettings.initModel(sequelize)
+  const configurationSettings = _configurationSettings.initModel(sequelize)
+  const scopeSettings = _scopeSettings.initModel(sequelize)
 
   return {
     entities: entities,
@@ -90,5 +108,7 @@ export function initModels(sequelize: Sequelize) {
     documentsStore: documentsStore,
     wikipedia: wikipedia,
     clientSettings: clientSettings,
+    configurationSettings: configurationSettings,
+    scopeSettings: scopeSettings,
   }
 }

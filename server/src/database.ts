@@ -9,8 +9,13 @@
 import pg from 'pg'
 import {
   AddClient,
+  AddConfiguration,
+  AddScope,
   ClientFilterOptions,
+  ConfigurationFilterOptions,
   EditClient,
+  EditConfiguration,
+  EditScope,
 } from './routes/settings/types'
 import { isValidObject, makeUpdateQuery } from './utils/utils'
 
@@ -538,6 +543,13 @@ export class database {
     return rows && rows.rows && rows.rows.length > 0
   }
 
+  /* 
+    Section : Settings
+    Modules : Client, Configuration, Scope
+  */
+
+  // Client settings start
+
   async getClientSettingByName(name: string) {
     const query =
       'SELECT id, client, name, type, default_value FROM client_settings WHERE name=$1 AND is_deleted=false'
@@ -547,7 +559,7 @@ export class database {
     return rows && rows.rows && rows.rows.length > 0 ? rows.rows[0] : {}
   }
 
-  async getClientSettingById(id: string | number) {
+  async getClientSettingById(id: string | number): Promise<any> {
     const query =
       'SELECT id, client, name, type, default_value FROM client_settings WHERE id=$1 AND is_deleted=false'
     const values = [id]
@@ -556,7 +568,10 @@ export class database {
     return rows && rows.rows && rows.rows.length > 0 ? rows.rows[0] : {}
   }
 
-  async getAllClientSetting({ page, per_page }: ClientFilterOptions) {
+  async getAllClientSetting({
+    page,
+    per_page,
+  }: ClientFilterOptions): Promise<any> {
     let offset = Math.abs(
       (per_page as number) * Math.abs((page as number) - 1)
     ) as number
@@ -659,4 +674,261 @@ export class database {
     }
     return { success: false, data: data, isExists: false }
   }
+
+  // Client settings end
+
+  // Configuration settings start
+
+  async getConfigurationSettingByName(key: string) {
+    const query =
+      'SELECT id, key, value FROM configuration_settings WHERE key=$1 AND is_deleted=false'
+    const values = [key]
+
+    const rows = await this.client.query(query, values)
+    return rows && rows.rows && rows.rows.length > 0 ? rows.rows[0] : {}
+  }
+
+  async getAllConfigurationSettings({
+    page,
+    per_page,
+  }: ConfigurationFilterOptions): Promise<any> {
+    let offset = Math.abs(
+      (per_page as number) * Math.abs((page as number) - 1)
+    ) as number
+
+    const query =
+      'SELECT id, key, value FROM configuration_settings WHERE is_deleted=false ORDER BY id ASC LIMIT $1 OFFSET $2'
+
+    const rows = await this.client.query(query, [per_page, offset])
+
+    if (rows && rows.rows && rows.rows.length > 0) {
+      return { data: rows.rows, success: true }
+    }
+    return { data: [], success: false }
+  }
+
+  async getConfigurationSettingsById(id: string | number): Promise<any> {
+    const query =
+      'SELECT id, key, value FROM configuration_settings WHERE id=$1 AND is_deleted=false'
+    const values = [id]
+
+    const rows = await this.client.query(query, values)
+    return rows && rows.rows && rows.rows.length > 0 ? rows.rows[0] : {}
+  }
+
+  async addConfigurationSetting(body: AddConfiguration): Promise<any> {
+    const { value, key } = body
+
+    const data = await this.getConfigurationSettingByName(key)
+
+    if (!isValidObject(data)) {
+      const query =
+        'INSERT INTO configuration_settings(key, value) VALUES($1, $2)'
+
+      const values: any = [key, value]
+
+      try {
+        const res = await this.client.query(query, values)
+        const { command, rowCount } = res
+
+        if (command === 'INSERT' && rowCount > 0) {
+          const data = await this.getConfigurationSettingByName(key)
+          return { success: true, data: data, isAlreadyExists: false }
+        }
+      } catch (error) {
+        console.log('Error => addConfigurationSetting => ', error)
+      }
+      return { success: false, data: {}, isAlreadyExists: false }
+    }
+    return { success: false, data: data, isAlreadyExists: true }
+  }
+
+  async editConfigurationSetting(
+    body: EditConfiguration,
+    id: string | number
+  ): Promise<any> {
+    const { value, key } = body
+
+    const data = await this.getConfigurationSettingsById(id)
+
+    if (isValidObject(data)) {
+      const query = makeUpdateQuery({
+        table: 'configuration_settings',
+        wheres: { id: `$${3}`, is_deleted: false },
+        cols: ['key', 'value'],
+      })
+
+      const values: any = [key, value, id]
+
+      try {
+        const res = await this.client.query(query, values)
+        const { command, rowCount } = res
+
+        if (command === 'UPDATE' && rowCount > 0) {
+          const data = await this.getConfigurationSettingsById(id)
+          return { success: true, data: data, isExists: true }
+        }
+      } catch (error) {
+        console.log('Error => editConfigurationSetting => ', error)
+      }
+      return { success: false, data: {}, isExists: true }
+    }
+    return { success: false, data: data, isExists: false }
+  }
+
+  async deleteConfigurationSetting(id: string | number): Promise<any> {
+    const data = await this.getConfigurationSettingsById(id)
+
+    if (isValidObject(data)) {
+      const query = makeUpdateQuery({
+        table: 'configuration_settings',
+        wheres: { id: `$2`, is_deleted: false },
+        cols: ['is_deleted'],
+      })
+
+      const values: any = [true, id]
+
+      try {
+        const res = await this.client.query(query, values)
+        const { command, rowCount } = res
+
+        if (command === 'UPDATE' && rowCount > 0) {
+          const data = await this.getConfigurationSettingsById(id)
+          return { success: true, data: data, isExists: true }
+        }
+      } catch (error) {
+        console.log('Error => deleteConfigurationSetting => ', error)
+      }
+      return { success: false, data: {}, isExists: true }
+    }
+    return { success: false, data: data, isExists: false }
+  }
+
+  // Configuration settings end
+
+  // Scope settings start
+
+  async getScopeSettingByName(tables: string) {
+    const query =
+      'SELECT id, full_table_size, table_size, tables, record_count FROM scope_settings WHERE tables=$1 AND is_deleted=false'
+    const values = [tables]
+
+    const rows = await this.client.query(query, values)
+    return rows && rows.rows && rows.rows.length > 0 ? rows.rows[0] : {}
+  }
+
+  async getAllScopeSettings({
+    page,
+    per_page,
+  }: ConfigurationFilterOptions): Promise<any> {
+    let offset = Math.abs(
+      (per_page as number) * Math.abs((page as number) - 1)
+    ) as number
+
+    const query =
+      'SELECT id, full_table_size, table_size, tables, record_count FROM scope_settings WHERE is_deleted=false ORDER BY id ASC LIMIT $1 OFFSET $2'
+
+    const rows = await this.client.query(query, [per_page, offset])
+
+    if (rows && rows.rows && rows.rows.length > 0) {
+      return { data: rows.rows, success: true }
+    }
+    return { data: [], success: false }
+  }
+
+  async getScopeSettingsById(id: string | number): Promise<any> {
+    const query =
+      'SELECT id, full_table_size, table_size, tables, record_count FROM scope_settings WHERE id=$1 AND is_deleted=false'
+    const values = [id]
+
+    const rows = await this.client.query(query, values)
+    return rows && rows.rows && rows.rows.length > 0 ? rows.rows[0] : {}
+  }
+
+  async addScopeSetting(body: AddScope): Promise<any> {
+    const { fullTableSize, tableSize, tables, recordCount } = body
+
+    const data = await this.getScopeSettingByName(tables)
+
+    if (!isValidObject(data)) {
+      const query =
+        'INSERT INTO scope_settings(full_table_size, table_size, tables, record_count) VALUES($1, $2, $3, $4)'
+
+      const values: any = [fullTableSize, tableSize, tables, recordCount]
+
+      try {
+        const res = await this.client.query(query, values)
+        const { command, rowCount } = res
+
+        if (command === 'INSERT' && rowCount > 0) {
+          const data = await this.getScopeSettingByName(tables)
+          return { success: true, data: data, isAlreadyExists: false }
+        }
+      } catch (error) {
+        console.log('Error => addConfigurationSetting => ', error)
+      }
+      return { success: false, data: {}, isAlreadyExists: false }
+    }
+    return { success: false, data: data, isAlreadyExists: true }
+  }
+
+  async editScopeSetting(body: EditScope, id: string | number): Promise<any> {
+    const { tables, fullTableSize, recordCount, tableSize } = body
+
+    const data = await this.getScopeSettingsById(id)
+
+    if (isValidObject(data)) {
+      const query = makeUpdateQuery({
+        table: 'scope_settings',
+        wheres: { id: `$${5}`, is_deleted: false },
+        cols: ['full_table_size', 'table_size', 'tables', 'record_count'],
+      })
+
+      const values: any = [fullTableSize, tableSize, tables, recordCount, id]
+
+      try {
+        const res = await this.client.query(query, values)
+        const { command, rowCount } = res
+
+        if (command === 'UPDATE' && rowCount > 0) {
+          const data = await this.getScopeSettingsById(id)
+          return { success: true, data: data, isExists: true }
+        }
+      } catch (error) {
+        console.log('Error => editScopeSetting => ', error)
+      }
+      return { success: false, data: {}, isExists: true }
+    }
+    return { success: false, data: data, isExists: false }
+  }
+
+  async deleteScopeSetting(id: string | number): Promise<any> {
+    const data = await this.getScopeSettingsById(id)
+
+    if (isValidObject(data)) {
+      const query = makeUpdateQuery({
+        table: 'scope_settings',
+        wheres: { id: `$2`, is_deleted: false },
+        cols: ['is_deleted'],
+      })
+
+      const values: any = [true, id]
+
+      try {
+        const res = await this.client.query(query, values)
+        const { command, rowCount } = res
+
+        if (command === 'UPDATE' && rowCount > 0) {
+          const data = await this.getScopeSettingsById(id)
+          return { success: true, data: data, isExists: true }
+        }
+      } catch (error) {
+        console.log('Error => deleteScopeSetting => ', error)
+      }
+      return { success: false, data: {}, isExists: true }
+    }
+    return { success: false, data: data, isExists: false }
+  }
+
+  // Scope settings end
 }
