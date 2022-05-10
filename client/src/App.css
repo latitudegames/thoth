@@ -524,3 +524,8 @@ input[type='text'] {
   outline: none;
   font-size: 0.975rem;
 }
+
+.adminActive div {
+  background-color: #05c807 !important;
+  color: red !important;
+}
