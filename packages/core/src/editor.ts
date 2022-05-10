@@ -22,6 +22,7 @@ import { PubSubContext, ThothComponent } from './thoth-component'
 import DebuggerPlugin from './plugins/debuggerPlugin'
 import KeyCodePlugin from './plugins/keyCodePlugin'
 import ModulePlugin from './plugins/modulePlugin'
+import SocketPlugin from './plugins/socketPlugin'
 // import SelectionPlugin from './plugins/selectionPlugin'
 import errorPlugin from './plugins/errorPlugin'
 
@@ -52,12 +53,14 @@ export const initEditor = async function ({
   thoth,
   tab,
   node,
+  client,
 }: {
   container: any
   pubSub: any
   thoth: any
   tab: any
   node: any
+  client?: any
 }) {
   if (editorTabMap[tab.id]) editorTabMap[tab.id].clear()
 
@@ -153,6 +156,10 @@ export const initEditor = async function ({
   editor.use(ModulePlugin, { engine, modules: {} } as unknown as void)
   editor.use(TaskPlugin)
   editor.use(KeyCodePlugin)
+
+  if (client) {
+    editor.use(SocketPlugin, { client })
+  }
 
   // editor.use(SelectionPlugin, { enabled: true })
 
