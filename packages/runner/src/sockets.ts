@@ -37,7 +37,10 @@ const handleSockets = (app: any) => {
       // Attach the user info to the params or use in services
       socket.feathers.user = user
 
-      const thothInterface = buildThothInterface()
+      // probably need to move interface instantiation into the runner rather than the spell manager.
+      // Doing it this way makes the interface shared across all spells
+      // Which messes up state stuff.
+      const thothInterface = buildThothInterface({})
       const spellManager = new SpellManager(thothInterface, socket)
 
       app.userSpellManagers.set(user.id, spellManager)
