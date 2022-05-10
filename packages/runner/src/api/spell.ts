@@ -13,3 +13,34 @@ export const getSpell = async (spellId: string) => {
     return {}
   }
 }
+
+type RunSpellArguments = {
+  spellId: string
+  inputs: Record<string, any>
+  state?: Record<string, any>
+  version?: string
+}
+
+export const runSpell = async ({
+  spellId,
+  version = 'latest',
+  inputs,
+  state = {},
+}: RunSpellArguments) => {
+  try {
+    const data = {
+      inputs,
+      state,
+    }
+    const response = await authRequest({
+      url: `game/chains/${spellId}/${version}`,
+      data: JSON.stringify(data),
+    })
+
+    return response.data
+  } catch (err) {
+    console.log('Error running spell!')
+    console.log('Err', err)
+    return {}
+  }
+}
