@@ -59,11 +59,10 @@ export const initSharedEngine = ({
     // WARNING: ModulePlugin needs to be initialized before TaskPlugin during engine setup
     engine.use(debuggerPlugin, { server: true, throwError })
     engine.use(ModulePlugin, { engine, modules } as any)
-    engine.use(TaskPlugin)
-
     if (socket) {
       engine.use(SocketPlugin, { socket, server: true })
     }
+    engine.use(TaskPlugin)
   }
 
   engine.bind('run')
