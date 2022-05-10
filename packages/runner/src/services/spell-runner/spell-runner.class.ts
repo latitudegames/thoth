@@ -77,8 +77,6 @@ export class SpellRunner implements ServiceMethods<Data> {
 
     const spellManager = this.app.userSpellManagers.get(user.id)
 
-    console.log('Spell manager', spellManager)
-
     if (!spellManager) throw new Error('No spell manager found for user!')
 
     const result = await spellManager.run(spellId, inputs)
