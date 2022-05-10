@@ -695,7 +695,21 @@ export class discord_client {
       channel.sendTyping()
     }, message.content.length)
 
-    console.log('discord spell_handler:', this.spell_handler)
+    const roomInfo: {
+      user: string
+      inConversation: boolean
+      isBot: boolean
+      info3d: string
+    }[] = []
+    for (const [memberID, member] of channel.members) {
+      roomInfo.push({
+        user: member.user.username,
+        inConversation: this.isInConversation(member.user.id),
+        isBot: member.user.bot,
+        info3d: '',
+      })
+    }
+
     const response = await this.handleInput(
       message.content,
       message.author.username,

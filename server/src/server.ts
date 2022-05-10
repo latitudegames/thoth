@@ -18,11 +18,17 @@ import { initFileServer } from './systems/fileServer'
 import https from 'https'
 import http from 'http'
 import * as fs from 'fs'
+import spawnPythonServer from './systems/pythonServer'
+import { convertToMp4 } from './systems/videoConverter'
 
 const app: Koa = new Koa()
 const router: Router = new Router()
 
 async function init() {
+  /*await convertToMp4(
+    'https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8',
+    'test.mp4'
+  )*/
   // async function initLoop() {
   //   new roomManager()
   //   const expectedServerDelta = 1000 / 60
@@ -49,6 +55,10 @@ async function init() {
   await initClassifier()
   await initTextToSpeech()
   new cacheManager(-1)
+
+  if (process.env.RUN_PYTHON_SERVER === 'true') {
+    spawnPythonServer()
+  }
 
   /*const string = 'test string'
   const key = 'test_key'
