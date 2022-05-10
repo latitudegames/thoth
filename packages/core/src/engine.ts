@@ -62,7 +62,7 @@ export const initSharedEngine = ({
     engine.use(TaskPlugin)
 
     if (socket) {
-      engine.use(SocketPlugin, { socket })
+      engine.use(SocketPlugin, { socket, server: true })
     }
   }
 
