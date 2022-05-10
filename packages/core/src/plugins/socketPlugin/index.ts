@@ -12,6 +12,7 @@ function install(
 ) {
   editor.on('componentregister', (component: ThothComponent<unknown>) => {
     const worker = component.worker
+    // const builder = component.builder
 
     component.worker = async (node, inputs, outputs, data, ...args) => {
       const result = await worker.apply(component, [
@@ -26,9 +27,14 @@ function install(
           nodeId: node.id,
           result,
         })
+        return result
       }
 
-      return result
+      if (client) {
+        client.io.on('worker', (data: unknown) => {
+          console.log('DATA RECEIVED', data)
+        })
+      }
     }
   })
 }
