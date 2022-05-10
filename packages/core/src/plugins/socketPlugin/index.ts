@@ -1,17 +1,34 @@
+import io from 'socket.io'
 import { IRunContextEditor, ThothComponent } from '../../../types'
 
-function install(editor: IRunContextEditor) {
+function install(
+  editor: IRunContextEditor,
+  // Need to better type the feathers client here
+  {
+    server = false,
+    socket,
+    client,
+  }: { server?: boolean; socket?: io.Socket; client?: any }
+) {
   editor.on('componentregister', (component: ThothComponent<unknown>) => {
     const worker = component.worker
 
-    component.worker = (node, inputs, outputs, data, ...args) => {
-      // if (displayMap[node.id])
-      //   node.display = displayMap[node.id].display.bind(displayMap[node.id])
+    component.worker = async (node, inputs, outputs, data, ...args) => {
+      const result = await worker.apply(component, [
+        node,
+        inputs,
+        outputs,
+        data,
+        ...args,
+      ])
+      if (server) {
+        socket?.emit('worker', {
+          nodeId: node.id,
+          result,
+        })
+      }
 
-      // // handle modules, which are in the engine run
-      // if (data?.silent) node.display = () => {}
-
-      return worker.apply(component, [node, inputs, outputs, data, ...args])
+      return result
     }
   })
 }
