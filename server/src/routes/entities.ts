@@ -116,6 +116,9 @@ const addEntityHandler = async (ctx: Koa.Context) => {
 
   try {
     console.log('updated agent database with', data)
+    if(Object.keys(data).length <= 0) return (
+      ctx.body = await database.instance.createEntity()
+    )
     return (ctx.body = await database.instance.updateEntity(instanceId, data))
   } catch (e) {
     console.log('addEntityHandler:', e)
