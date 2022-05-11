@@ -37,7 +37,8 @@
   },
   "devDependencies": {
     "craco": "^0.0.3",
-    "lerna": "^4.0.0"
+    "lerna": "^4.0.0",
+    "rimraf": "^3.0.2"
   },
   "dependencies": {
     "@plotdb/json0": "^0.0.5",
