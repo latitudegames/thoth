@@ -4,7 +4,7 @@ export const completion = async (request: Record<string, any>) => {
   try {
     const response = await authRequest({
       url: '/text/completions_v2',
-      data: JSON.stringify(request)
+      data: JSON.stringify(request),
     })
 
     console.log('response from completion', response)
