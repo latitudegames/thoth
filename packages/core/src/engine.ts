@@ -30,6 +30,7 @@ export abstract class ThothEngineComponent<WorkerReturnType> {
     node: NodeData,
     inputs: ThothWorkerInputs,
     outputs: WorkerOutputs,
+    context: Record<string, any>,
     ...args: unknown[]
   ): WorkerReturnType
 }
