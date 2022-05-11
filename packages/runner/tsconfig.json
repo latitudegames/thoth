@@ -5,9 +5,8 @@
     "outDir": "./lib",
     "rootDir": "./src",
     "strict": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "skipLibCheck": true
   },
-  "exclude": [
-    "test"
-  ]
+  "exclude": ["test", "jest.config.js"]
 }
