@@ -17,11 +17,12 @@ import InspectorPlugin from './plugins/inspectorPlugin'
 import LifecyclePlugin from './plugins/lifecyclePlugin'
 import { ModuleManager } from './plugins/modulePlugin/module-manager'
 import SocketGenerator from './plugins/socketGenerator'
-import TaskPlugin, { Task } from './plugins/taskPlugin'
+import SocketOverridePlugin from './plugins/socketPlugin/socketOverridePlugin'
+import { Task } from './plugins/taskPlugin'
 import { PubSubContext, ThothComponent } from './thoth-component'
 import DebuggerPlugin from './plugins/debuggerPlugin'
 import KeyCodePlugin from './plugins/keyCodePlugin'
-import ModulePlugin from './plugins/modulePlugin'
+// import ModulePlugin from './plugins/modulePlugin'
 import SocketPlugin from './plugins/socketPlugin'
 // import SelectionPlugin from './plugins/selectionPlugin'
 import errorPlugin from './plugins/errorPlugin'
@@ -82,6 +83,10 @@ export const initEditor = async function ({
   // ██╔═══╝ ██║     ██║   ██║██║   ██║██║██║╚██╗██║╚════██║
   // ██║     ███████╗╚██████╔╝╚██████╔╝██║██║ ╚████║███████║
   // ╚═╝     ╚══════╝ ╚═════╝  ╚═════╝ ╚═╝╚═╝  ╚═══╝╚══════╝
+
+  if (client) {
+    editor.use(SocketOverridePlugin, { client })
+  }
 
   // History plugin for undo/redo
   editor.use(HistoryPlugin, { keyboard: false })
