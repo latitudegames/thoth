@@ -40,6 +40,7 @@ const DataControls = ({
   data,
   inspectorData,
   nodeId,
+  tab = null,
 }) => {
   if (!dataControls)
     return <p className={css['message']}>No component selected</p>
@@ -61,6 +62,7 @@ const DataControls = ({
           name: inspectorData.name,
           initialValue: data[control.dataKey] || '',
           updateData,
+          tab,
         }
 
         const Component = controlMap[control.component]

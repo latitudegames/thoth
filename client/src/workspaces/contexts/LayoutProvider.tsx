@@ -18,7 +18,7 @@ const windowTypes: WindowTypes = {
   STATE_MANAGER: 'stateManager',
   EDITOR: 'editor',
   PLAYTEST: 'playtest',
-  VIDEOTRANSCRIPTION: 'videoTranscription'
+  CONSOLE: 'debugConsole',
 }
 
 type WindowType =
@@ -27,7 +27,7 @@ type WindowType =
   | 'stateManager'
   | 'editor'
   | 'playtest'
-  | 'videoTranscription'
+  | 'debugConsole'
 
 type WindowTypes = Record<string, WindowType>
 

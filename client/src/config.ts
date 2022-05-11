@@ -16,3 +16,6 @@ export const appRootUrl =
     : process.env.REACT_APP_SITE_ROOT_URL
 
 export const useLatitude = process.env.REACT_APP_USE_LATITUDE === 'true';
+// coercing this into a boolean
+export const sharedb = process.env.REACT_APP_SHAREDB === 'true'
+export const websocketUrl = 'ws://localhost:8080'

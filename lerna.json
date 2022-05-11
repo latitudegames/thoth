@@ -1,5 +1,5 @@
 {
-  "packages": ["client", "core", "server"],
+  "packages": ["client", "core", "server", "sharedb"],
   "npmClient": "yarn",
   "useWorkspaces": true,
   "version": "0.0.0"

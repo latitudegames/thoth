@@ -6,13 +6,13 @@ import axios from 'axios'
 import Rete from 'rete'
 
 import {
+  EngineContext,
   NodeData,
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../../types'
 import { InputControl } from '../../dataControls/InputControl'
-import { EngineContext } from '../../engine'
 import { triggerSocket, stringSocket, anySocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
@@ -27,7 +27,7 @@ async function getEvent(
   const response = await axios.get(
     `${process.env.REACT_APP_API_ROOT_URL ??
     process.env.API_ROOT_URL ??
-    'http://localhost:8001'
+    'https://localhost:8001'
     }/event`,
     {
       params: {
@@ -110,6 +110,7 @@ export class EventRecall extends ThothComponent<Promise<InputReturn>> {
     outputs: ThothWorkerOutputs,
     { silent, thoth }: { silent: boolean; thoth: EngineContext }
   ) {
+    
     const speaker = inputs['speaker'][0] as string
     const agent = inputs['agent'][0] as string
     const client = inputs['client'][0] as string

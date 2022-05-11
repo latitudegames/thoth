@@ -4,19 +4,19 @@
 import axios from 'axios'
 import Rete from 'rete'
 
+import { FewshotControl } from '../../dataControls/FewshotControl'
+import { stringSocket, triggerSocket } from '../../sockets'
+import { ThothComponent } from '../../thoth-component'
 import {
+  EngineContext,
   NodeData,
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
-} from '../../../types'
-import { FewshotControl } from '../../dataControls/FewshotControl'
-import { EngineContext } from '../../engine'
-import { stringSocket, triggerSocket } from '../../sockets'
+} from '../../types'
 // @seang todo: convert data controls to typescript to remove this
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore
-import { ThothComponent } from '../../thoth-component'
 const fewshot = `Change each statement to be in the third person present tense and correct all grammar.
 Matt: am sleepy.
 Third Person: Matt is sleepy.
@@ -102,7 +102,7 @@ export class TenseTransformer extends ThothComponent<Promise<WorkerReturn>> {
   // to generate the appropriate inputs and ouputs for the fewshot at build time
   builder(node: ThothNode) {
     // Set fewshot into nodes data
-    node.data.fewshot = fewshot
+    if(!node.data.fewshot) node.data.fewshot = fewshot
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const textInput = new Rete.Input('text', 'Text', stringSocket)
     const nameInput = new Rete.Input('name', 'Name', stringSocket)
@@ -134,20 +134,13 @@ export class TenseTransformer extends ThothComponent<Promise<WorkerReturn>> {
     const { name, text } = inputs
     const prompt = `${node.data.fewshot}${name[0]}: ${text[0]}\nThird Person:`
 
-    const resp = await axios.post(
-      `${
-        process.env.REACT_APP_API_URL ?? process.env.API_URL ?? 'https://localhost:8001'
-      }/text_completion`,
-      {
-        params: {
-          prompt: prompt,
-          modelName: 'davinci',
-          temperature: 0.0,
-          maxTokens: 100,
-          stop: ['\n'],
-        },
-      }
-    )
+    const body = {
+      prompt,
+      stop: ['\n'],
+      maxTokens: 100,
+      temperature: 0.0,
+      model: 'vanilla-davinci',
+    }
 
     const { success, choice } = resp.data
 

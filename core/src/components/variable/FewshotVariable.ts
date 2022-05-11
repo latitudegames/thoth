@@ -36,7 +36,7 @@ export class FewshotVariable extends ThothComponent<InputReturn> {
   }
 
   builder(node: ThothNode) {
-    node.data.fewshot = fewshot
+    if(!node.data.fewshot) node.data.fewshot = fewshot
     const out = new Rete.Output('output', 'output', anySocket)
 
     const name = new InputControl({

@@ -11,6 +11,7 @@ interface CssExports {
   'node': string;
   'node-depricated': string;
   'node-id': string;
+  'node-locked': string;
   'node-title': string;
   'nodeGenesis': string;
   'out': string;

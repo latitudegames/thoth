@@ -2,6 +2,7 @@ import { Node, Socket, Control } from 'rete-react-render-plugin'
 
 import Icon, { componentCategories } from '../Icon/Icon'
 import css from './Node.module.css'
+import icons from '../Icon/icon.module.css'
 
 export class MyNode extends Node {
   props: { node: any; bindSocket: any; bindControl: any }
@@ -15,6 +16,7 @@ export class MyNode extends Node {
     const fullName = node.data.name ? `${name} - ${node.data.name}` : name
     const hasError = node.data.error
     const hasSuccess = node.data.success
+    const nodeLocked = node.data.nodeLocked
 
     return (
       <div
@@ -23,6 +25,9 @@ export class MyNode extends Node {
         } ${css[hasSuccess ? 'success' : '']}`}
       >
         {node.deprecated && <div className={css['deprecated-overlay']}></div>}
+        {nodeLocked && (
+          <div className={`${css['node-locked']} ${icons['node-lock']}`}></div>
+        )}
         <div
           className={`${css['node-id']} ${hasError ? css['error'] : ''} ${
             hasSuccess ? css['success'] : ''

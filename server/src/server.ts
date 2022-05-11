@@ -23,6 +23,8 @@ import { convertToMp4 } from './systems/videoConverter'
 
 const app: Koa = new Koa()
 const router: Router = new Router()
+// @ts-ignore
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
 
 async function init() {
   /*await convertToMp4(
@@ -179,7 +181,11 @@ async function init() {
   })
 
   const PORT: number = Number(process.env.PORT) || 8001
-  const useSSL = process.env.USESSL === 'true'
+  const useSSL =
+    process.env.USESSL === 'true' &&
+    fs.existsSync('certs/') &&
+    fs.existsSync('certs/key.pem') &&
+    fs.existsSync('certs/cert.pem')
 
   var optionSsl = {
     key: useSSL ? fs.readFileSync('certs/key.pem') : '',
@@ -187,13 +193,13 @@ async function init() {
   }
   useSSL
     ? https
-      .createServer(optionSsl, app.callback())
-      .listen(PORT, '0.0.0.0', () => {
-        console.log('Https Server listening on: 0.0.0.0:' + PORT)
-      })
+        .createServer(optionSsl, app.callback())
+        .listen(PORT, '0.0.0.0', () => {
+          console.log('Https Server listening on: 0.0.0.0:' + PORT)
+        })
     : http.createServer(app.callback()).listen(PORT, '0.0.0.0', () => {
-      console.log('Http Server listening on: 0.0.0.0:' + PORT)
-    })
+        console.log('Http Server listening on: 0.0.0.0:' + PORT)
+      })
   // await initLoop()
 }
 init()

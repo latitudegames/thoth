@@ -136,18 +136,19 @@ function install(
         if (builder) {
           component.updateModuleSockets = (
             node: ThothNode,
-            GraphData?: GraphData
+            graphData?: GraphData,
+            useSocketName = false
           ) => {
             const modules = moduleManager.modules
             const currentNodeModule = node.data.module as string
-            if (!modules[currentNodeModule] && !GraphData) return
+            if (!modules[currentNodeModule] && !graphData) return
 
             if (!node.data.inputs) node.data.inputs = []
             if (!node.data.outputs) node.data.outputs = []
 
             const data = modules[currentNodeModule]
               ? modules[currentNodeModule].data
-              : GraphData
+              : graphData
 
             if (!data) return
             const inputs = moduleManager.getInputs(data)
@@ -165,7 +166,14 @@ function install(
 
             try {
               // The arguments for this are getting bit crazy
-              addIO(node, inputs, outputs, triggerOuts, triggerIns)
+              addIO({
+                node,
+                inputs,
+                outputs,
+                triggerOuts,
+                triggerIns,
+                useSocketName,
+              })
             } catch (e) {
               return runContext.trigger('warn', e)
             }

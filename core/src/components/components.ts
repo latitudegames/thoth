@@ -7,6 +7,7 @@ import { CreateOrGetAgent } from './entities/CreateOrGetAgent'
 import { EventRecall } from './entities/EventRecall'
 import { EventStore } from './entities/EventStore'
 import { InputDestructureComponent } from './entities/InputDestructure'
+import { InputRestructureComponent } from './entities/InputRestructure'
 import { Request } from './entities/Request'
 import { InputComponent } from './io/Input'
 import { Output } from './io/Output'
@@ -38,11 +39,12 @@ import { TenseTransformer } from './ml/TenseTransformer'
 import { TextToSpeech } from './ml/TextToSpeech'
 import { TimeDetectorComponent } from './ml/TimeDetector'
 import { DocumentDelete } from './search/DocumentDelete'
-import { DocumentGet } from './search/DocumentGet'
 import { DocumentEdit } from './search/DocumentEdit'
-import { DocumentStoreGet } from './search/DocumentStoreGet'
+import { DocumentGet } from './search/DocumentGet'
 import { DocumentSet } from './search/DocumentSet'
+import { DocumentStoreGet } from './search/DocumentStoreGet'
 import { Search } from './search/Search'
+import { SpellComponent } from './Spell'
 import { StateRead } from './state/StateRead'
 import { StateWrite } from './state/StateWrite'
 import { ComplexStringMatcher } from './strings/ComplexStringMatcher'
@@ -117,9 +119,11 @@ export const components = {
   huggingfaceComponent: () => new HuggingfaceComponent(),
   inputComponent: () => new InputComponent(),
   inputDestructureComponent: () => new InputDestructureComponent(),
+  inputRestructureComponent: () => new InputRestructureComponent(),
   inputsToJson: () => new InputsToJSON(),
   itemTypeComponent: () => new ItemTypeComponent(),
   joinListComponent: () => new JoinListComponent(),
+  moduleComponent: () => new SpellComponent(),
   output: () => new Output(),
   proseToScript: () => new ProseToScript(),
   safetyVerifier: () => new SafetyVerifier(),

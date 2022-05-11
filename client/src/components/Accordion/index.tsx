@@ -1,10 +1,9 @@
-// @ts-nocheck
-import Accordion from '@material-ui/core/Accordion'
-import AccordionDetails from '@material-ui/core/AccordionDetails'
-import AccordionSummary from '@material-ui/core/AccordionSummary'
-import { makeStyles } from '@material-ui/core/styles'
-import Typography from '@material-ui/core/Typography'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import Accordion from '@mui/material/Accordion'
+import AccordionDetails from '@mui/material/AccordionDetails'
+import AccordionSummary from '@mui/material/AccordionSummary'
+import makeStyles from '@mui/styles/makeStyles'
+import Typography from '@mui/material/Typography'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 
 import css from './accordion.module.css'
 import Icon from '../Icon/Icon'
@@ -13,7 +12,7 @@ import './accordion-overrides.css'
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
-    backgroundColor: 'var(--dark-3)',
+    backgroundColor: 'var(--dark-3) !important',
     boxShadow: 'none',
     padding: '0',
   },
@@ -60,7 +59,8 @@ export const SimpleAccordion = ({ setExpanded = x => { }, ...props }) => {
           className={classes.accordionSummary}
           classes={{
             root: classes.root,
-            expandIcon: classes.expandIcon,
+            expandIconWrapper: classes.expandIcon,
+            // content: classes.root,
             // accordionSummaryContent: classes.summaryContent
           }}
           id="panel1a-header"

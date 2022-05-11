@@ -16,7 +16,7 @@ type ProjectProps = {
 const ProjectRow = ({
   label,
   selectedSpell,
-  onClick = () => { },
+  onClick = () => {},
   icon = '',
   spell,
   style = {},
@@ -25,8 +25,9 @@ const ProjectRow = ({
   return (
     <div
       role="button"
-      className={`${css['project-row']} ${css[selectedSpell?.name === label ? 'selected' : '']
-        }`}
+      className={`${css['project-row']} ${
+        css[selectedSpell?.name === label ? 'selected' : '']
+      }`}
       onClick={e => {
         onClick(e)
       }}

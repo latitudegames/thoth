@@ -5,13 +5,13 @@ import axios from 'axios'
 import Rete from 'rete'
 
 import {
+  EngineContext,
   NodeData,
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../../types'
 import { FewshotControl } from '../../dataControls/FewshotControl'
-import { EngineContext } from '../../engine'
 import { triggerSocket, stringSocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
@@ -40,7 +40,7 @@ export class SummarizeFacts extends ThothComponent<Promise<InputReturn>> {
   }
 
   builder(node: ThothNode) {
-    node.data.fewshot = fewshot
+    if(!node.data.fewshot) node.data.fewshot = fewshot
 
     const inp = new Rete.Input('string', 'Input', stringSocket)
     const factsOut = new Rete.Output('output', 'Facts', stringSocket)

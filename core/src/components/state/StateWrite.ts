@@ -1,13 +1,13 @@
 import Rete from 'rete'
 
 import {
+  EngineContext,
   ThothNode,
   NodeData,
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../../types'
 import { SocketGeneratorControl } from '../../dataControls/SocketGenerator'
-import { EngineContext } from '../../engine'
 import { triggerSocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 

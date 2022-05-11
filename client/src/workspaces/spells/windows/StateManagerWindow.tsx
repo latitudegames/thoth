@@ -1,30 +1,28 @@
 import Editor from '@monaco-editor/react'
 import jsonFormat from 'json-format'
-// import debounce from 'lodash.debounce'
-import { useSnackbar } from 'notistack'
 import { useState, useEffect } from 'react'
-import {
-  useGetSpellQuery,
-  useSaveSpellMutation,
-} from '../../../state/api/spells'
+import { useGetSpellQuery } from '../../../state/api/spells'
 import Window from '../../../components/Window/Window'
 
 import '../../../screens/Thoth/thoth.module.css'
 import WindowMessage from '../components/WindowMessage'
+import { usePubSub } from '@/contexts/PubSubProvider'
+import { useAuth } from '@/contexts/AuthProvider'
 
 const StateManager = ({ tab, ...props }) => {
-  // const dispatch = useDispatch()
-  const [saveSpell] = useSaveSpellMutation()
-  const { data: spell } = useGetSpellQuery(tab.spellId, {
+  const { publish, events } = usePubSub()
+  const { user } = useAuth()
+  const { data: spell } = useGetSpellQuery({ 
+    spellId: tab.spellId, 
+    userId: user?.id as string 
+  }, {
     skip: !tab.spellId,
   })
 
-  const { enqueueSnackbar } = useSnackbar()
   const [typing, setTyping] = useState<boolean>(false)
   const [code, setCode] = useState('{}')
-  const [height, setHeight] = useState<number>()
 
-  const bottomHeight = 50
+  const SAVE_SPELL_DIFF = events.$SAVE_SPELL_DIFF(tab.id)
 
   const editorOptions = {
     lineNumbers: false,
@@ -48,15 +46,15 @@ const StateManager = ({ tab, ...props }) => {
     })
   }
 
-  useEffect(() => {
-    if (props?.node?.rect?.height)
-      setHeight((props.node.rect.height - bottomHeight) as number)
+  // useEffect(() => {
+  //   if (props?.node?.rect?.height)
+  //     setHeight((props.node.rect.height - bottomHeight) as number)
 
-    // this is to dynamically set the appriopriate height so that Monaco editor doesnt break flexbox when resizing
-    props.node.setEventListener('resize', data => {
-      setTimeout(() => setHeight(data.rect.height - bottomHeight), 0)
-    })
-  }, [props.node])
+  //   // this is to dynamically set the appriopriate height so that Monaco editor doesnt break flexbox when resizing
+  //   props.node.setEventListener('resize', data => {
+  //     setTimeout(() => setHeight(data.rect.height - bottomHeight), 0)
+  //   })
+  // }, [props.node])
 
   useEffect(() => {
     if (!typing) return
@@ -93,20 +91,8 @@ const StateManager = ({ tab, ...props }) => {
         ...spell,
         gameState: parsedState,
       }
-      const res = await saveSpell(spellUpdate)
-      if ('error' in res) {
-        enqueueSnackbar('Error saving state', {
-          preventDuplicate: true,
-          variant: 'error',
-        })
-        throw new Error('Error saving spell')
-      }
-      res.data.gameState && setCode(JSON.stringify(res.data.gameState?.state))
 
-      enqueueSnackbar('State saved', {
-        preventDuplicate: true,
-        variant: 'success',
-      })
+      publish(SAVE_SPELL_DIFF, spellUpdate)
     } catch (err) {
       console.log(err)
     }
@@ -130,7 +116,6 @@ const StateManager = ({ tab, ...props }) => {
     <Window toolbar={toolbar}>
       <Editor
         theme="sds-dark"
-        height={height}
         defaultLanguage="json"
         value={code}
         options={editorOptions}

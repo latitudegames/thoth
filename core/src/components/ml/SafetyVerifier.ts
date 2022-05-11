@@ -1,13 +1,13 @@
 import Rete from 'rete'
 
 import {
+  EngineContext,
   NodeData,
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../../types'
 import { FewshotControl } from '../../dataControls/FewshotControl'
-import { EngineContext } from '../../engine'
 import { stringSocket, triggerSocket, booleanSocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
@@ -101,7 +101,7 @@ export class SafetyVerifier extends ThothComponent<Promise<WorkerReturn>> {
   }
 
   builder(node: ThothNode) {
-    node.data.fewshot = fewshot
+    if(!node.data.fewshot) node.data.fewshot = fewshot
 
     const inp = new Rete.Input('string', 'Text', stringSocket)
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)

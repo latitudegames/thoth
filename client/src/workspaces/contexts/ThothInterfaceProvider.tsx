@@ -1,4 +1,8 @@
-import { EngineContext } from '@latitudegames/thoth-core'
+import {
+  EditorContext,
+  Spell,
+  ThothWorkerInputs,
+} from '@latitudegames/thoth-core/types'
 import { useContext, createContext, useRef, useEffect } from 'react'
 
 import { postEnkiCompletion } from '../../services/game-api/enki'
@@ -6,38 +10,15 @@ import { completion as _completion } from '../../services/game-api/text'
 import { invokeInference } from '../../utils/huggingfaceHelper'
 import { usePubSub } from '../../contexts/PubSubProvider'
 import { useFetchFromImageCacheMutation } from '@/state/api/visualGenerationsApi'
-import { Spell, ThothWorkerInputs } from '@latitudegames/thoth-core/types'
-import {
-  useGetSpellQuery,
-  useSaveSpellMutation,
-  useRunSpellMutation,
-} from '@/state/api/spells'
+import { useGetSpellQuery, useRunSpellMutation } from '@/state/api/spells'
+import { useAuth } from '@/contexts/AuthProvider'
 
 /*
 Some notes here.  The new rete provider, not to be confused with the old rete provider renamed to the editor provider, is designed to serve as the single source of truth for interfacing with the rete internal system.  This unified interface will also allow us to replicate the same API in the server, where rete expects certain functions to exist but doesn't care what is behind these functions so long as they work.
 Not all functions will be needed on the server, and functions which are not will be labeled as such.
 */
 
-export interface ThothInterfaceContext extends EngineContext {
-  onInspector: (node, callback) => void
-  onPlaytest: (callback) => void
-  sendToPlaytest: (data) => void
-  sendToInspector: (data) => void
-  sendToDebug: (data) => void
-  onDebug: (node, callback) => void
-  clearTextEditor: () => void
-  runSpell: (inputs: Record<string, any>, spellId: string) => void
-  getCurrentGameState: () => Record<string, unknown>
-  updateCurrentGameState: (update) => void
-  readFromImageCache: (caption, cacheTag, topK) => Promise<any>
-  processCode: (
-    code: unknown,
-    inputs: ThothWorkerInputs,
-    data: Record<string, any>
-  ) => void
-}
-
-const Context = createContext<ThothInterfaceContext>(undefined!)
+const Context = createContext<EditorContext>(undefined!)
 
 export const useThothInterface = () => useContext(Context)
 
@@ -45,9 +26,12 @@ const ThothInterfaceProvider = ({ children, tab }) => {
   const { events, publish, subscribe } = usePubSub()
   const spellRef = useRef<Spell | null>(null)
   const [fetchFromImageCache] = useFetchFromImageCacheMutation()
+  const { user } = useAuth()
   const [_runSpell] = useRunSpellMutation()
-  const [saveSpell] = useSaveSpellMutation()
-  const { data: _spell } = useGetSpellQuery(tab.spellId, {
+  const { data: _spell } = useGetSpellQuery({ 
+    spellId: tab.spellId, 
+    userId: user?.id as string 
+  }, {
     skip: !tab.spellId,
   })
 
@@ -63,6 +47,7 @@ const ThothInterfaceProvider = ({ children, tab }) => {
     $DEBUG_PRINT,
     $DEBUG_INPUT,
     $TEXT_EDITOR_CLEAR,
+    $SAVE_SPELL_DIFF,
     $NODE_SET,
     ADD_SUBSPELL,
     UPDATE_SUBSPELL,
@@ -155,6 +140,7 @@ const ThothInterfaceProvider = ({ children, tab }) => {
   const processCode = (code, inputs, data) => {
     const flattenedInputs = Object.entries(inputs as ThothWorkerInputs).reduce(
       (acc, [key, value]) => {
+        // @ts-ignore
         acc[key as string] = value[0] as any
         return acc
       },
@@ -171,8 +157,11 @@ const ThothInterfaceProvider = ({ children, tab }) => {
     console.log('RUN SPELL')
     const response = await _runSpell({ inputs, spellId })
 
-    console.log('RESPONSE', response)
-    return response
+    if ('error' in response) {
+      throw new Error(`Error running spell ${spellId}`)
+    }
+
+    return response.data.outputs
   }
 
   const clearTextEditor = () => {
@@ -185,19 +174,23 @@ const ThothInterfaceProvider = ({ children, tab }) => {
     return spellRef.current?.gameState ?? {}
   }
 
-  const updateCurrentGameState = update => {
+  const updateCurrentGameState = _update => {
     if (!spellRef.current) return
     const spell = spellRef.current
 
-    const newSpell = {
-      ...spell,
+    // lets delete out all undefined properties coming in
+    Object.keys(_update).forEach(
+      key => _update[key] === undefined && delete _update[key]
+    )
+
+    const update = {
       gameState: {
         ...spell.gameState,
-        ...update,
+        ..._update,
       },
     }
 
-    saveSpell(newSpell as Spell)
+    publish($SAVE_SPELL_DIFF(tab.id), update)
   }
 
   const publicInterface = {

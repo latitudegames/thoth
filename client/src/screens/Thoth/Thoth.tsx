@@ -1,5 +1,5 @@
 import { RootState } from '@/state/store'
-import { activeTabSelector, selectAllTabs, openTab } from '@/state/tabs'
+import { activeTabSelector, selectAllTabs, openTab, closeTab } from '@/state/tabs'
 import { useEffect } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
 import { useDispatch, useSelector } from 'react-redux'
@@ -36,6 +36,14 @@ const Thoth = ({ empty = false }) => {
   useEffect(() => {
     if (!spellName) return
 
+    // Return if navigating to the spell that is already active
+    if(activeTab && activeTab.spellId === spellName) return
+    
+    // Close spell tab if it is exists 
+    let spellNameTab = tabs.filter(tab => tab.spellId === spellName)
+    let isSpellNameTabPresent = spellNameTab.length
+    if(isSpellNameTabPresent) dispatch(closeTab(spellNameTab[0].id))
+    
     dispatch(
       openTab({
         spellId: spellName,

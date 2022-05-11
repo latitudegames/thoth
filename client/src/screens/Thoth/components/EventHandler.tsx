@@ -10,9 +10,15 @@ import {
 import {
   useSaveSpellMutation,
   useGetSpellQuery,
+  useSaveDiffMutation,
 } from '../../../state/api/spells'
-import { useEditor } from '../../../workspaces/contexts/EditorProvider'
 import { useLayout } from '../../../workspaces/contexts/LayoutProvider'
+import { useEditor } from '../../../workspaces/contexts/EditorProvider'
+import { diff } from '@/utils/json0'
+import { useSnackbar } from 'notistack'
+import { sharedb } from '@/config'
+import { useSharedb } from '@/contexts/SharedbProvider'
+import { useAuth } from '@/contexts/AuthProvider'
 
 // Config for unique name generator
 const customConfig = {
@@ -24,14 +30,20 @@ const customConfig = {
 const EventHandler = ({ pubSub, tab }) => {
   // only using this to handle events, so not rendering anything with it.
   const { createOrFocus, windowTypes } = useLayout()
+  const { enqueueSnackbar } = useSnackbar()
+  const { getSpellDoc } = useSharedb()
 
   const [saveSpellMutation] = useSaveSpellMutation()
-  const { data: spell } = useGetSpellQuery(tab.spellId, {
-    skip: !tab.spellId,
+  const [saveDiff] = useSaveDiffMutation()
+  const { user } = useAuth()
+  const { data: spell } = useGetSpellQuery({
+    spellId: tab.spellId,
+    userId: user?.id as string,
   })
 
   // Spell ref because callbacks cant hold values from state without them
   const spellRef = useRef<Spell | null>(null)
+
   useEffect(() => {
     if (!spell) return
     spellRef.current = spell
@@ -40,17 +52,20 @@ const EventHandler = ({ pubSub, tab }) => {
   const { serialize, getEditor, undo, redo, del } = useEditor()
 
   const { events, subscribe } = pubSub
+
   const {
     $DELETE,
     $UNDO,
     $REDO,
     $SAVE_SPELL,
+    $SAVE_SPELL_DIFF,
     $CREATE_STATE_MANAGER,
     $CREATE_SEARCH_CORPUS,
     $CREATE_ENT_MANAGER,
-    $CREATE_VIDEO_TRANSCRIPTION,
     $CREATE_PLAYTEST,
     $CREATE_INSPECTOR,
+    $CREATE_CONSOLE,
+    $CREATE_EVENT_MANAGER,
     $CREATE_TEXT_EDITOR,
     $SERIALIZE,
     $EXPORT,
@@ -62,7 +77,56 @@ const EventHandler = ({ pubSub, tab }) => {
     const currentSpell = spellRef.current
     const graph = serialize() as GraphData
 
-    await saveSpellMutation({ ...currentSpell, graph })
+    await saveSpellMutation({ ...currentSpell, graph, user: user?.id })
+  }
+
+  const sharedbDiff = async (event, update) => {
+    if (!spellRef.current) return
+    const doc = getSpellDoc(spellRef.current as Spell)
+    if (!doc) return
+
+    const updatedSpell = {
+      ...doc.data,
+      ...update,
+    }
+
+    const jsonDiff = diff(doc.data, updatedSpell)
+
+    if (jsonDiff.length === 0) return
+
+    console.log('JSON DIFF IN SHAREDB DIFF', jsonDiff)
+
+    doc.submitOp(jsonDiff)
+  }
+
+  const onSaveDiff = async (event, update) => {
+    if (!spellRef.current) return
+
+    const currentSpell = spellRef.current
+    const updatedSpell = {
+      ...currentSpell,
+      ...update,
+    }
+    const jsonDiff = diff(currentSpell, updatedSpell)
+
+    // no point saving if nothing has changed
+    if (jsonDiff.length === 0) return
+
+    const response = await saveDiff({
+      name: currentSpell.name,
+      diff: jsonDiff,
+    })
+
+    if ('error' in response) {
+      enqueueSnackbar('Error saving spell', {
+        variant: 'error',
+      })
+      return
+    }
+
+    enqueueSnackbar('Spell saved', {
+      variant: 'success',
+    })
   }
 
   const createStateManager = () => {
@@ -89,8 +153,12 @@ const EventHandler = ({ pubSub, tab }) => {
     createOrFocus(windowTypes.TEXT_EDITOR, 'Text Editor')
   }
 
-  const createVideoTranscription = () => {
-    createOrFocus(windowTypes.VIDEOTRANSCRIPTION, 'Video Transcription')
+  const createConsole = () => {
+    createOrFocus(windowTypes.CONSOLE, 'Console')
+  }
+
+  const createEventManager = () => {
+    createOrFocus(windowTypes.EVENT_MANAGER, 'Event Manager')
   }
 
   const onSerialize = () => {
@@ -158,7 +226,8 @@ const EventHandler = ({ pubSub, tab }) => {
     [$CREATE_PLAYTEST(tab.id)]: createPlaytest,
     [$CREATE_INSPECTOR(tab.id)]: createInspector,
     [$CREATE_TEXT_EDITOR(tab.id)]: createTextEditor,
-    [$CREATE_VIDEO_TRANSCRIPTION(tab.id)]: createVideoTranscription,
+    [$CREATE_CONSOLE(tab.id)]: createConsole,
+    [$CREATE_EVENT_MANAGER(tab.id)]: createEventManager,
     [$SERIALIZE(tab.id)]: onSerialize,
     [$EXPORT(tab.id)]: onExport,
     [$CLOSE_EDITOR(tab.id)]: onCloseEditor,
@@ -166,6 +235,7 @@ const EventHandler = ({ pubSub, tab }) => {
     [$REDO(tab.id)]: onRedo,
     [$DELETE(tab.id)]: onDelete,
     [$PROCESS(tab.id)]: onProcess,
+    [$SAVE_SPELL_DIFF(tab.id)]: sharedb ? sharedbDiff : onSaveDiff,
   }
 
   useEffect(() => {

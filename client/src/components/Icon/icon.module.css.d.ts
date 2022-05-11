@@ -18,6 +18,7 @@ interface CssExports {
   'minus': string;
   'moon': string;
   'newnode': string;
+  'node-lock': string;
   'pause': string;
   'person': string;
   'play': string;

@@ -9,15 +9,26 @@ export async function initFileServer() {
     fs.mkdirSync('files')
   }
 
-  if (process.env.USESSL_FILESERVER === 'true') {
-    await initSSL()
+  if (process.env.USESSL === 'true') {
+    const success = await initSSL()
+    if (!success) {
+      initNoSSL()
+    }
   } else {
     await initNoSSL()
   }
   console.log('file server started on port:', process.env.FILE_SERVER_PORT)
 }
 
-async function initSSL() {
+async function initSSL(): Promise<boolean> {
+  if (
+    !fs.existsSync('certs') ||
+    !fs.existsSync('certs/key.pem') ||
+    !fs.existsSync('certs/cert.pem')
+  ) {
+    return false
+  }
+
   https
     .createServer(
       {
@@ -86,6 +97,8 @@ async function initSSL() {
       }
     )
     .listen(parseInt(process.env.FILE_SERVER_PORT as string))
+
+  return true
 }
 async function initNoSSL() {
   http

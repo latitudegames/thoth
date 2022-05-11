@@ -41,11 +41,11 @@ const _activeTabSelector = createDraftSafeSelector(
   }
 )
 
-// currently thows a typescript error for having two inputs
 const selectTabBySpellId = createDraftSafeSelector(
   [tabSelectors.selectAll, (_, spellId) => spellId],
-  (tabs: Tab[], spellId) => Object.values(tabs).find(tab => tab.spellId === spellId)
-) as unknown as (state: any, spellId: string) => Tab | undefined
+  (tabs: Tab[], spellId) =>
+    Object.values(tabs).find(tab => tab.spellId === spellId)
+)
 
 // Used to build a tab with various defaults set, as well as workspace json and UUID
 const buildTab = (tab, properties = {}) => ({
@@ -76,7 +76,7 @@ export const tabSlice = createSlice({
         })
 
       // Check if the tab is already open.
-      const existingTab = selectTabBySpellId(state, action.payload.spellId)
+      const existingTab = selectTabBySpellId(state)
 
       if (existingTab && !switchActive) return
 
