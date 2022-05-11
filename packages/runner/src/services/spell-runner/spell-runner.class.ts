@@ -81,8 +81,6 @@ export class SpellRunner implements ServiceMethods<Data> {
 
     const result = await spellManager.run(spellId, inputs)
 
-    console.log('RESULT', result)
-
     return result || {}
   }
 
