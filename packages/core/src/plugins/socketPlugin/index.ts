@@ -10,47 +10,49 @@ function install(
     client,
   }: { server?: boolean; socket?: io.Socket; client?: any }
 ) {
-  if (client) {
-    client.io.on('worker', (data: unknown) => {
-      console.log('DATA RECEIVED', data)
-    })
-  }
+  const subscriptionMap = new Map()
 
   editor.on('componentregister', (component: ThothComponent<unknown>) => {
     const worker = component.worker
-    const builder = component.builder
 
-    component.worker = async (node, inputs, outputs, data, ...args) => {
-      const result = await worker.apply(component, [
-        node,
-        inputs,
-        outputs,
-        data,
-        ...args,
-      ])
-
+    component.worker = async (node, inputs, outputs, context, ...args) => {
       if (server) {
-        socket?.emit('worker', {
-          nodeId: node.id,
-          result: {
-            output: result?.output,
-          },
-        })
+        const result = await worker.apply(component, [
+          node,
+          inputs,
+          outputs,
+          context,
+          ...args,
+        ])
 
         socket?.emit(`${node.id}`, {
           output: result?.output,
         })
         return result
       }
-    }
 
-    component.builder = node => {
       if (client) {
-        client.io.on(node.id, (data: unknown) => {
-          console.log('DATA RECEIVED', node.id, data)
-        })
+        if (subscriptionMap.has(node.id)) return
+        //  We may need to namespace this by spell as well
+        const unsubscribe = client.io.on(
+          node.id,
+          async (socketData: unknown) => {
+            const newContext = {
+              ...context,
+              socketOutput: socketData,
+            }
+            await worker.apply(component, [
+              node,
+              inputs,
+              outputs,
+              newContext,
+              ...args,
+            ])
+          }
+        )
+
+        subscriptionMap.set(node.id, unsubscribe)
       }
-      return builder.call(component, node)
     }
   })
 }
