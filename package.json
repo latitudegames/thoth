@@ -21,6 +21,7 @@
     "start:core": "lerna exec --scope @latitudegames/thoth-core -- yarn start",
     "start:client": "lerna exec --scope @thoth/client -- yarn start",
     "start:sharedb": "lerna exec --scope @thoth/sharedb -- yarn start",
+    "start:runner": "lerna exec --scope @thoth/runner -- yarn start",
     "start": "run-p start:core start:client",
     "lint": "lerna run lint --parallel",
     "lint:fix": "lerna run lint:fix --parallel",
