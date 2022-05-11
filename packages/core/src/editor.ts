@@ -153,8 +153,8 @@ export const initEditor = async function ({
   }
 
   // WARNING: ModulePlugin needs to be initialized before TaskPlugin during engine setup
-  editor.use(ModulePlugin, { engine, modules: {} } as unknown as void)
-  editor.use(TaskPlugin)
+  // editor.use(ModulePlugin, { engine, modules: {} } as unknown as void)
+  // editor.use(TaskPlugin)
   editor.use(KeyCodePlugin)
 
   if (client) {
