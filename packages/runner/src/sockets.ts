@@ -1,11 +1,11 @@
-import io from 'socket.io'
+// import io from 'socket.io'
 import axios from 'axios'
 import { SpellManager } from '@latitudegames/thoth-core/dist/server'
 import { buildThothInterface } from './thothInterface'
 
-interface FeathersSocket extends io.Socket {
-  feathers: any
-}
+// interface FeathersSocket extends io.Socket {
+//   feathers: any
+// }
 
 const getUserInfo = async (sessionId: string) => {
   try {
