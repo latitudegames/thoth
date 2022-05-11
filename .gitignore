@@ -23,7 +23,7 @@ package-lock.json
 .env.*.local
 
 # Python
-pyserver/__pycache__
+pyserver/__pycache__/
 pyserver/__pypackages__/
 *.py[cod]
 *$py.class
