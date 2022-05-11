@@ -1,5 +1,4 @@
 import Editor from '@monaco-editor/react'
-import { useSnackbar } from 'notistack'
 import { useState, useEffect } from 'react'
 
 import Window from '@components/Window/Window'
@@ -20,7 +19,6 @@ const TextEditor = props => {
   const [language, setLanguage] = useState<string | undefined>(undefined)
 
   const { textEditorData, saveTextEditor } = useInspector()
-  const { enqueueSnackbar } = useSnackbar()
 
   // const bottomHeight = 50
   const handleEditorWillMount = monaco => {
@@ -62,19 +60,6 @@ const TextEditor = props => {
     }
   }, [textEditorData])
 
-  // useEffect(() => {
-  //   if (props?.node?.rect?.height)
-  //     setHeight(props.node.rect.height - bottomHeight)
-
-  //   // this is to dynamically set the appriopriate height so that Monaco editor doesnt break flexbox when resizing
-  //   props.node.setEventListener(
-  //     'resize',
-  //     (data: { rect: { height: number } }) => {
-  //       setTimeout(() => setHeight(data.rect.height - bottomHeight), 0)
-  //     }
-  //   )
-  // }, [props.node])
-
   // debounce for delayed save
   useEffect(() => {
     if (!typing) return
@@ -94,10 +79,6 @@ const TextEditor = props => {
     }
     setData(update)
     saveTextEditor(update)
-    enqueueSnackbar('Editor saved', {
-      preventDuplicate: true,
-      variant: 'success',
-    })
   }
 
   const onSave = () => {

@@ -134,7 +134,13 @@ export const CreateSpellHandler = async (props: {
     agent: string,
     client: string,
     channelId: string,
-    entity: any
+    entity: any,
+    roomInfo: {
+      user: string
+      inConversation: boolean
+      isBot: boolean
+      info3d: string
+    }[]
   ) {
     const spellInputs = {
       Input: message,
@@ -143,7 +149,11 @@ export const CreateSpellHandler = async (props: {
       Client: client,
       ChannelID: channelId,
       Entity: entity,
+      RoomInfo: roomInfo,
     } as any
+
+    console.log('********** spellInputs are')
+    console.log(spellInputs)
 
     // TODO: Remove this line
     // TEST CASE: Chatting with agent on Discord doesn't get same response over and over
@@ -153,7 +163,7 @@ export const CreateSpellHandler = async (props: {
 
     let error = null
     const inputs = inputKeys.reduce((inputs, expectedInput: string) => {
-      const requestInput = spellInputs[expectedInput]
+      const requestInput = spellInputs
 
       if (requestInput) {
         inputs[expectedInput] = [requestInput]
@@ -201,12 +211,6 @@ export const CreateSpellHandler = async (props: {
           rawOutputs[(node as any).data.socketKey as string]
       })
     if (error) return rawOutputs
-
-    console.log('inputs are', inputs)
-    console.log('rawOutputs are ', rawOutputs)
-
-    console.log('message is', message)
-    console.log('response is', formattedOutputs)
 
     let index = undefined
 

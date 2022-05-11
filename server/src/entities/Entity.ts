@@ -34,7 +34,11 @@ export class Entity {
     discord_bot_name: string,
     discord_empty_responses: string,
     spell_handler: string,
-    spell_version: string
+    spell_version: string,
+    use_voice: boolean,
+    voice_provider: string,
+    voice_character: string,
+    voice_language_code: string
   ) {
     console.log('initializing discord, spell_handler:', spell_handler)
     if (this.discord)
@@ -54,7 +58,11 @@ export class Entity {
       discord_bot_name_regex,
       discord_bot_name,
       discord_empty_responses,
-      spellHandler
+      spellHandler,
+      use_voice,
+      voice_provider,
+      voice_character,
+      voice_language_code
     )
     console.log('Started discord client for agent ' + this.name)
     // const response = await spellHandler(
@@ -68,9 +76,9 @@ export class Entity {
     // console.log("response is ", response)
   }
 
-  stopDiscord() {
+  async stopDiscord() {
     if (!this.discord) throw new Error("Discord isn't running, can't stop it")
-    this.discord.destroy()
+    await this.discord.destroy()
     this.discord = null
     console.log('Stopped discord client for agent ' + this.name)
   }
@@ -85,6 +93,10 @@ export class Entity {
     xrengine_starting_words: string
     xrengine_empty_responses: string
     handleInput?: any
+    use_voice: boolean
+    voice_provider: string
+    voice_character: string
+    voice_language_code: string
   }) {
     if (this.xrengine)
       throw new Error(
@@ -110,6 +122,7 @@ export class Entity {
 
   stopXREngine() {
     if (!this.xrengine) throw new Error("XREngine isn't running, can't stop it")
+    this.xrengine.destroy()
     ;(this.xrengine as any) = null
     console.log('Stopped xrengine client for agent ' + this.name)
   }
@@ -166,10 +179,17 @@ export class Entity {
   }
 
   async onDestroy() {
+    console.log(
+      'CLOSING ALL CLIENTS, discord is defined:,',
+      this.discord === null || this.discord === undefined
+    )
     if (this.discord) this.stopDiscord()
+    if (this.xrengine) this.stopXREngine()
+    if (this.twitter) this.stopTwitter()
   }
 
   constructor(data: any) {
+    this.onDestroy()
     this.id = data.id
     console.log('initing agent')
     console.log('agent data is ', data)
@@ -183,7 +203,11 @@ export class Entity {
         data.discord_bot_name,
         data.discord_empty_responses,
         data.discord_spell_handler_incoming,
-        data.spell_version
+        data.spell_version,
+        data.use_voice,
+        data.voice_provider,
+        data.voice_character,
+        data.voice_language_code
       )
     }
 
@@ -197,6 +221,10 @@ export class Entity {
         xrengine_bot_name_regex: data.xrengine_bot_name_regex,
         xrengine_starting_words: data.xrengine_starting_words,
         xrengine_empty_responses: data.xrengine_empty_responses,
+        use_voice: data.use_voice,
+        voice_provider: data.voice_provider,
+        voice_character: data.voice_character,
+        voice_language_code: data.voice_language_code,
       })
     }
 

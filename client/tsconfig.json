@@ -17,8 +17,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@components/*": ["src/components/*"],
-      "@thoth/*": ["src/Thoth/*"]
+      "@components/*": ["src/components/*"]
     }
   },
   "typeRoots": ["@types/@thoth", "@types"],

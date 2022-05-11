@@ -12,9 +12,9 @@ import {
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
+  EngineContext,
 } from '../../../types'
 import { InputControl } from '../../dataControls/InputControl'
-import { EngineContext } from '../../engine'
 import { triggerSocket, stringSocket, anySocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
@@ -143,8 +143,9 @@ export class AgentTextCompletion extends ThothComponent<Promise<WorkerReturn>> {
     console.log('filteredStop is', filteredStop)
 
     const resp = await axios.post(
-      `${
-        process.env.REACT_APP_API_URL ?? process.env.API_URL ?? 'https://localhost:8001'
+      `${process.env.REACT_APP_API_URL ??
+      process.env.API_URL ??
+      'https://localhost:8001'
       }/text_completion`,
       {
         prompt: prompt,

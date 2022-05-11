@@ -1,9 +1,10 @@
+import { ImageCacheResponse } from '@latitudegames/thoth-core/types'
 import { rootApi } from './api'
 
 export const visualGenerationsApi = rootApi.injectEndpoints({
   endpoints: builder => ({
     fetchFromImageCache: builder.mutation<
-      any,
+      ImageCacheResponse,
       { caption: string; cacheTag?: string; topK?: number }
     >({
       query: searchOptions => ({

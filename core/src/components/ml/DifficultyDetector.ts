@@ -5,9 +5,9 @@ import {
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
+  EngineContext
 } from '../../../types'
 import { FewshotControl } from '../../dataControls/FewshotControl'
-import { EngineContext } from '../../engine'
 import { stringSocket, triggerSocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 // For simplicity quests should be ONE thing not complete X and Y
@@ -71,7 +71,7 @@ export class DifficultyDetectorComponent extends ThothComponent<
   displayControl = {}
 
   builder(node: ThothNode) {
-    node.data.fewshot = fewshot
+    if(!node.data.fewshot) node.data.fewshot = fewshot
     const inp = new Rete.Input('action', 'Action', stringSocket)
     const difficultyOut = new Rete.Output(
       'difficulty',

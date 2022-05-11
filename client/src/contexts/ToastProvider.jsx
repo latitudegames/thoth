@@ -1,27 +1,29 @@
-import { makeStyles } from '@material-ui/core/styles'
+import makeStyles from '@mui/styles/makeStyles'
 import { SnackbarProvider } from 'notistack'
 
 const useStyles = makeStyles(() => ({
   success: {
     border: '1px solid var(--green)',
-    background: 'var(--dark-2)',
+    backgroundColor: 'var(--dark-2) !important',
   },
   error: {
     border: '1px solid var(--red)',
-    background: 'var(--dark-2)',
+    backgroundColor: 'var(--dark-2) !important',
   },
   warning: {
     border: '1px solid var(--yellow)',
-    background: 'var(--dark-2)',
+    backgroundColor: 'var(--dark-2) !important',
   },
   info: {
     border: '1px solid var(--blue)',
-    background: 'var(--dark-2)',
+    backgroundColor: 'var(--dark-2) !important',
   },
 }))
 
 const ToastProvider = ({ children }) => {
   const classes = useStyles()
+
+  console.log('TOIAST CLASSES', classes)
 
   return (
     <SnackbarProvider

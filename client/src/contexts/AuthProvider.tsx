@@ -22,7 +22,7 @@ interface SessionInfoType {
 }
 
 export interface UserInfoType {
-  id: number
+  id: string
   email: string
   groups: string[]
   username: string
@@ -114,7 +114,6 @@ const AuthProvider = ({ children }: { children: ReactElement }) => {
     ) {
       setSessionInfo(sessionInfoParam)
       setUserInfo(userInfo)
-      console.log(userInfo)
 
       let search = window.location.search.toString()
       initialize(search)
@@ -145,7 +144,6 @@ const AuthProvider = ({ children }: { children: ReactElement }) => {
         // Check if User has an existing sessionId in local storage
         const sessionId = await getSessionId()
 
-        console.log('im running', sessionId)
         if (sessionId) {
           const sessionReq = await fetch(
             `${latitudeApiRootUrl}/user/auth/info?access_token=${sessionId}`
@@ -206,6 +204,18 @@ const AuthProvider = ({ children }: { children: ReactElement }) => {
           }
         }
       } else {
+        // Setting static user data
+        let userId = localStorage.getItem('userId')
+        if(!userId) {
+          userId = uuidv4()
+          localStorage.setItem('userId', userId)
+        }
+        setUserInfo({
+          id: userId,
+          email: '',
+          groups: [],
+          username: ''
+        })
         setDone(true)
       }
     })()

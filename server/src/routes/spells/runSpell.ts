@@ -80,6 +80,9 @@ export const runSpell = async (
   thoth: Record<string, unknown>,
   modules?: ModuleType[]
 ) => {
+
+  console.log("************ RUN SPELL")
+  console.log(inputs)
   // The module is an interface that the module system uses to write data to
   // used internally by the module plugin, and we make use of it here too.
   // TODO: Test runing nested modules and watch out for unexpected behaviour

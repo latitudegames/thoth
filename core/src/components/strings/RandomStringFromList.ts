@@ -6,13 +6,13 @@
 import Rete from 'rete'
 
 import {
+  EngineContext,
   NodeData,
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../../types'
 import { FewshotControl } from '../../dataControls/FewshotControl'
-import { EngineContext } from '../../engine'
 import { triggerSocket, stringSocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
@@ -47,7 +47,7 @@ export class RandomStringFromList extends ThothComponent<
   }
 
   builder(node: ThothNode) {
-    node.data.fewshot = fewshot
+    if(!node.data.fewshot) node.data.fewshot = fewshot
 
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
     const dataOutput = new Rete.Output('trigger', 'Trigger', triggerSocket)

@@ -62,7 +62,8 @@ export class Inspector {
     control.component = this.component
     control.id = uuidv4()
 
-    if (control.defaultValue)
+    // If we gave a dewfault value and there isnt already one on the node, add it.
+    if (control.defaultValue && !this.node.data[control.dataKey])
       this.node.data[control.dataKey] = control.defaultValue
 
     list.set(control.dataKey, control)
@@ -184,12 +185,18 @@ export class Inspector {
     this.node.data.dataControls = cache
   }
 
+  handleLock(update: Record<string, any>) {
+    if (!('nodeLocked' in update.data)) return
+    this.node.data.nodeLocked = update.data.nodeLocked
+  }
+
   handleData(update: Record<string, any>) {
     // store all data controls inside the nodes data
     // WATCH in case our graphs start getting quite large.
     if (update.dataControls) this.cacheControls(update.dataControls)
 
     const { data } = update
+    this.handleLock(update)
 
     // Send data to a possibel node global handler
     // Turned off until the pattern might be useful

@@ -1,8 +1,10 @@
 //@ts-nocheck
 
+import { useAuth } from '@/contexts/AuthProvider'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { adjectives, colors, uniqueNamesGenerator } from 'unique-names-generator'
 
 function isJson(str) {
   try {
@@ -19,11 +21,17 @@ function capitalizeFirstLetter(word) {
 }
 
 const EntityWindow = ({ id, updateCallback }) => {
+  const { user } = useAuth()
   const [loaded, setLoaded] = useState(false)
 
   const [enabled, setEnabled] = useState(false)
-  const [discord_enabled, setdiscord_enabled] = useState(false)
+  const [discord_enabled, setDiscordEnabled] = useState(false)
   const [discord_api_key, setDiscordApiKey] = useState('')
+
+  const [use_voice, setUseVoice] = useState(false)
+  const [voice_provider, setVoiceProvider] = useState(false)
+  const [voice_character, setVoiceCharacter] = useState('')
+  const [voice_language_code, setVoiceLanguageCode] = useState('')
 
   const [discord_starting_words, setDiscordStartingWords] = useState('')
   const [discord_bot_name_regex, setDiscordBotNameRegex] = useState('')
@@ -74,7 +82,11 @@ const EntityWindow = ({ id, updateCallback }) => {
         )
         console.log('res is', res.data)
         setEnabled(res.data.enabled === true)
-        setdiscord_enabled(res.data.discord_enabled === true)
+        setDiscordEnabled(res.data.discord_enabled === true)
+        setUseVoice(res.data.use_voice === true)
+        setVoiceProvider(res.data.voice_provider)
+        setVoiceCharacter(res.data.voice_character)
+        setVoiceLanguageCode(res.data.voice_language_code)
         setDiscordApiKey(res.data.discord_api_key)
         setDiscordStartingWords(res.data.discord_starting_words)
         setDiscordBotNameRegex(res.data.discord_bot_name_regex)
@@ -119,7 +131,7 @@ const EntityWindow = ({ id, updateCallback }) => {
   useEffect(() => {
     ;(async () => {
       const res = await axios.get(
-        `${process.env.REACT_APP_API_ROOT_URL}/game/spells`
+        `${process.env.REACT_APP_API_ROOT_URL}/game/spells?userId=${user?.id}`
       )
       setSpellList(res.data)
     })()
@@ -153,6 +165,10 @@ const EntityWindow = ({ id, updateCallback }) => {
       discord_spell_handler_incoming,
       discord_spell_handler_update,
       discord_spell_handler_feed,
+      use_voice,
+      voice_provider,
+      voice_character,
+      voice_language_code,
       xrengine_enabled,
       xrengine_url,
       xrengine_spell_handler_incoming,
@@ -190,7 +206,7 @@ const EntityWindow = ({ id, updateCallback }) => {
           let responseData = res && JSON.parse(res?.config?.data).data
           console.log(responseData, 'responseDataresponseData')
           setEnabled(responseData.enabled)
-          setdiscord_enabled(responseData.discord_enabled)
+          setDiscordEnabled(responseData.discord_enabled)
           setDiscordApiKey(responseData.discord_api_key)
           setDiscordStartingWords(responseData.discord_starting_words)
           setDiscordBotNameRegex(responseData.discord_bot_name_regex)
@@ -235,6 +251,65 @@ const EntityWindow = ({ id, updateCallback }) => {
       })
   }
 
+  const exportEntity = () => {
+    const _data = {
+      enabled,
+      discord_enabled,
+      discord_api_key,
+      discord_starting_words,
+      discord_bot_name_regex,
+      discord_bot_name,
+      discord_empty_responses,
+      discord_spell_handler_incoming,
+      discord_spell_handler_update,
+      discord_spell_handler_feed,
+      use_voice,
+      voice_provider,
+      voice_character,
+      voice_language_code,
+      xrengine_enabled,
+      xrengine_url,
+      xrengine_spell_handler_incoming,
+      xrengine_spell_handler_update,
+      xrengine_spell_handler_feed,
+      xrengine_bot_name,
+      xrengine_bot_name_regex,
+      xrengine_starting_words,
+      xrengine_empty_responses,
+      twitter_client_enable,
+      twitter_token,
+      twitter_id,
+      twitter_app_token,
+      twitter_app_token_secret,
+      twitter_access_token,
+      twitter_access_token_secret,
+      twitter_bot_name,
+      twitter_bot_name_regex,
+      // twilio_client_enable,
+      // twilio_sid,
+      // twilio_auth_token,
+      // twilio_phone_number
+    }    
+    const fileName = uniqueNamesGenerator({
+      dictionaries: [adjectives, colors],
+      separator: '-',
+      length: 2,
+    })
+    const json = JSON.stringify(_data)
+    const blob = new Blob([json], { type: 'application/json' })
+    const url = window.URL.createObjectURL(new Blob([blob]))
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', `${fileName}.thoth`)
+    // Append to html link element page
+    document.body.appendChild(link)
+    // Start download
+    link.click()
+    if (!link.parentNode) return
+    // Clean up and remove the link
+    link.parentNode.removeChild(link)
+  }
+
   return !loaded ? (
     <>Loading...</>
   ) : (
@@ -249,6 +324,59 @@ const EntityWindow = ({ id, updateCallback }) => {
           }}
         />
       </div>
+      <div className="form-item">
+        <span className="form-item-label">Voice Enabled</span>
+        <input
+          type="checkbox"
+          value={use_voice}
+          defaultChecked={use_voice || use_voice === 'true'}
+          onChange={e => {
+            setUseVoice(e.target.checked)
+          }}
+        />
+      </div>
+
+      {use_voice && (
+        <React.Fragment>
+          <div className="form-item agent-select">
+            <span className="form-item-label">Voice Provider</span>
+            <select
+              name="voice_provider"
+              id="voice_provider"
+              value={voice_provider}
+              onChange={event => {
+                setVoiceProvider(event.target.value)
+              }}
+            >
+              <option value={'google'}>Google</option>
+              <option value={'uberduck'}>Uberduck</option>
+            </select>
+          </div>
+
+          <div className="form-item">
+            <span className="form-item-label">Character</span>
+            <input
+              type="text"
+              defaultValue={voice_character}
+              onChange={e => {
+                setVoiceCharacter(e.target.value)
+              }}
+            />
+          </div>
+
+          <div className="form-item">
+            <span className="form-item-label">Language Code</span>
+            <input
+              type="text"
+              defaultValue={voice_language_code}
+              onChange={e => {
+                setVoiceLanguageCode(e.target.value)
+              }}
+            />
+          </div>
+        </React.Fragment>
+      )}
+
       {enabled && (
         <>
           <div className="form-item">
@@ -258,7 +386,7 @@ const EntityWindow = ({ id, updateCallback }) => {
               value={discord_enabled}
               defaultChecked={discord_enabled || discord_enabled === 'true'}
               onChange={e => {
-                setdiscord_enabled(e.target.checked)
+                setDiscordEnabled(e.target.checked)
               }}
             />
           </div>
@@ -667,7 +795,8 @@ const EntityWindow = ({ id, updateCallback }) => {
         <button onClick={() => update()} style={{ marginRight: '10px' }}>
           Update
         </button>
-        <button onClick={() => _delete()}>Delete</button>
+        <button onClick={() => _delete()} style={{ marginRight: '10px' }}>Delete</button>
+        <button onClick={() => exportEntity()}>Export</button>
       </div>
     </div>
   )

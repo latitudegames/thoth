@@ -30,7 +30,8 @@ export const channelTypes = {
   thread: 'GUILD_PUBLIC_THREAD',
 }
 export class discord_client {
-  destroy() {
+  async destroy() {
+    await this.client.destroy()
     this.client = null
   }
 
@@ -641,10 +642,12 @@ export class discord_client {
       const mention = `<@!${client.user.id}>`
       if (
         content.startsWith('!ping join') ||
+        content.startsWith('!join') ||
         content.startsWith('!ping ' + mention + ' join')
       ) {
         const d = content.split(' ')
         const index = d.indexOf('join') + 1
+        console.log('d:', d)
         if (d.length > index) {
           const channelName = d[index]
           await message.guild.channels.cache.forEach(
@@ -655,6 +658,7 @@ export class discord_client {
               leave: () => void
             }) => {
               if (
+                this.use_voice &&
                 channel.type === channelTypes['voice'] &&
                 channel.name === channelName
               ) {
@@ -695,15 +699,31 @@ export class discord_client {
       channel.sendTyping()
     }, message.content.length)
 
-    console.log('discord spell_handler:', this.spell_handler)
+    const roomInfo: {
+      user: string
+      inConversation: boolean
+      isBot: boolean
+      info3d: string
+    }[] = []
+    for (const [memberID, member] of channel.members) {
+      roomInfo.push({
+        user: member.user.username,
+        inConversation: this.isInConversation(member.user.id),
+        isBot: member.user.bot,
+        info3d: '',
+      })
+    }
+
     const response = await this.handleInput(
       message.content,
       message.author.username,
       this.discord_bot_name,
       'discord',
       message.channel.id,
-      this.entity
+      this.entity,
+      roomInfo
     )
+
     this.handlePingSoloAgent(message.channel.id, message.id, response, false)
   }
 
@@ -1241,7 +1261,7 @@ export class discord_client {
             }
           }) => {
             log('response:', responses)
-            if ((responses as string).includes('uberduck')) {
+            if (responses && (responses as string).includes('uberduck')) {
               if (addPing) {
                 message.reply({
                   files: [{ attachment: responses, name: 'voice.wav' }],
@@ -1612,7 +1632,10 @@ export class discord_client {
   discord_bot_name_regex: string = ''
   discord_bot_name: string = 'Bot'
   discord_empty_responses: string[] = []
-
+  use_voice: boolean
+  voice_provider: string
+  voice_character: string
+  voice_language_code: string
   createDiscordClient = async (
     entity: any,
     discord_api_token: string | undefined,
@@ -1626,12 +1649,26 @@ export class discord_client {
       agent: string,
       client: string,
       channelId: string,
-      entity: number
-    ) => Promise<unknown>
+      entity: number,
+      roomInfo: {
+        user: string
+        inConversation: boolean
+        isBot: boolean
+        info3d: string
+      }[]
+    ) => Promise<unknown>,
+    use_voice,
+    voice_provider,
+    voice_character,
+    voice_language_code
   ) => {
     console.log('creating discord client')
     this.entity = entity
     this.handleInput = handleInput
+    this.use_voice = use_voice
+    this.voice_provider = voice_provider
+    this.voice_character = voice_character
+    this.voice_language_code = voice_language_code
     if (!discord_starting_words || discord_starting_words?.length <= 0) {
       this.discord_starting_words = ['hi', 'hey']
     } else {
@@ -1690,12 +1727,18 @@ export class discord_client {
     const embed = new Discord.MessageEmbed().setColor(0x00ae86)
 
     this.client.embed = embed
-    initSpeechClient(
-      this.client,
-      this.discord_bot_name,
-      this.entity,
-      this.handleInput
-    )
+
+    if (this.use_voice) {
+      initSpeechClient(
+        this.client,
+        this.discord_bot_name,
+        this.entity,
+        this.handleInput,
+        this.voice_provider,
+        this.voice_character,
+        this.voice_language_code
+      )
+    }
 
     this.client.on('messageCreate', this.messageCreate.bind(null, this.client))
     // this.client.on('messageDelete', this.messageDelete.bind(null, this.client))

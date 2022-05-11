@@ -13,6 +13,7 @@ export type SocketNameType =
   | 'String'
   | 'Object'
   | 'Trigger'
+  | 'Agent'
 
 export type SocketType =
   | 'anySocket'
@@ -22,6 +23,7 @@ export type SocketType =
   | 'stringSocket'
   | 'objectSocket'
   | 'triggerSocket'
+  | 'agentSocket'
 
 export const socketNameMap: Record<SocketNameType, SocketType> = {
   'Any type': 'anySocket',
@@ -31,6 +33,7 @@ export const socketNameMap: Record<SocketNameType, SocketType> = {
   String: 'stringSocket',
   Object: 'objectSocket',
   Trigger: 'triggerSocket',
+  Agent: 'agentSocket',
 }
 
 export const anySocket = new Rete.Socket('Any type')
@@ -41,6 +44,7 @@ export const arraySocket = new Rete.Socket('Array')
 export const stringSocket = new Rete.Socket('String')
 export const objectSocket = new Rete.Socket('Object')
 export const triggerSocket = new Rete.Socket('Trigger')
+export const agentSocket = new Rete.Socket('Agent')
 
 const sockets = [
   numSocket,
@@ -48,6 +52,7 @@ const sockets = [
   stringSocket,
   arraySocket,
   objectSocket,
+  agentSocket
 ]
 
 sockets.forEach(socket => {

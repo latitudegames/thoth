@@ -5,16 +5,16 @@ import axios from 'axios'
 import Rete from 'rete'
 
 import {
+  EngineContext,
   NodeData,
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../../types'
 import { FewshotControl } from '../../dataControls/FewshotControl'
-import { EngineContext } from '../../engine'
-import { TaskOptions } from '../../plugins/taskPlugin/task'
 import { stringSocket, triggerSocket, arraySocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
+import { TaskOptions } from '../plugins/../taskPlugin/task'
 const fewshot = `Given an action, detect what entities the player is interacting with. Ignore entities that the player is just asking about.
 Entity types: food, person, creature, object, place, other, none
 Action: throw an anvil at the man
@@ -130,7 +130,7 @@ export class EntityDetector extends ThothComponent<
   // when we have enki hooked up and have grabbed all few shots, we would use the builder
   // to generate the appropriate inputs and ouputs for the fewshot at build time
   builder(node: ThothNode) {
-    node.data.fewshot = fewshot
+    if(!node.data.fewshot) node.data.fewshot = fewshot
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const inp = new Rete.Input('action', 'Action', stringSocket)
     const out = new Rete.Output('entities', 'Entities', arraySocket)
@@ -161,8 +161,9 @@ export class EntityDetector extends ThothComponent<
     const prompt = fewshot + action + '\nEntities:'
 
     const resp = await axios.post(
-      `${
-        process.env.REACT_APP_API_URL ?? process.env.API_URL ?? 'https://localhost:8001'
+      `${process.env.REACT_APP_API_URL ??
+      process.env.API_URL ??
+      'https://localhost:8001'
       }/text_completion`,
       {
         params: {

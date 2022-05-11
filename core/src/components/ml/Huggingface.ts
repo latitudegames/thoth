@@ -8,11 +8,11 @@ import {
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
+  EngineContext,
 } from '../../../types'
 import { FewshotControl } from '../../dataControls/FewshotControl'
 import { InputControl } from '../../dataControls/InputControl'
 import { SocketGeneratorControl } from '../../dataControls/SocketGenerator'
-import { EngineContext } from '../../engine'
 import { triggerSocket, stringSocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 const info = `The huggingface component is used to access models on huggingface.co.  For now it is very simple.  You define a number of inputs with the input generator, and you can use those in forming the request to your huggingface inference model.  You input the name of the model from hugginface into the model name field, and you run it.  It will call the model, and return the result.

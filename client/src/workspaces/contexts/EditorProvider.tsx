@@ -1,6 +1,7 @@
-import { initEditor, zoomAt } from '@latitudegames/thoth-core'
+import { initEditor } from '@latitudegames/thoth-core/src'
 import {
   GraphData,
+  EditorContext,
   Spell,
   ThothEditor,
 } from '@latitudegames/thoth-core/types'
@@ -18,10 +19,9 @@ import LoadingScreen from '../../components/LoadingScreen/LoadingScreen'
 import { MyNode } from '../../components/Node/Node'
 import gridimg from '@/grid.png'
 import { usePubSub } from '../../contexts/PubSubProvider'
-import {
-  useThothInterface,
-  ThothInterfaceContext,
-} from './ThothInterfaceProvider'
+import { useThothInterface } from './ThothInterfaceProvider'
+import { zoomAt } from '@latitudegames/thoth-core/src/plugins/areaPlugin/zoom-at'
+import { useAuth } from '@/contexts/AuthProvider'
 
 export type ThothTab = {
   layoutJson: string
@@ -44,7 +44,7 @@ const Context = createContext({
     // todo update this to use proper spell type
     spell: Spell | undefined,
     tab: ThothTab,
-    reteInterface: ThothInterfaceContext
+    reteInterface: EditorContext
   ) => { },
   setEditor: (editor: any) => { },
   getNodeMap: () => { },
@@ -172,6 +172,7 @@ const EditorProvider = ({ children }) => {
 }
 
 const RawEditor = ({ tab, children }) => {
+  const { user } = useAuth()
   const [getSpell, { data: spell, isLoading }] = useLazyGetSpellQuery()
   const [loaded, setLoaded] = useState(false)
   const { buildEditor } = useEditor()
@@ -181,7 +182,10 @@ const RawEditor = ({ tab, children }) => {
   useEffect(() => {
     if (!tab) return
 
-    if (tab?.spellId) getSpell(tab.spellId)
+    if (tab?.spellId) getSpell({
+      spellId: tab.spellId,
+      userId: user?.id as string
+    })
   }, [tab])
 
   if (!tab || (tab.type === 'spell' && (isLoading || !spell)))

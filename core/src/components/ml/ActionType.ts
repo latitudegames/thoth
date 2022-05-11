@@ -3,13 +3,13 @@ import axios from 'axios'
 import Rete from 'rete'
 
 import {
+  EngineContext,
   NodeData,
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
 } from '../../../types'
 import { FewshotControl } from '../../dataControls/FewshotControl'
-import { EngineContext } from '../../engine'
 import { stringSocket, triggerSocket } from '../../sockets'
 import { ThothComponent } from '../../thoth-component'
 
@@ -57,7 +57,7 @@ export class ActionTypeComponent extends ThothComponent<Promise<WorkerReturn>> {
   // when we have enki hooked up and have grabbed all few shots, we would use the builder
   // to generate the appropriate inputs and ouputs for the fewshot at build time
   builder(node: ThothNode) {
-    node.data.fewshot = fewshot
+    if(!node.data.fewshot) node.data.fewshot = fewshot
     // create inputs here. First argument is the name, second is the type (matched to other components sockets), and third is the socket the i/o will use
     const inp = new Rete.Input('action', 'Action', stringSocket)
     const out = new Rete.Output('actionType', 'ActionType', stringSocket)
@@ -88,8 +88,9 @@ export class ActionTypeComponent extends ThothComponent<Promise<WorkerReturn>> {
     const prompt = fewshot + action + ','
 
     const resp = await axios.post(
-      `${
-        process.env.REACT_APP_API_URL ?? process.env.API_URL ?? 'https://localhost:8001'
+      `${process.env.REACT_APP_API_URL ??
+      process.env.API_URL ??
+      'https://localhost:8001'
       }/text_completion`,
       {
         params: {
