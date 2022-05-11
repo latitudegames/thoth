@@ -1,11 +1,10 @@
 import json
 import os
-from flask import Flask, session, request
-from postgres import getDocuments
-from vector_search import trainModel, getNumberOfTpocis
+from flask import Flask, request
+from vector_search import trainModel, getNumberOfTpocis, query, keywords_query
 from utils import *
 
-def run_server(port):
+def run_server(port, _postgres):
     app = Flask('thoth')
     
     @app.route('/', methods=['GET', 'POST'])
@@ -20,20 +19,26 @@ def run_server(port):
     @app.route('/search', methods=['GET', 'POST'])
     def search_page():
         if request.method == 'GET':
-            data = request.args.get('query')
-            return json.dumps({"status": data})
+            return json.dumps({"status": "not_supported"})
         elif request.method == 'POST':
             _json = request.get_json()
-            data = _json['query']
-            return  json.dumps({"status": data})
+            isKeywords = _json['isKeywords']
+            _query = _json['query']
+            res = ''
+            if isKeywords == True or isKeywords == 'true':
+                res = keywords_query(_query)
+            else:
+                res = query(_query)
+
+            return  json.dumps({"status": 'ok', 'data': res})
     
     @app.route('/update_search_model')
     def update_search_model_page():
         if request.method == 'GET':
-            documents = getDocuments()
+            documents = _postgres.getDocuments()
             try:
                 trainModel(documents=documents)
-                return json.dumbs({"status": "ok"})
+                return json.dumps({"status": "ok"})
             except Exception as e:
                 return json.dumps({"status": "error", "message": str(e)})
     

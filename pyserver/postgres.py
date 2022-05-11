@@ -1,25 +1,19 @@
 import psycopg2
-import os
-from datetime import datetime
-from json import dumps
 from envReader import getValue
 
-postgres_con = ''
-cur = ''
+class postgres:
+    def __init__(self):
+        print('initializing postgres')
+        self.postgres_con = psycopg2.connect(host=getValue('PGHOST'), database=getValue('PGDATABASE'), user=getValue('PGUSER'), password=getValue('PGPASSWORD'))
+        self.cur = self.postgres_con.cursor()
 
-def initPostgres():
-    print('initializing postgres')
-    postgres_con = psycopg2.connect(host=getValue('PGHOST'), database=getValue('PGDATABASE'), user=getValue('PGUSER'), password=getValue('PGPASSWORD'))
-    cur = postgres_con.cursor
-    
-def getDocuments():
-    documents = []
+    def getDocuments(self):
+        documents = []
 
-    query = 'SELECT * FROM documents'
-    cur.execute(query)
-    rows = cur.fetchall()
-    for row in rows:
-        documents.append(row['1'])
+        query = 'SELECT * FROM documents'
+        self.cur.execute(query)
+        rows = self.cur.fetchall()
+        for row in rows:
+            documents.append(row[1])
 
-    print(documents)
-    return documents
+        return documents

@@ -55,7 +55,7 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
     const documents: any = await database.instance.getDocumentsOfStore(storeId)
     return (ctx.body = documents)
   })
-  router.get('/document/:docId', async function (ctx:Koa.Context) {
+  router.get('/document/:docId', async function (ctx: Koa.Context) {
     const docId = ctx.params.docId
     const doc = await database.instance.getSingleDocument(docId)
     return (ctx.body = doc)
@@ -75,6 +75,12 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
         is_included,
         storeId
       )
+      const resp = await axios.get(
+        `${process.env.PYTHON_SERVER_URL}/update_search_model`
+      )
+      if (resp.data.status != 'ok') {
+        return (ctx.body = 'internal error')
+      }
     } catch (e) {
       console.log(e)
       return (ctx.body = 'internal error')
@@ -92,6 +98,12 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
 
     try {
       await database.instance.removeDocument(documentId)
+      const resp = await axios.get(
+        `${process.env.PYTHON_SERVER_URL}/update_search_model`
+      )
+      if (resp.data.status != 'ok') {
+        return (ctx.body = 'internal error')
+      }
     } catch (e) {
       console.log(e)
       return (ctx.body = 'internal error')
@@ -115,6 +127,12 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
         is_included,
         storeId
       )
+      const resp = await axios.get(
+        `${process.env.PYTHON_SERVER_URL}/update_search_model`
+      )
+      if (resp.data.status != 'ok') {
+        return (ctx.body = 'internal error')
+      }
     } catch (e) {
       console.log(e)
       return (ctx.body = 'internal error')
@@ -125,7 +143,16 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
   router.get('/search', async function (ctx: Koa.Context) {
     const question = ctx.request.query?.question as string
     const cleanQuestion = removePunctuation(question)
-    const words = simplifyWords(cleanQuestion.split(' '))
+    const resp = await axios.post(`${process.env.PYTHON_SERVER_URL}/search`, {
+      isKeywords: false,
+      query: cleanQuestion,
+    })
+    return (ctx.body =
+      resp.data.status == 'ok' && resp.data.data.length > 0
+        ? resp.data.data
+        : 'No documents where found to search from!')
+
+    /*const words = simplifyWords(cleanQuestion.split(' '))
     const topic = await classifyText(question)
     console.log('topic:', topic)
 
@@ -218,7 +245,7 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
       } else {
         return (ctx.body = 'No documents where found to search from!')
       }
-    } else return (ctx.body = 'No documents where found to search from!')
+    } else return (ctx.body = 'No documents where found to search from!')*/
   })
 
   router.post('/content-object', async function (ctx: Koa.Context) {
@@ -293,7 +320,7 @@ export async function initSearchCorpus(ignoreDotEnv: boolean) {
     const stores = await database.instance.getDocumentStores()
     return (ctx.body = stores)
   })
-  router.get('/document-store/:name', async function (ctx:Koa.Context) {
+  router.get('/document-store/:name', async function (ctx: Koa.Context) {
     const name = ctx.params.name
     const store = await database.instance.getSingleDocumentStore(name)
     return (ctx.body = store)
