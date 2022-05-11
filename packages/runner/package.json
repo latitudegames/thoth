@@ -24,10 +24,10 @@
     "yarn": ">= 0.18.0"
   },
   "scripts": {
-    "test": "yarn run lint && yarn run compile && yarn run jest",
+    "test": "yarn lint && yarn compile && yarn jest",
     "lint": "eslint src/. test/. --config .eslintrc.json --ext .ts --fix",
     "dev": "ts-node-dev --no-notify src/",
-    "start": "yarn run compile && node lib/",
+    "start": "yarn compile && node lib/",
     "jest": "jest --forceExit",
     "compile": "shx rm -rf lib/ && tsc"
   },
