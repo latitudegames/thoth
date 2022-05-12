@@ -19,3 +19,11 @@
     - should also send a "completed" message at the end of the runtime
     - or perhaps we send back the result of the spell runner as the result of that running.
       - this will keep us REST compliant as well, as the service will still return a result event without sockets
+
+Implementation notes
+
+- we want to find a way to still "run" the graph to take advantage of other plugins, like console. However we want this run of the graph to just be populated with cached data from the REAL run that happened on the server.
+- As the spell is running on the server, it is pushing up values to the socket plugin which is caching those values for that node run.
+- When the spell runner is done running the spell, it sends up a 'completed' event. When the client receives this event, it will trigger off the graph to "run" as normal. However, in doing so, each worker will only return the cached output data that was received during the server run phase.
+- the worker returns this value, passing to the next node as normal.
+- not sure quite how this will interact with having components which connect to full streams of data. In this case we actually just "play" and "pause" spells, and when playing they are streaming their events up to the client.

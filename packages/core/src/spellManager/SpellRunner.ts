@@ -1,3 +1,4 @@
+import io from 'socket.io'
 import {
   EngineContext,
   ChainData,
@@ -11,6 +12,7 @@ import { extractModuleInputKeys } from '../utils/chainHelpers'
 
 type RunSpellConstructor = {
   thothInterface: EngineContext
+  socket?: io.Socket
 }
 
 class SpellRunner {
@@ -19,18 +21,22 @@ class SpellRunner {
   module: Module
   thothInterface: EngineContext
   ranSpells: string[] = []
+  socket?: io.Socket | null = null
 
-  constructor({ thothInterface }: RunSpellConstructor) {
+  constructor({ thothInterface, socket }: RunSpellConstructor) {
     // Initialize the engine
     this.engine = initSharedEngine({
       name: 'demo@0.1.0',
       components: getComponents(),
       server: true,
       modules: {},
+      socket: socket || undefined,
     }) as ThothEngine
 
     // Set up the module to interface with the runtime processes
     this.module = new Module()
+
+    if (socket) this.socket = socket
 
     // Set the interface that this runner will use when running workers
     this.thothInterface = thothInterface

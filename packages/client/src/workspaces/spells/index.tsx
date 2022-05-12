@@ -19,6 +19,7 @@ import { sharedb } from '@/config'
 import { ThothComponent } from '@latitudegames/thoth-core/src/thoth-component'
 import { RootState } from '@/state/store'
 import { useSelector } from 'react-redux'
+import { useFeathers } from '@/contexts/FeathersProvider'
 
 const Workspace = ({ tab, tabs, pubSub }) => {
   const spellRef = useRef<Spell>()
@@ -26,6 +27,7 @@ const Workspace = ({ tab, tabs, pubSub }) => {
   const { getSpellDoc } = useSharedb()
   const [loadSpell, { data: spellData }] = useLazyGetSpellQuery()
   const { serialize, editor } = useEditor()
+  const { client } = useFeathers()
   const preferences = useSelector((state: RootState) => state.preferences)
 
   const [docLoaded, setDocLoaded] = useState<boolean>(false)
@@ -103,6 +105,15 @@ const Workspace = ({ tab, tabs, pubSub }) => {
     if (!tab || !tab.spellId) return
     loadSpell(tab.spellId)
   }, [tab])
+
+  useEffect(() => {
+    if (!client) return
+    ;(async () => {
+      if (!client) return
+
+      await client.service('spell-runner').get(tab.spellId)
+    })()
+  }, [client])
 
   const factory = tab => {
     return node => {

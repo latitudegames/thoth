@@ -17,11 +17,13 @@ import InspectorPlugin from './plugins/inspectorPlugin'
 import LifecyclePlugin from './plugins/lifecyclePlugin'
 import { ModuleManager } from './plugins/modulePlugin/module-manager'
 import SocketGenerator from './plugins/socketGenerator'
-import TaskPlugin, { Task } from './plugins/taskPlugin'
+import SocketOverridePlugin from './plugins/socketPlugin/socketOverridePlugin'
+import { Task } from './plugins/taskPlugin'
 import { PubSubContext, ThothComponent } from './thoth-component'
 import DebuggerPlugin from './plugins/debuggerPlugin'
 import KeyCodePlugin from './plugins/keyCodePlugin'
-import ModulePlugin from './plugins/modulePlugin'
+// import ModulePlugin from './plugins/modulePlugin'
+import SocketPlugin from './plugins/socketPlugin'
 // import SelectionPlugin from './plugins/selectionPlugin'
 import errorPlugin from './plugins/errorPlugin'
 
@@ -52,12 +54,14 @@ export const initEditor = async function ({
   thoth,
   tab,
   node,
+  client,
 }: {
   container: any
   pubSub: any
   thoth: any
   tab: any
   node: any
+  client?: any
 }) {
   if (editorTabMap[tab.id]) editorTabMap[tab.id].clear()
 
@@ -79,6 +83,10 @@ export const initEditor = async function ({
   // ██╔═══╝ ██║     ██║   ██║██║   ██║██║██║╚██╗██║╚════██║
   // ██║     ███████╗╚██████╔╝╚██████╔╝██║██║ ╚████║███████║
   // ╚═╝     ╚══════╝ ╚═════╝  ╚═════╝ ╚═╝╚═╝  ╚═══╝╚══════╝
+
+  if (client) {
+    editor.use(SocketOverridePlugin, { client })
+  }
 
   // History plugin for undo/redo
   editor.use(HistoryPlugin, { keyboard: false })
@@ -150,9 +158,13 @@ export const initEditor = async function ({
   }
 
   // WARNING: ModulePlugin needs to be initialized before TaskPlugin during engine setup
-  editor.use(ModulePlugin, { engine, modules: {} } as unknown as void)
-  editor.use(TaskPlugin)
+  // editor.use(ModulePlugin, { engine, modules: {} } as unknown as void)
+  // editor.use(TaskPlugin)
   editor.use(KeyCodePlugin)
+
+  if (client) {
+    editor.use(SocketPlugin, { client })
+  }
 
   // editor.use(SelectionPlugin, { enabled: true })
 

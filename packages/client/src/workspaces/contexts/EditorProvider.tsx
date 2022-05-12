@@ -20,6 +20,7 @@ import { MyNode } from '../../components/Node/Node'
 import gridimg from '@/grid.png'
 import { usePubSub } from '../../contexts/PubSubProvider'
 import { useThothInterface } from './ThothInterfaceProvider'
+import { useFeathers } from '@/contexts/FeathersProvider'
 
 export type ThothTab = {
   layoutJson: string
@@ -60,6 +61,7 @@ export const useEditor = () => useContext(Context)
 const EditorProvider = ({ children }) => {
   const [editor, setEditorState] = useState<ThothEditor | null>(null)
   const editorRef = useRef<ThothEditor | null>(null)
+  const { client } = useFeathers()
   const pubSub = usePubSub()
 
   const setEditor = editor => {
@@ -82,6 +84,7 @@ const EditorProvider = ({ children }) => {
       tab,
       // MyNode is a custom default style for nodes
       node: MyNode,
+      client,
     })
 
     // set editor to the map

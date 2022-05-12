@@ -18,7 +18,7 @@ import appHooks from './app.hooks'
 import channels from './channels'
 import { HookContext as FeathersHookContext } from '@feathersjs/feathers'
 import handleSockets from './sockets'
-import authentication from './authentication'
+// import authentication from './authentication'
 import { configureManager } from '@latitudegames/thoth-core/dist/server'
 // Don't remove this comment. It's needed to format import lines nicely.
 
