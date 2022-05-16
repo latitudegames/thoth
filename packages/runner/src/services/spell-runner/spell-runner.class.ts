@@ -86,6 +86,12 @@ export class SpellRunner implements ServiceMethods<Data> {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async update(id: NullableId, data: Data, params?: Params): Promise<Data> {
+    if (!this.app.userSpellManagers) return {}
+    if (!params) throw new Error('No params present in service')
+
+    const { user } = params
+
+    if (!user) throw new Error('No user is present in service')
     return data
   }
 
