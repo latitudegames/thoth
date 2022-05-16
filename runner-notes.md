@@ -1,5 +1,5 @@
 - feathers server for primary work using socket IO
-- user connects to the server with proper authentication headers right away\
+- user connects to the server with proper authentication headers right away
 - when socket connects, we add a spellManager to the socket for use during the lifetime of the socket connection
   - spell manager contains a map of all spell runners or each spell
   - spell manager is responsible for initiating spell runners for spells not in the map
