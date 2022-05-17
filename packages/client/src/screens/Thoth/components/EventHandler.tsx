@@ -121,7 +121,7 @@ const EventHandler = ({ pubSub, tab }) => {
     }
 
     try {
-      await client.service('spell-runner').update(currentSpell.id, {
+      await client.service('spell-runner').update(currentSpell.name, {
         diff: jsonDiff,
       })
       enqueueSnackbar('Spell saved', {
@@ -235,7 +235,7 @@ const EventHandler = ({ pubSub, tab }) => {
   }
 
   useEffect(() => {
-    if (!tab && !spell) return
+    if (!tab && !spell && !client) return
 
     const subscriptions = Object.entries(handlerMap).map(([event, handler]) => {
       return subscribe(event, handler)
@@ -247,7 +247,7 @@ const EventHandler = ({ pubSub, tab }) => {
         unsubscribe()
       })
     }
-  }, [tab])
+  }, [tab, client])
 
   return null
 }
