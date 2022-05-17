@@ -109,8 +109,7 @@ const Workspace = ({ tab, tabs, pubSub }) => {
   useEffect(() => {
     if (!client) return
     ;(async () => {
-      if (!client) return
-
+      if (!client || !tab || !tab.spellId) return
       await client.service('spell-runner').get(tab.spellId)
     })()
   }, [client])
