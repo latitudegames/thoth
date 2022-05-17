@@ -16,8 +16,8 @@ export default class SpellManager {
     return this.spellRunnerMap.get(spellId)
   }
 
-  load(spell: Spell) {
-    if (this.spellRunnerMap.has(spell.name))
+  load(spell: Spell, overload: boolean = false) {
+    if (this.spellRunnerMap.has(spell.name) && !overload)
       return this.getSpellRunner(spell.name)
 
     const spellRunner = new SpellRunner({
