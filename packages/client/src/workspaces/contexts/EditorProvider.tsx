@@ -61,7 +61,8 @@ export const useEditor = () => useContext(Context)
 const EditorProvider = ({ children }) => {
   const [editor, setEditorState] = useState<ThothEditor | null>(null)
   const editorRef = useRef<ThothEditor | null>(null)
-  const { client } = useFeathers()
+  const FeathersContext = useFeathers()
+  const client = FeathersContext?.client
   const pubSub = usePubSub()
 
   const setEditor = editor => {
