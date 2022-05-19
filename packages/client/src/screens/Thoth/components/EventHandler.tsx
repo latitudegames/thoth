@@ -19,6 +19,7 @@ import { useSnackbar } from 'notistack'
 import { sharedb } from '@/config'
 import { useSharedb } from '@/contexts/SharedbProvider'
 import { useFeathers } from '@/contexts/FeathersProvider'
+import { feathers as feathersFlag } from '@/config'
 
 // Config for unique name generator
 const customConfig = {
@@ -40,8 +41,8 @@ const EventHandler = ({ pubSub, tab }) => {
   // Spell ref because callbacks cant hold values from state without them
   const spellRef = useRef<Spell | null>(null)
 
-  const { client } = useFeathers()
-
+  const FeathersContext = useFeathers()
+  const client = FeathersContext?.client
   useEffect(() => {
     if (!spell) return
     spellRef.current = spell
@@ -120,18 +121,20 @@ const EventHandler = ({ pubSub, tab }) => {
       return
     }
 
-    try {
-      await client.service('spell-runner').update(currentSpell.name, {
-        diff: jsonDiff,
-      })
-      enqueueSnackbar('Spell saved', {
-        variant: 'success',
-      })
-    } catch {
-      enqueueSnackbar('Error saving spell', {
-        variant: 'error',
-      })
-      return
+    if (feathersFlag) {
+      try {
+        await client.service('spell-runner').update(currentSpell.name, {
+          diff: jsonDiff,
+        })
+        enqueueSnackbar('Spell saved', {
+          variant: 'success',
+        })
+      } catch {
+        enqueueSnackbar('Error saving spell', {
+          variant: 'error',
+        })
+        return
+      }
     }
   }
 
