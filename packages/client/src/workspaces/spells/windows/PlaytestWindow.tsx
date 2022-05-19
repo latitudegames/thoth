@@ -6,6 +6,7 @@ import { usePubSub } from '../../../contexts/PubSubProvider'
 import Window from '../../../components/Window/Window'
 import css from '../../../screens/Thoth/thoth.module.css'
 import { useFeathers } from '@/contexts/FeathersProvider'
+import { feathers as feathersFlag } from '@/config'
 
 const Input = props => {
   const ref = useRef() as React.MutableRefObject<HTMLInputElement>
@@ -40,8 +41,8 @@ const Playtest = ({ tab }) => {
   const [value, setValue] = useState('')
 
   const { publish, subscribe, events } = usePubSub()
-  const { client } = useFeathers()
-
+  const FeathersContext = useFeathers()
+  const client = FeathersContext?.client
   const { $PLAYTEST_INPUT, $PLAYTEST_PRINT } = events
 
   const printToConsole = useCallback(
@@ -65,13 +66,14 @@ const Playtest = ({ tab }) => {
   const onSend = () => {
     const newHistory = [...history, `You: ${value}`]
     setHistory(newHistory as [])
-
-    client.service('spell-runner').create({
-      spellId: tab.spellId,
-      inputs: {
-        Input: value,
-      },
-    })
+    if (feathersFlag) {
+      client.service('spell-runner').create({
+        spellId: tab.spellId,
+        inputs: {
+          Input: value,
+        },
+      })
+    }
 
     publish($PLAYTEST_INPUT(tab.id), value)
     setValue('')
