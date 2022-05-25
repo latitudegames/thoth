@@ -181,7 +181,7 @@ class SpellRunner {
 
   /**
    * Main spell runner for now. Processes inputs, gets the right component that starts the
-   * running.  Would be even better iof we just took a node identifier, got its
+   * running.  Would be even better if we just took a node identifier, got its
    * component, and ran the one triggered rather than this slightly hacky hard coded
    * method.
    */
