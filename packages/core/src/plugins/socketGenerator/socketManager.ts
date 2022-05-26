@@ -1,9 +1,5 @@
-import {
-  ChainData,
-  DataSocketType,
-  ThothEditor,
-  ThothNode,
-} from '../../../types'
+import { ChainData, DataSocketType, ThothNode } from '../../../types'
+import { ThothEditor } from '../../editor'
 import { ModuleSocketType } from '../modulePlugin/module-manager'
 
 export default class SocketManager {
