@@ -6,6 +6,7 @@ import {
 } from './../../types'
 import SpellRunner from '../../src/spellManager/SpellRunner'
 import imageGeneratorSpell from '../../data/imageGeneratorSpell'
+import thothInterfaceStub from '../../data/thothInterfaceStub'
 require('regenerator-runtime/runtime')
 
 describe('SpellRunner', () => {
@@ -13,42 +14,10 @@ describe('SpellRunner', () => {
     console.log(process.env.NODE_ENV)
     const runnerInstance = new SpellRunner({
       thothInterface: {
-        completion: () => {
-          return new Promise(resolve => resolve('string')) as Promise<
-            string | OpenAIResultChoice
-          >
-        },
-        enkiCompletion: () => {
-          return new Promise(resolve => resolve({ outputs: ['string'] }))
-        },
-        huggingface: () => {
-          return new Promise(resolve => resolve({ outputs: ['string'] }))
-        },
-        getCurrentGameState: () => {
-          return {}
-        },
-        setCurrentGameState: (state: Record<string, unknown>) => {},
-        updateCurrentGameState: (state: Record<string, unknown>) => {},
-        runSpell: (
-          flattenedInputs: Record<string, unknown>,
-          spellId: string
-        ) => {
-          return new Promise(resolve => resolve({ outputs: ['string'] }))
-        },
-        readFromImageCache: (caption: string) => {
-          return new Promise(resolve => resolve({} as ImageCacheResponse))
-        },
-        processCode: (
-          code: unknown,
-          inputs: ThothWorkerInputs,
-          data: Record<string, unknown>,
-          state: Record<string, unknown>
-        ) => {
-          return {}
-        },
+        ...thothInterfaceStub,
       },
     })
-    await runnerInstance.loadSpell(imageGeneratorSpell as unknown as Spell)
+    await runnerInstance.loadSpell(imageGeneratorSpell)
     const imageSpellResult = await runnerInstance.defaultRun({ data: 'data' })
 
     expect(imageSpellResult).toEqual({})
