@@ -48,7 +48,14 @@ describe('SpellRunner', () => {
     const generatorSpellResult = await runnerInstance.defaultRun({
       input: 'textprompt',
     })
-
+    expect(completionMock).toBeCalledWith({
+      frequencyPenalty: 0,
+      maxTokens: 50,
+      model: 'vanilla-jumbo',
+      prompt: 'textprompt',
+      stop: ['\\n'],
+      temperature: 0.8,
+    })
     expect(generatorSpellResult).toEqual({
       output: 'textprompt string',
     })
