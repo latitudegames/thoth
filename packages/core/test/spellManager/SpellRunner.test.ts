@@ -3,6 +3,7 @@ import SpellRunner from '../../src/spellManager/SpellRunner'
 import imageGeneratorSpell from '../../data/imageGeneratorSpell'
 import thothInterfaceStub from '../../data/thothInterfaceStub'
 import generatorSpell from '../../data/generatorSpell'
+import codeSpell from '../../data/codeSpell'
 require('regenerator-runtime/runtime')
 
 describe('SpellRunner', () => {
@@ -63,6 +64,27 @@ describe('SpellRunner', () => {
     })
     expect(generatorSpellResult).toEqual({
       output: 'textprompt string',
+    })
+  })
+  it('Returns result from an Code Spell', async () => {
+    const codeMock = jest
+      .fn()
+      .mockImplementation(thothInterfaceStub.processCode)
+    const runnerInstance = new SpellRunner({
+      thothInterface: { ...thothInterfaceStub, processCode: codeMock },
+    })
+    await runnerInstance.loadSpell(codeSpell)
+    const codeSpellResult = await runnerInstance.defaultRun({
+      input: 'textprompt',
+    })
+    expect(codeMock).toBeCalledWith(
+      "\n// inputs: dictionary of inputs based on socket names\n// data: internal data of the node to read or write to nodes data state\n// state: access to the current game state in the state manager window. Return state to update the state.\nfunction worker(inputs, data, state) {\n\n  // Keys of the object returned must match the names \n  // of your outputs you defined.\n  // To update the state, you must return the modified state.\n  return {modifiedInput: inputs.input + ' modified'}\n}\n",
+      { input: ['textprompt'] },
+      {},
+      {}
+    )
+    expect(codeSpellResult).toEqual({
+      output: 'textprompt modified',
     })
   })
 })
