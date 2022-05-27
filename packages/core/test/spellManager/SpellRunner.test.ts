@@ -4,6 +4,7 @@ import imageGeneratorSpell from '../../data/imageGeneratorSpell'
 import thothInterfaceStub from '../../data/thothInterfaceStub'
 import generatorSpell from '../../data/generatorSpell'
 import codeSpell from '../../data/codeSpell'
+import generatorSwitchSpell from '../../data/generatorSwitchSpell'
 require('regenerator-runtime/runtime')
 
 describe('SpellRunner', () => {
@@ -40,7 +41,7 @@ describe('SpellRunner', () => {
   })
   it('Returns a Text Completion from an Generator Spell', async () => {
     const completionMock = jest.fn().mockImplementation(() => {
-      return new Promise(resolve => resolve('string')) as Promise<
+      return new Promise(resolve => resolve('completionresult')) as Promise<
         string | OpenAIResultChoice
       >
     })
@@ -63,7 +64,35 @@ describe('SpellRunner', () => {
       temperature: 0.8,
     })
     expect(generatorSpellResult).toEqual({
-      output: 'textprompt string',
+      output: 'textprompt completionresult',
+    })
+  })
+  it('Returns a Text Completion from an Generator Spell that uses a Switch Component', async () => {
+    const completionMock = jest.fn().mockImplementation(() => {
+      return new Promise(resolve => resolve('completionresult')) as Promise<
+        string | OpenAIResultChoice
+      >
+    })
+    const runnerInstance = new SpellRunner({
+      thothInterface: {
+        ...thothInterfaceStub,
+        completion: completionMock,
+      },
+    })
+    await runnerInstance.loadSpell(generatorSwitchSpell)
+    const generatorSpellResult = await runnerInstance.defaultRun({
+      input: 'yes',
+    })
+    expect(completionMock).toBeCalledWith({
+      frequencyPenalty: 0,
+      maxTokens: 50,
+      model: 'vanilla-jumbo',
+      prompt: 'Generate',
+      stop: ['\\n'],
+      temperature: 0.7,
+    })
+    expect(generatorSpellResult).toEqual({
+      output: 'completionresult',
     })
   })
   it('Returns result from an Code Spell', async () => {
