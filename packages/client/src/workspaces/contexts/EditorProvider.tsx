@@ -3,8 +3,8 @@ import {
   ChainData,
   EditorContext,
   Spell,
-  ThothEditor,
 } from '@latitudegames/thoth-core/dist/types'
+import { ThothEditor } from '@latitudegames/thoth-core/dist/src/editor'
 import React, {
   useRef,
   useContext,
