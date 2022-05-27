@@ -33,14 +33,15 @@ describe('SpellRunner', () => {
     })
   })
   it('Returns a Text Completion from an Generator Spell', async () => {
+    const completionMock = jest.fn().mockImplementation(() => {
+      return new Promise(resolve => resolve('string')) as Promise<
+        string | OpenAIResultChoice
+      >
+    })
     const runnerInstance = new SpellRunner({
       thothInterface: {
         ...thothInterfaceStub,
-        completion: () => {
-          return new Promise(resolve => resolve('string')) as Promise<
-            string | OpenAIResultChoice
-          >
-        },
+        completion: completionMock,
       },
     })
     await runnerInstance.loadSpell(generatorSpell)
