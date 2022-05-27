@@ -54,19 +54,16 @@ export default {
       {} as Record<string, any>
     )
     const vm = new VM()
-    console.log({ state, flattenedInputs, data, sandboxConsole })
     vm.protect(state, 'state')
 
     vm.freeze(flattenedInputs, 'input')
     vm.freeze(data, 'data')
     vm.freeze(sandboxConsole, 'console')
-    console.log('ATTEMPTING TO VM')
 
     const codeToRun = `"use strict"; function runFn(input,data,state){ const copyFn=${code}; return copyFn(input,data,state)}; runFn(input,data,state);`
     try {
       return vm.run(codeToRun)
     } catch (err) {
-      console.log(JSON.stringify('vm.run Error', err))
       throw new Error('Error in runChain: processCode.')
     }
   },
