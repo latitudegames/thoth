@@ -8,7 +8,7 @@ import generatorSwitchSpell from '../../data/generatorSwitchSpell'
 require('regenerator-runtime/runtime')
 
 describe('SpellRunner', () => {
-  it('Returns an Image Cache Response from an Image Generator Spell', async () => {
+  it('Returns an Image Cache Response from an Image Generator Component Spell', async () => {
     const imageCacheMock = jest
       .fn()
       .mockImplementation((caption: string): Promise<ImageCacheResponse> => {
@@ -39,7 +39,7 @@ describe('SpellRunner', () => {
         'https://aidungeon-images.s3.us-east-2.amazonaws.com/generated_images/48b384e5-823b-44de-a77a-5aad3ee03908.png',
     })
   })
-  it('Returns a Text Completion from an Generator Spell', async () => {
+  it('Returns a Text Completion from an Generator Component Spell', async () => {
     const completionMock = jest.fn().mockImplementation(() => {
       return new Promise(resolve => resolve('completionresult')) as Promise<
         string | OpenAIResultChoice
@@ -95,7 +95,35 @@ describe('SpellRunner', () => {
       output: 'completionresult',
     })
   })
-  it('Returns result from an Code Spell', async () => {
+  it('Returns a Code component result from an Generator Spell that uses a Switch Component', async () => {
+    const completionMock = jest.fn().mockImplementation(() => {
+      return new Promise(resolve => resolve('completionresult')) as Promise<
+        string | OpenAIResultChoice
+      >
+    })
+    const runnerInstance = new SpellRunner({
+      thothInterface: {
+        ...thothInterfaceStub,
+        completion: completionMock,
+      },
+    })
+    await runnerInstance.loadSpell(generatorSwitchSpell)
+    const generatorSpellResult = await runnerInstance.defaultRun({
+      input: 'no',
+    })
+    expect(completionMock).toBeCalledWith({
+      frequencyPenalty: 0,
+      maxTokens: 50,
+      model: 'vanilla-jumbo',
+      prompt: 'Generate',
+      stop: ['\\n'],
+      temperature: 0.7,
+    })
+    expect(generatorSpellResult).toEqual({
+      nope: 'nope',
+    })
+  })
+  it('Returns result from an Code Component Spell', async () => {
     const codeMock = jest
       .fn()
       .mockImplementation(thothInterfaceStub.processCode)
