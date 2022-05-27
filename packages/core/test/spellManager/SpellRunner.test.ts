@@ -7,21 +7,24 @@ require('regenerator-runtime/runtime')
 
 describe('SpellRunner', () => {
   it('Returns an Image Cache Response from an Image Generator Spell', async () => {
+    const imageCacheMock = jest
+      .fn()
+      .mockImplementation((caption: string): Promise<ImageCacheResponse> => {
+        return new Promise(resolve =>
+          resolve({
+            images: [
+              {
+                imageUrl:
+                  'https://aidungeon-images.s3.us-east-2.amazonaws.com/generated_images/48b384e5-823b-44de-a77a-5aad3ee03908.png',
+              },
+            ],
+          } as ImageCacheResponse)
+        )
+      })
     const runnerInstance = new SpellRunner({
       thothInterface: {
         ...thothInterfaceStub,
-        readFromImageCache: (caption: string): Promise<ImageCacheResponse> => {
-          return new Promise(resolve =>
-            resolve({
-              images: [
-                {
-                  imageUrl:
-                    'https://aidungeon-images.s3.us-east-2.amazonaws.com/generated_images/48b384e5-823b-44de-a77a-5aad3ee03908.png',
-                },
-              ],
-            } as ImageCacheResponse)
-          )
-        },
+        readFromImageCache: imageCacheMock,
       },
     })
     await runnerInstance.loadSpell(imageGeneratorSpell)
