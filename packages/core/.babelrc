@@ -1,14 +1,9 @@
 {
   "env": {
-    "dev": {
+    "development": {
       "presets": [
         "@babel/env",
-        [
-          "@babel/preset-react",
-          {
-            "runtime": "automatic"
-          }
-        ],
+        "@babel/preset-react",
         "@babel/preset-typescript"
       ],
       "plugins": ["@babel/plugin-proposal-class-properties"]
