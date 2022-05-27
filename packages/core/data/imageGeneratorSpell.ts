@@ -1,3 +1,5 @@
+import { Spell } from '../types'
+
 export default {
   id: '3b7add2b-0f49-4c6b-8db9-18ecbb34602c',
   name: 'like coral',
@@ -164,4 +166,4 @@ export default {
     introText:
       'This is a simple AI generator app. Type anything and let the AI continue ',
   },
-}
+} as unknown as Spell
