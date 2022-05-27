@@ -5,7 +5,7 @@ import thothInterfaceStub from '../../data/thothInterfaceStub'
 require('regenerator-runtime/runtime')
 
 describe('SpellRunner', () => {
-  it('Returns an Image Cache Response', async () => {
+  it('Returns an Image Cache Response from an Image Generator Spell', async () => {
     const runnerInstance = new SpellRunner({
       thothInterface: {
         ...thothInterfaceStub,
