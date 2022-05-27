@@ -6,7 +6,6 @@ require('regenerator-runtime/runtime')
 
 describe('SpellRunner', () => {
   it('Returns an Image Cache Response', async () => {
-    console.log(process.env.NODE_ENV)
     const runnerInstance = new SpellRunner({
       thothInterface: {
         ...thothInterfaceStub,
