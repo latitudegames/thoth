@@ -28,8 +28,10 @@ describe('SpellRunner', () => {
       },
     })
     await runnerInstance.loadSpell(imageGeneratorSpell)
-    const imageSpellResult = await runnerInstance.defaultRun({ input: 'data' })
-
+    const imageSpellResult = await runnerInstance.defaultRun({
+      input: 'imageprompt',
+    })
+    expect(imageCacheMock).toBeCalledWith('imageprompt', undefined, undefined)
     expect(imageSpellResult).toEqual({
       output:
         'https://aidungeon-images.s3.us-east-2.amazonaws.com/generated_images/48b384e5-823b-44de-a77a-5aad3ee03908.png',
