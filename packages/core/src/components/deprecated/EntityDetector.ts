@@ -5,12 +5,12 @@ import {
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
-} from '../../types'
-import { FewshotControl } from '../dataControls/FewshotControl'
-import { EngineContext } from '../../types'
-import { TaskOptions } from '../plugins/taskPlugin/task'
-import { stringSocket, triggerSocket, arraySocket } from '../sockets'
-import { ThothComponent } from '../thoth-component'
+} from '../../../types'
+import { FewshotControl } from '../../dataControls/FewshotControl'
+import { EngineContext } from '../../../types'
+import { TaskOptions } from '../../plugins/taskPlugin/task'
+import { stringSocket, triggerSocket, arraySocket } from '../../sockets'
+import { ThothComponent } from '../../thoth-component'
 const fewshot = `Given an action, detect what entities the player is interacting with. Ignore entities that the player is just asking about.
 
 Entity types: food, person, creature, object, place, other, none
@@ -148,6 +148,9 @@ export class EntityDetector extends ThothComponent<
     this.category = 'AI/ML'
     this.display = true
     this.info = info
+    this.deprecated = true
+    this.deprecationMessage =
+      'This component has been deprecated. You can get similar functionality by using a generator with your own fewshots.'
   }
 
   // the builder is used to "assemble" the node component.

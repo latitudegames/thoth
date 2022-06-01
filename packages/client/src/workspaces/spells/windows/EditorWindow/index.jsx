@@ -40,6 +40,9 @@ const EditorWindow = ({ tab }) => {
     //Categorize node list into respective categories
     if (nodeList)
       Object.keys(nodeList).map(item => {
+        if (nodeList[item].deprecated) {
+          return
+        }
         if (doesCategoryExist(arr, nodeList[item].category) !== false) {
           return arr[
             doesCategoryExist(arr, nodeList[item].category)

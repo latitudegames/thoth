@@ -6,10 +6,10 @@ import {
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
-} from '../../types'
-import { FewshotControl } from '../dataControls/FewshotControl'
-import { stringSocket, triggerSocket } from '../sockets'
-import { ThothComponent } from '../thoth-component'
+} from '../../../types'
+import { FewshotControl } from '../../dataControls/FewshotControl'
+import { stringSocket, triggerSocket } from '../../sockets'
+import { ThothComponent } from '../../thoth-component'
 const fewshot = `Given an action classify the type of action it is
 
 Types: look, get, use, craft, dialog, movement, travel, combat, consume, other
@@ -48,6 +48,9 @@ export class ActionTypeComponent extends ThothComponent<Promise<WorkerReturn>> {
     this.category = 'AI/ML'
     this.info = info
     this.display = true
+    this.deprecated = true
+    this.deprecationMessage =
+      'This component has been deprecated. You can get similar functionality by using a generator with your own fewshots.'
   }
 
   // the builder is used to "assemble" the node component.
