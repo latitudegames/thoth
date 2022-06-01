@@ -21,6 +21,7 @@ import gridimg from '@/grid.png'
 import { usePubSub } from '../../contexts/PubSubProvider'
 import { useThothInterface } from './ThothInterfaceProvider'
 import { useFeathers } from '@/contexts/FeathersProvider'
+import { feathers } from '@/config'
 
 export type ThothTab = {
   layoutJson: string
@@ -86,6 +87,7 @@ const EditorProvider = ({ children }) => {
       // MyNode is a custom default style for nodes
       node: MyNode,
       client,
+      feathers,
     })
 
     // set editor to the map
