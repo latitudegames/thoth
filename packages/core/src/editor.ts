@@ -85,7 +85,7 @@ export const initEditor = async function ({
   // ██║     ███████╗╚██████╔╝╚██████╔╝██║██║ ╚████║███████║
   // ╚═╝     ╚══════╝ ╚═════╝  ╚═════╝ ╚═╝╚═╝  ╚═══╝╚══════╝
 
-  if (client) {
+  if (client && feathers) {
     editor.use(SocketOverridePlugin, { client })
   }
 
@@ -158,16 +158,14 @@ export const initEditor = async function ({
     return thoth.onSubspellUpdated(spellId, callback)
   }
 
-  // WARNING: ModulePlugin needs to be initialized before TaskPlugin during engine setup
   editor.use(KeyCodePlugin)
 
-  if (client) {
-    if (feathers) {
-      editor.use(SocketPlugin, { client })
-    } else {
-      editor.use(ModulePlugin, { engine, modules: {} } as unknown as void)
-      editor.use(TaskPlugin)
-    }
+  if (client && feathers) {
+    editor.use(SocketPlugin, { client })
+  } else {
+    // WARNING: ModulePlugin needs to be initialized before TaskPlugin during engine setup
+    editor.use(ModulePlugin, { engine, modules: {} } as unknown as void)
+    editor.use(TaskPlugin)
   }
 
   // editor.use(SelectionPlugin, { enabled: true })
