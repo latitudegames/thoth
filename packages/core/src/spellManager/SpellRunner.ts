@@ -198,7 +198,7 @@ class SpellRunner {
     // Set the current spell into the cache of spells that have run now.
     if (runSubspell) this.ranSpells.push(this.currentSpell.name)
 
-    // ensaure we run from a clean sloate
+    // ensure we run from a clean slate
     this._resetTasks()
 
     // load the inputs into module memory
