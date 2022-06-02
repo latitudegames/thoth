@@ -9,11 +9,18 @@ const ModelSelect = ({ control, updateData, initialValue }) => {
   const { defaultValue } = data
 
   const [values, setValues] = useState([initialValue])
+  const [descriptionList, setDescriptionList] = useState([])
+  const [description, setDescription] = useState('')
 
   useEffect(async () => {
     const models = await getModels()
     console.log({ models })
-    if (models) setValues(models.map(x => x.alias))
+    if (models) {
+      const descList = {}
+      models.map(x => (descList[x.alias] = x.description))
+      setDescriptionList(descList)
+      setValues(models.map(x => x.alias))
+    }
   }, [])
 
   const options = values.map(value => ({
@@ -26,12 +33,15 @@ const ModelSelect = ({ control, updateData, initialValue }) => {
   const defaultVal = { value, label: value }
 
   const onChange = async ({ value }) => {
+    setDescription(descriptionList[value])
     update(value)
   }
 
   const update = update => {
     updateData({ [dataKey]: update })
   }
+
+  console.log({ description })
 
   if (!defaultVal) return
   return (
@@ -43,6 +53,7 @@ const ModelSelect = ({ control, updateData, initialValue }) => {
         placeholder="select value"
         creatable={false}
       />
+      <p>{description ? `Description:\n${description}` : ''}</p>
     </div>
   )
 }
