@@ -53,7 +53,7 @@ const ModelSelect = ({ control, updateData, initialValue }) => {
         placeholder="select value"
         creatable={false}
       />
-      <p>{description ? `Description:\n${description}` : ''}</p>
+      <p>{description}</p>
     </div>
   )
 }
