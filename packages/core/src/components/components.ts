@@ -1,6 +1,7 @@
 import { ActionTypeComponent } from './ActionType'
 import { Alert } from './utility/AlertMessage'
 import { BooleanGate } from './BooleanGate'
+import { InRange } from './InRange'
 import { Code } from './Code'
 import { InputFieldComponent } from './deprecated/InputField'
 import { ModuleInput } from './deprecated/ModuleInput'
@@ -39,6 +40,7 @@ export const components = {
   actionTypeComponent: () => new ActionTypeComponent(),
   alert: () => new Alert(),
   booleanGate: () => new BooleanGate(),
+  inRange: () => new InRange(),
   code: () => new Code(),
   difficultyDetectorComponent: () => new DifficultyDetectorComponent(),
   echoComponent: () => new Echo(),
