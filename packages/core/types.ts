@@ -17,8 +17,8 @@ import { ThothTask } from './src/thoth-component'
 import { ThothConsole } from './src/plugins/debuggerPlugin/ThothConsole'
 import { Data } from 'rete/types/core/data'
 export { ThothComponent } from './src/thoth-component'
-
-export { ThothEditor } from './src/editor'
+//@seang this was causing test enviroment issues to have it shared client/server
+// export { ThothEditor } from './src/editor'
 
 export type { InspectorData } from './src/plugins/inspectorPlugin/Inspector'
 

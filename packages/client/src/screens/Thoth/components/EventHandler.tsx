@@ -18,6 +18,8 @@ import { diff } from '@/utils/json0'
 import { useSnackbar } from 'notistack'
 import { sharedb } from '@/config'
 import { useSharedb } from '@/contexts/SharedbProvider'
+import { useFeathers } from '@/contexts/FeathersProvider'
+import { feathers as feathersFlag } from '@/config'
 
 // Config for unique name generator
 const customConfig = {
@@ -39,6 +41,8 @@ const EventHandler = ({ pubSub, tab }) => {
   // Spell ref because callbacks cant hold values from state without them
   const spellRef = useRef<Spell | null>(null)
 
+  const FeathersContext = useFeathers()
+  const client = FeathersContext?.client
   useEffect(() => {
     if (!spell) return
     spellRef.current = spell
@@ -117,9 +121,21 @@ const EventHandler = ({ pubSub, tab }) => {
       return
     }
 
-    enqueueSnackbar('Spell saved', {
-      variant: 'success',
-    })
+    if (feathersFlag) {
+      try {
+        await client.service('spell-runner').update(currentSpell.name, {
+          diff: jsonDiff,
+        })
+        enqueueSnackbar('Spell saved', {
+          variant: 'success',
+        })
+      } catch {
+        enqueueSnackbar('Error saving spell', {
+          variant: 'error',
+        })
+        return
+      }
+    }
   }
 
   const createStateManager = () => {
@@ -222,7 +238,7 @@ const EventHandler = ({ pubSub, tab }) => {
   }
 
   useEffect(() => {
-    if (!tab && !spell) return
+    if (!tab && !spell && !client) return
 
     const subscriptions = Object.entries(handlerMap).map(([event, handler]) => {
       return subscribe(event, handler)
@@ -234,7 +250,7 @@ const EventHandler = ({ pubSub, tab }) => {
         unsubscribe()
       })
     }
-  }, [tab])
+  }, [tab, client])
 
   return null
 }

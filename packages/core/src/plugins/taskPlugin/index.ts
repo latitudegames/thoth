@@ -1,7 +1,7 @@
 import { Component } from 'rete'
 import { NodeData } from 'rete/types/core/data'
-
-import { ThothEditor, ThothWorkerInputs } from '../../../types'
+import { ThothEditor } from '../../editor'
+import { ThothWorkerInputs } from '../../../types'
 import { ThothComponent } from '../../thoth-component'
 import { Task } from './task'
 

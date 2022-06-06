@@ -3,8 +3,8 @@ import {
   ChainData,
   EditorContext,
   Spell,
-  ThothEditor,
 } from '@latitudegames/thoth-core/dist/types'
+import { ThothEditor } from '@latitudegames/thoth-core/dist/src/editor'
 import React, {
   useRef,
   useContext,
@@ -21,6 +21,7 @@ import gridimg from '@/grid.png'
 import { usePubSub } from '../../contexts/PubSubProvider'
 import { useThothInterface } from './ThothInterfaceProvider'
 import { useFeathers } from '@/contexts/FeathersProvider'
+import { feathers } from '@/config'
 
 export type ThothTab = {
   layoutJson: string
@@ -61,7 +62,8 @@ export const useEditor = () => useContext(Context)
 const EditorProvider = ({ children }) => {
   const [editor, setEditorState] = useState<ThothEditor | null>(null)
   const editorRef = useRef<ThothEditor | null>(null)
-  const { client } = useFeathers()
+  const FeathersContext = useFeathers()
+  const client = FeathersContext?.client
   const pubSub = usePubSub()
 
   const setEditor = editor => {
@@ -85,6 +87,7 @@ const EditorProvider = ({ children }) => {
       // MyNode is a custom default style for nodes
       node: MyNode,
       client,
+      feathers,
     })
 
     // set editor to the map

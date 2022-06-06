@@ -5,7 +5,6 @@ import ConnectionReroutePlugin from 'rete-connection-reroute-plugin'
 import ContextMenuPlugin from 'rete-context-menu-plugin'
 import ReactRenderPlugin from 'rete-react-render-plugin'
 import { Data } from 'rete/types/core/data'
-
 import { EventsTypes, EditorContext } from '../types'
 import { getComponents } from './components/components'
 import { initSharedEngine, ThothEngine } from './engine'
@@ -18,11 +17,11 @@ import LifecyclePlugin from './plugins/lifecyclePlugin'
 import { ModuleManager } from './plugins/modulePlugin/module-manager'
 import SocketGenerator from './plugins/socketGenerator'
 import SocketOverridePlugin from './plugins/socketPlugin/socketOverridePlugin'
-import { Task } from './plugins/taskPlugin'
+import TaskPlugin, { Task } from './plugins/taskPlugin'
 import { PubSubContext, ThothComponent } from './thoth-component'
 import DebuggerPlugin from './plugins/debuggerPlugin'
 import KeyCodePlugin from './plugins/keyCodePlugin'
-// import ModulePlugin from './plugins/modulePlugin'
+import ModulePlugin from './plugins/modulePlugin'
 import SocketPlugin from './plugins/socketPlugin'
 // import SelectionPlugin from './plugins/selectionPlugin'
 import errorPlugin from './plugins/errorPlugin'
@@ -55,6 +54,7 @@ export const initEditor = async function ({
   tab,
   node,
   client,
+  feathers,
 }: {
   container: any
   pubSub: any
@@ -62,6 +62,7 @@ export const initEditor = async function ({
   tab: any
   node: any
   client?: any
+  feathers?: any
 }) {
   if (editorTabMap[tab.id]) editorTabMap[tab.id].clear()
 
@@ -84,7 +85,7 @@ export const initEditor = async function ({
   // ██║     ███████╗╚██████╔╝╚██████╔╝██║██║ ╚████║███████║
   // ╚═╝     ╚══════╝ ╚═════╝  ╚═════╝ ╚═╝╚═╝  ╚═══╝╚══════╝
 
-  if (client) {
+  if (client && feathers) {
     editor.use(SocketOverridePlugin, { client })
   }
 
@@ -157,13 +158,14 @@ export const initEditor = async function ({
     return thoth.onSubspellUpdated(spellId, callback)
   }
 
-  // WARNING: ModulePlugin needs to be initialized before TaskPlugin during engine setup
-  // editor.use(ModulePlugin, { engine, modules: {} } as unknown as void)
-  // editor.use(TaskPlugin)
   editor.use(KeyCodePlugin)
 
-  if (client) {
+  if (client && feathers) {
     editor.use(SocketPlugin, { client })
+  } else {
+    // WARNING: ModulePlugin needs to be initialized before TaskPlugin during engine setup
+    editor.use(ModulePlugin, { engine, modules: {} } as unknown as void)
+    editor.use(TaskPlugin)
   }
 
   // editor.use(SelectionPlugin, { enabled: true })

@@ -5,11 +5,11 @@ import {
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
-} from '../../types'
-import { FewshotControl } from '../dataControls/FewshotControl'
-import { EngineContext } from '../../types'
-import { stringSocket, triggerSocket } from '../sockets'
-import { ThothComponent } from '../thoth-component'
+} from '../../../types'
+import { FewshotControl } from '../../dataControls/FewshotControl'
+import { EngineContext } from '../../../types'
+import { stringSocket, triggerSocket } from '../../sockets'
+import { ThothComponent } from '../../thoth-component'
 // For simplicity quests should be ONE thing not complete X and Y
 const fewshot = `Given an action, predict how long it would take to complete out of the following categories: seconds, minutes, hours, days, weeks, years.
 
@@ -55,6 +55,9 @@ export class TimeDetectorComponent extends ThothComponent<
     this.category = 'AI/ML'
     this.display = true
     this.info = info
+    this.deprecated = true
+    this.deprecationMessage =
+      'This component has been deprecated. You can get similar functionality by using a generator with your own fewshots.'
   }
 
   builder(node: ThothNode) {

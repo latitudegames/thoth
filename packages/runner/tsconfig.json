@@ -6,7 +6,8 @@
     "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "typeRoots": ["./@types"]
   },
   "exclude": ["test", "jest.config.js"]
 }

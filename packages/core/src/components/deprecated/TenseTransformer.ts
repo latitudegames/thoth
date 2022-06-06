@@ -5,14 +5,14 @@ import {
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
-} from '../../types'
-import { FewshotControl } from '../dataControls/FewshotControl'
-import { EngineContext } from '../../types'
-import { stringSocket, triggerSocket } from '../sockets'
+} from '../../../types'
+import { FewshotControl } from '../../dataControls/FewshotControl'
+import { EngineContext } from '../../../types'
+import { stringSocket, triggerSocket } from '../../sockets'
 // @seang todo: convert data controls to typescript to remove this
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore
-import { ThothComponent } from '../thoth-component'
+import { ThothComponent } from '../../thoth-component'
 const fewshot = `Change each statement to be in the third person present tense and correct all grammar.
 
 Matt: am sleepy.
@@ -93,6 +93,9 @@ export class TenseTransformer extends ThothComponent<Promise<WorkerReturn>> {
     this.category = 'AI/ML'
     this.display = true
     this.info = info
+    this.deprecated = true
+    this.deprecationMessage =
+      'This component has been deprecated. You can get similar functionality by using a generator with your own fewshots.'
   }
 
   // the builder is used to "assemble" the node component.
