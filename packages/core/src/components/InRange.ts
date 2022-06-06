@@ -21,14 +21,14 @@ export class InRange extends ThothComponent<void> {
   builder(node: ThothNode) {
     const startNumSocket = new Rete.Input(
       'startNumber',
-      'Start Number(optional)',
+      'Start Number',
       numSocket,
       false
     )
 
     const endNumSocket = new Rete.Input(
       'endNumber',
-      'End Number(optional)',
+      'End Number',
       numSocket,
       false
     )
