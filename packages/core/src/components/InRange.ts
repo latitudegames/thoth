@@ -1,6 +1,7 @@
 import Rete from 'rete'
 
 import { NodeData, ThothNode, ThothWorkerInputs } from '../../types'
+import { InputControl } from '../dataControls/InputControl'
 import { triggerSocket, numSocket } from '../sockets'
 import { ThothComponent } from '../thoth-component'
 
@@ -19,30 +20,44 @@ export class InRange extends ThothComponent<void> {
 
   builder(node: ThothNode) {
     const startNumSocket = new Rete.Input(
-      'number',
-      'Start Number',
+      'startNumber',
+      'Start Number(optional)',
       numSocket,
       false
     )
+
     const endNumSocket = new Rete.Input(
-      'number',
-      'End Number',
+      'endNumber',
+      'End Number(optional)',
       numSocket,
       false
     )
+    const inspectorStartNumSocket = new InputControl({
+      dataKey: 'startNumber',
+      name: 'Start Number',
+      defaultValue: 10,
+    })
+    const inspectorEndNumSocket = new InputControl({
+      dataKey: 'endNumber',
+      name: 'End Number',
+      defaultValue: 100,
+    })
+
     const dataInput = new Rete.Input('trigger', 'Trigger', triggerSocket, true)
-    const testInput = new Rete.Input('input', 'Input', numSocket)
+    const testInput = new Rete.Input('input', 'Input To Test', numSocket)
 
     const isTrue = new Rete.Output('true', 'True', triggerSocket)
     const isFalse = new Rete.Output('false', 'False', triggerSocket)
 
-    return node
+    node
+      .addInput(testInput)
       .addInput(startNumSocket)
       .addInput(endNumSocket)
       .addInput(dataInput)
-      .addInput(testInput)
       .addOutput(isTrue)
       .addOutput(isFalse)
+
+    node.inspector.add(inspectorStartNumSocket).add(inspectorEndNumSocket)
   }
 
   worker(node: NodeData, inputs: ThothWorkerInputs) {
