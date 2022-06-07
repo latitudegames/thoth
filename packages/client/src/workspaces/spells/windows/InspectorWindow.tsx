@@ -60,7 +60,7 @@ const Inspector = props => {
         ...update,
       },
     }
-
+    if (!preferences.autoSave) return
     saveInspector(newData)
   }
 
