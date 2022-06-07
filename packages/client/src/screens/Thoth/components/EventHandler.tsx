@@ -74,7 +74,7 @@ const EventHandler = ({ pubSub, tab }) => {
     const currentSpell = spellRef.current
     const chain = serialize() as ChainData
 
-    await saveSpellMutation({ ...currentSpell, chain })
+    const response = await saveSpellMutation({ ...currentSpell, chain })
   }
 
   const sharedbDiff = async (event, update) => {
