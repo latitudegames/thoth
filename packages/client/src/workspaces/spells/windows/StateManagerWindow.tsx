@@ -79,8 +79,8 @@ const StateManager = ({ tab, ...props }) => {
   }
 
   const onChange = code => {
-    setCode(code)
     setTyping(true)
+    setCode(code)
   }
 
   const onSave = async () => {
