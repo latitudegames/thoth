@@ -55,11 +55,12 @@ const StateManager = ({ tab, ...props }) => {
   // }, [props.node])
 
   useEffect(() => {
-    if (!typing || !preferences.autoSave) return
+    if (!typing) return
 
     const delayDebounceFn = setTimeout(() => {
-      // Send Axios request here
-      onSave()
+      if (preferences.autoSave) {
+        onSave()
+      }
       setTyping(false)
     }, 5000)
 
