@@ -6,6 +6,7 @@ import generatorSpell from '../../data/generatorSpell'
 import codeSpell from '../../data/codeSpell'
 import generatorSwitchSpell from '../../data/generatorSwitchSpell'
 import readWriteStateSpell from '../../data/readWriteStateSpell'
+import parentSpell from '../../data/parentSpell'
 require('regenerator-runtime/runtime')
 
 describe('SpellRunner', () => {
@@ -170,6 +171,20 @@ describe('SpellRunner', () => {
     )
     expect(readWriteStateSpellResult).toEqual({
       output: 'textprompt',
+    })
+  })
+  it('Returns an Echo component result from a SubSpell one layer down', async () => {
+    const runnerInstance = new SpellRunner({
+      thothInterface: {
+        ...thothInterfaceStub,
+      },
+    })
+    await runnerInstance.loadSpell(generatorSwitchSpell)
+    const generatorSpellResult = await runnerInstance.defaultRun({
+      input: 'echoThisInput',
+    })
+    expect(generatorSpellResult).toEqual({
+      output: 'echoThisInput',
     })
   })
 })
