@@ -19,7 +19,7 @@ export class Output extends ThothComponent<void> {
     super('Output')
 
     this.task = {
-      // runOneInput: true,
+      runOneInput: true,
       outputs: {
         text: 'output',
         trigger: 'option',
@@ -78,6 +78,7 @@ export class Output extends ThothComponent<void> {
     { silent, thoth }: { silent: boolean; thoth: EditorContext }
   ) {
     if (!inputs.input) throw new Error('No input provided to output component')
+    console.log({ inputs })
 
     const text = inputs.input.filter(Boolean)[0] as string
 

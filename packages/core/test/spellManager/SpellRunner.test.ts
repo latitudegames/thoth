@@ -112,16 +112,8 @@ describe('SpellRunner', () => {
     const generatorSpellResult = await runnerInstance.defaultRun({
       input: 'no',
     })
-    expect(completionMock).toBeCalledWith({
-      frequencyPenalty: 0,
-      maxTokens: 50,
-      model: 'vanilla-jumbo',
-      prompt: 'Generate',
-      stop: ['\\n'],
-      temperature: 0.7,
-    })
     expect(generatorSpellResult).toEqual({
-      nope: 'nope',
+      output: 'nope',
     })
   })
   it('Returns result from an Code Component Spell', async () => {

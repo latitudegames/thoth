@@ -116,7 +116,12 @@ export class Task {
           const inputPromises = this.inputs[key]
             .filter((con: ThothReteInput) => {
               // only filter inputs to remove ones that are not the origin if a task option is true
+              console.log({ component: this.component, fromNode, con })
               if (!this.component.task.runOneInput || !fromNode) return true
+
+              // return true if the input is from a triggerless component
+              if (!con.task.node.outputs.trigger) return true
+
               return con.task.node.id === fromNode.id
             })
             .map(async (con: ThothReteInput) => {
