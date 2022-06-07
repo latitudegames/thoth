@@ -75,6 +75,13 @@ const EventHandler = ({ pubSub, tab }) => {
     const chain = serialize() as ChainData
 
     const response = await saveSpellMutation({ ...currentSpell, chain })
+
+    if ('error' in response) {
+      enqueueSnackbar('Error saving spell', {
+        variant: 'error',
+      })
+      return
+    }
   }
 
   const sharedbDiff = async (event, update) => {
