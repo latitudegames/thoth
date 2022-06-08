@@ -61,8 +61,11 @@ const Inspector = props => {
         ...update,
       },
     }
-    if (!preferences.autoSave) return
-    saveInspector(newData)
+
+    debounce(() => {
+      if (!preferences.autoSave) return
+      saveInspector(newData)
+    }, 2000)
   }
 
   const onLock = () => {
