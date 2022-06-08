@@ -20,6 +20,7 @@
   "scripts": {
     "start:core": "lerna exec --scope @latitudegames/thoth-core -- yarn start",
     "start:client": "lerna exec --scope @thoth/client -- yarn start",
+    "stop:client": "lerna exec --scope @thoth/client -- yarn stop",
     "start:sharedb": "lerna exec --scope @thoth/sharedb -- yarn start",
     "start:runner": "lerna exec --scope @thoth/runner -- yarn start",
     "start": "run-p start:core start:client",

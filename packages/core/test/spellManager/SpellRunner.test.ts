@@ -6,6 +6,9 @@ import generatorSpell from '../../data/generatorSpell'
 import codeSpell from '../../data/codeSpell'
 import generatorSwitchSpell from '../../data/generatorSwitchSpell'
 import readWriteStateSpell from '../../data/readWriteStateSpell'
+import parentSpell from '../../data/parentSpell'
+import subSpell from '../../data/subSpell'
+
 require('regenerator-runtime/runtime')
 
 describe('SpellRunner', () => {
@@ -61,11 +64,11 @@ describe('SpellRunner', () => {
       maxTokens: 50,
       model: 'vanilla-jumbo',
       prompt: 'textprompt',
-      stop: ['\\n'],
+      stop: ['\n'],
       temperature: 0.8,
     })
     expect(generatorSpellResult).toEqual({
-      output: 'textprompt completionresult',
+      output: 'textpromptcompletionresult',
     })
   })
   it('Returns a Text Completion from an Generator Spell that uses a Switch Component', async () => {
@@ -89,7 +92,7 @@ describe('SpellRunner', () => {
       maxTokens: 50,
       model: 'vanilla-jumbo',
       prompt: 'Generate',
-      stop: ['\\n'],
+      stop: ['\n'],
       temperature: 0.7,
     })
     expect(generatorSpellResult).toEqual({
@@ -156,6 +159,7 @@ describe('SpellRunner', () => {
         },
       },
     })
+
     await runnerInstance.loadSpell(readWriteStateSpell)
     const readWriteStateSpellResult = await runnerInstance.defaultRun({
       input: 'textprompt',
@@ -170,6 +174,49 @@ describe('SpellRunner', () => {
     )
     expect(readWriteStateSpellResult).toEqual({
       output: 'textprompt',
+    })
+  })
+  it('Returns an Echo component result from a SubSpell one layer down', async () => {
+    const nestedRunnerInstance = new SpellRunner({
+      thothInterface: {
+        ...thothInterfaceStub,
+      },
+    })
+    const runSpellMock = jest
+      .fn()
+      .mockImplementation(
+        async (
+          flattenedInputs: Record<string, any>,
+          spellId: string,
+          state: Record<string, any>
+        ) => {
+          await nestedRunnerInstance.loadSpell(subSpell)
+          const nestedSpellResult = await nestedRunnerInstance.defaultRun(
+            flattenedInputs
+          )
+          console.log({ flattenedInputs, nestedSpellResult })
+          return nestedSpellResult
+        }
+      )
+    const runnerInstance = new SpellRunner({
+      thothInterface: {
+        ...thothInterfaceStub,
+        runSpell: runSpellMock,
+      },
+    })
+    await runnerInstance.loadSpell(parentSpell)
+    const generatorSpellResult = await runnerInstance.defaultRun({
+      Input: 'echoThisInput',
+    })
+    expect(runSpellMock).toHaveBeenCalledWith(
+      {
+        Input: 'echoThisInput',
+      },
+      'expected amethyst',
+      {}
+    )
+    expect(generatorSpellResult).toEqual({
+      'output-233': 'echoThisInput',
     })
   })
 })
