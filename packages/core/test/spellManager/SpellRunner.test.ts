@@ -208,6 +208,13 @@ describe('SpellRunner', () => {
     const generatorSpellResult = await runnerInstance.defaultRun({
       Input: 'echoThisInput',
     })
+    expect(runSpellMock).toHaveBeenCalledWith(
+      {
+        Input: 'echoThisInput',
+      },
+      'expected amethyst',
+      {}
+    )
     expect(generatorSpellResult).toEqual({
       'output-233': 'echoThisInput',
     })
