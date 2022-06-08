@@ -1,3 +1,4 @@
+import { Spell } from '@latitudegames/thoth-core/dist/types'
 export default {
   id: '801b7a36-9468-402a-8ecd-aed4038dfcd5',
   name: 'whole amethyst',
@@ -165,4 +166,4 @@ export default {
   userId: '29476106',
   modules: [],
   gameState: null,
-}
+} as unknown as Spell
