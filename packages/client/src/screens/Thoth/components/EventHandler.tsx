@@ -20,6 +20,8 @@ import { sharedb } from '@/config'
 import { useSharedb } from '@/contexts/SharedbProvider'
 import { useFeathers } from '@/contexts/FeathersProvider'
 import { feathers as feathersFlag } from '@/config'
+import { RootState } from '@/state/store'
+import { useSelector } from 'react-redux'
 
 // Config for unique name generator
 const customConfig = {
