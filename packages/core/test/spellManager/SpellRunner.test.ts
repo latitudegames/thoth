@@ -68,7 +68,7 @@ describe('SpellRunner', () => {
       temperature: 0.8,
     })
     expect(generatorSpellResult).toEqual({
-      output: 'textprompt completionresult',
+      output: 'textpromptcompletionresult',
     })
   })
   it('Returns a Text Completion from an Generator Spell that uses a Switch Component', async () => {
