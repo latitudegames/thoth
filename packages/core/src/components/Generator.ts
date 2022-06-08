@@ -164,7 +164,7 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
     try {
       const raw = (await completion(body)) as string
       const result = raw
-      const composed = `${prompt} ${result}`
+      const composed = `${prompt}${result}`
 
       if (!silent) node.display(result)
 
