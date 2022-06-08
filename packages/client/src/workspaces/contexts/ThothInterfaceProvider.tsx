@@ -11,8 +11,6 @@ import { invokeInference } from '../../utils/huggingfaceHelper'
 import { usePubSub } from '../../contexts/PubSubProvider'
 import { useFetchFromImageCacheMutation } from '@/state/api/visualGenerationsApi'
 import { useGetSpellQuery, useRunSpellMutation } from '@/state/api/spells'
-import { RootState } from '@/state/store'
-import { useSelector } from 'react-redux'
 
 const Context = createContext<EditorContext>(undefined!)
 
@@ -26,7 +24,6 @@ const ThothInterfaceProvider = ({ children, tab }) => {
   const { data: _spell } = useGetSpellQuery(tab.spellId, {
     skip: !tab.spellId,
   })
-  const preferences = useSelector((state: RootState) => state.preferences)
 
   useEffect(() => {
     if (!_spell) return
@@ -187,7 +184,6 @@ const ThothInterfaceProvider = ({ children, tab }) => {
     const update = {
       gameState: newState,
     }
-    if (!preferences.autoSave) return
     publish($SAVE_SPELL_DIFF(tab.id), update)
   }
 
@@ -206,14 +202,12 @@ const ThothInterfaceProvider = ({ children, tab }) => {
         ..._update,
       },
     }
-    if (!preferences.autoSave) return
 
     // Temporarily update the spell refs game state to account for multiple state writes in a spell run
     spellRef.current = {
       ...spell,
       ...update,
     }
-
     publish($SAVE_SPELL_DIFF(tab.id), update)
   }
 
