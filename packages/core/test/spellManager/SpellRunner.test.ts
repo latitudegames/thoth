@@ -64,7 +64,7 @@ describe('SpellRunner', () => {
       maxTokens: 50,
       model: 'vanilla-jumbo',
       prompt: 'textprompt',
-      stop: ['\\n'],
+      stop: ['\n'],
       temperature: 0.8,
     })
     expect(generatorSpellResult).toEqual({
@@ -92,7 +92,7 @@ describe('SpellRunner', () => {
       maxTokens: 50,
       model: 'vanilla-jumbo',
       prompt: 'Generate',
-      stop: ['\\n'],
+      stop: ['\n'],
       temperature: 0.7,
     })
     expect(generatorSpellResult).toEqual({
