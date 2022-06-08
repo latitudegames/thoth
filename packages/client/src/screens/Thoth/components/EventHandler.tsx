@@ -128,16 +128,18 @@ const EventHandler = ({ pubSub, tab }) => {
       diff: jsonDiff,
     })
 
-    if ('error' in response) {
-      enqueueSnackbar('Error saving spell', {
-        variant: 'error',
-      })
-      return
-    }
+    if (preferences.autoSave) {
+      if ('error' in response) {
+        enqueueSnackbar('Error saving spell', {
+          variant: 'error',
+        })
+        return
+      }
 
-    enqueueSnackbar('Spell saved', {
-      variant: 'success',
-    })
+      enqueueSnackbar('Spell saved', {
+        variant: 'success',
+      })
+    }
 
     if (feathersFlag) {
       try {
