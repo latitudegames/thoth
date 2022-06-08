@@ -7,6 +7,8 @@ import codeSpell from '../../data/codeSpell'
 import generatorSwitchSpell from '../../data/generatorSwitchSpell'
 import readWriteStateSpell from '../../data/readWriteStateSpell'
 import parentSpell from '../../data/parentSpell'
+import subSpell from '../../data/subSpell'
+
 require('regenerator-runtime/runtime')
 
 describe('SpellRunner', () => {
@@ -157,6 +159,7 @@ describe('SpellRunner', () => {
         },
       },
     })
+
     await runnerInstance.loadSpell(readWriteStateSpell)
     const readWriteStateSpellResult = await runnerInstance.defaultRun({
       input: 'textprompt',
@@ -174,17 +177,35 @@ describe('SpellRunner', () => {
     })
   })
   it('Returns an Echo component result from a SubSpell one layer down', async () => {
-    const runnerInstance = new SpellRunner({
+    const nestedRunnerInstance = new SpellRunner({
       thothInterface: {
         ...thothInterfaceStub,
       },
     })
-    await runnerInstance.loadSpell(generatorSwitchSpell)
+
+    const runnerInstance = new SpellRunner({
+      thothInterface: {
+        ...thothInterfaceStub,
+        runSpell: async (
+          flattenedInputs: Record<string, any>,
+          spellId: string,
+          state: Record<string, any>
+        ) => {
+          await nestedRunnerInstance.loadSpell(subSpell)
+          const nestedSpellResult = await nestedRunnerInstance.defaultRun(
+            flattenedInputs
+          )
+          console.log({ flattenedInputs, nestedSpellResult })
+          return nestedSpellResult
+        },
+      },
+    })
+    await runnerInstance.loadSpell(parentSpell)
     const generatorSpellResult = await runnerInstance.defaultRun({
-      input: 'echoThisInput',
+      Input: 'echoThisInput',
     })
     expect(generatorSpellResult).toEqual({
-      output: 'echoThisInput',
+      'output-233': 'echoThisInput',
     })
   })
 })
