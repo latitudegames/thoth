@@ -10,6 +10,7 @@ import { InspectorData } from '@latitudegames/thoth-core/types'
 import SwitchComponent from '@/components/Switch/Switch'
 import css from '../../../components/Icon/icon.module.css'
 import { RootState } from '@/state/store'
+import { debounce } from '@/utils/debounce'
 
 import { useSelector, useDispatch } from 'react-redux'
 import { toggleDoNotShowUnlockWarning } from '@/state/preferences'
@@ -60,8 +61,11 @@ const Inspector = props => {
         ...update,
       },
     }
-    if (!preferences.autoSave) return
-    saveInspector(newData)
+
+    debounce(() => {
+      if (!preferences.autoSave) return
+      saveInspector(newData)
+    }, 2000)
   }
 
   const onLock = () => {

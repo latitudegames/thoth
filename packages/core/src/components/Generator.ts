@@ -137,7 +137,7 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
 
     const stop = node?.data?.stop
       ? stopSequence.split(',').map(i => {
-          if (i.includes('\n')) return i
+          if (i.includes('\\n')) return '\n'
           return i.trim()
         })
       : ''
@@ -164,7 +164,7 @@ export class Generator extends ThothComponent<Promise<WorkerReturn>> {
     try {
       const raw = (await completion(body)) as string
       const result = raw
-      const composed = `${prompt} ${result}`
+      const composed = `${prompt}${result}`
 
       if (!silent) node.display(result)
 
