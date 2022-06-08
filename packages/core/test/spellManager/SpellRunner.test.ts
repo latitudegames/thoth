@@ -182,11 +182,10 @@ describe('SpellRunner', () => {
         ...thothInterfaceStub,
       },
     })
-
-    const runnerInstance = new SpellRunner({
-      thothInterface: {
-        ...thothInterfaceStub,
-        runSpell: async (
+    const runSpellMock = jest
+      .fn()
+      .mockImplementation(
+        async (
           flattenedInputs: Record<string, any>,
           spellId: string,
           state: Record<string, any>
@@ -197,7 +196,12 @@ describe('SpellRunner', () => {
           )
           console.log({ flattenedInputs, nestedSpellResult })
           return nestedSpellResult
-        },
+        }
+      )
+    const runnerInstance = new SpellRunner({
+      thothInterface: {
+        ...thothInterfaceStub,
+        runSpell: runSpellMock,
       },
     })
     await runnerInstance.loadSpell(parentSpell)
