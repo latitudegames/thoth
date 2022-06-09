@@ -12,6 +12,7 @@ import booleanGateSpell from '../../data/booleanGateSpell'
 import joinListSpell from '../../data/joinListSpell'
 import stringProcessorSpell from '../../data/stringProcessorSpell'
 import inputOutputSpell from '../../data/inputOutputSpell'
+import stateReadOutputSpell from '../../data/stateReadOutputSpell'
 
 require('regenerator-runtime/runtime')
 
@@ -316,6 +317,21 @@ describe('SpellRunner', () => {
     })
     expect(codeSpellResult).toEqual({
       'output-233': 'You said text,prompt!',
+    })
+  })
+  it('Returns result from a State Read Component Spell', async () => {
+    const runnerInstance = new SpellRunner({
+      thothInterface: {
+        ...thothInterfaceStub,
+        getCurrentGameState: () => {
+          return stateReadOutputSpell.gameState
+        },
+      },
+    })
+    await runnerInstance.loadSpell(stateReadOutputSpell)
+    const codeSpellResult = await runnerInstance.defaultRun({})
+    expect(codeSpellResult).toEqual({
+      'output-233': 'stateOutput',
     })
   })
 })
