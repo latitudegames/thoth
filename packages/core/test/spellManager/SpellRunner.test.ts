@@ -8,6 +8,7 @@ import generatorSwitchSpell from '../../data/generatorSwitchSpell'
 import readWriteStateSpell from '../../data/readWriteStateSpell'
 import parentSpell from '../../data/parentSpell'
 import subSpell from '../../data/subSpell'
+import booleanGateSpell from '../../data/booleanGateSpell'
 
 require('regenerator-runtime/runtime')
 
@@ -217,6 +218,62 @@ describe('SpellRunner', () => {
     )
     expect(generatorSpellResult).toEqual({
       'output-233': 'echoThisInput',
+    })
+  })
+  it('Returns a Generator component result from a Boolean gate component', async () => {
+    const nestedRunnerInstance = new SpellRunner({
+      thothInterface: {
+        ...thothInterfaceStub,
+      },
+    })
+
+    const completionMock = jest.fn().mockImplementation(() => {
+      return new Promise(resolve => resolve('completionresult')) as Promise<
+        string | OpenAIResultChoice
+      >
+    })
+
+    const runnerInstance = new SpellRunner({
+      thothInterface: {
+        ...thothInterfaceStub,
+        completion: completionMock,
+      },
+    })
+    await runnerInstance.loadSpell(booleanGateSpell)
+    const generatorSpellResult = await runnerInstance.defaultRun({
+      input: 'yes',
+    })
+
+    expect(generatorSpellResult).toEqual({
+      output: 'completionresult',
+    })
+  })
+  it('Returns a Code component result from a Boolean gate component', async () => {
+    const nestedRunnerInstance = new SpellRunner({
+      thothInterface: {
+        ...thothInterfaceStub,
+      },
+    })
+
+    const completionMock = jest.fn().mockImplementation(() => {
+      return new Promise(resolve => resolve('completionresult')) as Promise<
+        string | OpenAIResultChoice
+      >
+    })
+
+    const runnerInstance = new SpellRunner({
+      thothInterface: {
+        ...thothInterfaceStub,
+        completion: completionMock,
+      },
+    })
+    await runnerInstance.loadSpell(booleanGateSpell)
+    const generatorSpellResult = await runnerInstance.defaultRun({
+      input: 'maybe not',
+    })
+
+    expect(generatorSpellResult).toEqual({
+      output: 'nope',
     })
   })
 })
