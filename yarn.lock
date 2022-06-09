@@ -2346,10 +2346,10 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@latitudegames/thoth-core@^0.0.67":
-  version "0.0.67"
-  resolved "https://npm.pkg.github.com/download/@latitudegames/thoth-core/0.0.67/41babd5d6341947adce89dc7d6027bda9529a212617925c23d8a22146467f54b#e30318b84f1b3224edf3f9622fe8f9f7c09a2a15"
-  integrity sha512-Y6i1O1NI62R5fqewSnCM7ixXbr9VrraKN7lTGafhJCBrVVyi2r+8eOO2rCEJ+Hs4+0NbDTa01NaS8oViDL1HdA==
+"@latitudegames/thoth-core@0.0.68--canary.181.77f117102eae3219a569b469b284be5aabe73155.0":
+  version "0.0.68--canary.181.77f117102eae3219a569b469b284be5aabe73155.0"
+  resolved "https://npm.pkg.github.com/download/@latitudegames/thoth-core/0.0.68--canary.181.77f117102eae3219a569b469b284be5aabe73155.0/22c29892a2e6ce4526d16ec468ff5707bc9e6ee4fbd370c0546e8117499570bc#5ccef154cabb1298e27abb682a12cdf741f5feed"
+  integrity sha512-5riO+EodOgVX3w7eHiI9AAzrgx4AEoTlmeppqdECtc2pUVaxWg7G9Jy1IBSGUdcVLDHJFCKXXH6wVpuNQNhJDA==
   dependencies:
     deep-equal "^2.0.5"
     handlebars "^4.7.7"
@@ -2366,10 +2366,10 @@
     rete-react-render-plugin "^0.2.1"
     uuid "^8.3.2"
 
-"@latitudegames/thoth-core@canary":
-  version "0.0.68--canary.181.77f117102eae3219a569b469b284be5aabe73155.0"
-  resolved "https://npm.pkg.github.com/download/@latitudegames/thoth-core/0.0.68--canary.181.77f117102eae3219a569b469b284be5aabe73155.0/22c29892a2e6ce4526d16ec468ff5707bc9e6ee4fbd370c0546e8117499570bc#5ccef154cabb1298e27abb682a12cdf741f5feed"
-  integrity sha512-5riO+EodOgVX3w7eHiI9AAzrgx4AEoTlmeppqdECtc2pUVaxWg7G9Jy1IBSGUdcVLDHJFCKXXH6wVpuNQNhJDA==
+"@latitudegames/thoth-core@^0.0.67":
+  version "0.0.67"
+  resolved "https://npm.pkg.github.com/download/@latitudegames/thoth-core/0.0.67/41babd5d6341947adce89dc7d6027bda9529a212617925c23d8a22146467f54b#e30318b84f1b3224edf3f9622fe8f9f7c09a2a15"
+  integrity sha512-Y6i1O1NI62R5fqewSnCM7ixXbr9VrraKN7lTGafhJCBrVVyi2r+8eOO2rCEJ+Hs4+0NbDTa01NaS8oViDL1HdA==
   dependencies:
     deep-equal "^2.0.5"
     handlebars "^4.7.7"
