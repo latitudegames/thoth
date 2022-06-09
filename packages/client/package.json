@@ -8,6 +8,9 @@
     "Jakob Grant <j.grant@project89.org>",
     "Preston Gull <gull.preston@gmail.com>"
   ],
+  "engines": {
+    "node": "14.17.6"
+  },
   "private": true,
   "scripts": {
     "start": "NODE_ENV=development webpack serve --config webpack.dev.js",
