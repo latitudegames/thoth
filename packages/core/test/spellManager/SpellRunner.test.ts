@@ -9,6 +9,7 @@ import readWriteStateSpell from '../../data/readWriteStateSpell'
 import parentSpell from '../../data/parentSpell'
 import subSpell from '../../data/subSpell'
 import booleanGateSpell from '../../data/booleanGateSpell'
+import joinListSpell from '../../data/joinListSpell'
 
 require('regenerator-runtime/runtime')
 
@@ -274,6 +275,19 @@ describe('SpellRunner', () => {
 
     expect(generatorSpellResult).toEqual({
       output: 'nope',
+    })
+  })
+
+  it('Returns result from a Join List Component Spell', async () => {
+    const runnerInstance = new SpellRunner({
+      thothInterface: { ...thothInterfaceStub },
+    })
+    await runnerInstance.loadSpell(joinListSpell)
+    const codeSpellResult = await runnerInstance.defaultRun({
+      input: ['text', 'prompt'],
+    })
+    expect(codeSpellResult).toEqual({
+      output: '1 2 3',
     })
   })
 })
