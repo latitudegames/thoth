@@ -11,6 +11,7 @@ import subSpell from '../../data/subSpell'
 import booleanGateSpell from '../../data/booleanGateSpell'
 import joinListSpell from '../../data/joinListSpell'
 import stringProcessorSpell from '../../data/stringProcessorSpell'
+import inputOutputSpell from '../../data/inputOutputSpell'
 
 require('regenerator-runtime/runtime')
 
@@ -302,6 +303,19 @@ describe('SpellRunner', () => {
     })
     expect(codeSpellResult).toEqual({
       output: 'You said text,prompt!',
+    })
+  })
+
+  it('Returns result from a Input Component Spell', async () => {
+    const runnerInstance = new SpellRunner({
+      thothInterface: { ...thothInterfaceStub },
+    })
+    await runnerInstance.loadSpell(inputOutputSpell)
+    const codeSpellResult = await runnerInstance.defaultRun({
+      Input: 'You said text,prompt!',
+    })
+    expect(codeSpellResult).toEqual({
+      'output-233': 'You said text,prompt!',
     })
   })
 })
