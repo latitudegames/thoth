@@ -2346,27 +2346,6 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@latitudegames/thoth-core@0.0.69--canary.b8d4448.0":
-  version "0.0.69--canary.b8d4448.0"
-  resolved "https://npm.pkg.github.com/download/@latitudegames/thoth-core/0.0.69--canary.b8d4448.0/d15f186093165625dbc5dbfe8782588579f94473f168262b3cd00292a0c74db5#a45d886bbc67b6f33094b03df4468fe447b14ff9"
-  integrity sha512-8RbeqAQ6vNgt1u6RWWPHYsojkVtB1HwM0Y1btSqA2huosK0xo8LUsks2xCXg5Md/DoWdZlehYL+fGSrKDjzrnA==
-  dependencies:
-    deep-equal "^2.0.5"
-    handlebars "^4.7.7"
-    jsdom "^17.0.0"
-    license-webpack-plugin "^4.0.2"
-    path "^0.12.7"
-    react "^17.0.2"
-    regenerator-runtime "^0.13.9"
-    rete "https://github.com/latitudegames/rete.git#master"
-    rete-area-plugin "^0.2.1"
-    rete-connection-plugin "^0.9.0"
-    rete-context-menu-plugin "^0.6.0-rc.1"
-    rete-module-plugin "^0.4.1"
-    rete-react-render-plugin "^0.2.1"
-    socket.io "^4.5.0"
-    uuid "^8.3.2"
-
 "@latitudegames/thoth-core@^0.0.67":
   version "0.0.67"
   resolved "https://npm.pkg.github.com/download/@latitudegames/thoth-core/0.0.67/41babd5d6341947adce89dc7d6027bda9529a212617925c23d8a22146467f54b#e30318b84f1b3224edf3f9622fe8f9f7c09a2a15"
@@ -2385,6 +2364,27 @@
     rete-context-menu-plugin "^0.6.0-rc.1"
     rete-module-plugin "^0.4.1"
     rete-react-render-plugin "^0.2.1"
+    uuid "^8.3.2"
+
+"@latitudegames/thoth-core@^0.0.69--canary.87685b0.0":
+  version "0.0.69--canary.87685b0.0"
+  resolved "https://npm.pkg.github.com/download/@latitudegames/thoth-core/0.0.69--canary.87685b0.0/705a486f7b1bedb0ea019d1c5413c006fbec0af82574e6e9b2e48aaf3a4af986#b9c4b55ed2c40b79e9f5f8c8aea49d1afdb100a5"
+  integrity sha512-4rvlqe6ScgG2o4eQJgiSZaQHIMzOXbBg9lRCXTa69OdNZtJP3vBUbsxxltFCOjA7QksXNjofb1AExeaQFTYjvQ==
+  dependencies:
+    deep-equal "^2.0.5"
+    handlebars "^4.7.7"
+    jsdom "^17.0.0"
+    license-webpack-plugin "^4.0.2"
+    path "^0.12.7"
+    react "^17.0.2"
+    regenerator-runtime "^0.13.9"
+    rete "https://github.com/latitudegames/rete.git#master"
+    rete-area-plugin "^0.2.1"
+    rete-connection-plugin "^0.9.0"
+    rete-context-menu-plugin "^0.6.0-rc.1"
+    rete-module-plugin "^0.4.1"
+    rete-react-render-plugin "^0.2.1"
+    socket.io "^4.5.0"
     uuid "^8.3.2"
 
 "@lerna/add@4.0.0":
@@ -3988,12 +3988,13 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@17.0.2", "@types/react@^17.0.15", "@types/react@^17.0.24":
-  version "17.0.2"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.2.tgz#3de24c4efef902dd9795a49c75f760cbe4f7a5a8"
-  integrity sha512-Xt40xQsrkdvjn1EyWe1Bc0dJLcil/9x2vAuW7ya+PuQip4UYUaXyhzWmAbwRsdMgwOFHpfp7/FFZebDU6Y8VHA==
+"@types/react@*", "@types/react@17.0.24", "@types/react@^17.0.15", "@types/react@^17.0.24":
+  version "17.0.24"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.24.tgz#7e1b3f78d0fc53782543f9bce6d949959a5880bd"
+  integrity sha512-eIpyco99gTH+FTI3J7Oi/OH8MZoFMJuztNRimDOJwH4iGIsKV2qkGnk4M9VzlaVWeEEWLWSQRy0FEA0Kz218cg==
   dependencies:
     "@types/prop-types" "*"
+    "@types/scheduler" "*"
     csstype "^3.0.2"
 
 "@types/regenerator-runtime@^0.13.1":
@@ -4005,6 +4006,11 @@
   version "0.12.1"
   resolved "https://registry.yarnpkg.com/@types/retry/-/retry-0.12.1.tgz#d8f1c0d0dc23afad6dc16a9e993a0865774b4065"
   integrity sha512-xoDlM2S4ortawSWORYqsdU+2rxdh4LRW9ytc3zmT37RIKQh6IHyKwwtKhKis9ah8ol07DCkZxPt8BBvPjC6v4g==
+
+"@types/scheduler@*":
+  version "0.16.2"
+  resolved "https://registry.yarnpkg.com/@types/scheduler/-/scheduler-0.16.2.tgz#1a62f89525723dde24ba1b01b092bf5df8ad4d39"
+  integrity sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==
 
 "@types/serve-favicon@^2.5.3":
   version "2.5.3"
@@ -17143,8 +17149,10 @@ watchpack@^1.7.4:
   resolved "https://registry.yarnpkg.com/watchpack/-/watchpack-1.7.5.tgz#1267e6c55e0b9b5be44c2023aed5437a2c26c453"
   integrity sha512-9P3MWk6SrKjHsGkLT2KHXdQ/9SNkyoJbabxnKOoJepsvJjJG8uYTR3yTPxPQvNDI3w4Nz1xnE0TLHK4RIVe/MQ==
   dependencies:
+    chokidar "^3.4.1"
     graceful-fs "^4.1.2"
     neo-async "^2.5.0"
+    watchpack-chokidar2 "^2.0.1"
   optionalDependencies:
     chokidar "^3.4.1"
     watchpack-chokidar2 "^2.0.1"

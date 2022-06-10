@@ -32,7 +32,7 @@
     "@emotion/styled": "^11.8.1",
     "@feathersjs/client": "^4.5.14",
     "@feathersjs/feathers": "^4.5.12",
-    "@latitudegames/thoth-core": "0.0.69--canary.b8d4448.0",
+    "@latitudegames/thoth-core": "0.0.69--canary.87685b0.0",
     "@monaco-editor/react": "^4.2.1",
     "@mui/icons-material": "^5.5.1",
     "@mui/material": "^5.5.3",
