@@ -19,10 +19,6 @@
     "test": "test/",
     "config": "config/"
   },
-  "engines": {
-    "node": "^14.0.0",
-    "yarn": ">= 0.18.0"
-  },
   "scripts": {
     "test": "yarn lint && yarn compile && yarn jest",
     "lint": "eslint src/. test/. --config .eslintrc.json --ext .ts --fix",
