@@ -18,7 +18,7 @@ jobs:
           fetch-depth: 0
 
       - name: Check for git variance in the /core directory
-        run: git diff --quiet origin/main origin/${{ github.head_ref }} -- core
+        run: git diff --quiet origin/main origin/${{ github.head_ref }} -- packages/core
         id: core_diff
         shell: bash {0}
         continue-on-error: true

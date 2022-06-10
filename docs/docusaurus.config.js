@@ -7,7 +7,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula')
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Thoth',
-  tagline: 'Spell composer',
+  tagline: 'A visual node editor for building AI powered data pipelines',
   url: 'https://thoth.latitude.io',
   baseUrl: '/',
   onBrokenLinks: 'throw',
@@ -122,6 +122,9 @@ const config = {
         darkTheme: darkCodeTheme,
       },
     }),
+  customFields: {
+    thothLogo: 'img/thoth-logo.png',
+  },
 }
 
 module.exports = config
