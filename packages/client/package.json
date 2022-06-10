@@ -8,6 +8,9 @@
     "Jakob Grant <j.grant@project89.org>",
     "Preston Gull <gull.preston@gmail.com>"
   ],
+  "engines": {
+    "node": "14.17.6"
+  },
   "private": true,
   "scripts": {
     "start": "NODE_ENV=development webpack serve --config webpack.dev.js",
@@ -29,7 +32,7 @@
     "@emotion/styled": "^11.8.1",
     "@feathersjs/client": "^4.5.14",
     "@feathersjs/feathers": "^4.5.12",
-    "@latitudegames/thoth-core": "^0.0.68",
+    "@latitudegames/thoth-core": "0.0.69--canary.b8d4448.0",
     "@monaco-editor/react": "^4.2.1",
     "@mui/icons-material": "^5.5.1",
     "@mui/material": "^5.5.3",
