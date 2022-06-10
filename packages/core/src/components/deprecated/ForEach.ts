@@ -5,9 +5,9 @@ import {
   ThothNode,
   ThothWorkerInputs,
   ThothWorkerOutputs,
-} from '../../types'
-import { arraySocket, triggerSocket, anySocket } from '../sockets'
-import { ThothComponent, ThothTask } from '../thoth-component'
+} from '../../../types'
+import { arraySocket, triggerSocket, anySocket } from '../../sockets'
+import { ThothComponent, ThothTask } from '../../thoth-component'
 const info = `The forEach component takes in an array, and will iterate over each item in the array, firing a new trigger signal with the appropriate value, until all items in the array have been processed.`
 
 type WorkerReturn = {
@@ -23,6 +23,9 @@ export class ForEach extends ThothComponent<Promise<WorkerReturn | undefined>> {
     }
     this.category = 'Logic'
     this.info = info
+    this.deprecated = true
+    this.deprecationMessage =
+      'This component has been deprecated, it will be re-enabled once stabilized.'
   }
 
   builder(node: ThothNode) {
