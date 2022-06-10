@@ -12,8 +12,8 @@
     status = 200
 
 #  ALL DEPLOY PREVIEWS
-[[context.deploy-preview.plugins]]
-    package = "../../netlify/plugins/conditional-canary"
+# [[context.deploy-preview.plugins]]
+#    package = "../../netlify/plugins/conditional-canary"
 
 [context.deploy-preview.environment]
     REACT_APP_API_URL="https://latitude-api-staging.herokuapp.com"
