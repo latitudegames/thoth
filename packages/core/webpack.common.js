@@ -43,6 +43,29 @@ module.exports = () => {
             compilerOptions: {
               outDir: './dist',
             },
+            resolveTypeReferenceDirective: function (
+              directive,
+              containingFile,
+              compilerOptions,
+              moduleResolutionHost,
+              original
+            ) {
+              return directive === 'jest'
+                ? {
+                    resolvedTypeReferenceDirective: {
+                      resolvedFileName: path.join(
+                        __dirname,
+                        'node_modules/@types/jest/index.d.ts'
+                      ),
+                    },
+                  }
+                : original(
+                    directive,
+                    containingFile,
+                    compilerOptions,
+                    moduleResolutionHost
+                  )
+            },
           },
         },
         {
