@@ -1,26 +1,25 @@
 import feathers from '@feathersjs/client'
-// import io from 'socket.io-client'
+import io from 'socket.io-client'
 import { useContext, createContext, useEffect, useState } from 'react'
 
-// import { feathers as feathersFlag, feathersUrl } from '@/config'
-import { feathers as feathersFlag } from '@/config'
+import { feathers as feathersFlag, feathersUrl } from '@/config'
 // import { Application } from '@feathersjs/feathers'
 
-import { useAuth } from './AuthProvider'
+import { getAuthHeader, useAuth } from './AuthProvider'
 
 const buildFeathersClient = async () => {
   const feathersClient = feathers()
-  // const authHeaders = await getAuthHeader()
-  // const socket = io(feathersUrl, {
-  //   // Send the authorization header in the initial connection request
-  //   transportOptions: {
-  //     polling: {
-  //       withCredentials: true,
-  //       extraHeaders: authHeaders,
-  //     },
-  //   },
-  // })
-  // feathersClient.configure(feathers.socketio(socket, { timeout: 10000 }))
+  const authHeaders = await getAuthHeader()
+  const socket = io(feathersUrl, {
+    // Send the authorization header in the initial connection request
+    transportOptions: {
+      polling: {
+        withCredentials: true,
+        extraHeaders: authHeaders,
+      },
+    },
+  })
+  feathersClient.configure(feathers.socketio(socket, { timeout: 10000 }))
 
   // No idea how to type feathers to add io properties to root client.
   return feathersClient as any
@@ -42,7 +41,7 @@ const FeathersProvider = ({ children }) => {
 
   useEffect(() => {
     // We only want to create the feathers connection once we have a user to handle
-    if (!done || !feathersFlag) return
+    if (!done) return
     ;(async () => {
       const client = await buildFeathersClient()
       client.io.on('connected', () => {
