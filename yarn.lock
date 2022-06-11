@@ -2353,6 +2353,27 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
+"@latitudegames/thoth-core@0.0.68", "@latitudegames/thoth-core@^0.0.68":
+  version "0.0.68"
+  resolved "https://npm.pkg.github.com/download/@latitudegames/thoth-core/0.0.68/fc56784693d7fa00daae69ac7ecdedf54b0252ac172d8140f291f000c1dec241#395d703f8e885b24cdf7989062043bf361291b29"
+  integrity sha512-M0pBdpho7lqx29xfz1c9RnrgRYpP/kRu8DcJDePdWNaNmvtNUVkA6Nr73uEg6I1T2TpVriHp7KqQjR8Ex3iXKw==
+  dependencies:
+    deep-equal "^2.0.5"
+    handlebars "^4.7.7"
+    jsdom "^17.0.0"
+    license-webpack-plugin "^4.0.2"
+    path "^0.12.7"
+    react "^17.0.2"
+    regenerator-runtime "^0.13.9"
+    rete "https://github.com/latitudegames/rete.git#master"
+    rete-area-plugin "^0.2.1"
+    rete-connection-plugin "^0.9.0"
+    rete-context-menu-plugin "^0.6.0-rc.1"
+    rete-module-plugin "^0.4.1"
+    rete-react-render-plugin "^0.2.1"
+    socket.io "^4.5.0"
+    uuid "^8.3.2"
+
 "@latitudegames/thoth-core@^0.0.67":
   version "0.0.67"
   resolved "https://npm.pkg.github.com/download/@latitudegames/thoth-core/0.0.67/41babd5d6341947adce89dc7d6027bda9529a212617925c23d8a22146467f54b#e30318b84f1b3224edf3f9622fe8f9f7c09a2a15"
@@ -14996,6 +15017,14 @@ rete-react-render-plugin@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/rete-react-render-plugin/-/rete-react-render-plugin-0.2.1.tgz#71a6d73f18f850b85262563f678b40080a7b0e32"
   integrity sha512-2ZMXUP0v+EiejHVMqdrOmUwyDBHC2UDOJ/pFkElaZL1Kn/E40JZA5yzdBXi6ajYZI2DCzoW5ZBcA2Ihjtur8MQ==
+
+"rete@git+https://github.com/latitudegames/rete.git#master":
+  version "1.4.5"
+  uid "24565a81a2bbcdd4cd73b0a725977550cc8ff988"
+  resolved "git+https://github.com/latitudegames/rete.git#24565a81a2bbcdd4cd73b0a725977550cc8ff988"
+  dependencies:
+    lodash "^4.17.21"
+    watch "^1.0.2"
 
 "rete@https://github.com/latitudegames/rete.git#master":
   version "1.4.5"
