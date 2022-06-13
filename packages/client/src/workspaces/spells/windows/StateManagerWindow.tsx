@@ -20,7 +20,8 @@ const StateManager = ({ tab, ...props }) => {
   const [typing, setTyping] = useState<boolean>(false)
   const [code, setCode] = useState('{}')
 
-  const SAVE_SPELL_DIFF = events.$SAVE_SPELL_DIFF(tab.id)
+  // const SAVE_SPELL_DIFF = events.$SAVE_SPELL_DIFF(tab.id)
+  const SAVE_SPELL = events.$SAVE_SPELL(tab.id)
 
   const editorOptions = {
     lineNumbers: false,
@@ -91,7 +92,8 @@ const StateManager = ({ tab, ...props }) => {
         gameState: parsedState,
       }
 
-      publish(SAVE_SPELL_DIFF, spellUpdate)
+      // publish(SAVE_SPELL_DIFF, spellUpdate)
+      publish(SAVE_SPELL, spellUpdate)
     } catch (err) {
       console.log(err)
     }
