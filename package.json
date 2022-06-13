@@ -35,7 +35,7 @@
   "engines": {
     "node": ">=14.17.6",
     "npm": ">=6.12.0",
-    "yarn": "^1.22.10"
+    "yarn": "^1.18.0"
   },
   "devDependencies": {
     "craco": "^0.0.3",
