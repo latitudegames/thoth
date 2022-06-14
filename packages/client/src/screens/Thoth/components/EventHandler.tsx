@@ -86,9 +86,11 @@ const EventHandler = ({ pubSub, tab }) => {
       return
     }
 
-    enqueueSnackbar('Spell saved', {
-      variant: 'success',
-    })
+    if (preferences.autoSave) {
+      enqueueSnackbar('Spell saved', {
+        variant: 'success',
+      })
+    }
   }
 
   const sharedbDiff = async (event, update) => {
