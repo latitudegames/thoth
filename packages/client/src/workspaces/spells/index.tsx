@@ -42,7 +42,6 @@ const Workspace = ({ tab, tabs, pubSub }) => {
       'nodecreated noderemoved connectioncreated connectionremoved nodetranslated',
       debounce(async data => {
         if (tab.type === 'spell' && spellRef.current) {
-          if (!preferences.autoSave) return
           publish(events.$SAVE_SPELL_DIFF(tab.id), { chain: serialize() })
         }
       }, 2000)
